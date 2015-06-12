@@ -24,8 +24,8 @@ dependencies {
 android {
     publishNonDefault true
 
-    compileSdkVersion 19
-    buildToolsVersion "21.1.1"
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
 
     defaultConfig {
         versionName "1.0.0"

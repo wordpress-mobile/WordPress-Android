@@ -351,7 +351,7 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().registerSticky(this);
     }
 
     @SuppressWarnings("unused")
@@ -362,6 +362,9 @@ public class NotificationsListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
         setNoteIsHidden(event.mNoteId, event.mIsHidden);
+
+        // Clear out the sticky event
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
     }
 
     @SuppressWarnings("unused")

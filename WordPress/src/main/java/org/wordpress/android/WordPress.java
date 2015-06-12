@@ -32,6 +32,7 @@ import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
@@ -47,7 +48,6 @@ import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -390,14 +390,6 @@ public class WordPress extends Application {
         return currentBlog;
     }
 
-    public static Blog getCurrentBlogEvenIfNotVisible() {
-        if (currentBlog == null) {
-            attemptToRestoreLastActiveBlog();
-        }
-
-        return currentBlog;
-    }
-
     /**
      * Get the blog with the specified ID.
      *
@@ -439,11 +431,17 @@ public class WordPress extends Application {
      * Set the blog with the specified id as the current blog.
      *
      * @param id id of the blog to set as current
-     * @return the current blog
      */
-    public static Blog setCurrentBlog(int id) {
-        currentBlog = wpDB.instantiateBlogByLocalId(id);
-        return currentBlog;
+    public static void setCurrentBlog(int id) {
+        currentBlog = getBlog(id);
+    }
+
+    public static void setCurrentBlogAndSetVisible(int id) {
+        setCurrentBlog(id);
+
+        if (currentBlog != null && currentBlog.isHidden()) {
+            wpDB.setDotComBlogsVisibility(id, true);
+        }
     }
 
     /**

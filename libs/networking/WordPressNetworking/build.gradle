@@ -18,8 +18,8 @@ apply plugin: 'maven'
 android {
     publishNonDefault true
 
-    compileSdkVersion 19
-    buildToolsVersion "21.1.1"
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
 
     defaultConfig {
         minSdkVersion 14

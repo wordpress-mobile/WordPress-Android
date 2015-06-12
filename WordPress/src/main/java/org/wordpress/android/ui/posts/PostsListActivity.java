@@ -42,7 +42,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.IOException;
 
-public class PostsActivity extends ActionBarActivity
+public class PostsListActivity extends ActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
                    OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
@@ -64,7 +64,13 @@ public class PostsActivity extends ActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ProfilingUtils.split("PostsActivity.onCreate");
+        // This should be removed when #2734 is fixed
+        if (WordPress.getCurrentBlog() == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+        ProfilingUtils.split("PostsListActivity.onCreate");
         ProfilingUtils.dump();
 
         setContentView(R.layout.posts);
@@ -110,7 +116,7 @@ public class PostsActivity extends ActionBarActivity
 
     private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
                                           final String infoURL) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsListActivity.this);
         dialogBuilder.setTitle(getResources().getText(R.string.error));
         dialogBuilder.setMessage(errorMessage);
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -287,14 +293,14 @@ public class PostsActivity extends ActionBarActivity
     public void onPostAction(int action, final Post post) {
         // No post? No service.
         if (post == null) {
-            Toast.makeText(PostsActivity.this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostsListActivity.this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (action == POST_DELETE) {
             if (post.isLocalDraft()) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        PostsActivity.this);
+                        PostsListActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         R.string.delete_draft));
 
@@ -338,7 +344,7 @@ public class PostsActivity extends ActionBarActivity
                 }
 
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        PostsActivity.this);
+                        PostsListActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         (post.isPage()) ? R.string.delete_page
                                 : R.string.delete_post));
@@ -435,14 +441,14 @@ public class PostsActivity extends ActionBarActivity
             dismissDialog(ID_DIALOG_DELETING);
             attemptToSelectPost();
             if (result) {
-                Toast.makeText(PostsActivity.this, getResources().getText((mIsPage) ?
+                Toast.makeText(PostsListActivity.this, getResources().getText((mIsPage) ?
                                 R.string.page_deleted : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
                 requestPosts();
                 mPostList.requestPosts(false);
                 mPostList.setRefreshing(true);
             } else {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsListActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
                 dialogBuilder.setMessage(mErrorMsg);
                 dialogBuilder.setPositiveButton("OK",
