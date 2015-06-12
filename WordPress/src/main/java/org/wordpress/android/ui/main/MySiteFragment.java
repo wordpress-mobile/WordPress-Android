@@ -205,7 +205,7 @@ public class MySiteFragment extends Fragment
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
-                    setBlog(WordPress.getCurrentBlogEvenIfNotVisible());
+                    setBlog(WordPress.getCurrentBlog());
                 }
                 // redisplay the hidden fab after a short delay
                 long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
