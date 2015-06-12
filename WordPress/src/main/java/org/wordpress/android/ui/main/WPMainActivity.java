@@ -61,9 +61,6 @@ public class WPMainActivity extends Activity
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
-    // Keeps track of the noteId for when a user moderates from a push notification
-    private String mRemovedNoteId;
-
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     /*
@@ -283,32 +280,15 @@ public class WPMainActivity extends Activity
     private void moderateCommentOnActivityResult(Intent data) {
         try {
             if (SimperiumUtils.getNotesBucket() != null) {
-                String noteId = StringUtils.notNullStr(data.getStringExtra(
-                        NotificationsListFragment.NOTE_MODERATE_ID_EXTRA));
-                Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
+                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
                 CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                         NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
                 NotificationsUtils.moderateCommentForNote(note, status, this);
-
-                if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
-                    if (getNotificationListFragment() != null) {
-                        getNotificationListFragment().hideNote(noteId);
-                    } else {
-                        mRemovedNoteId = noteId;
-                    }
-                }
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
         }
-    }
-
-    public String getRemovedNoteId() {
-        return mRemovedNoteId;
-    }
-
-    public void setRemovedNoteId(String noteId) {
-        mRemovedNoteId = noteId;
     }
 
     @Override
