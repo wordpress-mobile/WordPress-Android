@@ -140,4 +140,9 @@
 
     <!--Me-->
     <color name="me_list_row_border">#D8E3EA</color>
+
+    <color name="passcodelock_background">@color/color_primary</color>
+    <color name="passcodelock_prompt_text_color">@color/white</color>
+    <color name="passcodelock_button_text_color">@color/white</color>
+
 </resources>
