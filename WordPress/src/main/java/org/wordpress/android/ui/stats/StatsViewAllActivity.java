@@ -102,9 +102,11 @@ public class StatsViewAllActivity extends ActionBarActivity {
             if(yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
-                        mOuterScrollView.scrollTo(0, yScrollPosition);
+                        if (!isFinishing()) {
+                            mOuterScrollView.scrollTo(0, yScrollPosition);
+                        }
                     }
-                }, 75L);
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();

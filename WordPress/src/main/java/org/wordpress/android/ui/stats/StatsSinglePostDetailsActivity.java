@@ -151,9 +151,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             if(yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
-                        mOuterScrollView.scrollTo(0, yScrollPosition);
+                        if (!isFinishing()) {
+                            mOuterScrollView.scrollTo(0, yScrollPosition);
+                        }
                     }
-                }, 75L);
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
             if (savedInstanceState.containsKey(ARG_AVERAGES_EXPANDED_ROWS)) {
                 mAveragesIdToExpandedMap = savedInstanceState.getParcelable(ARG_AVERAGES_EXPANDED_ROWS);
@@ -212,7 +214,9 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    refreshStats();
+                    if (!isFinishing()) {
+                        refreshStats();
+                    }
                 }
             }, 75L);
         } else {

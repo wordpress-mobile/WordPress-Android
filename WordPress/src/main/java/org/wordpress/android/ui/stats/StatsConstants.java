@@ -12,4 +12,6 @@ class StatsConstants {
 
     public static final int STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP = 100;
 
+    public static final long STATS_SCROLL_TO_DELAY = 75L;
+
 }

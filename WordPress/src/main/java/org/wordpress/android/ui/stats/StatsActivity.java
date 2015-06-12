@@ -153,7 +153,7 @@ public class StatsActivity extends ActionBarActivity
                     public void run() {
                         mOuterScrollView.scrollTo(0, yScrollPosition);
                     }
-                }, 75L);
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
@@ -210,9 +210,11 @@ public class StatsActivity extends ActionBarActivity
                     mSpinner.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            scrollToTop();
+                            if (!isFinishing()) {
+                                scrollToTop();
+                            }
                         }
-                    }, 75L);
+                    }, StatsConstants.STATS_SCROLL_TO_DELAY);
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -237,9 +239,11 @@ public class StatsActivity extends ActionBarActivity
                 mSpinner.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scrollToTop();
+                        if (!isFinishing()) {
+                            scrollToTop();
+                        }
                     }
-                }, 75L);
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         });
     }
