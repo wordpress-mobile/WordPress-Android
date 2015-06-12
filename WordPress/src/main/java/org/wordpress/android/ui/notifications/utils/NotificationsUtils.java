@@ -536,8 +536,8 @@ public class NotificationsUtils {
                                     @Override
                                     public void onActionResult(boolean succeeded) {
                                         if (!succeeded) {
-                                            EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
-                                            EventBus.getDefault().post(new NoteModerationFailed());
+                                            EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
+                                            EventBus.getDefault().postSticky(new NoteModerationFailed());
                                         }
                                     }
                                 });
@@ -550,7 +550,7 @@ public class NotificationsUtils {
 
                     @Override
                     public void onUndo(Parcelable parcelable) {
-                        EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
+                        EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
                     }
                 }).show();
     }
@@ -563,16 +563,16 @@ public class NotificationsUtils {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             note.setLocalStatus(CommentStatus.toRESTString(newStatus));
             note.save();
-            EventBus.getDefault().post(new NoteModerationStatusChanged(note.getId(), true));
+            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(boolean succeeded) {
-                            EventBus.getDefault().post(new NoteModerationStatusChanged(note.getId(), false));
+                            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
                             if (!succeeded) {
                                 note.setLocalStatus(null);
                                 note.save();
-                                EventBus.getDefault().post(new NoteModerationFailed());
+                                EventBus.getDefault().postSticky(new NoteModerationFailed());
                             }
                         }
                     });
