@@ -357,6 +357,9 @@ public class NotificationsListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NoteModerationStatusChanged event) {
         setNoteIsModerating(event.mNoteId, event.mIsModerating);
+
+        // Clear out the sticky event
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
     }
 
     @SuppressWarnings("unused")

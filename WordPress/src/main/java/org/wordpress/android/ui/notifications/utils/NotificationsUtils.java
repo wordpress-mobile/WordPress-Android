@@ -563,7 +563,7 @@ public class NotificationsUtils {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             note.setLocalStatus(CommentStatus.toRESTString(newStatus));
             note.save();
-            EventBus.getDefault().post(new NoteModerationStatusChanged(note.getId(), true));
+            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
                         @Override
