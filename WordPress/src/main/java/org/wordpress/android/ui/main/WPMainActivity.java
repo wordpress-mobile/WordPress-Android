@@ -284,7 +284,7 @@ public class WPMainActivity extends Activity
                         (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
                 CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                         NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
-                NotificationsUtils.moderateCommentForNote(note, status, this);
+                NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
