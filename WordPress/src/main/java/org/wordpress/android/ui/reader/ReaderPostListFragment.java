@@ -32,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -685,6 +686,16 @@ public class ReaderPostListFragment extends Fragment
         Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener)
                 .show();
+
+        // make sure the tag toolbar is correctly positioned once the snackbar goes away
+        if (shouldShowTagToolbar()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    positionTagToolbar();
+                }
+            }, Constants.SNACKBAR_LONG_DURATION_MS);
+        }
     }
 
     /*
