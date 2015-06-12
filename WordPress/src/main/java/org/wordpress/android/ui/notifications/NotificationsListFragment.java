@@ -372,8 +372,8 @@ public class NotificationsListFragment extends Fragment
     public void onEventMainThread(NotificationEvents.NoteModerationFailed event) {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, Duration.LONG);
-
-            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
         }
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
     }
 }
