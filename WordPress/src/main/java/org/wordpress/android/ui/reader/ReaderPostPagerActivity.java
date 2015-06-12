@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -18,8 +19,6 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
-import com.cocosw.undobar.UndoBarController;
-
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -27,7 +26,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.util.AniUtils.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -36,6 +34,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AniUtils.AnimationEndListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -346,7 +345,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && !isFinishing()) {
-                    hideUndoBar();
                     ToastUtils.showToast(
                             ReaderPostPagerActivity.this,
                             R.string.reader_toast_err_block_blog,
@@ -377,19 +375,17 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             return;
         }
 
-        // show the undo bar - on undo we restore the deleted posts, and reselect the
+        // show the undo snackbar - on undo we restore the deleted posts, and reselect the
         // one the blog was blocked from
-        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+        View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
-            public void onUndo(Parcelable parcelable) {
+            public void onClick(View v) {
                 ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 loadPosts(blogId, postId);
             }
         };
-        new UndoBarController.UndoBar(ReaderPostPagerActivity.this)
-                .message(getString(R.string.reader_toast_blog_blocked))
-                .listener(undoListener)
-                .translucent(true)
+        Snackbar.make(findViewById(R.id.root_view), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener)
                 .show();
 
         // reload the adapter and move to the best post not in the blocked blog
@@ -398,12 +394,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         long newBlogId = (newId != null ? newId.getBlogId() : 0);
         long newPostId = (newId != null ? newId.getPostId() : 0);
         loadPosts(newBlogId, newPostId);
-    }
-
-    private void hideUndoBar() {
-        if (!isFinishing()) {
-            UndoBarController.clear(this);
-        }
     }
 
     /*
