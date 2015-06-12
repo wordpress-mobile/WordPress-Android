@@ -47,7 +47,6 @@ public class ReaderPost {
 
     public boolean isLikedByCurrentUser;
     public boolean isFollowedByCurrentUser;
-    public boolean isRebloggedByCurrentUser;
     public boolean isCommentsOpen;
     public boolean isExternal;
     public boolean isPrivate;
@@ -88,7 +87,6 @@ public class ReaderPost {
         post.numLikes = json.optInt("like_count");
         post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
-        post.isRebloggedByCurrentUser = JSONUtils.getBool(json, "is_reblogged");
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
 
