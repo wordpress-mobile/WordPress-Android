@@ -53,9 +53,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     public static final String ARG_REMOTE_POST_OBJECT = "ARG_REMOTE_POST_OBJECT";
     private static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
+    private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private ScrollViewExt mOuterScrollView;
 
     private final Handler mHandler = new Handler();
 
@@ -82,6 +84,11 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
     private SparseBooleanArray mYearsIdToExpandedMap;
     private SparseBooleanArray mAveragesIdToExpandedMap;
     private SparseBooleanArray mRecentWeeksIdToExpandedMap;
+
+    private static final String ARG_YEARS_EXPANDED_ROWS = "ARG_YEARS_EXPANDED_ROWS";
+    private static final String ARG_AVERAGES_EXPANDED_ROWS = "ARG_AVERAGES_EXPANDED_ROWS";
+    private static final String ARG_RECENT_EXPANDED_ROWS = "ARG_RECENT_EXPANDED_ROWS";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,10 +136,36 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         mRecentWeeksList = (LinearLayout) findViewById(R.id.stats_recent_weeks_list_linearlayout);
         mRecentWeeksEmptyPlaceholder = (LinearLayout) findViewById(R.id.stats_recent_weeks_empty_module_placeholder);
 
+        mYearsIdToExpandedMap = new SparseBooleanArray();
+        mAveragesIdToExpandedMap = new SparseBooleanArray();
+        mRecentWeeksIdToExpandedMap = new SparseBooleanArray();
+
+        setTitle(R.string.stats);
+        mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
+
         if (savedInstanceState != null) {
             mRemotePostItem = (PostModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
             mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
+            final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
+            if(yScrollPosition != 0) {
+                mOuterScrollView.postDelayed(new Runnable() {
+                    public void run() {
+                        if (!isFinishing()) {
+                            mOuterScrollView.scrollTo(0, yScrollPosition);
+                        }
+                    }
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
+            }
+            if (savedInstanceState.containsKey(ARG_AVERAGES_EXPANDED_ROWS)) {
+                mAveragesIdToExpandedMap = savedInstanceState.getParcelable(ARG_AVERAGES_EXPANDED_ROWS);
+            }
+            if (savedInstanceState.containsKey(ARG_RECENT_EXPANDED_ROWS)) {
+                mRecentWeeksIdToExpandedMap = savedInstanceState.getParcelable(ARG_RECENT_EXPANDED_ROWS);
+            }
+            if (savedInstanceState.containsKey(ARG_YEARS_EXPANDED_ROWS)) {
+                mYearsIdToExpandedMap = savedInstanceState.getParcelable(ARG_YEARS_EXPANDED_ROWS);
+            }
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mRemotePostItem = (PostModel) extras.getSerializable(ARG_REMOTE_POST_OBJECT);
@@ -149,12 +182,6 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
                 StatsUtils.openPostInReaderOrInAppWebview(ctx, mRemotePostItem);
             }
         });
-
-        setTitle(R.string.stats);
-
-        mYearsIdToExpandedMap = new SparseBooleanArray();
-        mAveragesIdToExpandedMap = new SparseBooleanArray();
-        mRecentWeeksIdToExpandedMap = new SparseBooleanArray();
     }
 
     @Override
@@ -162,6 +189,20 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
         outState.putSerializable(ARG_REMOTE_POST_OBJECT, mRemotePostItem);
         outState.putSerializable(ARG_REST_RESPONSE, mRestResponseParsed);
+        if (mOuterScrollView.getScrollY() != 0) {
+            outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
+        }
+
+        if (mAveragesIdToExpandedMap.size() > 0){
+            outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
+        }
+        if (mRecentWeeksIdToExpandedMap.size() > 0) {
+            outState.putParcelable(ARG_RECENT_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
+        }
+        if (mYearsIdToExpandedMap.size() > 0) {
+            outState.putParcelable(ARG_YEARS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mYearsIdToExpandedMap));
+        }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -173,7 +214,9 @@ public class StatsSinglePostDetailsActivity extends ActionBarActivity
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    refreshStats();
+                    if (!isFinishing()) {
+                        refreshStats();
+                    }
                 }
             }, 75L);
         } else {

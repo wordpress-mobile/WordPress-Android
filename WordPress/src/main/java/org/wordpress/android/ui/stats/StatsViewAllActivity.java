@@ -32,10 +32,12 @@ import de.greenrobot.event.EventBus;
 public class StatsViewAllActivity extends ActionBarActivity {
 
     public static final String ARG_STATS_VIEW_ALL_TITLE = "arg_stats_view_all_title";
+    private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private ScrollViewExt mOuterScrollView;
 
     private StatsAbstractListFragment mFragment;
 
@@ -62,6 +64,8 @@ public class StatsViewAllActivity extends ActionBarActivity {
         }
 
         setTitle(R.string.stats);
+
+        mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
 
         // pull to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
@@ -94,6 +98,16 @@ public class StatsViewAllActivity extends ActionBarActivity {
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_SELECTED_DATE);
             mStatsViewType = (StatsViewType) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
             mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
+            final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
+            if(yScrollPosition != 0) {
+                mOuterScrollView.postDelayed(new Runnable() {
+                    public void run() {
+                        if (!isFinishing()) {
+                            mOuterScrollView.scrollTo(0, yScrollPosition);
+                        }
+                    }
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
+            }
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
@@ -251,6 +265,9 @@ public class StatsViewAllActivity extends ActionBarActivity {
         outState.putString(StatsAbstractFragment.ARGS_SELECTED_DATE, mDate);
         outState.putSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType);
         outState.putInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
+        if (mOuterScrollView.getScrollY() != 0) {
+            outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
+        }
         super.onSaveInstanceState(outState);
     }
 

@@ -187,7 +187,8 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         ReaderUpdateService.startService(this,
                 EnumSet.of(UpdateTask.TAGS,
-                           UpdateTask.FOLLOWED_BLOGS));
+                           UpdateTask.FOLLOWED_BLOGS,
+                           UpdateTask.RECOMMENDED_BLOGS));
 
         mHasPerformedUpdate = true;
     }
