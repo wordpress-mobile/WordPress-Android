@@ -1,15 +1,16 @@
 package org.wordpress.android.ui.notifications.utils;
 
 import android.app.AlertDialog;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Parcelable;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -22,7 +23,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.cocosw.undobar.UndoBarController;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -58,8 +59,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import de.greenrobot.event.EventBus;
 
 public class NotificationsUtils {
@@ -78,6 +77,8 @@ public class NotificationsUtils {
     private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
     private static final String WPCOM_PUSH_KEY_MUTE_UNTIL = "mute_until";
     private static final String WPCOM_PUSH_KEY_VALUE = "value";
+
+    private static boolean mSnackbarDidUndo;
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
@@ -523,43 +524,51 @@ public class NotificationsUtils {
         dialog.show();
     }
 
-    private static void showUndoBarForNote(final Note note, final CommentStatus status, final Activity activity) {
-        new UndoBarController.UndoBar(activity)
-                .message(status == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
-                .listener(new UndoBarController.AdvancedUndoListener() {
-                    @Override
-                    public void onHide(Parcelable parcelable) {
-                        // Deleted notifications in Simperium never come back, so we won't
-                        // make the request until the undo bar fades away
-                        CommentActions.moderateCommentForNote(note, status,
-                                new CommentActions.CommentActionListener() {
-                                    @Override
-                                    public void onActionResult(boolean succeeded) {
-                                        if (!succeeded) {
-                                            EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
-                                            EventBus.getDefault().postSticky(new NoteModerationFailed());
-                                        }
-                                    }
-                                });
-                    }
+    private static void showUndoBarForNote(final Note note,
+                                           final CommentStatus status,
+                                           final View parentView) {
+        Resources resources = parentView.getContext().getResources();
+        String message = (status == CommentStatus.TRASH ? resources.getString(R.string.comment_trashed) : resources.getString(R.string.comment_spammed));
+        View.OnClickListener undoListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSnackbarDidUndo = true;
+                EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
+            }
+        };
 
-                    @Override
-                    public void onClear(@Nonnull Parcelable[] token) {
-                        //noop
-                    }
+        mSnackbarDidUndo = false;
+        Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener)
+                .show();
 
-                    @Override
-                    public void onUndo(Parcelable parcelable) {
-                        EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
-                    }
-                }).show();
+        // Deleted notifications in Simperium never come back, so we won't
+        // make the request until the undo bar fades away
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mSnackbarDidUndo) {
+                    return;
+                }
+                CommentActions.moderateCommentForNote(note, status,
+                        new CommentActions.CommentActionListener() {
+                            @Override
+                            public void onActionResult(boolean succeeded) {
+                                if (!succeeded) {
+                                    EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
+                                    EventBus.getDefault().postSticky(new NoteModerationFailed());
+                                }
+                            }
+                        });
+            }
+        }, Constants.SNACKBAR_LONG_DURATION_MS);
     }
 
     /**
      * Moderate a comment from a WPCOM notification.
      * Broadcast EventBus events on update/success/failure and show an undo bar if new status is Trash or Spam
      */
-    public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final Activity activity) {
+    public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             note.setLocalStatus(CommentStatus.toRESTString(newStatus));
             note.save();
@@ -580,7 +589,7 @@ public class NotificationsUtils {
             // Post as sticky, so that NotificationsListFragment can pick it up after it's created
             EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), true));
             // Show undo bar for trash or spam actions
-            showUndoBarForNote(note, newStatus, activity);
+            showUndoBarForNote(note, newStatus, parentView);
         }
     }
 }
