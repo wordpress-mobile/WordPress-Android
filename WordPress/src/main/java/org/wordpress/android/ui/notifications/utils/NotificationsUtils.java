@@ -536,8 +536,8 @@ public class NotificationsUtils {
                                     @Override
                                     public void onActionResult(boolean succeeded) {
                                         if (!succeeded) {
-                                            EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
-                                            EventBus.getDefault().post(new NoteModerationFailed());
+                                            EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
+                                            EventBus.getDefault().postSticky(new NoteModerationFailed());
                                         }
                                     }
                                 });
@@ -550,7 +550,7 @@ public class NotificationsUtils {
 
                     @Override
                     public void onUndo(Parcelable parcelable) {
-                        EventBus.getDefault().post(new NoteVisibilityChanged(note.getId(), false));
+                        EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
                     }
                 }).show();
     }
@@ -568,11 +568,11 @@ public class NotificationsUtils {
                     new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(boolean succeeded) {
-                            EventBus.getDefault().post(new NoteModerationStatusChanged(note.getId(), false));
+                            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
                             if (!succeeded) {
                                 note.setLocalStatus(null);
                                 note.save();
-                                EventBus.getDefault().post(new NoteModerationFailed());
+                                EventBus.getDefault().postSticky(new NoteModerationFailed());
                             }
                         }
                     });

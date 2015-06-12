@@ -358,7 +358,6 @@ public class NotificationsListFragment extends Fragment
     public void onEventMainThread(NotificationEvents.NoteModerationStatusChanged event) {
         setNoteIsModerating(event.mNoteId, event.mIsModerating);
 
-        // Clear out the sticky event
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
     }
 
@@ -366,7 +365,6 @@ public class NotificationsListFragment extends Fragment
     public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
         setNoteIsHidden(event.mNoteId, event.mIsHidden);
 
-        // Clear out the sticky event
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
     }
 
@@ -374,6 +372,8 @@ public class NotificationsListFragment extends Fragment
     public void onEventMainThread(NotificationEvents.NoteModerationFailed event) {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, Duration.LONG);
+
+            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
         }
     }
 }
