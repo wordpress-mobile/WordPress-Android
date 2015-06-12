@@ -87,8 +87,8 @@ public class ReaderUtils {
     }
 
     /*
-     * returns true if the reader should provide a "logged out" experience - no likes, comments,
-     * reblogs, or anything else that requires an account
+     * returns true if the reader should provide a "logged out" experience - no likes,
+     * comments, or anything else that requires a wp.com account
      */
     public static boolean isLoggedOutReader() {
         return !AccountHelper.isSignedInWordPressDotCom();

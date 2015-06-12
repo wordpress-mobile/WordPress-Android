@@ -696,17 +696,6 @@ public class ReaderPostTable {
         }
     }
 
-    public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
-        if (post == null) {
-            return;
-        }
-
-        String sql = "UPDATE tbl_posts SET is_reblogged=" + SqlUtils.boolToSql(isReblogged)
-                  + " WHERE blog_id=? AND post_id=?";
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-        ReaderDatabase.getWritableDb().execSQL(sql, args);
-    }
-
     private static ReaderPost getPostFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("getPostFromCursor > null cursor");

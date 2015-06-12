@@ -460,13 +460,6 @@ public class ReaderPost {
     }
 
     /*
-     * only public wp posts can be reblogged
-     */
-    public boolean canReblog() {
-        return !isExternal && !isPrivate;
-    }
-
-    /*
      * returns true if this post is from a WordPress blog
      */
     public boolean isWP() {
@@ -483,8 +476,7 @@ public class ReaderPost {
                 && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
                 && post.isLikedByCurrentUser == this.isLikedByCurrentUser
                 && post.isCommentsOpen == this.isCommentsOpen
-                && post.isLikesEnabled == this.isLikesEnabled
-                && post.isRebloggedByCurrentUser == this.isRebloggedByCurrentUser;
+                && post.isLikesEnabled == this.isLikesEnabled;
     }
 
     /****
