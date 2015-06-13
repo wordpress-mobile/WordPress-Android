@@ -112,7 +112,7 @@ public class WPMainActivity extends Activity
                     case WPMainTabAdapter.TAB_NOTIFS:
                         if (getNotificationListFragment() != null) {
                             getNotificationListFragment().updateLastSeenTime();
-                            mTabLayout.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
+                            mTabLayout.showNoteBadge(false);
                         }
                         break;
                 }
