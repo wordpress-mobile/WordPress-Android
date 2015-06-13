@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -38,7 +39,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.lang.ref.WeakReference;
@@ -52,7 +52,7 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
 
     private ThemePagerAdapter mThemePagerAdapter;
     private ViewPager mViewPager;
-    private SlidingTabLayout mTabLayout;
+    private TabLayout mTabLayout;
     private ThemeSearchFragment mSearchFragment;
     private ThemePreviewFragment mPreviewFragment;
     private ThemeDetailsFragment mDetailsFragment;
@@ -92,11 +92,11 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
         mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
 
-        mTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        mTabLayout.setCustomTabView(R.layout.tab_text, R.id.text_tab);
-        mTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
-        mTabLayout.setDistributeEvenly(true);
-        mTabLayout.setViewPager(mViewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        int normalColor = getResources().getColor(R.color.blue_light);
+        int selectedColor = getResources().getColor(R.color.white);
+        mTabLayout.setTabTextColors(normalColor, selectedColor);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
