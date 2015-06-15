@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -55,7 +54,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
-    private ReaderInterfaces.RequestReblogListener mReblogListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
@@ -76,7 +74,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ReaderIconCountView likeCount;
         private final ReaderFollowButton followButton;
 
-        private final ImageView imgBtnReblog;
         private final ImageView imgMore;
 
         private final WPNetworkImageView imgFeatured;
@@ -106,11 +103,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
             toolbarSpacer = itemView.findViewById(R.id.spacer_toolbar);
-
-            imgBtnReblog = (ImageView) itemView.findViewById(R.id.image_reblog_btn);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
-            }
         }
     }
 
@@ -257,28 +249,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.commentCount.setOnClickListener(null);
         }
 
-        if (post.canReblog() && !mIsLoggedOutReader) {
-            showReblogStatus(postHolder.imgBtnReblog, post.isRebloggedByCurrentUser);
-            postHolder.imgBtnReblog.setVisibility(View.VISIBLE);
-            if (!post.isRebloggedByCurrentUser) {
-                postHolder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderAnim.animateReblogButton(postHolder.imgBtnReblog);
-                        if (mReblogListener != null) {
-                            mReblogListener.onRequestReblog(post, v);
-                        }
-                    }
-                });
-            } else {
-                postHolder.imgBtnReblog.setOnClickListener(null);
-            }
-        } else {
-            // use INVISIBLE rather than GONE to ensure container maintains the same height
-            postHolder.imgBtnReblog.setVisibility(View.INVISIBLE);
-            postHolder.imgBtnReblog.setOnClickListener(null);
-        }
-
         // more menu with "block this blog" only shows for public wp posts in followed tags
         if (!mIsLoggedOutReader && post.isWP() && !post.isPrivate && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
             postHolder.imgMore.setVisibility(View.VISIBLE);
@@ -349,10 +319,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
         mDataRequestedListener = listener;
-    }
-
-    public void setOnReblogRequestedListener(ReaderInterfaces.RequestReblogListener listener) {
-        mReblogListener = listener;
     }
 
     public void setOnPostPopupListener(ReaderInterfaces.OnPostPopupListener onPostPopupListener) {
@@ -570,15 +536,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 mPosts.set(position, updatedPost);
                 copyBlogFollowStatus(updatedPost);
             }
-        }
-    }
-
-    private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
-        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected()) {
-            imgBtnReblog.setSelected(isRebloggedByCurrentUser);
-        }
-        if (isRebloggedByCurrentUser) {
-            imgBtnReblog.setOnClickListener(null);
         }
     }
 

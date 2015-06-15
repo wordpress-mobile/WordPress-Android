@@ -680,7 +680,6 @@
 
     <!-- activity titles -->
     <string name="reader_title_applog">Application log</string>
-    <string name="reader_title_reblog">Reblog Post</string>
     <string name="reader_title_blog_preview">Preview Blog</string>
     <string name="reader_title_tag_preview">Preview Tag</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
@@ -711,16 +710,13 @@
     <string name="reader_hint_comment_on_post">Add your comment</string>
     <string name="reader_hint_comment_on_comment">Reply to comment</string>
     <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
-    <string name="reader_hint_reblog_comment">Add your thoughts (optional)</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
     <string name="reader_label_new_posts_subtitle">Tap to show them</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
-    <string name="reader_label_reblog_to">Reblog to</string>
     <string name="reader_label_reply">Reply</string>
-    <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
     <string name="reader_label_followed_blog">Blog followed</string>
     <string name="reader_label_tag_preview">Posts tagged %s</string>
     <string name="reader_label_comments_on">Comments on</string>
@@ -742,11 +738,7 @@
     <string name="reader_likes_multi_short">%,d people</string>
 
     <!-- toast messages -->
-    <string name="reader_toast_reblog_success">Post has been reblogged</string>
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
-    <string name="reader_toast_err_reblog_failed">Couldn\'t reblog this post</string>
-    <string name="reader_toast_err_already_reblogged">You already reblogged this post</string>
-    <string name="reader_toast_err_reblog_requires_blog">Select a blog</string>
     <string name="reader_toast_err_tag_exists">You already follow this tag</string>
     <string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
     <string name="reader_toast_err_add_tag">Unable to add this tag</string>
