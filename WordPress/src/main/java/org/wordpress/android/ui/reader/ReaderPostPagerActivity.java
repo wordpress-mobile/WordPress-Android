@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
@@ -25,7 +23,6 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -269,22 +266,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         return mCurrentTag != null;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        boolean isResultOK = (resultCode == Activity.RESULT_OK);
-        if (isResultOK && requestCode == RequestCodes.READER_REBLOG) {
-            // update the reblog status in the detail view if the user returned
-            // from the reblog activity after successfully reblogging
-            ReaderPostDetailFragment fragment = getActiveDetailFragment();
-            if (fragment != null) {
-                fragment.doPostReblogged();
-            }
-        }
-    }
-
-    ReaderPostListType getPostListType() {
+    private ReaderPostListType getPostListType() {
         return mPostListType;
     }
 
