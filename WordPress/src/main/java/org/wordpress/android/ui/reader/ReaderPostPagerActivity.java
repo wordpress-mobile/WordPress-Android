@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -70,15 +71,19 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         setContentView(R.layout.reader_activity_post_pager);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar(mToolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager);
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
@@ -266,7 +271,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         return mCurrentTag != null;
     }
 
-    private ReaderPostListType getPostListType() {
+    ReaderPostListType getPostListType() {
         return mPostListType;
     }
 
