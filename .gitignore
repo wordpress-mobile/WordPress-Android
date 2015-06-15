@@ -16,6 +16,7 @@ bin/
 gen/
 build/
 */build/
+captures/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -46,3 +47,6 @@ WordPress/src/main/res/values/com_crashlytics_export_strings.xml
 
 # Monkey runner settings
 *.pyc
+
+# libs
+libs/utils
