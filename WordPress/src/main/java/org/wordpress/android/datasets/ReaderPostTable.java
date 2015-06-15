@@ -50,16 +50,15 @@ public class ReaderPostTable {
           + "is_liked,"             // 21
           + "is_followed,"          // 22
           + "is_comments_open,"     // 23
-          + "is_reblogged,"         // 24
-          + "is_external,"          // 25
-          + "is_private,"           // 26
-          + "is_videopress,"        // 27
-          + "is_jetpack,"           // 28
-          + "primary_tag,"          // 29
-          + "secondary_tag,"        // 30
-          + "is_likes_enabled,"     // 31
-          + "is_sharing_enabled,"   // 32
-          + "attachments_json";     // 33
+          + "is_external,"          // 24
+          + "is_private,"           // 25
+          + "is_videopress,"        // 26
+          + "is_jetpack,"           // 27
+          + "primary_tag,"          // 28
+          + "secondary_tag,"        // 29
+          + "is_likes_enabled,"     // 30
+          + "is_sharing_enabled,"   // 31
+          + "attachments_json";     // 32
 
     // used when querying multiple rows and skipping tbl_posts.text
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -85,16 +84,15 @@ public class ReaderPostTable {
           + "tbl_posts.is_liked,"             // 20
           + "tbl_posts.is_followed,"          // 21
           + "tbl_posts.is_comments_open,"     // 22
-          + "tbl_posts.is_reblogged,"         // 23
-          + "tbl_posts.is_external,"          // 24
-          + "tbl_posts.is_private,"           // 25
-          + "tbl_posts.is_videopress,"        // 26
-          + "tbl_posts.is_jetpack,"           // 27
-          + "tbl_posts.primary_tag,"          // 28
-          + "tbl_posts.secondary_tag,"        // 29
-          + "tbl_posts.is_likes_enabled,"     // 30
-          + "tbl_posts.is_sharing_enabled,"   // 31
-          + "tbl_posts.attachments_json";     // 32
+          + "tbl_posts.is_external,"          // 23
+          + "tbl_posts.is_private,"           // 24
+          + "tbl_posts.is_videopress,"        // 25
+          + "tbl_posts.is_jetpack,"           // 26
+          + "tbl_posts.primary_tag,"          // 27
+          + "tbl_posts.secondary_tag,"        // 28
+          + "tbl_posts.is_likes_enabled,"     // 29
+          + "tbl_posts.is_sharing_enabled,"   // 30
+          + "tbl_posts.attachments_json";     // 31
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -121,7 +119,6 @@ public class ReaderPostTable {
                 + " is_liked            INTEGER DEFAULT 0,"
                 + " is_followed         INTEGER DEFAULT 0,"
                 + " is_comments_open    INTEGER DEFAULT 0,"
-                + " is_reblogged        INTEGER DEFAULT 0,"
                 + " is_external         INTEGER DEFAULT 0,"
                 + " is_private          INTEGER DEFAULT 0,"
                 + " is_videopress       INTEGER DEFAULT 0,"
@@ -507,7 +504,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, feed_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5,?6)");
 
@@ -538,16 +535,15 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isLikedByCurrentUser));
                 stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
                 stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isCommentsOpen));
-                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isRebloggedByCurrentUser));
-                stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isExternal));
-                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isPrivate));
-                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isJetpack));
-                stmtPosts.bindString(29, post.getPrimaryTag());
-                stmtPosts.bindString(30, post.getSecondaryTag());
-                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isLikesEnabled));
-                stmtPosts.bindLong  (32, SqlUtils.boolToSql(post.isSharingEnabled));
-                stmtPosts.bindString(33, post.getAttachmentsJson());
+                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isExternal));
+                stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isPrivate));
+                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isVideoPress));
+                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isJetpack));
+                stmtPosts.bindString(28, post.getPrimaryTag());
+                stmtPosts.bindString(29, post.getSecondaryTag());
+                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isLikesEnabled));
+                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isSharingEnabled));
+                stmtPosts.bindString(32, post.getAttachmentsJson());
                 stmtPosts.execute();
             }
 
@@ -696,17 +692,6 @@ public class ReaderPostTable {
         }
     }
 
-    public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
-        if (post == null) {
-            return;
-        }
-
-        String sql = "UPDATE tbl_posts SET is_reblogged=" + SqlUtils.boolToSql(isReblogged)
-                  + " WHERE blog_id=? AND post_id=?";
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-        ReaderDatabase.getWritableDb().execSQL(sql, args);
-    }
-
     private static ReaderPost getPostFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("getPostFromCursor > null cursor");
@@ -747,7 +732,6 @@ public class ReaderPostTable {
         post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
         post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt( c.getColumnIndex("is_followed")));
         post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_comments_open")));
-        post.isRebloggedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_reblogged")));
         post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));

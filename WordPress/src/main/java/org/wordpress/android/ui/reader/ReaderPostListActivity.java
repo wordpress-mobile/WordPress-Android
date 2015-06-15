@@ -132,7 +132,6 @@ public class ReaderPostListActivity extends ActionBarActivity {
 
             // pass reader-related results to the fragment
             case RequestCodes.READER_SUBS:
-            case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null) {
                     listFragment.onActivityResult(requestCode, resultCode, data);

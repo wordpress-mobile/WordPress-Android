@@ -304,7 +304,6 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.READER_SUBS:
-            case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment readerFragment = getReaderListFragment();
                 if (readerFragment != null) {
                     readerFragment.onActivityResult(requestCode, resultCode, data);

@@ -354,13 +354,15 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         inflater.inflate(R.menu.edit_post, menu);
 
         mTags = (SuggestionAutoCompleteText) findViewById(R.id.tags);
-        mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
+        if (mTags != null) {
+            mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
-        remoteBlogId = WordPress.getCurrentRemoteBlogId();
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
-        mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
-        if (mTagSuggestionAdapter != null) {
-            mTags.setAdapter(mTagSuggestionAdapter);
+            remoteBlogId = WordPress.getCurrentRemoteBlogId();
+            mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
+            mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
+            if (mTagSuggestionAdapter != null) {
+                mTags.setAdapter(mTagSuggestionAdapter);
+            }
         }
 
         return true;
