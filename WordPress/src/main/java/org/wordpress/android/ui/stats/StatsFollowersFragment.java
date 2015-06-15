@@ -238,7 +238,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     private String getTotalFollowersLabel(int total) {
-        String totalFollowersLabel;
+        final String totalFollowersLabel;
 
         if (mTopPagerSelectedButtonIndex == 0) {
             totalFollowersLabel = getString(R.string.stats_followers_total_wpcom);
