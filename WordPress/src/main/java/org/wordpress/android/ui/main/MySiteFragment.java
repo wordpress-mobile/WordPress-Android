@@ -2,7 +2,6 @@ package org.wordpress.android.ui.main;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,7 +20,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -38,7 +36,6 @@ import de.greenrobot.event.EventBus;
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
 
-    public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
     private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
     private static final long ALERT_ANIM_DURATION_MS = 1000l;
 
@@ -81,9 +78,6 @@ public class MySiteFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_site, container, false);
-
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
 
         int fabHeight = getResources().getDimensionPixelSize(com.getbase.floatingactionbutton.R.dimen.fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
@@ -194,14 +188,6 @@ public class MySiteFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RequestCodes.PICTURE_LIBRARY:
-                FragmentManager fm = getFragmentManager();
-                Fragment addFragment = fm.findFragmentByTag(ADD_MEDIA_FRAGMENT_TAG);
-                if (addFragment != null) {
-                    addFragment.onActivityResult(requestCode, resultCode, data);
-                }
-                break;
-
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
