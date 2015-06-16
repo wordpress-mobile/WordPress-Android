@@ -77,7 +77,7 @@ public class NetworkUtils {
      * and returns false
      */
     public static boolean checkConnection(Context context) {
-        if(context == null) {
+        if (context == null) {
             return false;
         }
         if (isNetworkAvailable(context)) {
