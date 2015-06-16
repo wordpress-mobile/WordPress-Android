@@ -47,7 +47,7 @@ public class TypefaceCache {
                         typefaceName = "Merriweather-LightItalic.otf";
                         break;
                     default:
-                        typefaceName = "Merriweather_Light.ttf";
+                        typefaceName = "Merriweather-Light.ttf";
                         break;
                 }
             } else {
