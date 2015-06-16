@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,7 +44,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
-import org.wordpress.android.widgets.WPMainViewPager;
+import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
 
@@ -57,7 +56,7 @@ public class WPMainActivity extends Activity
         SlidingTabLayout.SingleTabClickListener,
         MediaAddFragment.MediaAddFragmentCallback,
         Bucket.Listener<Note> {
-    private WPMainViewPager mViewPager;
+    private WPViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
@@ -78,7 +77,7 @@ public class WPMainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
@@ -329,14 +328,6 @@ public class WPMainActivity extends Activity
             case RequestCodes.NOTE_DETAIL:
                 if (resultCode == RESULT_OK && data != null) {
                     moderateCommentOnActivityResult(data);
-                }
-                break;
-            case RequestCodes.PICTURE_LIBRARY:
-                FragmentManager fm = getFragmentManager();
-                Fragment addFragment = fm.findFragmentByTag(MySiteFragment.ADD_MEDIA_FRAGMENT_TAG);
-                if (addFragment != null && data != null) {
-                    ToastUtils.showToast(this, R.string.image_added);
-                    addFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.SITE_PICKER:

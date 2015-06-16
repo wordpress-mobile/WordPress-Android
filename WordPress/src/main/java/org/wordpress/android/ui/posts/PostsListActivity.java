@@ -437,8 +437,9 @@ public class PostsListActivity extends ActionBarActivity
             }
             if (mLoadingDialog == null || isFinishing()) {
                 return;
+            } else if (mLoadingDialog.isShowing()) {
+                dismissDialog(ID_DIALOG_DELETING);
             }
-            dismissDialog(ID_DIALOG_DELETING);
             attemptToSelectPost();
             if (result) {
                 Toast.makeText(PostsListActivity.this, getResources().getText((mIsPage) ?
