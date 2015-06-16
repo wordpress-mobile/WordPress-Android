@@ -119,6 +119,7 @@ public class StatsTable {
 
         //Check if the response document from the server is less than 1.8MB. getBytes uses UTF-8 on Android.
         if (jsonResponse.getBytes().length > MAX_RESPONSE_LEN) {
+            AppLog.w(AppLog.T.STATS, "Stats JSON response length > max allowed length of 1.8MB. Current response will not be stored in cache.");
             return;
         }
 
