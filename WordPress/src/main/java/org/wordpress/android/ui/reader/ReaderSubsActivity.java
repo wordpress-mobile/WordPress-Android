@@ -1,14 +1,12 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -57,11 +55,10 @@ import de.greenrobot.event.EventBus;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
- * followed tags, popular tags, followed blogs, and recommended blogs
+ * followed tags, followed blogs, and recommended blogs
  */
 public class ReaderSubsActivity extends ActionBarActivity
-                                implements ReaderTagAdapter.TagDeletedListener,
-                                           ActionBar.TabListener {
+                                implements ReaderTagAdapter.TagDeletedListener {
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
@@ -91,6 +88,14 @@ public class ReaderSubsActivity extends ActionBarActivity
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        int normalColor = getResources().getColor(R.color.blue_light);
+        int selectedColor = getResources().getColor(R.color.white);
+        tabLayout.setTabTextColors(normalColor, selectedColor);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setupWithViewPager(mViewPager);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -101,10 +106,6 @@ public class ReaderSubsActivity extends ActionBarActivity
         });
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
-        tabStrip.setTabIndicatorColorResource(R.color.tab_indicator);
-        tabStrip.setTextColor(getResources().getColor(R.color.tab_text_selected));
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -132,7 +133,7 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         // remember which page the user last viewed - note this listener must be assigned
         // after we've already called restorePreviousPage()
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
@@ -479,24 +480,6 @@ public class ReaderSubsActivity extends ActionBarActivity
         }
     }
 
-    /*
-     * Note: Make sure we don't mix android.app.FragmentTransaction with support Fragment.
-     * As long as the android.app.FragmentTransaction passed to the tab handlers isn't used, we should be fine.
-     * If at some point we do want to make use of the transaction, the solution suggested here
-     * http://stackoverflow.com/a/14685927/1673548  would work.
-     */
-    @Override
-    public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) { }
-
-    @Override
-    public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) { }
-
-
     private class SubsPageAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments;
 
@@ -507,23 +490,16 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         @Override
         public CharSequence getPageTitle(int position) {
-            final String title;
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    title = getString(R.string.reader_page_followed_tags);
-                    break;
+                    return getString(R.string.reader_page_followed_tags);
                 case TAB_IDX_RECOMMENDED_BLOGS:
-                    title = getString(R.string.reader_page_recommended_blogs);
-                    break;
+                    return getString(R.string.reader_page_recommended_blogs);
                 case TAB_IDX_FOLLOWED_BLOGS:
-                    title = getString(R.string.reader_page_followed_blogs);
-                    break;
+                    return getString(R.string.reader_page_followed_blogs);
                 default:
                     return super.getPageTitle(position);
             }
-
-            // force titles to two lines by replacing the first space with a new line
-            return title.replaceFirst(" ", "\n");
         }
 
         @Override
