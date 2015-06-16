@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -31,8 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.cocosw.undobar.UndoBarController;
-
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -661,7 +660,6 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    hideUndoBar();
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
                 }
             }
@@ -676,25 +674,26 @@ public class ReaderPostListFragment extends Fragment
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
 
-        // show the undo bar enabling the user to undo the block
-        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+        // show the undo snackbar enabling the user to undo the block
+        View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
-            public void onUndo(Parcelable parcelable) {
+            public void onClick(View v) {
                 ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 refreshPosts();
             }
         };
-        new UndoBarController.UndoBar(getActivity())
-                .message(getString(R.string.reader_toast_blog_blocked))
-                .listener(undoListener)
-                .translucent(true)
+        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener)
                 .show();
 
-    }
-
-    private void hideUndoBar() {
-        if (isAdded()) {
-            UndoBarController.clear(getActivity());
+        // make sure the tag toolbar is correctly positioned once the snackbar goes away
+        if (shouldShowTagToolbar()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    positionTagToolbar();
+                }
+            }, Constants.SNACKBAR_LONG_DURATION_MS);
         }
     }
 
@@ -936,7 +935,6 @@ public class ReaderPostListFragment extends Fragment
 
         getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
-        hideUndoBar();
         showLoadingProgress(false);
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {

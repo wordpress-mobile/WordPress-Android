@@ -6,13 +6,15 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.cocosw.undobar.UndoBarController;
-
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.BlogPairId;
@@ -38,6 +40,7 @@ public class CommentsActivity extends ActionBarActivity
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private long mSelectedCommentId;
+    private boolean mSnackbarDidUndo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -251,45 +254,50 @@ public class CommentsActivity extends ActionBarActivity
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
 
-            new UndoBarController.UndoBar(this)
-                    .message(newStatus == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
-                    .listener(new UndoBarController.AdvancedUndoListener() {
+            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : getString(R.string.comment_spammed));
+            View.OnClickListener undoListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSnackbarDidUndo = true;
+                    getListFragment().setCommentIsModerating(comment.commentID, false);
+                    // On undo load from the db to show the comment again
+                    getListFragment().loadComments();
+                }
+            };
+
+            mSnackbarDidUndo = false;
+            Snackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, undoListener)
+                    .show();
+
+            // do the actual moderation once the undo bar has been hidden
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mSnackbarDidUndo) {
+                        return;
+                    }
+                    CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override
-                        public void onHide(Parcelable parcelable) {
-                            CommentActions.moderateComment(accountId, comment, newStatus,
-                                    new CommentActions.CommentActionListener() {
-                                @Override
-                                public void onActionResult(boolean succeeded) {
-                                    if (isFinishing() || !hasListFragment()) {
-                                        return;
-                                    }
+                        public void onActionResult(boolean succeeded) {
+                            if (isFinishing() || !hasListFragment()) {
+                                return;
+                            }
 
-                                    getListFragment().setCommentIsModerating(comment.commentID, false);
-
-                                    if (!succeeded) {
-                                        // show comment again upon error
-                                        getListFragment().loadComments();
-                                        ToastUtils.showToast(CommentsActivity.this,
-                                                R.string.error_moderate_comment,
-                                                ToastUtils.Duration.LONG
-                                        );
-                                    }
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onClear(Parcelable[] token) {
-                            //noop
-                        }
-
-                        @Override
-                        public void onUndo(Parcelable parcelable) {
                             getListFragment().setCommentIsModerating(comment.commentID, false);
-                            // On undo load from the db to show the comment again
-                            getListFragment().loadComments();
+
+                            if (!succeeded) {
+                                // show comment again upon error
+                                getListFragment().loadComments();
+                                ToastUtils.showToast(CommentsActivity.this,
+                                        R.string.error_moderate_comment,
+                                        ToastUtils.Duration.LONG
+                                );
+                            }
                         }
-                    }).show();
+                    });
+                }
+            }, Constants.SNACKBAR_LONG_DURATION_MS);
         }
     }
 
