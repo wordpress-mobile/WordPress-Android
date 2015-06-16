@@ -35,11 +35,4 @@ public class ReaderInterfaces {
         public void onDataLoaded(boolean isEmpty);
     }
 
-    /*
-     * used by post list & post list adapter when user asks to reblog a post
-     */
-    public interface RequestReblogListener {
-        public void onRequestReblog(ReaderPost post, View sourceView);
-    }
-
 }

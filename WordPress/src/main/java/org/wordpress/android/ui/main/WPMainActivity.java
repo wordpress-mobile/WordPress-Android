@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -268,7 +267,7 @@ public class WPMainActivity extends Activity
                         (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
                 CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                         NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
-                NotificationsUtils.moderateCommentForNote(note, status, this);
+                NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
@@ -288,7 +287,6 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.READER_SUBS:
-            case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment readerFragment = getReaderListFragment();
                 if (readerFragment != null) {
                     readerFragment.onActivityResult(requestCode, resultCode, data);
@@ -313,14 +311,6 @@ public class WPMainActivity extends Activity
             case RequestCodes.NOTE_DETAIL:
                 if (resultCode == RESULT_OK && data != null) {
                     moderateCommentOnActivityResult(data);
-                }
-                break;
-            case RequestCodes.PICTURE_LIBRARY:
-                FragmentManager fm = getFragmentManager();
-                Fragment addFragment = fm.findFragmentByTag(MySiteFragment.ADD_MEDIA_FRAGMENT_TAG);
-                if (addFragment != null && data != null) {
-                    ToastUtils.showToast(this, R.string.image_added);
-                    addFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.SITE_PICKER:

@@ -351,6 +351,7 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
+            mTagsChanged = true;
             mLastAddedTagName = tag.getTagName();
             // make sure addition is reflected on followed tags
             getPageAdapter().refreshFollowedTagFragment();

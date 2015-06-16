@@ -22,9 +22,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.VolleyUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ReaderPostActions {
 
     private ReaderPostActions() {
@@ -80,56 +77,6 @@ public class ReaderPostActions {
 
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
         return true;
-    }
-
-    /*
-     * reblogs the passed post to the passed destination with optional comment
-     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/reblogs/new/
-     */
-    public static void reblogPost(final ReaderPost post,
-                                  long destinationBlogId,
-                                  final String optionalComment,
-                                  final ActionListener actionListener) {
-        if (post == null) {
-            if (actionListener != null) {
-                actionListener.onActionResult(false);
-            }
-            return;
-        }
-
-        Map<String, String> params = new HashMap<>();
-        params.put("destination_site_id", Long.toString(destinationBlogId));
-        if (!TextUtils.isEmpty(optionalComment)) {
-            params.put("note", optionalComment);
-        }
-
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                boolean isReblogged = (jsonObject != null && JSONUtils.getBool(jsonObject, "is_reblogged"));
-                if (isReblogged) {
-                    ReaderPostTable.setPostReblogged(post, true);
-                }
-                if (actionListener != null) {
-                    actionListener.onActionResult(isReblogged);
-                }
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
-                }
-
-            }
-        };
-
-        String path = "sites/" + post.blogId
-                    + "/posts/" + post.postId
-                    + "/reblogs/new";
-        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
     /*

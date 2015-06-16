@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -262,7 +261,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * animate in/out the layout containing the reblog/comment/like icons
+     * animate in/out the layout containing the comment/like icons
      */
     private void showIconBar(boolean show) {
         if (isAdded() && canShowIconBar()) {
@@ -278,9 +277,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null || mPost.isExternal || mIsLoggedOutReader) {
             return false;
         }
-        return (mPost.isLikesEnabled
-                || mPost.canReblog()
-                || mPost.isCommentsOpen);
+        return (mPost.isLikesEnabled || mPost.isCommentsOpen);
     }
 
     @Override
@@ -389,39 +386,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, actionListener)) {
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         }
-    }
-
-    /*
-     * called when user chooses to reblog the post
-     */
-    private void reblogPost() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        if (mPost.isRebloggedByCurrentUser) {
-            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_already_reblogged);
-            return;
-        }
-
-        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-        ReaderAnim.animateReblogButton(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), mPost, imgBtnReblog);
-    }
-
-    /*
-     * called after the post has been reblogged
-     */
-    void doPostReblogged() {
-        if (!isAdded()) {
-            return;
-        }
-
-        // get the post again since reblog status has changed
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
-
-        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-        imgBtnReblog.setSelected(mPost != null && mPost.isRebloggedByCurrentUser);
     }
 
     /*
@@ -680,7 +644,6 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtBlogName;
         TextView txtDateAndAuthor;
 
-        ImageView imgBtnReblog;
         ImageView imgMore;
 
         ReaderFollowButton followButton;
@@ -717,7 +680,6 @@ public class ReaderPostDetailFragment extends Fragment
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
-            imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
             followButton = (ReaderFollowButton) container.findViewById(R.id.follow_button);
@@ -803,23 +765,6 @@ public class ReaderPostDetailFragment extends Fragment
                         ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
                     }
                 });
-            }
-
-            // enable reblogging wp posts
-            if (mPost.canReblog() && !mIsLoggedOutReader) {
-                imgBtnReblog.setVisibility(View.VISIBLE);
-                imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
-                imgBtnReblog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        reblogPost();
-                    }
-                });
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
-                }
-            } else {
-                imgBtnReblog.setVisibility(View.INVISIBLE);
             }
 
             // enable blocking the associated blog

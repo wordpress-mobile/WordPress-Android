@@ -7,4 +7,4 @@
     android:id="@+id/action_bar_spinner"
     style="?android:actionDropDownStyle"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/toolbar_height" />
+    android:layout_height="match_parent" />

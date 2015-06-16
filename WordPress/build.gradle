@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.1"
-        versionCode 187
+        versionName "4.2-rc-1"
+        versionCode 188
         minSdkVersion 14
         targetSdkVersion 22
 
@@ -83,7 +83,6 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.helpshift:android-aar:3.8.0'
     compile 'commons-lang:commons-lang:2.6'
-    compile 'com.cocosw:undobar:1.8.1'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile ('com.getbase:floatingactionbutton:1.9.0') {
         exclude module: 'support-annotations'
