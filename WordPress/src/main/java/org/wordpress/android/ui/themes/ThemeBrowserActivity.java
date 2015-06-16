@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,7 +47,7 @@ import java.util.ArrayList;
 /**
  * The theme browser.
  */
-public class ThemeBrowserActivity extends ActionBarActivity implements
+public class ThemeBrowserActivity extends AppCompatActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback {
 
     private ThemePagerAdapter mThemePagerAdapter;

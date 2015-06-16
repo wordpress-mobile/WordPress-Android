@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -36,14 +36,14 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
 
         if (context instanceof Activity) {
-            // For ActionBarActivity subclasses, we need to pull the title from the Toolbar
+            // For AppCompatActivity subclasses, we need to pull the title from the Toolbar
             CharSequence title = null;
-            if (context instanceof ActionBarActivity && ((ActionBarActivity) context).getSupportActionBar() != null) {
-                title = ((ActionBarActivity) context).getSupportActionBar().getTitle();
+            if (context instanceof AppCompatActivity && ((AppCompatActivity) context).getSupportActionBar() != null) {
+                title = ((AppCompatActivity) context).getSupportActionBar().getTitle();
             }
 
             if (title == null) {
-                // Not an ActionBarActivity, or getSupportActionBar().getTitle() returned null.
+                // Not an AppCompatActivity, or getSupportActionBar().getTitle() returned null.
                 // Try to read the title from the Activity
                 title = ((Activity)context).getTitle();
             }

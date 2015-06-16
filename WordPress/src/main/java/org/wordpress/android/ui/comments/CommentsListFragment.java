@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -358,8 +358,8 @@ public class CommentsListFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // enable CAB if it's not already enabled
                 if (mActionMode == null) {
-                    if (getActivity() instanceof ActionBarActivity) {
-                        ((ActionBarActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+                    if (getActivity() instanceof AppCompatActivity) {
+                        ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
                         getCommentAdapter().setEnableSelection(true);
                         getCommentAdapter().setItemSelected(position, true, view);
                     }

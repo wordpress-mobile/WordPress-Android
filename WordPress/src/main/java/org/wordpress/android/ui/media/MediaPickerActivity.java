@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,7 +47,7 @@ import java.util.List;
  *  - Use DEVICE_VIDEO_MEDIA_SOURCES_KEY with a {@link java.util.List} of {@link org.wordpress.mediapicker.source.MediaSource}'s to pass video sources via the Intent
  */
 
-public class MediaPickerActivity extends ActionBarActivity
+public class MediaPickerActivity extends AppCompatActivity
                               implements MediaPickerFragment.OnMediaSelected {
     /**
      * Request code for the {@link android.content.Intent} to start media selection.

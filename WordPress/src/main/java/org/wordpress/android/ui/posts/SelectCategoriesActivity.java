@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class SelectCategoriesActivity extends ActionBarActivity {
+public class SelectCategoriesActivity extends AppCompatActivity {
     String finalResult = "";
     private final Handler mHandler = new Handler();
     private Blog blog;
