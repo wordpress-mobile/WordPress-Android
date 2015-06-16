@@ -36,7 +36,7 @@ import org.wordpress.android.util.AniUtils.AnimationEndListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPMainViewPager;
+import org.wordpress.android.widgets.WPViewPager;
 
 import javax.annotation.Nonnull;
 
@@ -52,7 +52,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
                    ReaderInterfaces.AutoHideToolbarListener {
 
     private Toolbar mToolbar;
-    private WPMainViewPager mViewPager;
+    private WPViewPager mViewPager;
     private ProgressBar mProgress;
 
     private ReaderTag mCurrentTag;
@@ -85,7 +85,7 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mViewPager = (WPMainViewPager) findViewById(R.id.viewpager);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
 
         final String title;

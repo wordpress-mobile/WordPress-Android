@@ -17,7 +17,7 @@
         android:background="@color/tab_background"
         app:tabIndicatorColor="@color/tab_indicator" />
 
-    <android.support.v4.view.ViewPager
+    <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/theme_browser_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
