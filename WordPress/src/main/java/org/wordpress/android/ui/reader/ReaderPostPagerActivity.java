@@ -71,12 +71,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         setContentView(R.layout.reader_activity_post_pager);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -166,6 +160,15 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     public void finish() {
         super.finish();
         ActivityLauncher.slideOutToRight(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean hasPagerAdapter() {
