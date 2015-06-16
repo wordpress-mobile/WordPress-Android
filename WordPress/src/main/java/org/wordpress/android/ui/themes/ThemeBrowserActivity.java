@@ -40,6 +40,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
+import org.wordpress.android.widgets.WPViewPager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback {
 
     private ThemePagerAdapter mThemePagerAdapter;
-    private ViewPager mViewPager;
+    private WPViewPager mViewPager;
     private TabLayout mTabLayout;
     private ThemeSearchFragment mSearchFragment;
     private ThemePreviewFragment mPreviewFragment;
@@ -89,7 +90,7 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
 
         mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
 
-        mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
+        mViewPager = (WPViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);

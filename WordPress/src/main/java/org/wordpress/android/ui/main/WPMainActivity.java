@@ -42,7 +42,7 @@ import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPMainViewPager;
+import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
 
@@ -52,7 +52,7 @@ import de.greenrobot.event.EventBus;
 public class WPMainActivity extends Activity
     implements MediaAddFragment.MediaAddFragmentCallback, Bucket.Listener<Note> {
 
-    private WPMainViewPager mViewPager;
+    private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
 
@@ -73,7 +73,7 @@ public class WPMainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
