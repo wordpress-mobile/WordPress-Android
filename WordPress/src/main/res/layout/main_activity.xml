@@ -15,7 +15,7 @@
         android:paddingLeft="@dimen/tabstrip_padding"
         android:paddingRight="@dimen/tabstrip_padding" />
 
-    <org.wordpress.android.widgets.WPMainViewPager
+    <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -45,6 +45,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -64,7 +65,7 @@ public class ReaderSubsActivity extends ActionBarActivity
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
-    private ViewPager mViewPager;
+    private WPViewPager mViewPager;
     private SubsPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
@@ -87,7 +88,7 @@ public class ReaderSubsActivity extends ActionBarActivity
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
