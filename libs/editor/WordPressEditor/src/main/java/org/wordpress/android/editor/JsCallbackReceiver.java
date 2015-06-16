@@ -26,6 +26,8 @@ public class JsCallbackReceiver {
 
     private static final String CALLBACK_LOG = "callback-log";
 
+    private static final String CALLBACK_RESPONSE_STRING = "callback-response-string";
+
     private final OnJsEditorStateChangedListener mListener;
 
     private Set<String> mPreviousStyleSet = new HashSet<>();
@@ -85,6 +87,11 @@ public class JsCallbackReceiver {
             case CALLBACK_LOG:
                 // Strip 'msg=' from beginning of string
                 AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params.substring(4));
+                break;
+            case CALLBACK_RESPONSE_STRING:
+                AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
+                Set<String> responseKeyValueSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
+                mListener.onGetHtmlResponse(Utils.buildMapFromKeyValuePairs(responseKeyValueSet));
                 break;
             default:
                 AppLog.d(AppLog.T.EDITOR, "Unhandled callback: " + callbackId + ":" + params);

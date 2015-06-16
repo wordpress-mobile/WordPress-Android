@@ -19,7 +19,7 @@ import static org.robolectric.shadows.ShadowLog.LogItem;
 
 @Config(emulateSdk = 18)
 @RunWith(RobolectricTestRunner.class)
-public class JsCallbackHandlerTest {
+public class JsCallbackReceiverTest {
     private final static String EDITOR_LOG_TAG = "WordPress-" + AppLog.T.EDITOR.toString();
 
     private JsCallbackReceiver mJsCallbackReceiver;
@@ -63,6 +63,9 @@ public class JsCallbackHandlerTest {
         assertNotLogged("Unhandled callback");
 
         mJsCallbackReceiver.executeCallback("callback-log", "arguments");
+        assertNotLogged("Unhandled callback");
+
+        mJsCallbackReceiver.executeCallback("callback-response-string", "arguments");
         assertNotLogged("Unhandled callback");
     }
 

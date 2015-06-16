@@ -13,12 +13,19 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.wordpress.android.editor.Utils.buildMapFromKeyValuePairs;
+import static org.wordpress.android.editor.Utils.escapeHtml;
 import static org.wordpress.android.editor.Utils.getChangeMapFromSets;
 import static org.wordpress.android.editor.Utils.splitDelimitedString;
 
 @Config(emulateSdk = 18)
 @RunWith(RobolectricTestRunner.class)
 public class UtilsTest {
+
+    @Test
+    public void testEscapeHtml() {
+        // Test null
+        assertEquals(null, escapeHtml(null));
+    }
 
     @Test
     public void testSplitDelimitedString() {
@@ -56,6 +63,17 @@ public class UtilsTest {
 
         expectedMap.clear();
         expectedMap.put("name", "example");
+
+        assertEquals(expectedMap, buildMapFromKeyValuePairs(keyValueSet));
+
+        // Test multiple '=' (should split at the first `=` and treat the rest of them as part of the string)
+        keyValueSet.clear();
+        keyValueSet.add("id=test");
+        keyValueSet.add("contents=some text\n<a href=\"http://wordpress.com\">WordPress</a>");
+
+        expectedMap.clear();
+        expectedMap.put("id", "test");
+        expectedMap.put("contents", "some text\n<a href=\"http://wordpress.com\">WordPress</a>");
 
         assertEquals(expectedMap, buildMapFromKeyValuePairs(keyValueSet));
 
