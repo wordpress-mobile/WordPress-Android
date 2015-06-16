@@ -13,6 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:paddingLeft="@dimen/tabstrip_icon_spacing"
+        android:paddingRight="@dimen/tabstrip_icon_spacing"
         tools:src="@drawable/main_tab_notifications" />
 
     <View

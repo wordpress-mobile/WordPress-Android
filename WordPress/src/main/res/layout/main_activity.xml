@@ -13,8 +13,6 @@
         android:layout_height="wrap_content"
         android:background="@color/tab_background"
         android:elevation="@dimen/tabs_elevation"
-        android:paddingLeft="@dimen/tabstrip_padding"
-        android:paddingRight="@dimen/tabstrip_padding"
         app:tabIndicatorColor="@color/tab_indicator" />
 
     <org.wordpress.android.widgets.WPViewPager
