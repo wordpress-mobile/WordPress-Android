@@ -169,7 +169,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_edit_post);
+        setContentView(R.layout.new_edit_post_activity);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -358,13 +358,15 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         inflater.inflate(R.menu.edit_post, menu);
 
         mTags = (SuggestionAutoCompleteText) findViewById(R.id.tags);
-        mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
+        if (mTags != null) {
+            mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
-        remoteBlogId = WordPress.getCurrentRemoteBlogId();
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
-        mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
-        if (mTagSuggestionAdapter != null) {
-            mTags.setAdapter(mTagSuggestionAdapter);
+            remoteBlogId = WordPress.getCurrentRemoteBlogId();
+            mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
+            mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
+            if (mTagSuggestionAdapter != null) {
+                mTags.setAdapter(mTagSuggestionAdapter);
+            }
         }
 
         return true;

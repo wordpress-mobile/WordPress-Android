@@ -1,18 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="org.wordpress.android.editor.EditorFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.wordpress.android.editor.EditorFragment">
 
     <include
         layout="@layout/editor_webview"
-        android:id="@+id/webview" />
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/format_bar"/>
 
     <LinearLayout
         android:id="@+id/format_bar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/format_bar_height"
         android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:background="@android:color/white"
         android:orientation="vertical">
 
@@ -126,4 +131,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

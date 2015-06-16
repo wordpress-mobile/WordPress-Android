@@ -32,6 +32,7 @@ import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
@@ -47,7 +48,6 @@ import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -384,16 +384,7 @@ public class WordPress extends Application {
      */
     public static Blog getCurrentBlog() {
         if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
-            // attempt to restore the last active blog
-            if (setCurrentBlogToLastActive() == null) {
-                // fallback to just using the first blog
-                List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-                if (accounts.size() > 0) {
-                    int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                    setCurrentBlog(id);
-                    wpDB.updateLastBlogId(id);
-                }
-            }
+            attemptToRestoreLastActiveBlog();
         }
 
         return currentBlog;
@@ -440,11 +431,17 @@ public class WordPress extends Application {
      * Set the blog with the specified id as the current blog.
      *
      * @param id id of the blog to set as current
-     * @return the current blog
      */
-    public static Blog setCurrentBlog(int id) {
-        currentBlog = wpDB.instantiateBlogByLocalId(id);
-        return currentBlog;
+    public static void setCurrentBlog(int id) {
+        currentBlog = getBlog(id);
+    }
+
+    public static void setCurrentBlogAndSetVisible(int id) {
+        setCurrentBlog(id);
+
+        if (currentBlog != null && currentBlog.isHidden()) {
+            wpDB.setDotComBlogsVisibility(id, true);
+        }
     }
 
     /**
@@ -630,6 +627,18 @@ public class WordPress extends Application {
         HttpResponseCache cache = HttpResponseCache.getInstalled();
         if (cache != null) {
             cache.flush();
+        }
+    }
+
+    private static void attemptToRestoreLastActiveBlog() {
+        if (setCurrentBlogToLastActive() == null) {
+            // fallback to just using the first blog
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
+            if (accounts.size() > 0) {
+                int id = Integer.valueOf(accounts.get(0).get("id").toString());
+                setCurrentBlog(id);
+                wpDB.updateLastBlogId(id);
+            }
         }
     }
 

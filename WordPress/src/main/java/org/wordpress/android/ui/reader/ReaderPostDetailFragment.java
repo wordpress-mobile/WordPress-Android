@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -39,6 +38,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -261,11 +261,11 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * animate in/out the layout containing the reblog/comment/like icons
+     * animate in/out the layout containing the comment/like icons
      */
     private void showIconBar(boolean show) {
         if (isAdded() && canShowIconBar()) {
-            ReaderAnim.animateBottomBar(mLayoutIcons, show);
+            AniUtils.animateBottomBar(mLayoutIcons, show);
         }
     }
 
@@ -277,9 +277,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null || mPost.isExternal || mIsLoggedOutReader) {
             return false;
         }
-        return (mPost.isLikesEnabled
-                || mPost.canReblog()
-                || mPost.isCommentsOpen);
+        return (mPost.isLikesEnabled || mPost.isCommentsOpen);
     }
 
     @Override
@@ -388,39 +386,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, actionListener)) {
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         }
-    }
-
-    /*
-     * called when user chooses to reblog the post
-     */
-    private void reblogPost() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        if (mPost.isRebloggedByCurrentUser) {
-            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_already_reblogged);
-            return;
-        }
-
-        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-        ReaderAnim.animateReblogButton(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), mPost, imgBtnReblog);
-    }
-
-    /*
-     * called after the post has been reblogged
-     */
-    void doPostReblogged() {
-        if (!isAdded()) {
-            return;
-        }
-
-        // get the post again since reblog status has changed
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
-
-        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-        imgBtnReblog.setSelected(mPost != null && mPost.isRebloggedByCurrentUser);
     }
 
     /*
@@ -555,7 +520,7 @@ public class ReaderPostDetailFragment extends Fragment
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
             if (mLayoutLikes.getVisibility() != View.GONE) {
-                ReaderAnim.fadeOut(mLayoutLikes, ReaderAnim.Duration.SHORT);
+                AniUtils.fadeOut(mLayoutLikes, AniUtils.Duration.SHORT);
             }
             return;
         }
@@ -569,7 +534,7 @@ public class ReaderPostDetailFragment extends Fragment
         });
 
         if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
+            AniUtils.fadeIn(mLayoutLikes, AniUtils.Duration.SHORT);
         }
 
         mLikingUsersView.showLikingUsers(mPost);
@@ -679,7 +644,6 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtBlogName;
         TextView txtDateAndAuthor;
 
-        ImageView imgBtnReblog;
         ImageView imgMore;
 
         ReaderFollowButton followButton;
@@ -716,7 +680,6 @@ public class ReaderPostDetailFragment extends Fragment
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
-            imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
             followButton = (ReaderFollowButton) container.findViewById(R.id.follow_button);
@@ -802,23 +765,6 @@ public class ReaderPostDetailFragment extends Fragment
                         ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
                     }
                 });
-            }
-
-            // enable reblogging wp posts
-            if (mPost.canReblog() && !mIsLoggedOutReader) {
-                imgBtnReblog.setVisibility(View.VISIBLE);
-                imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
-                imgBtnReblog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        reblogPost();
-                    }
-                });
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
-                }
-            } else {
-                imgBtnReblog.setVisibility(View.INVISIBLE);
             }
 
             // enable blocking the associated blog

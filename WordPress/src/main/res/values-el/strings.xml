@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="media_details_file_type">Τύπος αρχείου:</string>
+	<string name="media_details_file_name">Όνομα αρχείου:</string>
+	<string name="media_details_file_url">URL αρχείου:</string>
+	<string name="media_details_dimensions">Διαστάσεις:</string>
+	<string name="device">Συσκευή</string>
+	<string name="language">Γλώσσα</string>
+	<string name="pages_fetching">Ανάκτηση σελίδων...</string>
 	<string name="comments_fetching">Ανάκτηση σχολίων...</string>
-	<string name="pages_fetching">Ανάκτηση σελίλδων...</string>
 	<string name="toast_err_post_uploading">Αδύνατο το άνοιγμα το άρθρου όσο αυτό φορτώνει</string>
 	<string name="stats_view_search_terms">Όροι αναζήτησης</string>
 	<string name="stats_empty_search_terms">Δεν καταχωρήθηκαν όροι αναζήτησης</string>
@@ -14,21 +20,32 @@
 	<string name="stats_empty_search_terms_desc">Μάθετε περισσότερα για την κίνηση στην αναζήτηση σας εξετάζοντας τους όρους αναζήτησης που χρησιμοποίησαν οι χρήστες για να βρούν το site σας.</string>
 	<string name="reader_empty_posts_request_failed">Αδυναμία φόρτωσης των άρθρων</string>
 	<string name="publisher">Εκδότης:</string>
+	<string name="delete_sure_page">Διαγραφή της σελίδας</string>
+	<string name="confirm_delete_multi_media">Διαγραφή επιλεγμένων αντικειμένων;</string>
+	<string name="confirm_delete_media">Διαγραφή επιλεγμένου αντικειμένου;</string>
+	<string name="cab_selected">%d επιλεγμένα</string>
+	<string name="reader_label_comment_count_multi">%,d σχόλια</string>
+	<string name="reader_title_photo_viewer">%1$d από %2$d</string>
+	<string name="older_two_days">Παλιότερο από 2 μέρες</string>
+	<string name="older_last_week">Παλιότερο από 1 βδομάδα</string>
+	<string name="comment">Σχόλιο</string>
+	<string name="reader_likes_multi_short">%,d άτομα</string>
+	<string name="reader_title_comments">Σχόλια</string>
 	<string name="contact_us">Επικοινωνήστε μαζί μας</string>
-	<string name="contact_us_pref_summary">Βρείτε βοήθεια από την υποστήριξη της Automattic</string>
 	<string name="hs__username_blank_error">Συμπληρώστε ένα έγκυρο όνομα</string>
 	<string name="hs__invalid_email_error">Εισάγετε μία έγκυρη διεύθυνση email</string>
 	<string name="hs__conversation_detail_error">Περιγράψτε το πρόβλημα που βλέπετε</string>
 	<string name="add_location">Προσθέστε περιοχή</string>
 	<string name="current_location">Τωρινή τοποθεσία</string>
+	<string name="your_signature">Η υπογραφή σας:</string>
 	<string name="search_location">Αναζήτηση</string>
 	<string name="edit_location">Επεξεργασία</string>
 	<string name="preference_privacy">Ιδιωτικότητα </string>
 	<string name="preference_send_usage_stats">Αποστολή στατιστικών</string>
 	<string name="preference_send_usage_stats_summary">Αυτόματη αποστολή στατιστικών στοιχείων χρήσης ώστε να μας βοηθήσετε να βελτιώσουμε το WordPress για το Android</string>
 	<string name="reader_hint_reblog_comment">Προσθέστε τις σκέψεις σας (προαιρετικό)</string>
-	<string name="sign_in_again">Συνδεθείτε ξανά</string>
 	<string name="reader_title_blog_preview">Προεπισκόπηση Ιστολογίου</string>
+	<string name="saving">Αποθήκευση...</string>
 	<string name="help_center">Κέντρο βοήθειας</string>
 	<string name="help">Βοήθεια</string>
 	<string name="forgot_password">Έχασες τον κωδικό σου;</string>
@@ -36,10 +53,10 @@
 	<string name="forums">Συζητήσεις</string>
 	<string name="out_of_memory">Η μνήμη της συσκευής εξαντλήθηκε</string>
 	<string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
-	<string name="could_not_remove_account">Η αφαίρεση του blog δεν ήταν δυνατή</string>
-	<string name="mnu_comment_edit">Αλλαγή</string>
+	<string name="comments_empty_list">Δεν υπάρχουν σχόλια</string>
+	<string name="stats_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
+	<string name="theme_no_search_result_found">Δεν βρέθηκαν αποτελέσματα</string>
 	<string name="learn_more">Μάθετε περισσότερα</string>
-	<string name="show_all">Εμφάνιση όλων</string>
 	<string name="category_name">Όνομα κατηγορίας</string>
 	<string name="preview_page">Προεπισκόπιση σελίδας</string>
 	<string name="delete_page">Διαγραφή σελίδας</string>
@@ -69,7 +86,6 @@
 	<string name="select_time">Επιλέξτε ώρα</string>
 	<string name="pick_photo">Επιλέξτε εικόνα</string>
 	<string name="account_two_step_auth_enabled">Αυτός ο λογαριασμός έχει ενεργοποιημένη τη διαπίστευση σε δύο στάδια. Επισκεφθείτε τις ρυθμίσεις ασφάλειάς σας στο WordPress.com για να παράξετε ένα κωδικό ειδικά για την εφαρμογή.</string>
-	<string name="add_self_hosted_blog">Προσθέστε ένα ιστότοπο που φιλοξενείτε μόνοι σας</string>
 	<string name="pick_video">Διάλεξε Βίντεο</string>
 	<string name="reader_toast_err_get_post">Δεν είναι δυνατή η ανάκτηση αυτού του άρθρου.</string>
 	<string name="validating_user_data">Επικύρωση των στοιχείων του χρήστη.</string>
@@ -86,7 +102,6 @@
 	<string name="jetpack_message">Το Jetpack plugin είναι αναγκαίο για την συλλογή στατιστικών στοιχείων. Θέλετε να εγκαταστήσετε το Jetpack;</string>
 	<string name="jetpack_not_found">Δεν βρέθηκε το Jetpack plugin</string>
 	<string name="reader_btn_share">Μοιράσου</string>
-	<string name="reader_btn_reblog">Αναμετάδοση</string>
 	<string name="reader_btn_follow">Ακολουθήστε</string>
 	<string name="reader_btn_unfollow">Ακολουθούν</string>
 	<string name="reader_hint_comment_on_post">Προσθήκη δικού σας σχόλιου</string>
@@ -155,7 +170,6 @@
 	<string name="stats_timeframe_days">Ημέρες</string>
 	<string name="stats_timeframe_weeks">Εβδομάδες</string>
 	<string name="stats_timeframe_months">Μήνες</string>
-	<string name="stats_summary">Σύνοψη</string>
 	<string name="stats_entry_country">Χώρα</string>
 	<string name="stats_entry_posts_and_pages">Τίτλος</string>
 	<string name="stats_entry_tags_and_categories">Θέμα</string>
@@ -165,8 +179,6 @@
 	<string name="stats_totals_clicks">Κλικ</string>
 	<string name="stats_totals_plays">Αναπαραγωγές</string>
 	<string name="stats_totals_comments">Σχόλια</string>
-	<string name="stats_totals_visitors">Επισκέπτες</string>
-	<string name="stats_visitors_and_views_header_today">Σήμερα</string>
 	<string name="menu_search">Αναζήτηση</string>
 	<string name="passcode_manage">Διαχείριση κλειδώματος PIN</string>
 	<string name="passcode_enter_passcode">Πληκτρολογήστε το PIN σας</string>
@@ -178,9 +190,7 @@
 	<string name="passcode_turn_off">Απενεργοποιήστε το κλείδωμα PIN</string>
 	<string name="passcode_turn_on">Ενεργοποιήστε το κλείδωμα PIN</string>
 	<string name="upload">Ανέβασμα</string>
-	<string name="manage">Διαχείριση</string>
 	<string name="sign_in">Συνδεθείτε</string>
-	<string name="sign_out">Αποσυνδεθείτε</string>
 	<string name="notifications">Ενημερώσεις</string>
 	<string name="manage_notifications">Διαχείριση ενημερώσεων</string>
 	<string name="enable_notifications">Ενεργοποίηση ενημερώσεων</string>
@@ -192,7 +202,6 @@
 	<string name="note_reply_successful">Η απάντηση δημοσιεύτηκε</string>
 	<string name="new_notifications">%d νέες ενημερώσεις</string>
 	<string name="more_notifications">και %d ακόμη.</string>
-	<string name="tooltip_follow">Ακολουθήστε ή σταματήστε να ακολουθείτε αυτό το ιστολόγιο</string>
 	<string name="loading">Φορτώνει...</string>
 	<string name="post_signature">Υπογραφή άρθρου</string>
 	<string name="add_tagline">Προσθήκη υπογραφής στα νέα άρθρα</string>
@@ -224,7 +233,6 @@
 	<string name="scheduled">Προγραμματισμένο</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Αναρτήθηκε από το WordPress για το Android</string>
-	<string name="uploading">Γίνεται ανέβασμα</string>
 	<string name="version">Έκδοση</string>
 	<string name="tos">Όροι Χρήσης</string>
 	<string name="app_title">WordPress για Android</string>
@@ -233,7 +241,6 @@
 	<string name="image_alignment">Στοίχιση</string>
 	<string name="refresh">Ανανέωση</string>
 	<string name="untitled">Χωρίς τίτλο</string>
-	<string name="edit">Επεξεργασία</string>
 	<string name="post_id">Άρθρο</string>
 	<string name="page_id">Σελίδα</string>
 	<string name="post_password">Κωδικός (προαιρετικός)</string>
@@ -250,7 +257,6 @@
 	<string name="title">Τίτλος</string>
 	<string name="tags_separate_with_commas">Ετικέτες (ξεχωριστές ετικέτες με κόμματα)</string>
 	<string name="categories">Κατηγορίες</string>
-	<string name="tab_stats">Στατιστικά</string>
 	<string name="notification_vibrate">Δόνηση</string>
 	<string name="notification_sound">Αναπαραγωγή ήχου ειδοποιήσης</string>
 	<string name="notification_blink">Να αναβοσβήνει η ένδειξη ενημερώσεων</string>

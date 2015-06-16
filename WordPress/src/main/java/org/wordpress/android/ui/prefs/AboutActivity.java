@@ -23,7 +23,7 @@ public class AboutActivity extends ActionBarActivity implements OnClickListener 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(R.layout.about);
+        setContentView(R.layout.about_activity);
 
         WPTextView version = (WPTextView) findViewById(R.id.about_version);
         version.setText(getString(R.string.version) + " " + WordPress.versionName);

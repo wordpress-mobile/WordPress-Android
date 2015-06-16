@@ -12,9 +12,11 @@
     <script src="wpload.js"></script>
     <script src="wpsave.js"></script>
     <script src="rangy-core.js"></script>
-    <script src="rangy-cssclassapplier.js"></script>
+    <script src="rangy-classapplier.js"></script>
+    <script src="rangy-highlighter.js"></script>
     <script src="rangy-selectionsaverestore.js"></script>
     <script src="rangy-serializer.js"></script>
+    <script src="rangy-textrange.js"></script>
     <script>
         // DRM: onLoad does not get called when offline, if there's remote content in the editor
         // (such as remote images).  We use the 'ready' event for this reason.
@@ -25,6 +27,7 @@
         });
     </script>
     <link rel="stylesheet" href="editor.css">
+    <link rel="stylesheet" href="editor-android.css">
   </head>
   <body>
       <div contenteditable="true" id="zss_field_title" class="field" nostyle>

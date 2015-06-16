@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.cocosw.undobar.UndoBarController;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
@@ -25,19 +23,19 @@ import com.simperium.client.BucketObjectMissingException;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 public class NotificationsListFragment extends Fragment
         implements Bucket.Listener<Note>,
@@ -301,88 +299,6 @@ public class NotificationsListFragment extends Fragment
         mRestoredScrollPosition = listPosition;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RequestCodes.NOTE_DETAIL && resultCode == Activity.RESULT_OK && data != null) {
-            if (SimperiumUtils.getNotesBucket() == null) return;
-
-            try {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra(NOTE_MODERATE_ID_EXTRA)));
-                CommentStatus commentStatus = CommentStatus.fromString(data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA));
-                moderateCommentForNote(note, commentStatus);
-            } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void moderateCommentForNote(final Note note, final CommentStatus newStatus) {
-        if (!isAdded()) return;
-
-        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
-            note.save();
-            setNoteIsModerating(note.getId(), true);
-            CommentActions.moderateCommentForNote(note, newStatus,
-                    new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(boolean succeeded) {
-                            if (!isAdded()) return;
-
-                            setNoteIsModerating(note.getId(), false);
-
-                            if (!succeeded) {
-                                note.setLocalStatus(null);
-                                note.save();
-                                ToastUtils.showToast(getActivity(),
-                                        R.string.error_moderate_comment,
-                                        ToastUtils.Duration.LONG
-                                );
-                            }
-                        }
-                    });
-        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
-            setNoteIsHidden(note.getId(), true);
-            // Show undo bar for trash or spam actions
-            new UndoBarController.UndoBar(getActivity())
-                    .message(newStatus == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
-                    .listener(new UndoBarController.AdvancedUndoListener() {
-                        @Override
-                        public void onHide(Parcelable parcelable) {
-                            // Deleted notifications in Simperium never come back, so we won't
-                            // make the request until the undo bar fades away
-                            CommentActions.moderateCommentForNote(note, newStatus,
-                                    new CommentActions.CommentActionListener() {
-                                        @Override
-                                        public void onActionResult(boolean succeeded) {
-                                            if (!isAdded()) return;
-
-                                            if (!succeeded) {
-                                                setNoteIsHidden(note.getId(), false);
-                                                ToastUtils.showToast(getActivity(),
-                                                        R.string.error_moderate_comment,
-                                                        ToastUtils.Duration.LONG
-                                                );
-                                            }
-                                        }
-                                    });
-                        }
-
-                        @Override
-                        public void onClear(@Nonnull Parcelable[] token) {
-                            //noop
-                        }
-
-                        @Override
-                        public void onUndo(Parcelable parcelable) {
-                            setNoteIsHidden(note.getId(), false);
-                        }
-                    }).show();
-        }
-    }
-
     /**
      * Simperium bucket listener methods
      */
@@ -426,4 +342,38 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NoteModerationStatusChanged event) {
+        setNoteIsModerating(event.mNoteId, event.mIsModerating);
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
+        setNoteIsHidden(event.mNoteId, event.mIsHidden);
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NoteModerationFailed event) {
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, Duration.LONG);
+        }
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
+    }
 }

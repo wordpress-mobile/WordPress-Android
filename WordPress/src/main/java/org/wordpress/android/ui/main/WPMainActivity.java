@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,11 +11,14 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -24,9 +26,11 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AppLog;
@@ -37,9 +41,10 @@ import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
-import org.wordpress.android.widgets.WPMainViewPager;
+import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
 
@@ -51,7 +56,7 @@ public class WPMainActivity extends Activity
         SlidingTabLayout.SingleTabClickListener,
         MediaAddFragment.MediaAddFragmentCallback,
         Bucket.Listener<Note> {
-    private WPMainViewPager mViewPager;
+    private WPViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private WPMainTabAdapter mTabAdapter;
 
@@ -70,9 +75,9 @@ public class WPMainActivity extends Activity
         setStatusBarColor();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
-        mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
@@ -87,6 +92,13 @@ public class WPMainActivity extends Activity
                            R.drawable.main_tab_me,
                            R.drawable.main_tab_notifications};
         mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
+
+        // content descriptions
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_MY_SITE, getString(R.string.tabbar_accessibility_label_my_site));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_READER, getString(R.string.reader));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_ME, getString(R.string.tabbar_accessibility_label_me));
+        mTabs.setContentDescription(WPMainTabAdapter.TAB_NOTIFS, getString(R.string.notifications));
+
         mTabs.setViewPager(mViewPager);
         mTabs.setOnSingleTabClickListener(this);
 
@@ -137,6 +149,24 @@ public class WPMainActivity extends Activity
      */
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
+
+        // Check for push authorization request
+        if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
+            Bundle extras = getIntent().getExtras();
+            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
+            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
+            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
+            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
+
+            long now = System.currentTimeMillis() / 1000;
+            if (expires > 0 && now > expires) {
+                // Show a toast if the user took too long to open the notification
+                ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+            } else {
+                NotificationsUtils.showPushAuthAlert(this, token, title, message);
+            }
+        }
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
@@ -246,6 +276,20 @@ public class WPMainActivity extends Activity
         }
     }
 
+    private void moderateCommentOnActivityResult(Intent data) {
+        try {
+            if (SimperiumUtils.getNotesBucket() != null) {
+                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
+                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                CommentStatus status = CommentStatus.fromString(data.getStringExtra(
+                        NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+                NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
+            }
+        } catch (BucketObjectMissingException e) {
+            AppLog.e(T.NOTIFS, e);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -259,7 +303,6 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.READER_SUBS:
-            case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment readerFragment = getReaderListFragment();
                 if (readerFragment != null) {
                     readerFragment.onActivityResult(requestCode, resultCode, data);
@@ -282,16 +325,8 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
-                if (getNotificationListFragment() != null) {
-                    getNotificationListFragment().onActivityResult(requestCode, resultCode, data);
-                }
-                break;
-            case RequestCodes.PICTURE_LIBRARY:
-                FragmentManager fm = getFragmentManager();
-                Fragment addFragment = fm.findFragmentByTag(MySiteFragment.ADD_MEDIA_FRAGMENT_TAG);
-                if (addFragment != null && data != null) {
-                    ToastUtils.showToast(this, R.string.image_added);
-                    addFragment.onActivityResult(requestCode, resultCode, data);
+                if (resultCode == RESULT_OK && data != null) {
+                    moderateCommentOnActivityResult(data);
                 }
                 break;
             case RequestCodes.SITE_PICKER:
@@ -310,6 +345,11 @@ public class WPMainActivity extends Activity
                             mySiteFragment.setBlog(WordPress.getCurrentBlog());
                         }
                     }
+                }
+                break;
+            case RequestCodes.ACCOUNT_SETTINGS:
+                if (resultCode == SettingsFragment.LANGUAGE_CHANGED) {
+                    resetFragments();
                 }
                 break;
         }

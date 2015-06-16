@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +39,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
+import org.wordpress.android.widgets.WPViewPager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback {
 
     private ThemePagerAdapter mThemePagerAdapter;
-    private ViewPager mViewPager;
+    private WPViewPager mViewPager;
     private SlidingTabLayout mTabLayout;
     private ThemeSearchFragment mSearchFragment;
     private ThemePreviewFragment mPreviewFragment;
@@ -89,7 +89,7 @@ public class ThemeBrowserActivity extends ActionBarActivity implements
 
         mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
 
-        mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
+        mViewPager = (WPViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
 
         mTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);

@@ -133,20 +133,26 @@
             android:theme="@style/CalypsoTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.posts.PostsActivity" />
+                android:value=".ui.posts.PostsListActivity" />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity
+        <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
+        <activity-alias
             android:name=".ui.posts.PostsActivity"
-            android:theme="@style/Calypso.NoActionBar" >
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
+        </activity-alias>
+        <activity
+            android:name=".ui.posts.PostsListActivity"
+            android:theme="@style/Calypso.NoActionBar">
         </activity>
         <activity
-            android:name=".ui.posts.PagesActivity"
+            android:name=".ui.posts.PagesListActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
@@ -229,11 +235,6 @@
             android:theme="@style/Calypso.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.reader.ReaderReblogActivity"
-            android:theme="@style/Calypso.NoActionBar"
-            android:label="@string/reader_title_reblog"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
             android:theme="@style/ReaderPhotoViewerTheme" />
 
@@ -276,20 +277,13 @@
         <!--  Passcode lock activities -->
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
-        <activity
-            android:name="org.wordpress.passcodelock.PasscodePreferencesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Holo.Light"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
+            android:theme="@style/CalypsoTheme"
+            android:windowSoftInputMode="stateHidden"/>
+
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
+            android:theme="@style/CalypsoTheme"
+            android:windowSoftInputMode="stateHidden"/>
 
 		<!-- Services -->
         <service

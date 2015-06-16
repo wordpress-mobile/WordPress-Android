@@ -23,8 +23,8 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 
@@ -35,13 +35,18 @@ public class SitePickerActivity extends ActionBarActivity
         SitePickerAdapter.OnSelectedCountChangedListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
+    public static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
+    public static final String KEY_LAST_SEARCH = "last_search";
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
     private View mFabView;
     private ActionMode mActionMode;
+    private SitePickerSearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
+    private boolean mIsInSearchMode;
+    private String mLastSearch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,8 +61,12 @@ public class SitePickerActivity extends ActionBarActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        mLastSearch = "";
+
         if (savedInstanceState != null) {
             mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
+            mIsInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
+            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
         } else if (getIntent() != null) {
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
         }
@@ -74,6 +83,8 @@ public class SitePickerActivity extends ActionBarActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_LOCAL_ID, mCurrentLocalId);
+        outState.putBoolean(KEY_IS_IN_SEARCH_MODE, mIsInSearchMode);
+        outState.putString(KEY_LAST_SEARCH, mLastSearch);
         super.onSaveInstanceState(outState);
     }
 
@@ -116,7 +127,7 @@ public class SitePickerActivity extends ActionBarActivity
 
         // animate fab in after a delay which matches that of the activity transition
         long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        ReaderAnim.showFabDelayed(mFabView, true, delayMs);
+        AniUtils.showFabDelayed(mFabView, true, delayMs);
     }
 
     @Override
@@ -131,6 +142,7 @@ public class SitePickerActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
+        setupSearchView(menu);
         return true;
     }
 
@@ -138,10 +150,14 @@ public class SitePickerActivity extends ActionBarActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        // don't allow editing visibility unless there are multiple wp.com blogs
+        // don't allow editing visibility unless there are multiple wp.com blogs and not in search mode
         int numSites = WordPress.wpDB.getNumDotComBlogs();
-        MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
-        mnuEdit.setVisible(numSites > 1);
+        MenuItem menuEdit = menu.findItem(R.id.menu_edit);
+        if (mIsInSearchMode) {
+            menuEdit.setVisible(false);
+        } else {
+            menuEdit.setVisible(numSites > 1);
+        }
 
         return true;
     }
@@ -156,6 +172,10 @@ public class SitePickerActivity extends ActionBarActivity
             mRecycleView.setItemAnimator(new DefaultItemAnimator());
             getAdapter().setEnableEditMode(true);
             startSupportActionMode(new ActionModeCallback());
+            return true;
+        } else if (itemId == R.id.menu_search) {
+            mSearchView.requestFocus();
+            mSearchView.showSoftKeyboard();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -187,6 +207,23 @@ public class SitePickerActivity extends ActionBarActivity
         EventBus.getDefault().register(this);
     }
 
+    public String getLastSearch() {
+        return mLastSearch;
+    }
+
+    public void setLastSearch(String lastSearch) {
+        mLastSearch = lastSearch;
+    }
+
+    public boolean getIsInSearchMode() {
+        return mIsInSearchMode;
+    }
+
+    public void setIsInSearchModeAndNullifyAdapter(boolean isInSearchMode) {
+        mIsInSearchMode = isInSearchMode;
+        mAdapter = null;
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.BlogListChanged event) {
         if (!isFinishing()) {
@@ -194,21 +231,21 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    private SitePickerAdapter getAdapter() {
+    protected SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
+            if (mIsInSearchMode) {
+                mAdapter = new SitePickerSearchAdapter(this, mCurrentLocalId, mLastSearch);
+            } else {
+                mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
+            }
             mAdapter.setOnSiteClickListener(this);
             mAdapter.setOnSelectedCountChangedListener(this);
         }
         return mAdapter;
     }
 
-    @Override
-    public void onSelectedCountChanged(int numSelected) {
-        if (mActionMode != null) {
-            updateActionModeTitle();
-            mActionMode.invalidate();
-        }
+    public RecyclerView getRecycleView() {
+        return mRecycleView;
     }
 
     private void saveHiddenSites() {
@@ -244,22 +281,37 @@ public class SitePickerActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public void onSiteClick(SiteRecord site) {
-        if (mActionMode == null) {
-            ReaderAnim.showFab(mFabView, false);
-            WordPress.setCurrentBlog(site.localId);
-            WordPress.wpDB.updateLastBlogId(site.localId);
-            setResult(RESULT_OK);
-            mDidUserSelectSite = true;
-            finish();
-        }
+    private void setupSearchView(Menu menu) {
+        MenuItem menuSearch = menu.findItem(R.id.menu_search);
+        mSearchView = (SitePickerSearchView) menuSearch.getActionView();
+        mSearchView.configure(this, menu);
     }
 
     private void updateActionModeTitle() {
         if (mActionMode != null) {
             int numSelected = getAdapter().getNumSelected();
             mActionMode.setTitle(getString(R.string.cab_selected, numSelected));
+        }
+    }
+
+    @Override
+    public void onSelectedCountChanged(int numSelected) {
+        if (mActionMode != null) {
+            updateActionModeTitle();
+            mActionMode.invalidate();
+        }
+    }
+
+    @Override
+    public void onSiteClick(SiteRecord site) {
+        if (mActionMode == null) {
+            mSearchView.hideSoftKeyboard();
+            AniUtils.showFab(mFabView, false);
+            WordPress.setCurrentBlogAndSetVisible(site.localId);
+            WordPress.wpDB.updateLastBlogId(site.localId);
+            setResult(RESULT_OK);
+            mDidUserSelectSite = true;
+            finish();
         }
     }
 
@@ -271,7 +323,7 @@ public class SitePickerActivity extends ActionBarActivity
             mActionMode = actionMode;
             mHasChanges = false;
             updateActionModeTitle();
-            ReaderAnim.showFab(mFabView, false);
+            AniUtils.showFab(mFabView, false);
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
@@ -318,7 +370,7 @@ public class SitePickerActivity extends ActionBarActivity
                 saveHiddenSites();
             }
             getAdapter().setEnableEditMode(false);
-            ReaderAnim.showFab(mFabView, true);
+            AniUtils.showFab(mFabView, true);
             mActionMode = null;
         }
     }

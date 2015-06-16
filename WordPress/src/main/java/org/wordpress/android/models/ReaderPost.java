@@ -47,7 +47,6 @@ public class ReaderPost {
 
     public boolean isLikedByCurrentUser;
     public boolean isFollowedByCurrentUser;
-    public boolean isRebloggedByCurrentUser;
     public boolean isCommentsOpen;
     public boolean isExternal;
     public boolean isPrivate;
@@ -88,7 +87,6 @@ public class ReaderPost {
         post.numLikes = json.optInt("like_count");
         post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
-        post.isRebloggedByCurrentUser = JSONUtils.getBool(json, "is_reblogged");
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
 
@@ -460,13 +458,6 @@ public class ReaderPost {
     }
 
     /*
-     * only public wp posts can be reblogged
-     */
-    public boolean canReblog() {
-        return !isExternal && !isPrivate;
-    }
-
-    /*
      * returns true if this post is from a WordPress blog
      */
     public boolean isWP() {
@@ -483,8 +474,7 @@ public class ReaderPost {
                 && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
                 && post.isLikedByCurrentUser == this.isLikedByCurrentUser
                 && post.isCommentsOpen == this.isCommentsOpen
-                && post.isLikesEnabled == this.isLikesEnabled
-                && post.isRebloggedByCurrentUser == this.isRebloggedByCurrentUser;
+                && post.isLikesEnabled == this.isLikesEnabled;
     }
 
     /****

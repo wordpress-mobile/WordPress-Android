@@ -238,11 +238,15 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     private String getTotalFollowersLabel(int total) {
-        if ( mTopPagerSelectedButtonIndex == 0 ) {
-            return getString(R.string.stats_followers_total_wpcom, FormatUtils.formatDecimal(total));
+        final String totalFollowersLabel;
+
+        if (mTopPagerSelectedButtonIndex == 0) {
+            totalFollowersLabel = getString(R.string.stats_followers_total_wpcom);
+        } else {
+            totalFollowersLabel = getString(R.string.stats_followers_total_email);
         }
 
-        return  getString(R.string.stats_followers_total_email, FormatUtils.formatDecimal(total));
+        return String.format(totalFollowersLabel, FormatUtils.formatDecimal(total));
     }
 
     @Override
@@ -378,10 +382,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 // 90 seconds to 45 minutes
                 if (currentDifference <= 2700 ) {
                     long minutes = this.roundUp(currentDifference, 60);
-                    return getString(
-                            R.string.stats_followers_minutes,
-                            minutes
-                    );
+                    String followersMinutes = getString(R.string.stats_followers_minutes);
+                    return String.format(followersMinutes, minutes);
                 }
 
                 // 45 to 90 minutes
@@ -392,10 +394,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 // 90 minutes to 22 hours
                 if (currentDifference <= 79200 ) {
                     long hours = this.roundUp(currentDifference, 60*60);
-                    return getString(
-                            R.string.stats_followers_hours,
-                            hours
-                    );
+                    String followersHours = getString(R.string.stats_followers_hours);
+                    return String.format(followersHours, hours);
                 }
 
                 // 22 to 36 hours
@@ -407,10 +407,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 // 86400 secs in a day -  2160000 secs in 25 days
                 if (currentDifference <= 2160000 ) {
                     long days = this.roundUp(currentDifference, 86400);
-                    return getString(
-                            R.string.stats_followers_days,
-                            days
-                    );
+                    String followersDays = getString(R.string.stats_followers_days);
+                    return String.format(followersDays, days);
                 }
 
                 // 25 to 45 days
@@ -423,10 +421,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 // 2678400 secs in a month - 29808000 secs in 345 days
                 if (currentDifference <= 29808000 ) {
                     long months = this.roundUp(currentDifference, 2678400);
-                    return getString(
-                            R.string.stats_followers_months,
-                            months
-                    );
+                    String followersMonths = getString(R.string.stats_followers_months);
+                    return String.format(followersMonths, months);
                 }
 
                 // 345 to 547 days (1.5 years)
@@ -437,10 +433,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 // 548 days+
                 // 31536000 secs in a year
                 long years = this.roundUp(currentDifference, 31536000);
-                return getString(
-                        R.string.stats_followers_years,
-                        years
-                );
+                String followersYears = getString(R.string.stats_followers_years);
+                return String.format(followersYears, years);
 
             } catch (ParseException e) {
                 AppLog.e(AppLog.T.STATS, e);
