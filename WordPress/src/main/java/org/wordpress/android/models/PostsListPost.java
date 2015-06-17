@@ -15,8 +15,8 @@ import java.util.Date;
  * Barebones post/page as listed in PostsListFragment
  */
 public class PostsListPost {
-    private static final int MAX_EXCERPT_LEN = 200;
-    private static final int MIN_FEATURED_IMAGE_SIZE = 100;
+    private static final int MAX_EXCERPT_LEN = 150;
+    private static final int MIN_FEATURED_IMAGE_SIZE = 500;
 
     private long postId;
     private long blogId;

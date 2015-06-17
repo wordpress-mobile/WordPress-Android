@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/posts"
     android:padding="0px"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:orientation="vertical">
 
     <include
         layout="@layout/toolbar"

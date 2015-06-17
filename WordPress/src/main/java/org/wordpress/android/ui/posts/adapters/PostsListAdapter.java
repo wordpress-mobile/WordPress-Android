@@ -93,6 +93,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         if (post.hasFeaturedImage()) {
             holder.imgFeatured.setVisibility(View.VISIBLE);
+            // TODO: photonize this
             holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
         } else {
             holder.imgFeatured.setVisibility(View.GONE);

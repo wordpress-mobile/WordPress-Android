@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -89,7 +90,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.post_list, container, false);
+        View view = inflater.inflate(R.layout.post_list_fragment, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mEmptyView = view.findViewById(R.id.empty_view);
@@ -98,6 +99,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
 
         Context context = getActivity();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
