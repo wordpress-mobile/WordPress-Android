@@ -52,6 +52,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.xmlrpc.android.ApiHelper;
 
@@ -425,27 +426,27 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
 
-        String password = (mPasswordEditText.getText() != null) ? mPasswordEditText.getText().toString() : "";
-        String pubDate = (mPubDateText.getText() != null) ? mPubDateText.getText().toString() : "";
-        String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
+        String password = WPActivityUtils.getNonNullString(mPasswordEditText);
+        String pubDate = WPActivityUtils.getNonNullString(mPubDateText);
+        String excerpt = WPActivityUtils.getNonNullString(mExcerptEditText);
 
         long pubDateTimestamp = 0;
-        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !mPost.isLocalDraft()) {
+        if (mIsCustomPubDate && pubDate.equals(getText(R.string.immediately)) && !mPost.isLocalDraft()) {
             Date d = new Date();
             pubDateTimestamp = d.getTime();
-        } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
+        } else if (!pubDate.equals(getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
             else if (mPost.getDate_created_gmt() > 0)
                 pubDateTimestamp = mPost.getDate_created_gmt();
-        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && mPost.isLocalDraft()) {
+        } else if (pubDate.equals(getText(R.string.immediately)) && mPost.isLocalDraft()) {
             mPost.setDate_created_gmt(0);
             mPost.setDateCreated(0);
         }
 
         String tags = "", postFormat = "";
         if (!mPost.isPage()) {
-            tags = (mTagsEditText.getText() != null) ? mTagsEditText.getText().toString() : "";
+            tags = WPActivityUtils.getNonNullString(mTagsEditText);
 
             // post format
             if (mPostFormats != null && mPostFormatSpinner != null &&
@@ -454,7 +455,12 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        String status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
+        String status;
+        if (mStatusSpinner != null) {
+            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
+        } else {
+            status = mPost.getPostStatus();
+        }
 
         // We want to flag this post as having changed statuses from draft to published so that we
         // properly track stats we care about for when users first publish posts.
