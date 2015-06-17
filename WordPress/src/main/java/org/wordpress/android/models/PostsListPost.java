@@ -16,7 +16,6 @@ import java.util.Date;
  */
 public class PostsListPost {
     private static final int MAX_EXCERPT_LEN = 150;
-    private static final int MIN_FEATURED_IMAGE_SIZE = 500;
 
     private long postId;
     private long blogId;
@@ -48,10 +47,11 @@ public class PostsListPost {
         if (!hasExcerpt()) {
             setExcerpt(makeExcerpt(post.getDescription()));
         }
+
         // TODO: our posts table doesn't store featured image so one is always generated here
         if (!hasFeaturedImage()) {
             ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), false);
-            this.featuredImageUrl = scanner.getLargestImage(MIN_FEATURED_IMAGE_SIZE);
+            this.featuredImageUrl = scanner.getLargestImage();
         }
     }
 

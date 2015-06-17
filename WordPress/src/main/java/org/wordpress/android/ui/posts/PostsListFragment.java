@@ -222,7 +222,9 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
                 }
             };
 
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage);
+            Blog currentBlog = WordPress.getCurrentBlog();
+            boolean isPrivateBlog = (currentBlog != null && currentBlog.isPrivate());
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, isPrivateBlog);
             mPostsListAdapter.setOnLoadMoreListener(loadMoreListener);
             mPostsListAdapter.setOnPostsLoadedListener(postsLoadedListener);
             mPostsListAdapter.setOnPostSelectedListener(postSelectedListener);

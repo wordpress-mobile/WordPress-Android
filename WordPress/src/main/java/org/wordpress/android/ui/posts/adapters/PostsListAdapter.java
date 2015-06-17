@@ -13,6 +13,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -24,18 +26,29 @@ import java.util.Locale;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
 
-    private final boolean mIsPage;
     private final LayoutInflater mLayoutInflater;
     private OnLoadMoreListener mOnLoadMoreListener;
     private OnPostsLoadedListener mOnPostsLoadedListener;
     private OnPostSelectedListener mOnPostSelectedListener;
     private int mSelectedPosition = -1;
+
     private boolean mShowSelection;
+    private final boolean mIsPage;
+    private final boolean mIsPrivateBlog;
+
+    private final int mPhotonWidth;
+    private final int mPhotonHeight;
+
     private List<PostsListPost> mPosts = new ArrayList<>();
 
-    public PostsListAdapter(Context context, boolean isPage) {
+    public PostsListAdapter(Context context, boolean isPage, boolean isPrivateBlog) {
         mIsPage = isPage;
+        mIsPrivateBlog = isPrivateBlog;
         mLayoutInflater = LayoutInflater.from(context);
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
+        mPhotonWidth = displayWidth - (cardSpacing * 2);
+        mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
@@ -92,9 +105,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
 
         if (post.hasFeaturedImage()) {
+            final String imageUrl = ReaderUtils.getResizedImageUrl(post.getFeaturedImageUrl(),
+                    mPhotonWidth, mPhotonHeight, mIsPrivateBlog);
             holder.imgFeatured.setVisibility(View.VISIBLE);
-            // TODO: photonize this
-            holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
+            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
         }
