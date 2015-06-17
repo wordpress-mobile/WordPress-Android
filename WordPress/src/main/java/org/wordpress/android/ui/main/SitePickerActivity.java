@@ -3,7 +3,7 @@ package org.wordpress.android.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +30,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import de.greenrobot.event.EventBus;
 
-public class SitePickerActivity extends ActionBarActivity
+public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener {
 

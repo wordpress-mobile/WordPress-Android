@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -24,7 +24,7 @@ import de.greenrobot.event.EventBus;
  * serves as the host for ReaderPostListFragment
  */
 
-public class ReaderPostListActivity extends ActionBarActivity {
+public class ReaderPostListActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -43,13 +43,8 @@
     <!-- spacing between icons in main tab strip -->
     <dimen name="tabstrip_icon_spacing_normal">0dp</dimen>
     <dimen name="tabstrip_icon_spacing_landscape">24dp</dimen>
+    <dimen name="tabstrip_icon_spacing_tablet">24dp</dimen>
     <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_normal</dimen>
-
-    <!-- spacing between first tab and left edge -->
-    <dimen name="tabstrip_padding_normal">0dp</dimen>
-    <dimen name="tabstrip_padding_tablet">@dimen/content_margin</dimen>
-    <dimen name="tabstrip_padding_landscape">@dimen/content_margin</dimen>
-    <dimen name="tabstrip_padding">@dimen/tabstrip_padding_normal</dimen>
 
     <!--
         native reader dimens

@@ -6,9 +6,9 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
@@ -40,10 +40,8 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
@@ -52,12 +50,10 @@ import de.greenrobot.event.EventBus;
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends Activity
-    implements ViewPager.OnPageChangeListener,
-        SlidingTabLayout.SingleTabClickListener,
-        MediaAddFragment.MediaAddFragmentCallback,
-        Bucket.Listener<Note> {
+    implements MediaAddFragment.MediaAddFragmentCallback, Bucket.Listener<Note> {
+
     private WPViewPager mViewPager;
-    private SlidingTabLayout mTabs;
+    private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
@@ -81,29 +77,60 @@ public class WPMainActivity extends Activity
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
-        mTabs = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
+        mTabLayout = (WPMainTabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.createTabs();
 
-        // tabs are left-aligned rather than evenly distributed in landscape
-        mTabs.setDistributeEvenly(!DisplayUtils.isLandscape(this));
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
 
-        Integer icons[] = {R.drawable.main_tab_sites,
-                           R.drawable.main_tab_reader,
-                           R.drawable.main_tab_me,
-                           R.drawable.main_tab_notifications};
-        mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //  nop
+            }
 
-        // content descriptions
-        mTabs.setContentDescription(WPMainTabAdapter.TAB_MY_SITE, getString(R.string.tabbar_accessibility_label_my_site));
-        mTabs.setContentDescription(WPMainTabAdapter.TAB_READER, getString(R.string.reader));
-        mTabs.setContentDescription(WPMainTabAdapter.TAB_ME, getString(R.string.tabbar_accessibility_label_me));
-        mTabs.setContentDescription(WPMainTabAdapter.TAB_NOTIFS, getString(R.string.notifications));
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // scroll the active fragment to the top, if available
+                Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
+                if (fragment instanceof OnScrollToTopListener) {
+                    ((OnScrollToTopListener) fragment).onScrollToTop();
+                }
+            }
+        });
 
-        mTabs.setViewPager(mViewPager);
-        mTabs.setOnSingleTabClickListener(this);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                AppPrefs.setMainTabIndex(position);
 
-        // page change listener must be set on the tab layout rather than the ViewPager
-        mTabs.setOnPageChangeListener(this);
+                switch (position) {
+                    case WPMainTabAdapter.TAB_NOTIFS:
+                        if (getNotificationListFragment() != null) {
+                            getNotificationListFragment().updateLastSeenTime();
+                            mTabLayout.showNoteBadge(false);
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // noop
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // fire event if the "My Site" page is being scrolled so the fragment can
+                // animate its fab to match
+                if (position == WPMainTabAdapter.TAB_MY_SITE) {
+                    EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
+                }
+            }
+        });
 
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
@@ -180,49 +207,6 @@ public class WPMainActivity extends Activity
     }
 
     @Override
-    public void onPageSelected(int position) {
-        // remember the index of this page
-        AppPrefs.setMainTabIndex(position);
-
-        switch (position) {
-            case WPMainTabAdapter.TAB_NOTIFS:
-                if (getNotificationListFragment() != null) {
-                    getNotificationListFragment().updateLastSeenTime();
-                    mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        // noop
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // fire event if the "My Site" page is being scrolled so the fragment can
-        // animate its fab to match
-        if (position == WPMainTabAdapter.TAB_MY_SITE) {
-            EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
-        }
-    }
-
-    /*
-     * user tapped a tab above the viewPager - detect when the active tab is clicked and scroll
-     * the fragment to the top if available
-     */
-    @Override
-    public void onTabClick(View view, int position) {
-        if (position == mViewPager.getCurrentItem()) {
-            Fragment fragment = mTabAdapter.getFragment(position);
-            if (fragment instanceof OnScrollToTopListener) {
-                ((OnScrollToTopListener) fragment).onScrollToTop();
-            }
-        }
-    }
-
-    @Override
     protected void onPause() {
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().removeListener(this);
@@ -251,7 +235,7 @@ public class WPMainActivity extends Activity
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
         }
-        checkNoteBadge();
+        mTabLayout.checkNoteBadge();
     }
 
     /*
@@ -386,48 +370,6 @@ public class WPMainActivity extends Activity
         return null;
     }
 
-    /*
-     * badges the notifications tab depending on whether there are unread notes
-     */
-    private boolean mIsCheckingNoteBadge;
-    private void checkNoteBadge() {
-        if (mIsCheckingNoteBadge) {
-            AppLog.v(AppLog.T.MAIN, "main activity > already checking note badge");
-            return;
-        } else if (isViewingNotificationsTab()) {
-            // Don't show the badge if the notifications tab is active
-            if (mTabs.isBadged(WPMainTabAdapter.TAB_NOTIFS)) {
-                mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
-            }
-
-            return;
-        }
-
-        mIsCheckingNoteBadge = true;
-        new Thread() {
-            @Override
-            public void run() {
-                final boolean hasUnreadNotes = SimperiumUtils.hasUnreadNotes();
-                boolean isBadged = mTabs.isBadged(WPMainTabAdapter.TAB_NOTIFS);
-                if (hasUnreadNotes != isBadged) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, hasUnreadNotes);
-                            mIsCheckingNoteBadge = false;
-                        }
-                    });
-                } else {
-                    mIsCheckingNoteBadge = false;
-                }
-            }
-        }.start();
-    }
-
-    private boolean isViewingNotificationsTab() {
-        return mViewPager.getCurrentItem() == WPMainTabAdapter.TAB_NOTIFS;
-    }
-
     // Events
 
     @SuppressWarnings("unused")
@@ -467,7 +409,7 @@ public class WPMainActivity extends Activity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        checkNoteBadge();
+        mTabLayout.checkNoteBadge();
     }
 
     /*
@@ -476,7 +418,7 @@ public class WPMainActivity extends Activity
     @Override
     public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
         if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
-            checkNoteBadge();
+            mTabLayout.checkNoteBadge();
         }
     }
 

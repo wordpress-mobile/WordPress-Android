@@ -8,7 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -47,7 +47,7 @@ import de.greenrobot.event.EventBus;
  * posts with a specific tag or in a specific blog, but can also be used to show a single
  * post detail
  */
-public class ReaderPostPagerActivity extends ActionBarActivity
+public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.OnPostPopupListener,
                    ReaderInterfaces.AutoHideToolbarListener {
 
@@ -71,12 +71,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         setContentView(R.layout.reader_activity_post_pager);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -166,6 +160,15 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     public void finish() {
         super.finish();
         ActivityLauncher.slideOutToRight(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean hasPagerAdapter() {

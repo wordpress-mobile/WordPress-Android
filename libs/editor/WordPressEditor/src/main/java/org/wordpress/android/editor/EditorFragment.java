@@ -6,7 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -50,9 +50,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private String mTitle = "";
     private String mContentHtml = "";
 
-    private ActionBarActivity mActivity;
     private EditorWebViewAbstract mWebView;
-    private ActionBar mActionBar;
 
     private boolean mHideActionBarOnSoftKeyboardUp;
 
@@ -76,8 +74,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (ActionBarActivity) getActivity();
-        mActionBar = mActivity.getSupportActionBar();
     }
 
     @Override
@@ -98,8 +94,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.setOnImeBackListener(new EditorWebViewAbstract.OnImeBackListener() {
             @Override
             public void onImeBack() {
-                if (mHideActionBarOnSoftKeyboardUp && mActionBar != null && !mActionBar.isShowing()) {
-                    mActionBar.show();
+                ActionBar actionBar = getActionBar();
+                if (mHideActionBarOnSoftKeyboardUp && actionBar != null && !actionBar.isShowing()) {
+                    actionBar.show();
                 }
             }
         });
@@ -150,6 +147,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         super.onDetach();
     }
 
+    private ActionBar getActionBar() {
+        if (!isAdded()) {
+            return null;
+        }
+
+        if (getActivity() instanceof AppCompatActivity) {
+            return ((AppCompatActivity) getActivity()).getSupportActionBar();
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -164,7 +173,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     protected void initJsEditor() {
-        String htmlEditor = Utils.getHtmlFromFile(mActivity, "android-editor.html");
+        if(!isAdded()) {
+            return;
+        }
+
+        String htmlEditor = Utils.getHtmlFromFile(getActivity(), "android-editor.html");
 
         mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
 
@@ -204,8 +217,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public boolean onTouch(View view, MotionEvent event) {
         if (mHideActionBarOnSoftKeyboardUp && event.getAction() == MotionEvent.ACTION_UP) {
             // If the WebView has received a touch event, the keyboard will be displayed and the action bar should hide
-            if (isAdded() && mActionBar != null && mActionBar.isShowing()) {
-                mActionBar.hide();
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null && actionBar.isShowing()) {
+                actionBar.hide();
                 return false;
             }
         }
@@ -236,6 +250,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      */
     @Override
     public CharSequence getTitle() {
+        if (!isAdded()) {
+            return "";
+        }
+
         if (Looper.myLooper() == Looper.getMainLooper()) {
             AppLog.d(T.EDITOR, "getTitle() called from UI thread");
         }
@@ -243,7 +261,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mGetTitleCountDownLatch = new CountDownLatch(1);
 
         // All WebView methods must be called from the UI thread
-        mActivity.runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_title').getHTMLForCallback();");
@@ -266,6 +284,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      */
     @Override
     public CharSequence getContent() {
+        if (!isAdded()) {
+            return "";
+        }
+
         if (Looper.myLooper() == Looper.getMainLooper()) {
             AppLog.d(T.EDITOR, "getContent() called from UI thread");
         }
@@ -273,7 +295,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mGetContentCountDownLatch = new CountDownLatch(1);
 
         // All WebView methods must be called from the UI thread
-        mActivity.runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').getHTMLForCallback();");
@@ -316,8 +338,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setHTML('" +
                         Utils.escapeHtml(mContentHtml) + "');");
 
-                if (mHideActionBarOnSoftKeyboardUp) {
-                    mActionBar.hide();
+                if (mHideActionBarOnSoftKeyboardUp && getActionBar() != null) {
+                    getActionBar().hide();
                 }
             }
         });

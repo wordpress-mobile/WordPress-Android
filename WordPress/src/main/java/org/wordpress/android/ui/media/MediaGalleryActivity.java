@@ -4,7 +4,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * An activity where the user can manage a media gallery
  */
-public class MediaGalleryActivity extends ActionBarActivity implements MediaGallerySettingsCallback {
+public class MediaGalleryActivity extends AppCompatActivity implements MediaGallerySettingsCallback {
     public static final int REQUEST_CODE = 3000;
 
     // params for the gallery

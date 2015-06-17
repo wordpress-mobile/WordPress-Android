@@ -6,10 +6,6 @@ import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
 import android.webkit.JavascriptInterface;
 
-import org.wordpress.android.editor.EditorWebView;
-import org.wordpress.android.editor.EditorWebViewAbstract;
-import org.wordpress.android.editor.Utils;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
