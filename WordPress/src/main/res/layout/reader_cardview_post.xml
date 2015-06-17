@@ -134,14 +134,14 @@
                 android:layout_below="@+id/divider"
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
                 android:layout_marginRight="@dimen/reader_card_content_padding"
-                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_date"
                     style="@style/ReaderTextView.Date"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_height="@dimen/reader_button_icon"
                     android:layout_weight="2"
                     tools:text="text_date" />
 
