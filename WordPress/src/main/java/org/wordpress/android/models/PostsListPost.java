@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.wordpress.android.util.StringUtils;
@@ -53,6 +54,10 @@ public class PostsListPost {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean hasTitle() {
+        return !TextUtils.isEmpty(title);
     }
 
     public long getDateCreatedGmt() {

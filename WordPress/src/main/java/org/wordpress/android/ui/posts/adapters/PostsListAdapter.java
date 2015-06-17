@@ -68,7 +68,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.post_list_item, parent, false);
+        View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
         return new PostViewHolder(view);
     }
 
@@ -77,17 +77,16 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         PostsListPost post = mPosts.get(position);
         Context context = holder.itemView.getContext();
 
-        String date = post.getFormattedDate();
-        String titleText = post.getTitle();
-        if (titleText.equals("")) {
-            titleText = "(" + context.getResources().getText(R.string.untitled) + ")";
+        if (post.hasTitle()) {
+            holder.txtTitle.setText(post.getTitle());
+        } else {
+            holder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
         }
-        holder.txtTitle.setText(titleText);
 
         if (post.isLocalDraft()) {
             holder.txtDate.setVisibility(View.GONE);
         } else {
-            holder.txtDate.setText(date);
+            holder.txtDate.setText(post.getFormattedDate());
             holder.txtDate.setVisibility(View.VISIBLE);
         }
 
@@ -261,9 +260,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         public PostViewHolder(View view) {
             super(view);
-            txtTitle = (TextView) view.findViewById(R.id.post_list_title);
-            txtDate = (TextView) view.findViewById(R.id.post_list_date);
-            txtStatus = (TextView) view.findViewById(R.id.post_list_status);
+            txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            txtStatus = (TextView) view.findViewById(R.id.text_status);
         }
     }
 
