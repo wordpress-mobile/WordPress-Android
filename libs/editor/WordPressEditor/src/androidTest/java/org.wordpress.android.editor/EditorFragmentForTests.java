@@ -5,10 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.wordpress.android.editor.EditorFragment;
-import org.wordpress.android.editor.EditorWebViewAbstract;
-import org.wordpress.android.editor.R;
-
 import java.util.Map;
 
 public class EditorFragmentForTests extends EditorFragment {

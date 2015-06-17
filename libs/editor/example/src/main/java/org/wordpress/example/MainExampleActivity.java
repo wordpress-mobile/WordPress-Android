@@ -3,7 +3,7 @@ package org.wordpress.android.editor.example;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -11,7 +11,7 @@ import android.widget.Button;
 import org.wordpress.android.editor.Utils;
 import org.wordpress.android.editor.example.EditorExampleActivity;
 
-public class MainExampleActivity extends ActionBarActivity {
+public class MainExampleActivity extends AppCompatActivity {
     private Activity mActivity;
 
     @Override
