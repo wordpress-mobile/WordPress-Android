@@ -13,6 +13,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,20 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             holder.txtTitle.setText(post.getTitle());
         } else {
             holder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+        }
+
+        if (post.hasExcerpt()) {
+            holder.txtExcerpt.setVisibility(View.VISIBLE);
+            holder.txtExcerpt.setText(post.getExcerpt());
+        } else {
+            holder.txtExcerpt.setVisibility(View.GONE);
+        }
+
+        if (post.hasFeaturedImage()) {
+            holder.imgFeatured.setVisibility(View.VISIBLE);
+            holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
+        } else {
+            holder.imgFeatured.setVisibility(View.GONE);
         }
 
         if (post.isLocalDraft()) {
@@ -255,14 +270,18 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     class PostViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
+        private final TextView txtExcerpt;
         private final TextView txtDate;
         private final TextView txtStatus;
+        private final WPNetworkImageView imgFeatured;
 
         public PostViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
             txtDate = (TextView) view.findViewById(R.id.text_date);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
+            imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
         }
     }
 
