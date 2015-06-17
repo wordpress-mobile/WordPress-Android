@@ -8,7 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -57,7 +57,7 @@ import de.greenrobot.event.EventBus;
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends ActionBarActivity
+public class ReaderSubsActivity extends AppCompatActivity
                                 implements ReaderTagAdapter.TagDeletedListener {
 
     private EditText mEditAdd;

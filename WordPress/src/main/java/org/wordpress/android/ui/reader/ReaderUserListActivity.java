@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -19,7 +19,7 @@ import org.wordpress.android.util.DisplayUtils;
 /*
  * displays a list of users who like a specific reader post
  */
-public class ReaderUserListActivity extends ActionBarActivity {
+public class ReaderUserListActivity extends AppCompatActivity {
 
     private ReaderRecyclerView mRecyclerView;
     private ReaderUserAdapter mAdapter;
