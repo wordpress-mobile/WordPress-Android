@@ -18,10 +18,6 @@ public class WPActivityUtils {
     }
 
     public static String getNonNullString(TextView textView) {
-        if (textView != null && textView.getText().length() != 0) {
-            return textView.getText().toString();
-        }
-
-        return "";
+        return (textView != null) ? textView.getText().toString() : "";
     }
 }
