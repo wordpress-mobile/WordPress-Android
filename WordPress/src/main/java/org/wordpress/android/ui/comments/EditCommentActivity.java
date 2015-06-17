@@ -30,6 +30,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.AppLog;
@@ -72,6 +73,8 @@ public class EditCommentActivity extends ActionBarActivity {
         }
 
         loadComment(getIntent());
+
+        ActivityId.trackLastActivity(ActivityId.COMMENT_EDITOR);
     }
 
     private void loadComment(Intent intent) {

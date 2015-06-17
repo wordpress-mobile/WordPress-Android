@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -75,6 +76,24 @@ public class MeFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    /*
+     * Workaround for the ViewPager that only shows one page at a time, but the pre-cached fragments are also put to "visible" state
+     * (actually invisible). So we can't keep track of which screen is visible on the screen by using the onResume method of Fragment.
+     *
+     * Note that this is only the half-part of the solution that keeps tracks of last active screen with the ViewPager.
+     * WPMainActivity contains the other part of the code in its onResume method. In that method we track the current active screen
+     * for situations like the following: Me Fragment -> Help & Support -> back to Me fragment, that's a case where
+     * setMenuVisibility is not called on Fragments contained in the ViewPager;
+     *
+     */
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            ActivityId.trackLastActivity(ActivityId.ME);
+        }
     }
 
     /*

@@ -21,6 +21,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
@@ -252,6 +253,26 @@ public class WPMainActivity extends Activity
             SimperiumUtils.getNotesBucket().addListener(this);
         }
         checkNoteBadge();
+
+        // We need to track the current item on the screen when this activity is resumed.
+        // Ex: Notifications -> notifications detail -> back to notifications
+        int position = (mViewPager.getCurrentItem());
+        switch (position) {
+            case WPMainTabAdapter.TAB_MY_SITE:
+                ActivityId.trackLastActivity(ActivityId.MY_SITE);
+                break;
+            case WPMainTabAdapter.TAB_READER:
+                ActivityId.trackLastActivity(ActivityId.READER);
+                break;
+            case WPMainTabAdapter.TAB_ME:
+                ActivityId.trackLastActivity(ActivityId.ME);
+                break;
+            case WPMainTabAdapter.TAB_NOTIFS:
+                ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
+                break;
+            default:
+                break;
+        }
     }
 
     /*

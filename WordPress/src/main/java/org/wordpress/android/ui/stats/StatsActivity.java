@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -277,6 +278,7 @@ public class StatsActivity extends ActionBarActivity
         } else {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
+        ActivityId.trackLastActivity(ActivityId.STATS);
     }
 
     @Override

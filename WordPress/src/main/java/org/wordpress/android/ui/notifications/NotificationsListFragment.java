@@ -24,6 +24,7 @@ import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -158,6 +159,14 @@ public class NotificationsListFragment extends Fragment
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
+        }
     }
 
     /**
