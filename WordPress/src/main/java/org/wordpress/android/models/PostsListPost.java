@@ -1,10 +1,9 @@
 package org.wordpress.android.models;
 
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -25,6 +24,8 @@ public class PostsListPost {
     private String excerpt;
     private String featuredImageUrl;
     private String status;
+
+    private java.util.Date dtCreatedGmt;
 
     private boolean isLocalDraft;
     private boolean hasLocalChanges;
@@ -139,7 +140,6 @@ public class PostsListPost {
     public long getDateCreatedGmt() {
         return dateCreatedGmt;
     }
-
     public void setDateCreatedGmt(long dateCreatedGmt) {
         this.dateCreatedGmt = dateCreatedGmt;
     }
@@ -157,7 +157,8 @@ public class PostsListPost {
     }
 
     public String getFormattedDate() {
-        return DateUtils.getRelativeTimeSpanString(getDateCreatedGmt(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
+        return DateTimeUtils.javaDateToTimeSpan(new Date(dateCreatedGmt));
+        //return DateUtils.getRelativeTimeSpanString(getDateCreatedGmt(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
     }
 
     public boolean isLocalDraft() {
