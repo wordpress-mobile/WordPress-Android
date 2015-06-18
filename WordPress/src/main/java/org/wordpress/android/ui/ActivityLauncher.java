@@ -28,6 +28,7 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -206,7 +207,7 @@ public class ActivityLauncher {
                 post.getRemotePostId(),
                 post.getTitle(),
                 post.getLink(),
-                isPage ? "page" : "post");
+                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, postModel);
     }
 
