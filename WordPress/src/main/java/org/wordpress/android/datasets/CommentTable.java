@@ -81,7 +81,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury 11/15/13 - add a single comment - will update existing comment with same IDs
+     * add a single comment - will update existing comment with same IDs
      * @param localBlogId - unique id in account table for the blog the comment is from
      * @param comment - comment object to store
      */
@@ -106,7 +106,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury 11/11/13 - retrieve a single comment
+     * retrieve a single comment
      * @param localBlogId - unique id in account table for the blog the comment is from
      * @param commentId - commentId of the actual comment
      * @return Comment if found, null otherwise
@@ -124,7 +124,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury - get all comments for a blog
+     * get all comments for a blog
      * @param localBlogId - unique id in account table for this blog
      * @return list of comments for this blog
      */
@@ -132,7 +132,8 @@ public class CommentTable {
         CommentList comments = new CommentList();
 
         String[] args = {Integer.toString(localBlogId)};
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? ORDER BY published DESC", args);
+        Cursor c = getReadableDb().rawQuery(
+                "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? ORDER BY published DESC", args);
 
         try {
             if (c.moveToFirst()) {
@@ -149,16 +150,16 @@ public class CommentTable {
     }
 
     /**
-    * nbradbury - delete all comments for a blog
-    * @param localBlogId - unique id in account table for this blog
-    * @return number of comments deleted
+     * delete all comments for a blog
+     * @param localBlogId - unique id in account table for this blog
+     * @return number of comments deleted
      */
     public static int deleteCommentsForBlog(int localBlogId) {
         return getWritableDb().delete(COMMENTS_TABLE, "blog_id=?", new String[]{Integer.toString(localBlogId)});
     }
 
     /**
-     * nbradbury - saves comments for passed blog to local db, overwriting existing ones if necessary
+     * saves comments for passed blog to local db, overwriting existing ones if necessary
      * @param localBlogId - unique id in account table for this blog
      * @param comments - list of comments to save
      * @return true if saved, false on failure
@@ -214,7 +215,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury - updates the passed comment
+     * updates the passed comment
      * @param localBlogId - unique id in account table for this blog
      * @param comment - comment to update
      */
@@ -224,7 +225,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury - updates the status for the passed comment
+     * updates the status for the passed comment
      * @param localBlogId - unique id in account table for this blog
      * @param commentId - id of comment (returned by api)
      * @param newStatus - status to change to
@@ -241,7 +242,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury - updates the status for the passed list of comments
+     * updates the status for the passed list of comments
      * @param localBlogId - unique id in account table for this blog
      * @param comments - list of comments to update
      * @param newStatus - status to change to
@@ -261,7 +262,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury - updates the post title for the passed comment
+     * updates the post title for the passed comment
      * @param localBlogId - unique id in account table for this blog
      * @param postTitle - title to update to
      * @return true if title updated
@@ -276,7 +277,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury 11/12/13 - delete a single comment
+     * delete a single comment
      * @param localBlogId - unique id in account table for this blog
      * @param commentId - commentId of the actual comment
      * @return true if comment deleted, false otherwise
@@ -289,7 +290,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury - delete a list of comments
+     * delete a list of comments
      * @param localBlogId - unique id in account table for this blog
      * @param comments - list of comments to delete
      */
@@ -308,7 +309,7 @@ public class CommentTable {
     }
 
     /**
-     * nbradbury - returns the number of unmoderated comments for a specific blog
+     * returns the number of unmoderated comments for a specific blog
      * @param localBlogId - unique id in account table for this blog
      */
     public static int getUnmoderatedCommentCount(int localBlogId) {
@@ -343,7 +344,8 @@ public class CommentTable {
                 profileImageUrl);
     }
 
-    /*
+
+    /**
      * Delete big comments (Maximum 1024 * 1024 = 1048576) (fix #2855)
      * @return number of deleted comments
      */
