@@ -261,6 +261,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mIsUpdatingStats = false;
+        mSwipeToRefreshHelper.setRefreshing(false);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
