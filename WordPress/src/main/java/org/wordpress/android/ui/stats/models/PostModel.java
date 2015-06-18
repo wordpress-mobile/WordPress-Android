@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.models;
 
+import org.wordpress.android.ui.stats.StatsConstants;
+
 import java.io.Serializable;
 
 public class PostModel extends SingleItemModel implements Serializable {
@@ -13,7 +15,7 @@ public class PostModel extends SingleItemModel implements Serializable {
 
     public PostModel(String blogId, long date, String itemID, String title, int totals, String url) {
         super(blogId, date, itemID, title, totals, url, null);
-        this.mPostType = "post";
+        this.mPostType = StatsConstants.ITEM_TYPE_POST;
     }
 
     public String getPostType() {
