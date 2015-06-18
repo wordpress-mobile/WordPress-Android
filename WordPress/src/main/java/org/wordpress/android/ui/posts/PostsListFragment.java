@@ -43,6 +43,7 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -641,23 +642,31 @@ public class PostsListFragment extends Fragment
      * called by the adapter when the user clicks the edit/view/stats/trash button for a post
      */
     @Override
-    public void onPostButtonClicked(PostsListAdapter.PostButton button, PostsListPost post) {
+    public void onPostButtonClicked(int buttonType, PostsListPost post) {
         Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
         if (fullPost == null)  {
             return;
         }
 
-        switch (button) {
-            case EDIT:
+        switch (buttonType) {
+            case PostListButton.BUTTON_EDIT:
                 ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
                 break;
-            case VIEW:
+            case PostListButton.BUTTON_PUBLISH:
+                // TODO: test this, verify post list is updated after upload
+                PostUploadService.addPostToUpload(fullPost);
+                getActivity().startService(new Intent(getActivity(), PostUploadService.class));
+                break;
+            case PostListButton.BUTTON_VIEW:
+            case PostListButton.BUTTON_PREVIEW:
+                // TODO: preview local drafts and posts with local changes
                 ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
                 break;
-            case STATS:
+            case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);
                 break;
-            case TRASH:
+            case PostListButton.BUTTON_TRASH:
+            case PostListButton.BUTTON_DELETE:
                 trashPost(post);
                 break;
         }

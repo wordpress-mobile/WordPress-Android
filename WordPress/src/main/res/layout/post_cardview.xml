@@ -1,6 +1,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -64,40 +65,83 @@
             tools:text="text_status"
             tools:visibility="visible" />
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/layout_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/grey_lighten_30"
+            android:clickable="false"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingLeft="@dimen/margin_extra_large"
             android:paddingRight="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_medium">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/btn_edit"
-                style="@style/PostList.Button"
-                android:drawableLeft="@drawable/noticon_edit"
-                android:text="@string/button_edit" />
+            <LinearLayout
+                android:id="@+id/layout_buttons_row1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/btn_view"
-                style="@style/PostList.Button"
-                android:drawableLeft="@drawable/noticon_view"
-                android:text="@string/button_view" />
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    wp:wpPostButtonType="edit" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/btn_stats"
-                style="@style/PostList.Button"
-                android:drawableLeft="@drawable/noticon_stats"
-                android:text="@string/button_stats" />
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_publish"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    wp:wpPostButtonType="publish" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/btn_trash"
-                style="@style/PostList.Button"
-                android:drawableLeft="@drawable/noticon_trash"
-                android:text="@string/button_trash" />
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    wp:wpPostButtonType="view" />
 
-        </LinearLayout>
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    wp:wpPostButtonType="more" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_buttons_row2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_stats"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    wp:wpPostButtonType="stats" />
+
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_trash"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    wp:wpPostButtonType="trash" />
+
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    wp:wpPostButtonType="back" />
+
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -1,11 +1,19 @@
 package org.wordpress.android.ui.posts.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -16,6 +24,7 @@ import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -23,15 +32,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
 
-    public enum PostButton {
-        EDIT,
-        VIEW,
-        STATS,
-        TRASH
-    }
-
     public interface OnPostButtonClickListener {
-        void onPostButtonClicked(PostButton button, PostsListPost post);
+        void onPostButtonClicked(int buttonId, PostsListPost post);
     }
 
     private OnLoadMoreListener mOnLoadMoreListener;
@@ -50,6 +52,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     private final PostsListPostList mPosts = new PostsListPostList();
     private final LayoutInflater mLayoutInflater;
+
+    private static final long ROW_ANIM_DURATION = 150;
 
     public PostsListAdapter(Context context, int localTableBlogId, boolean isPage, boolean isPrivateBlog) {
         mLocalTableBlogId = localTableBlogId;
@@ -104,7 +108,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, final int position) {
+    public void onBindViewHolder(final PostViewHolder holder, final int position) {
         PostsListPost post = mPosts.get(position);
         Context context = holder.itemView.getContext();
 
@@ -132,11 +136,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         if (post.isLocalDraft()) {
             holder.txtDate.setVisibility(View.GONE);
-            holder.btnTrash.setText(R.string.button_delete);
+            holder.btnTrash.setButtonType(PostListButton.BUTTON_DELETE);
         } else {
             holder.txtDate.setText(post.getFormattedDate());
             holder.txtDate.setVisibility(View.VISIBLE);
-            holder.btnTrash.setText(R.string.button_trash);
+            holder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
         }
 
         updateStatusText(holder.txtStatus, post);
@@ -144,17 +148,39 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         View.OnClickListener btnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postButtonClicked(v, position);
+                postButtonClicked((PostListButton) v, position);
             }
         };
         holder.btnEdit.setOnClickListener(btnClickListener);
+        holder.btnPublish.setOnClickListener(btnClickListener);
         holder.btnView.setOnClickListener(btnClickListener);
         holder.btnStats.setOnClickListener(btnClickListener);
         holder.btnTrash.setOnClickListener(btnClickListener);
 
-        // local drafts don't have stats and can't be viewed on the web
-        holder.btnView.setVisibility(post.isLocalDraft() ? View.INVISIBLE : View.VISIBLE);
-        holder.btnStats.setVisibility(post.isLocalDraft() ? View.INVISIBLE : View.VISIBLE);
+        // posts with local changes have publish button, no view button, no stats button
+        if (post.isLocalDraft() || post.hasLocalChanges()) {
+            holder.btnStats.setVisibility(View.INVISIBLE);
+            holder.btnView.setVisibility(View.GONE);
+            holder.btnPublish.setVisibility(View.VISIBLE);
+        } else {
+            holder.btnStats.setVisibility(View.VISIBLE);
+            holder.btnView.setVisibility(View.VISIBLE);
+            holder.btnPublish.setVisibility(View.GONE);
+        }
+
+        holder.btnMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateButtonRow(holder.buttonRow2, holder.buttonRow1);
+            }
+        });
+
+        holder.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateButtonRow(holder.buttonRow1, holder.buttonRow2);
+            }
+        });
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1
@@ -181,6 +207,35 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 }
             }
         });
+    }
+
+    private void animateButtonRow(final ViewGroup rowToAnimateIn, final ViewGroup rowToAnimateOut) {
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0.5f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0.5f);
+        ObjectAnimator animOut = ObjectAnimator.ofPropertyValuesHolder(rowToAnimateOut, scaleX, scaleY);
+        animOut.setDuration(ROW_ANIM_DURATION);
+        animOut.setInterpolator(new AccelerateInterpolator());
+
+        animOut.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                rowToAnimateOut.setVisibility(View.GONE);
+                PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0.5f, 1f);
+                PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.5f, 1f);
+                ObjectAnimator animIn = ObjectAnimator.ofPropertyValuesHolder(rowToAnimateIn, scaleX, scaleY);
+                animIn.setDuration(ROW_ANIM_DURATION);
+                animIn.setInterpolator(new DecelerateInterpolator());
+                animIn.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        rowToAnimateIn.setVisibility(View.VISIBLE);
+                    }
+                });
+                animIn.start();
+            }
+        });
+
+        animOut.start();
     }
 
     private void updateStatusText(TextView txtStatus, PostsListPost post) {
@@ -230,15 +285,16 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 }
             }
 
-            Context context = txtStatus.getContext();
-            txtStatus.setTextColor(context.getResources().getColor(statusColorResId));
-            txtStatus.setText(statusTextResId != 0 ? context.getResources().getString(statusTextResId) : "");
-            txtStatus.setCompoundDrawablesWithIntrinsicBounds((statusIconResId != 0 ? context.getDrawable(statusIconResId) : null), null, null, null);
+            Resources resources = txtStatus.getContext().getResources();
+            txtStatus.setTextColor(resources.getColor(statusColorResId));
+            txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
+            Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
+            txtStatus.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             txtStatus.setVisibility(View.VISIBLE);
         }
     }
 
-    private void postButtonClicked(View view, int position) {
+    private void postButtonClicked(PostListButton view, int position) {
         if (mOnPostButtonClickListener == null) {
             return;
         }
@@ -248,15 +304,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             return;
         }
 
-        if (view.getId() == R.id.btn_edit) {
-            mOnPostButtonClickListener.onPostButtonClicked(PostButton.EDIT, post);
-        } else if (view.getId() == R.id.btn_view) {
-            mOnPostButtonClickListener.onPostButtonClicked(PostButton.VIEW, post);
-        } else if (view.getId() == R.id.btn_stats) {
-            mOnPostButtonClickListener.onPostButtonClicked(PostButton.STATS, post);
-        } else if (view.getId() == R.id.btn_trash) {
-            mOnPostButtonClickListener.onPostButtonClicked(PostButton.TRASH, post);
-        }
+        mOnPostButtonClickListener.onPostButtonClicked(view.getButtonType(), post);
     }
 
     public void setShowSelection(boolean showSelection) {
@@ -331,10 +379,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         private final TextView txtDate;
         private final TextView txtStatus;
 
-        private final TextView btnEdit;
-        private final TextView btnView;
-        private final TextView btnStats;
-        private final TextView btnTrash;
+        private final PostListButton btnEdit;
+        private final PostListButton btnPublish;
+        private final PostListButton btnView;
+        private final PostListButton btnMore;
+
+        private final PostListButton btnStats;
+        private final PostListButton btnTrash;
+        private final PostListButton btnBack;
+
+        private final ViewGroup buttonRow1;
+        private final ViewGroup buttonRow2;
 
         private final WPNetworkImageView imgFeatured;
 
@@ -346,10 +401,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             txtDate = (TextView) view.findViewById(R.id.text_date);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
 
-            btnEdit = (TextView) view.findViewById(R.id.btn_edit);
-            btnView = (TextView) view.findViewById(R.id.btn_view);
-            btnStats = (TextView) view.findViewById(R.id.btn_stats);
-            btnTrash = (TextView) view.findViewById(R.id.btn_trash);
+            btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
+            btnPublish = (PostListButton) view.findViewById(R.id.btn_publish);
+            btnView = (PostListButton) view.findViewById(R.id.btn_view);
+            btnMore = (PostListButton) view.findViewById(R.id.btn_more);
+
+            btnStats = (PostListButton) view.findViewById(R.id.btn_stats);
+            btnTrash = (PostListButton) view.findViewById(R.id.btn_trash);
+            btnBack = (PostListButton) view.findViewById(R.id.btn_back);
+
+            buttonRow1 = (ViewGroup) view.findViewById(R.id.layout_buttons_row1);
+            buttonRow2 = (ViewGroup) view.findViewById(R.id.layout_buttons_row2);
 
             imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
         }

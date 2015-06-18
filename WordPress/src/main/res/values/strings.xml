@@ -202,10 +202,14 @@
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
+    <string name="button_publish">Publish</string>
     <string name="button_view">View</string>
+    <string name="button_preview">Preview</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
     <string name="button_delete">Delete</string>
+    <string name="button_more">More</string>
+    <string name="button_back">Back</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>
