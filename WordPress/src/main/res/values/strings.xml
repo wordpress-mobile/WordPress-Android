@@ -205,6 +205,7 @@
     <string name="button_view">View</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
+    <string name="button_delete">Delete</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>
@@ -286,14 +287,14 @@
     <!-- page actions -->
     <string name="preview_page">Preview page</string>
     <string name="deleting_page">Deleting page</string>
-    <string name="page_deleted">Page deleted successfully</string>
+    <string name="page_deleted">Page deleted</string>
     <string name="delete_sure_page">Delete this page</string>
     <string name="page_trashed">Page sent to trash</string>
 
     <!-- post actions -->
     <string name="preview_post">Preview post</string>
     <string name="deleting_post">Deleting post</string>
-    <string name="post_deleted">Post deleted successfully</string>
+    <string name="post_deleted">Post deleted</string>
     <string name="post_trashed">Post sent to trash</string>
     <string name="comment_added">Comment added successfully</string>
     <string name="delete_sure_post">Delete this post</string>
@@ -537,6 +538,7 @@
     <string name="draft">Draft</string>
     <string name="post_private">Private</string>
     <string name="scheduled">Scheduled</string>
+    <string name="trashed">Trashed</string>
 
     <!-- QuickPress -->
     <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>

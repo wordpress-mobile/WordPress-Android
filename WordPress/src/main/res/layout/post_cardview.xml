@@ -39,32 +39,30 @@
             android:maxLines="4"
             tools:text="text_excerpt" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_date"
+            style="@style/ReaderTextView.Date"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
-            android:orientation="horizontal">
+            tools:text="text_date" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_date"
-                style="@style/ReaderTextView.Date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                tools:text="text_date" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/grey_darken_10"
-                android:textSize="@dimen/text_sz_small"
-                tools:text="text_status" />
-        </RelativeLayout>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_extra_large"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:gravity="center_vertical"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_small"
+            android:visibility="gone"
+            tools:drawableLeft="@drawable/noticon_scheduled"
+            tools:text="text_status"
+            tools:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"

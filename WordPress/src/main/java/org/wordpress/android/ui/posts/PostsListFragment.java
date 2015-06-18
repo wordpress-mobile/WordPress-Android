@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewAnimationHandler;
@@ -664,35 +666,62 @@ public class PostsListFragment extends Fragment
     /*
      * send the passed post to the trash with undo
      */
-    private void trashPost(final PostsListPost post) {
+    private void trashPost(PostsListPost post) {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
+        final Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
+        if (fullPost == null) {
+            ToastUtils.showToast(getActivity(), R.string.post_not_found);
+            return;
+        }
+
+        // set status to trashed and remove post from the list
+        final String originalStatus = fullPost.getPostStatus();
+        fullPost.setPostStatus(PostStatus.toString(PostStatus.TRASHED));
+        WordPress.wpDB.updatePost(fullPost);
         mPostsListAdapter.removePost(post);
 
         View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDidUndoTrash = true;
+                // restore original status and reload the list
+                fullPost.setPostStatus(originalStatus);
+                WordPress.wpDB.updatePost(fullPost);
+                // TODO: trashed posts need to be skipped by adapter
                 mPostsListAdapter.loadPosts();
             }
         };
 
+        // different undo text if this is a local draft since it will be deleted rather than trashed
+        String text;
+        if (post.isLocalDraft()) {
+            text = mIsPage ? getString(R.string.page_deleted) : getString(R.string.post_deleted);
+        } else {
+            text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
+        }
+
         mDidUndoTrash = false;
-        String text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
         Snackbar.make(getView(), text, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener)
                 .show();
 
-        // wait for the undo snackbar to disappear before sending request
+        // wait for the undo snackbar to disappear before sending request, and only send if
+        // the user didn't tap to undo
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mDidUndoTrash) {
+                if (mDidUndoTrash || !isAdded()) {
                     return;
                 }
-                // TODO: network request
+                // if this is a local draft, simply delete it from the database
+                if (fullPost.isLocalDraft()) {
+                    WordPress.wpDB.deletePost(fullPost);
+                } else {
+                    // TODO: perform API call
+                }
 
             }
         }, Constants.SNACKBAR_LONG_DURATION_MS);

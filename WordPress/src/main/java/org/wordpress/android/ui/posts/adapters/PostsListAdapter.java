@@ -18,8 +18,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.Locale;
-
 /**
  * Adapter for Posts/Pages list
  */
@@ -134,51 +132,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         if (post.isLocalDraft()) {
             holder.txtDate.setVisibility(View.GONE);
+            holder.btnTrash.setText(R.string.button_delete);
         } else {
             holder.txtDate.setText(post.getFormattedDate());
             holder.txtDate.setVisibility(View.VISIBLE);
+            holder.btnTrash.setText(R.string.button_trash);
         }
 
-        if ((post.getStatusEnum() == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.hasLocalChanges()) {
-            holder.txtStatus.setVisibility(View.GONE);
-        } else {
-            final String status;
-            holder.txtStatus.setVisibility(View.VISIBLE);
-            if (post.isUploading()) {
-                status = context.getResources().getString(R.string.post_uploading);
-            } else if (post.isLocalDraft()) {
-                status = context.getResources().getString(R.string.local_draft);
-            } else if (post.hasLocalChanges()) {
-                status = context.getResources().getString(R.string.local_changes);
-            } else {
-                switch (post.getStatusEnum()) {
-                    case DRAFT:
-                        status = context.getResources().getString(R.string.draft);
-                        break;
-                    case PRIVATE:
-                        status = context.getResources().getString(R.string.post_private);
-                        break;
-                    case PENDING:
-                        status = context.getResources().getString(R.string.pending_review);
-                        break;
-                    case SCHEDULED:
-                        status = context.getResources().getString(R.string.scheduled);
-                        break;
-                    default:
-                        status = "";
-                        break;
-                }
-            }
-
-            if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges() ||
-                    post.isUploading()) {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.orange_fire));
-            } else {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.grey_darken_10));
-            }
-            // Make status upper-case and add line break to stack vertically
-            holder.txtStatus.setText(status.toUpperCase(Locale.getDefault()).replace(" ", "\n"));
-        }
+        updateStatusText(holder.txtStatus, post);
 
         View.OnClickListener btnClickListener = new View.OnClickListener() {
             @Override
@@ -220,6 +181,61 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 }
             }
         });
+    }
+
+    private void updateStatusText(TextView txtStatus, PostsListPost post) {
+        if ((post.getStatusEnum() == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.hasLocalChanges()) {
+            txtStatus.setVisibility(View.GONE);
+        } else {
+            int statusTextResId = 0;
+            int statusIconResId = 0;
+            int statusColorResId = R.color.grey_darken_10;
+
+            if (post.isUploading()) {
+                statusTextResId = R.string.post_uploading;
+                statusColorResId = R.color.alert_yellow;
+            } else if (post.isLocalDraft()) {
+                statusTextResId = R.string.local_draft;
+                statusIconResId = R.drawable.noticon_scheduled;
+                statusColorResId = R.color.alert_yellow;
+            } else if (post.hasLocalChanges()) {
+                statusTextResId = R.string.local_changes;
+                statusIconResId = R.drawable.noticon_scheduled;
+                statusColorResId = R.color.alert_yellow;
+            } else {
+                switch (post.getStatusEnum()) {
+                    case DRAFT:
+                        statusTextResId = R.string.draft;
+                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusColorResId = R.color.alert_yellow;
+                        break;
+                    case PRIVATE:
+                        statusTextResId = R.string.post_private;
+                        break;
+                    case PENDING:
+                        statusTextResId = R.string.pending_review;
+                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusColorResId = R.color.alert_yellow;
+                        break;
+                    case SCHEDULED:
+                        statusTextResId = R.string.scheduled;
+                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusColorResId = R.color.alert_yellow;
+                        break;
+                    case TRASHED:
+                        statusTextResId = R.string.trashed;
+                        statusIconResId = R.drawable.noticon_trashed;
+                        statusColorResId = R.color.alert_red;
+                        break;
+                }
+            }
+
+            Context context = txtStatus.getContext();
+            txtStatus.setTextColor(context.getResources().getColor(statusColorResId));
+            txtStatus.setText(statusTextResId != 0 ? context.getResources().getString(statusTextResId) : "");
+            txtStatus.setCompoundDrawablesWithIntrinsicBounds((statusIconResId != 0 ? context.getDrawable(statusIconResId) : null), null, null, null);
+            txtStatus.setVisibility(View.VISIBLE);
+        }
     }
 
     private void postButtonClicked(View view, int position) {
