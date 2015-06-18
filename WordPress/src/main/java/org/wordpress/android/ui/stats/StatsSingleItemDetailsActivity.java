@@ -799,7 +799,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             parseResponseExecutor.submit(new Thread() {
                 @Override
                 public void run() {
-                    AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
+                    //AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
                     mSelectedBarGraphIndex = -1;
                     try {
                         mRestResponseParsed = new PostViewsModel(response);
@@ -835,7 +835,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             mIsUpdatingStats = false;
             mSwipeToRefreshHelper.setRefreshing(false);
 
-            updateUI();
+            // Update the UI
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    updateUI();
+                }
+            });
         }
     }
 
