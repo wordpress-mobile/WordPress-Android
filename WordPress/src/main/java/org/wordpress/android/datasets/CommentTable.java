@@ -95,7 +95,7 @@ public class CommentTable {
         values.put("comment_id",        comment.commentID);
         values.put("author_name",       comment.getAuthorName());
         values.put("author_url",        comment.getAuthorUrl());
-        values.put("comment",           comment.getCommentText());
+        values.put("comment",           SqlUtils.maxSQLiteText(comment.getCommentText()));
         values.put("status",            comment.getStatus());
         values.put("author_email",      comment.getAuthorEmail());
         values.put("post_title",        comment.getPostTitle());
@@ -190,7 +190,7 @@ public class CommentTable {
                     stmt.bindLong  ( 1, localBlogId);
                     stmt.bindLong  ( 2, comment.postID);
                     stmt.bindLong  ( 3, comment.commentID);
-                    stmt.bindString( 4, comment.getCommentText());
+                    stmt.bindString( 4, SqlUtils.maxSQLiteText(comment.getCommentText()));
                     stmt.bindString( 5, comment.getPublished());
                     stmt.bindString( 6, comment.getStatus());
                     stmt.bindString( 7, comment.getAuthorName());
@@ -341,5 +341,13 @@ public class CommentTable {
                 authorUrl,
                 authorEmail,
                 profileImageUrl);
+    }
+
+    /*
+     * Delete big comments (Maximum 1024 * 1024 = 1048576) (fix #2855)
+     * @return number of deleted comments
+     */
+    public static int deleteBigComments(SQLiteDatabase db) {
+        return db.delete(COMMENTS_TABLE, "LENGTH(comment) >= 1048576", null);
     }
 }
