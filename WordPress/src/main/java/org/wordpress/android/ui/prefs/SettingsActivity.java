@@ -4,14 +4,14 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.passcodelock.PasscodePreferenceFragment;
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends AppCompatActivity {
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
     private static final String KEY_PASSCODE_FRAGMENT = "passcode-fragment";
 

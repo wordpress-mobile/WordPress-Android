@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditCommentActivity extends ActionBarActivity {
+public class EditCommentActivity extends AppCompatActivity {
     static final String ARG_LOCAL_BLOG_ID = "blog_id";
     static final String ARG_COMMENT_ID = "comment_id";
     static final String ARG_NOTE_ID = "note_id";

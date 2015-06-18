@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -48,7 +48,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  *  Single item details activity.
  */
-public class StatsSinglePostDetailsActivity extends ActionBarActivity
+public class StatsSinglePostDetailsActivity extends AppCompatActivity
         implements StatsBarGraph.OnGestureListener{
     public static final String ARG_REMOTE_POST_OBJECT = "ARG_REMOTE_POST_OBJECT";
     private static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";

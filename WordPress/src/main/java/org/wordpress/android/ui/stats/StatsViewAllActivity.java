@@ -4,7 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +29,7 @@ import de.greenrobot.event.EventBus;
 /**
  *  Single item details activity.
  */
-public class StatsViewAllActivity extends ActionBarActivity {
+public class StatsViewAllActivity extends AppCompatActivity {
 
     public static final String ARG_STATS_VIEW_ALL_TITLE = "arg_stats_view_all_title";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";

@@ -5,8 +5,6 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.ToggleButton;
 
-import org.wordpress.android.editor.R;
-
 import java.util.HashMap;
 import java.util.Map;
 

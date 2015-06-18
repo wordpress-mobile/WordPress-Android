@@ -2,7 +2,7 @@
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +14,7 @@ import org.wordpress.android.R;
 /**
  * Basic activity for displaying a WebView.
  */
-public abstract class WebViewActivity extends ActionBarActivity {
+public abstract class WebViewActivity extends AppCompatActivity {
     /** Primary webview used to display content. */
 
     private static final String URL = "url";
