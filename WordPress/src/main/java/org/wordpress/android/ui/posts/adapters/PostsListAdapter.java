@@ -191,6 +191,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         holder.btnStats.setOnClickListener(btnClickListener);
         holder.btnTrash.setOnClickListener(btnClickListener);
 
+        // local drafts don't have stats and can't be viewed on the web
+        holder.btnView.setVisibility(post.isLocalDraft() ? View.INVISIBLE : View.VISIBLE);
+        holder.btnStats.setVisibility(post.isLocalDraft() ? View.INVISIBLE : View.VISIBLE);
+
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1
                 && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
@@ -270,16 +274,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void clear() {
-        if (mPosts.size() > 0) {
-            mPosts.clear();
-            notifyDataSetChanged();
-        }
-    }
-
     public int getRemotePostCount() {
-        if (mPosts == null)
+        if (mPosts == null) {
             return 0;
+        }
 
         int remotePostCount = 0;
         for (PostsListPost post : mPosts) {

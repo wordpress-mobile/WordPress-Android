@@ -104,12 +104,20 @@ public class PostsListFragment extends Fragment
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
+        mFabButton = (FloatingActionButton) view.findViewById(R.id.fab_button);
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
+
+        mFabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newPost();
+            }
+        });
 
         return view;
     }
@@ -172,7 +180,7 @@ public class PostsListFragment extends Fragment
         if (mPostsListAdapter == null) {
             Blog currentBlog = WordPress.getCurrentBlog();
             boolean isPrivateBlog = (currentBlog != null && currentBlog.isPrivate());
-            int localBlogId = (currentBlog != null ? currentBlog.getLocalTableBlogId() : -1);
+            int localBlogId = (currentBlog != null ? currentBlog.getLocalTableBlogId() : 0);
             mPostsListAdapter = new PostsListAdapter(getActivity(), localBlogId, mIsPage, isPrivateBlog);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
@@ -189,15 +197,6 @@ public class PostsListFragment extends Fragment
         super.onActivityCreated(bundle);
 
         initSwipeToRefreshHelper();
-
-        mFabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newPost();
-            }
-        });
-
         mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -647,17 +646,13 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
                 break;
             case VIEW:
-                if (fullPost.isLocalDraft()) {
-                    // TODO: preview the post
-                } else {
-                    ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
-                }
+                ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
                 break;
             case STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);
                 break;
             case TRASH:
-                // TODO:
+                // TODO: implement trash with undo
                 break;
         }
     }
