@@ -18,15 +18,16 @@ public class PostListButton extends LinearLayout {
     private TextView mTextView;
     private int mButtonType;
 
-    public static final int BUTTON_EDIT = 0;
-    public static final int BUTTON_VIEW = 1;
-    public static final int BUTTON_PREVIEW = 2;
-    public static final int BUTTON_STATS = 3;
-    public static final int BUTTON_TRASH = 4;
-    public static final int BUTTON_DELETE = 5;
-    public static final int BUTTON_PUBLISH = 6;
-    public static final int BUTTON_MORE = 7;
-    public static final int BUTTON_BACK = 8;
+    // from attrs.xml
+    public static final int BUTTON_EDIT     = 0;
+    public static final int BUTTON_VIEW     = 1;
+    public static final int BUTTON_PREVIEW  = 2;
+    public static final int BUTTON_STATS    = 3;
+    public static final int BUTTON_TRASH    = 4;
+    public static final int BUTTON_DELETE   = 5;
+    public static final int BUTTON_PUBLISH  = 6;
+    public static final int BUTTON_MORE     = 7;
+    public static final int BUTTON_BACK     = 8;
 
     public PostListButton(Context context){
         super(context);

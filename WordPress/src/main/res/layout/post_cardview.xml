@@ -65,13 +65,14 @@
             tools:text="text_status"
             tools:visibility="visible" />
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/layout_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@color/grey_lighten_30"
             android:clickable="false"
+            android:gravity="center"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingLeft="@dimen/margin_extra_large"
             android:paddingRight="@dimen/margin_extra_large"
@@ -88,6 +89,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     wp:wpPostButtonType="edit" />
 
                 <org.wordpress.android.widgets.PostListButton
@@ -95,6 +97,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     wp:wpPostButtonType="publish" />
 
                 <org.wordpress.android.widgets.PostListButton
@@ -102,6 +107,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     wp:wpPostButtonType="view" />
 
                 <org.wordpress.android.widgets.PostListButton
@@ -109,6 +115,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     wp:wpPostButtonType="more" />
 
             </LinearLayout>
@@ -125,6 +132,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     wp:wpPostButtonType="stats" />
 
                 <org.wordpress.android.widgets.PostListButton
@@ -132,6 +140,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     wp:wpPostButtonType="trash" />
 
                 <org.wordpress.android.widgets.PostListButton
@@ -139,9 +148,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     wp:wpPostButtonType="back" />
 
             </LinearLayout>
-        </FrameLayout>
+        </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

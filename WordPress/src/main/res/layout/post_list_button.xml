@@ -4,7 +4,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
-    android:gravity="center"
     android:orientation="horizontal"
     android:padding="@dimen/margin_medium">
 
@@ -12,7 +11,6 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_marginRight="@dimen/margin_small"
         tools:src="@drawable/noticon_trash" />
 
@@ -21,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="none"
-        android:gravity="center_vertical"
         android:maxLines="1"
         android:textColor="@color/reader_hyperlink"
         android:textSize="@dimen/text_sz_medium"
