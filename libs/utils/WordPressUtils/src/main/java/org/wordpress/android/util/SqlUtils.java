@@ -129,7 +129,8 @@ public class SqlUtils {
      * https://github.com/android/platform_frameworks_base/blob/b77bc869241644a662f7e615b0b00ecb5aee373d/core/res/res/values/config.xml#L1268
      * https://github.com/android/platform_frameworks_base/blob/3bdbf644d61f46b531838558fabbd5b990fc4913/core/java/android/database/CursorWindow.java#L103
      */
-    private static final int MAX_TEXT_LEN = 1024 * 1024;
+    // Max 512K characters (a UTF-8 char is 4 bytes max, so a 512K characters string is always < 2Mb)
+    private static final int MAX_TEXT_LEN = 1024 * 1024 / 2;
     public static String maxSQLiteText(final String text) {
         if (text.length() <= MAX_TEXT_LEN) {
             return text;

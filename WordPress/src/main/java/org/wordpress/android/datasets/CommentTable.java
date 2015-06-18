@@ -235,10 +235,7 @@ public class CommentTable {
         values.put("status", newStatus);
         String[] args = {Integer.toString(localBlogId),
                          Long.toString(commentId)};
-        getWritableDb().update(COMMENTS_TABLE,
-                               values,
-                               "blog_id=? AND comment_id=?",
-                               args);
+        getWritableDb().update(COMMENTS_TABLE, values, "blog_id=? AND comment_id=?", args);
     }
 
     /**
@@ -346,10 +343,10 @@ public class CommentTable {
 
 
     /**
-     * Delete big comments (Maximum 1024 * 1024 = 1048576) (fix #2855)
+     * Delete big comments (Maximum 512 * 1024 = 524288) (fix #2855)
      * @return number of deleted comments
      */
     public static int deleteBigComments(SQLiteDatabase db) {
-        return db.delete(COMMENTS_TABLE, "LENGTH(comment) >= 1048576", null);
+        return db.delete(COMMENTS_TABLE, "LENGTH(comment) >= 524288", null);
     }
 }
