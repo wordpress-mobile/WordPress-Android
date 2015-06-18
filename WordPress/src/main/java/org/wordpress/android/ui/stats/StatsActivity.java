@@ -474,7 +474,7 @@ public class StatsActivity extends AppCompatActivity
                                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
                                 AnalyticsTracker.track(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
-                                if (!isFinishing()) {
+                                if (isFinishing()) {
                                     return;
                                 }
                                 // We have the blogID now, but we need to re-check if the network connection is available

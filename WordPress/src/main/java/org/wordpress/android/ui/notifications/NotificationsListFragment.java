@@ -88,6 +88,10 @@ public class NotificationsListFragment extends Fragment
                 mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
                     @Override
                     public void onClickNote(String noteId) {
+                        if (!isAdded()) {
+                            return;
+                        }
+
                         if (TextUtils.isEmpty(noteId)) return;
 
                         // open the latest version of this note just in case it has changed - this can
@@ -168,6 +172,10 @@ public class NotificationsListFragment extends Fragment
                                 boolean shouldShowKeyboard,
                                 boolean shouldSlideIn) {
         if (noteId == null || activity == null) {
+            return;
+        }
+
+        if (activity.isFinishing()) {
             return;
         }
 
