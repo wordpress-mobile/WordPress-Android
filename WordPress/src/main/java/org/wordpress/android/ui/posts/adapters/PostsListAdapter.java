@@ -12,13 +12,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -43,21 +42,23 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private OnPostButtonClickListener mOnPostButtonClickListener;
 
     private int mSelectedPosition = -1;
+    private final int mLocalTableBlogId;
+    private final int mPhotonWidth;
+    private final int mPhotonHeight;
 
     private boolean mShowSelection;
     private final boolean mIsPage;
     private final boolean mIsPrivateBlog;
 
-    private final int mPhotonWidth;
-    private final int mPhotonHeight;
-
-    private List<PostsListPost> mPosts = new ArrayList<>();
+    private final PostsListPostList mPosts = new PostsListPostList();
     private final LayoutInflater mLayoutInflater;
 
-    public PostsListAdapter(Context context, boolean isPage, boolean isPrivateBlog) {
+    public PostsListAdapter(Context context, int localTableBlogId, boolean isPage, boolean isPrivateBlog) {
+        mLocalTableBlogId = localTableBlogId;
         mIsPage = isPage;
         mIsPrivateBlog = isPrivateBlog;
         mLayoutInflater = LayoutInflater.from(context);
+
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mPhotonWidth = displayWidth - (cardSpacing * 2);
@@ -80,9 +81,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         mOnPostButtonClickListener = listener;
     }
 
-    private void setPosts(List<PostsListPost> postsList) {
+    private void setPosts(PostsListPostList postsList) {
+        mPosts.clear();
         if (postsList != null) {
-            this.mPosts = postsList;
+            mPosts.addAll(postsList);
         }
     }
 
@@ -234,8 +236,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             mOnPostButtonClickListener.onPostButtonClicked(PostButton.STATS, post);
         } else if (view.getId() == R.id.btn_trash) {
             mOnPostButtonClickListener.onPostButtonClicked(PostButton.TRASH, post);
-        } else {
-            return;
         }
     }
 
@@ -267,11 +267,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     public void loadPosts() {
-        if (WordPress.getCurrentBlog() == null) {
-            return;
-        }
-
-        // load posts from db
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -280,34 +275,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             mPosts.clear();
             notifyDataSetChanged();
         }
-    }
-
-    private boolean postsListMatch(List<PostsListPost> newPostsList) {
-        if (newPostsList == null || newPostsList.size() == 0 || mPosts == null || mPosts.size() != newPostsList.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < newPostsList.size(); i++) {
-            PostsListPost newPost = newPostsList.get(i);
-            PostsListPost currentPost = mPosts.get(i);
-
-            if (newPost.getPostId() != currentPost.getPostId())
-                return false;
-            if (!newPost.getTitle().equals(currentPost.getTitle()))
-                return false;
-            if (newPost.getDateCreatedGmt() != currentPost.getDateCreatedGmt())
-                return false;
-            if (!newPost.getOriginalStatus().equals(currentPost.getOriginalStatus()))
-                return false;
-            if (newPost.isUploading() != currentPost.isUploading())
-                return false;
-            if (newPost.isLocalDraft() != currentPost.isLocalDraft())
-                return false;
-            if (newPost.hasLocalChanges() != currentPost.hasLocalChanges())
-                return false;
-        }
-
-        return true;
     }
 
     public int getRemotePostCount() {
@@ -366,12 +333,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        List<PostsListPost> loadedPosts;
+        PostsListPostList loadedPosts;
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            loadedPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
-            return !postsListMatch(loadedPosts);
+            loadedPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
+            return !loadedPosts.isSameList(mPosts);
 
         }
 

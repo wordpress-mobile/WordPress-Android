@@ -172,7 +172,8 @@ public class PostsListFragment extends Fragment
         if (mPostsListAdapter == null) {
             Blog currentBlog = WordPress.getCurrentBlog();
             boolean isPrivateBlog = (currentBlog != null && currentBlog.isPrivate());
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, isPrivateBlog);
+            int localBlogId = (currentBlog != null ? currentBlog.getLocalTableBlogId() : -1);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), localBlogId, mIsPage, isPrivateBlog);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
