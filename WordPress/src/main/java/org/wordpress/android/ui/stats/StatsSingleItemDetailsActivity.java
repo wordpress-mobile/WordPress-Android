@@ -16,6 +16,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
@@ -48,9 +49,14 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  *  Single item details activity.
  */
-public class StatsSinglePostDetailsActivity extends AppCompatActivity
+public class StatsSingleItemDetailsActivity extends AppCompatActivity
         implements StatsBarGraph.OnGestureListener{
-    public static final String ARG_REMOTE_POST_OBJECT = "ARG_REMOTE_POST_OBJECT";
+
+    public static final String ARG_REMOTE_BLOG_ID = "ARG_REMOTE_BLOG_ID";
+    public static final String ARG_REMOTE_ITEM_ID = "ARG_REMOTE_ITEM_ID";
+    public static final String ARG_REMOTE_ITEM_TYPE = "ARG_REMOTE_ITEM_TYPE";
+    public static final String ARG_ITEM_TITLE = "ARG_ITEM_TITLE";
+    public static final String ARG_ITEM_URL = "ARG_ITEM_URL";
     private static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
@@ -76,8 +82,7 @@ public class StatsSinglePostDetailsActivity extends AppCompatActivity
     private LinearLayout mRecentWeeksList;
     private RelativeLayout mRecentWeeksHeader;
     private LinearLayout mRecentWeeksEmptyPlaceholder;
-
-    private PostModel mRemotePostItem; // The original item returned from TopPostsAndPages endpoint
+    private String mRemoteBlogID, mRemoteItemID, mRemoteItemType, mItemTitle, mItemURL;
     private PostViewsModel mRestResponseParsed;
     private int mSelectedBarGraphIndex = -1;
 
@@ -144,7 +149,11 @@ public class StatsSinglePostDetailsActivity extends AppCompatActivity
         mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
 
         if (savedInstanceState != null) {
-            mRemotePostItem = (PostModel) savedInstanceState.getSerializable(ARG_REMOTE_POST_OBJECT);
+            mRemoteItemID = savedInstanceState.getString(ARG_REMOTE_ITEM_ID);
+            mRemoteBlogID = savedInstanceState.getString(ARG_REMOTE_BLOG_ID);
+            mRemoteItemType = savedInstanceState.getString(ARG_REMOTE_ITEM_TYPE);
+            mItemTitle = savedInstanceState.getString(ARG_ITEM_TITLE);
+            mItemURL = savedInstanceState.getString(ARG_ITEM_URL);
             mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
@@ -168,26 +177,56 @@ public class StatsSinglePostDetailsActivity extends AppCompatActivity
             }
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
-            mRemotePostItem = (PostModel) extras.getSerializable(ARG_REMOTE_POST_OBJECT);
+            mRemoteItemID = extras.getString(ARG_REMOTE_ITEM_ID);
+            mRemoteBlogID = extras.getString(ARG_REMOTE_BLOG_ID);
+            mRemoteItemType = extras.getString(ARG_REMOTE_ITEM_TYPE);
+            mItemTitle = extras.getString(ARG_ITEM_TITLE);
+            mItemURL = extras.getString(ARG_ITEM_URL);
             mRestResponseParsed = (PostViewsModel) extras.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = extras.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         }
 
+        if (mRemoteBlogID == null || mRemoteItemID == null) {
+            Toast.makeText(this, R.string.stats_generic_error, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         // Setup the main top label that opens the post in the Reader where possible
-        mStatsForLabel.setText(mRemotePostItem.getTitle());
-        mStatsForLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Context ctx = v.getContext();
-                StatsUtils.openPostInReaderOrInAppWebview(ctx, mRemotePostItem);
+        if (mItemTitle != null || mItemURL != null) {
+            mStatsForLabel.setVisibility(View.VISIBLE);
+            mStatsForLabel.setText(mItemTitle != null ? mItemTitle : mItemURL );
+            // make the label clickable if the URL is available
+            if (mItemURL != null) {
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.stats_link_text_color));
+                mStatsForLabel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Context ctx = v.getContext();
+                        StatsUtils.openPostInReaderOrInAppWebview(ctx,
+                                mRemoteBlogID,
+                                mRemoteItemID,
+                                mRemoteItemType,
+                                mItemURL);
+                    }
+                });
+            } else {
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.grey_darken_20));
             }
-        });
+        } else {
+            mStatsForLabel.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
-        outState.putSerializable(ARG_REMOTE_POST_OBJECT, mRemotePostItem);
+        outState.putString(ARG_REMOTE_BLOG_ID, mRemoteBlogID);
+        outState.putString(ARG_REMOTE_ITEM_ID, mRemoteItemID);
+        outState.putString(ARG_REMOTE_ITEM_TYPE, mRemoteItemType);
+        outState.putString(ARG_ITEM_TITLE, mItemTitle);
+        outState.putString(ARG_ITEM_URL, mItemURL);
+
         outState.putSerializable(ARG_REST_RESPONSE, mRestResponseParsed);
         if (mOuterScrollView.getScrollY() != 0) {
             outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
@@ -225,6 +264,13 @@ public class StatsSinglePostDetailsActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mIsUpdatingStats = false;
+        mSwipeToRefreshHelper.setRefreshing(false);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -236,10 +282,10 @@ public class StatsSinglePostDetailsActivity extends AppCompatActivity
     }
 
     private void refreshStats() {
-        final String remotePostID = mRemotePostItem.getItemID();
+
         if (mIsUpdatingStats) {
             AppLog.w(AppLog.T.STATS, "stats details are already updating for the following postID "
-                    + mRemotePostItem.getItemID() + ", refresh cancelled.");
+                    + mRemoteItemID + ", refresh cancelled.");
             return;
         }
 
@@ -250,11 +296,11 @@ public class StatsSinglePostDetailsActivity extends AppCompatActivity
         }
 
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
-        final String blogId = mRemotePostItem.getBlogID();
+
 
         // View and visitor counts for a site
         final String singlePostRestPath = String.format(
-                "/sites/%s/stats/post/%s", blogId, remotePostID);
+                "/sites/%s/stats/post/%s", mRemoteBlogID, mRemoteItemID);
 
         AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
 
@@ -756,7 +802,7 @@ public class StatsSinglePostDetailsActivity extends AppCompatActivity
             parseResponseExecutor.submit(new Thread() {
                 @Override
                 public void run() {
-                    AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
+                    //AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
                     mSelectedBarGraphIndex = -1;
                     try {
                         mRestResponseParsed = new PostViewsModel(response);
@@ -792,7 +838,13 @@ public class StatsSinglePostDetailsActivity extends AppCompatActivity
             mIsUpdatingStats = false;
             mSwipeToRefreshHelper.setRefreshing(false);
 
-            updateUI();
+            // Update the UI
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    updateUI();
+                }
+            });
         }
     }
 
