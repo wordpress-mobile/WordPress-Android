@@ -288,6 +288,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         return remotePostCount;
     }
 
+    public void removePost(PostsListPost post) {
+        int position = mPosts.indexOfPost(post);
+        if (position == -1) {
+            return;
+        }
+        mPosts.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public interface OnLoadMoreListener {
         void onLoadMore();
     }

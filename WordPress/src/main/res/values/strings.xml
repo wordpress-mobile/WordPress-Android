@@ -288,11 +288,13 @@
     <string name="deleting_page">Deleting page</string>
     <string name="page_deleted">Page deleted successfully</string>
     <string name="delete_sure_page">Delete this page</string>
+    <string name="page_trashed">Page sent to trash</string>
 
     <!-- post actions -->
     <string name="preview_post">Preview post</string>
     <string name="deleting_post">Deleting post</string>
     <string name="post_deleted">Post deleted successfully</string>
+    <string name="post_trashed">Post sent to trash</string>
     <string name="comment_added">Comment added successfully</string>
     <string name="delete_sure_post">Delete this post</string>
     <string name="share_url_post">Share post</string>

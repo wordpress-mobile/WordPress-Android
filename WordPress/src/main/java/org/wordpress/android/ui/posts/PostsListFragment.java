@@ -7,7 +7,9 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -75,6 +78,7 @@ public class PostsListFragment extends Fragment
     private boolean mSwipedToRefresh;
     private boolean mKeepSwipeRefreshLayoutVisible;
     private boolean mShowSelection;
+    private boolean mDidUndoTrash;
 
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
@@ -652,9 +656,46 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);
                 break;
             case TRASH:
-                // TODO: implement trash with undo
+                trashPost(post);
                 break;
         }
+    }
+
+    /*
+     * send the passed post to the trash with undo
+     */
+    private void trashPost(final PostsListPost post) {
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
+        mPostsListAdapter.removePost(post);
+
+        View.OnClickListener undoListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDidUndoTrash = true;
+                mPostsListAdapter.loadPosts();
+            }
+        };
+
+        mDidUndoTrash = false;
+        String text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
+        Snackbar.make(getView(), text, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener)
+                .show();
+
+        // wait for the undo snackbar to disappear before sending request
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mDidUndoTrash) {
+                    return;
+                }
+                // TODO: network request
+
+            }
+        }, Constants.SNACKBAR_LONG_DURATION_MS);
     }
 
 

@@ -31,4 +31,16 @@ public class PostsListPostList extends ArrayList<PostsListPost> {
 
         return true;
     }
+
+    public int indexOfPost(PostsListPost post) {
+        if (post == null) {
+            return -1;
+        }
+        for (int i = 0; i < size(); i++) {
+            if (this.get(i).getPostId() == post.getPostId() && this.get(i).getBlogId() == post.getBlogId()) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
