@@ -52,7 +52,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.xmlrpc.android.ApiHelper;
 
@@ -426,9 +425,9 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
 
-        String password = WPActivityUtils.getNonNullString(mPasswordEditText);
-        String pubDate = WPActivityUtils.getNonNullString(mPubDateText);
-        String excerpt = WPActivityUtils.getNonNullString(mExcerptEditText);
+        String password = EditTextUtils.getText(mPasswordEditText);
+        String pubDate = EditTextUtils.getText(mPubDateText);
+        String excerpt = EditTextUtils.getText(mExcerptEditText);
 
         long pubDateTimestamp = 0;
         if (mIsCustomPubDate && pubDate.equals(getText(R.string.immediately)) && !mPost.isLocalDraft()) {
@@ -446,7 +445,7 @@ public class EditPostSettingsFragment extends Fragment
 
         String tags = "", postFormat = "";
         if (!mPost.isPage()) {
-            tags = WPActivityUtils.getNonNullString(mTagsEditText);
+            tags = EditTextUtils.getText(mTagsEditText);
 
             // post format
             if (mPostFormats != null && mPostFormatSpinner != null &&
