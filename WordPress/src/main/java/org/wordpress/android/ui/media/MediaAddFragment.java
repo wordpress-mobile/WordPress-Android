@@ -198,8 +198,13 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             return null;
         }
 
-        cursor.moveToFirst();
-        String path = cursor.getString(column_index);
+        String path;
+        if (cursor.moveToFirst()) {
+            path = cursor.getString(column_index);
+        } else {
+            path = null;
+        }
+
         cursor.close();
         return path;
     }
