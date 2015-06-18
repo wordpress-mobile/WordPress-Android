@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
@@ -46,7 +47,13 @@ import java.util.Vector;
 
 import de.greenrobot.event.EventBus;
 
-public class PostsListFragment extends Fragment implements EmptyViewAnimationHandler.OnAnimationProgressListener {
+public class PostsListFragment extends Fragment
+        implements EmptyViewAnimationHandler.OnAnimationProgressListener,
+                   PostsListAdapter.OnPostsLoadedListener,
+                   PostsListAdapter.OnLoadMoreListener,
+                   PostsListAdapter.OnPostSelectedListener,
+                   PostsListAdapter.OnPostButtonClickListener
+{
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -163,71 +170,13 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
 
     public PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
-            PostsListAdapter.OnLoadMoreListener loadMoreListener = new PostsListAdapter.OnLoadMoreListener() {
-                @Override
-                public void onLoadMore() {
-                    if (mCanLoadMorePosts && !mIsFetchingPosts)
-                        requestPosts(true);
-                }
-            };
-
-            PostsListAdapter.OnPostsLoadedListener postsLoadedListener = new PostsListAdapter.OnPostsLoadedListener() {
-                @Override
-                public void onPostsLoaded(int postCount) {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    // Now that posts have been loaded, show the empty view if there are no results to display
-                    // This avoids the problem of the empty view immediately appearing when set at design time
-                    if (postCount == 0) {
-                        mEmptyView.setVisibility(View.VISIBLE);
-                    } else {
-                        mEmptyView.setVisibility(View.GONE);
-                    }
-
-                    if (!isRefreshing() || mKeepSwipeRefreshLayoutVisible) {
-                        // No posts and not currently refreshing. Display the "no posts/pages" message
-                        updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                    }
-
-                    if (postCount == 0 && mCanLoadMorePosts) {
-                        // No posts, let's request some if network available
-                        if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
-                            setRefreshing(true);
-                            requestPosts(false);
-                        } else {
-                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                        }
-                    } else if (mShouldSelectFirstPost) {
-                        // Select the first row on a tablet, if requested
-                        mShouldSelectFirstPost = false;
-                        if (mPostsListAdapter.getItemCount() > 0) {
-                            PostsListPost postsListPost = mPostsListAdapter.getItem(0);
-                            if (postsListPost != null) {
-                                mPostsListAdapter.setSelectedPosition(0);
-                                showPost(postsListPost.getPostId());
-                            }
-                        }
-                    }
-                }
-            };
-
-            PostsListAdapter.OnPostSelectedListener postSelectedListener = new PostsListAdapter.OnPostSelectedListener() {
-                @Override
-                public void onPostSelected(PostsListPost post) {
-                    if (isAdded()) {
-                        showPost(post.getPostId());
-                    }
-                }
-            };
-
             Blog currentBlog = WordPress.getCurrentBlog();
             boolean isPrivateBlog = (currentBlog != null && currentBlog.isPrivate());
             mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, isPrivateBlog);
-            mPostsListAdapter.setOnLoadMoreListener(loadMoreListener);
-            mPostsListAdapter.setOnPostsLoadedListener(postsLoadedListener);
-            mPostsListAdapter.setOnPostSelectedListener(postSelectedListener);
+            mPostsListAdapter.setOnLoadMoreListener(this);
+            mPostsListAdapter.setOnPostsLoadedListener(this);
+            mPostsListAdapter.setOnPostSelectedListener(this);
+            mPostsListAdapter.setOnPostButtonClickListener(this);
             mPostsListAdapter.setShowSelection(mShowSelection);
         }
 
@@ -619,6 +568,97 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
+    /*
+     * called by the adapter after posts have been loaded
+     */
+    @Override
+    public void onPostsLoaded(int postCount) {
+        if (!isAdded()) {
+            return;
+        }
+
+        // Now that posts have been loaded, show the empty view if there are no results to display
+        // This avoids the problem of the empty view immediately appearing when set at design time
+        if (postCount == 0) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyView.setVisibility(View.GONE);
+        }
+
+        if (!isRefreshing() || mKeepSwipeRefreshLayoutVisible) {
+            // No posts and not currently refreshing. Display the "no posts/pages" message
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
+
+        if (postCount == 0 && mCanLoadMorePosts) {
+            // No posts, let's request some if network available
+            if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
+                setRefreshing(true);
+                requestPosts(false);
+            } else {
+                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            }
+        } else if (mShouldSelectFirstPost) {
+            // Select the first row on a tablet, if requested
+            mShouldSelectFirstPost = false;
+            if (mPostsListAdapter.getItemCount() > 0) {
+                PostsListPost postsListPost = mPostsListAdapter.getItem(0);
+                if (postsListPost != null) {
+                    mPostsListAdapter.setSelectedPosition(0);
+                    showPost(postsListPost.getPostId());
+                }
+            }
+        }
+    }
+
+    /*
+     * called by the adapter to load more posts when the user scrolls towards the last post
+     */
+    @Override
+    public void onLoadMore() {
+        if (mCanLoadMorePosts && !mIsFetchingPosts)
+            requestPosts(true);
+    }
+
+    /*
+     * called by the adapter when the user clicks a post
+     */
+    @Override
+    public void onPostSelected(PostsListPost post) {
+        if (isAdded()) {
+            showPost(post.getPostId());
+        }
+    }
+
+    /*
+     * called by the adapter when the user clicks the edit/view/stats/trash button for a post
+     */
+    @Override
+    public void onPostButtonClicked(PostsListAdapter.PostButton button, PostsListPost post) {
+        switch (button) {
+            case EDIT:
+                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
+                break;
+            case VIEW:
+                Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
+                if (fullPost != null) {
+                    if (fullPost.isLocalDraft()) {
+                        // TODO: preview the post
+                    } else {
+                        ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
+                    }
+                }
+                break;
+            case STATS:
+                // TODO: ActivityLauncher.viewStatsSinglePostDetails needs to work with Post rather than PostModel
+                break;
+            case TRASH:
+                // TODO:
+                break;
+        }
+    }
+
 
     public interface OnPostSelectedListener {
         void onPostSelected(Post post);

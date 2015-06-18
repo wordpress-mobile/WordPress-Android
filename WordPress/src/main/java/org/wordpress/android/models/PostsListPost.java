@@ -158,7 +158,6 @@ public class PostsListPost {
 
     public String getFormattedDate() {
         return DateTimeUtils.javaDateToTimeSpan(new Date(dateCreatedGmt));
-        //return DateUtils.getRelativeTimeSpanString(getDateCreatedGmt(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
     }
 
     public boolean isLocalDraft() {

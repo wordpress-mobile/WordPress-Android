@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:selectableItemBackground"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/margin_large">
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_featured"
@@ -67,5 +66,40 @@
                 tools:text="text_status" />
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@color/grey_lighten_30"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_medium">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_edit"
+                style="@style/PostList.Button"
+                android:drawableLeft="@drawable/noticon_edit"
+                android:text="@string/button_edit" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_view"
+                style="@style/PostList.Button"
+                android:drawableLeft="@drawable/noticon_view"
+                android:text="@string/button_view" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_stats"
+                style="@style/PostList.Button"
+                android:drawableLeft="@drawable/noticon_stats"
+                android:text="@string/button_stats" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_trash"
+                style="@style/PostList.Button"
+                android:drawableLeft="@drawable/noticon_trash"
+                android:text="@string/button_trash" />
+
+        </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

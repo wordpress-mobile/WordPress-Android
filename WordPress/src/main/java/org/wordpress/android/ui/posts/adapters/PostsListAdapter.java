@@ -26,10 +26,22 @@ import java.util.Locale;
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
 
-    private final LayoutInflater mLayoutInflater;
+    public enum PostButton {
+        EDIT,
+        VIEW,
+        STATS,
+        TRASH
+    }
+
+    public interface OnPostButtonClickListener {
+        void onPostButtonClicked(PostButton button, PostsListPost post);
+    }
+
     private OnLoadMoreListener mOnLoadMoreListener;
     private OnPostsLoadedListener mOnPostsLoadedListener;
     private OnPostSelectedListener mOnPostSelectedListener;
+    private OnPostButtonClickListener mOnPostButtonClickListener;
+
     private int mSelectedPosition = -1;
 
     private boolean mShowSelection;
@@ -40,6 +52,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private final int mPhotonHeight;
 
     private List<PostsListPost> mPosts = new ArrayList<>();
+    private final LayoutInflater mLayoutInflater;
 
     public PostsListAdapter(Context context, boolean isPage, boolean isPrivateBlog) {
         mIsPage = isPage;
@@ -61,6 +74,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     public void setOnPostSelectedListener(OnPostSelectedListener listener) {
         mOnPostSelectedListener = listener;
+    }
+
+    public void setOnPostButtonClickListener(OnPostButtonClickListener listener) {
+        mOnPostButtonClickListener = listener;
     }
 
     private void setPosts(List<PostsListPost> postsList) {
@@ -161,12 +178,24 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             holder.txtStatus.setText(status.toUpperCase(Locale.getDefault()).replace(" ", "\n"));
         }
 
+        View.OnClickListener btnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postButtonClicked(v, position);
+            }
+        };
+        holder.btnEdit.setOnClickListener(btnClickListener);
+        holder.btnView.setOnClickListener(btnClickListener);
+        holder.btnStats.setOnClickListener(btnClickListener);
+        holder.btnTrash.setOnClickListener(btnClickListener);
+
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1
                 && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
 
+        // highlight selected post in dual-pane
         if (mShowSelection) {
             holder.itemView.setSelected(position == mSelectedPosition);
         }
@@ -185,6 +214,29 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 }
             }
         });
+    }
+
+    private void postButtonClicked(View view, int position) {
+        if (mOnPostButtonClickListener == null) {
+            return;
+        }
+
+        PostsListPost post = getItem(position);
+        if (post == null) {
+            return;
+        }
+
+        if (view.getId() == R.id.btn_edit) {
+            mOnPostButtonClickListener.onPostButtonClicked(PostButton.EDIT, post);
+        } else if (view.getId() == R.id.btn_view) {
+            mOnPostButtonClickListener.onPostButtonClicked(PostButton.VIEW, post);
+        } else if (view.getId() == R.id.btn_stats) {
+            mOnPostButtonClickListener.onPostButtonClicked(PostButton.STATS, post);
+        } else if (view.getId() == R.id.btn_trash) {
+            mOnPostButtonClickListener.onPostButtonClicked(PostButton.TRASH, post);
+        } else {
+            return;
+        }
     }
 
     public void setShowSelection(boolean showSelection) {
@@ -288,14 +340,27 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         private final TextView txtExcerpt;
         private final TextView txtDate;
         private final TextView txtStatus;
+
+        private final TextView btnEdit;
+        private final TextView btnView;
+        private final TextView btnStats;
+        private final TextView btnTrash;
+
         private final WPNetworkImageView imgFeatured;
 
         public PostViewHolder(View view) {
             super(view);
+
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
             txtDate = (TextView) view.findViewById(R.id.text_date);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
+
+            btnEdit = (TextView) view.findViewById(R.id.btn_edit);
+            btnView = (TextView) view.findViewById(R.id.btn_view);
+            btnStats = (TextView) view.findViewById(R.id.btn_stats);
+            btnTrash = (TextView) view.findViewById(R.id.btn_trash);
+
             imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
         }
     }

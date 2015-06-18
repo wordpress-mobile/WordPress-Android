@@ -21,16 +21,15 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -195,20 +194,8 @@ public class ViewPostFragment extends Fragment {
         }
     }
 
-    /**
-     * Load the post preview as an authenticated URL so stats aren't bumped.
-     */
     protected void loadPostPreview() {
-        if (WordPress.currentPost != null && !TextUtils.isEmpty(WordPress.currentPost.getPermaLink())) {
-            Post post = WordPress.currentPost;
-            String url = post.getPermaLink();
-            if (-1 == url.indexOf('?')) {
-                url = url.concat("?preview=true");
-            } else {
-                url = url.concat("&preview=true");
-            }
-            WPWebViewActivity.openUrlByUsingBlogCredentials(getActivity(), WordPress.currentBlog, url);
-        }
+        ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), WordPress.currentPost);
     }
 
     public void onAttach(Activity activity) {

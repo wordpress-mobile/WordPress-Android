@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -133,6 +134,21 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    /*
+     * Load the post preview as an authenticated URL so stats aren't bumped
+     */
+    public static void browsePostOrPage(Context context, Blog blog, Post post) {
+        if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
+
+        String url = post.getPermaLink();
+        if (-1 == url.indexOf('?')) {
+            url = url.concat("?preview=true");
+        } else {
+            url = url.concat("&preview=true");
+        }
+        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, url);
     }
 
     public static void addMedia(Activity activity) {

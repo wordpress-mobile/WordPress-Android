@@ -200,6 +200,12 @@
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="empty_list_default">This list is empty</string>
 
+    <!-- buttons on post cards -->
+    <string name="button_edit">Edit</string>
+    <string name="button_view">View</string>
+    <string name="button_stats">Stats</string>
+    <string name="button_trash">Trash</string>
+
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
