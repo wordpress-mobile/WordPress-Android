@@ -209,6 +209,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         });
     }
 
+    /*
+     * buttons appear in two rows which are toggled through the "more" and "back" buttons, this
+     * routine is used to animate the new row in and the old row out
+     */
     private void animateButtonRow(final ViewGroup rowToAnimateIn, final ViewGroup rowToAnimateOut) {
         PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0.5f);
         PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0.5f);
