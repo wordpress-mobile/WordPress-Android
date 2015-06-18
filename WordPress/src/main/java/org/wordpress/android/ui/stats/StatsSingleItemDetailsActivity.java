@@ -196,8 +196,9 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         if (mItemTitle != null || mItemURL != null) {
             mStatsForLabel.setVisibility(View.VISIBLE);
             mStatsForLabel.setText(mItemTitle != null ? mItemTitle : mItemURL );
-            // make the label clickable is the URL is available
+            // make the label clickable if the URL is available
             if (mItemURL != null) {
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.stats_link_text_color));
                 mStatsForLabel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -209,6 +210,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                                 mItemURL);
                     }
                 });
+            } else {
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.grey_darken_20));
             }
         } else {
             mStatsForLabel.setVisibility(View.GONE);
