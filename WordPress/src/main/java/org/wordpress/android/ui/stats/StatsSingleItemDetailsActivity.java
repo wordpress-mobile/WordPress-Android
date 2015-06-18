@@ -193,9 +193,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         // Setup the main top label that opens the post in the Reader where possible
-        if (mItemTitle != null) {
+        if (mItemTitle != null || mItemURL != null) {
             mStatsForLabel.setVisibility(View.VISIBLE);
-            mStatsForLabel.setText(mItemTitle);
+            mStatsForLabel.setText(mItemTitle != null ? mItemTitle : mItemURL );
+            // make the label clickable is the URL is available
             if (mItemURL != null) {
                 mStatsForLabel.setOnClickListener(new View.OnClickListener() {
                     @Override
