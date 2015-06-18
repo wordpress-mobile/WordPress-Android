@@ -149,6 +149,44 @@ public class CommentTable {
     }
 
     /**
+     * Synchronize comments between local and remote server
+     * localdb should contain comment that is present in remote's db
+     *
+     * @param localBlogId - unique id in account table for this blog
+     * @param limit - specify number of elements returned in the cursor. Default is -1 (no limit).
+     * @param offset - speficy number of rows that should be skipped. Cursor will begin on the next
+     *               number after the offset
+     * @param remoteComments - valid comments from the remote.
+     */
+    public static void syncCommentsForBlog(int localBlogId, int limit, int offset, CommentList remoteComments) {
+        String[] args = {
+                Integer.toString(localBlogId),
+                Integer.toString(limit),
+                Integer.toString(offset)
+        };
+
+        if (offset == 0) {
+            deleteCommentsForBlog(localBlogId);
+        } else {
+            Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? ORDER BY published DESC LIMIT ? OFFSET ?", args);
+
+            try {
+                if (c.moveToFirst()) {
+                    do {
+                        Comment comment = getCommentFromCursor(c);
+                        CommentTable.deleteComment(localBlogId, comment.commentID);
+                    } while (c.moveToNext());
+                }
+            } finally {
+                SqlUtils.closeCursor(c);
+            }
+        }
+
+        CommentTable.saveComments(localBlogId, remoteComments);
+    }
+
+
+    /**
     * nbradbury - delete all comments for a blog
     * @param localBlogId - unique id in account table for this blog
     * @return number of comments deleted
@@ -156,7 +194,7 @@ public class CommentTable {
     public static int deleteCommentsForBlog(int localBlogId) {
         return getWritableDb().delete(COMMENTS_TABLE, "blog_id=?", new String[]{Integer.toString(localBlogId)});
     }
-
+    
     /**
      * nbradbury - saves comments for passed blog to local db, overwriting existing ones if necessary
      * @param localBlogId - unique id in account table for this blog
@@ -233,11 +271,11 @@ public class CommentTable {
         ContentValues values = new ContentValues();
         values.put("status", newStatus);
         String[] args = {Integer.toString(localBlogId),
-                         Long.toString(commentId)};
+                Long.toString(commentId)};
         getWritableDb().update(COMMENTS_TABLE,
-                               values,
-                               "blog_id=? AND comment_id=?",
-                               args);
+                values,
+                "blog_id=? AND comment_id=?",
+                args);
     }
 
     /**
@@ -270,7 +308,7 @@ public class CommentTable {
         ContentValues values = new ContentValues();
         values.put("post_title", StringUtils.notNullStr(postTitle));
         String[] args = {Integer.toString(localBlogId),
-                         Long.toString(commentId)};
+                Long.toString(commentId)};
         int count = getWritableDb().update(COMMENTS_TABLE, values, "blog_id=? AND comment_id=?", args);
         return (count > 0);
     }

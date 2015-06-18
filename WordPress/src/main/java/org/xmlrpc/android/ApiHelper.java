@@ -269,6 +269,7 @@ public class ApiHelper {
             hPost.put("number", 30);
             Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), hPost};
+
             try {
                 ApiHelper.refreshComments(mBlog, commentParams);
             } catch (Exception e) {
@@ -347,20 +348,38 @@ public class ApiHelper {
         if (blog == null) {
             return null;
         }
+
+        int paramsPosition = commentParams.length - 1; // params is in the last argument
+        int offset = 0; // no table offset
+        int limit = -1; // no table return limit
+
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         Object[] result;
-        result = (Object[]) client.call("wp.getComments", commentParams);
-
-        if (result.length == 0) {
-            return null;
-        }
 
         Map<?, ?> contentHash;
         long commentID, postID;
         String authorName, content, status, authorEmail, authorURL, postTitle, pubDate;
         java.util.Date date;
         CommentList comments = new CommentList();
+
+        HashMap <String, Object> hPost = (HashMap<String, Object>) commentParams[paramsPosition];
+        if (!hPost.containsKey("status")) {
+            hPost.put("status", "approve, hold, spam");
+        }
+        if (hPost.containsKey("number")) {
+            limit = (int) hPost.get("number");
+        }
+        if (hPost.containsKey("offset")) {
+            offset = (int) hPost.get("offset");
+        }
+        commentParams[paramsPosition] = hPost;
+
+        result = (Object[]) client.call("wp.getComments", commentParams);
+
+        if (result.length == 0) {
+            return null;
+        }
 
         for (int ctr = 0; ctr < result.length; ctr++) {
             contentHash = (Map<?, ?>) result[ctr];
@@ -391,7 +410,8 @@ public class ApiHelper {
         }
 
         int localBlogId = blog.getLocalTableBlogId();
-        CommentTable.saveComments(localBlogId, comments);
+
+        CommentTable.syncCommentsForBlog(localBlogId, limit, offset, comments);
 
         return comments;
     }

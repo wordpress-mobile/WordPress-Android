@@ -468,10 +468,9 @@ public class CommentsListFragment extends Fragment {
             if (mIsLoadingMore) {
                 int numExisting = getCommentAdapter().getCount();
                 hPost.put("offset", numExisting);
-                hPost.put("number", COMMENTS_PER_PAGE);
-            } else {
-                hPost.put("number", COMMENTS_PER_PAGE);
             }
+
+            hPost.put("number", COMMENTS_PER_PAGE);
 
             Object[] params = { blog.getRemoteBlogId(),
                                 blog.getUsername(),
