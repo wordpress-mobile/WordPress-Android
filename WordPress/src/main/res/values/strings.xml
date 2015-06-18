@@ -375,6 +375,8 @@
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
+    <string name="pref_key_editor" translatable="false">wp_pref_editor</string>
+    <string name="pref_key_visual_editor_enabled" translatable="false">wp_pref_visual_editor_enabled</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
     <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
@@ -384,6 +386,8 @@
     <string name="preference_privacy">Privacy</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
+    <string name="preference_editor">Editor</string>
+    <string name="preference_show_visual_editor">Show visual editor</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>

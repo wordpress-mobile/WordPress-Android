@@ -8,12 +8,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
@@ -127,7 +129,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int AUTOSAVE_INTERVAL_MILLIS = 10000;
     private Timer mAutoSaveTimer;
 
-    private boolean mShowNewEditor = true;
+    private boolean mShowNewEditor;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
     private Map<Long, List<String>> mPendingGalleryUploads = new HashMap<>();
@@ -170,6 +172,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_edit_post_activity);
+
+        // TODO: Remove debug build check when new editor is moved to production
+        if (PackageUtils.isDebugBuild()) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            mShowNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
+        }
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -585,7 +593,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Update post object from fragment fields
         if (mEditorFragment != null) {
-            if (showNewEditor()) {
+            if (mShowNewEditor) {
                 updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                         (String) mEditorFragment.getContent());
             } else {
@@ -642,7 +650,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // changes have been made, save the post and ask for the post list to refresh.
             // We consider this being "manual save", it will replace some Android "spans" by an html
             // or a shortcode replacement (for instance for images and galleries)
-            if (showNewEditor()) {
+            if (mShowNewEditor) {
                 // Update the post object directly, without re-fetching the fields from the EditorFragment
                 updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                 savePostToDb();
@@ -679,7 +687,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     // TODO: switch between legacy and new editor here (AB test?)
-                    if (showNewEditor()) {
+                    if (mShowNewEditor) {
                         return new EditorFragment();
                     } else {
                         return new LegacyEditorFragment();
@@ -713,11 +721,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // Show 3 total pages.
             return 3;
         }
-    }
-
-    // TODO: Remove debug build check when new editor is moved to production
-    private boolean showNewEditor() {
-        return (mShowNewEditor && PackageUtils.isDebugBuild());
     }
 
     public boolean isEditingPostContent() {
@@ -849,7 +852,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (post.isLocalDraft() && !showNewEditor()) {
+                if (post.isLocalDraft() && !mShowNewEditor) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
