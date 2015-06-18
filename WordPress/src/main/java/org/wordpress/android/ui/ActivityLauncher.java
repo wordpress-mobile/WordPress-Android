@@ -197,6 +197,19 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
+    public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
+        if (post == null) return;
+
+        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(post.getLocalTableBlogId());
+        PostModel postModel = new PostModel(
+                Integer.toString(remoteBlogId),
+                post.getRemotePostId(),
+                post.getTitle(),
+                post.getLink(),
+                isPage ? "page" : "post");
+        viewStatsSinglePostDetails(context, postModel);
+    }
+
     public static void viewStatsSinglePostDetails(Context context, PostModel post) {
         if (post == null) return;
 

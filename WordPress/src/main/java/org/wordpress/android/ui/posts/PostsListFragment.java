@@ -637,22 +637,24 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostButtonClicked(PostsListAdapter.PostButton button, PostsListPost post) {
+        Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
+        if (fullPost == null)  {
+            return;
+        }
+
         switch (button) {
             case EDIT:
                 ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
                 break;
             case VIEW:
-                Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
-                if (fullPost != null) {
-                    if (fullPost.isLocalDraft()) {
-                        // TODO: preview the post
-                    } else {
-                        ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
-                    }
+                if (fullPost.isLocalDraft()) {
+                    // TODO: preview the post
+                } else {
+                    ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
                 }
                 break;
             case STATS:
-                // TODO: ActivityLauncher.viewStatsSinglePostDetails needs to work with Post rather than PostModel
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);
                 break;
             case TRASH:
                 // TODO:
