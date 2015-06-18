@@ -75,7 +75,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                     Fragment detailFragment = getDetailFragmentForNote(note);
                     getFragmentManager().beginTransaction()
                             .add(R.id.notifications_detail_container, detailFragment)
-                            .commit();
+                            .commitAllowingStateLoss();
 
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(note.getTitle());
