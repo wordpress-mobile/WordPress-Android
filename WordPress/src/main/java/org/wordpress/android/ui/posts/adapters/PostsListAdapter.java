@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,15 +89,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         return mFilter;
     }
 
-    public void setPostFilter(PostListFilter filter) {
-        if (filter == null || filter == mFilter) {
-            return;
+    public void setPostFilter(@NonNull PostListFilter filter) {
+        if (filter != mFilter) {
+            mFilter = filter;
+            loadPosts();
         }
-        mFilter = filter;
-        loadPosts();
     }
 
-    public PostsListPost getItem(int position) {
+    private PostsListPost getItem(int position) {
         if (isValidPosition(position)) {
             return mPosts.get(position);
         }
@@ -197,11 +197,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnPostSelectedListener != null) {
-                    PostsListPost selectedPost = getItem(position);
-                    if (selectedPost != null) {
-                        mOnPostSelectedListener.onPostSelected(selectedPost);
-                    }
+                PostsListPost selectedPost = getItem(position);
+                if (mOnPostSelectedListener != null && selectedPost != null) {
+                    mOnPostSelectedListener.onPostSelected(selectedPost);
                 }
             }
         });
@@ -403,7 +401,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        PostsListPostList filteredPosts = new PostsListPostList();
+        final PostsListPostList filteredPosts = new PostsListPostList();
 
         @Override
         protected Boolean doInBackground(Void... nada) {
@@ -412,7 +410,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
             // then apply the filter - this isn't done at the db level due to the way PostStatus
             // has to rely on the pubDate to figure out whether a post is scheduled
-            PostStatus status;
+            final PostStatus status;
             switch (mFilter) {
                 case SCHEDULED:
                     status = PostStatus.SCHEDULED;
@@ -443,8 +441,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 mPosts.clear();
                 mPosts.addAll(filteredPosts);
                 notifyDataSetChanged();
-
-                if (mOnPostsLoadedListener != null && mPosts != null) {
+                if (mOnPostsLoadedListener != null) {
                     mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
                 }
             }

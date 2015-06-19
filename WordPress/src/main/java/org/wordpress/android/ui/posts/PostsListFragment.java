@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,7 +43,6 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.PostListButton;
-import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
@@ -63,7 +60,6 @@ public class PostsListFragment extends Fragment
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private OnPostSelectedListener mOnPostSelectedListener;
     private PostsListAdapter mPostsListAdapter;
     private FloatingActionButton mFabButton;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
@@ -228,18 +224,6 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            // check that the containing activity implements our callback
-            mOnPostSelectedListener = (OnPostSelectedListener) activity;
-        } catch (ClassCastException e) {
-            activity.finish();
-            throw new ClassCastException(activity.toString()
-                    + " must implement Callback");
-        }
-    }
-
     public void onResume() {
         super.onResume();
         if (WordPress.getCurrentBlog() != null) {
@@ -263,24 +247,6 @@ public class PostsListFragment extends Fragment
 
     public void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
-    }
-
-    private void showPost(long selectedId) {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-
-        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId);
-        if (post != null) {
-            WordPress.currentPost = post;
-            mOnPostSelectedListener.onPostSelected(post);
-        } else {
-            if (!getActivity().isFinishing()) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.post_not_found));
-                ft.add(alert, "alert");
-                ft.commitAllowingStateLoss();
-            }
-        }
     }
 
     public void requestPosts(boolean loadMore) {
@@ -610,12 +576,12 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * called by the adapter when the user clicks a post
+     * called by the adapter when the user clicks a post - opens the post for editing if not trashed
      */
     @Override
     public void onPostSelected(PostsListPost post) {
-        if (isAdded()) {
-            showPost(post.getPostId());
+        if (isAdded() && !post.getStatusEnum().equals(PostStatus.TRASHED)) {
+            ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
         }
     }
 
@@ -715,11 +681,6 @@ public class PostsListFragment extends Fragment
 
             }
         }, Constants.SNACKBAR_LONG_DURATION_MS);
-    }
-
-
-    public interface OnPostSelectedListener {
-        void onPostSelected(Post post);
     }
 
     public interface OnPostActionListener {

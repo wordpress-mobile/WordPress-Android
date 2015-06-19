@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +29,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
-import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
@@ -48,8 +46,9 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.io.IOException;
 
 public class PostsListActivity extends AppCompatActivity
-        implements OnPostSelectedListener, OnPostActionListener,
-                   OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
+        implements OnPostActionListener,
+                   OnDetailPostActionListener,
+                   WPAlertDialogFragment.OnDialogConfirmListener {
 
     public enum PostListFilter {
         PUBLISHED,
@@ -271,27 +270,6 @@ public class PostsListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPostSelected(Post post) {
-        if (isFinishing() || post == null) {
-            return;
-        }
-
-        if (post.isUploading()){
-            ToastUtils.showToast(this, R.string.toast_err_post_uploading, ToastUtils.Duration.SHORT);
-            return;
-        }
-
-        WordPress.currentPost = post;
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.hide(mPostList);
-        ViewPostFragment viewPostFragment = new ViewPostFragment();
-        ft.add(R.id.postDetailFragmentContainer, viewPostFragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.addToBackStack(null);
-        ft.commitAllowingStateLoss();
-    }
-
-    @Override
     protected Dialog onCreateDialog(int id) {
         mLoadingDialog = new ProgressDialog(this);
         if (id == ID_DIALOG_DELETING) {
@@ -490,11 +468,7 @@ public class PostsListActivity extends AppCompatActivity
             try {
                 client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost", (mIsPage) ? pageParams : postParams);
                 result = true;
-            } catch (XMLRPCException e) {
-                mErrorMsg = prepareErrorMessage(e);
-            } catch (IOException e) {
-                mErrorMsg = prepareErrorMessage(e);
-            } catch (XmlPullParserException e) {
+            } catch (XMLRPCException | IOException | XmlPullParserException e) {
                 mErrorMsg = prepareErrorMessage(e);
             }
             return result;
