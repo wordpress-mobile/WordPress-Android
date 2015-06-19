@@ -26,6 +26,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
@@ -159,6 +160,16 @@ public class PostsListActivity extends AppCompatActivity
                 // nop
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        bumpActivityAnalytics();
+    }
+
+    protected void bumpActivityAnalytics() {
+        ActivityId.trackLastActivity(ActivityId.POSTS);
     }
 
     @Override

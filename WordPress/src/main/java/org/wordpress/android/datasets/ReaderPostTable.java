@@ -474,7 +474,7 @@ public class ReaderPostTable {
      * with a very large text column, causing an IllegalStateException when the
      * row is read - prevent this by limiting the amount of text that's stored in
      * the text column - note that this situation very rarely occurs
-     * https://github.com/android/platform_frameworks_base/blob/master/core/res/res/values/config.xml#L946
+     * https://github.com/android/platform_frameworks_base/blob/b77bc869241644a662f7e615b0b00ecb5aee373d/core/res/res/values/config.xml#L1268
      * https://github.com/android/platform_frameworks_base/blob/3bdbf644d61f46b531838558fabbd5b990fc4913/core/java/android/database/CursorWindow.java#L103
      */
     private static final int MAX_TEXT_LEN = (1024 * 1024) / 2;
