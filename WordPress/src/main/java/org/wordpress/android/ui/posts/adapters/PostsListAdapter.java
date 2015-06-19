@@ -21,6 +21,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PostsListActivity.PostListFilter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -40,6 +42,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private OnPostsLoadedListener mOnPostsLoadedListener;
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnPostButtonClickListener mOnPostButtonClickListener;
+
+    private PostListFilter mFilter;
 
     private final int mLocalTableBlogId;
     private final int mPhotonWidth;
@@ -81,11 +85,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         mOnPostButtonClickListener = listener;
     }
 
-    private void setPosts(PostsListPostList postsList) {
-        mPosts.clear();
-        if (postsList != null) {
-            mPosts.addAll(postsList);
+    public void setFilter(PostListFilter filter) {
+        if (filter == null || filter == mFilter) {
+            return;
         }
+        mFilter = filter;
+        loadPosts();
     }
 
     public PostsListPost getItem(int position) {
@@ -399,7 +404,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            loadedPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
+            loadedPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage, mFilter);
             return !loadedPosts.isSameList(mPosts);
 
         }
@@ -407,7 +412,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                setPosts(loadedPosts);
+                mPosts.clear();
+                mPosts.addAll(loadedPosts);
                 notifyDataSetChanged();
 
                 if (mOnPostsLoadedListener != null && mPosts != null) {

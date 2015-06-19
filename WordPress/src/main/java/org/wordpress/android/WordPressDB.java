@@ -20,10 +20,12 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -974,11 +976,31 @@ public class WordPressDB {
     /*
      * returns list of posts for use in the post list fragment
      */
-    public PostsListPostList getPostsListPosts(int localBlogId, boolean loadPages) {
+    public PostsListPostList getPostsListPosts(int localBlogId, boolean loadPages, PostsListActivity.PostListFilter filter) {
         PostsListPostList listPosts = new PostsListPostList();
 
         String[] args = {Integer.toString(localBlogId), Integer.toString(loadPages ? 1 : 0)};
         String query = "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)";
+
+        if (filter != null) {
+            PostStatus status;
+            switch (filter) {
+                case DRAFTS:
+                    status = PostStatus.DRAFT;
+                    break;
+                case SCHEDULED:
+                    status = PostStatus.SCHEDULED;
+                    break;
+                case TRASHED:
+                    status = PostStatus.TRASHED;
+                    break;
+                default:
+                    status = PostStatus.PUBLISHED;
+                    break;
+            }
+            query += " AND post_status='" + PostStatus.toString(status) + "'";
+        }
+
         Cursor c = db.query(POSTS_TABLE, null, query, args, null, null, "localDraft DESC, date_created_gmt DESC");
         try {
             while (c.moveToNext()) {

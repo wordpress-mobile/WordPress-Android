@@ -35,6 +35,7 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.posts.PostsListActivity.PostListFilter;
 import org.wordpress.android.ui.reader.views.ReaderItemDecoration;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -85,6 +86,8 @@ public class PostsListFragment extends Fragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
+
+    private PostListFilter mFilter = PostListFilter.PUBLISHED;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,6 +151,10 @@ public class PostsListFragment extends Fragment
                         refreshPosts((PostsListActivity) getActivity());
                     }
                 });
+    }
+
+    public void setFilter(PostListFilter filter) {
+        getPostListAdapter().setFilter(filter);
     }
 
     private void refreshPosts(PostsListActivity postsListActivity) {
