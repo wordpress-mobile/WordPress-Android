@@ -174,6 +174,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         setContentView(R.layout.new_edit_post_activity);
 
         // Check whether to show the visual editor
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mShowNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
 
