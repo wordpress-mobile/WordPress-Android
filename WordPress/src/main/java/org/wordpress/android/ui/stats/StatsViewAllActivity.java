@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -276,6 +277,7 @@ public class StatsViewAllActivity extends ActionBarActivity {
         super.onResume();
         mIsInFront = true;
         NetworkUtils.checkConnection(this); // show the error toast if the network is offline
+        ActivityId.trackLastActivity(ActivityId.STATS_VIEW_ALL);
     }
 
     @Override

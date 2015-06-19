@@ -67,6 +67,8 @@ public class ViewSiteActivity extends ActionBarActivity {
 
         setTitle(StringUtils.unescapeHTML(mBlog.getBlogName()));
         loadSiteURL();
+
+        ActivityId.trackLastActivity(ActivityId.VIEW_SITE);
     }
 
     @Override
