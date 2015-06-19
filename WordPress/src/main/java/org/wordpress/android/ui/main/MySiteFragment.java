@@ -18,7 +18,6 @@ import android.widget.ScrollView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -174,14 +173,6 @@ public class MySiteFragment extends Fragment
         refreshBlogDetails();
 
         return rootView;
-    }
-
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-        if (visible) {
-            ActivityId.trackLastActivity(ActivityId.MY_SITE);
-        }
     }
 
     private void showSitePicker() {
