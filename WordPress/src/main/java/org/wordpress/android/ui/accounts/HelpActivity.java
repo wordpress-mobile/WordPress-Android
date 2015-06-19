@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.ABTestingUtils;
@@ -52,6 +53,12 @@ public class HelpActivity extends AppCompatActivity {
                 startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ActivityId.trackLastActivity(ActivityId.HELP_SCREEN);
     }
 
     @Override

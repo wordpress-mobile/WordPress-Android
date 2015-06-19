@@ -29,6 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
@@ -261,6 +262,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         } else {
             updateUI();
         }
+        ActivityId.trackLastActivity(ActivityId.STATS_POST_DETAILS);
     }
 
     @Override

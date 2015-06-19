@@ -21,6 +21,7 @@ import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
@@ -73,6 +74,12 @@ public class CommentsActivity extends AppCompatActivity
                 showReaderFragment(selectedPostId.getRemoteBlogId(), selectedPostId.getId());
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ActivityId.trackLastActivity(ActivityId.COMMENTS);
     }
 
     @Override

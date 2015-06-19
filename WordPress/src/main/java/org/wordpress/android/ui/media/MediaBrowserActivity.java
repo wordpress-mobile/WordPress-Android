@@ -34,6 +34,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -257,6 +258,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onResume();
         startMediaDeleteService();
         getFeatureSet();
+        ActivityId.trackLastActivity(ActivityId.MEDIA);
     }
 
     /** Get the feature set for a wordpress.com hosted blog **/
