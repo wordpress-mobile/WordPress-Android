@@ -173,11 +173,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_edit_post_activity);
 
-        // TODO: Remove debug build check when new editor is moved to production
-        if (PackageUtils.isDebugBuild()) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            mShowNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
-        }
+        // Check whether to show the visual editor
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mShowNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
