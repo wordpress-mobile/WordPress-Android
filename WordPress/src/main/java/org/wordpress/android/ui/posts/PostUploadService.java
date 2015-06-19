@@ -943,7 +943,12 @@ public class PostUploadService extends Service {
             }
 
             mNotificationBuilder.setProgress(100, (int)Math.ceil(currentChunkProgress), false);
-            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+
+            try {
+                mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+            } catch (RuntimeException runtimeException) {
+                AppLog.d(T.POSTS, "See issue #2858; notify failed with:" + runtimeException);
+            }
         }
 
         public void setTotalMediaItems(int totalMediaItems) {
