@@ -20,12 +20,10 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -980,32 +978,13 @@ public class WordPressDB {
     /*
      * returns list of posts for use in the post list fragment
      */
-    public PostsListPostList getPostsListPosts(int localBlogId, boolean loadPages, PostsListActivity.PostListFilter filter) {
+    public PostsListPostList getPostsListPosts(int localBlogId, boolean loadPages) {
         PostsListPostList listPosts = new PostsListPostList();
 
         String[] args = {Integer.toString(localBlogId), Integer.toString(loadPages ? 1 : 0)};
         String query = "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)";
 
-        if (filter != null) {
-            PostStatus status;
-            switch (filter) {
-                case DRAFTS:
-                    status = PostStatus.DRAFT;
-                    break;
-                case SCHEDULED:
-                    status = PostStatus.SCHEDULED;
-                    break;
-                case TRASHED:
-                    status = PostStatus.TRASHED;
-                    break;
-                default:
-                    status = PostStatus.PUBLISHED;
-                    break;
-            }
-            query += " AND post_status='" + PostStatus.toString(status) + "'";
-        }
-
-        Cursor c = db.query(POSTS_TABLE, null, query, args, null, null, "localDraft DESC, date_created_gmt DESC");
+        Cursor c = db.query(POSTS_TABLE, null, query, args, null, null, "date_created_gmt DESC");
         try {
             while (c.moveToNext()) {
                 Post post = new Post();
@@ -1056,39 +1035,6 @@ public class WordPressDB {
         } finally {
             SqlUtils.closeCursor(c);
         }
-
-
-        /*List<PostsListPost> posts = new ArrayList<PostsListPost>();
-        Cursor c;
-        c = db.query(POSTS_TABLE,
-                new String[] { "id", "blogID", "title",  "description",
-                        "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
-                "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
-                new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        for (int i = 0; i < numRows; ++i) {
-            String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
-
-            // Create the PostsListPost and add it to the Array
-            PostsListPost post = new PostsListPost(
-                    c.getInt(c.getColumnIndex("id")),
-                    c.getInt(c.getColumnIndex("blogID")),
-                    postTitle,
-                    c.getString(c.getColumnIndex("description")),
-                    c.getLong(c.getColumnIndex("date_created_gmt")),
-                    c.getString(c.getColumnIndex("post_status")),
-                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
-                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))),
-                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading")))
-            );
-            posts.add(i, post);
-            c.moveToNext();
-        }
-        c.close();
-
-        return posts;*/
     }
 
     public int clearAllUploadingPosts(int localTableBlogId, boolean isPage) {

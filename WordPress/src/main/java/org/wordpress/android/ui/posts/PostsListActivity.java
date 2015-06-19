@@ -48,7 +48,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.io.IOException;
 
 public class PostsListActivity extends AppCompatActivity
-        implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
+        implements OnPostSelectedListener, OnPostActionListener,
                    OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
 
     public enum PostListFilter {
@@ -142,16 +142,16 @@ public class PostsListActivity extends AppCompatActivity
 
                 switch (position) {
                     case IDX_FILTER_PUBLISHED:
-                        mPostList.setFilter(PostListFilter.PUBLISHED);
+                        mPostList.setPostFilter(PostListFilter.PUBLISHED);
                         break;
                     case IDX_FILTER_DRAFTS:
-                        mPostList.setFilter(PostListFilter.DRAFTS);
+                        mPostList.setPostFilter(PostListFilter.DRAFTS);
                         break;
                     case IDX_FILTER_SCHEDULED:
-                        mPostList.setFilter(PostListFilter.SCHEDULED);
+                        mPostList.setPostFilter(PostListFilter.SCHEDULED);
                         break;
                     case IDX_FILTER_TRASHED:
-                        mPostList.setFilter(PostListFilter.TRASHED);
+                        mPostList.setPostFilter(PostListFilter.TRASHED);
                         break;
                 }
             }
@@ -419,11 +419,6 @@ public class PostsListActivity extends AppCompatActivity
     public void onDialogConfirm() {
         mPostList.requestPosts(true);
         mPostList.setRefreshing(true);
-    }
-
-    @Override
-    public void onSinglePostLoaded() {
-        // noop
     }
 
     @Override

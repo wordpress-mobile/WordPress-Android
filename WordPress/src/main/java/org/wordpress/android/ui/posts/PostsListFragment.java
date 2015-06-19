@@ -34,8 +34,8 @@ import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
-import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.PostsListActivity.PostListFilter;
+import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.reader.views.ReaderItemDecoration;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -59,13 +59,11 @@ public class PostsListFragment extends Fragment
                    PostsListAdapter.OnPostsLoadedListener,
                    PostsListAdapter.OnLoadMoreListener,
                    PostsListAdapter.OnPostSelectedListener,
-                   PostsListAdapter.OnPostButtonClickListener
-{
+                   PostsListAdapter.OnPostButtonClickListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private OnPostSelectedListener mOnPostSelectedListener;
-    private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
     private FloatingActionButton mFabButton;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
@@ -86,8 +84,6 @@ public class PostsListFragment extends Fragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
-
-    private PostListFilter mFilter = PostListFilter.PUBLISHED;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,16 +144,22 @@ public class PostsListFragment extends Fragment
                             return;
                         }
                         mSwipedToRefresh = true;
-                        refreshPosts((PostsListActivity) getActivity());
+                        refreshPosts();
                     }
                 });
     }
 
-    public void setFilter(PostListFilter filter) {
-        getPostListAdapter().setFilter(filter);
+    public PostListFilter getPostFilter() {
+        return getPostListAdapter().getPostFilter();
     }
 
-    private void refreshPosts(PostsListActivity postsListActivity) {
+    public void setPostFilter(PostListFilter filter) {
+        getPostListAdapter().setPostFilter(filter);
+    }
+
+    private void refreshPosts() {
+        if (!isAdded()) return;
+
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog == null) {
             ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
@@ -166,7 +168,7 @@ public class PostsListFragment extends Fragment
         }
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsListActivity);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
             dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
@@ -222,7 +224,7 @@ public class PostsListFragment extends Fragment
 
     private void newPost() {
         if (getActivity() instanceof PostsListActivity) {
-            ((PostsListActivity)getActivity()).newPost();
+            ((PostsListActivity) getActivity()).newPost();
         }
     }
 
@@ -231,7 +233,6 @@ public class PostsListFragment extends Fragment
         try {
             // check that the containing activity implements our callback
             mOnPostSelectedListener = (OnPostSelectedListener) activity;
-            mOnSinglePostLoadedListener = (OnSinglePostLoadedListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
@@ -245,7 +246,6 @@ public class PostsListFragment extends Fragment
             if (mRecyclerView.getAdapter() == null) {
                 mRecyclerView.setAdapter(getPostListAdapter());
             }
-            getPostListAdapter().loadPosts();
         }
     }
 
@@ -414,32 +414,31 @@ public class PostsListFragment extends Fragment
 
             mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(
                     new ApiHelper.FetchSinglePostTask.Callback() {
-                @Override
-                public void onSuccess() {
-                    mCurrentFetchSinglePostTask = null;
-                    mIsFetchingPosts = false;
-                    if (!isAdded() || !reloadPosts) {
-                        return;
-                    }
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                    getPostListAdapter().loadPosts();
-                    mOnSinglePostLoadedListener.onSinglePostLoaded();
-                }
+                        @Override
+                        public void onSuccess() {
+                            mCurrentFetchSinglePostTask = null;
+                            mIsFetchingPosts = false;
+                            if (!isAdded() || !reloadPosts) {
+                                return;
+                            }
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            getPostListAdapter().loadPosts();
+                        }
 
-                @Override
-                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    mCurrentFetchSinglePostTask = null;
-                    mIsFetchingPosts = false;
-                    if (!isAdded() || !reloadPosts) {
-                        return;
-                    }
-                    if (errorType != ErrorType.TASK_CANCELLED) {
-                        ToastUtils.showToast(getActivity(),
-                                mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
-                    }
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                }
-            });
+                        @Override
+                        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                            mCurrentFetchSinglePostTask = null;
+                            mIsFetchingPosts = false;
+                            if (!isAdded() || !reloadPosts) {
+                                return;
+                            }
+                            if (errorType != ErrorType.TASK_CANCELLED) {
+                                ToastUtils.showToast(getActivity(),
+                                        mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                            }
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                        }
+                    });
 
             mSwipeToRefreshHelper.setRefreshing(true);
             mIsFetchingPosts = true;
@@ -626,7 +625,7 @@ public class PostsListFragment extends Fragment
     @Override
     public void onPostButtonClicked(int buttonType, PostsListPost post) {
         Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
-        if (fullPost == null)  {
+        if (fullPost == null) {
             return;
         }
 
@@ -727,7 +726,4 @@ public class PostsListFragment extends Fragment
         void onPostAction(int action, Post post);
     }
 
-    public interface OnSinglePostLoadedListener {
-        void onSinglePostLoaded();
-    }
 }

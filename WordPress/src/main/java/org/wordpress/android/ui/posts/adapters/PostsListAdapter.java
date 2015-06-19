@@ -21,7 +21,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
-import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListActivity.PostListFilter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -43,7 +42,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnPostButtonClickListener mOnPostButtonClickListener;
 
-    private PostListFilter mFilter;
+    private PostListFilter mFilter = PostListFilter.PUBLISHED;
 
     private final int mLocalTableBlogId;
     private final int mPhotonWidth;
@@ -85,7 +84,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         mOnPostButtonClickListener = listener;
     }
 
-    public void setFilter(PostListFilter filter) {
+    public PostListFilter getPostFilter() {
+        return mFilter;
+    }
+
+    public void setPostFilter(PostListFilter filter) {
         if (filter == null || filter == mFilter) {
             return;
         }
@@ -400,12 +403,37 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        PostsListPostList loadedPosts;
+        PostsListPostList filteredPosts = new PostsListPostList();
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            loadedPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage, mFilter);
-            return !loadedPosts.isSameList(mPosts);
+            // first request all posts
+            PostsListPostList allPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
+
+            // then apply the filter - this isn't done at the db level due to the way PostStatus
+            // has to rely on the pubDate to figure out whether a post is scheduled
+            PostStatus status;
+            switch (mFilter) {
+                case SCHEDULED:
+                    status = PostStatus.SCHEDULED;
+                    break;
+                case TRASHED:
+                    status = PostStatus.TRASHED;
+                    break;
+                case DRAFTS:
+                    status = PostStatus.DRAFT;
+                    break;
+                default:
+                    status = PostStatus.PUBLISHED;
+                    break;
+            }
+            for (PostsListPost post: allPosts) {
+                if (post.getStatusEnum().equals(status)) {
+                    filteredPosts.add(post);
+                }
+            }
+
+            return !filteredPosts.isSameList(mPosts);
 
         }
 
@@ -413,7 +441,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mPosts.clear();
-                mPosts.addAll(loadedPosts);
+                mPosts.addAll(filteredPosts);
                 notifyDataSetChanged();
 
                 if (mOnPostsLoadedListener != null && mPosts != null) {
