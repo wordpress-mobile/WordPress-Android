@@ -393,8 +393,6 @@ public class ViewPostFragment extends Fragment {
                 if (!isAdded())
                     return;
 
-                mParentActivity.attemptToSelectPost();
-
                 mEditComment.setEnabled(true);
                 mAddCommentButton.setEnabled(true);
                 imgPostComment.setVisibility(View.VISIBLE);

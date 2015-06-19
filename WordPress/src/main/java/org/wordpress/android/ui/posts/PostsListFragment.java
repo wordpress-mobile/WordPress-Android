@@ -80,11 +80,11 @@ public class PostsListFragment extends Fragment
     private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
     private boolean mSwipedToRefresh;
     private boolean mKeepSwipeRefreshLayoutVisible;
-    private boolean mShowSelection;
     private boolean mDidUndoTrash;
 
     private boolean mCanLoadMorePosts = true;
-    private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
+    private boolean mIsPage;
+    private boolean mIsFetchingPosts;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -193,7 +193,6 @@ public class PostsListFragment extends Fragment
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
             mPostsListAdapter.setOnPostButtonClickListener(this);
-            mPostsListAdapter.setShowSelection(mShowSelection);
         }
 
         return mPostsListAdapter;
@@ -377,20 +376,6 @@ public class PostsListFragment extends Fragment
     private void hideLoadMoreProgress() {
         if (mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.GONE);
-        }
-    }
-
-    public void setShouldSelectFirstPost(boolean shouldSelect) {
-        mShouldSelectFirstPost = shouldSelect;
-    }
-
-    /*
-     * determines whether the adapter highlights the selected post - used in dual-pane mode
-     */
-    public void setShowSelection(boolean showSelection) {
-        mShowSelection = showSelection;
-        if (mPostsListAdapter != null) {
-            mPostsListAdapter.setShowSelection(showSelection);
         }
     }
 
@@ -605,16 +590,6 @@ public class PostsListFragment extends Fragment
                 requestPosts(false);
             } else {
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            }
-        } else if (mShouldSelectFirstPost) {
-            // Select the first row on a tablet, if requested
-            mShouldSelectFirstPost = false;
-            if (mPostsListAdapter.getItemCount() > 0) {
-                PostsListPost postsListPost = mPostsListAdapter.getItem(0);
-                if (postsListPost != null) {
-                    mPostsListAdapter.setSelectedPosition(0);
-                    showPost(postsListPost.getPostId());
-                }
             }
         }
     }

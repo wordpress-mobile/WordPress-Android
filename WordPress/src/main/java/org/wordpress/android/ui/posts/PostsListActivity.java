@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -28,7 +29,6 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMeShortlinks;
@@ -45,6 +45,7 @@ import java.io.IOException;
 public class PostsListActivity extends AppCompatActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
                    OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
+
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
@@ -54,8 +55,10 @@ public class PostsListActivity extends AppCompatActivity
     public static final int POST_SHARE = 1;
     public static final int POST_EDIT = 2;
     public static final int POST_VIEW = 5;
-    private static final int POST_CLEAR = 3;
-    private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
+
+    private static final int ID_DIALOG_DELETING = 1;
+    private static final int ID_DIALOG_SHARE = 2;
+
     private ProgressDialog mLoadingDialog;
     private boolean mIsPage = false;
     private String mErrorMsg = "";
@@ -64,7 +67,7 @@ public class PostsListActivity extends AppCompatActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This should be removed when #2734 is fixed
+        // TODO: this should be removed when #2734 is fixed
         if (WordPress.getCurrentBlog() == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
@@ -73,19 +76,19 @@ public class PostsListActivity extends AppCompatActivity
         ProfilingUtils.split("PostsListActivity.onCreate");
         ProfilingUtils.dump();
 
-        setContentView(R.layout.posts);
+        setContentView(R.layout.post_list_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         FragmentManager fm = getFragmentManager();
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
-
-        // the post list should highlight the selected post when in dual-pane mode
-        boolean isDualPane = (fm.findFragmentById(R.id.postDetail) != null);
-        mPostList.setShowSelection(isDualPane);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -100,12 +103,6 @@ public class PostsListActivity extends AppCompatActivity
         }
 
         WordPress.currentPost = null;
-
-        if (savedInstanceState != null) {
-            popPostDetail();
-        }
-
-        attemptToSelectPost();
     }
 
     @Override
@@ -164,7 +161,6 @@ public class PostsListActivity extends AppCompatActivity
         }
         // If user has local changes, don't refresh
         if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
-            popPostDetail();
             mPostList.requestPosts(false);
             mPostList.setRefreshing(true);
         }
@@ -177,31 +173,6 @@ public class PostsListActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            popPostDetail();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    private void popPostDetail() {
-        if (isFinishing()) {
-            return;
-        }
-
-        FragmentManager fm = getFragmentManager();
-        ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
-        if (f == null) {
-            try {
-                fm.popBackStack();
-            } catch (RuntimeException e) {
-                AppLog.e(T.POSTS, e);
-            }
-        }
     }
 
     public void newPost() {
@@ -232,40 +203,25 @@ public class PostsListActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected void attemptToSelectPost() {
-        FragmentManager fm = getFragmentManager();
-        ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
-        if (f != null && f.isInLayout()) {
-            mPostList.setShouldSelectFirstPost(true);
-        }
-    }
-
     @Override
     public void onPostSelected(Post post) {
-        if (isFinishing()) {
+        if (isFinishing() || post == null) {
             return;
         }
-        FragmentManager fm = getFragmentManager();
-        ViewPostFragment viewPostFragment = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
 
-        if (post != null) {
-            if (post.isUploading()){
-                ToastUtils.showToast(this, R.string.toast_err_post_uploading, ToastUtils.Duration.SHORT);
-                return;
-            }
-            WordPress.currentPost = post;
-            if (viewPostFragment == null || !viewPostFragment.isInLayout()) {
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.hide(mPostList);
-                viewPostFragment = new ViewPostFragment();
-                ft.add(R.id.postDetailFragmentContainer, viewPostFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(null);
-                ft.commitAllowingStateLoss();
-            } else {
-                viewPostFragment.loadPost(post);
-            }
+        if (post.isUploading()){
+            ToastUtils.showToast(this, R.string.toast_err_post_uploading, ToastUtils.Duration.SHORT);
+            return;
         }
+
+        WordPress.currentPost = post;
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.hide(mPostList);
+        ViewPostFragment viewPostFragment = new ViewPostFragment();
+        ft.add(R.id.postDetailFragmentContainer, viewPostFragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.addToBackStack(null);
+        ft.commitAllowingStateLoss();
     }
 
     @Override
@@ -317,8 +273,6 @@ public class PostsListActivity extends AppCompatActivity
                             public void onClick(DialogInterface dialog,
                                                 int whichButton) {
                                 WordPress.wpDB.deletePost(post);
-                                popPostDetail();
-                                attemptToSelectPost();
                                 mPostList.getPostListAdapter().loadPosts();
                             }
                         });
@@ -386,13 +340,6 @@ public class PostsListActivity extends AppCompatActivity
             startActivity(Intent.createChooser(share, getResources()
                     .getText(R.string.share_url)));
             AppLockManager.getInstance().setExtendedTimeout();
-        } else if (action == POST_CLEAR) {
-            FragmentManager fm = getFragmentManager();
-            ViewPostFragment f = (ViewPostFragment) fm
-                    .findFragmentById(R.id.postDetail);
-            if (f != null) {
-                f.clearContent();
-            }
         }
     }
 
@@ -409,7 +356,7 @@ public class PostsListActivity extends AppCompatActivity
 
     @Override
     public void onSinglePostLoaded() {
-        popPostDetail();
+        // noop
     }
 
     @Override
@@ -425,8 +372,6 @@ public class PostsListActivity extends AppCompatActivity
 
         @Override
         protected void onPreExecute() {
-            // pop out of the detail view if on a smaller screen
-            popPostDetail();
             showDialog(ID_DIALOG_DELETING);
         }
 
@@ -440,7 +385,7 @@ public class PostsListActivity extends AppCompatActivity
             } else if (mLoadingDialog.isShowing()) {
                 dismissDialog(ID_DIALOG_DELETING);
             }
-            attemptToSelectPost();
+
             if (result) {
                 Toast.makeText(PostsListActivity.this, getResources().getText((mIsPage) ?
                                 R.string.page_deleted : R.string.post_deleted),
@@ -483,7 +428,7 @@ public class PostsListActivity extends AppCompatActivity
             try {
                 client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost", (mIsPage) ? pageParams : postParams);
                 result = true;
-            } catch (final XMLRPCException e) {
+            } catch (XMLRPCException e) {
                 mErrorMsg = prepareErrorMessage(e);
             } catch (IOException e) {
                 mErrorMsg = prepareErrorMessage(e);

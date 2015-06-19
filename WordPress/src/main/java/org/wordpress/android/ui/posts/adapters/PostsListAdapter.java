@@ -41,12 +41,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnPostButtonClickListener mOnPostButtonClickListener;
 
-    private int mSelectedPosition = -1;
     private final int mLocalTableBlogId;
     private final int mPhotonWidth;
     private final int mPhotonHeight;
 
-    private boolean mShowSelection;
     private final boolean mIsPage;
     private final boolean mIsPrivateBlog;
 
@@ -188,17 +186,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             mOnLoadMoreListener.onLoadMore();
         }
 
-        // highlight selected post in dual-pane
-        if (mShowSelection) {
-            holder.itemView.setSelected(position == mSelectedPosition);
-        }
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mShowSelection) {
-                    setSelectedPosition(position);
-                }
                 if (mOnPostSelectedListener != null) {
                     PostsListPost selectedPost = getItem(position);
                     if (selectedPost != null) {
@@ -309,23 +299,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
 
         mOnPostButtonClickListener.onPostButtonClicked(view.getButtonType(), post);
-    }
-
-    public void setShowSelection(boolean showSelection) {
-        mShowSelection = showSelection;
-    }
-
-    public void setSelectedPosition(int position) {
-        if (position == mSelectedPosition) {
-            return;
-        }
-        if (isValidPosition(mSelectedPosition)) {
-            notifyItemChanged(mSelectedPosition);
-        }
-        mSelectedPosition = position;
-        if (isValidPosition(mSelectedPosition)) {
-            notifyItemChanged(mSelectedPosition);
-        }
     }
 
     @Override

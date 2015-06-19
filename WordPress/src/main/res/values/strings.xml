@@ -211,6 +211,14 @@
     <string name="button_more">More</string>
     <string name="button_back">Back</string>
 
+    <!-- dropdown filter above post cards -->
+    <string-array name="post_filters_array">
+        <item>Published</item>
+        <item>Drafts</item>
+        <item>Scheduled</item>
+        <item>Trashed</item>
+    </string-array>
+
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
