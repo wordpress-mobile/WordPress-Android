@@ -984,7 +984,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                     return;
                 }
                 WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
-                if (spans.length != 0) {
+                if (spans.length != 0 && getActivity() != null) {
                     for (WPImageSpan is : spans) {
                         MediaFile mediaFile = is.getMediaFile();
                         if (mediaFile == null) {
