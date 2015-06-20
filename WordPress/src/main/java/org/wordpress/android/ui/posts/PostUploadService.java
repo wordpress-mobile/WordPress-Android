@@ -37,6 +37,7 @@ import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -943,7 +944,14 @@ public class PostUploadService extends Service {
             }
 
             mNotificationBuilder.setProgress(100, (int)Math.ceil(currentChunkProgress), false);
-            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+
+            try {
+                mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+            } catch (RuntimeException runtimeException) {
+                CrashlyticsUtils.logException(runtimeException, CrashlyticsUtils.ExceptionType.SPECIFIC,
+                        AppLog.T.UTILS, "See issue #2858");
+                AppLog.d(T.POSTS, "See issue #2858; notify failed with:" + runtimeException);
+            }
         }
 
         public void setTotalMediaItems(int totalMediaItems) {
