@@ -32,7 +32,9 @@ public class WPEditImageSpan extends WPImageSpan {
     }
 
     private void init(Context context) {
-        mEditIconBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ab_icon_edit);
+        if (context != null) {
+            mEditIconBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ab_icon_edit);
+        }
     }
 
     @Override
@@ -40,7 +42,7 @@ public class WPEditImageSpan extends WPImageSpan {
                      Paint paint) {
         super.draw(canvas, text, start, end, x, top, y, bottom, paint);
 
-        if (!mMediaFile.isVideo()) {
+        if (mEditIconBitmap != null && !mMediaFile.isVideo()) {
             // Add 'edit' icon at bottom right of image
             int width = getSize(paint, text, start, end, paint.getFontMetricsInt());
             float editIconXPosition = (x + width) - mEditIconBitmap.getWidth();

@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-class StatsConstants {
+public class StatsConstants {
 
     // Date formatting constants
     public static final String STATS_INPUT_DATE_FORMAT = "yyyy-MM-dd";
@@ -14,4 +14,7 @@ class StatsConstants {
 
     public static final long STATS_SCROLL_TO_DELAY = 75L;
 
+    public static final String ITEM_TYPE_POST = "post";
+    public static final String ITEM_TYPE_PAGE = "page";
+    public static final String ITEM_TYPE_HOME_PAGE = "homepage";
 }

@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -277,6 +278,7 @@ public class StatsActivity extends AppCompatActivity
         } else {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
+        ActivityId.trackLastActivity(ActivityId.STATS);
     }
 
     @Override
@@ -474,7 +476,7 @@ public class StatsActivity extends AppCompatActivity
                                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
                                 AnalyticsTracker.track(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
-                                if (!isFinishing()) {
+                                if (isFinishing()) {
                                     return;
                                 }
                                 // We have the blogID now, but we need to re-check if the network connection is available

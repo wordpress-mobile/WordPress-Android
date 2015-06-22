@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
@@ -134,6 +135,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         mIsRunning = true;
+        ActivityId.trackLastActivity(ActivityId.THEMES);
 
         // fetch themes if we don't have any
         if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null

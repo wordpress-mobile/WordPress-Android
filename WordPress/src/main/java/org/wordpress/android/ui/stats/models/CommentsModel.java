@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.ui.stats.StatsConstants;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class CommentsModel implements Serializable {
                 String name = currentPostJSON.getString("name");
                 int totals = currentPostJSON.getInt("comments");
                 String link = currentPostJSON.getString("link");
-                PostModel currentPost = new PostModel(blogID, mDate, itemID, name, totals, link, "post");
+                PostModel currentPost = new PostModel(blogID, mDate, itemID, name, totals, link, StatsConstants.ITEM_TYPE_POST);
                 mPosts.add(currentPost);
             }
         }

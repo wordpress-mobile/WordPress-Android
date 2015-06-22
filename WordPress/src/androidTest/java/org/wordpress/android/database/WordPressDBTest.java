@@ -1,17 +1,10 @@
-package org.wordpress.android.models;
+package org.wordpress.android.database;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
-import android.util.Log;
-import org.wordpress.android.TestUtils;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.CategoryNode;
 
-public class WordPressDB_Test extends InstrumentationTestCase {
+public class WordPressDBTest extends InstrumentationTestCase {
     protected Context testContext;
     protected Context targetContext;
 
