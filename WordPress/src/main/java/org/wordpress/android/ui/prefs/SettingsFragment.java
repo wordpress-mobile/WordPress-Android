@@ -276,7 +276,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
     private boolean handleNotificationPreferenceClick() {
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new NotificationSettingsFragment())
+                .replace(R.id.fragment_container, new NotificationsSettingsFragment())
                 .addToBackStack(null)
                 .commit();
         return true;
