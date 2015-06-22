@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -72,14 +73,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private TextView mStatsViewsLabel;
     private TextView mStatsViewsTotals;
 
+    private LinearLayout mMonthsAndYearsModule;
     private LinearLayout mMonthsAndYearsList;
     private RelativeLayout mMonthsAndYearsHeader;
     private LinearLayout mMonthsAndYearsEmptyPlaceholder;
 
+    private LinearLayout mAveragesModule;
     private LinearLayout mAveragesList;
     private RelativeLayout mAveragesHeader;
     private LinearLayout mAveragesEmptyPlaceholder;
 
+    private LinearLayout mRecentWeeksModule;
     private LinearLayout mRecentWeeksList;
     private RelativeLayout mRecentWeeksHeader;
     private LinearLayout mRecentWeeksEmptyPlaceholder;
@@ -130,14 +134,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mStatsViewsLabel = (TextView) findViewById(R.id.stats_views_label);
         mStatsViewsTotals = (TextView) findViewById(R.id.stats_views_totals);
 
+        mMonthsAndYearsModule = (LinearLayout) findViewById(R.id.stats_months_years_module);
         mMonthsAndYearsHeader = (RelativeLayout) findViewById(R.id.stats_months_years_header);
         mMonthsAndYearsList = (LinearLayout) findViewById(R.id.stats_months_years_list_linearlayout);
         mMonthsAndYearsEmptyPlaceholder = (LinearLayout) findViewById(R.id.stats_months_years_empty_module_placeholder);
 
+        mAveragesModule = (LinearLayout) findViewById(R.id.stats_averages_module);
         mAveragesHeader = (RelativeLayout) findViewById(R.id.stats_averages_list_header);
         mAveragesList = (LinearLayout) findViewById(R.id.stats_averages_list_linearlayout);
         mAveragesEmptyPlaceholder = (LinearLayout) findViewById(R.id.stats_averages_empty_module_placeholder);
 
+        mRecentWeeksModule = (LinearLayout) findViewById(R.id.stats_recent_weeks_module);
         mRecentWeeksHeader = (RelativeLayout) findViewById(R.id.stats_recent_weeks_list_header);
         mRecentWeeksList = (LinearLayout) findViewById(R.id.stats_recent_weeks_list_linearlayout);
         mRecentWeeksEmptyPlaceholder = (LinearLayout) findViewById(R.id.stats_recent_weeks_empty_module_placeholder);
@@ -250,11 +257,12 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if (mRestResponseParsed == null) {
-            setupEmptyUI(true);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (!isFinishing()) {
+                        setupEmptyGraph("");
+                        showHideEmptyModulesIndicator(true);
                         refreshStats();
                     }
                 }
@@ -311,11 +319,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         mIsUpdatingStats = true;
         mSwipeToRefreshHelper.setRefreshing(true);
-
-        showHideEmptyModulesIndicator(true);
     }
 
     private void showHideEmptyModulesIndicator(boolean show) {
+        if (isFinishing()) {
+            return;
+        }
+
+        mMonthsAndYearsModule.setVisibility(View.VISIBLE);
+        mRecentWeeksModule.setVisibility(View.VISIBLE);
+        mAveragesModule.setVisibility(View.VISIBLE);
+
         mMonthsAndYearsHeader.setVisibility(show ? View.GONE : View.VISIBLE);
         mRecentWeeksHeader.setVisibility(show ? View.GONE : View.VISIBLE);
         mAveragesHeader.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -329,38 +343,39 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mAveragesEmptyPlaceholder.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
+    private void setupEmptyUI() {
+        if (isFinishing()) {
+            return;
+        }
 
-    private void setupEmptyUI(boolean isLoading) {
+        setupEmptyGraph(null);
+
+        mMonthsAndYearsModule.setVisibility(View.GONE);
+        mRecentWeeksModule.setVisibility(View.GONE);
+        mAveragesModule.setVisibility(View.GONE);
+
+        mRecentWeeksIdToExpandedMap.clear();
+        mAveragesIdToExpandedMap.clear();
+        mYearsIdToExpandedMap.clear();
+    }
+
+    private void setupEmptyGraph(String emptyLabel) {
+        if (isFinishing()) {
+            return;
+        }
         Context context = mGraphContainer.getContext();
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
-            final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
-            if (isLoading) {
-                emptyLabel.setText("");
-            } else {
-                emptyLabel.setText(getString(R.string.stats_bar_graph_empty));
+            if (emptyLabel != null) {
+                final TextView emptyLabelField = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+                emptyLabelField.setText(emptyLabel);
             }
             mGraphContainer.removeAllViews();
             mGraphContainer.addView(emptyBarGraphView);
         }
         mStatsViewsLabel.setText("");
         mStatsViewsTotals.setText("");
-
-        mMonthsAndYearsList.setVisibility(View.GONE);
-        mRecentWeeksList.setVisibility(View.GONE);
-        mAveragesList.setVisibility(View.GONE);
-
-        mMonthsAndYearsHeader.setVisibility(View.GONE);
-        mRecentWeeksHeader.setVisibility(View.GONE);
-        mAveragesHeader.setVisibility(View.GONE);
-
-        mMonthsAndYearsEmptyPlaceholder.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        mRecentWeeksEmptyPlaceholder.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        mAveragesEmptyPlaceholder.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-
-        mAveragesIdToExpandedMap.clear();
-        mYearsIdToExpandedMap.clear();
     }
 
     private VisitModel[] getDataToShowOnGraph () {
@@ -386,10 +401,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     }
 
     private void updateUI() {
+        if (isFinishing()) {
+            return;
+        }
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph();
 
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
-            setupEmptyUI(false);
+            setupEmptyUI();
             return;
         }
 
@@ -834,9 +852,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 return;
             }
             resetModelVariables();
-            ToastUtils.showToast(mActivityRef.get(),
-                    mActivityRef.get().getString(R.string.error_refresh_stats),
-                    ToastUtils.Duration.LONG);
+
+            String label = mActivityRef.get().getString(R.string.error_refresh_stats);
+            if (volleyError instanceof NoConnectionError) {
+                label += "<br/>" + mActivityRef.get().getString(R.string.no_network_message);
+            }
+
+            ToastUtils.showToast(mActivityRef.get(), label, ToastUtils.Duration.LONG);
             mIsUpdatingStats = false;
             mSwipeToRefreshHelper.setRefreshing(false);
 
