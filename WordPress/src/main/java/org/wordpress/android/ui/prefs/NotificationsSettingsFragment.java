@@ -46,12 +46,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         loadNotifications();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.manage_notifications);
-    }
-
     private void loadNotifications() {
         AppLog.d(T.NOTIFS, "Preferences > loading notification settings");
 
