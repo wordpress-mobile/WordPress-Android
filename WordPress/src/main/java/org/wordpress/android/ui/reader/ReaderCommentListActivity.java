@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -49,7 +49,7 @@ import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
-public class ReaderCommentListActivity extends ActionBarActivity {
+public class ReaderCommentListActivity extends AppCompatActivity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";

@@ -74,7 +74,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 31;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -292,6 +292,10 @@ public class WordPressDB {
                 if (!isNewInstall) {
                     migratePreferencesToAccountTable(context);
                 }
+                currentVersion++;
+            case 30:
+                // Fix big comments issue #2855
+                CommentTable.deleteBigComments(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

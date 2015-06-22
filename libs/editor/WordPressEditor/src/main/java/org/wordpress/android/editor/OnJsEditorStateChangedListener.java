@@ -6,4 +6,5 @@ public interface OnJsEditorStateChangedListener {
     void onDomLoaded();
     void onSelectionChanged(Map<String, String> selectionArgs);
     void onSelectionStyleChanged(Map<String, Boolean> changeSet);
+    void onGetHtmlResponse(Map<String, String> responseArgs);
 }

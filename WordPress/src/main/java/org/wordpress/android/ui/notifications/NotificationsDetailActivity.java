@@ -4,7 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -39,7 +39,7 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class NotificationsDetailActivity extends ActionBarActivity implements
+public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener {
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
@@ -75,7 +75,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                     Fragment detailFragment = getDetailFragmentForNote(note);
                     getFragmentManager().beginTransaction()
                             .add(R.id.notifications_detail_container, detailFragment)
-                            .commit();
+                            .commitAllowingStateLoss();
 
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(note.getTitle());

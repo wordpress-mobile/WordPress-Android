@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Custom view used when showing icons in main activity's SlidingTabLayout
+    Custom view used when showing icons in main activity's tab layout
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/toolbar_height"
-    android:background="?android:selectableItemBackground"
-    android:paddingLeft="@dimen/tabstrip_icon_spacing"
-    android:paddingRight="@dimen/tabstrip_icon_spacing"
-    tools:background="@color/color_primary">
+    android:layout_height="@dimen/toolbar_height">
 
-    <FrameLayout
+    <ImageView
+        android:id="@+id/tab_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:paddingLeft="@dimen/tabstrip_icon_spacing"
+        android:paddingRight="@dimen/tabstrip_icon_spacing"
+        tools:src="@drawable/main_tab_notifications" />
 
-        <ImageView
-            android:id="@+id/tab_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            tools:src="@drawable/main_tab_notifications" />
-
-        <View
-            android:id="@+id/tab_badge"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="top|left"
-            android:background="@drawable/badge"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </FrameLayout>
+    <View
+        android:id="@+id/tab_badge"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_toRightOf="@+id/tab_icon"
+        android:background="@drawable/badge"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </RelativeLayout>

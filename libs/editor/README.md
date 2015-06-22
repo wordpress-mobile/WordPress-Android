@@ -26,7 +26,13 @@ Finally, update `[PROJECT_ROOT]\.git\info\exclude` to ignore the symlink locally
 
 ## Testing ##
 
-Testing is done with the [Robolectric framework.](http://robolectric.org/) To run tests simply run `gradlew testDebug`. Code coverage reports can be generated via [JaCoCo.](http://www.eclemma.org/jacoco/) To generate them locally run `gradlew jacocoTestReport`.
+This project has both unit testing and integration testing, maintained and run separately.
+
+Unit testing is done with the [Robolectric framework](http://robolectric.org/). To run unit tests simply run `gradlew testDebug`. Code coverage reports can be generated via [JaCoCo.](http://www.eclemma.org/jacoco/) To generate them locally run `gradlew jacocoTestReport`.
+
+Integration testing is done with the [Android testing framework](http://developer.android.com/tools/testing/testing_android.html). To run integration tests run `gradlew connectedAndroidTest`.
+
+Add new unit tests to `src/test/java/` and integration tests to `stc/androidTest/java/`.
 
 ## LICENSE ##
 

@@ -18,7 +18,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -94,7 +94,7 @@ import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 
-public class EditPostActivity extends ActionBarActivity implements EditorFragmentListener {
+public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -354,13 +354,15 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         inflater.inflate(R.menu.edit_post, menu);
 
         mTags = (SuggestionAutoCompleteText) findViewById(R.id.tags);
-        mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
+        if (mTags != null) {
+            mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
-        remoteBlogId = WordPress.getCurrentRemoteBlogId();
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
-        mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
-        if (mTagSuggestionAdapter != null) {
-            mTags.setAdapter(mTagSuggestionAdapter);
+            remoteBlogId = WordPress.getCurrentRemoteBlogId();
+            mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
+            mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
+            if (mTagSuggestionAdapter != null) {
+                mTags.setAdapter(mTagSuggestionAdapter);
+            }
         }
 
         return true;

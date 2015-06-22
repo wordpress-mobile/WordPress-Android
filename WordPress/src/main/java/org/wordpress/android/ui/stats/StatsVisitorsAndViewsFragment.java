@@ -715,6 +715,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     @Override
     public void onBarTapped(int tappedBar) {
+        if (!isAdded()) {
+            return;
+        }
         //AppLog.d(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
         mSelectedBarGraphBarIndex = tappedBar;
         updateUIBelowTheGraph(tappedBar);

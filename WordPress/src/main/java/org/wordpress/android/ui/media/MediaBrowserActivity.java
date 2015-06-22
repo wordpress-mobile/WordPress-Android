@@ -12,7 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +34,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -43,6 +44,7 @@ import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallbac
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -55,7 +57,7 @@ import java.util.Set;
 /**
  * The main activity in which the user can browse their media.
  */
-public class MediaBrowserActivity extends ActionBarActivity implements MediaGridListener,
+public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
         MediaEditFragmentCallback, MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -88,6 +90,12 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // This should be removed when #2734 is fixed
+        if (WordPress.getCurrentBlog() == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
 
         setContentView(R.layout.media_browser_activity);
 
@@ -250,6 +258,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         super.onResume();
         startMediaDeleteService();
         getFeatureSet();
+        ActivityId.trackLastActivity(ActivityId.MEDIA);
     }
 
     /** Get the feature set for a wordpress.com hosted blog **/

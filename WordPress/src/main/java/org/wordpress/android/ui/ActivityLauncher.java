@@ -22,12 +22,12 @@ import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PagesActivity;
-import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.ui.posts.PagesListActivity;
+import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
-import org.wordpress.android.ui.stats.StatsSinglePostDetailsActivity;
+import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -65,7 +65,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPosts(Context context) {
-        Intent intent = new Intent(context, PostsActivity.class);
+        Intent intent = new Intent(context, PostsListActivity.class);
         slideInFromRight(context, intent);
     }
 
@@ -75,8 +75,8 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(Context context) {
-        Intent intent = new Intent(context, PagesActivity.class);
-        intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
+        Intent intent = new Intent(context, PagesListActivity.class);
+        intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         slideInFromRight(context, intent);
     }
 
@@ -184,8 +184,12 @@ public class ActivityLauncher {
     public static void viewStatsSinglePostDetails(Context context, PostModel post) {
         if (post == null) return;
 
-        Intent statsPostViewIntent = new Intent(context, StatsSinglePostDetailsActivity.class);
-        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, post);
+        Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_BLOG_ID, post.getBlogID());
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_ID, post.getItemID());
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_TYPE, post.getPostType());
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_TITLE, post.getTitle());
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_URL, post.getUrl());
         context.startActivity(statsPostViewIntent);
     }
 

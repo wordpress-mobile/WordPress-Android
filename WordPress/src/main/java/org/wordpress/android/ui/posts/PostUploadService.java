@@ -18,7 +18,6 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
-import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -38,6 +37,7 @@ import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -863,20 +863,6 @@ public class PostUploadService extends Service {
 
             mNotificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
-
-            Intent notificationIntent = new Intent(mContext, post.isPage() ? PagesActivity.class : PostsActivity.class);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-            notificationIntent.setAction(Intent.ACTION_MAIN);
-            notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"
-                    + post.getLocalTableBlogId())));
-            notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-
-            mNotificationBuilder.setContentIntent(pendingIntent);
-
             mNotificationId = (new Random()).nextInt() + post.getLocalTableBlogId();
             startForeground(mNotificationId, mNotificationBuilder.build());
         }
@@ -913,17 +899,13 @@ public class PostUploadService extends Service {
             Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
                     : mContext.getResources().getText(R.string.post_id));
-            Intent notificationIntent = new Intent(mContext, isPage ? PagesActivity.class : PostsActivity.class);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-            notificationIntent.setAction(Intent.ACTION_MAIN);
-            notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, isPage);
-            notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_MSG, mErrorMessage);
+            Intent notificationIntent = new Intent(mContext, isPage ? PagesListActivity.class : PostsListActivity.class);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
+            notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, mErrorMessage);
             if (isVideoPressError) {
-                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
-                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
+                notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
+                notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
             }
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
@@ -962,7 +944,14 @@ public class PostUploadService extends Service {
             }
 
             mNotificationBuilder.setProgress(100, (int)Math.ceil(currentChunkProgress), false);
-            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+
+            try {
+                mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+            } catch (RuntimeException runtimeException) {
+                CrashlyticsUtils.logException(runtimeException, CrashlyticsUtils.ExceptionType.SPECIFIC,
+                        AppLog.T.UTILS, "See issue #2858");
+                AppLog.d(T.POSTS, "See issue #2858; notify failed with:" + runtimeException);
+            }
         }
 
         public void setTotalMediaItems(int totalMediaItems) {

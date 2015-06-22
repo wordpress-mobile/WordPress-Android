@@ -2,19 +2,20 @@ package org.wordpress.android.ui.comments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 // simple wrapper activity for CommentDetailFragment
-public class CommentDetailActivity extends ActionBarActivity {
+public class CommentDetailActivity extends AppCompatActivity {
 
     public static final String KEY_COMMENT_DETAIL_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
     public static final String KEY_COMMENT_DETAIL_COMMENT_ID = "comment_detail_comment_id";
@@ -71,6 +72,12 @@ public class CommentDetailActivity extends ActionBarActivity {
                 finish();
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
     }
 
     @Override

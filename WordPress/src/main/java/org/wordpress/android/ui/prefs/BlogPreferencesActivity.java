@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +33,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Activity for configuring blog specific settings.
  */
-public class BlogPreferencesActivity extends ActionBarActivity {
+public class BlogPreferencesActivity extends AppCompatActivity {
     public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
     public static final int RESULT_BLOG_REMOVED = RESULT_FIRST_USER;
 

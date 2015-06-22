@@ -11,14 +11,11 @@ import org.wordpress.android.util.AniUtils;
 public class ReaderAnim {
 
     /*
-     * animation when user taps a like/reblog button
+     * animation when user taps a like button
      */
-    private enum ReaderButton { LIKE_ON, LIKE_OFF, REBLOG}
+    private enum ReaderButton { LIKE_ON, LIKE_OFF}
     public static void animateLikeButton(final View target, boolean isAskingToLike) {
         animateButton(target, isAskingToLike ? ReaderButton.LIKE_ON : ReaderButton.LIKE_OFF);
-    }
-    public static void animateReblogButton(final View target) {
-        animateButton(target, ReaderButton.REBLOG);
     }
     private static void animateButton(final View target, ReaderButton button) {
         if (target == null || button == null) {

@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -18,16 +18,12 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
-import com.cocosw.undobar.UndoBarController;
-
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.util.AniUtils.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -36,10 +32,11 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AniUtils.AnimationEndListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPMainViewPager;
+import org.wordpress.android.widgets.WPViewPager;
 
 import javax.annotation.Nonnull;
 
@@ -50,12 +47,12 @@ import de.greenrobot.event.EventBus;
  * posts with a specific tag or in a specific blog, but can also be used to show a single
  * post detail
  */
-public class ReaderPostPagerActivity extends ActionBarActivity
+public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.OnPostPopupListener,
                    ReaderInterfaces.AutoHideToolbarListener {
 
     private Toolbar mToolbar;
-    private WPMainViewPager mViewPager;
+    private WPViewPager mViewPager;
     private ProgressBar mProgress;
 
     private ReaderTag mCurrentTag;
@@ -75,16 +72,14 @@ public class ReaderPostPagerActivity extends ActionBarActivity
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mViewPager = (WPMainViewPager) findViewById(R.id.viewpager);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
 
         final String title;
@@ -165,6 +160,15 @@ public class ReaderPostPagerActivity extends ActionBarActivity
     public void finish() {
         super.finish();
         ActivityLauncher.slideOutToRight(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean hasPagerAdapter() {
@@ -270,21 +274,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         return mCurrentTag != null;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        boolean isResultOK = (resultCode == Activity.RESULT_OK);
-        if (isResultOK && requestCode == RequestCodes.READER_REBLOG) {
-            // update the reblog status in the detail view if the user returned
-            // from the reblog activity after successfully reblogging
-            ReaderPostDetailFragment fragment = getActiveDetailFragment();
-            if (fragment != null) {
-                fragment.doPostReblogged();
-            }
-        }
-    }
-
     ReaderPostListType getPostListType() {
         return mPostListType;
     }
@@ -346,7 +335,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && !isFinishing()) {
-                    hideUndoBar();
                     ToastUtils.showToast(
                             ReaderPostPagerActivity.this,
                             R.string.reader_toast_err_block_blog,
@@ -377,19 +365,17 @@ public class ReaderPostPagerActivity extends ActionBarActivity
             return;
         }
 
-        // show the undo bar - on undo we restore the deleted posts, and reselect the
+        // show the undo snackbar - on undo we restore the deleted posts, and reselect the
         // one the blog was blocked from
-        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+        View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
-            public void onUndo(Parcelable parcelable) {
+            public void onClick(View v) {
                 ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 loadPosts(blogId, postId);
             }
         };
-        new UndoBarController.UndoBar(ReaderPostPagerActivity.this)
-                .message(getString(R.string.reader_toast_blog_blocked))
-                .listener(undoListener)
-                .translucent(true)
+        Snackbar.make(findViewById(R.id.root_view), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener)
                 .show();
 
         // reload the adapter and move to the best post not in the blocked blog
@@ -398,12 +384,6 @@ public class ReaderPostPagerActivity extends ActionBarActivity
         long newBlogId = (newId != null ? newId.getBlogId() : 0);
         long newPostId = (newId != null ? newId.getPostId() : 0);
         loadPosts(newBlogId, newPostId);
-    }
-
-    private void hideUndoBar() {
-        if (!isFinishing()) {
-            UndoBarController.clear(this);
-        }
     }
 
     /*

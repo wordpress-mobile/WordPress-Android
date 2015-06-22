@@ -7,6 +7,7 @@
     <org.wordpress.android.ui.stats.ScrollViewExt
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/scroll_view_stats"
         android:fillViewport="true">
 
         <LinearLayout
@@ -34,7 +35,10 @@
                 android:background="@drawable/stats_white_background"
                 android:orientation="vertical"
                 android:padding="@dimen/margin_medium"
-                android:layout_margin="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin">
 
                 <LinearLayout
                     android:id="@+id/stats_bar_chart_fragment_container"
@@ -80,7 +84,10 @@
                 android:background="@drawable/stats_white_background"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/margin_small"
-                android:layout_margin="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
@@ -138,7 +145,10 @@
                 android:background="@drawable/stats_white_background"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/margin_small"
-                android:layout_margin="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
@@ -196,7 +206,10 @@
                 android:background="@drawable/stats_white_background"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/margin_small"
-                android:layout_margin="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"

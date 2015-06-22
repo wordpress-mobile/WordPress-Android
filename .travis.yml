@@ -11,8 +11,10 @@ notifications:
 
 android:
   components:
-    - build-tools-21.1.1
-    - android-21
+    - extra-android-m2repository
+    - extra-android-support
+    - build-tools-22.0.1
+    - android-22
 
 env:
   global:

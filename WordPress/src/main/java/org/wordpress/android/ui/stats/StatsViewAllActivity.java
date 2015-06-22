@@ -4,7 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -29,13 +30,15 @@ import de.greenrobot.event.EventBus;
 /**
  *  Single item details activity.
  */
-public class StatsViewAllActivity extends ActionBarActivity {
+public class StatsViewAllActivity extends AppCompatActivity {
 
     public static final String ARG_STATS_VIEW_ALL_TITLE = "arg_stats_view_all_title";
+    private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private ScrollViewExt mOuterScrollView;
 
     private StatsAbstractListFragment mFragment;
 
@@ -62,6 +65,8 @@ public class StatsViewAllActivity extends ActionBarActivity {
         }
 
         setTitle(R.string.stats);
+
+        mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
 
         // pull to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this, (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
@@ -94,6 +99,16 @@ public class StatsViewAllActivity extends ActionBarActivity {
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_SELECTED_DATE);
             mStatsViewType = (StatsViewType) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
             mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
+            final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
+            if(yScrollPosition != 0) {
+                mOuterScrollView.postDelayed(new Runnable() {
+                    public void run() {
+                        if (!isFinishing()) {
+                            mOuterScrollView.scrollTo(0, yScrollPosition);
+                        }
+                    }
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
+            }
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
@@ -251,6 +266,9 @@ public class StatsViewAllActivity extends ActionBarActivity {
         outState.putString(StatsAbstractFragment.ARGS_SELECTED_DATE, mDate);
         outState.putSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE, mStatsViewType);
         outState.putInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mOuterPagerSelectedButtonIndex);
+        if (mOuterScrollView.getScrollY() != 0) {
+            outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -259,6 +277,7 @@ public class StatsViewAllActivity extends ActionBarActivity {
         super.onResume();
         mIsInFront = true;
         NetworkUtils.checkConnection(this); // show the error toast if the network is offline
+        ActivityId.trackLastActivity(ActivityId.STATS_VIEW_ALL);
     }
 
     @Override

@@ -12,7 +12,7 @@
         <item name="android:windowBackground">@color/grey_lighten_30</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Dark.WordPress</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
         <item name="android:actionModeBackground">@color/color_primary_dark</item>
@@ -59,6 +59,7 @@
     <style name="DropDownListView.Light.WordPress" parent="android:Widget.Holo.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
         <item name="android:fadeScrollbars">false</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_transparent_black</item>
     </style>
 
     <style name="TabTextStyle.WordPress" parent="android:Widget.Holo.ActionBar.TabText">

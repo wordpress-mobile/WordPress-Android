@@ -3,7 +3,7 @@ package org.wordpress.android.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +18,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -30,7 +31,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import de.greenrobot.event.EventBus;
 
-public class SitePickerActivity extends ActionBarActivity
+public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener {
 
@@ -78,6 +79,12 @@ public class SitePickerActivity extends ActionBarActivity
         mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mRecycleView.setItemAnimator(null);
         mRecycleView.setAdapter(getAdapter());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ActivityId.trackLastActivity(ActivityId.SITE_PICKER);
     }
 
     @Override
@@ -307,7 +314,7 @@ public class SitePickerActivity extends ActionBarActivity
         if (mActionMode == null) {
             mSearchView.hideSoftKeyboard();
             AniUtils.showFab(mFabView, false);
-            WordPress.setCurrentBlog(site.localId);
+            WordPress.setCurrentBlogAndSetVisible(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
             mDidUserSelectSite = true;

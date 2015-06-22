@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,6 +26,7 @@ import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
@@ -46,6 +46,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean mCanRequestMorePosts;
     private boolean mShowToolbarSpacer;
+    private final boolean mIsLoggedOutReader;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
@@ -53,7 +54,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
-    private ReaderInterfaces.RequestReblogListener mReblogListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
@@ -74,7 +74,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ReaderIconCountView likeCount;
         private final ReaderFollowButton followButton;
 
-        private final ImageView imgBtnReblog;
         private final ImageView imgMore;
 
         private final WPNetworkImageView imgFeatured;
@@ -104,11 +103,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
             toolbarSpacer = itemView.findViewById(R.id.spacer_toolbar);
-
-            imgBtnReblog = (ImageView) itemView.findViewById(R.id.image_reblog_btn);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
-            }
         }
     }
 
@@ -145,13 +139,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             // follow/following
-            postHolder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
-            postHolder.followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFollow((ReaderFollowButton) v, position);
-                }
-            });
+            if (mIsLoggedOutReader) {
+                postHolder.followButton.setVisibility(View.GONE);
+            } else {
+                postHolder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
+                postHolder.followButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleFollow((ReaderFollowButton) v, position);
+                    }
+                });
+            }
 
             // show blog/feed preview when avatar is tapped
             postHolder.imgAvatar.setOnClickListener(new View.OnClickListener() {
@@ -206,9 +204,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.txtTag.setOnClickListener(null);
         }
 
-        // likes, comments & reblogging - supported by wp posts only
-        boolean showLikes = post.isWP() && post.isLikesEnabled;
-        boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
+        boolean showLikes;
+        boolean showComments;
+        if (mIsLoggedOutReader) {
+            showLikes = post.numLikes > 0;
+            showComments = post.numReplies > 0;
+        } else {
+            showLikes = post.isWP() && post.isLikesEnabled;
+            showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
+        }
 
         if (showLikes || showComments) {
             showCounts(postHolder, post, false);
@@ -217,12 +221,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (showLikes) {
             postHolder.likeCount.setSelected(post.isLikedByCurrentUser);
             postHolder.likeCount.setVisibility(View.VISIBLE);
-            postHolder.likeCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleLike(v.getContext(), postHolder, position);
-                }
-            });
+            if (mIsLoggedOutReader) {
+                postHolder.likeCount.setEnabled(false);
+            } else {
+                postHolder.likeCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleLike(v.getContext(), postHolder, position);
+                    }
+                });
+            }
         } else {
             postHolder.likeCount.setVisibility(View.GONE);
             postHolder.likeCount.setOnClickListener(null);
@@ -241,30 +249,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.commentCount.setOnClickListener(null);
         }
 
-        if (post.canReblog()) {
-            showReblogStatus(postHolder.imgBtnReblog, post.isRebloggedByCurrentUser);
-            postHolder.imgBtnReblog.setVisibility(View.VISIBLE);
-            if (!post.isRebloggedByCurrentUser) {
-                postHolder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderAnim.animateReblogButton(postHolder.imgBtnReblog);
-                        if (mReblogListener != null) {
-                            mReblogListener.onRequestReblog(post, v);
-                        }
-                    }
-                });
-            } else {
-                postHolder.imgBtnReblog.setOnClickListener(null);
-            }
-        } else {
-            // use INVISIBLE rather than GONE to ensure container maintains the same height
-            postHolder.imgBtnReblog.setVisibility(View.INVISIBLE);
-            postHolder.imgBtnReblog.setOnClickListener(null);
-        }
-
         // more menu with "block this blog" only shows for public wp posts in followed tags
-        if (post.isWP() && !post.isPrivate && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+        if (!mIsLoggedOutReader && post.isWP() && !post.isPrivate && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
             postHolder.imgMore.setVisibility(View.VISIBLE);
             postHolder.imgMore.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -302,6 +288,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
@@ -332,10 +319,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
         mDataRequestedListener = listener;
-    }
-
-    public void setOnReblogRequestedListener(ReaderInterfaces.RequestReblogListener listener) {
-        mReblogListener = listener;
     }
 
     public void setOnPostPopupListener(ReaderInterfaces.OnPostPopupListener onPostPopupListener) {
@@ -553,15 +536,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 mPosts.set(position, updatedPost);
                 copyBlogFollowStatus(updatedPost);
             }
-        }
-    }
-
-    private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
-        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected()) {
-            imgBtnReblog.setSelected(isRebloggedByCurrentUser);
-        }
-        if (isRebloggedByCurrentUser) {
-            imgBtnReblog.setOnClickListener(null);
         }
     }
 
