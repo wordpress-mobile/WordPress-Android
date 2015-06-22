@@ -240,11 +240,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     protected SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
-            if (mIsInSearchMode) {
-                mAdapter = new SitePickerSearchAdapter(this, mCurrentLocalId, mLastSearch);
-            } else {
-                mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
-            }
+            mAdapter = new SitePickerAdapter(this, mCurrentLocalId, mLastSearch, mIsInSearchMode);
             mAdapter.setOnSiteClickListener(this);
             mAdapter.setOnSelectedCountChangedListener(this);
         }

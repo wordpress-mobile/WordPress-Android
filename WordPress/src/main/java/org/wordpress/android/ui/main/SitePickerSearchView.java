@@ -30,8 +30,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
     @Override
     public boolean onQueryTextChange(String s) {
         mSitePickerActivity.setLastSearch(s);
-        SitePickerSearchAdapter searchAdapter = (SitePickerSearchAdapter) mSitePickerActivity.getAdapter();
-        searchAdapter.searchSites(s);
+        mSitePickerActivity.getAdapter().searchSites(s);
         return true;
     }
 
@@ -64,9 +63,9 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
     public void enableSearchMode() {
         mMenuEdit.setVisible(false);
         mSitePickerActivity.setIsInSearchModeAndNullifyAdapter(true);
-        SitePickerSearchAdapter adapter = (SitePickerSearchAdapter) mSitePickerActivity.getAdapter();
-        mSitePickerActivity.getRecycleView().swapAdapter(adapter, true);
-        adapter.loadSites();
+        mSitePickerActivity.getAdapter().searchSites("");
+        mSitePickerActivity.getRecycleView().swapAdapter(mSitePickerActivity.getAdapter(), true);
+        mSitePickerActivity.getAdapter().loadSites();
     }
 
     public void disableSearchMode() {
