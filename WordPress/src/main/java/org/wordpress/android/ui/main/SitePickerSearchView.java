@@ -63,9 +63,7 @@ public class SitePickerSearchView extends SearchView implements SearchView.OnQue
     public void enableSearchMode() {
         mMenuEdit.setVisible(false);
         mSitePickerActivity.setIsInSearchModeAndNullifyAdapter(true);
-        mSitePickerActivity.getAdapter().searchSites("");
         mSitePickerActivity.getRecycleView().swapAdapter(mSitePickerActivity.getAdapter(), true);
-        mSitePickerActivity.getAdapter().loadSites();
     }
 
     public void disableSearchMode() {
