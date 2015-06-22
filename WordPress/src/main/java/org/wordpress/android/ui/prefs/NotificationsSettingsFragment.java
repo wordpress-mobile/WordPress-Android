@@ -62,7 +62,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(R.string.notifications);
 
         new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
