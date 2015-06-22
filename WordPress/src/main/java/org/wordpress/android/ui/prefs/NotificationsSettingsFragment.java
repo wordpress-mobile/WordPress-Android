@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NotificationSettingsFragment extends PreferenceFragment {
+public class NotificationsSettingsFragment extends PreferenceFragment {
     public static final String TAG = "NotificationSettingsFragment";
     private ArrayList<StringMap<Double>> mMutedBlogsList;
     private Map<String, Object> mNotificationSettings;
