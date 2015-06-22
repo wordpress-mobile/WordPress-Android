@@ -490,4 +490,8 @@ public class Post implements Serializable {
     public boolean isPublishable() {
         return !(getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
     }
+
+    public boolean hasEmptyContentFields() {
+        return TextUtils.isEmpty(this.getTitle()) && TextUtils.isEmpty(this.getContent());
+    }
 }

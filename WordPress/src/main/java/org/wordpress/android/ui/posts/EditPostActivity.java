@@ -8,12 +8,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
@@ -40,6 +42,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.LegacyEditorFragment;
@@ -67,6 +70,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -125,6 +129,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int AUTOSAVE_INTERVAL_MILLIS = 10000;
     private Timer mAutoSaveTimer;
 
+    private boolean mShowNewEditor;
+
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
     private Map<Long, List<String>> mPendingGalleryUploads = new HashMap<>();
 
@@ -166,6 +172,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_edit_post_activity);
+
+        // Check whether to show the visual editor
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mShowNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -450,7 +461,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return false;
             }
 
-            savePost(false, false);
+            savePostToDb();
             trackSavePostAnalytics();
 
             if (!NetworkUtils.isNetworkAvailable(this)) {
@@ -581,7 +592,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Update post object from fragment fields
         if (mEditorFragment != null) {
-            updatePostContent(isAutosave);
+            if (mShowNewEditor) {
+                updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                        (String) mEditorFragment.getContent());
+            } else {
+                // TODO: Remove when legacy editor is dropped
+                updatePostContent(isAutosave);
+            }
         }
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updatePostSettings();
@@ -589,14 +606,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void savePost(boolean isAutosave) {
-        savePost(isAutosave, true);
+        updatePostObject(isAutosave);
+
+        savePostToDb();
     }
 
-    private void savePost(boolean isAutosave, boolean updatePost) {
-        if (updatePost) {
-            updatePostObject(isAutosave);
-        }
-
+    private void savePostToDb() {
         WordPress.wpDB.updatePost(mPost);
     }
 
@@ -613,35 +628,46 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private boolean hasEmptyContentFields() {
-        return TextUtils.isEmpty(mEditorFragment.getTitle()) && TextUtils.isEmpty(mEditorFragment.getContent());
-    }
-
     private void saveAndFinish() {
+        // Fetch post title and content from editor fields and update the Post object
         savePost(true);
-        if (mEditorFragment != null && hasEmptyContentFields()) {
+
+        if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
             // new and empty post? delete it
             if (mIsNewPost) {
                 WordPress.wpDB.deletePost(mPost);
+                finish();
+                return;
             }
         } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
             // if no changes have been made to the post, set it back to the original don't save it
             WordPress.wpDB.updatePost(mOriginalPost);
             WordPress.currentPost = mOriginalPost;
+            finish();
+            return;
         } else {
             // changes have been made, save the post and ask for the post list to refresh.
             // We consider this being "manual save", it will replace some Android "spans" by an html
             // or a shortcode replacement (for instance for images and galleries)
-            savePost(false);
-            WordPress.currentPost = mPost;
-            Intent i = new Intent();
-            i.putExtra(EXTRA_SHOULD_REFRESH, true);
-            i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
-            i.putExtra(EXTRA_IS_PAGE, mIsPage);
-            setResult(RESULT_OK, i);
-
-            ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
+            if (mShowNewEditor) {
+                // Update the post object directly, without re-fetching the fields from the EditorFragment
+                updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
+                savePostToDb();
+            } else {
+                // TODO: Remove when legacy editor is dropped
+                savePost(false);
+            }
         }
+
+        WordPress.currentPost = mPost;
+        Intent i = new Intent();
+        i.putExtra(EXTRA_SHOULD_REFRESH, true);
+        i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
+        i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        setResult(RESULT_OK, i);
+
+        ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
+
         finish();
     }
 
@@ -660,7 +686,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     // TODO: switch between legacy and new editor here (AB test?)
-                    return new LegacyEditorFragment();
+                    if (mShowNewEditor) {
+                        return new EditorFragment();
+                    } else {
+                        return new LegacyEditorFragment();
+                    }
                 case 1:
                     return new EditPostSettingsFragment();
                 default:
@@ -821,12 +851,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (post.isLocalDraft()) {
+                if (post.isLocalDraft() && !mShowNewEditor) {
+                    // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                             post.getContent().replaceAll("\uFFFC", ""));
-                }
-                else {
+                } else {
+                    // TODO: Might be able to drop .replaceAll() when legacy editor is removed
                     mEditorFragment.setContent(post.getContent().replaceAll("\uFFFC", ""));
                 }
             }
@@ -931,6 +962,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         addExistingMediaToEditor(mediaId);
     }
 
+    // TODO: Replace with contents of the updatePostContentNewEditor() method when legacy editor is dropped
     /**
      * Updates post object with content of this fragment
      */
@@ -1014,6 +1046,37 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
             content = postContent.toString();
+        }
+
+        String moreTag = "<!--more-->";
+
+        post.setTitle(title);
+        // split up the post content if there's a more tag
+        if (post.isLocalDraft() && content.contains(moreTag)) {
+            post.setDescription(content.substring(0, content.indexOf(moreTag)));
+            post.setMoreText(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
+        } else {
+            post.setDescription(content);
+            post.setMoreText("");
+        }
+
+        if (!post.isLocalDraft()) {
+            post.setLocalChange(true);
+        }
+    }
+
+    /**
+     * Updates post object with given title and content
+     */
+    public void updatePostContentNewEditor(boolean isAutoSave, String title, String content) {
+        Post post = getPost();
+
+        if (post == null) {
+            return;
+        }
+
+        if (!isAutoSave) {
+            // TODO: Shortcode handling, media handling
         }
 
         String moreTag = "<!--more-->";

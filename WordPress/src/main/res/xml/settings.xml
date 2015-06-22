@@ -15,6 +15,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="@string/pref_key_editor"
+        android:title="@string/preference_editor">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_visual_editor_enabled"
+            android:title="@string/preference_show_visual_editor" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/post_signature"
         android:key="@string/pref_key_post_sig_section">
 
