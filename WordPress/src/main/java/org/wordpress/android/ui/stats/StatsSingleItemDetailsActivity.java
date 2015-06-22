@@ -31,7 +31,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.util.AppLog;
@@ -855,7 +854,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             String label = mActivityRef.get().getString(R.string.error_refresh_stats);
             if (volleyError instanceof NoConnectionError) {
-                label += "<br/>" + mActivityRef.get().getString(R.string.no_network_message);
+                label += "\n" + mActivityRef.get().getString(R.string.no_network_message);
             }
 
             ToastUtils.showToast(mActivityRef.get(), label, ToastUtils.Duration.LONG);
