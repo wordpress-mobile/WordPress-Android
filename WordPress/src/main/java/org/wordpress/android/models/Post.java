@@ -41,6 +41,7 @@ public class Post implements Serializable {
     private String password;
     private String postFormat;
     private String slug;
+    private String postThumbnail;
     private boolean localDraft;
     private boolean uploaded;
     private boolean mIsUploading;
@@ -489,5 +490,15 @@ public class Post implements Serializable {
 
     public boolean isPublishable() {
         return !(getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
+    }
+
+    public void setPostThumbnail(String thumbnail) {
+        this.postThumbnail = StringUtils.notNullStr(thumbnail);
+    }
+    public String getPostThumbnail() {
+        return StringUtils.notNullStr(postThumbnail);
+    }
+    public boolean hasPostThumbnail() {
+        return !TextUtils.isEmpty(postThumbnail);
     }
 }
