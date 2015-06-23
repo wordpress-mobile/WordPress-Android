@@ -74,7 +74,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 31;
+    private static final int DATABASE_VERSION = 32;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -109,6 +109,7 @@ public class WordPressDB {
             + "wp_password text default '',"
             + "wp_post_format text default '',"
             + "wp_slug text default '',"
+            + "wp_post_thumbnail default '',"
             + "mediaPaths text default '',"
             + "latitude real,"
             + "longitude real,"
@@ -166,6 +167,9 @@ public class WordPressDB {
 
     // Add boolean to POSTS to track posts currently being uploaded
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
+
+    // add wp_post_thumbnail to posts table
+    private static final String ADD_POST_THUMBNAIL = "alter table posts add wp_post_thumbnail text default '';";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -324,7 +328,12 @@ public class WordPressDB {
                 // Fix big comments issue #2855
                 CommentTable.deleteBigComments(db);
                 currentVersion++;
+            case 31:
+                // add wp_post_thumbnail to posts table
+                db.execSQL(ADD_POST_THUMBNAIL);
+                currentVersion++;
         }
+
         db.setVersion(DATABASE_VERSION);
     }
 
