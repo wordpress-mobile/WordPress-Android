@@ -27,6 +27,9 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Adapter for Posts/Pages list
  */
@@ -50,6 +53,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     private final PostsListPostList mPosts = new PostsListPostList();
     private final LayoutInflater mLayoutInflater;
+
+    private final List<PostsListPost> mHiddenPosts = new ArrayList<>();
 
     private static final long ROW_ANIM_DURATION = 150;
 
@@ -320,13 +325,24 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         return remotePostCount;
     }
 
-    public void removePost(PostsListPost post) {
+    /*
+     * hides the past post - used when the post is trashed by the user but the network request
+     * to delete the post hasn't completed yet
+     */
+    public void hidePost(PostsListPost post) {
+        mHiddenPosts.add(post);
+
         int position = mPosts.indexOfPost(post);
-        if (position == -1) {
-            return;
+        if (position > -1) {
+            mPosts.remove(position);
+            notifyItemRemoved(position);
         }
-        mPosts.remove(position);
-        notifyItemRemoved(position);
+    }
+
+    public void unhidePost(PostsListPost post) {
+        if (mHiddenPosts.remove(post)) {
+            loadPosts();
+        }
     }
 
     public interface OnLoadMoreListener {
@@ -389,7 +405,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         @Override
         protected PostsListPostList doInBackground(Void... nada) {
-            return WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
+            PostsListPostList posts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
+
+            // make sure we don't return any hidden posts
+            for (PostsListPost hiddenPost: mHiddenPosts) {
+                posts.remove(hiddenPost);
+
+            }
+            return posts;
         }
 
         @Override

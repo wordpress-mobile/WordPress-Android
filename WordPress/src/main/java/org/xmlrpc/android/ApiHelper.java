@@ -571,6 +571,41 @@ public class ApiHelper {
         }
     }
 
+    /**
+     * Delete a single post or page via XML-RPC API parameters follow those of FetchSinglePostTask
+     */
+    public static class DeleteSinglePostTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null) {
+                return false;
+            }
+
+            String postId = (String) arguments.get(1);
+            boolean isPage = (Boolean) arguments.get(2);
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] postParams = {"", postId,
+                    blog.getUsername(),
+                    blog.getPassword()};
+            Object[] pageParams = {blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(), postId};
+
+            try {
+                client.call(isPage ? "wp.deletePage" : "blogger.deletePost", (isPage) ? pageParams : postParams);
+                return true;
+            } catch (XMLRPCException | IOException | XmlPullParserException e) {
+                mErrorMessage = e.getMessage();
+                return false;
+            }
+        }
+    }
+
     public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int results);

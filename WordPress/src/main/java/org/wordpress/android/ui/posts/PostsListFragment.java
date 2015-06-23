@@ -613,7 +613,7 @@ public class PostsListFragment extends Fragment
     /*
      * send the passed post to the trash with undo
      */
-    private void trashPost(PostsListPost post) {
+    private void trashPost(final PostsListPost post) {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -624,21 +624,14 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        // set status to trashed and remove post from the list
-        final String originalStatus = fullPost.getPostStatus();
-        fullPost.setPostStatus(PostStatus.toString(PostStatus.TRASHED));
-        WordPress.wpDB.updatePost(fullPost);
-        mPostsListAdapter.removePost(post);
+        // remove post from the list
+        mPostsListAdapter.hidePost(post);
 
         View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDidUndoTrash = true;
-                // restore original status and reload the list
-                fullPost.setPostStatus(originalStatus);
-                WordPress.wpDB.updatePost(fullPost);
-                // TODO: trashed posts need to be skipped by adapter
-                mPostsListAdapter.loadPosts();
+                mPostsListAdapter.unhidePost(post);
             }
         };
 
@@ -655,21 +648,23 @@ public class PostsListFragment extends Fragment
                 .setAction(R.string.undo, undoListener)
                 .show();
 
-        // wait for the undo snackbar to disappear before sending request, and only send if
-        // the user didn't tap to undo
+        // wait for the undo snackbar to disappear before actually deleting the post
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (mDidUndoTrash || !isAdded()) {
                     return;
                 }
-                // if this is a local draft, simply delete it from the database
-                if (fullPost.isLocalDraft()) {
-                    WordPress.wpDB.deletePost(fullPost);
-                } else {
-                    // TODO: perform API call
-                }
 
+                WordPress.wpDB.deletePost(fullPost);
+
+                if (!post.isLocalDraft()) {
+                    List<Object> apiArgs = new Vector<>();
+                    apiArgs.add(WordPress.getCurrentBlog());
+                    apiArgs.add(fullPost.getRemotePostId());
+                    apiArgs.add(mIsPage);
+                    new ApiHelper.DeleteSinglePostTask().execute(apiArgs);
+                }
             }
         }, Constants.SNACKBAR_LONG_DURATION_MS);
     }
