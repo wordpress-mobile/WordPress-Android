@@ -14,10 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
@@ -50,13 +46,6 @@ public class PostsListActivity extends AppCompatActivity
                    OnDetailPostActionListener,
                    WPAlertDialogFragment.OnDialogConfirmListener {
 
-    public enum PostListFilter {
-        PUBLISHED,
-        DRAFTS,
-        SCHEDULED,
-        TRASHED
-    }
-
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
@@ -74,12 +63,6 @@ public class PostsListActivity extends AppCompatActivity
     private boolean mIsPage = false;
     private String mErrorMsg = "";
     private PostsListFragment mPostList;
-
-    // array indexes of post filters in the spinner adapter
-    private static final int IDX_FILTER_PUBLISHED = 0;
-    private static final int IDX_FILTER_DRAFTS = 1;
-    private static final int IDX_FILTER_SCHEDULED = 2;
-    private static final int IDX_FILTER_TRASHED = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,11 +83,9 @@ public class PostsListActivity extends AppCompatActivity
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        setupSpinner(toolbar);
 
         FragmentManager fm = getFragmentManager();
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
@@ -122,43 +103,6 @@ public class PostsListActivity extends AppCompatActivity
         }
 
         WordPress.currentPost = null;
-    }
-
-    /*
-     * add the post filter spinner to the toolbar
-     */
-    private void setupSpinner(Toolbar toolbar) {
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.post_filters_array, R.layout.toolbar_spinner_item);
-        adapter.setDropDownViewResource(R.layout.toolbar_spinner_dropdown_item);
-
-        View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
-        Spinner spinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (mPostList == null) return;
-
-                switch (position) {
-                    case IDX_FILTER_PUBLISHED:
-                        mPostList.setPostFilter(PostListFilter.PUBLISHED);
-                        break;
-                    case IDX_FILTER_DRAFTS:
-                        mPostList.setPostFilter(PostListFilter.DRAFTS);
-                        break;
-                    case IDX_FILTER_SCHEDULED:
-                        mPostList.setPostFilter(PostListFilter.SCHEDULED);
-                        break;
-                    case IDX_FILTER_TRASHED:
-                        mPostList.setPostFilter(PostListFilter.TRASHED);
-                        break;
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // nop
-            }
-        });
     }
 
     @Override

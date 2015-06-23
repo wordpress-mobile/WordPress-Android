@@ -32,7 +32,6 @@ import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
-import org.wordpress.android.ui.posts.PostsListActivity.PostListFilter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.reader.views.ReaderItemDecoration;
 import org.wordpress.android.util.NetworkUtils;
@@ -143,14 +142,6 @@ public class PostsListFragment extends Fragment
                         refreshPosts();
                     }
                 });
-    }
-
-    public PostListFilter getPostFilter() {
-        return getPostListAdapter().getPostFilter();
-    }
-
-    public void setPostFilter(PostListFilter filter) {
-        getPostListAdapter().setPostFilter(filter);
     }
 
     private void refreshPosts() {

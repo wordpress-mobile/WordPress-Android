@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
-import org.wordpress.android.ui.posts.PostsListActivity.PostListFilter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -42,8 +40,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private OnPostsLoadedListener mOnPostsLoadedListener;
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnPostButtonClickListener mOnPostButtonClickListener;
-
-    private PostListFilter mFilter = PostListFilter.PUBLISHED;
 
     private final int mLocalTableBlogId;
     private final int mPhotonWidth;
@@ -83,17 +79,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     public void setOnPostButtonClickListener(OnPostButtonClickListener listener) {
         mOnPostButtonClickListener = listener;
-    }
-
-    public PostListFilter getPostFilter() {
-        return mFilter;
-    }
-
-    public void setPostFilter(@NonNull PostListFilter filter) {
-        if (filter != mFilter) {
-            mFilter = filter;
-            loadPosts();
-        }
     }
 
     private PostsListPost getItem(int position) {
@@ -400,46 +385,18 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
-    private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        final PostsListPostList filteredPosts = new PostsListPostList();
+    private class LoadPostsTask extends AsyncTask<Void, Void, PostsListPostList> {
 
         @Override
-        protected Boolean doInBackground(Void... nada) {
-            // first request all posts
-            PostsListPostList allPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
-
-            // then apply the filter - this isn't done at the db level due to the way PostStatus
-            // has to rely on the pubDate to figure out whether a post is scheduled
-            final PostStatus status;
-            switch (mFilter) {
-                case SCHEDULED:
-                    status = PostStatus.SCHEDULED;
-                    break;
-                case TRASHED:
-                    status = PostStatus.TRASHED;
-                    break;
-                case DRAFTS:
-                    status = PostStatus.DRAFT;
-                    break;
-                default:
-                    status = PostStatus.PUBLISHED;
-                    break;
-            }
-            for (PostsListPost post: allPosts) {
-                if (post.getStatusEnum().equals(status)) {
-                    filteredPosts.add(post);
-                }
-            }
-
-            return !filteredPosts.isSameList(mPosts);
-
+        protected PostsListPostList doInBackground(Void... nada) {
+            return WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
+        protected void onPostExecute(PostsListPostList result) {
+            if (!mPosts.isSameList(result)) {
                 mPosts.clear();
-                mPosts.addAll(filteredPosts);
+                mPosts.addAll(result);
                 notifyDataSetChanged();
                 if (mOnPostsLoadedListener != null) {
                     mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
