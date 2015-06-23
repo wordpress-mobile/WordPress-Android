@@ -1079,7 +1079,7 @@ public class WordPressDB {
             putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
-            values.put("wp_post_thumbnail", post.getPostThumbnail());
+            values.put("wp_post_thumbnail", post.getFeaturedImageId());
 
             result = db.insert(POSTS_TABLE, null, values);
 
@@ -1116,7 +1116,7 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
-            values.put("wp_post_thumbnail", post.getPostThumbnail());
+            values.put("wp_post_thumbnail", post.getFeaturedImageId());
 
             putPostLocation(post, values);
 
@@ -1221,7 +1221,7 @@ public class WordPressDB {
                 post.setAuthorId(c.getString(c.getColumnIndex("wp_author_id")));
                 post.setPassword(c.getString(c.getColumnIndex("wp_password")));
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
-                post.setPostThumbnail(c.getInt(c.getColumnIndex("wp_post_thumbnail")));
+                post.setFeaturedImageId(c.getInt(c.getColumnIndex("wp_post_thumbnail")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
 

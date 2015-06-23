@@ -53,7 +53,8 @@ public class Post implements Serializable {
     private String mediaPaths;
     private String quickPostType;
     private PostLocation mPostLocation;
-    private int postThumbnailId;
+
+    private int featuredImageId;
 
     public Post() {
     }
@@ -493,13 +494,10 @@ public class Post implements Serializable {
         return !(getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
     }
 
-    public void setPostThumbnail(int thumbnailId) {
-        this.postThumbnailId = thumbnailId;
+    public int getFeaturedImageId() {
+        return featuredImageId;
     }
-    public int getPostThumbnail() {
-        return postThumbnailId;
-    }
-    public boolean hasPostThumbnail() {
-        return (postThumbnailId != 0);
+    public void setFeaturedImageId(int id) {
+        this.featuredImageId = id;
     }
 }
