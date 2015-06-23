@@ -256,16 +256,22 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if (mRestResponseParsed == null) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-                        setupEmptyGraph("");
-                        showHideEmptyModulesIndicator(true);
-                        refreshStats();
+            // check if network is available, if not shows the empty UI immediately
+            if (!NetworkUtils.checkConnection(this)) {
+                mSwipeToRefreshHelper.setRefreshing(false);
+                setupEmptyUI();
+            } else {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isFinishing()) {
+                            setupEmptyGraph("");
+                            showHideEmptyModulesIndicator(true);
+                            refreshStats();
+                        }
                     }
-                }
-            }, 75L);
+                }, 75L);
+            }
         } else {
             updateUI();
         }
@@ -298,9 +304,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             return;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.checkConnection(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            ToastUtils.showToast(this, this.getString(R.string.connection_error), ToastUtils.Duration.LONG);
             return;
         }
 
