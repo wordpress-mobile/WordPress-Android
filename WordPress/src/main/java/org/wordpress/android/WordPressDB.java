@@ -18,7 +18,6 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -31,6 +30,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -109,7 +109,6 @@ public class WordPressDB {
             + "wp_password text default '',"
             + "wp_post_format text default '',"
             + "wp_slug text default '',"
-            + "wp_post_thumbnail default '',"
             + "mediaPaths text default '',"
             + "latitude real,"
             + "longitude real,"
@@ -169,7 +168,7 @@ public class WordPressDB {
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
 
     // add wp_post_thumbnail to posts table
-    private static final String ADD_POST_THUMBNAIL = "alter table posts add wp_post_thumbnail text default '';";
+    private static final String ADD_POST_THUMBNAIL = "alter table posts add wp_post_thumbnail integer default 0;";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -980,7 +979,7 @@ public class WordPressDB {
                     values.put("wp_password", MapUtils.getMapStr(postMap, "wp_password"));
                     values.put("wp_author_id", MapUtils.getMapStr(postMap, "wp_author_id"));
                     values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
-                    values.put("wp_post_thumbnail", MapUtils.getMapStr(postMap, "wp_post_thumbnail"));
+                    values.put("wp_post_thumbnail", MapUtils.getMapInt(postMap, "wp_post_thumbnail"));
                     values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
                     values.put("userid", MapUtils.getMapStr(postMap, "userid"));
 
@@ -1222,7 +1221,7 @@ public class WordPressDB {
                 post.setAuthorId(c.getString(c.getColumnIndex("wp_author_id")));
                 post.setPassword(c.getString(c.getColumnIndex("wp_password")));
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
-                post.setPostThumbnail(c.getString(c.getColumnIndex("wp_post_thumbnail")));
+                post.setPostThumbnail(c.getInt(c.getColumnIndex("wp_post_thumbnail")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
 

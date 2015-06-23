@@ -41,7 +41,7 @@ public class Post implements Serializable {
     private String password;
     private String postFormat;
     private String slug;
-    private String postThumbnail;
+
     private boolean localDraft;
     private boolean uploaded;
     private boolean mIsUploading;
@@ -53,6 +53,7 @@ public class Post implements Serializable {
     private String mediaPaths;
     private String quickPostType;
     private PostLocation mPostLocation;
+    private int postThumbnailId;
 
     public Post() {
     }
@@ -492,13 +493,13 @@ public class Post implements Serializable {
         return !(getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
     }
 
-    public void setPostThumbnail(String thumbnail) {
-        this.postThumbnail = StringUtils.notNullStr(thumbnail);
+    public void setPostThumbnail(int thumbnailId) {
+        this.postThumbnailId = thumbnailId;
     }
-    public String getPostThumbnail() {
-        return StringUtils.notNullStr(postThumbnail);
+    public int getPostThumbnail() {
+        return postThumbnailId;
     }
     public boolean hasPostThumbnail() {
-        return !TextUtils.isEmpty(postThumbnail);
+        return (postThumbnailId != 0);
     }
 }
