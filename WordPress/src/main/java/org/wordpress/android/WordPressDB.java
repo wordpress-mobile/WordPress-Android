@@ -980,6 +980,7 @@ public class WordPressDB {
                     values.put("wp_password", MapUtils.getMapStr(postMap, "wp_password"));
                     values.put("wp_author_id", MapUtils.getMapStr(postMap, "wp_author_id"));
                     values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
+                    values.put("wp_post_thumbnail", MapUtils.getMapStr(postMap, "wp_post_thumbnail"));
                     values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
                     values.put("userid", MapUtils.getMapStr(postMap, "userid"));
 
@@ -1079,6 +1080,7 @@ public class WordPressDB {
             putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            values.put("wp_post_thumbnail", post.getPostThumbnail());
 
             result = db.insert(POSTS_TABLE, null, values);
 
@@ -1115,6 +1117,8 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            values.put("wp_post_thumbnail", post.getPostThumbnail());
+
             putPostLocation(post, values);
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
@@ -1218,6 +1222,7 @@ public class WordPressDB {
                 post.setAuthorId(c.getString(c.getColumnIndex("wp_author_id")));
                 post.setPassword(c.getString(c.getColumnIndex("wp_password")));
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
+                post.setPostThumbnail(c.getString(c.getColumnIndex("wp_post_thumbnail")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
 
