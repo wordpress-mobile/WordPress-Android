@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -26,29 +23,16 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPAlertDialogFragment;
-import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
 
-import java.io.IOException;
-
-public class PostsListActivity extends AppCompatActivity
-        implements WPAlertDialogFragment.OnDialogConfirmListener {
+public class PostsListActivity extends AppCompatActivity {
 
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
     public static final String EXTRA_ERROR_INFO_LINK = "errorInfoLink";
 
-    private static final int ID_DIALOG_DELETING = 1;
-    private static final int ID_DIALOG_SHARE = 2;
-
-    private ProgressDialog mLoadingDialog;
     private boolean mIsPage = false;
-    private String mErrorMsg = "";
     private PostsListFragment mPostList;
 
     @Override
@@ -200,31 +184,8 @@ public class PostsListActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        mLoadingDialog = new ProgressDialog(this);
-        if (id == ID_DIALOG_DELETING) {
-            mLoadingDialog.setMessage(getResources().getText(
-                    mIsPage ? R.string.deleting_page : R.string.deleting_post));
-            mLoadingDialog.setCancelable(false);
-            return mLoadingDialog;
-        } else if (id == ID_DIALOG_SHARE) {
-            mLoadingDialog.setMessage(mIsPage ? getString(R.string.share_url_page) : getString(
-                    R.string.share_url_post));
-            mLoadingDialog.setCancelable(false);
-            return mLoadingDialog;
-        }
-        return super.onCreateDialog(id);
-    }
-
     protected void refreshComments() {
         new refreshCommentsTask().execute();
-    }
-
-    @Override
-    public void onDialogConfirm() {
-        mPostList.requestPosts(true);
-        mPostList.setRefreshing(true);
     }
 
     @Override
@@ -233,81 +194,6 @@ public class PostsListActivity extends AppCompatActivity
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
-    }
-
-    public class deletePostTask extends AsyncTask<Post, Void, Boolean> {
-        Post post;
-
-        @Override
-        protected void onPreExecute() {
-            showDialog(ID_DIALOG_DELETING);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                WordPress.wpDB.deletePost(post);
-            }
-            if (mLoadingDialog == null || isFinishing()) {
-                return;
-            } else if (mLoadingDialog.isShowing()) {
-                dismissDialog(ID_DIALOG_DELETING);
-            }
-
-            if (result) {
-                Toast.makeText(PostsListActivity.this, getResources().getText((mIsPage) ?
-                                R.string.page_deleted : R.string.post_deleted),
-                        Toast.LENGTH_SHORT).show();
-                requestPosts();
-                mPostList.requestPosts(false);
-                mPostList.setRefreshing(true);
-            } else {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsListActivity.this);
-                dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-                dialogBuilder.setMessage(mErrorMsg);
-                dialogBuilder.setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // Just close the window.
-                            }
-                        });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
-            }
-        }
-
-        @Override
-        protected Boolean doInBackground(Post... params) {
-            boolean result = false;
-            post = params[0];
-            Blog blog = WordPress.currentBlog;
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-
-            Object[] postParams = {"", post.getRemotePostId(),
-                    WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword()};
-            Object[] pageParams = {WordPress.currentBlog.getRemoteBlogId(),
-                    WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword(), post.getRemotePostId()};
-
-            try {
-                client.call((mIsPage) ? "wp.deletePage" : "blogger.deletePost", (mIsPage) ? pageParams : postParams);
-                result = true;
-            } catch (XMLRPCException | IOException | XmlPullParserException e) {
-                mErrorMsg = prepareErrorMessage(e);
-            }
-            return result;
-        }
-
-        private String prepareErrorMessage(Exception e) {
-            AppLog.e(AppLog.T.POSTS, "Error while deleting post or page", e);
-            return String.format(getResources().getString(R.string.error_delete_post),
-                    (mIsPage) ? getResources().getText(R.string.page)
-                            : getResources().getText(R.string.post));
-        }
     }
 
     private class refreshCommentsTask extends AsyncTask<Void, Void, Void> {
@@ -320,7 +206,7 @@ public class PostsListActivity extends AppCompatActivity
             try {
                 ApiHelper.refreshComments(WordPress.currentBlog, commentParams);
             } catch (final Exception e) {
-                mErrorMsg = getResources().getText(R.string.error_generic).toString();
+                AppLog.e(AppLog.T.POSTS, e);
             }
             return null;
         }
