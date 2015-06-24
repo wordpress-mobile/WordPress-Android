@@ -156,24 +156,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             }
         };
         holder.btnEdit.setOnClickListener(btnClickListener);
-        holder.btnPublish.setOnClickListener(btnClickListener);
-        holder.btnView.setOnClickListener(btnClickListener);
+        holder.btnViewOrPublish.setOnClickListener(btnClickListener);
         holder.btnStats.setOnClickListener(btnClickListener);
         holder.btnTrash.setOnClickListener(btnClickListener);
 
         // posts with local changes have publish button, no view button, no stats button
         if (post.isLocalDraft() || post.hasLocalChanges()) {
+            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
             holder.btnStats.setVisibility(View.GONE);
-            holder.btnView.setVisibility(View.GONE);
-            holder.btnPublish.setVisibility(View.VISIBLE);
         } else {
-            holder.btnView.setVisibility(View.VISIBLE);
-            holder.btnPublish.setVisibility(View.GONE);
-            if (mIsStatsSupported) {
-                holder.btnStats.setVisibility(View.VISIBLE);
-            } else {
-                holder.btnStats.setVisibility(View.GONE);
-            }
+            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_VIEW);
+            holder.btnStats.setVisibility(mIsStatsSupported ? View.VISIBLE : View.GONE);
         }
 
         // more button on first row of buttons animates in the second row
@@ -378,8 +371,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         private final TextView txtStatus;
 
         private final PostListButton btnEdit;
-        private final PostListButton btnPublish;
-        private final PostListButton btnView;
+        private final PostListButton btnViewOrPublish;
         private final PostListButton btnMore;
 
         private final PostListButton btnStats;
@@ -400,8 +392,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             txtStatus = (TextView) view.findViewById(R.id.text_status);
 
             btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
-            btnPublish = (PostListButton) view.findViewById(R.id.btn_publish);
-            btnView = (PostListButton) view.findViewById(R.id.btn_view);
+            btnViewOrPublish = (PostListButton) view.findViewById(R.id.btn_view_or_publish);
             btnMore = (PostListButton) view.findViewById(R.id.btn_more);
 
             btnStats = (PostListButton) view.findViewById(R.id.btn_stats);

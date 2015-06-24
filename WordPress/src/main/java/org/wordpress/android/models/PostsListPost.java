@@ -1,7 +1,9 @@
 package org.wordpress.android.models;
 
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
@@ -146,7 +148,11 @@ public class PostsListPost {
     }
 
     public String getFormattedDate() {
-        return DateTimeUtils.javaDateToTimeSpan(new Date(dateCreatedGmt));
+        if (getStatusEnum() == PostStatus.SCHEDULED) {
+            return DateUtils.formatDateTime(WordPress.getContext(), dateCreatedGmt, DateUtils.FORMAT_ABBREV_ALL);
+        } else {
+            return DateTimeUtils.javaDateToTimeSpan(new Date(dateCreatedGmt));
+        }
     }
 
     public boolean isLocalDraft() {

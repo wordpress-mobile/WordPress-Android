@@ -67,6 +67,10 @@ public class PostListButton extends LinearLayout {
     }
 
     public void setButtonType(int buttonType) {
+        if (buttonType == mButtonType) {
+            return;
+        }
+
         int textResId;
         int iconResId;
         switch (buttonType) {
