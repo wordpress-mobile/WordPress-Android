@@ -160,7 +160,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         holder.btnStats.setOnClickListener(btnClickListener);
         holder.btnTrash.setOnClickListener(btnClickListener);
 
-        // posts with local changes have publish button, no view button, no stats button
+        // posts with local changes have publish button rather than view button, no stats button
         if (post.isLocalDraft() || post.hasLocalChanges()) {
             holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
             holder.btnStats.setVisibility(View.GONE);

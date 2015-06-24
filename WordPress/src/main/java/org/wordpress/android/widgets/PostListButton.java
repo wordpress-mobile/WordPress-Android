@@ -16,18 +16,19 @@ public class PostListButton extends LinearLayout {
 
     private ImageView mImageView;
     private TextView mTextView;
-    private int mButtonType;
+    private int mButtonType = BUTTON_NONE;
 
     // from attrs.xml
-    public static final int BUTTON_EDIT     = 0;
-    public static final int BUTTON_VIEW     = 1;
-    public static final int BUTTON_PREVIEW  = 2;
-    public static final int BUTTON_STATS    = 3;
-    public static final int BUTTON_TRASH    = 4;
-    public static final int BUTTON_DELETE   = 5;
-    public static final int BUTTON_PUBLISH  = 6;
-    public static final int BUTTON_MORE     = 7;
-    public static final int BUTTON_BACK     = 8;
+    public static final int BUTTON_NONE     = 0;
+    public static final int BUTTON_EDIT     = 1;
+    public static final int BUTTON_VIEW     = 2;
+    public static final int BUTTON_PREVIEW  = 3;
+    public static final int BUTTON_STATS    = 4;
+    public static final int BUTTON_TRASH    = 5;
+    public static final int BUTTON_DELETE   = 6;
+    public static final int BUTTON_PUBLISH  = 7;
+    public static final int BUTTON_MORE     = 8;
+    public static final int BUTTON_BACK     = 9;
 
     public PostListButton(Context context){
         super(context);
@@ -71,6 +72,8 @@ public class PostListButton extends LinearLayout {
             return;
         }
 
+        mButtonType = buttonType;
+
         int textResId;
         int iconResId;
         switch (buttonType) {
@@ -111,10 +114,11 @@ public class PostListButton extends LinearLayout {
                 iconResId = R.drawable.noticon_back;
                 break;
             default:
+                mTextView.setText(null);
+                mImageView.setImageBitmap(null);
                 return;
         }
 
-        mButtonType = buttonType;
         mTextView.setText(textResId);
         mImageView.setImageResource(iconResId);
     }
