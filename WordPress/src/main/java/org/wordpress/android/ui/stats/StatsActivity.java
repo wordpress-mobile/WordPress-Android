@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -215,7 +214,7 @@ public class StatsActivity extends AppCompatActivity
                         }
                     }, StatsConstants.STATS_SCROLL_TO_DELAY);
 
-                    trackStatsAnalitycs();
+                    trackStatsAnalytics();
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -251,11 +250,11 @@ public class StatsActivity extends AppCompatActivity
         // Track usage here
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
-            trackStatsAnalitycs();
+            trackStatsAnalytics();
         }
     }
 
-    private void trackStatsAnalitycs() {
+    private void trackStatsAnalytics() {
         // Track usage here
         switch (mCurrentTimeframe) {
             case INSIGHTS:
