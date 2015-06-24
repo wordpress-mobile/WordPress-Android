@@ -48,6 +48,7 @@ public class PostsListPost {
 
         setDateCreatedGmt(post.getDate_created_gmt());
 
+        // if the post doesn't have an excerpt, generate one from the description
         if (!hasExcerpt() && hasDescription()) {
             excerpt = makeExcerpt(description);
         }

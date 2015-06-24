@@ -64,15 +64,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private static final long ROW_ANIM_DURATION = 150;
 
     public PostsListAdapter(Context context, @NonNull Blog blog, boolean isPage) {
+        mIsPage = isPage;
+        mLayoutInflater = LayoutInflater.from(context);
+
         mLocalTableBlogId = blog.getLocalTableBlogId();
         mIsPrivateBlog = blog.isPrivate();
 
-        // TODO: this assumes the current user always has the rights to view stats
-        // for wp.com/jp blogs
+        // TODO: this assumes the user always has the rights to view stats for wp.com/jp blogs
         mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
-
-        mIsPage = isPage;
-        mLayoutInflater = LayoutInflater.from(context);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
@@ -138,6 +137,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             holder.imgFeatured.setVisibility(View.GONE);
         }
 
+        // local drafts say "delete" instead of "trash"
         if (post.isLocalDraft()) {
             holder.txtDate.setVisibility(View.GONE);
             holder.btnTrash.setButtonType(PostListButton.BUTTON_DELETE);
@@ -163,15 +163,20 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         // posts with local changes have publish button, no view button, no stats button
         if (post.isLocalDraft() || post.hasLocalChanges()) {
-            holder.btnStats.setVisibility(View.INVISIBLE);
+            holder.btnStats.setVisibility(View.GONE);
             holder.btnView.setVisibility(View.GONE);
             holder.btnPublish.setVisibility(View.VISIBLE);
         } else {
-            holder.btnStats.setVisibility(mIsStatsSupported ? View.VISIBLE :  View.INVISIBLE);
             holder.btnView.setVisibility(View.VISIBLE);
             holder.btnPublish.setVisibility(View.GONE);
+            if (mIsStatsSupported) {
+                holder.btnStats.setVisibility(View.VISIBLE);
+            } else {
+                holder.btnStats.setVisibility(View.GONE);
+            }
         }
 
+        // more button on first row of buttons animates in the second row
         holder.btnMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,6 +184,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             }
         });
 
+        // back button on second row of buttons animates back in the first row
         holder.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -410,34 +416,30 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        private boolean mIsMediaScanNeeded;
-        private PostsListPostList mTmpPosts;
+        private PostsListPostList tmpPosts;
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            mTmpPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
+            tmpPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
 
             // make sure we don't return any hidden posts
             for (PostsListPost hiddenPost: mHiddenPosts) {
-                mTmpPosts.remove(hiddenPost);
+                tmpPosts.remove(hiddenPost);
             }
 
             // go no further if existing post list is the same
-            if (mPosts.isSameList(mTmpPosts)) {
+            if (mPosts.isSameList(tmpPosts)) {
                 return false;
             }
 
-            // generated the featured image url for each post
-            for (PostsListPost post: mTmpPosts) {
-                long mediaId = post.getFeaturedImageId();
-                String imageUrl;
-                if (mediaId != 0) {
-                    imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, mediaId);
-                    if (TextUtils.isEmpty(imageUrl)) {
-                        mIsMediaScanNeeded = true;
-                    }
+            // generate the featured image url for each post
+            String imageUrl;
+            for (PostsListPost post: tmpPosts) {
+                if (post.getFeaturedImageId() != 0) {
+                    // TODO: if media table doesn't have this image, we may want to refresh media
+                    imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, post.getFeaturedImageId());
                 } else if (post.hasDescription()) {
-                    ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), false);
+                    ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mIsPrivateBlog);
                     imageUrl = scanner.getLargestImage();
                 } else {
                     imageUrl = null;
@@ -460,7 +462,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mPosts.clear();
-                mPosts.addAll(mTmpPosts);
+                mPosts.addAll(tmpPosts);
                 notifyDataSetChanged();
                 if (mOnPostsLoadedListener != null) {
                     mOnPostsLoadedListener.onPostsLoaded(mPosts.size());

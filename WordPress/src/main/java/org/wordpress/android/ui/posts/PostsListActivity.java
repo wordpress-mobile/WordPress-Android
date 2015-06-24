@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -157,19 +156,11 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     public void newPost() {
-        if (WordPress.getCurrentBlog() == null) {
-            if (!isFinishing())
-                Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
-            return;
+        if (WordPress.getCurrentBlog() != null) {
+            ActivityLauncher.addNewBlogPostOrPageForResult(this, WordPress.getCurrentBlog(), mIsPage);
+        } else if (!isFinishing()) {
+            Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
         }
-        // Create a new post object
-        Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
-        WordPress.wpDB.savePost(newPost);
-        Intent i = new Intent(this, EditPostActivity.class);
-        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
-        i.putExtra(EditPostActivity.EXTRA_IS_PAGE, mIsPage);
-        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
-        startActivityForResult(i, RequestCodes.EDIT_POST);
     }
 
     @Override
