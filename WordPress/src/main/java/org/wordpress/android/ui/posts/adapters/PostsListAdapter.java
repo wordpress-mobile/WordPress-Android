@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.PostListButton;
@@ -130,10 +132,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
 
         if (post.hasFeaturedImageUrl()) {
-            final String imageUrl = ReaderUtils.getResizedImageUrl(post.getFeaturedImageUrl(),
-                    mPhotonWidth, mPhotonHeight, mIsPrivateBlog);
             holder.imgFeatured.setVisibility(View.VISIBLE);
-            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+            holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
         }
@@ -409,38 +409,58 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
-    private class LoadPostsTask extends AsyncTask<Void, Void, PostsListPostList> {
+    private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
+        private boolean mIsMediaScanNeeded;
+        private PostsListPostList mTmpPosts;
 
         @Override
-        protected PostsListPostList doInBackground(Void... nada) {
-            PostsListPostList posts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
+        protected Boolean doInBackground(Void... nada) {
+            mTmpPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
 
             // make sure we don't return any hidden posts
             for (PostsListPost hiddenPost: mHiddenPosts) {
-                posts.remove(hiddenPost);
-
+                mTmpPosts.remove(hiddenPost);
             }
 
-            // fill in the featured image url
-            for (PostsListPost post: posts) {
+            // go no further if existing post list is the same
+            if (mPosts.isSameList(mTmpPosts)) {
+                return false;
+            }
+
+            // generated the featured image url for each post
+            for (PostsListPost post: mTmpPosts) {
                 long mediaId = post.getFeaturedImageId();
-                if (mediaId != 0 /*&& !post.hasFeaturedImageUrl()*/) {
-                    String imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, mediaId);
-                    post.setFeaturedImageUrl(imageUrl);
+                String imageUrl;
+                if (mediaId != 0) {
+                    imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, mediaId);
+                    if (TextUtils.isEmpty(imageUrl)) {
+                        mIsMediaScanNeeded = true;
+                    }
+                } else if (post.hasDescription()) {
+                    ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), false);
+                    imageUrl = scanner.getLargestImage();
+                } else {
+                    imageUrl = null;
+                }
+
+                if (!TextUtils.isEmpty(imageUrl)) {
+                    post.setFeaturedImageUrl(
+                            ReaderUtils.getResizedImageUrl(
+                                    imageUrl,
+                                    mPhotonWidth,
+                                    mPhotonHeight,
+                                    mIsPrivateBlog));
                 }
             }
 
-            // ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), false);
-            // this.featuredImageUrl = scanner.getLargestImage();
-
-            return posts;
+            return true;
         }
 
         @Override
-        protected void onPostExecute(PostsListPostList result) {
-            if (!mPosts.isSameList(result)) {
+        protected void onPostExecute(Boolean result) {
+            if (result) {
                 mPosts.clear();
-                mPosts.addAll(result);
+                mPosts.addAll(mTmpPosts);
                 notifyDataSetChanged();
                 if (mOnPostsLoadedListener != null) {
                     mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
