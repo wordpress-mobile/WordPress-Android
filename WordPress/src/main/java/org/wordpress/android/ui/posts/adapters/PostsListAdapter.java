@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
@@ -50,6 +52,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     private final boolean mIsPage;
     private final boolean mIsPrivateBlog;
+    private final boolean mIsStatsSupported;
 
     private final PostsListPostList mPosts = new PostsListPostList();
     private final LayoutInflater mLayoutInflater;
@@ -58,10 +61,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     private static final long ROW_ANIM_DURATION = 150;
 
-    public PostsListAdapter(Context context, int localTableBlogId, boolean isPage, boolean isPrivateBlog) {
-        mLocalTableBlogId = localTableBlogId;
+    public PostsListAdapter(Context context, @NonNull Blog blog, boolean isPage) {
+        mLocalTableBlogId = blog.getLocalTableBlogId();
+        mIsPrivateBlog = blog.isPrivate();
+
+        // TODO: this assumes the current user always has the rights to view stats
+        // for wp.com/jp blogs
+        mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
+
         mIsPage = isPage;
-        mIsPrivateBlog = isPrivateBlog;
         mLayoutInflater = LayoutInflater.from(context);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
@@ -159,7 +167,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             holder.btnView.setVisibility(View.GONE);
             holder.btnPublish.setVisibility(View.VISIBLE);
         } else {
-            holder.btnStats.setVisibility(View.VISIBLE);
+            holder.btnStats.setVisibility(mIsStatsSupported ? View.VISIBLE :  View.INVISIBLE);
             holder.btnView.setVisibility(View.VISIBLE);
             holder.btnPublish.setVisibility(View.GONE);
         }
