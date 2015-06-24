@@ -1058,6 +1058,7 @@ public class WordPressDB {
         post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
         post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
         post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
+        post.setFeaturedImageId(c.getInt(c.getColumnIndex("wp_post_thumbnail")));
 
         int latColumnIndex = c.getColumnIndex("latitude");
         int lngColumnIndex = c.getColumnIndex("longitude");
@@ -1232,45 +1233,7 @@ public class WordPressDB {
 
         Post post = new Post();
         if (c.moveToFirst()) {
-                post.setLocalTablePostId(c.getLong(c.getColumnIndex("id")));
-                post.setLocalTableBlogId(Integer.valueOf(c.getString(c.getColumnIndex("blogID"))));
-                post.setRemotePostId(c.getString(c.getColumnIndex("postid")));
-                post.setTitle(c.getString(c.getColumnIndex("title")));
-                post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
-                post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
-                post.setCategories(c.getString(c.getColumnIndex("categories")));
-                post.setCustomFields(c.getString(c.getColumnIndex("custom_fields")));
-                post.setDescription(c.getString(c.getColumnIndex("description")));
-                post.setLink(c.getString(c.getColumnIndex("link")));
-                post.setAllowComments(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_comments"))));
-                post.setAllowPings(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_pings"))));
-                post.setPostExcerpt(c.getString(c.getColumnIndex("mt_excerpt")));
-                post.setKeywords(c.getString(c.getColumnIndex("mt_keywords")));
-                post.setMoreText(c.getString(c.getColumnIndex("mt_text_more")));
-                post.setPermaLink(c.getString(c.getColumnIndex("permaLink")));
-                post.setPostStatus(c.getString(c.getColumnIndex("post_status")));
-                post.setUserId(c.getString(c.getColumnIndex("userid")));
-                post.setAuthorDisplayName(c.getString(c.getColumnIndex("wp_author_display_name")));
-                post.setAuthorId(c.getString(c.getColumnIndex("wp_author_id")));
-                post.setPassword(c.getString(c.getColumnIndex("wp_password")));
-                post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
-                post.setFeaturedImageId(c.getInt(c.getColumnIndex("wp_post_thumbnail")));
-                post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
-                post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
-
-                int latColumnIndex = c.getColumnIndex("latitude");
-                int lngColumnIndex = c.getColumnIndex("longitude");
-                if (!c.isNull(latColumnIndex) && !c.isNull(lngColumnIndex)) {
-                    post.setLocation(c.getDouble(latColumnIndex), c.getDouble(lngColumnIndex));
-                }
-
-                post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
-                post.setUploading(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading"))));
-                post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
-                post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
-                post.setPageParentId(c.getString(c.getColumnIndex("wp_page_parent_id")));
-                post.setPageParentTitle(c.getString(c.getColumnIndex("wp_page_parent_title")));
-                post.setLocalChange(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
+            post = getPostFromCursor(c);
         } else {
             post = null;
         }
@@ -1577,6 +1540,11 @@ public class WordPressDB {
     /** For a given blogId, get the media file with the given media_id **/
     public Cursor getMediaFile(String blogId, String mediaId) {
         return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+    }
+
+    public String getMediaThumbnailUrl(int blogId, long mediaId) {
+        String query = "SELECT " + COLUMN_NAME_THUMBNAIL_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?";
+        return SqlUtils.stringForQuery(db, query, new String[] { Integer.toString(blogId), Long.toString(mediaId) });
     }
 
     public int getMediaCountAll(String blogId) {

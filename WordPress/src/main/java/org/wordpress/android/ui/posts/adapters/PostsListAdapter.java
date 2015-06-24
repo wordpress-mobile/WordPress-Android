@@ -129,7 +129,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             holder.txtExcerpt.setVisibility(View.GONE);
         }
 
-        if (post.hasFeaturedImage()) {
+        if (post.hasFeaturedImageUrl()) {
             final String imageUrl = ReaderUtils.getResizedImageUrl(post.getFeaturedImageUrl(),
                     mPhotonWidth, mPhotonHeight, mIsPrivateBlog);
             holder.imgFeatured.setVisibility(View.VISIBLE);
@@ -420,6 +420,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 posts.remove(hiddenPost);
 
             }
+
+            // fill in the featured image url
+            for (PostsListPost post: posts) {
+                long mediaId = post.getFeaturedImageId();
+                if (mediaId != 0 /*&& !post.hasFeaturedImageUrl()*/) {
+                    String imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, mediaId);
+                    post.setFeaturedImageUrl(imageUrl);
+                }
+            }
+
+            // ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), false);
+            // this.featuredImageUrl = scanner.getLargestImage();
+
             return posts;
         }
 

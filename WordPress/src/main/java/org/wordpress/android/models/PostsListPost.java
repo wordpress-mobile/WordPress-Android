@@ -19,6 +19,7 @@ public class PostsListPost {
     private long postId;
     private long blogId;
     private long dateCreatedGmt;
+    private long featuredImageId;
 
     private String title;
     private String excerpt;
@@ -34,6 +35,7 @@ public class PostsListPost {
     public PostsListPost(Post post) {
         setPostId(post.getLocalTablePostId());
         setBlogId(post.getLocalTableBlogId());
+        setFeaturedImageId(post.getFeaturedImageId());
 
         setTitle(post.getTitle());
         setExcerpt(post.getPostExcerpt());
@@ -47,12 +49,6 @@ public class PostsListPost {
         // generate the excerpt and featured image from the post's content if not set above
         if (!hasExcerpt()) {
             setExcerpt(makeExcerpt(post.getDescription()));
-        }
-
-        // TODO: our posts table doesn't store featured image so one is always generated here
-        if (!hasFeaturedImage()) {
-            ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), false);
-            this.featuredImageUrl = scanner.getLargestImage();
         }
     }
 
@@ -129,11 +125,21 @@ public class PostsListPost {
         return result.toString().trim() + "...";
     }
 
+    public long getFeaturedImageId() {
+        return featuredImageId;
+    }
+    public void setFeaturedImageId(long id) {
+        this.featuredImageId = id;
+    }
+
     public String getFeaturedImageUrl() {
         return StringUtils.notNullStr(featuredImageUrl);
     }
+    public void setFeaturedImageUrl(String url) {
+        this.featuredImageUrl = StringUtils.notNullStr(url);
+    }
 
-    public boolean hasFeaturedImage() {
+    public boolean hasFeaturedImageUrl() {
         return !TextUtils.isEmpty(featuredImageUrl);
     }
 
