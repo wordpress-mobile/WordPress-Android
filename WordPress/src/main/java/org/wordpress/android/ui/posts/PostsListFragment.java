@@ -668,9 +668,4 @@ public class PostsListFragment extends Fragment
             }
         }, Constants.SNACKBAR_LONG_DURATION_MS);
     }
-
-    public interface OnPostActionListener {
-        void onPostAction(int action, Post post);
-    }
-
 }

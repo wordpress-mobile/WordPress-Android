@@ -43,7 +43,13 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class ViewPostFragment extends Fragment {
-    /** Called when the activity is first created. */
+    public static final int POST_ACTION_SHARE = 1;
+    public static final int POST_ACTION_EDIT = 2;
+    public static final int POST_ACTION_VIEW = 3;
+
+    public interface OnDetailPostActionListener {
+        public void onDetailPostAction(int action, Post post);
+    }
 
     private OnDetailPostActionListener mOnDetailPostActionListener;
     PostsListActivity mParentActivity;
@@ -134,7 +140,7 @@ public class ViewPostFragment extends Fragment {
         editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (WordPress.currentPost != null && !mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_EDIT, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailPostAction(POST_ACTION_EDIT, WordPress.currentPost);
                     long postId = WordPress.currentPost.getLocalTablePostId();
                     boolean isPage = WordPress.currentPost.isPage();
                     ActivityLauncher.editBlogPostOrPageForResult(getActivity(), postId, isPage);
@@ -146,14 +152,14 @@ public class ViewPostFragment extends Fragment {
         mShareUrlButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_SHARE, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailPostAction(POST_ACTION_SHARE, WordPress.currentPost);
                 }
             }
         });
 
         mViewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_VIEW, WordPress.currentPost);
+                mOnDetailPostActionListener.onDetailPostAction(POST_ACTION_VIEW, WordPress.currentPost);
                 if (!mParentActivity.isRefreshing()) {
                     loadPostPreview();
                 }
@@ -274,10 +280,6 @@ public class ViewPostFragment extends Fragment {
                 });
             }
         }.start();
-    }
-
-    public interface OnDetailPostActionListener {
-        public void onDetailPostAction(int action, Post post);
     }
 
     public void clearContent() {

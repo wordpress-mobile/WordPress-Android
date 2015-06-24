@@ -20,19 +20,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
-import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
-import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -42,18 +36,12 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.io.IOException;
 
 public class PostsListActivity extends AppCompatActivity
-        implements OnPostActionListener,
-                   OnDetailPostActionListener,
-                   WPAlertDialogFragment.OnDialogConfirmListener {
+        implements WPAlertDialogFragment.OnDialogConfirmListener {
 
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
     public static final String EXTRA_ERROR_INFO_LINK = "errorInfoLink";
-
-    public static final int POST_SHARE = 1;
-    public static final int POST_EDIT = 2;
-    public static final int POST_VIEW = 5;
 
     private static final int ID_DIALOG_DELETING = 1;
     private static final int ID_DIALOG_SHARE = 2;
@@ -231,38 +219,6 @@ public class PostsListActivity extends AppCompatActivity
 
     protected void refreshComments() {
         new refreshCommentsTask().execute();
-    }
-
-    @Override
-    public void onPostAction(int action, final Post post) {
-        // No post? No service.
-        if (post == null) {
-            Toast.makeText(PostsListActivity.this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (action == POST_SHARE) {
-            // Only share published posts
-            if (post.getStatusEnum() != PostStatus.PUBLISHED && post.getStatusEnum() != PostStatus.SCHEDULED) {
-                AlertUtils.showAlert(this, R.string.error,
-                        post.isPage() ? R.string.page_not_published : R.string.post_not_published);
-                return;
-            }
-
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType("text/plain");
-            share.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-            String shortlink = WPMeShortlinks.getPostShortlink(WordPress.getCurrentBlog(), post);
-            share.putExtra(Intent.EXTRA_TEXT, shortlink != null ? shortlink : post.getPermaLink());
-            startActivity(Intent.createChooser(share, getResources()
-                    .getText(R.string.share_url)));
-            AppLockManager.getInstance().setExtendedTimeout();
-        }
-    }
-
-    @Override
-    public void onDetailPostAction(int action, Post post) {
-        onPostAction(action, post);
     }
 
     @Override
