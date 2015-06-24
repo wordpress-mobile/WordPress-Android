@@ -151,15 +151,6 @@ public class ViewPostFragment extends Fragment {
             }
         });
 
-        ImageButton deletePostButton = (ImageButton) v.findViewById(R.id.deletePost);
-        deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                if (!mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_DELETE, WordPress.currentPost);
-                }
-            }
-        });
-
         mViewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_VIEW, WordPress.currentPost);

@@ -51,7 +51,6 @@ public class PostsListActivity extends AppCompatActivity
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
     public static final String EXTRA_ERROR_INFO_LINK = "errorInfoLink";
 
-    public static final int POST_DELETE = 0;
     public static final int POST_SHARE = 1;
     public static final int POST_EDIT = 2;
     public static final int POST_VIEW = 5;
@@ -242,78 +241,7 @@ public class PostsListActivity extends AppCompatActivity
             return;
         }
 
-        if (action == POST_DELETE) {
-            if (post.isLocalDraft()) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        PostsListActivity.this);
-                dialogBuilder.setTitle(getResources().getText(
-                        R.string.delete_draft));
-
-                String deleteDraftMessage = getResources().getText(R.string.delete_sure).toString();
-                if (!post.getTitle().isEmpty()) {
-                    String postTitleEnclosedByQuotes = "'" + post.getTitle() + "'";
-                    deleteDraftMessage += " " + postTitleEnclosedByQuotes;
-                }
-
-                dialogBuilder.setMessage(deleteDraftMessage + "?");
-                dialogBuilder.setPositiveButton(
-                        getResources().getText(R.string.yes),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                WordPress.wpDB.deletePost(post);
-                                mPostList.getPostListAdapter().loadPosts();
-                            }
-                        });
-                dialogBuilder.setNegativeButton(
-                        getResources().getText(R.string.no),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                // Just close the window.
-                            }
-                        });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
-            } else {
-                String deletePostMessage = getResources().getText(
-                        (post.isPage()) ? R.string.delete_sure_page
-                                : R.string.delete_sure_post).toString();
-                if (!post.getTitle().isEmpty()) {
-                    String postTitleEnclosedByQuotes = "'" + post.getTitle() + "'";
-                    deletePostMessage += " " + postTitleEnclosedByQuotes;
-                }
-
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        PostsListActivity.this);
-                dialogBuilder.setTitle(getResources().getText(
-                        (post.isPage()) ? R.string.delete_page
-                                : R.string.delete_post));
-                dialogBuilder.setMessage(deletePostMessage + "?");
-                dialogBuilder.setPositiveButton(
-                        getResources().getText(R.string.yes),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                new deletePostTask().execute(post);
-                            }
-                        });
-                dialogBuilder.setNegativeButton(
-                        getResources().getText(R.string.no),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                // Just close the window.
-                            }
-                        });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
-            }
-        } else if (action == POST_SHARE) {
+        if (action == POST_SHARE) {
             // Only share published posts
             if (post.getStatusEnum() != PostStatus.PUBLISHED && post.getStatusEnum() != PostStatus.SCHEDULED) {
                 AlertUtils.showAlert(this, R.string.error,
