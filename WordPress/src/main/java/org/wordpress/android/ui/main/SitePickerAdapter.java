@@ -350,7 +350,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
      * AsyncTask which loads sites from database and populates the adapter
      */
     private boolean mIsTaskRunning;
-    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
+    private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -364,7 +364,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
 
         @Override
-        protected SiteList doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
             String[] extraFields = {"isHidden", "dotcomFlag"};
 
@@ -383,16 +383,17 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                 }
             });
 
-            return sites;
-        }
-
-        @Override
-        protected void onPostExecute(SiteList sites) {
             if (mSites == null || !mSites.isSameList(sites)) {
                 mAllSites = (SiteList) sites.clone();
                 mSites = filteredSitesByTextIfInSearchMode(sites);
-                notifyDataSetChanged();
             }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void results) {
+            notifyDataSetChanged();
             mIsTaskRunning = false;
         }
 
