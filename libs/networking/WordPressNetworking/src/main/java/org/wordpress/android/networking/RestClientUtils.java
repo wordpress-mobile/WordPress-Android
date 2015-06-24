@@ -218,6 +218,13 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
+    public void getGeneralSettings(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s", siteId);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("fields", "title,description,lang,private");
+        get(path, params, null, listener, errorListener);
+    }
+
     /**
      * Make GET request
      */

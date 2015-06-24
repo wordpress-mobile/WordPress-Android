@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="General">
+
+        <EditTextPreference
+            android:title="@string/site_title_title"
+            android:id="@+id/pref_site_title"
+            android:key="@string/pref_key_site_title"
+            android:hint="@string/site_title_hint" />
+
+        <EditTextPreference
+            android:title="@string/site_tagline_title"
+            android:id="@+id/pref_site_tagline"
+            android:key="@string/pref_key_site_tagline"
+            android:hint="@string/site_tagline_hint" />
+
+        <MultiSelectListPreference
+            android:entries="@array/available_languages"
+            android:entryValues="@array/available_languages"
+            android:title="@string/language"
+            android:id="@+id/pref_site_language"
+            android:key="@string/pref_key_site_language" />
+
+        <org.wordpress.android.ui.prefs.SeekBarPreference
+            android:title="@string/site_visibility_header"
+            android:summary="Discourage search engines from indexing this site"
+            android:id="@+id/pref_site_visibility"
+            android:key="@string/pref_key_site_visibility" />
+
+        <SwitchPreference
+            android:title="@string/site_settings_related_posts_title"
+            android:summary="@string/site_settings_related_posts_summary"
+            android:id="@+id/pref_site_related_posts"
+            android:key="@string/pref_key_site_related_posts" />
+
+        <CheckBoxPreference
+            android:title="@string/site_settings_related_posts_title"
+            android:summary="@string/site_settings_related_posts_summary"
+            android:id="@+id/pref_site_related_posts"
+            android:key="@string/pref_key_site_related_posts" />
+
+        <CheckBoxPreference
+            android:title="@string/site_settings_related_posts_title"
+            android:summary="@string/site_settings_related_posts_summary"
+            android:id="@+id/pref_site_related_posts"
+            android:key="@string/pref_key_site_related_posts" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -379,6 +379,22 @@
     <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
     <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
 
+    <!-- Site Settings preference keys-->
+    <string name="seekbar_pref_header">@string/site_visibility_header</string>
+    <string name="site_visibility_header">Visibility</string>
+    <string name="site_title_hint">What\'s this site about</string>
+    <string name="site_title_title">Title</string>
+    <string name="site_tagline_hint">Words to live by</string>
+    <string name="site_tagline_title">Tagline</string>
+    <string name="site_settings_related_posts_title">Related Posts</string>
+    <string name="site_settings_related_header_title">Related Posts</string>
+    <string name="site_settings_related_posts_summary">Show related content after posts</string>
+    <string name="pref_key_site_title" translatable="false">wp_pref_site_title</string>
+    <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
+    <string name="pref_key_site_language" translatable="false">wp_pref_site_language</string>
+    <string name="pref_key_site_visibility" translatable="false">wp_pref_site_visibility</string>
+    <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
+
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_privacy">Privacy</string>
