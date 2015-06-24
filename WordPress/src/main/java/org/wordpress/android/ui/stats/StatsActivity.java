@@ -101,10 +101,6 @@ public class StatsActivity extends AppCompatActivity
             return;
         }
 
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
-        }
-
         setContentView(R.layout.stats_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -218,6 +214,8 @@ public class StatsActivity extends AppCompatActivity
                             }
                         }
                     }, StatsConstants.STATS_SCROLL_TO_DELAY);
+
+                    trackStatsAnalitycs();
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -249,6 +247,33 @@ public class StatsActivity extends AppCompatActivity
                 }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         });
+
+        // Track usage here
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
+            trackStatsAnalitycs();
+        }
+    }
+
+    private void trackStatsAnalitycs() {
+        // Track usage here
+        switch (mCurrentTimeframe) {
+            case INSIGHTS:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED);
+                break;
+            case DAY:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED);
+                break;
+            case WEEK:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED);
+                break;
+            case MONTH:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED);
+                break;
+            case YEAR:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED);
+                break;
+        }
     }
 
     @Override
