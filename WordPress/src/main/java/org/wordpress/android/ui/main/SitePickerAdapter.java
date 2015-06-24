@@ -366,11 +366,12 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         @Override
         protected SiteList doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
+            String[] extraFields = {"isHidden", "dotcomFlag"};
 
             if (mIsInSearchMode) {
-                blogs = WordPress.wpDB.getAllBlogs();
+                blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
             } else {
-                blogs = getBlogsForCurrentView();
+                blogs = getBlogsForCurrentView(extraFields);
             }
 
             SiteList sites = new SiteList(blogs);
@@ -395,9 +396,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             mIsTaskRunning = false;
         }
 
-        private List<Map<String, Object>> getBlogsForCurrentView() {
-            String[] extraFields = {"isHidden", "dotcomFlag"};
-
+        private List<Map<String, Object>> getBlogsForCurrentView(String[] extraFields) {
             if (mShowHiddenSites) {
                 if (mShowSelfHostedSites) {
                     // all self-hosted blogs and all wp.com blogs
