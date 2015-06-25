@@ -373,21 +373,24 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         showAddUrlProgress();
 
-        ReaderActions.ActionListener urlActionListener = new ReaderActions.ActionListener() {
+        ReaderActions.OnCheckUrlReachableListener urlListener = new ReaderActions.OnCheckUrlReachableListener() {
             @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) {
-                    return;
-                }
-                if (succeeded) {
+            public void onSuccess() {
+                if (!isFinishing()) {
                     followBlogUrl(blogUrl);
-                } else {
+                }
+            }
+            @Override
+            public void onFailed(int statusCode) {
+                if (!isFinishing()) {
                     hideAddUrlProgress();
-                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                    String errMsg = getString(R.string.reader_toast_err_follow_blog)
+                            + " (" + Integer.toString(statusCode) + ")";
+                    ToastUtils.showToast(ReaderSubsActivity.this, errMsg);
                 }
             }
         };
-        ReaderBlogActions.checkBlogUrlReachable(blogUrl, urlActionListener);
+        ReaderBlogActions.checkUrlReachable(blogUrl, urlListener);
     }
 
     private void followBlogUrl(String normUrl) {

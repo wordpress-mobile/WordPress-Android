@@ -356,27 +356,25 @@ public class ReaderBlogActions {
      * tests whether the passed url can be reached - does NOT use authentication, and does not
      * account for 404 replacement pages used by ISPs such as Charter
      */
-    public static void checkBlogUrlReachable(final String blogUrl, final ActionListener actionListener) {
-        // ActionListener is required
-        if (actionListener == null) {
-            return;
-        }
-        if (TextUtils.isEmpty(blogUrl)) {
-            actionListener.onActionResult(false);
+    public static void checkUrlReachable(final String blogUrl,
+                                         final ReaderActions.OnCheckUrlReachableListener urlListener) {
+        // listener is required
+        if (urlListener == null) {
             return;
         }
 
         Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                actionListener.onActionResult(true);
+                urlListener.onSuccess();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                actionListener.onActionResult(false);
+                int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                urlListener.onFailed(statusCode);
             }
         };
 
