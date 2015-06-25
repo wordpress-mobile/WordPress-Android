@@ -564,7 +564,7 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * called by the adapter when the user clicks a post - opens the post for editing if not trashed
+     * called by the adapter when the user clicks a postx
      */
     @Override
     public void onPostSelected(PostsListPost post) {

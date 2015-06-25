@@ -245,6 +245,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         boolean canShowStatsButton = canShowStatsForPost(post);
         int numVisibleButtons = (canShowStatsButton ? 4 : 3);
 
+        // edit / view are always visible
+        holder.btnEdit.setVisibility(View.VISIBLE);
+        holder.btnViewOrPublish.setVisibility(View.VISIBLE);
+
         // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash
         if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
             holder.btnMore.setVisibility(View.GONE);
@@ -473,9 +477,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 mPosts.clear();
                 mPosts.addAll(tmpPosts);
                 notifyDataSetChanged();
-                if (mOnPostsLoadedListener != null) {
-                    mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
-                }
+            }
+            if (mOnPostsLoadedListener != null) {
+                mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
             }
         }
     }

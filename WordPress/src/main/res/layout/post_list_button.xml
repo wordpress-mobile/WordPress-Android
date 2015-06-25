@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_extra_small"
         tools:src="@drawable/noticon_trash" />
 
     <org.wordpress.android.widgets.WPTextView
