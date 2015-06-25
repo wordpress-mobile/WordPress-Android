@@ -1,10 +1,7 @@
 package org.wordpress.android.ui.main;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -14,8 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.SearchView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -38,8 +33,7 @@ import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
-        SitePickerAdapter.OnSelectedCountChangedListener,
-        SearchView.OnQueryTextListener {
+        SitePickerAdapter.OnSelectedCountChangedListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
     public static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
@@ -49,20 +43,42 @@ public class SitePickerActivity extends AppCompatActivity
     private RecyclerView mRecycleView;
     private View mFabView;
     private ActionMode mActionMode;
-    private MenuItem mMenuEdit;
-    private SearchView mSearchView;
+    private SitePickerSearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
+    private boolean mIsInSearchMode;
+    private String mLastSearch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.site_picker_activity);
-        restoreSavedInstanceState(savedInstanceState);
-        setupActionBar();
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        mLastSearch = "";
+
+        if (savedInstanceState != null) {
+            mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
+            mIsInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
+            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
+        } else if (getIntent() != null) {
+            mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
+        }
+
         setupFab();
-        setupRecycleView();
+
+        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mRecycleView.setItemAnimator(null);
+        mRecycleView.setAdapter(getAdapter());
     }
 
     @Override
@@ -74,88 +90,9 @@ public class SitePickerActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_LOCAL_ID, mCurrentLocalId);
-        outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
-        outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
+        outState.putBoolean(KEY_IS_IN_SEARCH_MODE, mIsInSearchMode);
+        outState.putString(KEY_LAST_SEARCH, mLastSearch);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        if (mDidUserSelectSite) {
-            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.site_picker, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        mMenuEdit = menu.findItem(R.id.menu_edit);
-        toggleMenuEditVisibility();
-
-        setupSearchView(menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == android.R.id.home) {
-            onBackPressed();
-            return true;
-        } else if (itemId == R.id.menu_edit) {
-            mRecycleView.setItemAnimator(new DefaultItemAnimator());
-            getAdapter().setEnableEditMode(true);
-            startSupportActionMode(new ActionModeCallback());
-            return true;
-        } else if (itemId == R.id.menu_search) {
-            mSearchView.requestFocus();
-            showSoftKeyboard();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case SignInActivity.CREATE_ACCOUNT_REQUEST:
-            case RequestCodes.CREATE_BLOG:
-                if (resultCode != RESULT_CANCELED) {
-                    getAdapter().loadSites();
-                }
-                break;
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.BlogListChanged event) {
-        if (!isFinishing()) {
-            getAdapter().loadSites();
-        }
     }
 
     /*
@@ -200,64 +137,122 @@ public class SitePickerActivity extends AppCompatActivity
         AniUtils.showFabDelayed(mFabView, true, delayMs);
     }
 
-    private void setupRecycleView() {
-        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        mRecycleView.setItemAnimator(null);
-        mRecycleView.setAdapter(getAdapter());
-    }
-
-    private void restoreSavedInstanceState(Bundle savedInstanceState) {
-        boolean isInSearchMode = false;
-        String lastSearch = "";
-
-        if (savedInstanceState != null) {
-            mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
-            isInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
-            lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
-        } else if (getIntent() != null) {
-            mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
-        }
-
-        setNewAdapter(lastSearch, isInSearchMode);
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+    @Override
+    public void finish() {
+        super.finish();
+        if (mDidUserSelectSite) {
+            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
         }
     }
 
-    private void setIsInSearchModeAndSetNewAdapter(boolean isInSearchMode) {
-        String lastSearch = getAdapter().getLastSearch();
-        setNewAdapter(lastSearch, isInSearchMode);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.site_picker, menu);
+        setupSearchView(menu);
+        return true;
     }
 
-    private SitePickerAdapter getAdapter() {
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // don't allow editing visibility unless there are multiple wp.com blogs and not in search mode
+        int numSites = WordPress.wpDB.getNumDotComBlogs();
+        MenuItem menuEdit = menu.findItem(R.id.menu_edit);
+        if (mIsInSearchMode) {
+            menuEdit.setVisible(false);
+        } else {
+            menuEdit.setVisible(numSites > 1);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (itemId == R.id.menu_edit) {
+            mRecycleView.setItemAnimator(new DefaultItemAnimator());
+            getAdapter().setEnableEditMode(true);
+            startSupportActionMode(new ActionModeCallback());
+            return true;
+        } else if (itemId == R.id.menu_search) {
+            mSearchView.requestFocus();
+            mSearchView.showSoftKeyboard();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case SignInActivity.CREATE_ACCOUNT_REQUEST:
+            case RequestCodes.CREATE_BLOG:
+                if (resultCode != RESULT_CANCELED) {
+                    getAdapter().loadSites();
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    public String getLastSearch() {
+        return mLastSearch;
+    }
+
+    public void setLastSearch(String lastSearch) {
+        mLastSearch = lastSearch;
+    }
+
+    public boolean getIsInSearchMode() {
+        return mIsInSearchMode;
+    }
+
+    public void setIsInSearchModeAndNullifyAdapter(boolean isInSearchMode) {
+        mIsInSearchMode = isInSearchMode;
+        mAdapter = null;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+        if (!isFinishing()) {
+            getAdapter().loadSites();
+        }
+    }
+
+    protected SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
-            setNewAdapter("", false);
+            if (mIsInSearchMode) {
+                mAdapter = new SitePickerSearchAdapter(this, mCurrentLocalId, mLastSearch);
+            } else {
+                mAdapter = new SitePickerAdapter(this, mCurrentLocalId);
+            }
+            mAdapter.setOnSiteClickListener(this);
+            mAdapter.setOnSelectedCountChangedListener(this);
         }
         return mAdapter;
     }
 
-    private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
-        mAdapter = new SitePickerAdapter(this, mCurrentLocalId, lastSearch, isInSearchMode);
-        mAdapter.setOnSiteClickListener(this);
-        mAdapter.setOnSelectedCountChangedListener(this);
-    }
-
-    private void toggleMenuEditVisibility() {
-        // don't allow editing visibility unless there are multiple wp.com blogs and not in search mode
-        if (getAdapter().getIsInSearchMode()) {
-            mMenuEdit.setVisible(false);
-        } else {
-            int numSites = WordPress.wpDB.getNumDotComBlogs();
-            mMenuEdit.setVisible(numSites > 1);
-        }
+    public RecyclerView getRecycleView() {
+        return mRecycleView;
     }
 
     private void saveHiddenSites() {
@@ -293,73 +288,17 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
+    private void setupSearchView(Menu menu) {
+        MenuItem menuSearch = menu.findItem(R.id.menu_search);
+        mSearchView = (SitePickerSearchView) menuSearch.getActionView();
+        mSearchView.configure(this, menu);
+    }
+
     private void updateActionModeTitle() {
         if (mActionMode != null) {
             int numSelected = getAdapter().getNumSelected();
             mActionMode.setTitle(getString(R.string.cab_selected, numSelected));
         }
-    }
-
-    private void setupSearchView(Menu menu) {
-        MenuItem menuSearch = menu.findItem(R.id.menu_search);
-
-        mSearchView = (SearchView) menuSearch.getActionView();
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setOnQueryTextListener(this);
-
-        MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                enableSearchMode();
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                disableSearchMode();
-                return true;
-            }
-        });
-
-        ifInSearchModeExpandActionViewAndSetQueryToLastSearch(menuSearch);
-    }
-
-    private void ifInSearchModeExpandActionViewAndSetQueryToLastSearch(MenuItem menuSearch) {
-        if (getAdapter().getIsInSearchMode()) {
-            menuSearch.expandActionView();
-            mSearchView.setQuery(getAdapter().getLastSearch(), false);
-        }
-    }
-
-    private void enableSearchMode() {
-        mMenuEdit.setVisible(false);
-        setIsInSearchModeAndSetNewAdapter(true);
-        mRecycleView.swapAdapter(getAdapter(), true);
-    }
-
-    private void disableSearchMode() {
-        mMenuEdit.setVisible(true);
-        hideSoftKeyboard();
-        setIsInSearchModeAndSetNewAdapter(false);
-        mRecycleView.swapAdapter(getAdapter(), true);
-    }
-
-    private void hideSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    private void showSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    private boolean hasHardwareKeyboard() {
-        return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
     @Override
@@ -373,7 +312,7 @@ public class SitePickerActivity extends AppCompatActivity
     @Override
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
-            hideSoftKeyboard();
+            mSearchView.hideSoftKeyboard();
             AniUtils.showFab(mFabView, false);
             WordPress.setCurrentBlogAndSetVisible(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
@@ -381,19 +320,6 @@ public class SitePickerActivity extends AppCompatActivity
             mDidUserSelectSite = true;
             finish();
         }
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String s) {
-        hideSoftKeyboard();
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-        getAdapter().setLastSearch(s);
-        getAdapter().searchSites(s);
-        return true;
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
