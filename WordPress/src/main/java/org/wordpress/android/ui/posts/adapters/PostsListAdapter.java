@@ -116,6 +116,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         return new PostViewHolder(view);
     }
 
+    private boolean canShowStatsForPost(PostsListPost post) {
+        return mIsStatsSupported
+                && post.getStatusEnum() == PostStatus.PUBLISHED
+                && !post.isLocalDraft();
+    }
+
     @Override
     public void onBindViewHolder(final PostViewHolder holder, final int position) {
         PostsListPost post = mPosts.get(position);
@@ -152,50 +158,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
 
         updateStatusText(holder.txtStatus, post);
-
-        View.OnClickListener btnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postButtonClicked((PostListButton) v, holder, position);
-            }
-        };
-        holder.btnEdit.setOnClickListener(btnClickListener);
-        holder.btnViewOrPublish.setOnClickListener(btnClickListener);
-        holder.btnStats.setOnClickListener(btnClickListener);
-        holder.btnTrash.setOnClickListener(btnClickListener);
-        holder.btnMore.setOnClickListener(btnClickListener);
-        holder.btnBack.setOnClickListener(btnClickListener);
-
-        int numVisibleButtons;
-        boolean canShowStatsButton;
-
-        // posts with local changes have publish button rather than view button, no stats button
-        if (post.isLocalDraft() || post.hasLocalChanges()) {
-            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
-            canShowStatsButton = false;
-            numVisibleButtons = 3; // edit / publish / delete
-        } else {
-            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_VIEW);
-            canShowStatsButton = mIsStatsSupported;
-            if (mIsStatsSupported) {
-                numVisibleButtons = 4; // edit / view / stats / trash
-            } else {
-                numVisibleButtons = 3; // edit / view / trash
-            }
-        }
-
-        // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash
-        if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
-            holder.btnMore.setVisibility(View.GONE);
-            holder.btnBack.setVisibility(View.GONE);
-            holder.btnTrash.setVisibility(View.VISIBLE);
-            holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
-        } else {
-            holder.btnMore.setVisibility(View.VISIBLE);
-            holder.btnBack.setVisibility(View.GONE);
-            holder.btnTrash.setVisibility(View.GONE);
-            holder.btnStats.setVisibility(View.GONE);
-        }
+        configurePostButtons(holder, post);
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1
@@ -270,24 +233,57 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
-    private void postButtonClicked(PostListButton view, PostViewHolder holder, int position) {
-        PostsListPost post = getItem(position);
-        if (post == null) return;
-
-        // handle back/more here, pass other actions to activity/fragment
-        switch (view.getButtonType()) {
-            case PostListButton.BUTTON_MORE:
-                animateButtonRows(holder, post, false);
-                break;
-            case PostListButton.BUTTON_BACK:
-                animateButtonRows(holder, post, true);
-                break;
-            default:
-                if (mOnPostButtonClickListener != null) {
-                    mOnPostButtonClickListener.onPostButtonClicked(view.getButtonType(), post);
-                }
-                break;
+    private void configurePostButtons(final PostViewHolder holder,
+                                      final PostsListPost post) {
+        // posts with local changes have publish button rather than view button
+        if (post.isLocalDraft() || post.hasLocalChanges()) {
+            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+        } else {
+            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_VIEW);
         }
+
+        boolean canShowStatsButton = canShowStatsForPost(post);
+        int numVisibleButtons = (canShowStatsButton ? 4 : 3);
+
+        // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash
+        if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
+            holder.btnMore.setVisibility(View.GONE);
+            holder.btnBack.setVisibility(View.GONE);
+            holder.btnTrash.setVisibility(View.VISIBLE);
+            holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
+        } else {
+            holder.btnMore.setVisibility(View.VISIBLE);
+            holder.btnBack.setVisibility(View.GONE);
+            holder.btnTrash.setVisibility(View.GONE);
+            holder.btnStats.setVisibility(View.GONE);
+        }
+
+        View.OnClickListener btnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // handle back/more here, pass other actions to activity/fragment
+                int buttonType = ((PostListButton) view).getButtonType();
+                switch (buttonType) {
+                    case PostListButton.BUTTON_MORE:
+                        animateButtonRows(holder, post, false);
+                        break;
+                    case PostListButton.BUTTON_BACK:
+                        animateButtonRows(holder, post, true);
+                        break;
+                    default:
+                        if (mOnPostButtonClickListener != null) {
+                            mOnPostButtonClickListener.onPostButtonClicked(buttonType, post);
+                        }
+                        break;
+                }
+            }
+        };
+        holder.btnEdit.setOnClickListener(btnClickListener);
+        holder.btnViewOrPublish.setOnClickListener(btnClickListener);
+        holder.btnStats.setOnClickListener(btnClickListener);
+        holder.btnTrash.setOnClickListener(btnClickListener);
+        holder.btnMore.setOnClickListener(btnClickListener);
+        holder.btnBack.setOnClickListener(btnClickListener);
     }
 
     /*
@@ -314,10 +310,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 holder.btnViewOrPublish.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 holder.btnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 // row 2
-                boolean canShowStats = mIsStatsSupported
-                        && !post.isLocalDraft()
-                        && !post.hasLocalChanges();
-                holder.btnStats.setVisibility(!showRow1 && canShowStats ? View.VISIBLE : View.GONE);
+                holder.btnStats.setVisibility(!showRow1 && canShowStatsForPost(post) ? View.VISIBLE : View.GONE);
                 holder.btnTrash.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
                 holder.btnBack.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
 
