@@ -373,7 +373,14 @@ public class ReaderBlogActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                int statusCode;
+                // check specifically for auth failure class rather than relying on status code
+                // since a redirect to an unauthorized url may return a 301 rather than a 401
+                if (volleyError instanceof com.android.volley.AuthFailureError) {
+                    statusCode = 401;
+                } else {
+                    statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                }
                 urlListener.onFailed(statusCode);
             }
         };

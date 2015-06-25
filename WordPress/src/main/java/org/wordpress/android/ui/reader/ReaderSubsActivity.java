@@ -384,8 +384,22 @@ public class ReaderSubsActivity extends AppCompatActivity
             public void onFailed(int statusCode) {
                 if (!isFinishing()) {
                     hideAddUrlProgress();
-                    String errMsg = getString(R.string.reader_toast_err_follow_blog)
-                            + " (" + Integer.toString(statusCode) + ")";
+                    String errMsg;
+                    switch (statusCode) {
+                        case 301:
+                            errMsg = getString(R.string.reader_toast_err_follow_blog_moved);
+                            break;
+                        case 401:
+                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_authorized);
+                            break;
+                        case 0: // can happen when host name not found
+                        case 404:
+                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
+                            break;
+                        default:
+                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + Integer.toString(statusCode) + ")";
+                            break;
+                    }
                     ToastUtils.showToast(ReaderSubsActivity.this, errMsg);
                 }
             }
