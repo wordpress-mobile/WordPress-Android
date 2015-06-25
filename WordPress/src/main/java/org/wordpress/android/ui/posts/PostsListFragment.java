@@ -18,8 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -60,7 +58,7 @@ public class PostsListFragment extends Fragment
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
-    private FloatingActionButton mFabButton;
+    private View mFabButton;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
 
@@ -105,7 +103,7 @@ public class PostsListFragment extends Fragment
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
-        mFabButton = (FloatingActionButton) view.findViewById(R.id.fab_button);
+        mFabButton = view.findViewById(R.id.fab_button);
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -641,7 +639,7 @@ public class PostsListFragment extends Fragment
         }
 
         mDidUndoTrash = false;
-        Snackbar.make(getView(), text, Snackbar.LENGTH_LONG)
+        Snackbar.make(getView().findViewById(R.id.coordinator), text, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener)
                 .show();
 
