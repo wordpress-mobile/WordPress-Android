@@ -166,6 +166,22 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
     }
 
+    public String getLastSearch() {
+        return mLastSearch;
+    }
+
+    public void setLastSearch(String lastSearch) {
+        mLastSearch = lastSearch;
+    }
+
+    public boolean getIsInSearchMode() {
+        return mIsInSearchMode;
+    }
+
+    public void setIsInSearchMode(boolean isInSearchMode) {
+        mIsInSearchMode = isInSearchMode;
+    }
+
     public void searchSites(String searchText) {
         mLastSearch = searchText;
         mSites = filteredSitesByText(mAllSites);
