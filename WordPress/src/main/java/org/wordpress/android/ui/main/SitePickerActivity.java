@@ -322,10 +322,10 @@ public class SitePickerActivity extends AppCompatActivity
             }
         });
 
-        ifInSearchModeExpandActionViewAndSetQueryToLastSearch(menuSearch);
+        setQueryIfInSearch(menuSearch);
     }
 
-    private void ifInSearchModeExpandActionViewAndSetQueryToLastSearch(MenuItem menuSearch) {
+    private void setQueryIfInSearch(MenuItem menuSearch) {
         if (getAdapter().getIsInSearchMode()) {
             menuSearch.expandActionView();
             mSearchView.setQuery(getAdapter().getLastSearch(), false);
