@@ -51,7 +51,6 @@ public class SitePickerActivity extends AppCompatActivity
     private ActionMode mActionMode;
     private MenuItem mMenuEdit;
     private SearchView mSearchView;
-    private InputMethodManager mInputMethodManager;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
 
@@ -61,7 +60,6 @@ public class SitePickerActivity extends AppCompatActivity
 
         setContentView(R.layout.site_picker_activity);
 
-        mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -337,13 +335,15 @@ public class SitePickerActivity extends AppCompatActivity
 
     public void hideSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
-            mInputMethodManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
     public void showSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
-            mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
