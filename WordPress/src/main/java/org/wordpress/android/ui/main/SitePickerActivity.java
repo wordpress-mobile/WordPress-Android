@@ -234,6 +234,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     private void setIsInSearchModeAndSetNewAdapter(boolean isInSearchMode) {
         String lastSearch = getAdapter().getLastSearch();
+        AniUtils.showFab(mFabView, !isInSearchMode);
         setNewAdapter(lastSearch, isInSearchMode);
     }
 
