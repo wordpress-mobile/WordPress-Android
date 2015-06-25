@@ -59,35 +59,10 @@ public class SitePickerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.site_picker_activity);
-
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        boolean isInSearchMode = false;
-        String lastSearch = "";
-
-        if (savedInstanceState != null) {
-            mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
-            isInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
-            lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
-        } else if (getIntent() != null) {
-            mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
-        }
-
-        setNewAdapter(lastSearch, isInSearchMode);
-
+        restoreSavedInstanceState(savedInstanceState);
+        setupActionBar();
         setupFab();
-
-        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        mRecycleView.setItemAnimator(null);
-        mRecycleView.setAdapter(getAdapter());
+        setupRecycleView();
     }
 
     @Override
@@ -259,6 +234,39 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     protected SitePickerAdapter getAdapter() {
+
+    private void setupRecycleView() {
+        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        mRecycleView.setItemAnimator(null);
+        mRecycleView.setAdapter(getAdapter());
+    }
+
+    private void restoreSavedInstanceState(Bundle savedInstanceState) {
+        boolean isInSearchMode = false;
+        String lastSearch = "";
+
+        if (savedInstanceState != null) {
+            mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
+            isInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
+            lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
+        } else if (getIntent() != null) {
+            mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
+        }
+
+        setNewAdapter(lastSearch, isInSearchMode);
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
         if (mAdapter == null) {
             setNewAdapter("", false);
         }
