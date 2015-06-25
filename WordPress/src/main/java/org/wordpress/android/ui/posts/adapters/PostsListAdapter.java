@@ -1,5 +1,9 @@
 package org.wordpress.android.ui.posts.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -10,6 +14,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -49,7 +55,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private final boolean mIsPage;
     private final boolean mIsPrivateBlog;
     private final boolean mIsStatsSupported;
-    private final boolean mCanShowAllButtons = false;
+    private final boolean mAlwaysShowAllButtons;
 
     private final PostsListPostList mPosts = new PostsListPostList();
     private final LayoutInflater mLayoutInflater;
@@ -67,6 +73,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         // TODO: this assumes the user always has the rights to view stats for wp.com/jp blogs
         mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
+
+        // on large/landscape displays we can always show all buttons
+        mAlwaysShowAllButtons = DisplayUtils.isLandscape(context) || DisplayUtils.isXLarge(context);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
@@ -157,26 +166,26 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         holder.btnMore.setOnClickListener(btnClickListener);
         holder.btnBack.setOnClickListener(btnClickListener);
 
-        int numVisibleBtns;
+        int numVisibleButtons;
         boolean canShowStatsButton;
 
         // posts with local changes have publish button rather than view button, no stats button
         if (post.isLocalDraft() || post.hasLocalChanges()) {
             holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
             canShowStatsButton = false;
-            numVisibleBtns = 3; // edit / publish / delete
+            numVisibleButtons = 3; // edit / publish / delete
         } else {
             holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_VIEW);
             canShowStatsButton = mIsStatsSupported;
             if (mIsStatsSupported) {
-                numVisibleBtns = 4; // edit / view / stats / trash
+                numVisibleButtons = 4; // edit / view / stats / trash
             } else {
-                numVisibleBtns = 3; // edit / view / trash
+                numVisibleButtons = 3; // edit / view / trash
             }
         }
 
         // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash
-        if (mCanShowAllButtons || numVisibleBtns <= 3) {
+        if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
             holder.btnMore.setVisibility(View.GONE);
             holder.btnBack.setVisibility(View.GONE);
             holder.btnTrash.setVisibility(View.VISIBLE);
@@ -268,19 +277,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         // handle back/more here, pass other actions to activity/fragment
         switch (view.getButtonType()) {
             case PostListButton.BUTTON_MORE:
+                animateButtonRows(holder, post, false);
+                break;
             case PostListButton.BUTTON_BACK:
-                boolean showRow1 = (view.getButtonType() == PostListButton.BUTTON_BACK);
-                // row 1
-                showButton(holder.btnEdit, showRow1);
-                showButton(holder.btnViewOrPublish, showRow1);
-                showButton(holder.btnMore, showRow1);
-                // row 2
-                boolean canShowStats = mIsStatsSupported
-                        && !post.isLocalDraft()
-                        && !post.hasLocalChanges();
-                showButton(holder.btnStats, !showRow1 && canShowStats);
-                showButton(holder.btnTrash, !showRow1);
-                showButton(holder.btnBack, !showRow1);
+                animateButtonRows(holder, post, true);
                 break;
             default:
                 if (mOnPostButtonClickListener != null) {
@@ -290,11 +290,47 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
-    private static void showButton(PostListButton view, boolean show) {
-        int newVisibility = (show ? View.VISIBLE : View.GONE);
-        if (view.getVisibility() != newVisibility) {
-            view.setVisibility(newVisibility);
-        }
+    /*
+     * buttons may appear in two rows depending on display size and number of visible
+     * buttons - these rows are toggled through the "more" and "back" buttons - this
+     * routine is used to animate the new row in and the old row out
+     */
+    private void animateButtonRows(final PostViewHolder holder,
+                                   final PostsListPost post,
+                                   final boolean showRow1) {
+        // first animate out the button row, then show/hide the appropriate buttons,
+        // then animate the row layout back in
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0f);
+        ObjectAnimator animOut = ObjectAnimator.ofPropertyValuesHolder(holder.layoutButtons, scaleX, scaleY);
+        animOut.setDuration(ROW_ANIM_DURATION);
+        animOut.setInterpolator(new AccelerateInterpolator());
+
+        animOut.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // row 1
+                holder.btnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnViewOrPublish.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                // row 2
+                boolean canShowStats = mIsStatsSupported
+                        && !post.isLocalDraft()
+                        && !post.hasLocalChanges();
+                holder.btnStats.setVisibility(!showRow1 && canShowStats ? View.VISIBLE : View.GONE);
+                holder.btnTrash.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnBack.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
+
+                PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f, 1f);
+                PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f, 1f);
+                ObjectAnimator animIn = ObjectAnimator.ofPropertyValuesHolder(holder.layoutButtons, scaleX, scaleY);
+                animIn.setDuration(ROW_ANIM_DURATION);
+                animIn.setInterpolator(new DecelerateInterpolator());
+                animIn.start();
+            }
+        });
+
+        animOut.start();
     }
 
     @Override
@@ -372,6 +408,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         private final PostListButton btnBack;
 
         private final WPNetworkImageView imgFeatured;
+        private final ViewGroup layoutButtons;
 
         public PostViewHolder(View view) {
             super(view);
@@ -390,6 +427,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             btnBack = (PostListButton) view.findViewById(R.id.btn_back);
 
             imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
+            layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
         }
     }
 
