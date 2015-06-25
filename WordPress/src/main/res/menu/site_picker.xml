@@ -7,7 +7,7 @@
         android:title="@string/menu_search"
         android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="collapseActionView|ifRoom"
-        app:actionViewClass="org.wordpress.android.ui.main.SitePickerSearchView" />
+        app:actionViewClass="android.widget.SearchView" />
 
     <item
         android:id="@+id/menu_edit"
