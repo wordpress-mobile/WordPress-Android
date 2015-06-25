@@ -79,48 +79,6 @@ public class SitePickerActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
-    /*
-     * if the user is signed into wp.com, show a fab menu which enables choosing between
-     * adding a self-hosted site and creating a new wp.com one - if they're not signed in
-     * we hide the menu and use a separate fab which directly adds a self-hosted site
-     */
-    private void setupFab() {
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            FloatingActionButton fabMenuItemCreateDotCom = (FloatingActionButton) findViewById(R.id.fab_item_create_dotcom);
-            fabMenuItemCreateDotCom.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.newBlogForResult(SitePickerActivity.this);
-                    fabMenu.collapse();
-                }
-            });
-
-            FloatingActionButton fabMenuItemAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_item_add_dotorg);
-            fabMenuItemAddDotOrg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
-                    fabMenu.collapse();
-                }
-            });
-            mFabView = fabMenu;
-        } else {
-            FloatingActionButton fabMenuAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_add_dotorg);
-            fabMenuAddDotOrg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
-                }
-            });
-            mFabView = fabMenuAddDotOrg;
-        }
-
-        // animate fab in after a delay which matches that of the activity transition
-        long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        AniUtils.showFabDelayed(mFabView, true, delayMs);
-    }
-
     @Override
     public void finish() {
         super.finish();
@@ -133,8 +91,6 @@ public class SitePickerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
-
-        setupSearchView(menu);
         return true;
     }
 
@@ -142,36 +98,10 @@ public class SitePickerActivity extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        // don't allow editing visibility unless there are multiple wp.com blogs and not in search mode
-        int numSites = WordPress.wpDB.getNumDotComBlogs();
         mMenuEdit = menu.findItem(R.id.menu_edit);
-        if (getAdapter().getIsInSearchMode()) {
-            mMenuEdit.setVisible(false);
-        } else {
-            mMenuEdit.setVisible(numSites > 1);
-        }
+        toggleMenuEditVisibility();
 
-        MenuItem menuSearch = menu.findItem(R.id.menu_search);
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setOnQueryTextListener(this);
-        MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                enableSearchMode();
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                disableSearchMode();
-                return true;
-            }
-        });
-
-        if (getAdapter().getIsInSearchMode()) {
-            menuSearch.expandActionView();
-            mSearchView.setQuery(getAdapter().getLastSearch(), false);
-        }
+        setupSearchView(menu);
 
         return true;
     }
@@ -221,11 +151,6 @@ public class SitePickerActivity extends AppCompatActivity
         EventBus.getDefault().register(this);
     }
 
-    public void setIsInSearchModeAndNullifyAdapter(boolean isInSearchMode) {
-        String lastSearch = getAdapter().getLastSearch();
-        setNewAdapter(lastSearch, isInSearchMode);
-    }
-
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.BlogListChanged event) {
         if (!isFinishing()) {
@@ -233,7 +158,47 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    protected SitePickerAdapter getAdapter() {
+    /*
+     * if the user is signed into wp.com, show a fab menu which enables choosing between
+     * adding a self-hosted site and creating a new wp.com one - if they're not signed in
+     * we hide the menu and use a separate fab which directly adds a self-hosted site
+     */
+    private void setupFab() {
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            FloatingActionButton fabMenuItemCreateDotCom = (FloatingActionButton) findViewById(R.id.fab_item_create_dotcom);
+            fabMenuItemCreateDotCom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.newBlogForResult(SitePickerActivity.this);
+                    fabMenu.collapse();
+                }
+            });
+
+            FloatingActionButton fabMenuItemAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_item_add_dotorg);
+            fabMenuItemAddDotOrg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+                    fabMenu.collapse();
+                }
+            });
+            mFabView = fabMenu;
+        } else {
+            FloatingActionButton fabMenuAddDotOrg = (FloatingActionButton) findViewById(R.id.fab_add_dotorg);
+            fabMenuAddDotOrg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+                }
+            });
+            mFabView = fabMenuAddDotOrg;
+        }
+
+        // animate fab in after a delay which matches that of the activity transition
+        long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        AniUtils.showFabDelayed(mFabView, true, delayMs);
+    }
 
     private void setupRecycleView() {
         mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -267,6 +232,12 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
+    private void setIsInSearchModeAndNullifyAdapter(boolean isInSearchMode) {
+        String lastSearch = getAdapter().getLastSearch();
+        setNewAdapter(lastSearch, isInSearchMode);
+    }
+
+    private SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
             setNewAdapter("", false);
         }
@@ -279,8 +250,14 @@ public class SitePickerActivity extends AppCompatActivity
         mAdapter.setOnSelectedCountChangedListener(this);
     }
 
-    public RecyclerView getRecycleView() {
-        return mRecycleView;
+    private void toggleMenuEditVisibility() {
+        // don't allow editing visibility unless there are multiple wp.com blogs and not in search mode
+        if (getAdapter().getIsInSearchMode()) {
+            mMenuEdit.setVisible(false);
+        } else {
+            int numSites = WordPress.wpDB.getNumDotComBlogs();
+            mMenuEdit.setVisible(numSites > 1);
+        }
     }
 
     private void saveHiddenSites() {
@@ -316,11 +293,6 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    private void setupSearchView(Menu menu) {
-        MenuItem menuSearch = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) menuSearch.getActionView();
-    }
-
     private void updateActionModeTitle() {
         if (mActionMode != null) {
             int numSelected = getAdapter().getNumSelected();
@@ -328,27 +300,58 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    public void enableSearchMode() {
-        mMenuEdit.setVisible(false);
-        setIsInSearchModeAndNullifyAdapter(true);
-        getRecycleView().swapAdapter(getAdapter(), true);
+    private void setupSearchView(Menu menu) {
+        MenuItem menuSearch = menu.findItem(R.id.menu_search);
+
+        mSearchView = (SearchView) menuSearch.getActionView();
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                enableSearchMode();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                disableSearchMode();
+                return true;
+            }
+        });
+
+        ifInSearchModeExpandActionViewAndSetQueryToLastSearch(menuSearch);
     }
 
-    public void disableSearchMode() {
+    private void ifInSearchModeExpandActionViewAndSetQueryToLastSearch(MenuItem menuSearch) {
+        if (getAdapter().getIsInSearchMode()) {
+            menuSearch.expandActionView();
+            mSearchView.setQuery(getAdapter().getLastSearch(), false);
+        }
+    }
+
+    private void enableSearchMode() {
+        mMenuEdit.setVisible(false);
+        setIsInSearchModeAndNullifyAdapter(true);
+        mRecycleView.swapAdapter(getAdapter(), true);
+    }
+
+    private void disableSearchMode() {
         mMenuEdit.setVisible(true);
         hideSoftKeyboard();
         setIsInSearchModeAndNullifyAdapter(false);
-        getRecycleView().swapAdapter(getAdapter(), true);
+        mRecycleView.swapAdapter(getAdapter(), true);
     }
 
-    public void hideSoftKeyboard() {
+    private void hideSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
-    public void showSoftKeyboard() {
+    private void showSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
