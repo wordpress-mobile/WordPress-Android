@@ -232,7 +232,7 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    private void setIsInSearchModeAndNullifyAdapter(boolean isInSearchMode) {
+    private void setIsInSearchModeAndSetNewAdapter(boolean isInSearchMode) {
         String lastSearch = getAdapter().getLastSearch();
         setNewAdapter(lastSearch, isInSearchMode);
     }
@@ -333,14 +333,14 @@ public class SitePickerActivity extends AppCompatActivity
 
     private void enableSearchMode() {
         mMenuEdit.setVisible(false);
-        setIsInSearchModeAndNullifyAdapter(true);
+        setIsInSearchModeAndSetNewAdapter(true);
         mRecycleView.swapAdapter(getAdapter(), true);
     }
 
     private void disableSearchMode() {
         mMenuEdit.setVisible(true);
         hideSoftKeyboard();
-        setIsInSearchModeAndNullifyAdapter(false);
+        setIsInSearchModeAndSetNewAdapter(false);
         mRecycleView.swapAdapter(getAdapter(), true);
     }
 
