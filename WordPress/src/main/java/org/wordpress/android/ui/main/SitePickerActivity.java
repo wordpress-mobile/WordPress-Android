@@ -51,6 +51,7 @@ public class SitePickerActivity extends AppCompatActivity
     private ActionMode mActionMode;
     private MenuItem mMenuEdit;
     private MenuItem mMenuAdd;
+    private MenuItem mMenuSearch;
     private SearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
@@ -100,15 +101,16 @@ public class SitePickerActivity extends AppCompatActivity
 
         mMenuEdit = menu.findItem(R.id.menu_edit);
         mMenuAdd = menu.findItem(R.id.menu_add);
+        mMenuSearch = menu.findItem(R.id.menu_search);
 
         updateMenuItemVisibility();
-        setupSearchView(menu);
+        setupSearchView();
 
         return true;
     }
 
     private void updateMenuItemVisibility() {
-        if (mMenuAdd == null || mMenuEdit == null) return;
+        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null) return;
 
         if (getAdapter().getIsInSearchMode()) {
             mMenuEdit.setVisible(false);
@@ -118,6 +120,9 @@ public class SitePickerActivity extends AppCompatActivity
             mMenuEdit.setVisible(WordPress.wpDB.getNumDotComBlogs() > 1);
             mMenuAdd.setVisible(true);
         }
+
+        // no point showing search if there aren't multiple blogs
+        mMenuSearch.setVisible(WordPress.wpDB.getNumBlogs() > 1);
     }
 
     @Override
@@ -265,14 +270,12 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    private void setupSearchView(Menu menu) {
-        MenuItem menuSearch = menu.findItem(R.id.menu_search);
-
-        mSearchView = (SearchView) menuSearch.getActionView();
+    private void setupSearchView() {
+        mSearchView = (SearchView) mMenuSearch.getActionView();
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
 
-        MenuItemCompat.setOnActionExpandListener(menuSearch, new MenuItemCompat.OnActionExpandListener() {
+        MenuItemCompat.setOnActionExpandListener(mMenuSearch, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 enableSearchMode();
@@ -286,12 +289,12 @@ public class SitePickerActivity extends AppCompatActivity
             }
         });
 
-        setQueryIfInSearch(menuSearch);
+        setQueryIfInSearch();
     }
 
-    private void setQueryIfInSearch(MenuItem menuSearch) {
+    private void setQueryIfInSearch() {
         if (getAdapter().getIsInSearchMode()) {
-            menuSearch.expandActionView();
+            mMenuSearch.expandActionView();
             mSearchView.setQuery(getAdapter().getLastSearch(), false);
         }
     }
