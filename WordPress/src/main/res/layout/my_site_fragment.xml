@@ -81,8 +81,9 @@
                             android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
                             android:paddingTop="@dimen/my_site_margin_general"
                             android:text="@string/my_site_btn_switch_site"
+                            android:textAllCaps="true"
                             android:textColor="@color/grey_dark"
-                            android:textSize="@dimen/text_sz_medium" />
+                            android:textSize="@dimen/text_sz_small" />
 
                     </LinearLayout>
                 </RelativeLayout>
