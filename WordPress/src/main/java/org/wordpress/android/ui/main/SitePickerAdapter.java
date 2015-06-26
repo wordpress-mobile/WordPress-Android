@@ -43,7 +43,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     private static int mBlavatarSz;
 
-    protected SiteList mSites = new SiteList();
+    private SiteList mSites = new SiteList();
     private final int mCurrentLocalId;
 
     private final Drawable mSelectedItemBackground;
@@ -52,7 +52,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
     private boolean mIsMultiSelectEnabled;
-    private boolean mIsInSearchMode;
+    private final boolean mIsInSearchMode;
     private boolean mShowHiddenSites = false;
     private boolean mShowSelfHostedSites = true;
     private String mLastSearch;
@@ -176,10 +176,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     public boolean getIsInSearchMode() {
         return mIsInSearchMode;
-    }
-
-    public void setIsInSearchMode(boolean isInSearchMode) {
-        mIsInSearchMode = isInSearchMode;
     }
 
     public void searchSites(String searchText) {
@@ -312,20 +308,14 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return hiddenSites;
     }
 
-    private void setVisibilityForSite(SiteRecord site, boolean makeVisible) {
-        boolean newIsHidden = !makeVisible;
-        int index = mSites.indexOfSite(site);
-        if (index > -1 && mSites.get(index).isHidden != newIsHidden) {
-            mSites.get(index).isHidden = newIsHidden;
-            notifyItemChanged(index);
-        }
-    }
-
     void setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
         if (sites != null && sites.size() > 0) {
             for (SiteRecord site: sites) {
-                setVisibilityForSite(site, makeVisible);
+                int index = mSites.indexOfSite(site);
+                if (index > -1) {
+                    mSites.get(index).isHidden = !makeVisible;
+                }
             }
         }
     }

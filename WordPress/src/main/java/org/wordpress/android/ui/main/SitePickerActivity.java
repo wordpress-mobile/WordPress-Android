@@ -43,8 +43,8 @@ public class SitePickerActivity extends AppCompatActivity
         SearchView.OnQueryTextListener {
 
     public static final String KEY_LOCAL_ID = "local_id";
-    public static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
-    public static final String KEY_LAST_SEARCH = "last_search";
+    private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
+    private static final String KEY_LAST_SEARCH = "last_search";
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
