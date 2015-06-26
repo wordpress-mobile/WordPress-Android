@@ -32,6 +32,7 @@ import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.reader.views.ReaderItemDecoration;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -58,7 +59,7 @@ public class PostsListFragment extends Fragment
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
-    private View mFabButton;
+    private View mFabView;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
 
@@ -103,7 +104,7 @@ public class PostsListFragment extends Fragment
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
-        mFabButton = view.findViewById(R.id.fab_button);
+        mFabView = view.findViewById(R.id.fab_button);
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -111,7 +112,7 @@ public class PostsListFragment extends Fragment
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
 
-        mFabButton.setOnClickListener(new View.OnClickListener() {
+        mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 newPost();
@@ -217,13 +218,18 @@ public class PostsListFragment extends Fragment
                 mRecyclerView.setAdapter(getPostListAdapter());
             }
         }
-    }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (mFabButton != null) {
-            mFabButton.setVisibility(hidden ? View.GONE : View.VISIBLE);
+        // scale in the fab after a brief delay if it's not already showing
+        if (mFabView.getVisibility() != View.VISIBLE) {
+            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAdded()) {
+                        AniUtils.scaleIn(mFabView, AniUtils.Duration.MEDIUM);
+                    }
+                }
+            }, delayMs);
         }
     }
 
@@ -562,7 +568,7 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * called by the adapter when the user clicks a postx
+     * called by the adapter when the user clicks a post
      */
     @Override
     public void onPostSelected(PostsListPost post) {

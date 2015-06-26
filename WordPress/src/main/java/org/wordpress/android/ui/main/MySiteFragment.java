@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,10 +68,28 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        AniUtils.showFab(mFabView, false);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
+        }
+        // redisplay hidden fab after a short delay
+        if (mFabView.getVisibility() != View.VISIBLE) {
+            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAdded()) {
+                        AniUtils.showFab(mFabView, true);
+                    }
+                }
+            }, delayMs);
         }
     }
 
@@ -177,7 +196,6 @@ public class MySiteFragment extends Fragment
 
     private void showSitePicker() {
         if (isAdded()) {
-            AniUtils.showFab(mFabView, false);
             int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
             ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
         }
@@ -193,9 +211,6 @@ public class MySiteFragment extends Fragment
                 if (resultCode == Activity.RESULT_OK) {
                     setBlog(WordPress.getCurrentBlog());
                 }
-                // redisplay the hidden fab after a short delay
-                long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-                AniUtils.showFabDelayed(mFabView, true, delayMs);
                 break;
 
             case RequestCodes.EDIT_POST:

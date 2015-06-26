@@ -73,9 +73,11 @@
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
             android:src="@drawable/ic_create_white_24dp"
+            android:visibility="gone"
             app:borderWidth="0dp"
             app:elevation="@dimen/fab_elevation"
-            app:rippleColor="@color/fab_pressed" />
+            app:rippleColor="@color/fab_pressed"
+            tools:visibility="visible" />
 
     </android.support.design.widget.CoordinatorLayout>
 
