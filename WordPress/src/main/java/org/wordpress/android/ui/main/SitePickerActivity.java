@@ -197,7 +197,7 @@ public class SitePickerActivity extends AppCompatActivity
 
         // animate fab in after a delay which matches that of the activity transition
         long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-        AniUtils.showFabDelayed(mFabView, true, delayMs);
+        AniUtils.showFabDelayed(mFabView, !getAdapter().getIsInSearchMode(), delayMs);
     }
 
     private void setupRecycleView() {
