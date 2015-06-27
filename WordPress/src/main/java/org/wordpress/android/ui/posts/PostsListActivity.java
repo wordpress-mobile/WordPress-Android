@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -138,14 +137,6 @@ public class PostsListActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void newPost() {
-        if (WordPress.getCurrentBlog() != null) {
-            ActivityLauncher.addNewBlogPostOrPageForResult(this, WordPress.getCurrentBlog(), mIsPage);
-        } else if (!isFinishing()) {
-            Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override

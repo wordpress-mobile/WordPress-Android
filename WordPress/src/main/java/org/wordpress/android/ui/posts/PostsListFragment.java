@@ -206,8 +206,12 @@ public class PostsListFragment extends Fragment
     }
 
     private void newPost() {
-        if (getActivity() instanceof PostsListActivity) {
-            ((PostsListActivity) getActivity()).newPost();
+        if (!isAdded()) return;
+
+        if (WordPress.getCurrentBlog() != null) {
+            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), mIsPage);
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found);
         }
     }
 
