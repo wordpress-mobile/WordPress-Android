@@ -6,9 +6,12 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
@@ -34,6 +37,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -41,6 +45,7 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -57,6 +62,10 @@ public class WPMainActivity extends Activity
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
 
+    private TextView mConnectionBar;
+    private boolean mIsConnected;
+
+    private static final int CONNECTION_CHECK_DELAY_MS = 1500;
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     /*
@@ -77,6 +86,16 @@ public class WPMainActivity extends Activity
         mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
+
+        mConnectionBar = (TextView) findViewById(R.id.connection_bar);
+        mConnectionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // hide the bar then recheck after a brief delay
+                AniUtils.animateBottomBar(mConnectionBar, false);
+                checkConnectionDelayed();
+            }
+        });
 
         mTabLayout = (WPMainTabLayout) findViewById(R.id.tab_layout);
         mTabLayout.createTabs();
@@ -241,7 +260,9 @@ public class WPMainActivity extends Activity
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-       trackLastVisibleTab(mViewPager.getCurrentItem());
+        trackLastVisibleTab(mViewPager.getCurrentItem());
+
+        checkConnectionDelayed();
     }
 
     private void trackLastVisibleTab(int position) {
@@ -460,6 +481,36 @@ public class WPMainActivity extends Activity
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
+    }
+
+    private void checkConnectionDelayed() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    checkConnection();
+                }
+            }
+        }, CONNECTION_CHECK_DELAY_MS);
+    }
+
+    private void checkConnection() {
+        mIsConnected = NetworkUtils.isNetworkAvailable(this);
+        if (mIsConnected && mConnectionBar.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mConnectionBar, false);
+        } else if (!mIsConnected) {
+            String text;
+            // TODO: move to strings.xml
+            if (NetworkUtils.isAirplaneModeOn(this)) {
+                text = "Airplane mode enabled";
+            } else {
+                text = "No connection";
+            }
+            mConnectionBar.setText(text);
+            if (mConnectionBar.getVisibility() != View.VISIBLE) {
+                AniUtils.animateBottomBar(mConnectionBar, true);
+            }
+        }
     }
 
     @Override
