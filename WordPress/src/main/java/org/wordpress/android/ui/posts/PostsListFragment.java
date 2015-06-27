@@ -132,8 +132,8 @@ public class PostsListFragment extends Fragment
                         if (!isAdded()) {
                             return;
                         }
-                        if (!NetworkUtils.checkConnection(getActivity())) {
-                            mSwipeToRefreshHelper.setRefreshing(false);
+                        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                            setRefreshing(false);
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
@@ -160,20 +160,20 @@ public class PostsListFragment extends Fragment
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            mSwipeToRefreshHelper.setRefreshing(true);
+                            setRefreshing(true);
                             requestPosts(false);
                         }
                     }
             );
             dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    mSwipeToRefreshHelper.setRefreshing(false);
+                    setRefreshing(false);
                 }
             });
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
         } else {
-            mSwipeToRefreshHelper.setRefreshing(true);
+            setRefreshing(true);
             requestPosts(false);
         }
     }
@@ -197,12 +197,12 @@ public class PostsListFragment extends Fragment
         initSwipeToRefreshHelper();
         mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            // If we remove or throttle the following call, we should make PostUpload events sticky
-            ((PostsListActivity) getActivity()).requestPosts();
-        } else {
-            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+        if (WordPress.getCurrentBlog() != null && mRecyclerView.getAdapter() == null) {
+            mRecyclerView.setAdapter(getPostListAdapter());
         }
+
+        // If we remove or throttle the following call, we should make PostUpload events sticky
+        requestPosts(false);
     }
 
     private void newPost() {
@@ -213,11 +213,6 @@ public class PostsListFragment extends Fragment
 
     public void onResume() {
         super.onResume();
-        if (WordPress.getCurrentBlog() != null) {
-            if (mRecyclerView.getAdapter() == null) {
-                mRecyclerView.setAdapter(getPostListAdapter());
-            }
-        }
 
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
@@ -237,21 +232,31 @@ public class PostsListFragment extends Fragment
         return mSwipeToRefreshHelper.isRefreshing();
     }
 
-    public void setRefreshing(boolean refreshing) {
+    private void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    public void requestPosts(boolean loadMore) {
+    private boolean isPostListEmpty() {
+        return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
+    }
+
+    private void requestPosts(boolean loadMore) {
         if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
             return;
         }
 
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            mSwipeToRefreshHelper.setRefreshing(false);
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            setRefreshing(false);
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
 
+        // If user has local changes, don't refresh
+        if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
+            return;
+        }
+
+        setRefreshing(true);
         updateEmptyView(EmptyViewMessageType.LOADING);
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
@@ -275,14 +280,15 @@ public class PostsListFragment extends Fragment
             public void onSuccess(int postCount) {
                 mCurrentFetchPostsTask = null;
                 mIsFetchingPosts = false;
-                if (!isAdded())
+                if (!isAdded()) {
                     return;
+                }
 
                 if (mEmptyViewAnimationHandler.isShowingLoadingAnimation() || mEmptyViewAnimationHandler.isBetweenSequences()) {
                     // Keep the SwipeRefreshLayout animation visible until the EmptyViewAnimationHandler dismisses it
                     mKeepSwipeRefreshLayoutVisible = true;
                 } else {
-                    mSwipeToRefreshHelper.setRefreshing(false);
+                    setRefreshing(false);
                 }
 
                 hideLoadMoreProgress();
@@ -304,7 +310,7 @@ public class PostsListFragment extends Fragment
                     return;
                 }
 
-                mSwipeToRefreshHelper.setRefreshing(false);
+                setRefreshing(false);
                 hideLoadMoreProgress();
 
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
@@ -356,8 +362,8 @@ public class PostsListFragment extends Fragment
             sameBlogId = false;
         }
 
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            mSwipeToRefreshHelper.setRefreshing(false);
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            setRefreshing(false);
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
@@ -379,7 +385,7 @@ public class PostsListFragment extends Fragment
                             if (!isAdded() || !reloadPosts) {
                                 return;
                             }
-                            mSwipeToRefreshHelper.setRefreshing(false);
+                            setRefreshing(false);
                             getPostListAdapter().loadPosts();
                         }
 
@@ -394,11 +400,11 @@ public class PostsListFragment extends Fragment
                                 ToastUtils.showToast(getActivity(),
                                         mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
                             }
-                            mSwipeToRefreshHelper.setRefreshing(false);
+                            setRefreshing(false);
                         }
                     });
 
-            mSwipeToRefreshHelper.setRefreshing(true);
+            setRefreshing(true);
             mIsFetchingPosts = true;
             mCurrentFetchSinglePostTask.execute(apiArgs);
         }
@@ -406,7 +412,7 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(PostUploadFailed event) {
-        mSwipeToRefreshHelper.setRefreshing(true);
+        setRefreshing(true);
 
         if (!isAdded()) {
             return;
@@ -417,19 +423,19 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            mSwipeToRefreshHelper.setRefreshing(false);
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            setRefreshing(false);
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
 
-        mSwipeToRefreshHelper.setRefreshing(false);
+        setRefreshing(false);
         // Refresh the posts list to revert post status back to local draft or local changes
         getPostListAdapter().loadPosts();
     }
 
     private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
-        if (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0) {
+        if (isPostListEmpty()) {
             // Handle animation display
             if (mEmptyViewMessage == EmptyViewMessageType.NO_CONTENT &&
                     emptyViewMessageType == EmptyViewMessageType.LOADING) {
@@ -448,7 +454,7 @@ public class PostsListFragment extends Fragment
         } else {
             // Dismiss the SwipeRefreshLayout animation if it was set to persist
             if (mKeepSwipeRefreshLayoutVisible) {
-                mSwipeToRefreshHelper.setRefreshing(false);
+                setRefreshing(false);
                 mKeepSwipeRefreshLayoutVisible = false;
             }
         }
@@ -488,6 +494,10 @@ public class PostsListFragment extends Fragment
             mEmptyViewTitle.setText(getText(stringId));
             mEmptyViewMessage = emptyViewMessageType;
         }
+
+        if (isPostListEmpty()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -505,7 +515,7 @@ public class PostsListFragment extends Fragment
             case NO_CONTENT:
                 mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.pages_empty_list :
                         org.wordpress.android.R.string.posts_empty_list);
-                mSwipeToRefreshHelper.setRefreshing(false);
+                setRefreshing(false);
                 mKeepSwipeRefreshLayoutVisible = false;
                 break;
             default:
@@ -536,11 +546,7 @@ public class PostsListFragment extends Fragment
 
         // Now that posts have been loaded, show the empty view if there are no results to display
         // This avoids the problem of the empty view immediately appearing when set at design time
-        if (postCount == 0) {
-            mEmptyView.setVisibility(View.VISIBLE);
-        } else {
-            mEmptyView.setVisibility(View.GONE);
-        }
+        mEmptyView.setVisibility(postCount == 0 ? View.VISIBLE : View.GONE);
 
         if (!isRefreshing() || mKeepSwipeRefreshLayoutVisible) {
             // No posts and not currently refreshing. Display the "no posts/pages" message

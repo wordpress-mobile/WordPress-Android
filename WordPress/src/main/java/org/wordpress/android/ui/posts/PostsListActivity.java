@@ -131,21 +131,6 @@ public class PostsListActivity extends AppCompatActivity {
         return mPostList.isRefreshing();
     }
 
-    public void setRefreshing(boolean refreshing) {
-        mPostList.setRefreshing(refreshing);
-    }
-
-    public void requestPosts() {
-        if (WordPress.getCurrentBlog() == null) {
-            return;
-        }
-        // If user has local changes, don't refresh
-        if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
-            mPostList.requestPosts(false);
-            mPostList.setRefreshing(true);
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
