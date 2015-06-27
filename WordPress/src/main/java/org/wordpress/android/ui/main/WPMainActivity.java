@@ -499,14 +499,11 @@ public class WPMainActivity extends Activity
         if (mIsConnected && mConnectionBar.getVisibility() == View.VISIBLE) {
             AniUtils.animateBottomBar(mConnectionBar, false);
         } else if (!mIsConnected) {
-            String text;
-            // TODO: move to strings.xml
             if (NetworkUtils.isAirplaneModeOn(this)) {
-                text = "Airplane mode enabled";
+                mConnectionBar.setText(R.string.connectionbar_airplane_mode);
             } else {
-                text = "No connection";
+                mConnectionBar.setText(R.string.connectionbar_no_connection);
             }
-            mConnectionBar.setText(text);
             if (mConnectionBar.getVisibility() != View.VISIBLE) {
                 AniUtils.animateBottomBar(mConnectionBar, true);
             }
