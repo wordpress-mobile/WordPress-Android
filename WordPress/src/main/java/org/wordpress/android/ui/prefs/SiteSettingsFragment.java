@@ -41,8 +41,8 @@ public class SiteSettingsFragment extends PreferenceFragment {
                         @Override
                         public void onResponse(JSONObject response) {
                             if (titlePreference != null) {
-                                titlePreference.setText(response.optString("title"));
-                                titlePreference.setSummary(response.optString("title"));
+                                titlePreference.setText(response.optString("name"));
+                                titlePreference.setSummary(response.optString("name"));
                             }
 
                             if (taglinePreference != null) {
