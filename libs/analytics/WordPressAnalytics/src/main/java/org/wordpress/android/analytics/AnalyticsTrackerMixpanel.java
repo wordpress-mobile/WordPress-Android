@@ -564,6 +564,36 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_stats");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_stats");
                 break;
+            case STATS_INSIGHTS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Insights Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_insights_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_insights_screen_stats");
+                break;
+            case STATS_PERIOD_DAYS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Days Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_days_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_days_screen_stats");
+                break;
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Weeks Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_weeks_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_weeks_screen_stats");
+                break;
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Months Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_months_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_months_screen_stats");
+                break;
+            case STATS_PERIOD_YEARS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Years Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_years_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_years_screen_stats");
+                break;
             case STATS_VIEW_ALL_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - View All Accessed");
