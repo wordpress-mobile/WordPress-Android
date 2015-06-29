@@ -319,6 +319,64 @@
 
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/no_site_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_margin="@dimen/my_site_no_site_view_margin"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="Drake"
+            android:src="@drawable/my_site_no_sites_drake" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:gravity="center"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_double_extra_large"
+            android:text="You don't have any WordPress sites yet."
+            app:fontVariation="light" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/my_site_no_site_view_subtitle_margin_top"
+            android:gravity="center"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/my_site_no_site_view_subtitle_font"
+            android:text="Would you like to add one?"
+            app:fontVariation="light" />
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            card_view:cardBackgroundColor="@color/blue_medium"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="6dp">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
+                android:textColor="@color/white"
+                android:text="ADD SITE" />
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_button"
         android:layout_width="wrap_content"

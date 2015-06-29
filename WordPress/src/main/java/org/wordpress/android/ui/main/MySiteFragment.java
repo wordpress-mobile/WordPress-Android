@@ -45,6 +45,8 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private View mFabView;
+    private LinearLayout mNoSiteView;
+    private ScrollView mScrollView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -89,6 +91,8 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+        mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mFabView = rootView.findViewById(R.id.fab_button);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
@@ -237,9 +241,20 @@ public class MySiteFragment extends Fragment
     }
 
     private void refreshBlogDetails() {
-        if (!isAdded() || mBlog == null) {
+        if (!isAdded()) {
             return;
         }
+
+        if (mBlog == null) {
+            mScrollView.setVisibility(View.GONE);
+            mFabView.setVisibility(View.GONE);
+            mNoSiteView.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        mScrollView.setVisibility(View.VISIBLE);
+        mFabView.setVisibility(View.VISIBLE);
+        mNoSiteView.setVisibility(View.GONE);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
@@ -258,8 +273,7 @@ public class MySiteFragment extends Fragment
     @Override
     public void onScrollToTop() {
         if (isAdded()) {
-            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
-            scrollView.smoothScrollTo(0, 0);
+            mScrollView.smoothScrollTo(0, 0);
         }
     }
 
