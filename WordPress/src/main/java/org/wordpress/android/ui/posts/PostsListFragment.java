@@ -190,6 +190,10 @@ public class PostsListFragment extends Fragment
         return mPostsListAdapter;
     }
 
+    private boolean isPostAdapterEmpty() {
+        return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
+    }
+
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -238,10 +242,6 @@ public class PostsListFragment extends Fragment
 
     private void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
-    }
-
-    private boolean isPostListEmpty() {
-        return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
     }
 
     private void requestPosts(boolean loadMore) {
@@ -416,8 +416,6 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(PostUploadFailed event) {
-        setRefreshing(true);
-
         if (!isAdded()) {
             return;
         }
@@ -427,19 +425,19 @@ public class PostsListFragment extends Fragment
             return;
         }
 
+        setRefreshing(false);
+
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            setRefreshing(false);
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
 
-        setRefreshing(false);
         // Refresh the posts list to revert post status back to local draft or local changes
         getPostListAdapter().loadPosts();
     }
 
     private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
-        if (isPostListEmpty()) {
+        if (isPostAdapterEmpty()) {
             // Handle animation display
             if (mEmptyViewMessage == EmptyViewMessageType.NO_CONTENT &&
                     emptyViewMessageType == EmptyViewMessageType.LOADING) {
@@ -499,7 +497,7 @@ public class PostsListFragment extends Fragment
             mEmptyViewMessage = emptyViewMessageType;
         }
 
-        if (isPostListEmpty()) {
+        if (isPostAdapterEmpty()) {
             mEmptyView.setVisibility(View.VISIBLE);
         }
     }
@@ -559,7 +557,7 @@ public class PostsListFragment extends Fragment
 
         if (postCount == 0 && mCanLoadMorePosts) {
             // No posts, let's request some if network available
-            if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 setRefreshing(true);
                 requestPosts(false);
             } else {
