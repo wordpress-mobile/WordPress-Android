@@ -262,6 +262,25 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case STATS_ACCESSED:
                 eventName = "stats_accessed";
                 break;
+            case STATS_INSIGHTS_ACCESSED:
+                eventName = "stats_insights_accessed";
+                break;
+            case STATS_PERIOD_DAYS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "days");
+                break;
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "weeks");
+                break;
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "months");
+                break;
+            case STATS_PERIOD_YEARS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "years");
+                break;
             case STATS_VIEW_ALL_ACCESSED:
                 eventName = "stats_view_all_accessed";
                 break;

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -99,10 +98,6 @@ public class StatsActivity extends AppCompatActivity
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
             finish();
             return;
-        }
-
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
         }
 
         setContentView(R.layout.stats_activity);
@@ -218,6 +213,8 @@ public class StatsActivity extends AppCompatActivity
                             }
                         }
                     }, StatsConstants.STATS_SCROLL_TO_DELAY);
+
+                    trackStatsAnalytics();
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -249,6 +246,33 @@ public class StatsActivity extends AppCompatActivity
                 }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         });
+
+        // Track usage here
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
+            trackStatsAnalytics();
+        }
+    }
+
+    private void trackStatsAnalytics() {
+        // Track usage here
+        switch (mCurrentTimeframe) {
+            case INSIGHTS:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED);
+                break;
+            case DAY:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED);
+                break;
+            case WEEK:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED);
+                break;
+            case MONTH:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED);
+                break;
+            case YEAR:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED);
+                break;
+        }
     }
 
     @Override
