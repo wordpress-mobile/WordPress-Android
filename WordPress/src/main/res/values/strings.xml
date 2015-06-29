@@ -754,7 +754,6 @@
     <string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
     <string name="reader_toast_err_follow_blog_not_found">This blog could not be found</string>
     <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this blog</string>
-    <string name="reader_toast_err_follow_blog_moved">This blog no longer exists</string>
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>

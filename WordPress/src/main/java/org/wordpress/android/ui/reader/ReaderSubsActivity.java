@@ -386,9 +386,6 @@ public class ReaderSubsActivity extends AppCompatActivity
                     hideAddUrlProgress();
                     String errMsg;
                     switch (statusCode) {
-                        case 301:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog_moved);
-                            break;
                         case 401:
                             errMsg = getString(R.string.reader_toast_err_follow_blog_not_authorized);
                             break;
