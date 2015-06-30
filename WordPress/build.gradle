@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.2-rc-2"
-        versionCode 190
+        versionName "4.2"
+        versionCode 191
         minSdkVersion 14
         targetSdkVersion 22
 
@@ -84,9 +84,6 @@ dependencies {
     compile 'com.helpshift:android-aar:3.8.0'
     compile 'commons-lang:commons-lang:2.6'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile ('com.getbase:floatingactionbutton:1.9.0') {
-        exclude module: 'support-annotations'
-    }
     compile 'com.automattic:rest:1.0.1'
     compile 'org.wordpress:graphview:3.3.0'
     compile 'org.wordpress:persistentedittext:1.0.1'

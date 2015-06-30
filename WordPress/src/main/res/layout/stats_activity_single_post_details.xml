@@ -79,6 +79,7 @@
 
             <!-- Months and Years -->
             <LinearLayout
+                android:id="@+id/stats_months_years_module"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stats_white_background"
@@ -140,6 +141,7 @@
 
             <!-- Average per Day -->
             <LinearLayout
+                android:id="@+id/stats_averages_module"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stats_white_background"
@@ -201,6 +203,7 @@
 
             <!-- Recent Weeks -->
             <LinearLayout
+                android:id="@+id/stats_recent_weeks_module"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stats_white_background"

@@ -41,6 +41,7 @@ public class Post implements Serializable {
     private String password;
     private String postFormat;
     private String slug;
+
     private boolean localDraft;
     private boolean uploaded;
     private boolean mIsUploading;
@@ -52,6 +53,8 @@ public class Post implements Serializable {
     private String mediaPaths;
     private String quickPostType;
     private PostLocation mPostLocation;
+
+    private int featuredImageId;
 
     public Post() {
     }
@@ -493,5 +496,13 @@ public class Post implements Serializable {
 
     public boolean hasEmptyContentFields() {
         return TextUtils.isEmpty(this.getTitle()) && TextUtils.isEmpty(this.getContent());
+    }
+
+    public int getFeaturedImageId() {
+        return featuredImageId;
+    }
+
+    public void setFeaturedImageId(int id) {
+        this.featuredImageId = id;
     }
 }
