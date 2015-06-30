@@ -81,8 +81,9 @@
                             android:paddingBottom="@dimen/my_site_switch_site_button_padding_bottom"
                             android:paddingTop="@dimen/my_site_margin_general"
                             android:text="@string/my_site_btn_switch_site"
+                            android:textAllCaps="true"
                             android:textColor="@color/grey_dark"
-                            android:textSize="@dimen/text_sz_medium" />
+                            android:textSize="@dimen/text_sz_small" />
 
                     </LinearLayout>
                 </RelativeLayout>
@@ -378,15 +379,16 @@
 
     </LinearLayout>
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
-        fab:fab_colorNormal="@color/fab_normal"
-        fab:fab_colorPressed="@color/fab_pressed"
-        fab:fab_icon="@drawable/ic_create_white_24dp" />
+        android:src="@drawable/ic_create_white_24dp"
+        app:borderWidth="0dp"
+        app:elevation="@dimen/fab_elevation"
+        app:rippleColor="@color/fab_pressed" />
 
 </FrameLayout>

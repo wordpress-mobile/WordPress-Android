@@ -451,7 +451,14 @@ public class WPMainActivity extends Activity
     @Override
     public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
         if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
-            mTabLayout.checkNoteBadge();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        mTabLayout.checkNoteBadge();
+                    }
+                }
+            });
         }
     }
 

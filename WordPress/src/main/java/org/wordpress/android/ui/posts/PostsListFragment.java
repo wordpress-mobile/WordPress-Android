@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -50,7 +48,7 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
-    private FloatingActionButton mFabButton;
+    private View mFabView;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
 
@@ -229,8 +227,8 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
 
         initSwipeToRefreshHelper();
 
-        mFabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
+        mFabView = getView().findViewById(R.id.fab_button);
+        mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 newPost();
@@ -279,8 +277,8 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (mFabButton != null) {
-            mFabButton.setVisibility(hidden ? View.GONE : View.VISIBLE);
+        if (mFabView != null) {
+            mFabView.setVisibility(hidden ? View.GONE : View.VISIBLE);
         }
     }
 
