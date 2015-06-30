@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 
 // Maps to notification settings returned from the /me/notifications/settings endpoint on wp.com
-public class NotificationSetting {
+public class NotificationsSettings {
 
     public enum StreamType {
         TIMELINE,

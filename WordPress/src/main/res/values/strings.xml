@@ -572,12 +572,30 @@
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
     <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string><string name="notifications_updates_from_wordpress">Updates from WordPress.com</string>
+
+    <!-- Notifications Settings -->
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
     <string name="notifications_account_emails_summary">Decide what emails you get from us regarding your accounts and sites.</string>
     <string name="notifications_other_blogs_summary">Control your notification settings when you comment on other blogs.</string>
     <string name="notifications_account_emails">Account Emails</string>
     <string name="notifications_other_blogs">Other Blogs</string>
     <string name="notifications_comments_other_blogs">Comments on other blogs</string>
+    <string-array name="notifications_site_settings">
+        <item>Comments</item>
+        <item>Comment likes</item>
+        <item>Post likes</item>
+        <item>Follows</item>
+        <item>Achievements</item>
+        <item>Mentions</item>
+    </string-array>
+    <string-array name="notifications_site_settings_values" translatable="false">
+        <item>new-comment</item>
+        <item>comment-like</item>
+        <item>post-like</item>
+        <item>follow</item>
+        <item>achievement</item>
+        <item>mentions</item>
+    </string-array>
 
     <!-- reader -->
     <string name="reader">Reader</string>

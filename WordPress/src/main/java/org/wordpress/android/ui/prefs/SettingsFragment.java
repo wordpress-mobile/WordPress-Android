@@ -140,20 +140,17 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         }
         // Request notification settings if needed
         String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
+        //TODO testing
+        settingsJson = null;
         if (settingsJson == null) {
             com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                 @Override
                 public void onResponse(JSONObject jsonObject) {
                     AppLog.d(T.NOTIFS, "Get settings action succeeded");
                     Editor editor = mSettings.edit();
-                    try {
-                        JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                        editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS,
-                                settingsJSON.toString());
-                        editor.apply();
-                    } catch (JSONException e) {
-                        AppLog.e(T.NOTIFS, "Can't parse PN settings from server response", e);
-                    }
+                    editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS,
+                            jsonObject.toString());
+                    editor.apply();
                 }
             };
             RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
