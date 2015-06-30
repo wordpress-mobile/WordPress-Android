@@ -220,6 +220,11 @@ public class MySiteFragment extends Fragment
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
+            case RequestCodes.CREATE_BLOG:
+                // if the user created a new blog refresh the blog details
+                mBlog = WordPress.getCurrentBlog();
+                refreshBlogDetails();
+                break;
         }
     }
 
