@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs;
+package org.wordpress.android.ui.prefs.notifications;
 
 import android.content.Context;
 import android.os.AsyncTask;

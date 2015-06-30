@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs;
+package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
