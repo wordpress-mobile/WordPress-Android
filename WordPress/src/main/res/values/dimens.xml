@@ -149,6 +149,8 @@
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
     <dimen name="my_site_no_site_view_subtitle_margin_top">18dp</dimen>
     <dimen name="my_site_no_site_view_subtitle_font">21sp</dimen>
+    <dimen name="my_site_no_site_view_button_margin_top">50dp</dimen>
+    <dimen name="my_site_no_site_view_button_corner_radius">2dp</dimen>
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
