@@ -363,8 +363,10 @@
             card_view:cardElevation="@dimen/card_elevation">
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/my_site_add_site_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_large"
                 android:paddingRight="@dimen/margin_large"

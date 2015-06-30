@@ -174,6 +174,13 @@ public class MySiteFragment extends Fragment
             }
         });
 
+        rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.newBlogForResult(getActivity());
+            }
+        });
+
         refreshBlogDetails();
 
         return rootView;
