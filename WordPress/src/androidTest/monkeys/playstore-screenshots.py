@@ -35,6 +35,7 @@ def action_open_reader_freshlypressed(device, serialno):
     for i in range(5):
         device.press('KEYCODE_DPAD_LEFT')
     device.press('KEYCODE_DPAD_RIGHT')
+    device.press('KEYCODE_ENTER')
     # Wait for the reader to load articles / pictures
     time.sleep(5)
 
@@ -45,6 +46,7 @@ def action_open_notifications(device, serialno):
         device.press('KEYCODE_DPAD_LEFT')
     for i in range(4):
         device.press('KEYCODE_DPAD_RIGHT')
+    device.press('KEYCODE_ENTER')
     time.sleep(5)
 
 def action_open_me(device, serialno):
@@ -52,8 +54,9 @@ def action_open_me(device, serialno):
     # Open the reader
     for i in range(5):
         device.press('KEYCODE_DPAD_LEFT')
-    for i in range(3):
+    for i in range(2):
         device.press('KEYCODE_DPAD_RIGHT')
+    device.press('KEYCODE_ENTER')
     time.sleep(5)
 
 def action_open_editor_and_type_text(device, serialno):
