@@ -608,7 +608,7 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreview(getActivity(), fullPost, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);

@@ -139,6 +139,9 @@ public class PostsListActivity extends AppCompatActivity {
                 && data != null
                 && data.getBooleanExtra(EditPostActivity.EXTRA_SHOULD_REFRESH, false)) {
             mPostList.getPostListAdapter().loadPosts();
+        } else if (requestCode == RequestCodes.PREVIEW_POST) {
+            // reload after post preview in case user edited post
+            mPostList.getPostListAdapter().loadPosts();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

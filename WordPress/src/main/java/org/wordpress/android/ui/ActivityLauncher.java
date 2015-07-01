@@ -117,13 +117,13 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewPostPreview(Context context, Post post, boolean isPage) {
+    public static void viewPostPreviewForResult(Activity activity, Post post, boolean isPage) {
         if (post == null) return;
 
-        Intent intent = new Intent(context, PostPreviewActivity.class);
+        Intent intent = new Intent(activity, PostPreviewActivity.class);
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
