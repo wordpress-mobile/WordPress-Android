@@ -25,6 +25,8 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -88,6 +90,9 @@ public class PostsListFragment extends Fragment implements EmptyViewAnimationHan
         View view = inflater.inflate(R.layout.post_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, spacingVertical));
+
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
