@@ -20,7 +20,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
 public class PostsListActivity extends AppCompatActivity {
@@ -36,12 +35,6 @@ public class PostsListActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: this should be removed when #2734 is fixed
-        if (WordPress.getCurrentBlog() == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            finish();
-            return;
-        }
         ProfilingUtils.split("PostsListActivity.onCreate");
         ProfilingUtils.dump();
 

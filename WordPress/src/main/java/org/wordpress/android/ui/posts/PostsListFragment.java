@@ -605,9 +605,10 @@ public class PostsListFragment extends Fragment
                 getActivity().startService(new Intent(getActivity(), PostUploadService.class));
                 break;
             case PostListButton.BUTTON_VIEW:
-            case PostListButton.BUTTON_PREVIEW:
-                // TODO: preview local drafts and posts with local changes
                 ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
+                break;
+            case PostListButton.BUTTON_PREVIEW:
+                ActivityLauncher.viewPostPreview(getActivity(), fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);

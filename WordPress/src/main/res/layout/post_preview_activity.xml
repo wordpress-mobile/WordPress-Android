@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/postTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="3"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_extra_large"
+        app:fontFamily="merriweather"
+        tools:text="postTitle" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <WebView
+                android:id="@+id/viewPostWebView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/viewPostTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_extra_large"
+                android:textSize="@dimen/text_sz_extra_large" />
+        </FrameLayout>
+    </ScrollView>
+</LinearLayout>

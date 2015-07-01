@@ -158,6 +158,10 @@
             android:name=".ui.posts.PagesListActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
+            android:name=".ui.posts.PostPreviewActivity"
+            android:label="@string/post_preview_title"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme"/>
 

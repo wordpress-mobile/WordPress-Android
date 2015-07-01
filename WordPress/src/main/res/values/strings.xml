@@ -239,6 +239,7 @@
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
+    <string name="post_preview_title">Preview Post</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -801,6 +802,7 @@
     <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
+    <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>

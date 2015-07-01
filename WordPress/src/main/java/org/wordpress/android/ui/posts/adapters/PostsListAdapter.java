@@ -140,7 +140,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             holder.txtExcerpt.setVisibility(View.GONE);
         }
 
-        if (post.hasFeaturedImageUrl()) {
+        if (post.hasFeaturedImageUrl() && !post.isLocalDraft()) {
             holder.imgFeatured.setVisibility(View.VISIBLE);
             holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
         } else {
@@ -235,11 +235,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostsListPost post) {
-        // posts with local changes have publish button rather than view button
+        // posts with local changes have preview rather than view button
         if (post.isLocalDraft() || post.hasLocalChanges()) {
-            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+            holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
         } else {
-            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_VIEW);
+            holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
         boolean canShowStatsButton = canShowStatsForPost(post);
@@ -247,7 +247,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         // edit / view are always visible
         holder.btnEdit.setVisibility(View.VISIBLE);
-        holder.btnViewOrPublish.setVisibility(View.VISIBLE);
+        holder.btnView.setVisibility(View.VISIBLE);
 
         // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash
         if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
@@ -283,7 +283,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             }
         };
         holder.btnEdit.setOnClickListener(btnClickListener);
-        holder.btnViewOrPublish.setOnClickListener(btnClickListener);
+        holder.btnView.setOnClickListener(btnClickListener);
         holder.btnStats.setOnClickListener(btnClickListener);
         holder.btnTrash.setOnClickListener(btnClickListener);
         holder.btnMore.setOnClickListener(btnClickListener);
@@ -311,7 +311,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             public void onAnimationEnd(Animator animation) {
                 // row 1
                 holder.btnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnViewOrPublish.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnView.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 holder.btnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 // row 2
                 holder.btnStats.setVisibility(!showRow1 && canShowStatsForPost(post) ? View.VISIBLE : View.GONE);
@@ -397,7 +397,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         private final TextView txtStatus;
 
         private final PostListButton btnEdit;
-        private final PostListButton btnViewOrPublish;
+        private final PostListButton btnView;
         private final PostListButton btnMore;
 
         private final PostListButton btnStats;
@@ -416,7 +416,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             txtStatus = (TextView) view.findViewById(R.id.text_status);
 
             btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
-            btnViewOrPublish = (PostListButton) view.findViewById(R.id.btn_view_or_publish);
+            btnView = (PostListButton) view.findViewById(R.id.btn_view);
             btnMore = (PostListButton) view.findViewById(R.id.btn_more);
 
             btnStats = (PostListButton) view.findViewById(R.id.btn_stats);

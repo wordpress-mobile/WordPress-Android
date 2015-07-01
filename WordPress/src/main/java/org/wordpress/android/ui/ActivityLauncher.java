@@ -24,6 +24,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesListActivity;
+import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
@@ -114,6 +115,15 @@ public class ActivityLauncher {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPWebViewActivity.getBlogLoginUrl(blog));
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         slideInFromRight(context, intent);
+    }
+
+    public static void viewPostPreview(Context context, Post post, boolean isPage) {
+        if (post == null) return;
+
+        Intent intent = new Intent(context, PostPreviewActivity.class);
+        intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
+        intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
+        context.startActivity(intent);
     }
 
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
