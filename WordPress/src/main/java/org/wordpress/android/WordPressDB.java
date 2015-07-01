@@ -13,6 +13,7 @@ import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -222,6 +223,11 @@ public class WordPressDB {
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
         boolean isNewInstall = (currentVersion == 0);
+
+        if (!isNewInstall && currentVersion < DATABASE_VERSION) {
+            // Upgrading the app
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
+        }
 
         switch (currentVersion) {
             case 0:

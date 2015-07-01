@@ -472,6 +472,8 @@ public class WordPress extends Application {
         if (!AccountHelper.isSignedIn()) {
             EventBus.getDefault().post(new UserSignedOutCompletely());
         }
+
+        AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
     }
 
     @SuppressWarnings("unused")
