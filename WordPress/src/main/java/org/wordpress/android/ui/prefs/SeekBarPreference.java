@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Activity;
 import android.content.Context;
 import android.preference.Preference;
 import android.util.AttributeSet;
@@ -32,6 +31,7 @@ public class SeekBarPreference extends Preference {
 
         LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = li.inflate(R.layout.seekbar_pref, parent, false);
+        int seekPosition = mSeekBar == null ? 0 : mSeekBar.getProgress();
 
         if (view != null) {
             mSeekBar = (SeekBar) view.findViewById(R.id.seekbar_pref_bar);
@@ -50,33 +50,22 @@ public class SeekBarPreference extends Preference {
                                int progress = seekBar.getProgress();
 
                                if (progress <= 33) {
-                                   updateProgress(mSeekBar, 0);
                                    setSummary("Allow search engines to index this site");
+                                   mSeekBar.setProgress(0);
                                } else if (progress <= 67) {
-                                   updateProgress(mSeekBar, 50);
                                    setSummary("Discourage search engines from indexing this site");
+                                   mSeekBar.setProgress(50);
                                } else {
-                                   updateProgress(mSeekBar, 100);
                                    setSummary("I would like my site to be private, visible only to users I choose");
+                                   mSeekBar.setProgress(100);
                                }
                            }
                        }
                 );
+                mSeekBar.setProgress(seekPosition);
             }
         }
 
         return view;
-    }
-
-    private void updateProgress(final SeekBar seekBar, final int progress) {
-        final Activity activity = (Activity) getContext();
-        if (activity == null || seekBar == null) return;
-
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                seekBar.setProgress(progress);
-            }
-        });
     }
 }
