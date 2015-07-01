@@ -61,12 +61,7 @@ public class PostsListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        bumpActivityAnalytics();
-    }
-
-    // note that this is overridden by PagesListActivity
-    protected void bumpActivityAnalytics() {
-        ActivityId.trackLastActivity(ActivityId.POSTS);
+        ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
     }
 
     @Override
