@@ -326,7 +326,8 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/my_site_no_site_view_margin"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
