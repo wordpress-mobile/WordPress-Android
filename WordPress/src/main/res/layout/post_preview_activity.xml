@@ -10,7 +10,7 @@
     <include layout="@layout/toolbar" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/postTitle"
+        android:id="@+id/text_post_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -34,16 +34,16 @@
             android:layout_height="match_parent">
 
             <WebView
-                android:id="@+id/viewPostWebView"
+                android:id="@+id/webView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/viewPostTextView"
+                android:id="@+id/text_post_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/margin_extra_large"
-                android:textSize="@dimen/text_sz_extra_large" />
+                android:textSize="@dimen/text_sz_large" />
         </FrameLayout>
     </ScrollView>
 </LinearLayout>

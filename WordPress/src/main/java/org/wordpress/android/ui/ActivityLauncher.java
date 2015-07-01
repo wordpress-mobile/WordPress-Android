@@ -122,6 +122,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
+        intent.putExtra(PostPreviewActivity.ARG_LOCAL_BLOG_ID, post.getLocalTableBlogId());
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
