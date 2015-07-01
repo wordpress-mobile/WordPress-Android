@@ -361,6 +361,14 @@ public class WPMainActivity extends Activity
                     resetFragments();
                 }
                 break;
+            case RequestCodes.CREATE_BLOG:
+                if (resultCode == RESULT_OK) {
+                    MySiteFragment mySiteFragment = getMySiteFragment();
+                    if (mySiteFragment != null) {
+                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
         }
     }
 
