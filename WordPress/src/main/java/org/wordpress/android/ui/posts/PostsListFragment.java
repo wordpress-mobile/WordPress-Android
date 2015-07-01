@@ -320,17 +320,9 @@ public class PostsListFragment extends Fragment
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
                     switch (errorType) {
                         case UNAUTHORIZED:
-                            if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
-                                ToastUtils.showToast(getActivity(),
-                                        mIsPage ? R.string.error_refresh_unauthorized_pages :
-                                                R.string.error_refresh_unauthorized_posts, Duration.LONG);
-                            }
                             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
                             break;
                         default:
-                            ToastUtils.showToast(getActivity(),
-                                    mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
-                                    Duration.LONG);
                             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
                             break;
                     }
