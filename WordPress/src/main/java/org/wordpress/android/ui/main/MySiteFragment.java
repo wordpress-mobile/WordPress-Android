@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -25,6 +27,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -47,6 +50,7 @@ public class MySiteFragment extends Fragment
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
+    private ImageView mNoSiteDrakeImageView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -93,6 +97,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
+        mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
@@ -261,6 +266,16 @@ public class MySiteFragment extends Fragment
             mScrollView.setVisibility(View.GONE);
             mFabView.setVisibility(View.GONE);
             mNoSiteView.setVisibility(View.VISIBLE);
+
+            // if the screen height is too short, we can just hide the drake illustration
+            Activity activity = getActivity();
+            boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
+            if (drakeVisibility) {
+                mNoSiteDrakeImageView.setVisibility(View.VISIBLE);
+            } else {
+                mNoSiteDrakeImageView.setVisibility(View.GONE);
+            }
+
             return;
         }
 
@@ -307,5 +322,12 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
         mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        refreshBlogDetails();
     }
 }

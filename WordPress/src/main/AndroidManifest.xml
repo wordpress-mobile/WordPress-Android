@@ -63,6 +63,7 @@
 
         <!-- Main tab activity -->
         <activity android:name=".ui.main.WPMainActivity"
+            android:configChanges="orientation"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Account activities -->

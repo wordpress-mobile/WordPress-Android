@@ -324,12 +324,16 @@
         android:id="@+id/no_site_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/my_site_no_site_view_margin"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginLeft="@dimen/my_site_no_site_view_margin"
+        android:layout_marginRight="@dimen/my_site_no_site_view_margin"
+        android:layout_marginTop="@dimen/margin_large"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/my_site_no_site_view_drake"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
