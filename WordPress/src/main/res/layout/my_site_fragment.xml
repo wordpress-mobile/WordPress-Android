@@ -360,7 +360,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/my_site_no_site_view_button_margin_top"
             card_view:cardBackgroundColor="@color/blue_medium"
-            card_view:cardCornerRadius="@dimen/my_site_no_site_view_button_corner_radius"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
             card_view:cardElevation="@dimen/card_elevation">
 
             <org.wordpress.android.widgets.WPTextView
