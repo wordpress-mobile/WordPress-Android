@@ -395,7 +395,6 @@ public class ViewPostFragment extends Fragment {
                     ToastUtils.showToast(getActivity(), R.string.comment_added);
                     hideCommentBox();
                     mEditComment.setText(null);
-                    mParentActivity.refreshComments();
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
                 }

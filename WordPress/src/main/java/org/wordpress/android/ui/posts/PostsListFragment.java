@@ -194,6 +194,10 @@ public class PostsListFragment extends Fragment
         return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
     }
 
+    private void loadPosts() {
+        getPostListAdapter().loadPosts();
+    }
+
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -205,8 +209,12 @@ public class PostsListFragment extends Fragment
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
-        // If we remove or throttle the following call, we should make PostUpload events sticky
-        requestPosts(false);
+        loadPosts();
+
+        // request latest posts the first time this is called (ie: not after device rotation)
+        if (bundle == null) {
+            requestPosts(false);
+        }
     }
 
     private void newPost() {
@@ -303,7 +311,7 @@ public class PostsListFragment extends Fragment
                     mCanLoadMorePosts = false;
                 }
 
-                getPostListAdapter().loadPosts();
+                loadPosts();
             }
 
             @Override
@@ -382,7 +390,7 @@ public class PostsListFragment extends Fragment
                                 return;
                             }
                             setRefreshing(false);
-                            getPostListAdapter().loadPosts();
+                            loadPosts();
                         }
 
                         @Override
@@ -425,7 +433,7 @@ public class PostsListFragment extends Fragment
         }
 
         // Refresh the posts list to revert post status back to local draft or local changes
-        getPostListAdapter().loadPosts();
+        loadPosts();
     }
 
     private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
@@ -538,23 +546,11 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        // Now that posts have been loaded, show the empty view if there are no results to display
-        // This avoids the problem of the empty view immediately appearing when set at design time
-        mEmptyView.setVisibility(postCount == 0 ? View.VISIBLE : View.GONE);
-
-        if (!isRefreshing() || mKeepSwipeRefreshLayoutVisible) {
+        if (postCount == 0 && (!isRefreshing() || mKeepSwipeRefreshLayoutVisible)) {
             // No posts and not currently refreshing. Display the "no posts/pages" message
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-        }
-
-        if (postCount == 0 && mCanLoadMorePosts) {
-            // No posts, let's request some if network available
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                setRefreshing(true);
-                requestPosts(false);
-            } else {
-                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            }
+        } else if (postCount > 0) {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
