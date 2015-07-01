@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -322,12 +321,5 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
         mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        refreshBlogDetails();
     }
 }

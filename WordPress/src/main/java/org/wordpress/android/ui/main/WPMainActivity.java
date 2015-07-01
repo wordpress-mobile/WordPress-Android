@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -480,15 +479,5 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onMediaAdded(String mediaId) {
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        MySiteFragment mySiteFragment = getMySiteFragment();
-        if (mySiteFragment != null) {
-            mySiteFragment.onConfigurationChanged(newConfig);
-        }
     }
 }
