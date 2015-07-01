@@ -886,7 +886,7 @@ public class WordPressDB {
     }
 
     // Deletes all posts for the given blogId
-    private void deleteAllPostsForLocalTableBlogId(int localBlogId) {
+    public void deleteAllPostsForLocalTableBlogId(int localBlogId) {
         db.delete(POSTS_TABLE, "blogID=?", new String[]{String.valueOf(localBlogId)});
     }
 
