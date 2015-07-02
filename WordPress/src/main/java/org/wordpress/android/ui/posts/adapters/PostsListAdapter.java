@@ -222,11 +222,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 }
             }
 
-            Context context = txtStatus.getContext();
-            Resources resources = context.getResources();
+            Resources resources = txtStatus.getContext().getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
             txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
-            Drawable drawable = (statusIconResId != 0 ? context.getDrawable(statusIconResId) : null);
+            Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
             txtStatus.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             txtStatus.setVisibility(View.VISIBLE);
         }
