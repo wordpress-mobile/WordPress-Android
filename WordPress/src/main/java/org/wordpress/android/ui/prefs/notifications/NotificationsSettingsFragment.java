@@ -1,27 +1,40 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.NotificationsSettings;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 public class NotificationsSettingsFragment extends PreferenceFragment {
     public static final String TAG = "NotificationSettingsFragment";
@@ -32,7 +45,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.notification_settings);
+        addPreferencesFromResource(R.xml.notifications_settings);
 
         setHasOptionsMenu(true);
     }
@@ -82,33 +95,84 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Map<String, Object>> allBlogs = WordPress.wpDB.getBlogsBy("NOT(dotcomFlag=0 AND wpVersion!='')", null, 0, false);
+            JSONObject settingsJson;
+            try {
+                settingsJson = new JSONObject(AppPrefs.getNotificationsSettings());
+            } catch (JSONException e) {
+                AppLog.e(T.NOTIFS, "Could not parse notifications settings JSON");
+                return null;
+            }
+
+            NotificationsSettings settings = new NotificationsSettings(settingsJson);
+            if (settings.getSiteSettings() == null) {
+                return null;
+            }
+
+            // Retrieve blogs that are .com or jetpack powered
+            List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("NOT(dotcomFlag=0 AND wpVersion!='')", null, 0, false);
 
             Context context = getActivity();
 
             PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
                     getString(R.string.pref_notification_blogs));
 
-            for (Map blog : allBlogs) {
+            for (Map blog : blogs) {
                 if (context == null) return null;
 
                 String siteUrl = MapUtils.getMapStr(blog, "url");
-                NotificationsPreference preference = new NotificationsPreference(context);
-                preference.setLayoutResource(R.layout.notifications_site_preference);
-
                 String title = MapUtils.getMapStr(blog, "blogName");
-                preference.setTitle(title);
-                preference.setSummary(UrlUtils.getDomainFromUrl(siteUrl));
-                preference.setBlavatarUrl(GravatarUtils.blavatarFromUrl(
-                        siteUrl,
-                        context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium))
+                long siteId = MapUtils.getMapLong(blog, "blogId");
+
+                PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
+                prefScreen.setTitle(title);
+                prefScreen.setSummary(UrlUtils.getDomainFromUrl(siteUrl));
+
+                JSONObject siteSettings = settings.getSiteSettings().get(siteId);
+                if (siteSettings == null) {
+                    siteSettings = new JSONObject();
+                }
+
+                // Add the 3 setting types to the preference screen
+                JSONObject timelineSettings = JSONUtils.queryJSON(siteSettings, "timeline", new JSONObject());
+                NotificationsSettingsDialogPreference timelinePref = new NotificationsSettingsDialogPreference(
+                        context, null, NotificationsSettings.Type.TIMELINE, timelineSettings, mOnSettingsChangedListener
                 );
-                blogsCategory.addPreference(preference);
+                timelinePref.setTitle(R.string.timeline);
+                timelinePref.setDialogTitle(R.string.timeline);
+                prefScreen.addPreference(timelinePref);
+
+                JSONObject emailSettings = JSONUtils.queryJSON(siteSettings, "email", new JSONObject());
+                NotificationsSettingsDialogPreference emailPref = new NotificationsSettingsDialogPreference(
+                        context, null, NotificationsSettings.Type.EMAIL, emailSettings, mOnSettingsChangedListener
+                );
+                emailPref.setTitle(R.string.email);
+                emailPref.setDialogTitle(R.string.email);
+                prefScreen.addPreference(emailPref);
+
+                JSONObject deviceSettings = JSONUtils.queryJSON(siteSettings, "device", new JSONObject());
+                NotificationsSettingsDialogPreference devicePref = new NotificationsSettingsDialogPreference(
+                        context, null, NotificationsSettings.Type.MOBILE, deviceSettings, mOnSettingsChangedListener
+                );
+                devicePref.setTitle(R.string.push_notifications);
+                devicePref.setDialogTitle(R.string.push_notifications);
+                prefScreen.addPreference(devicePref);
+
+                blogsCategory.addPreference(prefScreen);
             }
 
             return null;
         }
     }
+
+    private NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener mOnSettingsChangedListener = new NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener() {
+        @Override
+        public void OnNotificationsSettingsChanged(NotificationsSettings.Type type, JSONObject newValues) {
+            if (!isAdded()) return;
+
+            // TODO Send the notification settings changes
+
+        }
+    };
 
     private void sendNotificationsSettings() {
         AppLog.d(T.NOTIFS, "Send push notification settings");
@@ -118,7 +182,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     /**
      * Performs the notification settings save in the background
      */
-    private class sendNotificationSettingsTask extends AsyncTask<Void, Void, Void> {
+    private class SendNotificationSettingsTask extends AsyncTask<Void, Void, Void> {
         // Sends updated notification settings to WP.com
         @Override
         protected Void doInBackground(Void... params) {
@@ -147,5 +211,35 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         if (mNotificationSettingsChanged) {
             sendNotificationsSettings();
         }
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, @Nonnull Preference preference) {
+        super.onPreferenceTreeClick(preferenceScreen, preference);
+
+        // PreferenceScreens don't show the toolbar, so we'll manually add one
+        // See: http://stackoverflow.com/a/27455363/309558
+        if (preference instanceof PreferenceScreen) {
+            addToolbarToPreferenceScreen((PreferenceScreen) preference);
+        }
+
+        return false;
+    }
+
+    public void addToolbarToPreferenceScreen(PreferenceScreen preferenceScreen) {
+        if (!isAdded()) return;
+        final Dialog dialog = preferenceScreen.getDialog();
+
+        LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
+        Toolbar toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);
+        root.addView(toolbar, 0);
+        toolbar.setTitle(preferenceScreen.getTitle());
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 }

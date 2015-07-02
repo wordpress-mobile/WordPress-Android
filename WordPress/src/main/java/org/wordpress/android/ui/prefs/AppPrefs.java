@@ -30,6 +30,9 @@ public class AppPrefs {
 
         // index of the last active item in Stats activity
         STATS_ITEM_INDEX,
+
+        // notifications settings json
+        NOTIFICATIONS_SETTINGS,
     }
 
     private static SharedPreferences prefs() {
@@ -183,5 +186,13 @@ public class AppPrefs {
     }
     public static void setMainTabIndex(int index) {
         setInt(PrefKey.MAIN_TAB_INDEX, index);
+    }
+
+    public static String getNotificationsSettings() {
+        return getString(PrefKey.NOTIFICATIONS_SETTINGS);
+    }
+    
+    public static void setNotificationsSettings(String settings) {
+        setString(PrefKey.NOTIFICATIONS_SETTINGS, settings);
     }
 }

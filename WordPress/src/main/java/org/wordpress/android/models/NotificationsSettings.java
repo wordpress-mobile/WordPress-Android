@@ -1,65 +1,94 @@
 package org.wordpress.android.models;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 // Maps to notification settings returned from the /me/notifications/settings endpoint on wp.com
 public class NotificationsSettings {
 
-    public enum StreamType {
+    private static final String KEY_OTHER = "other";
+    private static final String KEY_SITES = "sites";
+    private static final String KEY_WPCOM = "wpcom";
+
+    private JSONObject mOtherSettings;
+    private Map<Long, JSONObject> mSiteSettings;
+    private JSONObject mDotcomSettings;
+
+    public enum Type {
         TIMELINE,
         EMAIL,
-        DEVICE
-    }
+        MOBILE;
 
-    // Site notification settings
-    public class Site {
-        long siteId;
-        StreamType streamType;
-        boolean newComment;
-        boolean commentLike;
-        boolean postLike;
-        boolean follow;
-        boolean achievement;
-        boolean mentions;
-
-        public void Site(long siteId, StreamType streamType, JSONObject settings) {
-            this.siteId = siteId;
-            this.streamType = streamType;
-            this.newComment = JSONUtils.getBool(settings, "new-comment");
-            this.commentLike = JSONUtils.getBool(settings, "comment-like");
-            this.postLike = JSONUtils.getBool(settings, "post-like");
-            this.follow = JSONUtils.getBool(settings, "follow");
-            this.achievement = JSONUtils.getBool(settings, "achievement");
-            this.mentions = JSONUtils.getBool(settings, "mentions");
+        public String toString(Type type) {
+            switch (type) {
+                case TIMELINE:
+                    return "timeline";
+                case EMAIL:
+                    return "email";
+                case MOBILE:
+                    return "device";
+                default:
+                    return "";
+            }
         }
     }
 
-    // Other notification settings, not tied to a site (aka notifications from 3rd party sites)
-    public class Other {
-        StreamType streamType;
-        boolean commentLike;
-        boolean commentReply;
+    private enum Channel {
+        OTHER,
+        SITES,
+        WPCOM
+    }
 
-        public void Other(StreamType streamType, JSONObject settings) {
-            this.streamType = streamType;
-            this.commentLike = JSONUtils.getBool(settings, "comment-like");
-            this.commentReply = JSONUtils.getBool(settings, "comment-reply");
+    public NotificationsSettings(JSONObject json) {
+        mSiteSettings = new HashMap<>();
+
+        Iterator<?> keys = json.keys();
+        while(keys.hasNext()) {
+            String key = (String)keys.next();
+            try {
+                if (json.get(key) instanceof JSONObject) {
+                    JSONObject settingsObject = (JSONObject)json.get(key);
+                    switch(key) {
+                        case KEY_OTHER:
+                            mOtherSettings = settingsObject;
+                            break;
+                        case KEY_WPCOM:
+                            mDotcomSettings = settingsObject;
+                            break;
+                        default:
+                            AppLog.i(AppLog.T.NOTIFS, "Unknown notification channel found");
+                    }
+                } else if (json.get(key) instanceof JSONArray && key.equals(KEY_SITES)) {
+                    JSONArray siteSettingsArray = (JSONArray)json.get(key);
+                    for (int i=0; i < siteSettingsArray.length(); i++) {
+                        JSONObject siteSetting = siteSettingsArray.getJSONObject(i);
+                        mSiteSettings.put(siteSetting.optLong("site_id"), siteSetting);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    // WordPress.com email settings
-    public class WordPressCom {
-        boolean news;
-        boolean recommendation;
-        boolean promotion;
-        boolean digest;
+    public JSONObject getOtherSettings() {
+        return mOtherSettings;
+    }
 
-        public void WordPressCom(JSONObject settings) {
-            this.news = JSONUtils.getBool(settings, "news");
-            this.recommendation = JSONUtils.getBool(settings, "recommendation");
-            this.promotion = JSONUtils.getBool(settings, "promotion");
-            this.digest = JSONUtils.getBool(settings, "digest");
-        }
+    public Map<Long, JSONObject> getSiteSettings() {
+        return mSiteSettings;
+    }
+
+    public JSONObject getDotcomSettings() {
+        return mDotcomSettings;
     }
 }
