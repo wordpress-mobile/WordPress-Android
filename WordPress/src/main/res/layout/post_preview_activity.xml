@@ -22,8 +22,8 @@
         android:paddingTop="@dimen/margin_extra_large"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_extra_large"
-        app:fontFamily="merriweather"
-        tools:text="postTitle" />
+        android:textStyle="bold"
+        tools:text="text_post_title" />
 
     <ScrollView
         android:layout_width="match_parent"

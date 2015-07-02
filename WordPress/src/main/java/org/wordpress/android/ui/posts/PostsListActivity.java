@@ -54,8 +54,6 @@ public class PostsListActivity extends AppCompatActivity {
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
         showErrorDialogIfNeeded(getIntent().getExtras());
-
-        WordPress.currentPost = null;
     }
 
     @Override

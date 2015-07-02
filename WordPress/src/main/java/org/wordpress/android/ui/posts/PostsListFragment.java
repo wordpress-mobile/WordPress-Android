@@ -518,8 +518,10 @@ public class PostsListFragment extends Fragment
                 getActivity().startService(new Intent(getActivity(), PostUploadService.class));
                 break;
             case PostListButton.BUTTON_VIEW:
-            case PostListButton.BUTTON_PREVIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
+                break;
+            case PostListButton.BUTTON_PREVIEW:
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);
