@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -28,6 +28,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mTaglinePreference;
     private MultiSelectListPreference mLanguagePreference;
     private SeekBarPreference mVisibilityPreference;
+    private MenuItem mSaveItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,25 +41,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         if (mBlog == null) return;
 
-        findPreferences();
-
-        if (mTitlePreference != null) {
-            mTitlePreference.setText(mBlog.getBlogName());
-            mTitlePreference.setSummary(mBlog.getBlogName());
-            mTitlePreference.setOnPreferenceChangeListener(this);
-        }
-
-        if (mTaglinePreference != null) {
-            mTaglinePreference.setOnPreferenceChangeListener(this);
-        }
-
-        if (mLanguagePreference != null) {
-            mLanguagePreference.setOnPreferenceChangeListener(this);
-        }
-
-        if (mVisibilityPreference != null) {
-            mVisibilityPreference.setOnPreferenceChangeListener(this);
-        }
+        initPreferences();
 
         WordPress.getRestClientUtils().getGeneralSettings(
                 String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
@@ -103,28 +86,59 @@ public class SiteSettingsFragment extends PreferenceFragment
                         }
                     }
                 });
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+
+        menuInflater.inflate(R.menu.site_settings, menu);
+
+        if (menu == null || (mSaveItem = menu.findItem(R.id.save_site_settings)) == null) return;
+
+        mSaveItem.setOnMenuItemClickListener(
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        applySettings();
+                        return true;
+                    }
+                });
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if (newValue == null) return false;
+
         if (preference == mTitlePreference) {
-            if (newValue == null || newValue.equals("")) return false;
+            if (newValue.equals(mTitlePreference.getText())) return false;
 
             mTitlePreference.setText(newValue.toString());
             mTitlePreference.setSummary(newValue.toString());
             mBlog.setBlogName(newValue.toString());
-
-            showDialog();
+            toggleSaveItemVisibility(true);
 
             return true;
         } else if (preference == mTaglinePreference) {
-            ((EditTextPreference) preference).setText(newValue.toString());
-            preference.setSummary(newValue.toString());
+            if (newValue.equals(mTaglinePreference.getText())) return false;
+
+            mTaglinePreference.setText(newValue.toString());
+            mTaglinePreference.setSummary(newValue.toString());
+            toggleSaveItemVisibility(true);
+
             return true;
         } else if (preference == mLanguagePreference) {
-            preference.setSummary(newValue.toString());
+            if (newValue.equals(mLanguagePreference.getSummary())) return false;
+
+            mLanguagePreference.setSummary(newValue.toString());
+            toggleSaveItemVisibility(true);
+
             return true;
         } else if (preference == mVisibilityPreference) {
+            toggleSaveItemVisibility(true);
+
             return true;
         }
 
@@ -175,6 +189,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
+                toggleSaveItemVisibility(false);
             }
         }, new RestRequest.ErrorListener() {
             @Override
@@ -190,7 +205,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Helper method to set preference references
      */
-    private void findPreferences() {
+    private void initPreferences() {
         mTitlePreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_title));
         mTaglinePreference =
@@ -199,16 +214,28 @@ public class SiteSettingsFragment extends PreferenceFragment
                 (MultiSelectListPreference) findPreference(getString(R.string.pref_key_site_language));
         mVisibilityPreference =
                 (SeekBarPreference) findPreference(getString(R.string.pref_key_site_visibility));
+
+        if (mTitlePreference != null) {
+            mTitlePreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (mTaglinePreference != null) {
+            mTaglinePreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (mLanguagePreference != null) {
+            mLanguagePreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (mVisibilityPreference != null) {
+            mVisibilityPreference.setOnPreferenceChangeListener(this);
+        }
     }
 
-    // TODO: delete
-    private void showDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setPositiveButton("Sync", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                applySettings();
-            }
-        }).setNegativeButton("Cancel", null).show();
+    private void toggleSaveItemVisibility(boolean on) {
+        if (mSaveItem != null) {
+            mSaveItem.setVisible(on);
+            mSaveItem.setEnabled(on);
+        }
     }
 }
