@@ -474,6 +474,9 @@ public class WordPress extends Application {
      * Sign out from wpcom account
      */
     public static void WordPressComSignOut(Context context) {
+        // Keep the analytics tracking at the beginning, before the account data is actual removed.
+        AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
+
         removeWpComUserRelatedData(context);
 
         // broadcast an event: wpcom user signed out
@@ -483,8 +486,6 @@ public class WordPress extends Application {
         if (!AccountHelper.isSignedIn()) {
             EventBus.getDefault().post(new UserSignedOutCompletely());
         }
-
-        AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
     }
 
     @SuppressWarnings("unused")
