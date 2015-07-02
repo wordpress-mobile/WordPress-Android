@@ -224,11 +224,6 @@ public class WordPressDB {
         int currentVersion = db.getVersion();
         boolean isNewInstall = (currentVersion == 0);
 
-        if (!isNewInstall && currentVersion < DATABASE_VERSION) {
-            // Upgrading the app
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
-        }
-
         switch (currentVersion) {
             case 0:
                 // New install
