@@ -19,6 +19,7 @@
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/connection_bar"
         android:layout_below="@+id/tab_layout" />
 
     <org.wordpress.android.widgets.WPTextView
