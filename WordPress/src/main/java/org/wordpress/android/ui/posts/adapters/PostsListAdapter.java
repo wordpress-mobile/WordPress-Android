@@ -224,10 +224,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 }
             }
 
-            Resources resources = txtStatus.getContext().getResources();
+            Context context = txtStatus.getContext();
+            Resources resources = context.getResources();
             txtStatus.setTextColor(resources.getColor(statusColorResId));
             txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
-            Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
+            Drawable drawable = (statusIconResId != 0 ? context.getDrawable(statusIconResId) : null);
             txtStatus.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             txtStatus.setVisibility(View.VISIBLE);
         }
@@ -359,7 +360,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     /*
-     * hides the past post - used when the post is trashed by the user but the network request
+     * hides the post - used when the post is trashed by the user but the network request
      * to delete the post hasn't completed yet
      */
     public void hidePost(PostsListPost post) {
@@ -448,8 +449,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             // generate the featured image url for each post
             String imageUrl;
             for (PostsListPost post : tmpPosts) {
-                if (post.getFeaturedImageId() != 0) {
-                    // TODO: if media table doesn't have this image, we may want to refresh media
+                if (post.isLocalDraft()) {
+                    imageUrl = null;
+                } else if (post.getFeaturedImageId() != 0) {
                     imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, post.getFeaturedImageId());
                 } else if (post.hasDescription()) {
                     ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mIsPrivateBlog);
