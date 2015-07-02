@@ -463,15 +463,8 @@ public class WPMainActivity extends Activity
         boolean isConnected = NetworkUtils.isNetworkAvailable(this);
         if (isConnected && mConnectionBar.getVisibility() == View.VISIBLE) {
             AniUtils.animateBottomBar(mConnectionBar, false);
-        } else if (!isConnected) {
-            if (NetworkUtils.isAirplaneModeOn(this)) {
-                mConnectionBar.setText(R.string.connectionbar_airplane_mode);
-            } else {
-                mConnectionBar.setText(R.string.connectionbar_no_connection);
-            }
-            if (mConnectionBar.getVisibility() != View.VISIBLE) {
-                AniUtils.animateBottomBar(mConnectionBar, true);
-            }
+        } else if (!isConnected && mConnectionBar.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(mConnectionBar, true);
         }
     }
 

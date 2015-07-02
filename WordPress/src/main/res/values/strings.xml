@@ -774,9 +774,8 @@
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
 
-    <!-- connection bar which appears when there's no connection -->
+    <!-- connection bar which appears on main activity when there's no connection -->
     <string name="connectionbar_no_connection">No connection</string>
-    <string name="connectionbar_airplane_mode">Airplane mode</string>
 
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
