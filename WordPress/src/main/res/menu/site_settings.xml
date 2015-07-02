@@ -7,6 +7,6 @@
         android:title="Save"
         android:id="@+id/save_site_settings"
         android:enabled="false"
-        android:visible="false" />
+        android:visible="true" />
 
 </menu>

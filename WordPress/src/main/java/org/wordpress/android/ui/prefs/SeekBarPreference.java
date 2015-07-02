@@ -81,5 +81,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
             setSummary("Allow search engines to index this site");
             mSeekBar.setProgress(100);
         }
+
+        callChangeListener(progress);
     }
 }

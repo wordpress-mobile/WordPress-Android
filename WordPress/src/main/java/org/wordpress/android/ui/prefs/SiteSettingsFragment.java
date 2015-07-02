@@ -117,7 +117,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             mTitlePreference.setText(newValue.toString());
             mTitlePreference.setSummary(newValue.toString());
-            mBlog.setBlogName(newValue.toString());
             toggleSaveItemVisibility(true);
 
             return true;
@@ -137,6 +136,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             return true;
         } else if (preference == mVisibilityPreference) {
+            int progress = convertProgressToVisibility(mVisibilityPreference.getProgress());
+
+            if (newValue.equals(progress)) return false;
+
             toggleSaveItemVisibility(true);
 
             return true;
@@ -166,14 +169,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         if (mVisibilityPreference != null) {
-            int progress = mVisibilityPreference.getProgress();
-
-            if (progress >= 0) {
-                if (progress < 33) progress = -1;
-                else if (progress < 67) progress = 0;
-                else progress = 1;
-                params.put("blog_public", String.valueOf(progress));
-            }
+            params.put("blog_public", String.valueOf(
+                    convertProgressToVisibility(mVisibilityPreference.getProgress())));
         }
 
         return params;
@@ -190,6 +187,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             @Override
             public void onResponse(JSONObject response) {
                 toggleSaveItemVisibility(false);
+
+                if (params.containsKey("blogname")) {
+                    mBlog.setBlogName(params.get("blogname"));
+                }
             }
         }, new RestRequest.ErrorListener() {
             @Override
@@ -237,5 +238,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSaveItem.setVisible(on);
             mSaveItem.setEnabled(on);
         }
+    }
+
+    private int convertProgressToVisibility(int progress) {
+        if (progress < 33) return -1;
+        else if (progress < 67) return 0;
+        else return 1;
     }
 }
