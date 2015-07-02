@@ -10,7 +10,7 @@ import android.widget.SeekBar;
 
 import org.wordpress.android.R;
 
-public class SeekBarPreference extends Preference {
+public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarChangeListener {
     private SeekBar mSeekBar;
 
     public SeekBarPreference(Context context) {
@@ -36,36 +36,50 @@ public class SeekBarPreference extends Preference {
         if (view != null) {
             mSeekBar = (SeekBar) view.findViewById(R.id.seekbar_pref_bar);
             if (mSeekBar != null) {
-                mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                           @Override
-                           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                           }
-
-                           @Override
-                           public void onStartTrackingTouch(SeekBar seekBar) {
-                           }
-
-                           @Override
-                           public void onStopTrackingTouch(SeekBar seekBar) {
-                               int progress = seekBar.getProgress();
-
-                               if (progress <= 33) {
-                                   setSummary("Allow search engines to index this site");
-                                   mSeekBar.setProgress(0);
-                               } else if (progress <= 67) {
-                                   setSummary("Discourage search engines from indexing this site");
-                                   mSeekBar.setProgress(50);
-                               } else {
-                                   setSummary("I would like my site to be private, visible only to users I choose");
-                                   mSeekBar.setProgress(100);
-                               }
-                           }
-                       }
-                );
-                mSeekBar.setProgress(seekPosition);
+                mSeekBar.setOnSeekBarChangeListener(this);
             }
         }
 
+        updateProgress(seekPosition);
+
         return view;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        updateProgress(seekBar.getProgress());
+    }
+
+    public int getProgress() {
+        if (mSeekBar == null) return -1;
+
+        return mSeekBar.getProgress();
+    }
+
+    public void setProgress(int progress) {
+        updateProgress(progress);
+    }
+
+    private void updateProgress(int progress) {
+        if (mSeekBar == null) return;
+
+        if (progress <= 33) {
+            setSummary("I would like my site to be private, visible only to users I choose");
+            mSeekBar.setProgress(0);
+        } else if (progress <= 67) {
+            setSummary("Discourage search engines from indexing this site");
+            mSeekBar.setProgress(50);
+        } else {
+            setSummary("Allow search engines to index this site");
+            mSeekBar.setProgress(100);
+        }
     }
 }
