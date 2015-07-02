@@ -142,7 +142,7 @@ public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.
         Cursor cursor = WordPress.wpDB.getThemes(blogId, searchTerm);
 
         mAdapter.changeCursor(cursor);
-        mGridView.invalidateViews();
+        mListView.invalidateViews();
 
         if (cursor == null || cursor.getCount() == 0) {
             mNoResultText.setVisibility(View.VISIBLE);

@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -60,7 +60,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     protected static final String ARGS_SORT = "ARGS_SORT";
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
-    protected GridView mGridView;
+    protected AbsListView mListView;
     protected TextView mEmptyView;
     protected TextView mNoResultText;
     protected ThemeTabAdapter mAdapter;
@@ -96,8 +96,8 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
 
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         mEmptyView = (TextView) view.findViewById(R.id.text_empty);
-        mGridView = (GridView) view.findViewById(R.id.theme_gridview);
-        mGridView.setRecyclerListener(this);
+        mListView = (AbsListView) view.findViewById(R.id.theme_listview);
+        mListView.setRecyclerListener(this);
 
         // swipe to refresh setup but not for the search view
         if (!(this instanceof ThemeSearchFragment)) {
@@ -149,9 +149,9 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         }
         mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         setEmptyViewVisible(mAdapter.getCount() == 0);
-        mGridView.setAdapter(mAdapter);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setSelection(mSavedScrollPosition);
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
+        mListView.setSelection(mSavedScrollPosition);
     }
 
     private void setEmptyViewVisible(boolean visible) {
@@ -159,7 +159,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             return;
         }
         mEmptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
-        mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
+        mListView.setVisibility(visible ? View.GONE : View.VISIBLE);
         if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
             mEmptyView.setText(R.string.no_network_title);
         }
@@ -172,8 +172,8 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mGridView != null)
-            outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
+        if (mListView != null)
+            outState.putInt(BUNDLE_SCROLL_POSTION, mListView.getFirstVisiblePosition());
     }
 
     private ThemeSortType getThemeSortType() {
