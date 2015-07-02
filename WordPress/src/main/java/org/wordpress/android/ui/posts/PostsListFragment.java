@@ -253,18 +253,20 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        // If user has local changes, don't refresh
+        // if user has local changes, don't refresh
         if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
             return;
         }
 
-        setRefreshing(true);
-        updateEmptyView(EmptyViewMessageType.LOADING);
-
-        int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
-        if (!loadMore) {
+        int postCount;
+        if (loadMore) {
+            postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
+            showLoadMoreProgress();
+        } else {
             mCanLoadMorePosts = true;
             postCount = POSTS_REQUEST_COUNT;
+            setRefreshing(true);
+            updateEmptyView(EmptyViewMessageType.LOADING);
         }
 
         List<Object> apiArgs = new Vector<>();
@@ -272,11 +274,6 @@ public class PostsListFragment extends Fragment
         apiArgs.add(mIsPage);
         apiArgs.add(postCount);
         apiArgs.add(loadMore);
-
-        // show progress bar at the bottom if we're loading more posts
-        if (loadMore) {
-            showLoadMoreProgress();
-        }
 
         mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
@@ -517,13 +514,11 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
                 break;
             case PostListButton.BUTTON_PUBLISH:
-                // TODO: test this, verify post list is updated after upload
                 PostUploadService.addPostToUpload(fullPost);
                 getActivity().startService(new Intent(getActivity(), PostUploadService.class));
                 break;
             case PostListButton.BUTTON_VIEW:
             case PostListButton.BUTTON_PREVIEW:
-                // TODO: preview local drafts and posts with local changes
                 ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
                 break;
             case PostListButton.BUTTON_STATS:

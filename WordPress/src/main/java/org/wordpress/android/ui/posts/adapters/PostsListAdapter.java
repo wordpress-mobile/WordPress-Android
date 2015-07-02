@@ -70,8 +70,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         mLocalTableBlogId = blog.getLocalTableBlogId();
         mIsPrivateBlog = blog.isPrivate();
-
-        // TODO: this assumes the user always has the rights to view stats for wp.com/jp blogs
         mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
 
         // on large/landscape displays we can always show all buttons
