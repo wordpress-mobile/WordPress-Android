@@ -33,7 +33,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NotificationSettingsFragment extends PreferenceFragment {
+public class NotificationsSettingsFragment extends PreferenceFragment {
     public static final String TAG = "NotificationSettingsFragment";
     private ArrayList<StringMap<Double>> mMutedBlogsList;
     private Map<String, Object> mNotificationSettings;
@@ -44,12 +44,6 @@ public class NotificationSettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.notification_settings);
         loadNotifications();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.manage_notifications);
     }
 
     private void loadNotifications() {

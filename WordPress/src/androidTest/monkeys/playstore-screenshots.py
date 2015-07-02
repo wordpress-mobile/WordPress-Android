@@ -21,88 +21,54 @@ def action_login(device, serialno):
     device.press('KEYCODE_DPAD_DOWN')
     time.sleep(1)
 
-def action_open_drawer(device, serialno):
-    print("open drawer")
+def action_open_my_sites(device, serialno):
+    print("open my sites")
+    device.press('KEYCODE_TAB')
     for i in range(5):
-        device.press('KEYCODE_DPAD_UP')
         device.press('KEYCODE_DPAD_LEFT')
-    device.press('KEYCODE_ENTER')
-    # Wait for the animation to finish
-    time.sleep(1)
-
-# Menu drawer should be opened when calling this
-def action_open_notifications(device, serialno):
-    print("open notifications")
-    for i in range(5):
-        device.press('KEYCODE_DPAD_UP')
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_ENTER')
-    # lose focus
-    time.sleep(1)
-    device.press('KEYCODE_DPAD_DOWN')
     # Wait for gravatars to load
-    time.sleep(10)
+    time.sleep(2)
 
-# Menu drawer should be opened when calling this
-def action_open_reader_posts_i_like(device, serialno):
+def action_open_reader_freshlypressed(device, serialno):
     print("open reader")
     # Open the reader
-    for i in range(3):
-        device.press('KEYCODE_DPAD_UP')
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_ENTER')
-    time.sleep(1)
-    # Be sure to focus the hamburger
-    for i in range(3):
-        device.press('KEYCODE_DPAD_UP')
+    for i in range(5):
         device.press('KEYCODE_DPAD_LEFT')
-    # Select dropdown
     device.press('KEYCODE_DPAD_RIGHT')
     device.press('KEYCODE_ENTER')
-    for i in range(3):
-        device.press('KEYCODE_DPAD_UP')
-    # Select Post I Like
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_ENTER')
-    device.press('KEYCODE_SEARCH')
     # Wait for the reader to load articles / pictures
-    time.sleep(10)
-    lose_focus(serialno)
+    time.sleep(5)
 
-# Menu drawer should be opened when calling this
-def action_open_media(device, serialno):
-    print("open media")
+def action_open_notifications(device, serialno):
+    print("open notifications tab")
     # Open the reader
-    for i in range(3):
-        device.press('KEYCODE_DPAD_UP')
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_DPAD_DOWN')
+    for i in range(5):
+        device.press('KEYCODE_DPAD_LEFT')
+    for i in range(4):
+        device.press('KEYCODE_DPAD_RIGHT')
     device.press('KEYCODE_ENTER')
-    # Wait for the reader to load articles / pictures
-    time.sleep(10)
+    time.sleep(5)
 
-# Menu drawer should be opened when calling this
+def action_open_me(device, serialno):
+    print("open me tab")
+    # Open the reader
+    for i in range(5):
+        device.press('KEYCODE_DPAD_LEFT')
+    for i in range(2):
+        device.press('KEYCODE_DPAD_RIGHT')
+    device.press('KEYCODE_ENTER')
+    time.sleep(5)
+
 def action_open_editor_and_type_text(device, serialno):
     print("open editor")
-    # Open Posts
-    for i in range(3):
-        device.press('KEYCODE_DPAD_UP')
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_DPAD_DOWN')
+    # Open My Sites
+    for i in range(5):
+        device.press('KEYCODE_DPAD_LEFT')
+    # Select FAB and open the editor
     device.press('KEYCODE_DPAD_DOWN')
     device.press('KEYCODE_ENTER')
     time.sleep(1)
-    # Open editor
-    device.press('KEYCODE_DPAD_RIGHT')
-    device.press('KEYCODE_ENTER')
-    time.sleep(1)
-    device.press('KEYCODE_TAB')
-    device.press('KEYCODE_DPAD_DOWN')
-    # Type a sample text (spaces can't be entered via device.type())
+        # Type a sample text (spaces can't be entered via device.type())
     for word in settings.example_post_content.split():
         device.type(word)
         device.press('KEYCODE_SPACE')
@@ -154,28 +120,34 @@ def back(device):
 # Main scenario + screenshots
 
 def run_tests_for_device_and_lang(device, serialno, filename, lang, packagename, apk):
+    # Install the apk`
     reinstall_apk(serialno, packagename, apk)
+
+    # Change language setting
     change_lang_settings(serialno, lang)
+
+    # Launch the app
     launch_activity(device, packagename, "org.wordpress.android.ui.WPLaunchActivity")
     take_screenshot(serialno, lang + "-login-screen-" + filename)
+
+    # Login into the app
     action_login(device, serialno)
-    take_screenshot(serialno, lang + "-post-login-" + filename)
-    action_open_drawer(device, serialno)
-    take_screenshot(serialno, lang + "-drawer-opened-" + filename)
+
+    # Action!
+    action_open_my_sites(device, serialno)
+    take_screenshot(serialno, lang + "-1-my-sites-" + filename)
+    action_open_reader_freshlypressed(device, serialno)
+    take_screenshot(serialno, lang + "-2-reader-freshlypressed-" + filename)
+    action_open_me(device, serialno)
+    take_screenshot(serialno, lang + "-3-me-tab-" + filename)
     action_open_notifications(device, serialno)
-    take_screenshot(serialno, lang + "-notifications-" + filename)
-    action_open_drawer(device, serialno)
-    action_open_reader_posts_i_like(device, serialno)
-    take_screenshot(serialno, lang + "-reader-" + filename)
-    action_open_drawer(device, serialno)
-    action_open_media(device, serialno)
-    take_screenshot(serialno, lang + "-media-" + filename)
-    action_open_drawer(device, serialno)
-    action_open_editor_and_type_text(device, serialno)
-    take_screenshot(serialno, lang + "-editor-" + filename)
+    take_screenshot(serialno, lang + "-4-notifications-" + filename)
+
+    #action_open_editor_and_type_text(device, serialno)
+    #take_screenshot(serialno, lang + "-editor-" + filename)
     # Close virtual keyboard and editor
-    back(device)
-    back(device)
+    #back(device)
+    #back(device)
 
 def list_devices():
     devices = []
