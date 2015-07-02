@@ -63,8 +63,6 @@ public class PostsListActivity extends AppCompatActivity {
         } else {
             getSupportActionBar().setTitle(getString(R.string.posts));
         }
-
-        WordPress.currentPost = null;
     }
 
     @Override
