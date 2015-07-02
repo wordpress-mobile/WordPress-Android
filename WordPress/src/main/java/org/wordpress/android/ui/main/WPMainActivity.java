@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -62,11 +61,8 @@ public class WPMainActivity extends Activity
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
-
     private TextView mConnectionBar;
-    private boolean mIsConnected;
 
-    private static final int CONNECTION_CHECK_DELAY_MS = 1500;
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     /*
@@ -89,15 +85,6 @@ public class WPMainActivity extends Activity
         mViewPager.setAdapter(mTabAdapter);
 
         mConnectionBar = (TextView) findViewById(R.id.connection_bar);
-        mConnectionBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // hide the bar then recheck after a brief delay
-                AniUtils.animateBottomBar(mConnectionBar, false);
-                checkConnectionDelayed();
-            }
-        });
-
         mTabLayout = (WPMainTabLayout) findViewById(R.id.tab_layout);
         mTabLayout.createTabs();
 
@@ -263,7 +250,7 @@ public class WPMainActivity extends Activity
         // Ex: Notifications -> notifications detail -> back to notifications
         trackLastVisibleTab(mViewPager.getCurrentItem());
 
-        checkConnectionDelayed();
+        checkConnection();
     }
 
     private void trackLastVisibleTab(int position) {
@@ -464,6 +451,22 @@ public class WPMainActivity extends Activity
         checkConnection();
     }
 
+    private void checkConnection() {
+        boolean isConnected = NetworkUtils.isNetworkAvailable(this);
+        if (isConnected && mConnectionBar.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mConnectionBar, false);
+        } else if (!isConnected) {
+            if (NetworkUtils.isAirplaneModeOn(this)) {
+                mConnectionBar.setText(R.string.connectionbar_airplane_mode);
+            } else {
+                mConnectionBar.setText(R.string.connectionbar_no_connection);
+            }
+            if (mConnectionBar.getVisibility() != View.VISIBLE) {
+                AniUtils.animateBottomBar(mConnectionBar, true);
+            }
+        }
+    }
+
     /*
      * Simperium Note bucket listeners
      */
@@ -487,33 +490,6 @@ public class WPMainActivity extends Activity
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
-    }
-
-    private void checkConnectionDelayed() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
-                    checkConnection();
-                }
-            }
-        }, CONNECTION_CHECK_DELAY_MS);
-    }
-
-    private void checkConnection() {
-        mIsConnected = NetworkUtils.isNetworkAvailable(this);
-        if (mIsConnected && mConnectionBar.getVisibility() == View.VISIBLE) {
-            AniUtils.animateBottomBar(mConnectionBar, false);
-        } else if (!mIsConnected) {
-            if (NetworkUtils.isAirplaneModeOn(this)) {
-                mConnectionBar.setText(R.string.connectionbar_airplane_mode);
-            } else {
-                mConnectionBar.setText(R.string.connectionbar_no_connection);
-            }
-            if (mConnectionBar.getVisibility() != View.VISIBLE) {
-                AniUtils.animateBottomBar(mConnectionBar, true);
-            }
-        }
     }
 
     @Override

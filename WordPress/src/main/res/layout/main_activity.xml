@@ -28,13 +28,11 @@
         android:layout_alignParentBottom="true"
         android:background="@color/alert_red"
         android:gravity="center"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_large"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_small"
-        android:visibility="gone"
-        tools:text="No connection"
-        tools:visibility="visible" />
+        tools:text="No connection" />
 
 </RelativeLayout>
