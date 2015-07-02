@@ -70,10 +70,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     mVisibilityPreference.setProgress(0);
                                     break;
                                 case 0:
-                                    mVisibilityPreference.setProgress(50);
+                                    mVisibilityPreference.setProgress(1);
                                     break;
                                 case 1:
-                                    mVisibilityPreference.setProgress(100);
+                                    mVisibilityPreference.setProgress(2);
                                     break;
                             }
                         }
@@ -112,33 +112,39 @@ public class SiteSettingsFragment extends PreferenceFragment
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (newValue == null) return false;
 
-        if (preference == mTitlePreference) {
-            if (newValue.equals(mTitlePreference.getText())) return false;
-
+        if (preference == mTitlePreference &&
+                !newValue.equals(mTitlePreference.getText())) {
             mTitlePreference.setText(newValue.toString());
             mTitlePreference.setSummary(newValue.toString());
             toggleSaveItemVisibility(true);
 
             return true;
-        } else if (preference == mTaglinePreference) {
-            if (newValue.equals(mTaglinePreference.getText())) return false;
-
+        } else if (preference == mTaglinePreference &&
+                !newValue.equals(mTaglinePreference.getText())) {
             mTaglinePreference.setText(newValue.toString());
             mTaglinePreference.setSummary(newValue.toString());
             toggleSaveItemVisibility(true);
 
             return true;
-        } else if (preference == mLanguagePreference) {
-            if (newValue.equals(mLanguagePreference.getSummary())) return false;
-
+        } else if (preference == mLanguagePreference &&
+                !newValue.equals(mLanguagePreference.getSummary())) {
             mLanguagePreference.setSummary(newValue.toString());
             toggleSaveItemVisibility(true);
 
             return true;
-        } else if (preference == mVisibilityPreference) {
-            int progress = convertProgressToVisibility(mVisibilityPreference.getProgress());
-
-            if (newValue.equals(progress)) return false;
+        } else if (preference == mVisibilityPreference &&
+                !newValue.equals(convertProgress(mVisibilityPreference.getProgress()))) {
+            switch ((Integer)newValue) {
+                case 0:
+                    mVisibilityPreference.setSummary("I would like my site to be private, visible only to users I choose");
+                    break;
+                case 1:
+                    mVisibilityPreference.setSummary("Discourage search engines from indexing this site");
+                    break;
+                case 2:
+                    mVisibilityPreference.setSummary("Allow search engines to index this site");
+                    break;
+            }
 
             toggleSaveItemVisibility(true);
 
@@ -170,7 +176,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         if (mVisibilityPreference != null) {
             params.put("blog_public", String.valueOf(
-                    convertProgressToVisibility(mVisibilityPreference.getProgress())));
+                    convertProgress(mVisibilityPreference.getProgress())));
         }
 
         return params;
@@ -188,6 +194,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             public void onResponse(JSONObject response) {
                 toggleSaveItemVisibility(false);
 
+                // Update local Blog name
                 if (params.containsKey("blogname")) {
                     mBlog.setBlogName(params.get("blogname"));
                 }
@@ -240,7 +247,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private int convertProgressToVisibility(int progress) {
+    private int convertProgress(int progress) {
         if (progress < 33) return -1;
         else if (progress < 67) return 0;
         else return 1;

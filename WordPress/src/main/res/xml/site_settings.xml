@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:title="General">
@@ -29,7 +30,8 @@
             android:title="@string/site_visibility_header"
             android:summary="Discourage search engines from indexing this site"
             android:id="@+id/pref_site_visibility"
-            android:key="@string/pref_key_site_visibility" />
+            android:key="@string/pref_key_site_visibility"
+            app:maxValue="2" />
 
         <SwitchPreference
             android:title="@string/site_settings_related_posts_title"

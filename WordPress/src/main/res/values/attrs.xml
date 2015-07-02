@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- SeekBarPreference attributes -->
+    <declare-styleable name="SeekBarPreference">
+        <attr name="maxValue" format="integer" />
+    </declare-styleable>
+
     <declare-styleable name="FlowLayout">
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="verticalSpacing" format="dimension" />

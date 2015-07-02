@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,8 +11,14 @@ import android.widget.SeekBar;
 
 import org.wordpress.android.R;
 
+/**
+ * Smooth scrolling SeekBar that can be configured to snap to equally positioned discrete points
+ * (referred to as Progress).
+ */
+
 public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarChangeListener {
     private SeekBar mSeekBar;
+    private int mMaxValue;
 
     public SeekBarPreference(Context context) {
         super(context);
@@ -23,6 +30,18 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        mMaxValue = 100;
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);
+
+        for (int i = 0; i < array.getIndexCount(); ++i) {
+            int index = array.getIndex(i);
+            if (index == R.styleable.SeekBarPreference_maxValue) {
+                mMaxValue = array.getInt(index, 100);
+            }
+        }
+
+        array.recycle();
     }
 
     @Override
@@ -31,7 +50,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
         LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = li.inflate(R.layout.seekbar_pref, parent, false);
-        int seekPosition = mSeekBar == null ? 0 : mSeekBar.getProgress();
+        int seekPosition = mSeekBar == null ? 0 : getProgress();
 
         if (view != null) {
             mSeekBar = (SeekBar) view.findViewById(R.id.seekbar_pref_bar);
@@ -55,32 +74,23 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        updateProgress(seekBar.getProgress());
+        updateProgress(getProgress());
     }
 
     public int getProgress() {
         if (mSeekBar == null) return -1;
 
-        return mSeekBar.getProgress();
+        return Math.round((float)mSeekBar.getProgress() / 100.f * mMaxValue);
     }
 
     public void setProgress(int progress) {
-        updateProgress(progress);
+        updateProgress(Math.min(mMaxValue, progress));
     }
 
     private void updateProgress(int progress) {
         if (mSeekBar == null) return;
 
-        if (progress <= 33) {
-            setSummary("I would like my site to be private, visible only to users I choose");
-            mSeekBar.setProgress(0);
-        } else if (progress <= 67) {
-            setSummary("Discourage search engines from indexing this site");
-            mSeekBar.setProgress(50);
-        } else {
-            setSummary("Allow search engines to index this site");
-            mSeekBar.setProgress(100);
-        }
+        mSeekBar.setProgress((int)((float)progress / mMaxValue * 100));
 
         callChangeListener(progress);
     }
