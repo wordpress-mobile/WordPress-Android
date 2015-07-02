@@ -13,7 +13,6 @@ import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
