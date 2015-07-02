@@ -456,11 +456,14 @@ public class WPMainActivity extends Activity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
-        checkConnection();
+        updateConnectionBar(event.isConnected());
     }
 
     private void checkConnection() {
-        boolean isConnected = NetworkUtils.isNetworkAvailable(this);
+        updateConnectionBar(NetworkUtils.isNetworkAvailable(this));
+    }
+
+    private void updateConnectionBar(boolean isConnected) {
         if (isConnected && mConnectionBar.getVisibility() == View.VISIBLE) {
             AniUtils.animateBottomBar(mConnectionBar, false);
         } else if (!isConnected && mConnectionBar.getVisibility() != View.VISIBLE) {

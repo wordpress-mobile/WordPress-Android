@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/alert_red"
+        android:background="@color/alert_yellow"
         android:gravity="center"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
