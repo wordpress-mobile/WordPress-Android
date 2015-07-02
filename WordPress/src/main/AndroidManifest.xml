@@ -327,5 +327,12 @@
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
+
+        <receiver android:name=".networking.ConnectionChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

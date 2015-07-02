@@ -23,6 +23,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -456,6 +457,11 @@ public class WPMainActivity extends Activity
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
         mTabLayout.checkNoteBadge();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+        checkConnection();
     }
 
     /*
