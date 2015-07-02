@@ -27,7 +27,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
+import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeTabFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -44,7 +44,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeTabF
     private boolean mIsRunning;
 
     private boolean mIsActivatingTheme = false;
-    private ThemeTabFragment mThemeTabFragment;
+    private ThemeBrowserFragment mThemeBrowserFragment;
     private static final String KEY_IS_ACTIVATING_THEME = "is_activating_theme";
 
     @Override
@@ -72,7 +72,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeTabF
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.themes));
 
-        mThemeTabFragment = (ThemeTabFragment) getFragmentManager().findFragmentById(R.id.theme_tab_fragment);
+        mThemeBrowserFragment = (ThemeBrowserFragment) getFragmentManager().findFragmentById(R.id.theme_tab_fragment);
     }
 
     @Override
@@ -259,7 +259,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeTabF
     }
 
     private void setRefreshing(boolean refreshing) {
-        mThemeTabFragment.setRefreshing(refreshing);
+        mThemeBrowserFragment.setRefreshing(refreshing);
     }
 
     public static boolean isAccessible() {

@@ -19,10 +19,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DisplayUtils;
 
 /**
- * Adapter for the {@link ThemeTabFragment}'s gridview
+ * Adapter for the {@link ThemeBrowserFragment}'s gridview
  *
  */
-public class ThemeTabAdapter extends CursorAdapter {
+public class ThemeBrowserAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
     private final int mColumnWidth;
     private final int mColumnHeight;
@@ -30,7 +30,7 @@ public class ThemeTabAdapter extends CursorAdapter {
     private final Drawable mIconCurrent;
     private final int m32DpToPx;
 
-    public ThemeTabAdapter(Context context, Cursor c, boolean autoRequery) {
+    public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery) {
         super(context, c, autoRequery);
         mInflater = LayoutInflater.from(context);
         mColumnWidth = getColumnWidth(context);

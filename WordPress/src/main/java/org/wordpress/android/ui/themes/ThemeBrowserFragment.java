@@ -20,7 +20,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
+import org.wordpress.android.ui.themes.ThemeBrowserAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -29,7 +29,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeTabFragment extends Fragment implements OnItemClickListener, RecyclerListener {
+public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener {
     public enum ThemeSortType {
         TRENDING("Trending"),
         NEWEST("Newest"),
@@ -63,14 +63,14 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     protected AbsListView mListView;
     protected TextView mEmptyView;
     protected TextView mNoResultText;
-    protected ThemeTabAdapter mAdapter;
+    protected ThemeBrowserAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
     private boolean mShouldRefreshOnStart;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
-    public static ThemeTabFragment newInstance(ThemeSortType sort) {
-        ThemeTabFragment fragment = new ThemeTabFragment();
+    public static ThemeBrowserFragment newInstance(ThemeSortType sort) {
+        ThemeBrowserFragment fragment = new ThemeBrowserFragment();
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, sort.ordinal());
         fragment.setArguments(args);
@@ -147,7 +147,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         if (cursor == null) {
             return;
         }
-        mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
+        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
@@ -212,7 +212,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             return;
         }
         if (mAdapter == null) {
-            mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
         }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);
@@ -223,7 +223,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Cursor cursor = ((ThemeTabAdapter) parent.getAdapter()).getCursor();
+        Cursor cursor = ((ThemeBrowserAdapter) parent.getAdapter()).getCursor();
         String themeId = cursor.getString(cursor.getColumnIndex("themeId"));
         mCallback.onThemeSelected(themeId);
     }
@@ -234,7 +234,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
 
         NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
-            // this tag is set in the ThemeTabAdapter class
+            // this tag is set in the ThemeBrowserAdapter class
             ScreenshotHolder tag =  (ScreenshotHolder) niv.getTag();
             if (tag != null && tag.requestURL != null) {
                 // need a listener to cancel request, even if the listener does nothing
