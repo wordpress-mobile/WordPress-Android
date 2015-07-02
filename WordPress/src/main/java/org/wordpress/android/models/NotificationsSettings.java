@@ -28,8 +28,8 @@ public class NotificationsSettings {
         EMAIL,
         MOBILE;
 
-        public String toString(Type type) {
-            switch (type) {
+        public String toString() {
+            switch (this) {
                 case TIMELINE:
                     return "timeline";
                 case EMAIL:

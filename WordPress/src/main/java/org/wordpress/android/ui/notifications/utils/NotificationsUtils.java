@@ -68,10 +68,10 @@ public class NotificationsUtils {
     public static final String ARG_PUSH_AUTH_EXPIRES = "arg_push_auth_expires";
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
-    private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
     public static final String WPCOM_PUSH_AUTH_TOKEN = "wp_pref_push_auth_token";
 
+    private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
 
     private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
@@ -99,10 +99,10 @@ public class NotificationsUtils {
             return;
         }
 
-        WordPress.getRestClientUtils().get("/device/" + deviceID, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get("/me/notifications/settings/?device_id=" + deviceID, listener, errorListener);
     }
 
-    public static void setPushNotificationSettings(Context context) {
+    public static void setPushNotificationSettings(Context context, JSONObject newSettings) {
         if (context == null || !AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
@@ -114,64 +114,9 @@ public class NotificationsUtils {
             return;
         }
 
-        String settingsJson = settings.getString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
-        if (settingsJson == null) {
-            AppLog.e(T.NOTIFS, "Notifications settings JSON not found in app preferences.");
-            return;
-        }
-
-        Gson gson = new Gson();
-        Map notificationSettings = gson.fromJson(settingsJson, HashMap.class);
-        Map<String, Object> updatedSettings = new HashMap<>();
-        ArrayList<StringMap> mutedBlogsList = new ArrayList<>();
-        if (notificationSettings == null || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS) instanceof StringMap)
-                || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTE_UNTIL) instanceof StringMap)) {
-            return;
-        }
-
-        StringMap<?> mutedBlogsMap = (StringMap)notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS);
-        StringMap<?> muteUntilMap = (StringMap)notificationSettings.get(WPCOM_PUSH_KEY_MUTE_UNTIL);
-
-        // Remove entries that we don't want to loop through
-        notificationSettings.remove(WPCOM_PUSH_KEY_MUTED_BLOGS);
-        notificationSettings.remove(WPCOM_PUSH_KEY_MUTE_UNTIL);
-
-        for (Object entry : notificationSettings.entrySet())
-        {
-            if (entry instanceof Map.Entry) {
-                Map.Entry hashMapEntry = (Map.Entry)entry;
-                if (hashMapEntry.getValue() instanceof StringMap && hashMapEntry.getKey() instanceof String) {
-                    StringMap setting = (StringMap)hashMapEntry.getValue();
-                    updatedSettings.put((String)hashMapEntry.getKey(), setting.get(WPCOM_PUSH_KEY_VALUE));
-                }
-            }
-        }
-
-        if (muteUntilMap != null && muteUntilMap.get(WPCOM_PUSH_KEY_VALUE) != null) {
-            updatedSettings.put(WPCOM_PUSH_KEY_MUTE_UNTIL, muteUntilMap.get(WPCOM_PUSH_KEY_VALUE));
-        }
-
-        if (mutedBlogsMap.get(WPCOM_PUSH_KEY_VALUE) instanceof ArrayList) {
-            ArrayList blogsList = (ArrayList)mutedBlogsMap.get(WPCOM_PUSH_KEY_VALUE);
-            for (Object userBlog : blogsList) {
-                if (userBlog instanceof StringMap) {
-                    StringMap userBlogMap = (StringMap)userBlog;
-                    if (MapUtils.getMapBool(userBlogMap, WPCOM_PUSH_KEY_VALUE)) {
-                        mutedBlogsList.add(userBlogMap);
-                    }
-                }
-            }
-        }
-
-        if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0) {
-            return;
-        }
-
-        updatedSettings.put(WPCOM_PUSH_KEY_MUTED_BLOGS, mutedBlogsList);
-
-        Map<String, String> contentStruct = new HashMap<>();
-        contentStruct.put("settings", gson.toJson(updatedSettings));
-        WordPress.getRestClientUtils().post("/device/"+deviceID, contentStruct, null, null, null);
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put("", newSettings.toString());
+        WordPress.getRestClientUtils().post("/device/"+deviceID, paramsMap, null, null, null);
     }
 
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
@@ -203,8 +148,6 @@ public class NotificationsUtils {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceID);
-                    JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                    editor.putString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
                     editor.apply();
                     AppLog.d(T.NOTIFS, "Server response OK. The device_id : " + deviceID);
                 } catch (JSONException e1) {
@@ -229,7 +172,6 @@ public class NotificationsUtils {
                 AppLog.d(T.NOTIFS, "Unregister token action succeeded");
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
                 editor.remove(WPCOM_PUSH_DEVICE_SERVER_ID);
-                editor.remove(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
                 editor.remove(WPCOM_PUSH_DEVICE_UUID);
                 editor.apply();
             }

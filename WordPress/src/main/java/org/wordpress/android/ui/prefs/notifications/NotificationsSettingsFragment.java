@@ -2,11 +2,13 @@ package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +26,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.NotificationsSettings;
-import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -97,7 +99,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         protected Void doInBackground(Void... params) {
             JSONObject settingsJson;
             try {
-                settingsJson = new JSONObject(AppPrefs.getNotificationsSettings());
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                settingsJson = new JSONObject(
+                        sharedPreferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, "")
+                );
             } catch (JSONException e) {
                 AppLog.e(T.NOTIFS, "Could not parse notifications settings JSON");
                 return null;
@@ -169,33 +174,31 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         public void OnNotificationsSettingsChanged(NotificationsSettings.Type type, JSONObject newValues) {
             if (!isAdded()) return;
 
-            // TODO Send the notification settings changes
+            // Construct a new settings JSONObject to send back to WP.com
+            JSONObject settingsObject = new JSONObject();
+            try {
+                settingsObject.put(type.toString(), newValues);
+                new SendNotificationSettingsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, settingsObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
     };
 
     private void sendNotificationsSettings() {
         AppLog.d(T.NOTIFS, "Send push notification settings");
-        new sendNotificationSettingsTask().execute();
+        new SendNotificationSettingsTask().execute();
     }
 
     /**
      * Performs the notification settings save in the background
      */
-    private class SendNotificationSettingsTask extends AsyncTask<Void, Void, Void> {
+    private class SendNotificationSettingsTask extends AsyncTask<JSONObject, Void, Void> {
         // Sends updated notification settings to WP.com
         @Override
-        protected Void doInBackground(Void... params) {
-            /*if (mNotificationSettings != null) {
-                Context context = WordPress.getContext();
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-                SharedPreferences.Editor editor = settings.edit();
-                Gson gson = new Gson();
-                String settingsJson = gson.toJson(mNotificationSettings);
-                editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJson);
-                editor.apply();
-                NotificationsUtils.setPushNotificationSettings(context);
-            }*/
+        protected Void doInBackground(JSONObject... params) {
+
             return null;
         }
 

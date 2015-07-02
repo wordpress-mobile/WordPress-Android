@@ -139,7 +139,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             return;
         }
         // Request notification settings if needed
-        String settingsJson = AppPrefs.getNotificationsSettings();
+        String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
         //TODO testing
         settingsJson = null;
         if (settingsJson == null) {
@@ -147,7 +147,9 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 @Override
                 public void onResponse(JSONObject jsonObject) {
                     AppLog.d(T.NOTIFS, "Get settings action succeeded");
-                    AppPrefs.setNotificationsSettings(jsonObject.toString());
+                    Editor editor = mSettings.edit();
+                    editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, jsonObject.toString());
+                    editor.apply();
                 }
             };
             RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
