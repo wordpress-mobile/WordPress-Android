@@ -213,6 +213,17 @@ public class WordPress extends Application {
 
         // we want to reset the suggestion table in every launch so we can get a fresh list
         SuggestionTable.reset(wpDB.getDatabase());
+
+
+        // Track app upgrade
+        int versionCode = PackageUtils.getVersionCode(this);
+        int oldVersionCode = AppPrefs.getLastAppVersionCode();
+        if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+            // app upgraded
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
+        }
+        AppPrefs.setLastAppVersionCode(versionCode);
+
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -461,6 +472,9 @@ public class WordPress extends Application {
      * Sign out from wpcom account
      */
     public static void WordPressComSignOut(Context context) {
+        // Keep the analytics tracking at the beginning, before the account data is actual removed.
+        AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
+
         removeWpComUserRelatedData(context);
 
         // broadcast an event: wpcom user signed out

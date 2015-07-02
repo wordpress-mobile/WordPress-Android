@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -46,6 +48,9 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private View mFabView;
+    private LinearLayout mNoSiteView;
+    private ScrollView mScrollView;
+    private ImageView mNoSiteDrakeImageView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -108,6 +113,9 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+        mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
+        mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +197,13 @@ public class MySiteFragment extends Fragment
             }
         });
 
+        rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.newBlogForResult(getActivity());
+            }
+        });
+
         refreshBlogDetails();
 
         return rootView;
@@ -224,6 +239,11 @@ public class MySiteFragment extends Fragment
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
+            case RequestCodes.CREATE_BLOG:
+                // if the user created a new blog refresh the blog details
+                mBlog = WordPress.getCurrentBlog();
+                refreshBlogDetails();
+                break;
         }
     }
 
@@ -252,9 +272,30 @@ public class MySiteFragment extends Fragment
     }
 
     private void refreshBlogDetails() {
-        if (!isAdded() || mBlog == null) {
+        if (!isAdded()) {
             return;
         }
+
+        if (mBlog == null) {
+            mScrollView.setVisibility(View.GONE);
+            mFabView.setVisibility(View.GONE);
+            mNoSiteView.setVisibility(View.VISIBLE);
+
+            // if the screen height is too short, we can just hide the drake illustration
+            Activity activity = getActivity();
+            boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
+            if (drakeVisibility) {
+                mNoSiteDrakeImageView.setVisibility(View.VISIBLE);
+            } else {
+                mNoSiteDrakeImageView.setVisibility(View.GONE);
+            }
+
+            return;
+        }
+
+        mScrollView.setVisibility(View.VISIBLE);
+        mFabView.setVisibility(View.VISIBLE);
+        mNoSiteView.setVisibility(View.GONE);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
@@ -273,8 +314,7 @@ public class MySiteFragment extends Fragment
     @Override
     public void onScrollToTop() {
         if (isAdded()) {
-            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
-            scrollView.smoothScrollTo(0, 0);
+            mScrollView.smoothScrollTo(0, 0);
         }
     }
 

@@ -70,8 +70,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
         mLocalTableBlogId = blog.getLocalTableBlogId();
         mIsPrivateBlog = blog.isPrivate();
-
-        // TODO: this assumes the user always has the rights to view stats for wp.com/jp blogs
         mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
 
         // on large/landscape displays we can always show all buttons
@@ -359,7 +357,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     /*
-     * hides the past post - used when the post is trashed by the user but the network request
+     * hides the post - used when the post is trashed by the user but the network request
      * to delete the post hasn't completed yet
      */
     public void hidePost(PostsListPost post) {
@@ -448,8 +446,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             // generate the featured image url for each post
             String imageUrl;
             for (PostsListPost post : tmpPosts) {
-                if (post.getFeaturedImageId() != 0) {
-                    // TODO: if media table doesn't have this image, we may want to refresh media
+                if (post.isLocalDraft()) {
+                    imageUrl = null;
+                } else if (post.getFeaturedImageId() != 0) {
                     imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, post.getFeaturedImageId());
                 } else if (post.hasDescription()) {
                     ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mIsPrivateBlog);

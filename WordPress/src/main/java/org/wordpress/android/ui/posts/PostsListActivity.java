@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +17,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ProfilingUtils;
-import org.xmlrpc.android.ApiHelper;
 
 public class PostsListActivity extends AppCompatActivity {
 
@@ -35,16 +32,20 @@ public class PostsListActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         ProfilingUtils.split("PostsListActivity.onCreate");
         ProfilingUtils.dump();
 
         setContentView(R.layout.post_list_activity);
+
+        mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -52,27 +53,15 @@ public class PostsListActivity extends AppCompatActivity {
         FragmentManager fm = getFragmentManager();
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            mIsPage = extras.getBoolean(EXTRA_VIEW_PAGES);
-            showErrorDialogIfNeeded(extras);
-        }
+        showErrorDialogIfNeeded(getIntent().getExtras());
 
-        if (mIsPage) {
-            getSupportActionBar().setTitle(getString(R.string.pages));
-        } else {
-            getSupportActionBar().setTitle(getString(R.string.posts));
-        }
+        WordPress.currentPost = null;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        bumpActivityAnalytics();
-    }
-
-    protected void bumpActivityAnalytics() {
-        ActivityId.trackLastActivity(ActivityId.POSTS);
+        ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
     }
 
     @Override
@@ -81,40 +70,40 @@ public class PostsListActivity extends AppCompatActivity {
         ActivityLauncher.slideOutToRight(this);
     }
 
-    private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
-                                          final String infoURL) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsListActivity.this);
-        dialogBuilder.setTitle(getResources().getText(R.string.error));
-        dialogBuilder.setMessage(errorMessage);
-        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
-                    }
-                }
-        );
-        if (infoTitle != null && infoURL != null) {
-            dialogBuilder.setNeutralButton(infoTitle,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoURL)));
-                    }
-                });
-        }
-        dialogBuilder.setCancelable(true);
-        if (!isFinishing())
-            dialogBuilder.create().show();
-    }
-
+    /*
+     * intent extras will contain error info if this activity was started from an
+     * upload error notification
+     */
     private void showErrorDialogIfNeeded(Bundle extras) {
-        if (extras == null) {
+        if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
             return;
         }
-        String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-        if (!TextUtils.isEmpty(errorMessage)) {
-            String errorInfoTitle = extras.getString(EXTRA_ERROR_INFO_TITLE);
-            String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
-            showPostUploadErrorAlert(errorMessage, errorInfoTitle, errorInfoLink);
+
+        final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
+        final String errorInfoTitle = extras.getString(EXTRA_ERROR_INFO_TITLE);
+        final String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
+
+        if (TextUtils.isEmpty(errorMessage)) {
+            return;
         }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getText(R.string.error))
+               .setMessage(errorMessage)
+               .setPositiveButton(R.string.ok, null)
+               .setCancelable(true);
+
+        // enable browsing error link if one exists
+        if (!TextUtils.isEmpty(errorInfoTitle) && !TextUtils.isEmpty(errorInfoLink)) {
+            builder.setNeutralButton(errorInfoTitle,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(errorInfoLink)));
+                        }
+                    });
+        }
+
+        builder.create().show();
     }
 
     public boolean isRefreshing() {
@@ -137,15 +126,8 @@ public class PostsListActivity extends AppCompatActivity {
                 && data != null
                 && data.getBooleanExtra(EditPostActivity.EXTRA_SHOULD_REFRESH, false)) {
             mPostList.getPostListAdapter().loadPosts();
-        } else if (requestCode == RequestCodes.PREVIEW_POST) {
-            // reload after post preview in case user edited post
-            mPostList.getPostListAdapter().loadPosts();
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    protected void refreshComments() {
-        new refreshCommentsTask().execute();
     }
 
     @Override
@@ -154,21 +136,5 @@ public class PostsListActivity extends AppCompatActivity {
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
-    }
-
-    private class refreshCommentsTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            Object[] commentParams = {WordPress.currentBlog.getRemoteBlogId(),
-                    WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword()};
-
-            try {
-                ApiHelper.refreshComments(WordPress.currentBlog, commentParams);
-            } catch (final Exception e) {
-                AppLog.e(AppLog.T.POSTS, e);
-            }
-            return null;
-        }
     }
 }

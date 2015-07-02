@@ -17,8 +17,10 @@
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_featured"
-            style="@style/ReaderImageView.Featured"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/postlist_featured_image_height"
             android:layout_below="@+id/layout_post_header"
+            android:scaleType="centerCrop"
             android:visibility="gone"
             tools:visibility="visible" />
 

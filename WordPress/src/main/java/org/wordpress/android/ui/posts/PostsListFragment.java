@@ -26,7 +26,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
@@ -50,11 +49,11 @@ import java.util.Vector;
 import de.greenrobot.event.EventBus;
 
 public class PostsListFragment extends Fragment
-        implements EmptyViewAnimationHandler.OnAnimationProgressListener,
-                   PostsListAdapter.OnPostsLoadedListener,
+        implements PostsListAdapter.OnPostsLoadedListener,
                    PostsListAdapter.OnLoadMoreListener,
                    PostsListAdapter.OnPostSelectedListener,
                    PostsListAdapter.OnPostButtonClickListener {
+
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -65,16 +64,10 @@ public class PostsListFragment extends Fragment
 
     private RecyclerView mRecyclerView;
     private View mEmptyView;
-    private View mEmptyViewImage;
     private ProgressBar mProgressLoadMore;
     private TextView mEmptyViewTitle;
-    private EmptyViewMessageType mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
 
-    private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
-    private boolean mSwipedToRefresh;
-    private boolean mKeepSwipeRefreshLayoutVisible;
     private boolean mDidUndoTrash;
-
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
@@ -101,7 +94,6 @@ public class PostsListFragment extends Fragment
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mEmptyView = view.findViewById(R.id.empty_view);
-        mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
         mFabView = view.findViewById(R.id.fab_button);
@@ -137,7 +129,6 @@ public class PostsListFragment extends Fragment
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
-                        mSwipedToRefresh = true;
                         refreshPosts();
                     }
                 });
@@ -194,19 +185,26 @@ public class PostsListFragment extends Fragment
         return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
     }
 
+    private void loadPosts() {
+        getPostListAdapter().loadPosts();
+    }
+
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
         initSwipeToRefreshHelper();
-        mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
         if (WordPress.getCurrentBlog() != null && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
-        // If we remove or throttle the following call, we should make PostUpload events sticky
-        requestPosts(false);
+        // request latest posts the first time this is called (ie: not after device rotation)
+        if (bundle == null) {
+            requestPosts(false);
+        }
+
+        loadPosts();
     }
 
     private void newPost() {
@@ -255,29 +253,27 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        // If user has local changes, don't refresh
+        // if user has local changes, don't refresh
         if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
             return;
         }
 
-        setRefreshing(true);
-        updateEmptyView(EmptyViewMessageType.LOADING);
-
-        int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
-        if (!loadMore) {
+        int postCount;
+        if (loadMore) {
+            postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
+            showLoadMoreProgress();
+        } else {
             mCanLoadMorePosts = true;
             postCount = POSTS_REQUEST_COUNT;
+            setRefreshing(true);
+            updateEmptyView(EmptyViewMessageType.LOADING);
         }
+
         List<Object> apiArgs = new Vector<>();
         apiArgs.add(WordPress.getCurrentBlog());
         apiArgs.add(mIsPage);
         apiArgs.add(postCount);
         apiArgs.add(loadMore);
-
-        // show progress bar at the bottom if we're loading more posts
-        if (loadMore) {
-            showLoadMoreProgress();
-        }
 
         mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
             @Override
@@ -288,13 +284,7 @@ public class PostsListFragment extends Fragment
                     return;
                 }
 
-                if (mEmptyViewAnimationHandler.isShowingLoadingAnimation() || mEmptyViewAnimationHandler.isBetweenSequences()) {
-                    // Keep the SwipeRefreshLayout animation visible until the EmptyViewAnimationHandler dismisses it
-                    mKeepSwipeRefreshLayoutVisible = true;
-                } else {
-                    setRefreshing(false);
-                }
-
+                setRefreshing(false);
                 hideLoadMoreProgress();
 
                 if (postCount == 0) {
@@ -303,7 +293,7 @@ public class PostsListFragment extends Fragment
                     mCanLoadMorePosts = false;
                 }
 
-                getPostListAdapter().loadPosts();
+                loadPosts();
             }
 
             @Override
@@ -320,17 +310,9 @@ public class PostsListFragment extends Fragment
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
                     switch (errorType) {
                         case UNAUTHORIZED:
-                            if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
-                                ToastUtils.showToast(getActivity(),
-                                        mIsPage ? R.string.error_refresh_unauthorized_pages :
-                                                R.string.error_refresh_unauthorized_posts, Duration.LONG);
-                            }
                             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
                             break;
                         default:
-                            ToastUtils.showToast(getActivity(),
-                                    mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
-                                    Duration.LONG);
                             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
                             break;
                     }
@@ -390,7 +372,7 @@ public class PostsListFragment extends Fragment
                                 return;
                             }
                             setRefreshing(false);
-                            getPostListAdapter().loadPosts();
+                            loadPosts();
                         }
 
                         @Override
@@ -433,95 +415,36 @@ public class PostsListFragment extends Fragment
         }
 
         // Refresh the posts list to revert post status back to local draft or local changes
-        getPostListAdapter().loadPosts();
+        loadPosts();
     }
 
-    private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
-        if (isPostAdapterEmpty()) {
-            // Handle animation display
-            if (mEmptyViewMessage == EmptyViewMessageType.NO_CONTENT &&
-                    emptyViewMessageType == EmptyViewMessageType.LOADING) {
-                // Show the NO_CONTENT > LOADING sequence, but only if the user swiped to refresh
-                if (mSwipedToRefresh) {
-                    mSwipedToRefresh = false;
-                    mEmptyViewAnimationHandler.showLoadingSequence();
-                    return;
-                }
-            } else if (mEmptyViewMessage == EmptyViewMessageType.LOADING &&
-                    emptyViewMessageType == EmptyViewMessageType.NO_CONTENT) {
-                // Show the LOADING > NO_CONTENT sequence
-                mEmptyViewAnimationHandler.showNoContentSequence();
+    private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
+        int stringId;
+        switch (emptyViewMessageType) {
+            case LOADING:
+                stringId = mIsPage ? R.string.pages_fetching : R.string.posts_fetching;
+                break;
+            case NO_CONTENT:
+                stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
+                break;
+            case NETWORK_ERROR:
+                stringId = R.string.no_network_message;
+                break;
+            case PERMISSION_ERROR:
+                stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
+                        R.string.error_refresh_unauthorized_posts;
+                break;
+            case GENERIC_ERROR:
+                stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
+                break;
+            default:
                 return;
-            }
-        } else {
-            // Dismiss the SwipeRefreshLayout animation if it was set to persist
-            if (mKeepSwipeRefreshLayoutVisible) {
-                setRefreshing(false);
-                mKeepSwipeRefreshLayoutVisible = false;
-            }
         }
 
-        if (mEmptyView != null) {
-            int stringId = 0;
-
-            // Don't modify the empty view image if the NO_CONTENT > LOADING sequence has already run -
-            // let the EmptyViewAnimationHandler take care of it
-            if (!mEmptyViewAnimationHandler.isBetweenSequences()) {
-                if (emptyViewMessageType == EmptyViewMessageType.NO_CONTENT) {
-                    mEmptyViewImage.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyViewImage.setVisibility(View.GONE);
-                }
-            }
-
-            switch (emptyViewMessageType) {
-                case LOADING:
-                    stringId = mIsPage ? R.string.pages_fetching : R.string.posts_fetching;
-                    break;
-                case NO_CONTENT:
-                    stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
-                    break;
-                case NETWORK_ERROR:
-                    stringId = R.string.no_network_message;
-                    break;
-                case PERMISSION_ERROR:
-                    stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
-                            R.string.error_refresh_unauthorized_posts;
-                    break;
-                case GENERIC_ERROR:
-                    stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
-                    break;
-            }
-
-            mEmptyViewTitle.setText(getText(stringId));
-            mEmptyViewMessage = emptyViewMessageType;
-        }
+        mEmptyViewTitle.setText(getText(stringId));
 
         if (isPostAdapterEmpty()) {
             mEmptyView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onSequenceStarted(EmptyViewMessageType emptyViewMessageType) {
-        mEmptyViewMessage = emptyViewMessageType;
-    }
-
-    @Override
-    public void onNewTextFadingIn() {
-        switch (mEmptyViewMessage) {
-            case LOADING:
-                mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.pages_fetching :
-                        org.wordpress.android.R.string.posts_fetching);
-                break;
-            case NO_CONTENT:
-                mEmptyViewTitle.setText(mIsPage ? org.wordpress.android.R.string.pages_empty_list :
-                        org.wordpress.android.R.string.posts_empty_list);
-                setRefreshing(false);
-                mKeepSwipeRefreshLayoutVisible = false;
-                break;
-            default:
-                break;
         }
     }
 
@@ -546,23 +469,14 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        // Now that posts have been loaded, show the empty view if there are no results to display
-        // This avoids the problem of the empty view immediately appearing when set at design time
-        mEmptyView.setVisibility(postCount == 0 ? View.VISIBLE : View.GONE);
-
-        if (!isRefreshing() || mKeepSwipeRefreshLayoutVisible) {
-            // No posts and not currently refreshing. Display the "no posts/pages" message
-            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-        }
-
-        if (postCount == 0 && mCanLoadMorePosts) {
-            // No posts, let's request some if network available
+        if (postCount == 0 && !mIsFetchingPosts) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                setRefreshing(true);
-                requestPosts(false);
+                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
             } else {
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             }
+        } else if (postCount > 0) {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -600,15 +514,12 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
                 break;
             case PostListButton.BUTTON_PUBLISH:
-                // TODO: test this, verify post list is updated after upload
                 PostUploadService.addPostToUpload(fullPost);
                 getActivity().startService(new Intent(getActivity(), PostUploadService.class));
                 break;
             case PostListButton.BUTTON_VIEW:
-                ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
-                break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), fullPost, mIsPage);
+                ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);

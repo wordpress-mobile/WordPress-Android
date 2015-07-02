@@ -23,8 +23,6 @@ import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PagesListActivity;
-import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
@@ -78,7 +76,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(Context context) {
-        Intent intent = new Intent(context, PagesListActivity.class);
+        Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         slideInFromRight(context, intent);
     }
@@ -115,16 +113,6 @@ public class ActivityLauncher {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPWebViewActivity.getBlogLoginUrl(blog));
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         slideInFromRight(context, intent);
-    }
-
-    public static void viewPostPreviewForResult(Activity activity, Post post, boolean isPage) {
-        if (post == null) return;
-
-        Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
-        intent.putExtra(PostPreviewActivity.ARG_LOCAL_BLOG_ID, post.getLocalTableBlogId());
-        intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
-        activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
