@@ -61,6 +61,9 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case APPLICATION_CLOSED:
                 eventName = "application_closed";
                 break;
+            case APPLICATION_UPGRADED:
+                eventName = "application_upgraded";
+                break;
             case THEMES_ACCESSED_THEMES_BROWSER:
                 eventName = "themes_theme_browser_accessed";
                 break;
@@ -255,6 +258,9 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
             case SIGNED_INTO_JETPACK:
                 eventName = "signed_into_jetpack";
+                break;
+            case ACCOUNT_LOGOUT:
+                eventName = "account_logout";
                 break;
             case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
                 eventName = "stats_screen_signed_into_jetpack";
