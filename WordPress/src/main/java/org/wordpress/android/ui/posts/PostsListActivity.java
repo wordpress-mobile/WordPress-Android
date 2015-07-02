@@ -70,41 +70,40 @@ public class PostsListActivity extends AppCompatActivity {
         ActivityLauncher.slideOutToRight(this);
     }
 
-    private void showPostUploadErrorAlert(String errorMessage,
-                                          String infoTitle,
-                                          final String infoURL) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsListActivity.this);
-        dialogBuilder.setTitle(getResources().getText(R.string.error));
-        dialogBuilder.setMessage(errorMessage);
-        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
-                    }
-                }
-        );
-        if (infoTitle != null && infoURL != null) {
-            dialogBuilder.setNeutralButton(infoTitle,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoURL)));
-                    }
-                });
-        }
-        dialogBuilder.setCancelable(true);
-        if (!isFinishing())
-            dialogBuilder.create().show();
-    }
-
+    /*
+     * intent extras will contain error info if this activity was started from an
+     * upload error notification
+     */
     private void showErrorDialogIfNeeded(Bundle extras) {
-        if (extras == null) {
+        if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
             return;
         }
-        String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-        if (!TextUtils.isEmpty(errorMessage)) {
-            String errorInfoTitle = extras.getString(EXTRA_ERROR_INFO_TITLE);
-            String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
-            showPostUploadErrorAlert(errorMessage, errorInfoTitle, errorInfoLink);
+
+        final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
+        final String errorInfoTitle = extras.getString(EXTRA_ERROR_INFO_TITLE);
+        final String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
+
+        if (TextUtils.isEmpty(errorMessage)) {
+            return;
         }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getText(R.string.error))
+               .setMessage(errorMessage)
+               .setPositiveButton(R.string.ok, null)
+               .setCancelable(true);
+
+        // enable browsing error link if one exists
+        if (!TextUtils.isEmpty(errorInfoTitle) && !TextUtils.isEmpty(errorInfoLink)) {
+            builder.setNeutralButton(errorInfoTitle,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(errorInfoLink)));
+                        }
+                    });
+        }
+
+        builder.create().show();
     }
 
     public boolean isRefreshing() {
