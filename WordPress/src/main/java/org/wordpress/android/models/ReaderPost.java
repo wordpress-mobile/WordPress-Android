@@ -58,6 +58,8 @@ public class ReaderPost {
 
     private String attachmentsJson;
 
+    private ReaderPostDiscoverData discoverData;
+
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
             throw new IllegalArgumentException("null json post");
@@ -159,6 +161,12 @@ public class ReaderPost {
             post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
+        }
+
+        // "discovery" posts
+        JSONObject jsonDiscover = json.optJSONObject("discover_metadata");
+        if (jsonDiscover != null) {
+            post.discoverData = new ReaderPostDiscoverData(jsonDiscover);
         }
 
         // if there's no featured image, check if featured media has been set - this is sometimes
@@ -455,6 +463,10 @@ public class ReaderPost {
 
     public boolean hasBlogUrl() {
         return !TextUtils.isEmpty(blogUrl);
+    }
+
+    public boolean hasDiscoverData() {
+        return discoverData != null;
     }
 
     /*
