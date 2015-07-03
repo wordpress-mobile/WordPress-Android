@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 101;
+    private static final int DB_VERSION = 102;
 
     /*
      * version history
@@ -53,6 +53,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   99 - added feed_url to tbl_blog_info
      *  100 - changed primary key on tbl_blog_info
      *  101 - dropped is_reblogged from ReaderPostTable
+     *  102 - added discover_json to ReaderPostTable
      */
 
     /*

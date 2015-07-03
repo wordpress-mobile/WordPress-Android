@@ -57,8 +57,7 @@ public class ReaderPost {
     public boolean isSharingEnabled;    // currently unused
 
     private String attachmentsJson;
-
-    private ReaderPostDiscoverData discoverData;
+    private String discoverJson;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -166,7 +165,7 @@ public class ReaderPost {
         // "discovery" posts
         JSONObject jsonDiscover = json.optJSONObject("discover_metadata");
         if (jsonDiscover != null) {
-            post.discoverData = new ReaderPostDiscoverData(jsonDiscover);
+            post.setDiscoverJson(jsonDiscover.toString());
         }
 
         // if there's no featured image, check if featured media has been set - this is sometimes
@@ -425,6 +424,16 @@ public class ReaderPost {
         return !TextUtils.isEmpty(attachmentsJson);
     }
 
+    public String getDiscoverJson() {
+        return StringUtils.notNullStr(discoverJson);
+    }
+    public void setDiscoverJson(String json) {
+        discoverJson = StringUtils.notNullStr(json);
+    }
+    public boolean hasDiscoverData() {
+        return !TextUtils.isEmpty(discoverJson);
+    }
+
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
     }
@@ -463,10 +472,6 @@ public class ReaderPost {
 
     public boolean hasBlogUrl() {
         return !TextUtils.isEmpty(blogUrl);
-    }
-
-    public boolean hasDiscoverData() {
-        return discoverData != null;
     }
 
     /*
