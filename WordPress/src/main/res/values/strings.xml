@@ -583,7 +583,9 @@
     <string name="notifications_comments_other_blogs">Comments on other blogs</string>
     <string name="timeline">Timeline</string>
     <string name="email">Email</string>
-    <string name="push_notifications">Push notifications</string>
+    <string name="mobile_notifications">Mobile notifications</string>
+    <string name="comment_likes">Comment likes</string>
+    <string name="replies_to_your_comments">Replies to your comments</string>
     <string-array name="notifications_site_settings">
         <item>Comments</item>
         <item>Comment likes</item>
@@ -599,6 +601,14 @@
         <item>follow</item>
         <item>achievement</item>
         <item>mentions</item>
+    </string-array>
+    <string-array name="notifications_other_settings">
+        <item>Comment likes</item>
+        <item>Replies to your comments</item>
+    </string-array>
+    <string-array name="notifications_other_settings_values" translatable="false">
+        <item>comment-like</item>
+        <item>comment-reply</item>
     </string-array>
 
     <!-- reader -->

@@ -19,23 +19,29 @@ import org.wordpress.android.util.StringUtils;
 
 import javax.annotation.Nonnull;
 
-// A dialog preference that displays notification settings for a specified NotificationSettings.Type
+// A dialog preference that displays settings for a NotificationSettings Channel and Type
 public class NotificationsSettingsDialogPreference extends DialogPreference {
+    private NotificationsSettings.Channel mChannel;
     private NotificationsSettings.Type mType;
     private JSONObject mSettingsJson;
     private JSONObject mUpdatedJson = new JSONObject();
-    private OnNotificationsSettingsChangedListener mOnNotificationsSettingsChangedListener;
 
-    public interface OnNotificationsSettingsChangedListener {
-        void OnNotificationsSettingsChanged(NotificationsSettings.Type type, JSONObject newValues);
+    private long mSiteId;
+
+    private OnSiteSettingsChangedListener mOnNotificationsSettingsChangedListener;
+
+    public interface OnSiteSettingsChangedListener {
+        void OnNotificationsSettingsChanged(NotificationsSettings.Channel channel, NotificationsSettings.Type type, long siteId, JSONObject newValues);
     }
 
-    public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs,
-                                                 NotificationsSettings.Type type, JSONObject settings,
-                                                 OnNotificationsSettingsChangedListener listener) {
+    public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs, NotificationsSettings.Channel channel,
+                                                 NotificationsSettings.Type type, long siteId, JSONObject settings,
+                                                 OnSiteSettingsChangedListener listener) {
         super(context, attrs);
 
+        mChannel = channel;
         mType = type;
+        mSiteId = siteId;
         mSettingsJson = settings;
         mOnNotificationsSettingsChangedListener = listener;
     }
@@ -51,8 +57,19 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         view.setOrientation(LinearLayout.VERTICAL);
 
-        String[] settingsArray = getContext().getResources().getStringArray(R.array.notifications_site_settings);
-        String[] settingsValues = getContext().getResources().getStringArray(R.array.notifications_site_settings_values);
+
+        return configureLayoutForView(view);
+    }
+
+    private View configureLayoutForView(LinearLayout view) {
+        String[] settingsArray, settingsValues;
+        if (mChannel == NotificationsSettings.Channel.SITES) {
+            settingsArray = getContext().getResources().getStringArray(R.array.notifications_site_settings);
+            settingsValues = getContext().getResources().getStringArray(R.array.notifications_site_settings_values);
+        } else {
+            settingsArray = getContext().getResources().getStringArray(R.array.notifications_other_settings);
+            settingsValues = getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
+        }
 
         if (settingsArray != null && settingsArray.length == settingsValues.length) {
             for (int i=0; i < settingsArray.length; i++) {
@@ -66,21 +83,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 Switch toggleSwitch = (Switch)commentsSetting.findViewById(R.id.notifications_switch);
                 toggleSwitch.setChecked(JSONUtils.queryJSON(mSettingsJson, settingValue, true));
                 toggleSwitch.setTag(settingValue);
-                toggleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        try {
-                            String settingName = StringUtils.notNullStr(compoundButton.getTag().toString());
-                            if (mUpdatedJson.has(settingName)) {
-                                mUpdatedJson.remove(settingName);
-                            } else {
-                                mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
-                            }
-                        } catch (JSONException e) {
-                            AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
-                        }
-                    }
-                });
+                toggleSwitch.setOnCheckedChangeListener(mOnCheckedChangedListener);
 
                 view.addView(commentsSetting);
             }
@@ -89,10 +92,28 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         return view;
     }
 
+    private CompoundButton.OnCheckedChangeListener mOnCheckedChangedListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+            try {
+                String settingName = StringUtils.notNullStr(compoundButton.getTag().toString());
+                if (mUpdatedJson.has(settingName)) {
+                    mUpdatedJson.remove(settingName);
+                } else {
+                    mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
+                }
+
+                mSettingsJson.put(compoundButton.getTag().toString(), isChecked);
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
+            }
+        }
+    };
+
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult && mUpdatedJson.length() > 0 && mOnNotificationsSettingsChangedListener != null) {
-            mOnNotificationsSettingsChangedListener.OnNotificationsSettingsChanged(mType, mUpdatedJson);
+            mOnNotificationsSettingsChangedListener.OnNotificationsSettingsChanged(mChannel, mType, mSiteId, mUpdatedJson);
         }
     }
 }

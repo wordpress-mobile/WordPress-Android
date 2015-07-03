@@ -71,7 +71,7 @@ public class NotificationsUtils {
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
     public static final String WPCOM_PUSH_AUTH_TOKEN = "wp_pref_push_auth_token";
 
-    private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
+    public static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
 
     private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
@@ -102,23 +102,6 @@ public class NotificationsUtils {
         WordPress.getRestClientUtilsV1_1().get("/me/notifications/settings/?device_id=" + deviceID, listener, errorListener);
     }
 
-    public static void setPushNotificationSettings(Context context, JSONObject newSettings) {
-        if (context == null || !AccountHelper.isSignedInWordPressDotCom()) {
-            return;
-        }
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
-        if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "device_ID is null in preferences. Set device settings skipped.");
-            return;
-        }
-
-        Map<String, String> paramsMap = new HashMap<>();
-        paramsMap.put("", newSettings.toString());
-        WordPress.getRestClientUtils().post("/device/"+deviceID, paramsMap, null, null, null);
-    }
-
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String uuid = settings.getString(WPCOM_PUSH_DEVICE_UUID, null);
@@ -131,9 +114,9 @@ public class NotificationsUtils {
         contentStruct.put("device_family", "android");
         contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
         contentStruct.put("device_name", deviceName);
-        contentStruct.put("device_model",  Build.MANUFACTURER + " " + Build.MODEL);
+        contentStruct.put("device_model", Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
-        contentStruct.put("os_version",  Build.VERSION.RELEASE);
+        contentStruct.put("os_version", Build.VERSION.RELEASE);
         contentStruct.put("device_uuid", uuid);
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override

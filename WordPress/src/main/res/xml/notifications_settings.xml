@@ -6,9 +6,9 @@
         android:key="@string/pref_notification_blogs">
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/notifications_other_blogs"
-        android:key="@string/pref_notification_other_blogs">
-        <Preference android:title="@string/notifications_comments_other_blogs"
+        android:title="@string/notifications_other_blogs">
+        <PreferenceScreen android:key="@string/pref_notification_other_blogs"
+            android:title="@string/notifications_comments_other_blogs"
             android:summary="@string/notifications_other_blogs_summary" />
     </PreferenceCategory>
     <PreferenceCategory

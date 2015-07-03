@@ -42,7 +42,7 @@ public class NotificationsSettings {
         }
     }
 
-    private enum Channel {
+    public enum Channel {
         OTHER,
         SITES,
         WPCOM
