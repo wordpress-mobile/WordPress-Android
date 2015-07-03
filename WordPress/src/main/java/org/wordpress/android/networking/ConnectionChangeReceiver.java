@@ -14,7 +14,7 @@ import de.greenrobot.event.EventBus;
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
 
-    private boolean mWasConnected = true;
+    private static boolean mWasConnected = true;
 
     public static class ConnectionChangeEvent {
         private final boolean mIsConnected;
