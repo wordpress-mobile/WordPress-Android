@@ -103,7 +103,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating post");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdatePostResponse(final ReaderPost originalPost,
@@ -223,6 +223,6 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "requesting post");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 }

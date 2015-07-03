@@ -195,7 +195,7 @@ public class ReaderPostService extends Service {
             }
         };
 
-        WordPress.getRestClientUtilsV1_1().get(sb.toString(), null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
     }
 
 
@@ -226,7 +226,7 @@ public class ReaderPostService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "updating posts in blog " + blogId);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     private static void requestPostsForFeed(final long feedId,
@@ -255,7 +255,7 @@ public class ReaderPostService extends Service {
         };
 
         AppLog.d(AppLog.T.READER, "updating posts in feed " + feedId);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     /*
