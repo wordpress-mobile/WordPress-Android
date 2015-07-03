@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -85,6 +86,21 @@ public class WPMainActivity extends Activity
         mViewPager.setAdapter(mTabAdapter);
 
         mConnectionBar = (TextView) findViewById(R.id.connection_bar);
+        mConnectionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // slide out the bar on click, then re-check connection after a brief delay
+                AniUtils.animateBottomBar(mConnectionBar, false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isFinishing()) {
+                            checkConnection();
+                        }
+                    }
+                }, 2000);
+            }
+        });
         mTabLayout = (WPMainTabLayout) findViewById(R.id.tab_layout);
         mTabLayout.createTabs();
 
