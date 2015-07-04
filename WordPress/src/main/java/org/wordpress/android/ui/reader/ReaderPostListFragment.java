@@ -1345,7 +1345,13 @@ public class ReaderPostListFragment extends Fragment
         if (post.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
             if (discoverData != null && discoverData.getBlogId() != 0) {
-                ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
+                // if there's no postId then this is a discover post highlighting a blog, so show
+                // the blog preview rather than post detail
+                if (discoverData.getPostId() == 0) {
+                    ReaderActivityLauncher.showReaderBlogPreview(getActivity(), discoverData.getBlogId());
+                } else {
+                    ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
+                }
                 return;
             }
         }
