@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -66,6 +67,7 @@ public class PostsListFragment extends Fragment
     private View mEmptyView;
     private ProgressBar mProgressLoadMore;
     private TextView mEmptyViewTitle;
+    private ImageView mEmptyViewImage;
 
     private boolean mDidUndoTrash;
     private boolean mCanLoadMorePosts = true;
@@ -93,10 +95,12 @@ public class PostsListFragment extends Fragment
         View view = inflater.inflate(R.layout.post_list_fragment, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mEmptyView = view.findViewById(R.id.empty_view);
-        mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
         mFabView = view.findViewById(R.id.fab_button);
+
+        mEmptyView = view.findViewById(R.id.empty_view);
+        mEmptyViewTitle = (TextView) mEmptyView.findViewById(R.id.title_empty);
+        mEmptyViewImage = (ImageView) mEmptyView.findViewById(R.id.image_empty);
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -199,12 +203,12 @@ public class PostsListFragment extends Fragment
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
+        loadPosts();
+
         // request latest posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
             requestPosts(false);
         }
-
-        loadPosts();
     }
 
     private void newPost() {
@@ -442,10 +446,8 @@ public class PostsListFragment extends Fragment
         }
 
         mEmptyViewTitle.setText(getText(stringId));
-
-        if (isPostAdapterEmpty()) {
-            mEmptyView.setVisibility(View.VISIBLE);
-        }
+        mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE : View.GONE);
+        mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -535,7 +537,7 @@ public class PostsListFragment extends Fragment
      * send the passed post to the trash with undo
      */
     private void trashPost(final PostsListPost post) {
-        if (!NetworkUtils.checkConnection(getActivity())) {
+        if (!isAdded() || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
