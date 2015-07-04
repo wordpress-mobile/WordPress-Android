@@ -425,11 +425,17 @@ public class ReaderPost {
         return !TextUtils.isEmpty(attachmentsJson);
     }
 
+    /*
+     * "discover" posts also store the actual JSON
+     */
     public String getDiscoverJson() {
         return StringUtils.notNullStr(discoverJson);
     }
     public void setDiscoverJson(String json) {
         discoverJson = StringUtils.notNullStr(json);
+    }
+    public boolean isDiscoverPost() {
+        return !TextUtils.isEmpty(discoverJson);
     }
 
     private transient ReaderPostDiscoverData discoverData;

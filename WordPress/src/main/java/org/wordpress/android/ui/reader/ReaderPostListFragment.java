@@ -40,6 +40,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.RequestCodes;
@@ -1337,8 +1338,17 @@ public class ReaderPostListFragment extends Fragment
      * called from adapter when user taps a post
      */
     @Override
-    public void onPostSelected(long blogId, long postId) {
-        if (!isAdded()) return;
+    public void onPostSelected(ReaderPost post) {
+        if (!isAdded() || post == null) return;
+
+        // "discover" posts should open the original (source) post when tapped
+        if (post.isDiscoverPost()) {
+            ReaderPostDiscoverData discoverData = post.getDiscoverData();
+            if (discoverData != null && discoverData.getBlogId() != 0) {
+                ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
+                return;
+            }
+        }
 
         ReaderPostListType type = getPostListType();
         Map<String, Object> analyticsProperties = new HashMap<>();
@@ -1354,16 +1364,16 @@ public class ReaderPostListFragment extends Fragment
                         getActivity(),
                         getCurrentTag(),
                         getPostListType(),
-                        blogId,
-                        postId);
+                        post.blogId,
+                        post.postId);
                 break;
             case BLOG_PREVIEW:
                 analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
                         AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
-                        blogId,
-                        postId);
+                        post.blogId,
+                        post.postId);
                 break;
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE, analyticsProperties);

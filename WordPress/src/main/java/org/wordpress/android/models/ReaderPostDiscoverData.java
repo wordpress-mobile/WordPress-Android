@@ -10,7 +10,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.StringUtils;
 
 /**
- * additional data for "discovery" posts in the reader
+ * additional data for "discover" posts in the reader - these are posts chosen by
+ * Editorial which highlight other posts - in the reader we show an attribution
+ * line for these posts, and when tapped they open the original post - the like
+ * and comment counts come from the original post
  */
 public class ReaderPostDiscoverData {
     private String authorName;
@@ -22,8 +25,9 @@ public class ReaderPostDiscoverData {
 
     private long blogId;
     private long postId;
-    private int numLikes;
-    private int numComments;
+
+    public int numLikes;
+    public int numComments;
 
     /*
      * passed JSONObject is the "discover_metadata" section of a reader post
