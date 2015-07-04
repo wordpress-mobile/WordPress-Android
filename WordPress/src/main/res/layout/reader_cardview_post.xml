@@ -106,10 +106,44 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 tools:text="text_excerpt" />
 
+            <!-- attribution section for discover posts -->
+            <LinearLayout
+                android:id="@+id/layout_discover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_excerpt"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/reader_card_content_padding"
+                android:layout_marginTop="@dimen/margin_large"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <org.wordpress.android.widgets.WPNetworkImageView
+                    android:id="@+id/image_discover_avatar"
+                    style="@style/ReaderImageView.Avatar.Small"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:background="?android:selectableItemBackground"
+                    tools:src="@drawable/gravatar_placeholder" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/text_discover"
+                    style="@style/ReaderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_sz_small"
+                    tools:text="text_attribution" />
+
+            </LinearLayout>
+
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_tag"
                 style="@style/ReaderTextView.Post.Tag"
-                android:layout_below="@+id/text_excerpt"
+                android:layout_below="@+id/layout_discover"
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
                 android:layout_marginTop="@dimen/margin_small"
                 android:paddingBottom="@dimen/margin_small"
@@ -140,9 +174,9 @@
                     android:id="@+id/text_date"
                     style="@style/ReaderTextView.Date"
                     android:layout_width="0dp"
-                    android:gravity="center_vertical"
                     android:layout_height="@dimen/reader_button_icon"
                     android:layout_weight="2"
+                    android:gravity="center_vertical"
                     tools:text="text_date" />
 
                 <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -160,7 +194,6 @@
                     wp:readerIcon="like" />
 
             </LinearLayout>
-
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

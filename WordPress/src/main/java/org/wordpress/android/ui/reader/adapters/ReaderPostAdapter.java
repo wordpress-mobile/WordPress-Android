@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -32,7 +35,9 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -41,7 +46,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
-    private final int mAvatarSz;
+    private final int mAvatarSzMedium;
+    private final int mAvatarSzSmall;
     private final int mMarginLarge;
 
     private boolean mCanRequestMorePosts;
@@ -82,6 +88,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ViewGroup layoutPostHeader;
         private final View toolbarSpacer;
 
+        private final ViewGroup layoutDiscover;
+        private final WPNetworkImageView imgDiscoverAvatar;
+        private final TextView txtDiscover;
+
         public ReaderPostViewHolder(View itemView) {
             super(itemView);
 
@@ -103,6 +113,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
             toolbarSpacer = itemView.findViewById(R.id.spacer_toolbar);
+
+            layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
+            imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
+            txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
         }
     }
 
@@ -129,7 +143,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.layoutPostHeader.setVisibility(View.GONE);
         } else {
             postHolder.layoutPostHeader.setVisibility(View.VISIBLE);
-            postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+            postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
             if (post.hasBlogName()) {
                 postHolder.txtBlogName.setText(post.getBlogName());
             } else if (post.hasAuthorName()) {
@@ -265,6 +279,24 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.imgMore.setOnClickListener(null);
         }
 
+        // discover data
+        if (post.hasDiscoverData()) {
+            try {
+                ReaderPostDiscoverData discoverData = new ReaderPostDiscoverData(post.getDiscoverJson());
+                postHolder.layoutDiscover.setVisibility(View.VISIBLE);
+                postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                // TODO: replace hard-coded text
+                String s = "Originally posted by <a href='" + discoverData.getAuthorUrl() + "'>" + discoverData.getAuthorName() + "</a>"
+                         + " on <a href='" + discoverData.getBlogUrl() + "'>" + discoverData.getBlogName() + "</a>";
+                postHolder.txtDiscover.setText(Html.fromHtml(s));
+                postHolder.txtDiscover.setMovementMethod(WPLinkMovementMethod.getInstance());
+            } catch (JSONException e) {
+                postHolder.layoutDiscover.setVisibility(View.GONE);
+            }
+        } else {
+            postHolder.layoutDiscover.setVisibility(View.GONE);
+        }
+
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getItemCount() - 1)) {
             mDataRequestedListener.onRequestData();
@@ -286,7 +318,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         super();
 
         mPostListType = postListType;
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
