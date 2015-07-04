@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.util.StringUtils;
@@ -29,9 +28,6 @@ public class ReaderPostDiscoverData {
     /*
      * passed JSONObject is the "discover_metadata" section of a reader post
      */
-    public ReaderPostDiscoverData(@NonNull String jsonString) throws JSONException {
-        this(new JSONObject(jsonString));
-    }
     public ReaderPostDiscoverData(@NonNull JSONObject json) {
         setPermaLink(json.optString("permalink"));
 
@@ -51,6 +47,14 @@ public class ReaderPostDiscoverData {
             numLikes = jsonWpcomData.optInt("like_count");
             numComments = jsonWpcomData.optInt("comment_count");
         }
+    }
+
+    public long getBlogId() {
+        return blogId;
+    }
+
+    public long getPostId() {
+        return postId;
     }
 
     public String getAuthorName() {

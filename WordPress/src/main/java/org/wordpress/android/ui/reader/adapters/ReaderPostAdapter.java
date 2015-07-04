@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -279,16 +278,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         // discover data
-        if (post.hasDiscoverData()) {
-            try {
-                ReaderPostDiscoverData discoverData = new ReaderPostDiscoverData(post.getDiscoverJson());
-                postHolder.layoutDiscover.setVisibility(View.VISIBLE);
-                postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
-                postHolder.txtDiscover.setText(discoverData.getAttributionHtml(postHolder.txtDiscover.getContext()));
-                postHolder.txtDiscover.setMovementMethod(WPLinkMovementMethod.getInstance());
-            } catch (JSONException e) {
-                postHolder.layoutDiscover.setVisibility(View.GONE);
-            }
+        ReaderPostDiscoverData discoverData = post.getDiscoverData();
+        if (discoverData != null) {
+            postHolder.layoutDiscover.setVisibility(View.VISIBLE);
+            postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+            postHolder.txtDiscover.setText(discoverData.getAttributionHtml(postHolder.txtDiscover.getContext()));
+            postHolder.txtDiscover.setMovementMethod(WPLinkMovementMethod.getInstance());
         } else {
             postHolder.layoutDiscover.setVisibility(View.GONE);
         }
@@ -302,6 +297,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    long blogId;
+                    long postId;
+                    // "discover" posts should open the original (source) post when tapped
+                    ReaderPostDiscoverData discoverData = post.getDiscoverData();
+                    if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
+                        blogId = discoverData.getBlogId();
+                        postId = discoverData.getPostId();
+                    } else {
+                        blogId = post.blogId;
+                        postId = post.postId;
+                    }
                     mPostSelectedListener.onPostSelected(post.blogId, post.postId);
                 }
             });

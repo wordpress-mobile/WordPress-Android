@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
@@ -162,7 +163,7 @@ public class ReaderPost {
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
         }
 
-        // "discovery" posts
+        // "discover" posts
         JSONObject jsonDiscover = json.optJSONObject("discover_metadata");
         if (jsonDiscover != null) {
             post.setDiscoverJson(jsonDiscover.toString());
@@ -430,8 +431,17 @@ public class ReaderPost {
     public void setDiscoverJson(String json) {
         discoverJson = StringUtils.notNullStr(json);
     }
-    public boolean hasDiscoverData() {
-        return !TextUtils.isEmpty(discoverJson);
+
+    private transient ReaderPostDiscoverData discoverData;
+    public ReaderPostDiscoverData getDiscoverData() {
+        if (discoverData == null && !TextUtils.isEmpty(discoverJson)) {
+            try {
+                discoverData = new ReaderPostDiscoverData(new JSONObject(discoverJson));
+            } catch (JSONException e) {
+                return null;
+            }
+        }
+        return discoverData;
     }
 
     public boolean hasText() {
