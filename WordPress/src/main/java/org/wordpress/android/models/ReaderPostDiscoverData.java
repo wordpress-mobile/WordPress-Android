@@ -1,9 +1,13 @@
 package org.wordpress.android.models;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.Html;
+import android.text.Spanned;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.util.StringUtils;
 
 /**
@@ -89,5 +93,17 @@ public class ReaderPostDiscoverData {
     }
     public void setPermaLink(String permaLink) {
         this.permaLink = permaLink;
+    }
+
+    /*
+     * returns the spanned html for the attribution line, "Originally posted by [AuthorName] in [BlogName]"
+     */
+    public Spanned getAttributionHtml(Context context) {
+        // TODO: this means that clicking the blog link opens the blog in the browser, but we want
+        // to open the blog preview inside the app instead
+        String blogLink = "<a href='" + getBlogUrl() + "'>" + getBlogName()  + "</a>";
+        String authorLink = "<a href='" + getAuthorUrl() + "'>" + getAuthorName()  + "</a>";
+        String html = context.getString(R.string.reader_discover_attribution, authorLink, blogLink);
+        return Html.fromHtml(html);
     }
 }

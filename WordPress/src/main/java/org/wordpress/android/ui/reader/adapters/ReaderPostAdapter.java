@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -285,10 +284,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ReaderPostDiscoverData discoverData = new ReaderPostDiscoverData(post.getDiscoverJson());
                 postHolder.layoutDiscover.setVisibility(View.VISIBLE);
                 postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
-                // TODO: replace hard-coded text
-                String s = "Originally posted by <a href='" + discoverData.getAuthorUrl() + "'>" + discoverData.getAuthorName() + "</a>"
-                         + " on <a href='" + discoverData.getBlogUrl() + "'>" + discoverData.getBlogName() + "</a>";
-                postHolder.txtDiscover.setText(Html.fromHtml(s));
+                postHolder.txtDiscover.setText(discoverData.getAttributionHtml(postHolder.txtDiscover.getContext()));
                 postHolder.txtDiscover.setMovementMethod(WPLinkMovementMethod.getInstance());
             } catch (JSONException e) {
                 postHolder.layoutDiscover.setVisibility(View.GONE);

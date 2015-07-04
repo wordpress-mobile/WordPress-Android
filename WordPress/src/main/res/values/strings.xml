@@ -774,6 +774,9 @@
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
 
+    <!--example: "Originally posted by [AuthorName] on [BlogName] -->
+    <string name="reader_discover_attribution">Originally posted by %1$s on %2$s</string>
+
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
     <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>

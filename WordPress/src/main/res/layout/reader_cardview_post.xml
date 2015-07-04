@@ -114,6 +114,7 @@
                 android:layout_below="@+id/text_excerpt"
                 android:layout_marginBottom="@dimen/margin_small"
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
+                android:layout_marginRight="@dimen/reader_card_content_padding"
                 android:layout_marginTop="@dimen/margin_large"
                 android:orientation="horizontal"
                 android:visibility="gone"
