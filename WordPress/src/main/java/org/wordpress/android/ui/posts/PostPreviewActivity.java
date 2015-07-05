@@ -150,7 +150,7 @@ public class PostPreviewActivity extends AppCompatActivity {
                 + "  body, p, div { max-width: 100% !important; word-wrap: break-word; }"
                 + "  p, div { line-height: 1.6em; font-size: 0.95em; }"
                 + "  h1 { font-size: 1.2em; font-family: Merriweather, serif; font-weight: 700; }"
-                + "  img { max-width: 100%; }"
+                + "  img { max-width: 100%; height: auto; }"
                 + "  a { text-decoration: none; color: " + linkColorStr + "; }"
                 + "</style></head><body>"
                 + "<h1>" + title + "</h1>"
