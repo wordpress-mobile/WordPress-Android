@@ -9,33 +9,10 @@
 
     <include layout="@layout/toolbar" />
 
-    <LinearLayout
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/content_margin"
-        android:paddingRight="@dimen/content_margin">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_post_title"
-            style="@style/ReaderTextView.Post.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_large"
-            app:fontFamily="merriweather"
-            tools:text="text_post_title" />
-
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large" />
-
-    </LinearLayout>
-
+        android:scrollbarStyle="outsideInset" />
 
 </LinearLayout>
