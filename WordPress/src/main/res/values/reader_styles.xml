@@ -83,6 +83,8 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="fontFamily">merriweather</item>
+        <item name="fontVariation">light</item>
     </style>
     <style name="ReaderTextView.Comment.Action" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>

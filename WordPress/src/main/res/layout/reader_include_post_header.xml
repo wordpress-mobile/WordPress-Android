@@ -4,6 +4,7 @@
     post header on reader comment activity
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_post_header"
     android:layout_width="match_parent"
@@ -47,6 +48,8 @@
             android:maxLines="2"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
+            app:fontFamily="merriweather"
+            app:fontVariation="light"
             tools:text="text_post_title" />
     </RelativeLayout>
 
