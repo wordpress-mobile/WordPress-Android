@@ -142,23 +142,16 @@ public class PostPreviewActivity extends AppCompatActivity {
         String textColorStr = HtmlUtils.colorResToHtmlColor(this, R.color.grey_dark);
         String linkColorStr = HtmlUtils.colorResToHtmlColor(this, R.color.reader_hyperlink);
 
-        StringBuilder sbHtml = new StringBuilder();
-
-        sbHtml.append("<!DOCTYPE html><html><head><meta charset='UTF-8' />")
-              .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
-              .append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Merriweather:300' />")
-              .append("<style type='text/css'>")
-              .append("  body { font-family: Merriweather, serif; margin: 0px; padding: 0px; width: 100%; color: ").append(textColorStr).append("; }")
-              .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
-              .append("  p, div { line-height: 1.6em; font-size: 0.95em; }")
-              .append("  h1, h2 { line-height: 1.2em; }")
-              .append("  img { max-width: 100%; }")
-              .append("  a { text-decoration: none; color: ").append(linkColorStr).append("; }")
-              .append("</style>")
-              .append("</head><body>")
-              .append(StringUtils.addPTags(content))
-              .append("</body></html>");
-
-        return sbHtml.toString();
+        return "<!DOCTYPE html><html><head><meta charset='UTF-8' />"
+                + "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+                + "<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Merriweather:300' />"
+                + "<style type='text/css'>"
+                + "  body { font-family: Merriweather, serif; margin: 0px; padding: 0px; width: 100%; color: " + textColorStr + "; }"
+                + "  body, p, div { max-width: 100% !important; word-wrap: break-word; }"
+                + "  p, div { line-height: 1.6em; font-size: 0.95em; }"
+                + "  h1, h2 { line-height: 1.2em; }"
+                + "  img { max-width: 100%; }"
+                + "  a { text-decoration: none; color: " + linkColorStr + "; }"
+                + "</style></head><body>" + StringUtils.addPTags(content) + "</body></html>";
     }
 }
