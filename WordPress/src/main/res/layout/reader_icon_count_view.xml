@@ -20,7 +20,7 @@
         android:background="@drawable/reader_count_background"
         android:textColor="@color/reader_count_text"
         android:textSize="@dimen/text_sz_small"
-        android:layout_marginLeft="-6dp"
+        android:layout_marginLeft="-10dp"
         android:visibility="gone"
         tools:text="2"
         tools:visibility="visible" />

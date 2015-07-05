@@ -305,7 +305,7 @@ class ReaderPostRenderer {
         .append("<style type='text/css'>")
         .append("  body { font-family: Merriweather, serif; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
-        .append("  p, div { line-height: 1.6em; font-size: 0.9em; }")
+        .append("  p, div, li { line-height: 1.6em; font-size: 0.95em; }")
         .append("  h1, h2 { line-height: 1.2em; }")
 
         // counteract pre-defined height/width styles
