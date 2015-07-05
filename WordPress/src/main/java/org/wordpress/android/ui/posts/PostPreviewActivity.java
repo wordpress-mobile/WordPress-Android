@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -20,10 +17,9 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPWebViewClient;
 
 public class PostPreviewActivity extends AppCompatActivity {
@@ -32,10 +28,10 @@ public class PostPreviewActivity extends AppCompatActivity {
     public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
     public static final String ARG_IS_PAGE = "is_page";
 
-    private WebView mWebView;
     private TextView mTitleTextView;
-    private TextView mContentTextView;
+    private WebView mWebView;
     private long mLocalPostId;
+    private int mLocalBlogId;
     private boolean mIsPage;
 
     @Override
@@ -52,24 +48,30 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
 
         mTitleTextView = (TextView) findViewById(R.id.text_post_title);
-        mContentTextView = (TextView) findViewById(R.id.text_post_content);
         mWebView = (WebView) findViewById(R.id.webView);
 
-        int localBlogId;
         if (savedInstanceState != null) {
             mLocalPostId = savedInstanceState.getLong(ARG_LOCAL_POST_ID);
-            localBlogId = savedInstanceState.getInt(ARG_LOCAL_BLOG_ID);
+            mLocalBlogId = savedInstanceState.getInt(ARG_LOCAL_BLOG_ID);
             mIsPage = savedInstanceState.getBoolean(ARG_IS_PAGE);
         } else {
             mLocalPostId = getIntent().getLongExtra(ARG_LOCAL_POST_ID, 0);
-            localBlogId = getIntent().getIntExtra(ARG_LOCAL_BLOG_ID, 0);
+            mLocalBlogId = getIntent().getIntExtra(ARG_LOCAL_BLOG_ID, 0);
             mIsPage = getIntent().getBooleanExtra(ARG_IS_PAGE, false);
         }
 
-        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localBlogId);
+        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId);
         mWebView.setWebViewClient(new WPWebViewClient(blog));
 
         loadPost();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putLong(ARG_LOCAL_POST_ID, mLocalPostId);
+        outState.putInt(ARG_LOCAL_BLOG_ID, mLocalBlogId);
+        outState.putBoolean(ARG_IS_PAGE, mIsPage);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -112,59 +114,51 @@ public class PostPreviewActivity extends AppCompatActivity {
             return;
         }
 
-        // if this is a local draft, we use a TextView for previewing in order to support local media
-        final boolean useWebViewPreview = !post.isLocalDraft();
+        String title = (TextUtils.isEmpty(post.getTitle())
+                ? "(" + getResources().getText(R.string.untitled) + ")"
+                : StringUtils.unescapeHTML(post.getTitle()));
+        mTitleTextView.setText(title);
 
-        // determine content in the background to avoid ANR - especially important
-        // when using WPHtml.fromHtml() for drafts that contain images since
-        // thumbnails may take some time to create
-        new Thread() {
-            @Override
-            public void run() {
-                final String title = (TextUtils.isEmpty(post.getTitle())
-                        ? "(" + getResources().getText(R.string.untitled) + ")"
-                        : StringUtils.unescapeHTML(post.getTitle()));
+        mWebView.loadDataWithBaseURL(
+                "file:///android_asset/",
+                formatPostContentForWebView(post),
+                "text/html",
+                "utf-8",
+                null);
+    }
 
-                final String postContent = post.getDescription() + "\n\n" + post.getMoreText();
-                final Spanned draftContent;
-                final String htmlContent;
+    private String formatPostContentForWebView(Post post) {
+        String content = post.getDescription();
+        if (!TextUtils.isEmpty(post.getMoreText())) {
+            content += "\n\n" + post.getMoreText();
+        }
 
-                if (useWebViewPreview) {
-                    draftContent = null;
-                    htmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-                            + "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head>"
-                            + "<body><div id=\"container\">"
-                            + StringUtils.addPTags(postContent)
-                            + "</div></body></html>";
-                } else {
-                    Point point = DisplayUtils.getDisplayPixelSize(PostPreviewActivity.this);
-                    int maxWidth = Math.min(point.x, point.y);
-                    draftContent = WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), PostPreviewActivity.this, post, maxWidth);
-                    htmlContent = null;
-                }
+        // if this is a local draft, remove src="null" from image tags then replace the "android-uri"
+        // tag added for local image with a valid "src" tag so local images can be viewed
+        if (post.isLocalDraft()) {
+            content = content.replace("src=\"null\"", "").replace("android-uri=", "src=");
+        }
 
-                PostPreviewActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isFinishing()) return;
+        String textColorStr = HtmlUtils.colorResToHtmlColor(this, R.color.grey_dark);
+        String linkColorStr = HtmlUtils.colorResToHtmlColor(this, R.color.reader_hyperlink);
 
-                        mTitleTextView.setText(title);
-                        mContentTextView.setVisibility(useWebViewPreview ? View.GONE : View.VISIBLE);
-                        mWebView.setVisibility(useWebViewPreview ? View.VISIBLE : View.GONE);
+        StringBuilder sbHtml = new StringBuilder();
 
-                        if (useWebViewPreview) {
-                            mWebView.loadDataWithBaseURL(
-                                    "file:///android_asset/",
-                                    htmlContent,
-                                    "text/html",
-                                    "utf-8",
-                                    null);
-                        } else {
-                            mContentTextView.setText(draftContent);
-                        }
-                    }
-                });
-            }
-        }.start();
+        sbHtml.append("<!DOCTYPE html><html><head><meta charset='UTF-8' />")
+              .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
+              .append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Merriweather:300' />")
+              .append("<style type='text/css'>")
+              .append("  body { font-family: Merriweather, serif; margin: 0px; padding: 0px; width: 100%; color: ").append(textColorStr).append("; }")
+              .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
+              .append("  p, div { line-height: 1.6em; font-size: 0.95em; }")
+              .append("  h1, h2 { line-height: 1.2em; }")
+              .append("  img { max-width: 100%; }")
+              .append("  a { text-decoration: none; color: ").append(linkColorStr).append("; }")
+              .append("</style>")
+              .append("</head><body>")
+              .append(StringUtils.addPTags(content))
+              .append("</body></html>");
+
+        return sbHtml.toString();
     }
 }

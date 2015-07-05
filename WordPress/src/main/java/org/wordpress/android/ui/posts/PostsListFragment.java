@@ -23,7 +23,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
@@ -494,9 +493,7 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostSelected(PostsListPost post) {
-        if (isAdded() && !post.getStatusEnum().equals(PostStatus.TRASHED)) {
-            ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
-        }
+        onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
     }
 
     /*
@@ -504,6 +501,8 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostButtonClicked(int buttonType, PostsListPost post) {
+        if (!isAdded()) return;
+
         Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
         if (fullPost == null) {
             return;
