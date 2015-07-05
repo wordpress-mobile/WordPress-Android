@@ -76,25 +76,41 @@ public class PostPreviewFragment extends Fragment {
     }
 
     void loadPreview() {
-        if (!isAdded()) {
-            return;
-        }
+        if (!isAdded()) return;
 
-        final Post post = WordPress.wpDB.getPostForLocalTablePostId(mLocalPostId);
-        if (post == null) {
-            ToastUtils.showToast(getActivity(), R.string.post_not_found);
-            return;
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                final String htmlContent = formatPostContentForWebView(
+                        getActivity(),
+                        WordPress.wpDB.getPostForLocalTablePostId(mLocalPostId));
 
-        mWebView.loadDataWithBaseURL(
-                null,
-                formatPostContentForWebView(getActivity(), post),
-                "text/html",
-                "utf-8",
-                null);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isAdded()) return;
+
+                        if (htmlContent != null) {
+                            mWebView.loadDataWithBaseURL(
+                                    null,
+                                    htmlContent,
+                                    "text/html",
+                                    "utf-8",
+                                    null);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.post_not_found);
+                        }
+                    }
+                });
+            }
+        }.start();
     }
 
     private String formatPostContentForWebView(Context context, Post post) {
+        if (context == null || post == null) {
+            return null;
+        }
+
         String title = (TextUtils.isEmpty(post.getTitle())
                 ? "(" + getResources().getText(R.string.untitled) + ")"
                 : StringUtils.unescapeHTML(post.getTitle()));
@@ -114,7 +130,7 @@ public class PostPreviewFragment extends Fragment {
         String linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
 
         int contentMargin = getResources().getDimensionPixelSize(R.dimen.content_margin);
-        String marginStr =  Integer.toString(contentMargin) + "px";
+        String marginStr = Integer.toString(contentMargin) + "px";
 
         return "<!DOCTYPE html><html><head><meta charset='UTF-8' />"
                 + "<meta name='viewport' content='width=device-width, initial-scale=1'>"
