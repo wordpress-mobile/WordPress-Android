@@ -112,11 +112,13 @@ public class PostPreviewActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // reload preview if used returned from editor
-        if (requestCode == RequestCodes.EDIT_POST) {
+        if (requestCode == RequestCodes.EDIT_POST && resultCode == RESULT_OK) {
             PostPreviewFragment fragment = getPreviewFragment();
             if (fragment != null) {
                 fragment.loadPreview();
             }
+            // this will tell PostListActivity is needs to refresh
+            setResult(RESULT_OK, data);
         }
     }
 }
