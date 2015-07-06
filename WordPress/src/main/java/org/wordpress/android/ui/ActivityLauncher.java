@@ -123,7 +123,7 @@ public class ActivityLauncher {
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_BLOG_ID, post.getLocalTableBlogId());
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
-        activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
+        slideInFromRightForResult(activity, intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
