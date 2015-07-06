@@ -60,6 +60,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     public static final String ARG_ITEM_URL = "ARG_ITEM_URL";
     private static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
+    private static final String ARG_PREV_NUMBER_OF_BARS = "ARG_PREV_NUMBER_OF_BARS";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
     private boolean mIsUpdatingStats;
@@ -89,6 +90,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private String mRemoteBlogID, mRemoteItemID, mRemoteItemType, mItemTitle, mItemURL;
     private PostViewsModel mRestResponseParsed;
     private int mSelectedBarGraphIndex = -1;
+    private int mPrevNumberOfBarsGraph = -1;
 
     private SparseBooleanArray mYearsIdToExpandedMap;
     private SparseBooleanArray mAveragesIdToExpandedMap;
@@ -163,6 +165,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             mItemURL = savedInstanceState.getString(ARG_ITEM_URL);
             mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
+            mPrevNumberOfBarsGraph = savedInstanceState.getInt(ARG_PREV_NUMBER_OF_BARS, -1);
+
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
             if(yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
@@ -228,6 +232,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
+        outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
         outState.putString(ARG_REMOTE_BLOG_ID, mRemoteBlogID);
         outState.putString(ARG_REMOTE_ITEM_ID, mRemoteItemID);
         outState.putString(ARG_REMOTE_ITEM_TYPE, mRemoteItemType);
@@ -457,8 +462,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         );
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
-        mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
+
+        // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
+        // Only happens on 720DP tablets
+        if (mPrevNumberOfBarsGraph != -1 && mPrevNumberOfBarsGraph != dataToShowOnGraph.length) {
+            mSelectedBarGraphIndex = dataToShowOnGraph.length - 1;
+        } else {
+            mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
+        }
+
         mGraphView.highlightBar(mSelectedBarGraphIndex);
+        mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
 
         setMainViewsLabel(
                 StatsUtils.parseDate(
