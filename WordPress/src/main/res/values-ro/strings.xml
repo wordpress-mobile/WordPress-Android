@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">Situl meu</string>
+	<string name="tabbar_accessibility_label_me">Eu</string>
+	<string name="editor_toast_changes_saved">Modificări salvate</string>
+	<string name="passcodelock_prompt_message">Introdu PIN-ul tău</string>
+	<string name="push_auth_expired">Cererea a expirat. Autentifică-te pe WordPress.com pentru a încerca din nou.</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% de vizualizări</string>
+	<string name="ignore">Ignoră</string>
+	<string name="stats_insights_best_ever">Cele mai multe vizualizări dintotdeauna</string>
+	<string name="stats_insights_most_popular_hour">Cea mai populară oră</string>
+	<string name="stats_insights_most_popular_day">Cea mai populară zi</string>
+	<string name="stats_insights_popular">Cea mai populară zi și oră</string>
+	<string name="stats_insights_today">Statisticile de azi</string>
+	<string name="stats_insights_all_time">Articole, vizualizări și vizitatori dintotdeauna.</string>
+	<string name="stats_insights">Perspective</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Pentru a-ți vedea statisticile, autentifică-te pe WordPress.com în contul pe care-l folosești pentru a te conecta la Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Ești interesat de alte statistici recente? Le-am mutat pe pagina de Perspective.</string>
 	<string name="me_disconnect_from_wordpress_com">Deconectare de la WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Conectare la WordPress.com</string>
 	<string name="me_btn_login_logout">Autentificare/Deautentificare</string>
@@ -26,7 +42,7 @@
 	<string name="stats_unknown_author">Autor necunoscut</string>
 	<string name="signout">Deconectare</string>
 	<string name="image_added">Imagine adăugată</string>
-	<string name="sign_out_wpcom_confirm">Deconectarea contului tău va înlătura toate datele WordPress.com despre@%s de pe acest dispozitiv, inclusiv schițele și modificările locale.</string>
+	<string name="sign_out_wpcom_confirm">Deconectarea contului tău va înlătura toate datele WordPress.com despre @%s de pe acest dispozitiv, inclusiv schițele și modificările locale.</string>
 	<string name="hide">Ascunde</string>
 	<string name="select_all">Selectează tot</string>
 	<string name="show">Arată</string>
@@ -101,6 +117,7 @@
 	<string name="stats_total">Total</string>
 	<string name="reader_label_new_posts">Articol nou</string>
 	<string name="post_uploading">Încărcare</string>
+	<string name="stats_comments_total_comments_followers">Total articole cu urmăritori ai comentarilor: %1$s</string>
 	<string name="stats_comments">Comentarii</string>
 	<string name="stats_views">Vizualizări</string>
 	<string name="stats_likes">Plăcute</string>
@@ -133,7 +150,6 @@
 	<string name="stats_comments_by_posts_and_pages">După articole și pagini</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_followers_total_wpcom">Total urmăritori de pe WordPress.com: %1$s</string>
-	<string name="stats_comments_total_comments_followers">Total urmăritori de comentarii: %1$s</string>
 	<string name="stats_comments_by_authors">După autori</string>
 	<string name="stats_followers_total_email">Total urmăritori pe email: %1$s</string>
 	<string name="stats_followers_seconds_ago">acum o secundă</string>
@@ -249,7 +265,6 @@
 	<string name="reader_title_subs">Etichete și bloguri</string>
 	<string name="reader_title_tag_preview">Previzualizare etichetă</string>
 	<string name="reader_title_blog_preview">Previzualizare blog</string>
-	<string name="reader_page_popular_tags">Etichete populare</string>
 	<string name="ptr_tip_message">Sfat: Trage în jos pentru reîmprospătare</string>
 	<string name="saving">Salvare...</string>
 	<string name="media_empty_list">Nicio media</string>
@@ -347,7 +362,6 @@
 	<string name="http_authorization_required">Autorizație necesară</string>
 	<string name="http_credentials">Acreditări HTTP (opțional)</string>
 	<string name="pending_review">Revizie în așteptare</string>
-	<string name="stats_view_tags_and_categories">Etichete &amp; Categorii</string>
 	<string name="open_source_licenses">Licențe Open source</string>
 	<string name="location_not_found">Locație necunoscută</string>
 	<string name="file_error_create">Nu am putut crea fișierul temporar pentru a încărca media. Asigură-te că este destul spațiu liber pe dispozitiv.</string>
@@ -471,7 +485,6 @@
 	<string name="nux_tutorial_get_started_title">Poți începe!</string>
 	<string name="limit_reached">S-a atins limita. Poți încerca din nou peste un minut. A încerca înainte de acesta nu va face decât să mărească timpul pe care trebuie să-l aștepți ca blocajul să fie ridicat. Dacă crezi că aceasta este o eroare, contactează suportul.</string>
 	<string name="username_invalid">Nume de utilizator invalid</string>
-	<string name="reader_empty_popular_tags">Nu sunt etichete populare</string>
 	<string name="create_account_wpcom">Crează un cont la WordPress.com</string>
 	<string name="reader_empty_followed_tags">Nu urmărești nicio etichetă</string>
 	<string name="empty_list_default">Această listă e goală</string>
@@ -503,6 +516,7 @@
 	<string name="jetpack_message">Modulul Jetpack e necesar pentru statistici. Vrei să-l instalez?</string>
 	<string name="media_add_popup_title">Adaugă la biblioteca media</string>
 	<string name="media_add_new_media_gallery">Crează galerie</string>
+	<string name="stats_view_tags_and_categories">Etichete și categorii</string>
 	<string name="passcode_preference_title">PIN blocat</string>
 	<string name="passcode_turn_on">Pune blocarea PIN-ului</string>
 	<string name="passcode_turn_off">Scoate blocarea PIN-ului</string>

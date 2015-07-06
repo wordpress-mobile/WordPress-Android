@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">Il mio sito</string>
+	<string name="tabbar_accessibility_label_me">Io</string>
+	<string name="editor_toast_changes_saved">Cambiamenti salvati</string>
+	<string name="passcodelock_prompt_message">Inserisci il tuo PIN</string>
+	<string name="push_auth_expired">La richiesta è scaduta. Accedi a WordPress.com per riprovare.</string>
+	<string name="stats_insights_best_ever">Le migliore visualizzazioni di sempre</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% di visite</string>
+	<string name="ignore">Ignora</string>
+	<string name="stats_insights_most_popular_hour">Ora più popolare.</string>
+	<string name="stats_insights_most_popular_day">Giorno più popolare.</string>
+	<string name="stats_insights_popular">Giorno e ora più popolari.</string>
+	<string name="stats_insights_today">Statistiche odierne.</string>
+	<string name="stats_insights_all_time">Articoli, visualizzazioni e visitatori dall\'inizio</string>
+	<string name="stats_insights">Approfondimenti</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Per vedere le tue statistiche, accedi con l\'account WordPress.com che hai usato per connettere Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Stai cercando le tue altre statististiche recenti? Le abbiamo spostaste nella pagina insights.</string>
 	<string name="me_disconnect_from_wordpress_com">Disconnettiti da WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Connettiti a WordPress.com</string>
@@ -10,9 +26,9 @@
 	<string name="site_picker_edit_visibility">Mostra/nascondi siti</string>
 	<string name="site_picker_add_self_hosted">Aggiungi un sito self-hosted</string>
 	<string name="site_picker_add_site">Aggiungi sito</string>
+	<string name="my_site_btn_view_site">Visualizza il sito</string>
 	<string name="my_site_btn_switch_site">Cambia sito</string>
 	<string name="site_picker_title">Seleziona un sito</string>
-	<string name="my_site_btn_view_site">Visualizza il stio</string>
 	<string name="my_site_btn_view_admin">Visualizza l\'amministrazione</string>
 	<string name="my_site_header_look_and_feel">Aspetto</string>
 	<string name="my_site_header_publish">Pubblica</string>
@@ -101,6 +117,7 @@
 	<string name="reader_empty_posts_in_blog">Il blog è vuoto</string>
 	<string name="stats_average_per_day">Media giornaliera</string>
 	<string name="post_uploading">Caricamento</string>
+	<string name="stats_comments_total_comments_followers">Totale articoli con commento dei follower: %1$s</string>
 	<string name="stats_likes">Mi piace</string>
 	<string name="stats_views">Visite</string>
 	<string name="stats_view_publicize">Pubblicizza</string>
@@ -124,7 +141,6 @@
 	<string name="stats_empty_followers">Nessun follower</string>
 	<string name="stats_comments_by_authors">Per autori</string>
 	<string name="stats_empty_followers_desc">Tieni traccia del numero totale di follower e da quanto tempo ognuno di essi segue il tuo sito web.</string>
-	<string name="stats_comments_total_comments_followers">Commenti totali dei follower: %1$s</string>
 	<string name="stats_followers_email_selector">E-mail</string>
 	<string name="stats_followers_total_wpcom">Follower WordPress.com totali: %1$s</string>
 	<string name="stats_followers_total_email">Follower e-mail totali: %1$s</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">Anteprima tag</string>
 	<string name="reader_title_subs">Tag e blog</string>
 	<string name="reader_page_followed_tags">Tag seguiti</string>
-	<string name="reader_page_popular_tags">Tag più amati</string>
 	<string name="reader_page_followed_blogs">Blog seguiti</string>
 	<string name="reader_hint_add_tag_or_url">Inserisci un tag o un URL da seguire</string>
 	<string name="reader_label_followed_blog">Blog seguito</string>
@@ -402,7 +417,6 @@
 	<string name="file_error_create">Impossibile creare un file temporaneo per il caricamento. Assicurati che vi sia spazio libero sufficiente sul dispositivo.</string>
 	<string name="location_not_found">Posizione non nota</string>
 	<string name="open_source_licenses">Licenze Open Source</string>
-	<string name="stats_view_tags_and_categories">Tag e categorie</string>
 	<string name="pending_review">In attesa di revisione</string>
 	<string name="http_credentials">Credenziali HTTP (opzionale)</string>
 	<string name="http_authorization_required">Autorizzazione richiesta</string>
@@ -494,7 +508,6 @@
 	<string name="reader_toast_err_view_image">Impossibile visualizzare l\'immagine</string>
 	<string name="reader_toast_err_url_intent">Impossibile aprire %s</string>
 	<string name="reader_empty_followed_tags">Non stai seguendo alcun tag</string>
-	<string name="reader_empty_popular_tags">Non ci sono tag in evidenza</string>
 	<string name="create_account_wpcom">Apri un account su WordPress.com</string>
 	<string name="connecting_wpcom">Collegamento con WordPress.com in corso</string>
 	<string name="limit_reached">Limite raggiunto. Si consiglia di attendere almeno un minuto prima di riprovare. Se l\'errore persiste, o se pensi che sia un errore del sistema, si prega di contattare il supporto.</string>
@@ -516,6 +529,7 @@
 	<string name="media_edit_description_hint">Inserisci una descrizione qui</string>
 	<string name="theme_set_success">Tema impostato con successo!</string>
 	<string name="share_action_title">Aggiungi a...</string>
+	<string name="stats_view_tags_and_categories">Tag &amp; Categorie</string>
 	<string name="stats_view_comments">Commenti</string>
 	<string name="stats_timeframe_today">Oggi</string>
 	<string name="stats_timeframe_yesterday">Ieri</string>
