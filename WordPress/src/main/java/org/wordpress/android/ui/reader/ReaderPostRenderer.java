@@ -299,11 +299,11 @@ class ReaderPostRenderer {
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
-        // use Merriweather Light (weight 300) Google font
-        .append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Merriweather:300' />")
+        // use Merriweather font assets
+        .append("<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>")
 
         .append("<style type='text/css'>")
-        .append("  body { font-family: Merriweather, serif; margin: 0px; padding: 0px;}")
+        .append("  body { font-family: Merriweather, serif; font-weight: 300; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
         .append("  p, div, li { line-height: 1.6em; font-size: 0.95em; }")
         .append("  h1, h2 { line-height: 1.2em; }")
