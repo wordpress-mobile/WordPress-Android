@@ -45,7 +45,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
-    private static final String ARG_NUMBER_OF_BARS = "ARG_NUMBER_OF_BARS";
+    private static final String ARG_PREV_NUMBER_OF_BARS = "ARG_PREV_NUMBER_OF_BARS";
     private static final String ARG_SELECTED_OVERVIEW_ITEM = "ARG_SELECTED_OVERVIEW_ITEM";
     private static final String ARG_CHECKBOX_SELECTED = "ARG_CHECKBOX_SELECTED";
 
@@ -72,7 +72,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private Serializable mVisitsData; //VisitModel or VolleyError
     private int mSelectedOverviewItemIndex = 0;
     private int mSelectedBarGraphBarIndex = -1;
-    private int mNumberOfBarsGraph = -1;
+    private int mPrevNumberOfBarsGraph = -1;
 
     // Container Activity must implement this interface
     public interface OnDateChangeListener {
@@ -281,8 +281,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (savedInstanceState.containsKey(ARG_SELECTED_GRAPH_BAR)) {
                 mSelectedBarGraphBarIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
             }
-            if (savedInstanceState.containsKey(ARG_NUMBER_OF_BARS)) {
-                mNumberOfBarsGraph = savedInstanceState.getInt(ARG_NUMBER_OF_BARS, -1);
+            if (savedInstanceState.containsKey(ARG_PREV_NUMBER_OF_BARS)) {
+                mPrevNumberOfBarsGraph = savedInstanceState.getInt(ARG_PREV_NUMBER_OF_BARS, -1);
             }
 
             mIsCheckboxChecked = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, true);
@@ -302,7 +302,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
         outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
-        outState.putInt(ARG_NUMBER_OF_BARS, mNumberOfBarsGraph);
+        outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
         outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
         outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
 
@@ -478,15 +478,15 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
         // Only happens on 720DP tablets
-        if (mNumberOfBarsGraph != -1 && mNumberOfBarsGraph != dataToShowOnGraph.length) {
+        if (mPrevNumberOfBarsGraph != -1 && mPrevNumberOfBarsGraph != dataToShowOnGraph.length) {
             mSelectedBarGraphBarIndex = -1;
-            mNumberOfBarsGraph = dataToShowOnGraph.length;
+            mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
             onBarTapped(dataToShowOnGraph.length - 1);
             mGraphView.highlightBar(dataToShowOnGraph.length - 1);
             return;
         }
 
-        mNumberOfBarsGraph = dataToShowOnGraph.length;
+        mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
         int barSelectedOnGraph;
         if (mSelectedBarGraphBarIndex == -1) {
             // No previous bar was highlighted, highlight the most recent one
