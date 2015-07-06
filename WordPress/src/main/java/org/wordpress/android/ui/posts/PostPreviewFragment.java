@@ -134,10 +134,10 @@ public class PostPreviewFragment extends Fragment {
 
         return "<!DOCTYPE html><html><head><meta charset='UTF-8' />"
                 + "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-                + "<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Merriweather:300,700' />"
+                + "<link href='http://fonts.googleapis.com/css?family=Merriweather:300italic,300,700,700italic' rel='stylesheet' type='text/css'>"
                 + "<style type='text/css'>"
                 + "  html { margin-left: " + marginStr + "; margin-right: " + marginStr + "; }"
-                + "  body { font-family: Merriweather, serif; font-weight: 300; padding: 0px; width: 100%; color: " + textColorStr + "; }"
+                + "  body { font-family: Merriweather, serif; font-weight: 300; padding: 0px; margin: 0px; width: 100%; color: " + textColorStr + "; }"
                 + "  body, p, div { max-width: 100% !important; word-wrap: break-word; }"
                 + "  p, div { line-height: 1.6em; font-size: 0.95em; }"
                 + "  h1 { font-size: 1.2em; font-family: Merriweather, serif; font-weight: 700; }"
