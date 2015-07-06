@@ -25,6 +25,8 @@
             android:gravity="center"
             android:horizontalSpacing="0dp"
             android:scrollbarStyle="outsideOverlay"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="4dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:stretchMode="columnWidth"
