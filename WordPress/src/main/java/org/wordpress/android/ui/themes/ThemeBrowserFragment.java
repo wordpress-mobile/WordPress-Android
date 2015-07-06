@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -25,6 +24,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.HeaderGridView;
 
 /**
  * A fragment display the themes on a grid view.
@@ -60,7 +60,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     protected static final String ARGS_SORT = "ARGS_SORT";
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
-    protected AbsListView mListView;
+    protected HeaderGridView mListView;
     protected TextView mEmptyView;
     protected TextView mNoResultText;
     protected ThemeBrowserAdapter mAdapter;
@@ -90,13 +90,13 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.theme_tab_fragment, container, false);
+        View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
         setRetainInstance(true);
 
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         mEmptyView = (TextView) view.findViewById(R.id.text_empty);
-        mListView = (AbsListView) view.findViewById(R.id.theme_listview);
+        mListView = (HeaderGridView) view.findViewById(R.id.theme_listview);
         mListView.setRecyclerListener(this);
 
         // swipe to refresh setup but not for the search view
@@ -149,6 +149,10 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         }
         mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
         setEmptyViewVisible(mAdapter.getCount() == 0);
+        TextView jk = new TextView(getActivity());
+        jk.setText("ghjk");
+        jk.setBackgroundColor(getResources().getColor(R.color.error_color));
+        mListView.addHeaderView(jk);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setSelection(mSavedScrollPosition);
