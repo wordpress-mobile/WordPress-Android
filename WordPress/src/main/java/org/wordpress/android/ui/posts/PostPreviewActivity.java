@@ -48,6 +48,8 @@ public class PostPreviewActivity extends AppCompatActivity {
             mIsPage = getIntent().getBooleanExtra(ARG_IS_PAGE, false);
         }
 
+        setTitle(mIsPage? getString(R.string.preview_page) : getString(R.string.preview_post));
+
         if (!hasPreviewFragment()) {
             showPreviewFragment();
         }

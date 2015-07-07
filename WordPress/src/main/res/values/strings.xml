@@ -240,6 +240,7 @@
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
     <string name="post_preview_title">Preview Post</string>
+    <string name="page_preview_title">Preview Page</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
