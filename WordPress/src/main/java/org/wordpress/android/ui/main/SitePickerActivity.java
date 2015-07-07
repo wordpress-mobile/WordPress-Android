@@ -277,8 +277,9 @@ public class SitePickerActivity extends ActionBarActivity
 
             // let user know the current site wasn't hidden
             if (skippedCurrentSite) {
+                String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
                 ToastUtils.showToast(this,
-                        getString(R.string.site_picker_cant_hide_current_site, currentSiteName),
+                        String.format(cantHideCurrentSite, currentSiteName),
                         ToastUtils.Duration.LONG);
             }
 
@@ -297,7 +298,8 @@ public class SitePickerActivity extends ActionBarActivity
     private void updateActionModeTitle() {
         if (mActionMode != null) {
             int numSelected = getAdapter().getNumSelected();
-            mActionMode.setTitle(getString(R.string.cab_selected, numSelected));
+            String cabSelected = getString(R.string.cab_selected);
+            mActionMode.setTitle(String.format(cabSelected, numSelected));
         }
     }
 
