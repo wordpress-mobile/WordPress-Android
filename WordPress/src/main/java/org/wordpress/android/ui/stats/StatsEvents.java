@@ -38,11 +38,18 @@ public class StatsEvents {
         }
     }
 
-    public static class JetpackAuthError {
+    public static class StatsAuthError {
         public final int mLocalBlogId; // This is the local blogID
+        public final boolean mIsJetpack;
 
-        public JetpackAuthError(int blogId) {
+        public StatsAuthError(int blogId) {
             mLocalBlogId = blogId;
+            mIsJetpack = false;
+        }
+
+        public StatsAuthError(int blogId, boolean isJetpack) {
+            mLocalBlogId = blogId;
+            mIsJetpack = isJetpack;
         }
     }
 }
