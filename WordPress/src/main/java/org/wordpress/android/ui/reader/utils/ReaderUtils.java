@@ -78,7 +78,8 @@ public class ReaderUtils {
                 case 2:
                     return context.getString(R.string.reader_likes_you_and_one);
                 default:
-                    return context.getString(R.string.reader_likes_you_and_multi, numLikes - 1);
+                    String youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi);
+                    return String.format(youAndMultiLikes, numLikes - 1);
             }
         } else {
             if (numLikes == 1) {
