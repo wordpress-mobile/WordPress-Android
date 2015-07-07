@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Adapter for Posts/Pages list
  */
-public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
+public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OnPostButtonClickListener {
         void onPostButtonClicked(int buttonId, PostsListPost post);
@@ -109,9 +109,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     @Override
-    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
-        return new PostViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (mIsPage) {
+            View view = mLayoutInflater.inflate(R.layout.page_cardview, parent, false);
+            return new PageViewHolder(view);
+        } else {
+            View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
+            return new PostViewHolder(view);
+        }
     }
 
     private boolean canShowStatsForPost(PostsListPost post) {
@@ -121,42 +126,74 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     @Override
-    public void onBindViewHolder(final PostViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         PostsListPost post = mPosts.get(position);
         Context context = holder.itemView.getContext();
 
-        if (post.hasTitle()) {
-            holder.txtTitle.setText(post.getTitle());
-        } else {
-            holder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
-        }
+        if (holder instanceof PostViewHolder) {
+            PostViewHolder postHolder = (PostViewHolder) holder;
 
-        if (post.hasExcerpt()) {
-            holder.txtExcerpt.setVisibility(View.VISIBLE);
-            holder.txtExcerpt.setText(post.getExcerpt());
-        } else {
-            holder.txtExcerpt.setVisibility(View.GONE);
-        }
+            if (post.hasTitle()) {
+                postHolder.txtTitle.setText(post.getTitle());
+            } else {
+                postHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+            }
 
-        if (post.hasFeaturedImageUrl()) {
-            holder.imgFeatured.setVisibility(View.VISIBLE);
-            holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
-        } else {
-            holder.imgFeatured.setVisibility(View.GONE);
-        }
+            if (post.hasExcerpt()) {
+                postHolder.txtExcerpt.setVisibility(View.VISIBLE);
+                postHolder.txtExcerpt.setText(post.getExcerpt());
+            } else {
+                postHolder.txtExcerpt.setVisibility(View.GONE);
+            }
 
-        // local drafts say "delete" instead of "trash"
-        if (post.isLocalDraft()) {
-            holder.txtDate.setVisibility(View.GONE);
-            holder.btnTrash.setButtonType(PostListButton.BUTTON_DELETE);
-        } else {
-            holder.txtDate.setText(post.getFormattedDate());
-            holder.txtDate.setVisibility(View.VISIBLE);
-            holder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
-        }
+            if (post.hasFeaturedImageUrl()) {
+                postHolder.imgFeatured.setVisibility(View.VISIBLE);
+                postHolder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
+            } else {
+                postHolder.imgFeatured.setVisibility(View.GONE);
+            }
 
-        updateStatusText(holder.txtStatus, post);
-        configurePostButtons(holder, post);
+            // local drafts say "delete" instead of "trash"
+            if (post.isLocalDraft()) {
+                postHolder.txtDate.setVisibility(View.GONE);
+                postHolder.btnTrash.setButtonType(PostListButton.BUTTON_DELETE);
+            } else {
+                postHolder.txtDate.setText(post.getFormattedDate());
+                postHolder.txtDate.setVisibility(View.VISIBLE);
+                postHolder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
+            }
+
+            updateStatusText(postHolder.txtStatus, post);
+            configurePostButtons(postHolder, post);
+        } else if (holder instanceof PageViewHolder) {
+            PageViewHolder pageHolder = (PageViewHolder) holder;
+            if (post.hasTitle()) {
+                pageHolder.txtTitle.setText(post.getTitle());
+            } else {
+                pageHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+            }
+
+            String dateStr = post.getFormattedDate();
+            pageHolder.txtDate.setText(dateStr);
+
+            // don't show date header if same as previous
+            boolean showDate;
+            if (position > 0) {
+                String prevDateStr = mPosts.get(position - 1).getFormattedDate();
+                showDate = !prevDateStr.equals(dateStr);
+            } else {
+                showDate = true;
+            }
+            pageHolder.txtDate.setVisibility(showDate ? View.VISIBLE : View.GONE);
+            pageHolder.dateDivider.setVisibility(showDate ? View.VISIBLE : View.GONE);
+
+            pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: show menu
+                }
+            });
+        }
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1
@@ -423,6 +460,21 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
             imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
             layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+        }
+    }
+
+    class PageViewHolder extends RecyclerView.ViewHolder {
+        private final TextView txtTitle;
+        private final TextView txtDate;
+        private final View dateDivider;
+        private final View btnMore;
+
+        public PageViewHolder(View view) {
+            super(view);
+            txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            dateDivider = view.findViewById(R.id.divider_date);
+            btnMore = view.findViewById(R.id.btn_more);
         }
     }
 
