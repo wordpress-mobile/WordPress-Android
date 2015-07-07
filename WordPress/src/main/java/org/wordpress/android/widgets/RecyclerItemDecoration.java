@@ -1,17 +1,17 @@
-package org.wordpress.android.ui.reader.views;
+package org.wordpress.android.widgets;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * dividers for reader cards
+ * simple implementation of RecyclerView dividers
  */
-public class ReaderItemDecoration extends RecyclerView.ItemDecoration {
+public class RecyclerItemDecoration extends RecyclerView.ItemDecoration {
     private final int mSpacingHorizontal;
     private final int mSpacingVertical;
 
-    public ReaderItemDecoration(int spacingHorizontal, int spacingVertical) {
+    public RecyclerItemDecoration(int spacingHorizontal, int spacingVertical) {
         super();
         mSpacingHorizontal = spacingHorizontal;
         mSpacingVertical = spacingVertical;

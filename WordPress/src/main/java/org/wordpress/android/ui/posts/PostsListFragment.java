@@ -31,7 +31,7 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.ui.reader.views.ReaderItemDecoration;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -106,7 +106,7 @@ public class PostsListFragment extends Fragment
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-        mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
