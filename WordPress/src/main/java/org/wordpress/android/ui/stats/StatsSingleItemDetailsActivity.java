@@ -848,13 +848,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            if (volleyError != null) {
-                AppLog.e(AppLog.T.STATS, "Error while reading Stats details "
-                        + volleyError.getMessage(), volleyError);
-            }
+            StatsUtils.logVolleyErrorDetails(volleyError);
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
+
+            if (StatsUtils.isAuthenticationError(volleyError)) {
+                Toast.makeText(mActivityRef.get(), R.string.stats_cannot_access_stats, Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+
             resetModelVariables();
 
             String label = mActivityRef.get().getString(R.string.error_refresh_stats);

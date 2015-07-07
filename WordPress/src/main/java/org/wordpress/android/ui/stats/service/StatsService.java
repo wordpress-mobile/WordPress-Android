@@ -402,19 +402,15 @@ public class StatsService extends Service {
                     StatsUtils.logVolleyErrorDetails(volleyError);
 
                     // Check here if this is an authentication error
-                    // .com authentication errors are handled automatically by the app
-                    if (volleyError.networkResponse != null) {
-                        NetworkResponse networkResponse = volleyError.networkResponse;
-                        if (networkResponse.statusCode == 403 && networkResponse.data != null) {
-                            if (new String(networkResponse.data).contains("unauthorized")) {
-                                int localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                                        Integer.parseInt(mRequestBlogId)
-                                );
-                                Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
-                                if (blog != null && blog.isJetpackPowered()) {
-                                    EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
-                                }
-                            }
+                    if (StatsUtils.isAuthenticationError(volleyError)) {
+                        int localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                                Integer.parseInt(mRequestBlogId)
+                        );
+                        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
+                        if (blog != null) {
+                            EventBus.getDefault().post(
+                                    new StatsEvents.StatsAuthError(localId, blog.isJetpackPowered())
+                            );
                         }
                     }
                     mResponseObjectModel = volleyError;

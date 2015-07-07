@@ -398,6 +398,7 @@
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
+    <string name="stats_cannot_access_stats">You can\'t view stats for this site.</string>
     <string name="stats_sign_in_jetpack_different_com_account">To view your stats, sign in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- stats: labels for timeframes -->

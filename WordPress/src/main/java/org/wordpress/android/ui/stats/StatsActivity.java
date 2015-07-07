@@ -759,7 +759,7 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.JetpackAuthError event) {
+    public void onEventMainThread(StatsEvents.StatsAuthError event) {
         if (isFinishing() || !mIsInFront) {
             return;
         }
@@ -768,6 +768,14 @@ public class StatsActivity extends AppCompatActivity
             // The user has changed blog
             return;
         }
+
+        if (!event.mIsJetpack) {
+            // Trying to access stats for a .com blog where the user cannot see Stats
+            Toast.makeText(this, R.string.stats_cannot_access_stats, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         mSwipeToRefreshHelper.setRefreshing(false);
         startWPComLoginActivity();
     }

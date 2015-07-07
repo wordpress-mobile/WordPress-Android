@@ -352,6 +352,18 @@ public class StatsUtils {
         AppLog.e(T.STATS, "Volley Error details: " + volleyError.getMessage(), volleyError);
     }
 
+    public static synchronized  boolean isAuthenticationError(final VolleyError volleyError) {
+        if (volleyError != null && volleyError.networkResponse != null) {
+            NetworkResponse networkResponse = volleyError.networkResponse;
+            if (networkResponse.statusCode == 403 && networkResponse.data != null) {
+                if (new String(networkResponse.data).contains("unauthorized")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
             throws JSONException {
         Serializable model = null;
