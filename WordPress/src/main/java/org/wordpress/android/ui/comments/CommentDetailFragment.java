@@ -259,6 +259,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mImgSubmitReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!hasComment()) return;
+
                 submitReply();
             }
         });
@@ -266,6 +268,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnSpamComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!hasComment()) return;
+
                 if (mComment.getStatusEnum() == CommentStatus.SPAM) {
                     moderateComment(CommentStatus.APPROVED);
                 } else {
