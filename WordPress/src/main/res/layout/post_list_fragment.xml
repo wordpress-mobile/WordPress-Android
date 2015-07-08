@@ -11,6 +11,7 @@
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         android:background="@color/background_grey"
         android:gravity="center"
         android:orientation="vertical"
@@ -18,10 +19,10 @@
         tools:visibility="visible">
 
         <ImageView
-            android:id="@+id/empty_tags_box_top"
+            android:id="@+id/image_empty"
             android:layout_width="112dp"
             android:layout_height="86dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:src="@drawable/penandink" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -35,14 +36,6 @@
             android:text="@string/empty_list_default"
             app:fixWidowWords="true" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/description_empty"
-            style="@style/WordPress.EmptyList.Description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/empty_list_description_bottom_margin"
-            android:layout_marginLeft="@dimen/empty_list_description_side_margin"
-            android:layout_marginRight="@dimen/empty_list_description_side_margin" />
     </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout

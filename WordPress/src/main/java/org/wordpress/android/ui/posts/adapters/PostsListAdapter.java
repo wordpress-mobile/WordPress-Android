@@ -72,13 +72,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         mIsPrivateBlog = blog.isPrivate();
         mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
 
-        // on large/landscape displays we can always show all buttons
-        mAlwaysShowAllButtons = DisplayUtils.isLandscape(context) || DisplayUtils.isXLarge(context);
-
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mPhotonWidth = displayWidth - (cardSpacing * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+
+        // on larger displays we can always show all buttons
+        mAlwaysShowAllButtons = (displayWidth >= 1080);
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
