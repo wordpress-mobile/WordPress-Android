@@ -9,7 +9,8 @@
 
     <ImageView
         android:id="@+id/image_count"
-        style="@style/ReaderImageView.ButtonIcon"
+        android:layout_width="@dimen/reader_button_icon"
+        android:layout_height="@dimen/reader_button_icon"
         tools:src="@drawable/reader_button_comment" />
 
     <TextView
@@ -18,7 +19,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/reader_count_background"
         android:textColor="@color/reader_count_text"
-        android:textSize="@dimen/text_sz_medium"
+        android:textSize="@dimen/text_sz_small"
         android:layout_marginLeft="-10dp"
         android:visibility="gone"
         tools:text="2"

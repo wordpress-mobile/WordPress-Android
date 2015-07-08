@@ -29,7 +29,7 @@
             style="@style/ReaderTextView.Post.Title"
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
