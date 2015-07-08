@@ -25,7 +25,6 @@
 	<string name="update_verb">अपडेट करे</string>
 	<string name="schedule_verb">निर्धारित करे</string>
 	<string name="reader_label_followed_blog">अनुसरण किये गए ब्लॉग</string>
-	<string name="reader_page_popular_tags">लोकप्रिय टैग</string>
 	<string name="reader_toast_err_already_follow_blog">आप पहले से ही इस ब्लॉग का अनुसरण कर रहे है</string>
 	<string name="reader_title_blog_preview">ब्लॉग पूर्वावलोकन</string>
 	<string name="reader_title_tag_preview">टैग पूर्वावलोकन</string>
@@ -164,7 +163,6 @@
 	<string name="reader_share_link">कड़ी साझा करे</string>
 	<string name="comment_status_spam">स्पैम</string>
 	<string name="mnu_comment_spam">स्पैम</string>
-	<string name="stats_view_tags_and_categories">टैग्स और श्रेणिया</string>
 	<string name="wordpress_blog">वर्डप्रेस ब्लॉग</string>
 	<string name="view_in_browser">ब्राउज़र में देखें</string>
 	<string name="delete_draft">प्रारूप हटाये</string>
@@ -257,7 +255,6 @@
 	<string name="media_add_new_media_gallery">गैलरी बनाएं</string>
 	<string name="username_invalid">अमान्य उपयोगकर्ता नाम</string>
 	<string name="jetpack_not_found">जेटपैक प्लगइन नहीं मिला</string>
-	<string name="reader_empty_popular_tags">कोई लोकप्रिय टैग नहीं</string>
 	<string name="reader_timespan_now">अब</string>
 	<string name="reader_likes_one">एक व्यक्ति ने पसंद किया</string>
 	<string name="reader_toast_reblog_success">पोस्ट पुनः पोस्ट किया गया है</string>

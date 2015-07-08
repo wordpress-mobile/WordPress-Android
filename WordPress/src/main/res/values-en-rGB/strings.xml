@@ -80,7 +80,6 @@
 	<string name="reader_title_tag_preview">Preview Tag</string>
 	<string name="reader_title_subs">Tags &amp; Blogs</string>
 	<string name="reader_page_followed_tags">Followed tags</string>
-	<string name="reader_page_popular_tags">Popular tags</string>
 	<string name="reader_page_followed_blogs">Followed blogs</string>
 	<string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
 	<string name="reader_label_followed_blog">Blog followed</string>
@@ -240,7 +239,6 @@
 	<string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
 	<string name="location_not_found">Unknown location</string>
 	<string name="open_source_licenses">Open source licenses</string>
-	<string name="stats_view_tags_and_categories">Tags &amp; categories</string>
 	<string name="pending_review">Pending review</string>
 	<string name="http_credentials">HTTP credentials (optional)</string>
 	<string name="http_authorization_required">Authorization required</string>
@@ -325,7 +323,6 @@
 	<string name="reader_toast_err_share_intent">Unable to share</string>
 	<string name="reader_toast_err_view_image">Unable to view image</string>
 	<string name="reader_toast_err_url_intent">Unable to open %s</string>
-	<string name="reader_empty_popular_tags">No popular tags</string>
 	<string name="connecting_wpcom">Connecting to WordPress.com</string>
 	<string name="username_invalid">Invalid username</string>
 	<string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>

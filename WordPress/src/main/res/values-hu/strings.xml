@@ -48,7 +48,6 @@
 	<string name="schedule_verb">Időzítés</string>
 	<string name="reader_title_subs">Címkék és blogok</string>
 	<string name="reader_page_followed_blogs">Követett blogok</string>
-	<string name="reader_page_popular_tags">Népszerű címkék</string>
 	<string name="reader_title_blog_preview">Blog előnézete</string>
 	<string name="reader_label_followed_blog">Követett blogok</string>
 	<string name="reader_page_followed_tags">Követett címkék</string>
@@ -134,6 +133,7 @@
 	<string name="stats_timeframe_today">Ma</string>
 	<string name="stats_timeframe_yesterday">Tegnap</string>
 	<string name="stats_view_clicks">Kattintások</string>
+	<string name="stats_view_tags_and_categories">Címkék és kategóriák</string>
 	<string name="view_stats_full_site">Teljes oldal megtekintése</string>
 	<string name="menu_search">Keresés</string>
 	<string name="stats_entry_tags_and_categories">Téma</string>

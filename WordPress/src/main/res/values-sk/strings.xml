@@ -90,7 +90,6 @@
 	<string name="stats_empty_followers">Žiadny odberatelia</string>
 	<string name="stats_empty_tags_and_categories">Žiadne označené príspevky alebo zobrazené stránky</string>
 	<string name="stats_empty_tags_and_categories_desc">Získajte prehľad najpopulárnejších tém na stránke podľa príspevkov z uplynulého týždňa.</string>
-	<string name="stats_comments_total_comments_followers">Počet odberateľov príspevku: %1$s</string>
 	<string name="stats_followers_total_wpcom">Počet odberateľov WordPress.com: %1$s</string>
 	<string name="stats_followers_total_email">Počet odberateľov emailov: %1$s</string>
 	<string name="stats_totals_publicize">Odberatelia</string>
@@ -215,7 +214,6 @@
 	<string name="reader_toast_err_follow_blog">Tento blog nie je možné sledovať</string>
 	<string name="reader_page_followed_blogs">Sledované blogy</string>
 	<string name="reader_title_subs">Značky a blogy</string>
-	<string name="reader_page_popular_tags">Populárne značky</string>
 	<string name="reader_title_tag_preview">Zobraziť značku</string>
 	<string name="reader_empty_recommended_blogs">Žiadne odporúčané blogy</string>
 	<string name="media_empty_list">Žiadne súbory</string>
@@ -339,7 +337,6 @@
 	<string name="image_settings">Nastavenie obrázka</string>
 	<string name="http_authorization_required">Požaduje sa autorizácia</string>
 	<string name="view_site">Pozrieť stránku</string>
-	<string name="stats_view_tags_and_categories">Značky a kategórie</string>
 	<string name="new_post">Nový príspevok</string>
 	<string name="post_format">Formát príspevku</string>
 	<string name="location_not_found">Neznáma lokalita</string>
@@ -444,7 +441,6 @@
 	<string name="reader_likes_only_you">Páči sa vám to</string>
 	<string name="nux_tutorial_get_started_title">Začíname!</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
-	<string name="reader_empty_popular_tags">Žiadne obľúbené značky</string>
 	<string name="select_from_media_library">Vybrať z knižnice súborov</string>
 	<string name="reader_hint_comment_on_comment">Reagovať na komentár</string>
 	<string name="reader_hint_comment_on_post">Pridať komentár</string>

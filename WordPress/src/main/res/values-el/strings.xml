@@ -153,6 +153,7 @@
 	<string name="theme_activate_button">Ενεργοποιήση</string>
 	<string name="stats_view_visitors_and_views">Επισκέπτες και Προβολές</string>
 	<string name="stats_view_clicks">Κλικ</string>
+	<string name="stats_view_tags_and_categories">Ετικέτες και Κατηγορίες</string>
 	<string name="stats_view_comments">Σχόλια</string>
 	<string name="stats_timeframe_today">Σήμερα</string>
 	<string name="stats_timeframe_yesterday">Χθες</string>

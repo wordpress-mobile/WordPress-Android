@@ -261,16 +261,9 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 mSwipeToRefreshHelper.setRefreshing(false);
                 setupEmptyUI();
             } else {
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isFinishing()) {
-                            setupEmptyGraph("");
-                            showHideEmptyModulesIndicator(true);
-                            refreshStats();
-                        }
-                    }
-                }, 75L);
+                setupEmptyGraph("");
+                showHideEmptyModulesIndicator(true);
+                refreshStats();
             }
         } else {
             updateUI();
@@ -848,10 +841,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            if (volleyError != null) {
-                AppLog.e(AppLog.T.STATS, "Error while reading Stats details "
-                        + volleyError.getMessage(), volleyError);
-            }
+            StatsUtils.logVolleyErrorDetails(volleyError);
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
