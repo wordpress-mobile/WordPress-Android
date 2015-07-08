@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_me">Moi</string>
+	<string name="tabbar_accessibility_label_my_site">Mon site</string>
+	<string name="editor_toast_changes_saved">Modifications enregistrées</string>
+	<string name="passcodelock_prompt_message">Entrer votre PIN</string>
+	<string name="push_auth_expired">La requête a expiré. Inscrivez-vous sur WordPress.com et réessayez.</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% de vues</string>
+	<string name="ignore">Ignorer</string>
+	<string name="stats_insights_best_ever">Record de vues absolu</string>
+	<string name="stats_insights_most_popular_hour">Heure la plus prisée</string>
+	<string name="stats_insights_most_popular_day">Jour le plus prisé</string>
+	<string name="stats_insights_today">Statistiques du jour</string>
+	<string name="stats_insights_popular">Jour et heure les plus prisés</string>
+	<string name="stats_insights_all_time">Articles, vues et visiteurs depuis la création</string>
+	<string name="stats_insights">Tendances</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Pour afficher vos statistiques, connectez-vous au compte WordPress.com que vous avez utilisé pour vous connecter à Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Vous recherchez vos autres statistiques récentes ? Elles se trouvent désormais sur la page Tendances.</string>
 	<string name="me_disconnect_from_wordpress_com">Se déconnecter de WordPress.com</string>
 	<string name="me_btn_login_logout">Se Connecter/Déconnecter</string>
 	<string name="me_connect_to_wordpress_com">Se connecter à WordPress.com</string>
@@ -101,6 +117,7 @@
 	<string name="stats_overall">Global</string>
 	<string name="stats_total">Total</string>
 	<string name="post_uploading">En cours d\'upload</string>
+	<string name="stats_comments_total_comments_followers">Nombre d’articles commentés par les abonnés : %1$s</string>
 	<string name="stats_visitors">Visiteurs</string>
 	<string name="stats_views">Visites</string>
 	<string name="stats_timeframe_years">Années</string>
@@ -139,7 +156,6 @@
 	<string name="stats_empty_followers">Aucun abonné</string>
 	<string name="stats_comments_by_authors">Par auteurs</string>
 	<string name="stats_comments_by_posts_and_pages">Par articles et pages</string>
-	<string name="stats_comments_total_comments_followers">Total des abonnés ayant commenté : %1$s</string>
 	<string name="stats_followers_total_wpcom">Total des abonnés WordPress.com : %1$s</string>
 	<string name="stats_followers_email_selector">Email</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">Prévisualisation du tag</string>
 	<string name="reader_title_subs">Tags &amp; blogs</string>
 	<string name="reader_page_followed_tags">Tags suivis</string>
-	<string name="reader_page_popular_tags">Tags populaires</string>
 	<string name="reader_page_followed_blogs">Blogs suivis</string>
 	<string name="reader_hint_add_tag_or_url">Entrer un tag ou une URL à suivre</string>
 	<string name="reader_label_followed_blog">Abonné au blog</string>
@@ -386,7 +401,6 @@
 	<string name="post_not_published">L\'état de l\'article n\'est pas publié</string>
 	<string name="page_not_published">L\'état de la page n\'est pas publiée</string>
 	<string name="category_slug">Identifiant de la catégorie (optionnel)</string>
-	<string name="stats_view_tags_and_categories">Mots-clés et catégories</string>
 	<string name="http_authorization_required">Autorisation requise</string>
 	<string name="post_format">Format d\'article</string>
 	<string name="new_media">Nouveau média</string>
@@ -490,7 +504,6 @@
 	<string name="reader_toast_err_view_image">Impossible de voir l\'image</string>
 	<string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>
 	<string name="reader_empty_followed_tags">Vous ne suivez aucun tag</string>
-	<string name="reader_empty_popular_tags">Pas de tags populaires</string>
 	<string name="create_account_wpcom">Créer un compte sur WordPress.com</string>
 	<string name="connecting_wpcom">Connection à WordPress.com</string>
 	<string name="reader_likes_one">Une personne aime ça</string>
@@ -543,6 +556,7 @@
 	<string name="theme_activate_button">Activer</string>
 	<string name="theme_activating_button">Activation</string>
 	<string name="stats_view_visitors_and_views">Visiteurs et Vues</string>
+	<string name="stats_view_tags_and_categories">Tags et Catégories</string>
 	<string name="stats_entry_country">Pays</string>
 	<string name="stats_entry_posts_and_pages">Titre</string>
 	<string name="stats_entry_tags_and_categories">Sujet</string>

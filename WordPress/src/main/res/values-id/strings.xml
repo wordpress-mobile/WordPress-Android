@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">Situs Saya</string>
+	<string name="tabbar_accessibility_label_me">Saya</string>
+	<string name="editor_toast_changes_saved">Perubahan disimpan</string>
+	<string name="passcodelock_prompt_message">Masukkan PIN</string>
+	<string name="push_auth_expired">Permintaan sudah kedaluwarsa. Masuk ke WordPress.com untuk mencoba lagi.</string>
+	<string name="ignore">Abaikan</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% dilihat</string>
+	<string name="stats_insights_best_ever">Tampilan Terbaik</string>
+	<string name="stats_insights_most_popular_hour">Jam paling populer</string>
+	<string name="stats_insights_most_popular_day">Hari paling populer</string>
+	<string name="stats_insights_popular">Hari dan jam paling populer</string>
+	<string name="stats_insights_today">Statistik Hari Ini</string>
+	<string name="stats_insights_all_time">Pos, tampilan, dan pengunjung sepanjang waktu</string>
+	<string name="stats_insights">Wawasan</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Untuk melihat statistik Anda, masuk ke akun WordPress.com yang Anda gunakan untuk terhubung dengan Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Mencari Statistik Terbaru Lainnya? Kami telah memindahkannya ke halaman Wawasan.</string>
 	<string name="me_disconnect_from_wordpress_com">Putuskan koneksi WordPress.com</string>
 	<string name="me_btn_login_logout">Log masuk/keluar</string>
 	<string name="me_connect_to_wordpress_com">Koneksikan ke WordPress.com</string>
@@ -101,6 +117,7 @@
 	<string name="logs_copied_to_clipboard">Log aplikasi sudah disalin ke clipboard</string>
 	<string name="stats_average_per_day">Rata-Rata per Hari</string>
 	<string name="stats_months_and_years">Bulan dan Tahun</string>
+	<string name="stats_comments_total_comments_followers">Total pos dengan pengikut komentar: %1$s</string>
 	<string name="stats_view_publicize">Publikasikan</string>
 	<string name="stats_view_followers">Pengikut</string>
 	<string name="stats_view_countries">Negara</string>
@@ -131,7 +148,6 @@
 	<string name="stats_view">Lihat</string>
 	<string name="stats_followers_seconds_ago">detik yang lalu</string>
 	<string name="stats_followers_total_email">Total Pengikut Email: %1$s</string>
-	<string name="stats_comments_total_comments_followers">Total pengikut komentar: %1$s</string>
 	<string name="stats_other_recent_stats_label">Statistik Terbaru Lainnya</string>
 	<string name="stats_view_all">Lihat semua</string>
 	<string name="stats_for">Statistik untuk %s</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">Pratinjau Tag</string>
 	<string name="reader_title_subs">Tag &amp; Blog</string>
 	<string name="reader_page_followed_tags">Tag yang diikuti</string>
-	<string name="reader_page_popular_tags">Tag populer</string>
 	<string name="reader_page_followed_blogs">Blog yang diikuti</string>
 	<string name="reader_hint_add_tag_or_url">Masukkan sebuah tag atau URL untuk mengikuti</string>
 	<string name="reader_label_followed_blog">Blog diikuti</string>
@@ -399,7 +414,6 @@
 	<string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
 	<string name="open_source_licenses">Lisensi sumber terbuka</string>
 	<string name="location_not_found">Lokasi tidak diketahui</string>
-	<string name="stats_view_tags_and_categories">Tag dan kategori</string>
 	<string name="pending_review">Tinjauan tertunda</string>
 	<string name="http_credentials">HTTP credentials (opsional)</string>
 	<string name="http_authorization_required">Otorisasi diwajibkan</string>
@@ -497,7 +511,6 @@
 	<string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
 	<string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
 	<string name="reader_empty_followed_tags">Anda belum mengikuti satupun tag</string>
-	<string name="reader_empty_popular_tags">Bukan tag populer</string>
 	<string name="create_account_wpcom">Buat akun dengan Wordpress.com</string>
 	<string name="connecting_wpcom">MEnghubungkan ke Wordpress.com</string>
 	<string name="username_invalid">Username tidak valid</string>
@@ -534,6 +547,7 @@
 	<string name="theme_set_success">Berhasil memasang tema!</string>
 	<string name="theme_auth_error_title">Gagal mengambil tema</string>
 	<string name="stats_view_clicks">Klik</string>
+	<string name="stats_view_tags_and_categories">Tag &amp; Kategori</string>
 	<string name="stats_view_referrers">Pengacu</string>
 	<string name="stats_view_comments">Komentar</string>
 	<string name="stats_timeframe_today">Hari Ini</string>
