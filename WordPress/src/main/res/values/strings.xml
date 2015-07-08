@@ -796,6 +796,9 @@
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
 
+    <!--example: "Originally posted by [AuthorName] on [BlogName] -->
+    <string name="reader_discover_attribution">Originally posted by %1$s on %2$s</string>
+
     <!-- connection bar which appears on main activity when there's no connection -->
     <string name="connectionbar_no_connection">No connection</string>
 

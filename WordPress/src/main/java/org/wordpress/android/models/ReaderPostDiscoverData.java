@@ -111,7 +111,7 @@ public class ReaderPostDiscoverData {
         // to open the blog preview inside the app instead
         String blogLink = "<a href='" + getBlogUrl() + "'>" + getBlogName()  + "</a>";
         String authorLink = "<a href='" + getAuthorUrl() + "'>" + getAuthorName()  + "</a>";
-        String html = context.getString(R.string.reader_discover_attribution, authorLink, blogLink);
+        String html = String.format(context.getString(R.string.reader_discover_attribution), authorLink, blogLink);
         return Html.fromHtml(html);
     }
 }
