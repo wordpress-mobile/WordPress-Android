@@ -31,7 +31,6 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -41,6 +40,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.PostListButton;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
@@ -77,6 +77,8 @@ public class PostsListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
@@ -203,10 +205,10 @@ public class PostsListFragment extends Fragment
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
-        loadPosts();
-
-        // request latest posts the first time this is called (ie: not after device rotation)
+        // since setRetainInstance(true) is used, we only need to load adapter and request latest
+        // posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
+            loadPosts();
             requestPosts(false);
         }
     }
@@ -548,13 +550,13 @@ public class PostsListFragment extends Fragment
         }
 
         // remove post from the list
-        mPostsListAdapter.hidePost(post);
+        getPostListAdapter().hidePost(post);
 
         View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDidUndoTrash = true;
-                mPostsListAdapter.unhidePost(post);
+                getPostListAdapter().unhidePost(post);
             }
         };
 
@@ -575,7 +577,7 @@ public class PostsListFragment extends Fragment
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mDidUndoTrash || !isAdded()) {
+                if (mDidUndoTrash) {
                     return;
                 }
 
