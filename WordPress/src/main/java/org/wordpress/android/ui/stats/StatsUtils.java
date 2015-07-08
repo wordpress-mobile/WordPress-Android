@@ -119,7 +119,7 @@ public class StatsUtils {
     /**
      * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
-    private static String getCurrentDate() {
+    public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
         return sdf.format(new Date());
     }

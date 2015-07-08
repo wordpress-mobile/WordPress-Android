@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -22,11 +23,11 @@ import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PagesListActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -75,7 +76,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(Context context) {
-        Intent intent = new Intent(context, PagesListActivity.class);
+        Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         slideInFromRight(context, intent);
     }
@@ -135,6 +136,21 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
+    /*
+     * Load the post preview as an authenticated URL so stats aren't bumped
+     */
+    public static void browsePostOrPage(Context context, Blog blog, Post post) {
+        if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
+
+        String url = post.getPermaLink();
+        if (-1 == url.indexOf('?')) {
+            url = url.concat("?preview=true");
+        } else {
+            url = url.concat("&preview=true");
+        }
+        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, url);
+    }
+
     public static void addMedia(Activity activity) {
         WordPressMediaUtils.launchPictureLibrary(activity);
     }
@@ -179,6 +195,19 @@ public class ActivityLauncher {
     public static void showSignInForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
+        if (post == null) return;
+
+        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(post.getLocalTableBlogId());
+        PostModel postModel = new PostModel(
+                Integer.toString(remoteBlogId),
+                post.getRemotePostId(),
+                post.getTitle(),
+                post.getLink(),
+                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
+        viewStatsSinglePostDetails(context, postModel);
     }
 
     public static void viewStatsSinglePostDetails(Context context, PostModel post) {
