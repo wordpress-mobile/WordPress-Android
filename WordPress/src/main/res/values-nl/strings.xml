@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">Mijn site</string>
+	<string name="tabbar_accessibility_label_me">Ik</string>
+	<string name="passcodelock_prompt_message">Je PIN invullen.</string>
+	<string name="editor_toast_changes_saved">De wijzigingen zijn opgeslagen.</string>
+	<string name="push_auth_expired">Je verzoek is verlopen. Je bij WordPress.com aanmelden en opnieuw proberen.</string>
+	<string name="stats_insights_best_ever">Best bekeken ooit</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% van weergaven</string>
+	<string name="ignore">Negeren</string>
+	<string name="stats_insights_most_popular_hour">De meest populaire tijd.</string>
+	<string name="stats_insights_most_popular_day">De meest populaire dag.</string>
+	<string name="stats_insights_today">De statistieken van vandaag.</string>
+	<string name="stats_insights_popular">De meest populaire dag en tijd.</string>
+	<string name="stats_insights_all_time">Alle berichten, weergaven en bezoekers</string>
+	<string name="stats_insights">Inzichten</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Om de statistieken te bekijken moet je bij je WordPress.com account aanmelden en deze verbinden met Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Op zoek naar je andere recente statistieken? We hebben ze verplaatst naar de pagina Inzichten.</string>
 	<string name="me_disconnect_from_wordpress_com">Loskoppelen van WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Verbinden met WordPress.com</string>
 	<string name="me_btn_login_logout">Inloggen/uitloggen</string>
@@ -101,6 +117,7 @@
 	<string name="stats_total">Totaal</string>
 	<string name="stats_overall">Totaal</string>
 	<string name="post_uploading">Uploaden</string>
+	<string name="stats_comments_total_comments_followers">Totaalaantal berichten met reactievolgers: %1$s</string>
 	<string name="stats_visitors">Bezoekers</string>
 	<string name="stats_likes">Waarderingen</string>
 	<string name="stats_comments">Reacties</string>
@@ -136,7 +153,6 @@
 	<string name="stats_empty_publicize">Geen Publicize-volgers geregistreerd</string>
 	<string name="stats_empty_publicize_desc">Houd je volgers van verschillende sociale netwerkservices bij met behulp van Publicize.</string>
 	<string name="stats_empty_followers">Geen volgers</string>
-	<string name="stats_comments_total_comments_followers">Totaal aantal reactievolgers: %1$s</string>
 	<string name="stats_comments_by_authors">Op auteurs</string>
 	<string name="stats_comments_by_posts_and_pages">Op berichten en pagina\'s</string>
 	<string name="stats_empty_followers_desc">Houd je totaal aantal volgers bij en hoe lang elke volger je site al volgt.</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">Voorbeeld tag</string>
 	<string name="reader_title_subs">Tags &amp; Blogs</string>
 	<string name="reader_page_followed_tags">Gevolgde tags</string>
-	<string name="reader_page_popular_tags">Populaire tags</string>
 	<string name="reader_page_followed_blogs">Gevolgde blogs</string>
 	<string name="reader_hint_add_tag_or_url">Voer een tag of URL in om te volgen</string>
 	<string name="reader_label_followed_blog">Blog gevolgd</string>
@@ -402,7 +417,6 @@
 	<string name="file_error_create">Kan geen tijdelijk bestand maken voor het uploaden van media. Controleer of er genoeg vrije ruimte is op je apparaat.</string>
 	<string name="location_not_found">Onbekende locatie</string>
 	<string name="open_source_licenses">Open-sourcelicenties</string>
-	<string name="stats_view_tags_and_categories">Tags &amp; categorieën</string>
 	<string name="pending_review">In afwachting van controle</string>
 	<string name="http_credentials">HTTP-verificatiegegevens (optioneel)</string>
 	<string name="http_authorization_required">Autorisatie vereist</string>
@@ -478,7 +492,6 @@
 	<string name="reader_label_added_tag">%s toegevoegd</string>
 	<string name="reader_label_removed_tag">%s verwijderd</string>
 	<string name="reader_toast_err_url_intent">Onmogelijk %s te openen</string>
-	<string name="reader_empty_popular_tags">Geen populaire tags</string>
 	<string name="create_account_wpcom">Maak een account op Wordpress.com aan</string>
 	<string name="connecting_wpcom">Verbinden met Wordpress.com</string>
 	<string name="reader_toast_err_share_intent">Onmogelijk te delen</string>
@@ -532,6 +545,7 @@
 	<string name="view_stats_full_site">Bekijk site</string>
 	<string name="stats_view_visitors_and_views">Bezoekers en views</string>
 	<string name="stats_view_clicks">Kliks</string>
+	<string name="stats_view_tags_and_categories">Tags en categorieën </string>
 	<string name="stats_entry_country">Land</string>
 	<string name="stats_entry_posts_and_pages">Titel</string>
 	<string name="stats_entry_tags_and_categories">Onderwerp</string>

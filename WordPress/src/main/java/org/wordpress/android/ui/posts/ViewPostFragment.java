@@ -21,16 +21,15 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -44,7 +43,13 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class ViewPostFragment extends Fragment {
-    /** Called when the activity is first created. */
+    public static final int POST_ACTION_SHARE = 1;
+    public static final int POST_ACTION_EDIT = 2;
+    public static final int POST_ACTION_VIEW = 3;
+
+    public interface OnDetailPostActionListener {
+        public void onDetailPostAction(int action, Post post);
+    }
 
     private OnDetailPostActionListener mOnDetailPostActionListener;
     PostsListActivity mParentActivity;
@@ -135,7 +140,7 @@ public class ViewPostFragment extends Fragment {
         editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (WordPress.currentPost != null && !mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_EDIT, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailPostAction(POST_ACTION_EDIT, WordPress.currentPost);
                     long postId = WordPress.currentPost.getLocalTablePostId();
                     boolean isPage = WordPress.currentPost.isPage();
                     ActivityLauncher.editBlogPostOrPageForResult(getActivity(), postId, isPage);
@@ -147,23 +152,14 @@ public class ViewPostFragment extends Fragment {
         mShareUrlButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_SHARE, WordPress.currentPost);
-                }
-            }
-        });
-
-        ImageButton deletePostButton = (ImageButton) v.findViewById(R.id.deletePost);
-        deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                if (!mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_DELETE, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailPostAction(POST_ACTION_SHARE, WordPress.currentPost);
                 }
             }
         });
 
         mViewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_VIEW, WordPress.currentPost);
+                mOnDetailPostActionListener.onDetailPostAction(POST_ACTION_VIEW, WordPress.currentPost);
                 if (!mParentActivity.isRefreshing()) {
                     loadPostPreview();
                 }
@@ -195,20 +191,8 @@ public class ViewPostFragment extends Fragment {
         }
     }
 
-    /**
-     * Load the post preview as an authenticated URL so stats aren't bumped.
-     */
     protected void loadPostPreview() {
-        if (WordPress.currentPost != null && !TextUtils.isEmpty(WordPress.currentPost.getPermaLink())) {
-            Post post = WordPress.currentPost;
-            String url = post.getPermaLink();
-            if (-1 == url.indexOf('?')) {
-                url = url.concat("?preview=true");
-            } else {
-                url = url.concat("&preview=true");
-            }
-            WPWebViewActivity.openUrlByUsingBlogCredentials(getActivity(), WordPress.currentBlog, url);
-        }
+        ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), WordPress.currentPost);
     }
 
     public void onAttach(Activity activity) {
@@ -296,10 +280,6 @@ public class ViewPostFragment extends Fragment {
                 });
             }
         }.start();
-    }
-
-    public interface OnDetailPostActionListener {
-        public void onDetailPostAction(int action, Post post);
     }
 
     public void clearContent() {
@@ -406,8 +386,6 @@ public class ViewPostFragment extends Fragment {
                 if (!isAdded())
                     return;
 
-                mParentActivity.attemptToSelectPost();
-
                 mEditComment.setEnabled(true);
                 mAddCommentButton.setEnabled(true);
                 imgPostComment.setVisibility(View.VISIBLE);
@@ -417,7 +395,6 @@ public class ViewPostFragment extends Fragment {
                     ToastUtils.showToast(getActivity(), R.string.comment_added);
                     hideCommentBox();
                     mEditComment.setText(null);
-                    mParentActivity.refreshComments();
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
                 }

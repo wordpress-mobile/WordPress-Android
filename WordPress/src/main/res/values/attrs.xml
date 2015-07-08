@@ -42,4 +42,22 @@
         </attr>
     </declare-styleable>
 
+    <!--
+        PostListButton attributes
+    -->
+    <declare-styleable name="wpPostListButton">
+        <attr name="wpPostButtonType" format="enum">
+            <enum name="none" value="0" />
+            <enum name="edit" value="1" />
+            <enum name="view" value="2" />
+            <enum name="preview" value="3" />
+            <enum name="stats" value="4" />
+            <enum name="trash" value="5" />
+            <enum name="delete" value="6" />
+            <enum name="publish" value="7" />
+            <enum name="more" value="8" />
+            <enum name="back" value="9" />
+        </attr>
+    </declare-styleable>
+
 </resources>

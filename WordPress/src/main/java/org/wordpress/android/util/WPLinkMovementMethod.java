@@ -63,7 +63,8 @@ public class WPLinkMovementMethod extends LinkMovementMethod {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            ToastUtils.showToast(context, context.getString(R.string.reader_toast_err_url_intent, url), ToastUtils.Duration.LONG);
+            String readerToastUrlErrorIntent = context.getString(R.string.reader_toast_err_url_intent);
+            ToastUtils.showToast(context, String.format(readerToastUrlErrorIntent, url), ToastUtils.Duration.LONG);
         }
     }
 }
