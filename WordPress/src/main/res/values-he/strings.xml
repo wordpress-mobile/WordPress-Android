@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">האתר שלי</string>
+	<string name="tabbar_accessibility_label_me">אני</string>
+	<string name="passcodelock_prompt_message">הזנת קוד PIN</string>
+	<string name="editor_toast_changes_saved">השינויים נשמרו</string>
+	<string name="push_auth_expired">פג תוקף הבקשה. יש להיכנס ל-WordPress.com כדי לנסות שוב.</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% מהצפיות</string>
+	<string name="stats_insights_best_ever">כמות הצפיות הגבוהה בכל הזמנים</string>
+	<string name="ignore">להתעלם</string>
+	<string name="stats_insights_most_popular_hour">השעה הפופולרית ביותר</string>
+	<string name="stats_insights_most_popular_day">היום הפופולרי ביותר</string>
+	<string name="stats_insights_popular">היום והשעה הפופולרים ביותר</string>
+	<string name="stats_insights_today">הנתונים הסטטיסטיים של היום</string>
+	<string name="stats_insights_all_time">פוסטים, צפיות ומבקרים מההתחלה ועד היום</string>
+	<string name="stats_insights">תובנות</string>
+	<string name="stats_sign_in_jetpack_different_com_account">להצגת הנתונים הסטטיסטיים שלך, יש להיכנס לחשבון WordPress.com שבו השתמשת כדי לחבר את Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">מנסה למצוא נתונים סטטיסטיים אחרים מהזמן האחרון? העברנו אותם אל העמוד \'תובנות\'.</string>
 	<string name="me_disconnect_from_wordpress_com">התנתקות מ-WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">התחברות אל WordPress.com</string>
 	<string name="me_btn_login_logout">כניסה/יציאה</string>
@@ -101,6 +117,7 @@
 	<string name="reader_label_new_posts">פוסטים חדשים</string>
 	<string name="stats_total">סה"כ</string>
 	<string name="post_uploading">מעלה</string>
+	<string name="stats_comments_total_comments_followers">סה"כ פוסטים עם עוקבים אחר תגובות: %1$s</string>
 	<string name="stats_empty_video">לא הופעל וידאו</string>
 	<string name="stats_view_videos">וידאו</string>
 	<string name="stats_visitors">מבקרים</string>
@@ -139,7 +156,6 @@
 	<string name="stats_empty_followers_desc">אפשר לעקוב אחר המספר הכולל של עוקבים ומשך הזמן שכל אחד מהם עוקב אחר האתר שלך.</string>
 	<string name="stats_comments_by_posts_and_pages">לפי פוסטים ועמודים</string>
 	<string name="stats_comments_by_authors">לפי מחברים</string>
-	<string name="stats_comments_total_comments_followers">סה"כ עוקבים אחר תגובות: %1$s</string>
 	<string name="stats_followers_total_wpcom">סה"כ עוקבי WordPress.com: %1$s</string>
 	<string name="stats_followers_email_selector">אימייל</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -247,7 +263,6 @@
 	<string name="reader_title_blog_preview">הצג אתר בתצוגה מקדימה</string>
 	<string name="reader_title_tag_preview">הצג תגית בתצוגה מקדימה</string>
 	<string name="reader_page_followed_tags">תגיות נעקבות</string>
-	<string name="reader_page_popular_tags">תגיות פופולריות</string>
 	<string name="reader_hint_add_tag_or_url">הזן תגית או כתובת אתר למעקב</string>
 	<string name="reader_label_tag_preview">פוסטים שתויגו %s</string>
 	<string name="saving">שומר...</string>
@@ -406,7 +421,6 @@
 	<string name="file_error_create">יצירת קובץ temp להעלאת קבצים לא הצליחה. וודא שיש מספיק מקום פנוי במכשיר.</string>
 	<string name="location_not_found">מיקום לא ידוע</string>
 	<string name="open_source_licenses">רישיונות קוד פתוח</string>
-	<string name="stats_view_tags_and_categories">תגיות וקטגוריות</string>
 	<string name="pending_review">בהמתנה לבדיקה</string>
 	<string name="http_credentials">אישורי HTTP (אופציונאלי)</string>
 	<string name="http_authorization_required">דרושה הרשאה</string>
@@ -498,7 +512,6 @@
 	<string name="reader_toast_err_share_intent">לא ניתן לשתף</string>
 	<string name="reader_toast_err_view_image">לא ניתן להציג תמונה</string>
 	<string name="reader_toast_err_url_intent">לא ניתן לפתוח את %s</string>
-	<string name="reader_empty_popular_tags">אין תגיות פופולאריות</string>
 	<string name="username_invalid">שם משתמש לא חוקי</string>
 	<string name="limit_reached">הגעת למגבלה. תוכל לנסות שנית בעוד דקה 1. אם תנסה שנית קודם לכן, זה רק יאריך את זמן ההמתנה שלך עד להסרת המגבלה. אם אתה חושב שזו שגיאה, פנה לתמיכה.</string>
 	<string name="nux_tutorial_get_started_title">צא לדרך!</string>
@@ -507,6 +520,7 @@
 	<string name="all">הכל</string>
 	<string name="images">תמונות</string>
 	<string name="media_gallery_image_order_random">אקראי</string>
+	<string name="stats_view_tags_and_categories">תגים וקטגוריות</string>
 	<string name="unattached">מנותק</string>
 	<string name="custom_date">תאריך מותאם אישית</string>
 	<string name="media_add_popup_capture_photo">צלם תמונה</string>

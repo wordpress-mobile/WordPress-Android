@@ -26,13 +26,14 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.ui.reader.views.ReaderItemDecoration;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.PostListButton;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
@@ -69,14 +71,17 @@ public class PostsListFragment extends Fragment
     private TextView mEmptyViewTitle;
     private ImageView mEmptyViewImage;
 
-    private boolean mDidUndoTrash;
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
 
+    private final PostsListPostList mTrashedPosts = new PostsListPostList();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
@@ -106,7 +111,7 @@ public class PostsListFragment extends Fragment
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-        mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,10 +208,10 @@ public class PostsListFragment extends Fragment
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
-        loadPosts();
-
-        // request latest posts the first time this is called (ie: not after device rotation)
+        // since setRetainInstance(true) is used, we only need to load adapter and request latest
+        // posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
+            loadPosts();
             requestPosts(false);
         }
     }
@@ -508,6 +513,7 @@ public class PostsListFragment extends Fragment
     public void onPostButtonClicked(int buttonType, PostsListPost post) {
         Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
         if (fullPost == null) {
+            ToastUtils.showToast(getActivity(), R.string.post_not_found);
             return;
         }
 
@@ -547,14 +553,16 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        // remove post from the list
-        mPostsListAdapter.hidePost(post);
+        // remove post from the list and add it to the list of trashed posts
+        getPostListAdapter().hidePost(post);
+        mTrashedPosts.add(post);
 
         View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDidUndoTrash = true;
-                mPostsListAdapter.unhidePost(post);
+                // user undid the trash, so unhide the post and remove it from the list of trashed posts
+                mTrashedPosts.remove(post);
+                getPostListAdapter().unhidePost(post);
             }
         };
 
@@ -566,7 +574,6 @@ public class PostsListFragment extends Fragment
             text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
         }
 
-        mDidUndoTrash = false;
         Snackbar.make(getView().findViewById(R.id.coordinator), text, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener)
                 .show();
@@ -575,7 +582,10 @@ public class PostsListFragment extends Fragment
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mDidUndoTrash || !isAdded()) {
+                // if the post no longer exists in the list of trashed posts it's because the
+                // user undid the trash, so don't perform the deletion
+                if (!mTrashedPosts.contains(post)) {
+                    AppLog.d(AppLog.T.POSTS, "user undid trashing");
                     return;
                 }
 

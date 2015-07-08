@@ -356,7 +356,8 @@ public class ReaderSubsActivity extends AppCompatActivity
             mLastAddedTagName = tag.getTagName();
             // make sure addition is reflected on followed tags
             getPageAdapter().refreshFollowedTagFragment();
-            showInfoToast(getString(R.string.reader_label_added_tag, tag.getCapitalizedTagName()));
+            String labelAddedTag = getString(R.string.reader_label_added_tag);
+            showInfoToast(String.format(labelAddedTag, tag.getCapitalizedTagName()));
         }
     }
 
@@ -469,7 +470,8 @@ public class ReaderSubsActivity extends AppCompatActivity
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
             mLastAddedTagName = null;
         }
-        showInfoToast(getString(R.string.reader_label_removed_tag, tag.getCapitalizedTagName()));
+        String labelRemovedTag = getString(R.string.reader_label_removed_tag);
+        showInfoToast(String.format(labelRemovedTag, tag.getCapitalizedTagName()));
     }
 
     /*

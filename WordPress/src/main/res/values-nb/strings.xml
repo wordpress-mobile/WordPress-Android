@@ -109,6 +109,7 @@
 	<string name="view_stats_full_site">Se alle</string>
 	<string name="stats_view_visitors_and_views">Besøk og visninger</string>
 	<string name="stats_view_clicks">Klikk</string>
+	<string name="stats_view_tags_and_categories">Stikkord og kategorier</string>
 	<string name="stats_view_referrers">Henvisninger</string>
 	<string name="stats_view_comments">Kommentarer</string>
 	<string name="stats_timeframe_today">Idag</string>
