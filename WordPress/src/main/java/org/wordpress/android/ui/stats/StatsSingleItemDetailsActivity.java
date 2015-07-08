@@ -848,10 +848,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            if (volleyError != null) {
-                AppLog.e(AppLog.T.STATS, "Error while reading Stats details "
-                        + volleyError.getMessage(), volleyError);
-            }
+            StatsUtils.logVolleyErrorDetails(volleyError);
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
