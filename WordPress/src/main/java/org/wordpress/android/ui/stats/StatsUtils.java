@@ -349,7 +349,7 @@ public class StatsUtils {
                 AppLog.e(T.STATS, "Network data: " + new String(networkResponse.data));
             }
         }
-        AppLog.e(T.STATS, "Volley Error details: " + volleyError.getMessage(), volleyError);
+        AppLog.e(T.STATS, "Volley Error Message: " + volleyError.getMessage(), volleyError);
     }
 
     public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
