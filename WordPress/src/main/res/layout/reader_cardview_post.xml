@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stateListAnimator="@anim/pressed_card"
+        card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
         card_view:cardElevation="@dimen/card_elevation">
 
@@ -140,9 +141,9 @@
                     android:id="@+id/text_date"
                     style="@style/ReaderTextView.Date"
                     android:layout_width="0dp"
-                    android:gravity="center_vertical"
                     android:layout_height="@dimen/reader_button_icon"
                     android:layout_weight="2"
+                    android:gravity="center_vertical"
                     tools:text="text_date" />
 
                 <org.wordpress.android.ui.reader.views.ReaderIconCountView
