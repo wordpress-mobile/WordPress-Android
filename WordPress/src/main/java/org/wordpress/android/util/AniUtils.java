@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
-import android.os.Handler;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -17,8 +16,6 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 
 import org.wordpress.android.R;
-
-import java.lang.ref.WeakReference;
 
 public class AniUtils {
 
@@ -76,11 +73,11 @@ public class AniUtils {
     /*
      * in/out animation for floating action button
      */
-    public static void showFab(final View view, boolean show) {
+    public static void showFab(final View view, final boolean show) {
         if (view == null) return;
 
         Context context = view.getContext();
-        int fabHeight = context.getResources().getDimensionPixelSize(com.getbase.floatingactionbutton.R.dimen.fab_size_normal);
+        int fabHeight = context.getResources().getDimensionPixelSize(R.dimen.fab_size_normal);
         int fabMargin = context.getResources().getDimensionPixelSize(R.dimen.fab_margin);
         int max = (fabHeight + fabMargin) * 2;
         float fromY = (show ? max : 0f);
@@ -98,24 +95,16 @@ public class AniUtils {
                     view.setVisibility(View.VISIBLE);
                 }
             }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (!show) {
+                    view.setVisibility(View.GONE);
+                }
+            }
         });
 
         anim.start();
-    }
-
-    public static void showFabDelayed(View fabView, final boolean show, long delayMs) {
-        // use a weak reference to the view so it won't be retained if the
-        // activity/fragment is destroyed before the animation is started
-        final WeakReference<View> weakView = new WeakReference<>(fabView);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                View view = weakView.get();
-                if (view != null) {
-                    showFab(view, show);
-                }
-            }
-        }, delayMs);
     }
 
     /*
@@ -226,6 +215,9 @@ public class AniUtils {
         animator.start();
     }
 
+    public static void scaleOut(final View target, Duration duration) {
+        scaleOut(target, View.GONE, duration, null);
+    }
     public static void scaleOut(final View target,
                                 final int endVisibility,
                                 Duration duration,

@@ -33,6 +33,12 @@
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
 
+    <!-- featured image in post list -->
+    <dimen name="postlist_featured_image_height_normal">128dp</dimen>
+    <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
+    <dimen name="postlist_featured_image_height_tablet_large">280dp</dimen>
+    <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_normal</dimen>
+
     <!-- left/right margin for content such as Me fragment, My Site fragment, reader posts -->
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
     <dimen name="content_margin_normal_landscape">48dp</dimen>
@@ -73,6 +79,7 @@
     <dimen name="text_sz_medium">14sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
+    <dimen name="text_sz_double_extra_large">24sp</dimen>
 
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">48dp</dimen>
@@ -145,6 +152,10 @@
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
+    <dimen name="my_site_no_site_view_margin">24dp</dimen>
+    <dimen name="my_site_no_site_view_subtitle_margin_top">18dp</dimen>
+    <dimen name="my_site_no_site_view_subtitle_font">21sp</dimen>
+    <dimen name="my_site_no_site_view_button_margin_top">50dp</dimen>
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>

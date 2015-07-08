@@ -85,8 +85,11 @@ public class WordPress extends Application {
     public static Blog currentBlog;
     public static Post currentPost;
     public static WordPressDB wpDB;
-    public static RestClientUtils mRestClientUtils;
-    public static RestClientUtils mRestClientUtilsVersion1_1;
+
+    private static RestClientUtils mRestClientUtils;
+    private static RestClientUtils mRestClientUtilsVersion1_1;
+    private static RestClientUtils mRestClientUtilsVersion1_2;
+
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
 
@@ -215,6 +218,17 @@ public class WordPress extends Application {
 
         // we want to reset the suggestion table in every launch so we can get a fresh list
         SuggestionTable.reset(wpDB.getDatabase());
+
+
+        // Track app upgrade
+        int versionCode = PackageUtils.getVersionCode(this);
+        int oldVersionCode = AppPrefs.getLastAppVersionCode();
+        if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+            // app upgraded
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
+        }
+        AppPrefs.setLastAppVersionCode(versionCode);
+
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -293,6 +307,14 @@ public class WordPress extends Application {
             mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
         return mRestClientUtilsVersion1_1;
+    }
+
+    public static RestClientUtils getRestClientUtilsV1_2() {
+        if (mRestClientUtilsVersion1_2 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion1_2 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_2);
+        }
+        return mRestClientUtilsVersion1_2;
     }
 
     /**
@@ -463,6 +485,9 @@ public class WordPress extends Application {
      * Sign out from wpcom account
      */
     public static void WordPressComSignOut(Context context) {
+        // Keep the analytics tracking at the beginning, before the account data is actual removed.
+        AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
+
         removeWpComUserRelatedData(context);
 
         // broadcast an event: wpcom user signed out

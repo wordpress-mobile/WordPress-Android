@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">我的網站</string>
+	<string name="tabbar_accessibility_label_me">我</string>
+	<string name="passcodelock_prompt_message">輸入 PIN 碼</string>
+	<string name="editor_toast_changes_saved">變更已儲存</string>
+	<string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
+	<string name="stats_insights_best_ever">最佳的瀏覽次數</string>
+	<string name="ignore">忽略</string>
+	<string name="stats_insights_most_popular_percent_views">瀏覽次數：%1$d%%</string>
+	<string name="stats_insights_most_popular_hour">最熱門的時段</string>
+	<string name="stats_insights_most_popular_day">最熱門的日子</string>
+	<string name="stats_insights_popular">最熱門的日子及時段</string>
+	<string name="stats_insights_today">本日統計</string>
+	<string name="stats_insights_all_time">有史以來的文章數、瀏覽次數與訪客數</string>
+	<string name="stats_insights">Insights</string>
+	<string name="stats_sign_in_jetpack_different_com_account">若要檢視統計資料，請使用連線 Jetpack 的帳號登入 WordPress.com。</string>
+	<string name="stats_other_recent_stats_moved_label">正在尋找其他近期統計資料嗎？我們已將統計資料移至「Insights」頁面。</string>
 	<string name="me_disconnect_from_wordpress_com">中斷與 WordPress.com 的連線</string>
 	<string name="me_btn_login_logout">登入/登出</string>
 	<string name="me_connect_to_wordpress_com">連線 WordPress.com</string>
@@ -101,6 +117,7 @@
 	<string name="stats_total">總計</string>
 	<string name="stats_overall">整體</string>
 	<string name="post_uploading">正在上傳</string>
+	<string name="stats_comments_total_comments_followers">含有留言關注者的文章總數：%1$s</string>
 	<string name="stats_visitors">訪客</string>
 	<string name="stats_timeframe_years">年</string>
 	<string name="stats_views">點閱數</string>
@@ -138,7 +155,6 @@
 	<string name="stats_empty_publicize_desc">使用 Publicize 追蹤來自不同社交網路服務的關注者。</string>
 	<string name="stats_comments_by_posts_and_pages">依文章與頁面</string>
 	<string name="stats_empty_followers_desc">追蹤關注者總人數，以及這些關注者分別已關注你的網站多久時間。</string>
-	<string name="stats_comments_total_comments_followers">留言關注者總數：%1$s</string>
 	<string name="stats_comments_by_authors">依作者</string>
 	<string name="stats_followers_email_selector">電子郵件</string>
 	<string name="stats_followers_total_wpcom">WordPress.com 關注者總數：%1$s</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">預覽標籤</string>
 	<string name="reader_title_subs">標籤和網誌</string>
 	<string name="reader_page_followed_tags">關注的標籤</string>
-	<string name="reader_page_popular_tags">熱門標籤</string>
 	<string name="reader_page_followed_blogs">關注的網誌</string>
 	<string name="reader_hint_add_tag_or_url">輸入要關注的標籤或網址</string>
 	<string name="reader_label_followed_blog">網誌已關注</string>
@@ -402,7 +417,6 @@
 	<string name="file_error_create">無法建立暫存檔進行媒體上傳。確認裝置上有足夠的可用空間。</string>
 	<string name="location_not_found">未知的位置</string>
 	<string name="open_source_licenses">開啟來源授權</string>
-	<string name="stats_view_tags_and_categories">標籤和類別</string>
 	<string name="pending_review">待審中</string>
 	<string name="http_credentials">HTTP 憑證 (選填)</string>
 	<string name="http_authorization_required">需要授權</string>
@@ -489,7 +503,6 @@
 	<string name="reader_btn_share">分享</string>
 	<string name="reader_btn_follow">追蹤</string>
 	<string name="reader_toast_err_url_intent">無法開啟 %s</string>
-	<string name="reader_empty_popular_tags">沒有受歡迎的標籤</string>
 	<string name="connecting_wpcom">連結至 WordPress.com</string>
 	<string name="username_invalid">無效的使用者名稱</string>
 	<string name="reader_likes_one">1 人說這個讚</string>
@@ -531,6 +544,7 @@
 	<string name="media_edit_failure">更新失敗</string>
 	<string name="themes_details_label">細節</string>
 	<string name="view_stats_full_site">檢視全站</string>
+	<string name="stats_view_tags_and_categories">標籤與分類</string>
 	<string name="media_no_video_message">取得 VideoPress 升級以上傳影片！</string>
 	<string name="themes_features_label">功能</string>
 	<string name="theme_activate_button">啟用</string>

@@ -9,7 +9,7 @@ public class InsightsTodayModel implements Serializable {
 
     private String mBlogID;
     private String mDate;
-    private String period;
+    private String mPeriod;
     private int mVisitors;
     private int mViews;
     private int mLikes;
@@ -20,7 +20,7 @@ public class InsightsTodayModel implements Serializable {
     public InsightsTodayModel(String blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
         this.mDate = response.getString("date");
-        this.period = response.getString("period");
+        this.mPeriod = response.getString("period");
         this.mViews = response.optInt("views");
         this.mVisitors = response.optInt("visitors");
         this.mLikes = response.optInt("likes");

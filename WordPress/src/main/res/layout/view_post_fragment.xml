@@ -68,17 +68,6 @@
         android:background="@drawable/view_post_toolbar"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/deletePost"
-            android:layout_width="@dimen/post_detail_button_size"
-            android:layout_height="@dimen/post_detail_button_size"
-            android:background="@drawable/selectable_background_wordpress"
-            android:scaleType="fitCenter"
-            android:padding="12dp"
-            android:tint="@color/post_detail_icon_tint"
-            android:src="@drawable/ic_delete_white_24dp"
-            android:contentDescription="@string/delete_post" />
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="48dp"

@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_me">Yo mismo</string>
+	<string name="tabbar_accessibility_label_my_site">Mi sitio</string>
+	<string name="passcodelock_prompt_message">Escribe tu PIN</string>
+	<string name="editor_toast_changes_saved">Cambios guardados</string>
+	<string name="push_auth_expired">La solicitud ha expirado. Inicia sesión en WordPress.com para volver a intentarlo.</string>
+	<string name="ignore">Ignorar</string>
+	<string name="stats_insights_best_ever">El mejor día</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% de vistas</string>
+	<string name="stats_insights_most_popular_hour">Hora más popular</string>
+	<string name="stats_insights_most_popular_day">Día más popular</string>
+	<string name="stats_insights_today">Estadísticas de hoy</string>
+	<string name="stats_insights_popular">Hora y día más populares</string>
+	<string name="stats_insights_all_time">Entradas, vistas y visitantes de todos los tiempos</string>
+	<string name="stats_insights">Detalles</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Para ver tus estadísticas, inicia sesión en la cuenta de WordPress.com que has usado para efectuar la conexión con Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página "Detalles".</string>
 	<string name="me_disconnect_from_wordpress_com">Desconectar de WordPress.com</string>
 	<string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
 	<string name="me_connect_to_wordpress_com">Conectar a WordPress.com</string>
@@ -101,6 +117,7 @@
 	<string name="stats_period">Periodo</string>
 	<string name="reader_label_new_posts">Nuevas entradas</string>
 	<string name="post_uploading">Cargando</string>
+	<string name="stats_comments_total_comments_followers">Total de entradas con comentarios de seguidores: %1$s</string>
 	<string name="stats_visitors">Visitantes</string>
 	<string name="stats_views">Vistas</string>
 	<string name="stats_timeframe_years">Años</string>
@@ -139,7 +156,6 @@
 	<string name="stats_empty_followers_desc">Realiza un seguimiento del número total de seguidores y del tiempo que cada uno de ellos lleva siguiendo tu sitio.</string>
 	<string name="stats_comments_by_authors">Por autores</string>
 	<string name="stats_comments_by_posts_and_pages">Por entradas y páginas</string>
-	<string name="stats_comments_total_comments_followers">Seguidores totales del comentario: %1$s</string>
 	<string name="stats_followers_total_wpcom">Seguidores totales de WordPress.com: %1$s</string>
 	<string name="stats_followers_seconds_ago">hace unos segundos</string>
 	<string name="stats_followers_total_email">Seguidores totales por correo electrónico: %1$s</string>
@@ -237,7 +253,6 @@
 	<string name="update_verb">Actualizar</string>
 	<string name="schedule_verb">Programación</string>
 	<string name="reader_title_subs">Etiquetas y blogs</string>
-	<string name="reader_page_popular_tags">Etiquetas populares</string>
 	<string name="reader_toast_err_already_follow_blog">Ya estás siguiendo este blog</string>
 	<string name="reader_title_blog_preview">Vista previa del blog</string>
 	<string name="reader_title_tag_preview">Vista previa de la etiqueta</string>
@@ -390,7 +405,6 @@
 	<string name="local_draft">Borrador local</string>
 	<string name="view_in_browser">Ver en el navegador</string>
 	<string name="open_source_licenses">Licencias Open source</string>
-	<string name="stats_view_tags_and_categories">Etiquetas y categorías</string>
 	<string name="reader_share_link">Compartir enlace</string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
@@ -478,7 +492,6 @@
 	<string name="reader_toast_err_tag_invalid">Esta no es una etiqueta válida</string>
 	<string name="reader_toast_err_share_intent">Imposible compartir</string>
 	<string name="limit_reached">Límite alcanzado. Puedes probar en 1 minuto. Probar de nuevo antes solamente incrementará el tiempo de espera hasta que la prohibición sea suprimida. Si crees que es un error, contacta con soporte. </string>
-	<string name="reader_empty_popular_tags">No hay etiquetas populares</string>
 	<string name="reader_toast_err_comment_failed">No se pudo publicar tu comentario </string>
 	<string name="reader_toast_err_view_image">Imposible ver la imágen</string>
 	<string name="reader_toast_err_url_intent">Imposible abrir %s</string>
@@ -512,6 +525,7 @@
 	<string name="media_add_popup_capture_video">Tomar vídeo</string>
 	<string name="media_gallery_type">Tipo</string>
 	<string name="media_no_video_title">VideoPress no disponible</string>
+	<string name="stats_view_tags_and_categories">Etiquetas y categorías</string>
 	<string name="stats_timeframe_today">Hoy</string>
 	<string name="stats_timeframe_yesterday">Ayer</string>
 	<string name="stats_timeframe_days">Días</string>

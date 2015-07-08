@@ -29,7 +29,6 @@
 	<string name="stats_empty_video_desc">Доколку прикачувате видеа со VideoPress, дознајте колку пати се гледани.</string>
 	<string name="stats_empty_publicize">Нема записи за следбеници на објавата</string>
 	<string name="stats_followers_months">%1$d месеци</string>
-	<string name="stats_comments_total_comments_followers">Вкупен број на следбеници на коментарот: %1$s</string>
 	<string name="stats_view_top_posts_and_pages">Написи и страници</string>
 	<string name="stats_empty_top_posts_desc">Откријте која содржина е најгледана и како индивидуални написи и страници се извршуваат од време на време.</string>
 	<string name="stats_empty_tags_and_categories_desc">Земете преглед на најпопуларните теми на вашата веб страница врз база на најдобрите написи од минатата недела.</string>
@@ -150,7 +149,6 @@
 	<string name="reader_title_tag_preview">Прегледај ја ознаката</string>
 	<string name="reader_title_subs">Ознаки и Блогови</string>
 	<string name="reader_page_followed_tags">Проследени ознаки</string>
-	<string name="reader_page_popular_tags">Популарни ознаки</string>
 	<string name="reader_page_followed_blogs">Проследени блогови</string>
 	<string name="reader_hint_add_tag_or_url">Внеси ознака или URL за следење</string>
 	<string name="reader_label_followed_blog">Блогот се следи</string>
@@ -240,7 +238,6 @@
 	<string name="connection_error">Грешка во поврзувањето</string>
 	<string name="cancel_edit">Откажи промени</string>
 	<string name="location_not_found">Непозната локација</string>
-	<string name="stats_view_tags_and_categories">Етикети и категори</string>
 	<string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
 	<string name="learn_more">Научи повеќе</string>
 	<string name="theme_current_theme">Сегашна тема</string>
@@ -397,7 +394,6 @@
 	<string name="reader_toast_err_view_image">Неможе да се види сликата</string>
 	<string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>
 	<string name="reader_empty_followed_tags">Вие не следите ниту едно обележување</string>
-	<string name="reader_empty_popular_tags">Нема популарни обележувања</string>
 	<string name="create_account_wpcom">Креирајте корисничка сметка на WordPress.com</string>
 	<string name="connecting_wpcom">Поврзување со WordPress.com</string>
 	<string name="username_invalid">Невалидно корисничко име</string>

@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_me">Fi</string>
+	<string name="tabbar_accessibility_label_my_site">Fy Ngwefan</string>
+	<string name="editor_toast_changes_saved">Mae\'r newidiadau wedi eu cadw</string>
+	<string name="passcodelock_prompt_message">Rhowch eich PIN</string>
+	<string name="push_auth_expired">Daeth y cais i ben. Mewngofnodwch i WordPress.com a cheisio eto.</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% golwg</string>
+	<string name="ignore">Anwybyddu</string>
+	<string name="stats_insights_best_ever">Golygon Gorau Erioed</string>
+	<string name="stats_insights_most_popular_hour">Awr mwyaf poblogaidd</string>
+	<string name="stats_insights_most_popular_day">Diwrnod mwyaf poblogaidd</string>
+	<string name="stats_insights_today">Ystadegau Heddiw</string>
+	<string name="stats_insights_popular">Diwrnod ac awr mwyaf poblogaidd</string>
+	<string name="stats_insights_all_time">Cofnodion, golygon ac ymwelwyr erioed</string>
+	<string name="stats_insights">Mewnwelediadau</string>
+	<string name="stats_sign_in_jetpack_different_com_account">I weld eich ystadegau, mewngofnodwch i\'r cyfrif WordPress.com rydych wedi ei ddefnyddio i gysylltu Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Chwilio am eich Ystadegau Diweddar Eraill? Mae nhw wedi eu symud i\'r dudalen Mewnwelediad.</string>
 	<string name="me_disconnect_from_wordpress_com">Datgysylltwch o WordPress.com</string>
 	<string name="me_btn_login_logout">Mewngofnodi/Allgofnodi</string>
 	<string name="me_connect_to_wordpress_com">Cysylltwch i WordPress.com</string>
@@ -101,11 +117,11 @@
 	<string name="stats_overall">O\'r Cyfan</string>
 	<string name="stats_total">Cyfanswm</string>
 	<string name="post_uploading">Llwytho</string>
+	<string name="stats_comments_total_comments_followers">Cyfanswm cofnodion gyda sylwadau dilynwyr: %1$s</string>
 	<string name="stats_pagination_label">Tudalen %1$s o %2$s</string>
 	<string name="stats_empty_geoviews_desc">Gweld o\'r rhestr i weld pa wledydd ac ardaloedd sy\'n cynhyrchu\'r mwyaf o draffig i\'ch gwefan.</string>
 	<string name="stats_empty_tags_and_categories_desc">Derbyn trosolwg o\'r pynciau mwyaf poblogaidd ar eich gwefan, yn ôl y prif gofnodion yn ystod yr wythnos diwethaf.</string>
 	<string name="stats_empty_referrers_desc">Dysgu rhagor am welededd eich gwefan drwy edrych ar y gwefannau a pheiriannau chwilio sy\'n anfon y mwyaf o draffig atoch</string>
-	<string name="stats_comments_total_comments_followers">Cyfanswm dilynwyr sylwadau: %1$s</string>
 	<string name="stats_other_recent_stats_label">Ystadegau Diweddar Eraill</string>
 	<string name="themes_fetching">Estyn themâu</string>
 	<string name="stats_timeframe_years">Blwyddyn</string>
@@ -242,7 +258,6 @@
 	<string name="reader_empty_recommended_blogs">Dim blogiau cymeradwy</string>
 	<string name="reader_label_tag_preview">Cofnodion wedi\'u tagio %s</string>
 	<string name="reader_toast_err_get_blog_info">Methu dangos y blog</string>
-	<string name="reader_page_popular_tags">Tagiau poblogaidd</string>
 	<string name="reader_page_followed_blogs">Blogiau sy\'n cael eu dilyn</string>
 	<string name="reader_hint_add_tag_or_url">Rhwch dag neu URL i\'w dilyn</string>
 	<string name="reader_label_followed_blog">Blogiau rwy\'n eu diyn</string>
@@ -355,7 +370,6 @@
 	<string name="http_authorization_required">Mae angen awdurdodi</string>
 	<string name="http_credentials">Cymwysterau HTTP (dewisol)</string>
 	<string name="pending_review">Disgwyl adolygiad</string>
-	<string name="stats_view_tags_and_categories">Tags a chategorïau</string>
 	<string name="open_source_licenses">Trwyddedau cod agored</string>
 	<string name="location_not_found">Lleoliad anhysbys</string>
 	<string name="file_error_create">Methwyd creu ffeil dros dro ar gyfer llwytho cyfryngau. Gwnewch yn siwr bod digon o le rhydd ar eich dyfais.</string>
@@ -473,7 +487,6 @@
 	<string name="username_invalid">Enw defnyddiwr annilys</string>
 	<string name="connecting_wpcom">Cysylltu â WordPress.com</string>
 	<string name="create_account_wpcom">Creu cyfrif ar WordPress.com</string>
-	<string name="reader_empty_popular_tags">Dim tagiau poblogaidd</string>
 	<string name="reader_empty_followed_tags">Nid ydych yn dlyn unrhyw dagiau</string>
 	<string name="reader_toast_err_url_intent">Methu agor %s</string>
 	<string name="reader_toast_err_view_image">Methu â gweld delwedd</string>
@@ -503,6 +516,7 @@
 	<string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
 	<string name="media_add_new_media_gallery">Creu oriel</string>
 	<string name="media_add_popup_title">Ychwanegu at y llyfrgell cyfryngau</string>
+	<string name="stats_view_tags_and_categories">Tagiau a Chategorïau</string>
 	<string name="passcode_turn_on">Troi clo PIN ymlaen</string>
 	<string name="passcode_turn_off">Diffodd clo PIN</string>
 	<string name="passcode_preference_title">Clo PIN</string>
