@@ -125,7 +125,8 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             return;
         }
 
-        final String title = getString(R.string.reader_title_photo_viewer, position + 1, getImageCount());
+        String titlePhotoViewer = getString(R.string.reader_title_photo_viewer);
+        String title = String.format(titlePhotoViewer, position + 1, getImageCount());
         if (title.equals(mTxtTitle.getText())) {
             return;
         }

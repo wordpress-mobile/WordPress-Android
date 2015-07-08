@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">내 사이트</string>
+	<string name="tabbar_accessibility_label_me">내 계정</string>
+	<string name="passcodelock_prompt_message">PIN 입력</string>
+	<string name="editor_toast_changes_saved">변경사항 저장됨</string>
+	<string name="push_auth_expired">요청이 만료되었습니다. 워드프레스닷컴에 로그인하고 다시 시도하세요.</string>
+	<string name="ignore">무시</string>
+	<string name="stats_insights_most_popular_percent_views">조회수 %1$d%%</string>
+	<string name="stats_insights_best_ever">최고 조회수</string>
+	<string name="stats_insights_most_popular_hour">가장 인기 있는 시간대</string>
+	<string name="stats_insights_most_popular_day">가장 인기 있는 요일</string>
+	<string name="stats_insights_today">오늘의 통계</string>
+	<string name="stats_insights_popular">가장 인기 있는 요일 및 시간대</string>
+	<string name="stats_insights_all_time">최고 게시글, 조회수 및 방문자</string>
+	<string name="stats_insights">인사이트</string>
+	<string name="stats_sign_in_jetpack_different_com_account">통계를 보려면 젯팩 연결에 사용한 워드프레스닷컴 계정에 로그인하세요.</string>
+	<string name="stats_other_recent_stats_moved_label">기타 최근 통계를 찾으시나요? 인사이트 페이지로 이동되었습니다.</string>
 	<string name="me_disconnect_from_wordpress_com">워드프레스닷컴 연결 해제</string>
 	<string name="me_btn_login_logout">로그인/로그아웃</string>
 	<string name="me_connect_to_wordpress_com">워드프레스닷컴 연결하기</string>
@@ -101,6 +117,7 @@
 	<string name="logs_copied_to_clipboard">애플리케이션 로그가 클립보드에 복사되었습니다.</string>
 	<string name="post_uploading">업로드</string>
 	<string name="reader_label_new_posts">새 게시물</string>
+	<string name="stats_comments_total_comments_followers">댓글 팔로워 수를 포함한 총 게시글 수: %1$s</string>
 	<string name="stats_timeframe_years">년</string>
 	<string name="stats_views">조회수</string>
 	<string name="stats_visitors">방문자</string>
@@ -139,7 +156,6 @@
 	<string name="stats_empty_followers_desc">전반적인 팔로워 수와 각 팔로워가 사이트를 팔로우한 기간을 추적합니다.</string>
 	<string name="stats_comments_by_posts_and_pages">게시물 및 페이지별</string>
 	<string name="stats_comments_by_authors">작성자별</string>
-	<string name="stats_comments_total_comments_followers">총 댓글 팔로워 수: %1$s</string>
 	<string name="stats_followers_total_wpcom">총 WordPress.com 팔로워 수: %1$s</string>
 	<string name="stats_followers_email_selector">이메일</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">태그 미리보기</string>
 	<string name="reader_title_subs">태그 및 블로그</string>
 	<string name="reader_page_followed_tags">팔로우된 태그</string>
-	<string name="reader_page_popular_tags">인기 태그</string>
 	<string name="reader_page_followed_blogs">팔로우된 블로그</string>
 	<string name="reader_hint_add_tag_or_url">팔로우할 태그나 URL 입력</string>
 	<string name="reader_label_followed_blog">팔로우한 블로그</string>
@@ -355,7 +370,6 @@
 	<string name="theme_premium_theme">프리미엄 테마</string>
 	<string name="share_action_post">새 게시물</string>
 	<string name="new_media">새 미디어</string>
-	<string name="stats_view_tags_and_categories">태그 및 카테고리</string>
 	<string name="media_gallery_image_order">이미지 순서</string>
 	<string name="comment_added">댓글 추가에 성공했습니다</string>
 	<string name="add_comment">댓글을 추가</string>
@@ -475,7 +489,6 @@
 	<string name="reader_btn_share">공유</string>
 	<string name="reader_btn_follow">팔로우</string>
 	<string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
-	<string name="reader_empty_popular_tags">인기 태그가 없습니다.</string>
 	<string name="empty_list_default">이 목록에는 아무것도 포함되어 있지 않습니다.</string>
 	<string name="nux_tutorial_get_started_title">시작 하자</string>
 	<string name="media_add_popup_title">미디어 라이브러리 에 추가</string>
@@ -514,6 +527,7 @@
 	<string name="theme_activate_button">활성화</string>
 	<string name="theme_activating_button">활성화 중</string>
 	<string name="stats_view_clicks">클릭 수</string>
+	<string name="stats_view_tags_and_categories">태그 &amp; 카테고리</string>
 	<string name="stats_view_comments">댓글</string>
 	<string name="stats_timeframe_today">오늘</string>
 	<string name="stats_timeframe_yesterday">어제</string>

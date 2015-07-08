@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">My Site</string>
+	<string name="tabbar_accessibility_label_me">Me</string>
+	<string name="passcodelock_prompt_message">Enter your PIN</string>
+	<string name="editor_toast_changes_saved">Changes saved</string>
+	<string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
+	<string name="stats_insights_best_ever">Best Views Ever</string>
+	<string name="ignore">Ignore</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
+	<string name="stats_insights_most_popular_hour">Most popular hour</string>
+	<string name="stats_insights_most_popular_day">Most popular day</string>
+	<string name="stats_insights_popular">Most popular day and hour</string>
+	<string name="stats_insights_today">Today\'s Stats</string>
+	<string name="stats_insights_all_time">All-time posts, views, and visitors</string>
+	<string name="stats_insights">Insights</string>
+	<string name="stats_sign_in_jetpack_different_com_account">To view your stats, sign in to the WordPress.com account you used to connect Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
 	<string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
@@ -101,6 +117,7 @@
 	<string name="stats_overall">Overall</string>
 	<string name="stats_total">Total</string>
 	<string name="post_uploading">Uploading</string>
+	<string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
 	<string name="stats_visitors">Visitors</string>
 	<string name="stats_views">Views</string>
 	<string name="stats_pagination_label">Page %1$s of %2$s</string>
@@ -125,7 +142,6 @@
 	<string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
 	<string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
 	<string name="stats_comments_by_authors">By Authors</string>
-	<string name="stats_comments_total_comments_followers">Total comment followers: %1$s</string>
 	<string name="stats_followers_email_selector">Email</string>
 	<string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">Preview Tag</string>
 	<string name="reader_title_subs">Tags &amp; Blogs</string>
 	<string name="reader_page_followed_tags">Followed tags</string>
-	<string name="reader_page_popular_tags">Popular tags</string>
 	<string name="reader_page_followed_blogs">Followed blogs</string>
 	<string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
 	<string name="reader_label_followed_blog">Blog followed</string>
@@ -402,7 +417,6 @@
 	<string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
 	<string name="location_not_found">Unknown location</string>
 	<string name="open_source_licenses">Open source licences</string>
-	<string name="stats_view_tags_and_categories">Tags &amp; categories</string>
 	<string name="pending_review">Pending review</string>
 	<string name="http_credentials">HTTP credentials (optional)</string>
 	<string name="http_authorization_required">Authorisation required</string>
@@ -497,12 +511,12 @@
 	<string name="reader_toast_err_view_image">Unable to view image</string>
 	<string name="reader_toast_err_url_intent">Unable to open %s</string>
 	<string name="reader_empty_followed_tags">You don\'t follow any tags</string>
-	<string name="reader_empty_popular_tags">No popular tags</string>
 	<string name="create_account_wpcom">Create an account on WordPress.com</string>
 	<string name="connecting_wpcom">Connecting to WordPress.com</string>
 	<string name="username_invalid">Invalid username</string>
 	<string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
 	<string name="nux_tutorial_get_started_title">Get started!</string>
+	<string name="stats_view_tags_and_categories">Tags &amp; Categories</string>
 	<string name="themes">Themes</string>
 	<string name="all">All</string>
 	<string name="images">Images</string>

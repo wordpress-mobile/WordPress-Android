@@ -248,7 +248,8 @@ public class ReaderActivityLauncher {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 context.startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                ToastUtils.showToast(context, context.getString(R.string.reader_toast_err_url_intent, url), ToastUtils.Duration.LONG);
+                String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
+                ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
             }
         }
     }
