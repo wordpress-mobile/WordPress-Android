@@ -261,16 +261,9 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 mSwipeToRefreshHelper.setRefreshing(false);
                 setupEmptyUI();
             } else {
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isFinishing()) {
-                            setupEmptyGraph("");
-                            showHideEmptyModulesIndicator(true);
-                            refreshStats();
-                        }
-                    }
-                }, 75L);
+                setupEmptyGraph("");
+                showHideEmptyModulesIndicator(true);
+                refreshStats();
             }
         } else {
             updateUI();
