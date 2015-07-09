@@ -270,11 +270,11 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * action icons don't appear for feeds or when logged out, otherwise they appear
-     * only if the user can act upon them
+     * action icons don't appear for feeds or discover posts or when logged out, otherwise
+     * they appear only if the user can act upon them
      */
     private boolean canShowIconBar() {
-        if (mPost == null || mPost.isExternal || mIsLoggedOutReader) {
+        if (mPost == null || mPost.isExternal || mPost.isDiscoverPost() || mIsLoggedOutReader) {
             return false;
         }
         return (mPost.isLikesEnabled || mPost.isCommentsOpen);

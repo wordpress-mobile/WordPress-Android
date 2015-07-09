@@ -221,8 +221,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean showLikes;
         boolean showComments;
         if (isDiscoverPost) {
-            showLikes = discoverData.numLikes > 0;
-            showComments = discoverData.numComments > 0;
+            showLikes = false;
+            showComments = false;
         } else if (mIsLoggedOutReader) {
             showLikes = post.numLikes > 0;
             showComments = post.numReplies > 0;
@@ -238,8 +238,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (showLikes) {
             postHolder.likeCount.setSelected(post.isLikedByCurrentUser);
             postHolder.likeCount.setVisibility(View.VISIBLE);
-            // can't like when logged out or showing a discover post
-            if (mIsLoggedOutReader || isDiscoverPost) {
+            // can't like when logged out
+            if (mIsLoggedOutReader) {
                 postHolder.likeCount.setEnabled(false);
                 postHolder.likeCount.setOnClickListener(null);
             } else {
@@ -258,18 +258,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (showComments) {
             postHolder.commentCount.setVisibility(View.VISIBLE);
-            if (isDiscoverPost) {
-                postHolder.commentCount.setEnabled(false);
-                postHolder.commentCount.setOnClickListener(null);
-            } else {
-                postHolder.commentCount.setEnabled(true);
-                postHolder.commentCount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderComments(v.getContext(), post.blogId, post.postId);
-                    }
-                });
-            }
+            postHolder.commentCount.setEnabled(true);
+            postHolder.commentCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderComments(v.getContext(), post.blogId, post.postId);
+                }
+            });
         } else {
             postHolder.commentCount.setVisibility(View.GONE);
             postHolder.commentCount.setOnClickListener(null);
@@ -502,22 +497,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * shows like & comment count
      */
     private void showCounts(ReaderPostViewHolder holder, ReaderPost post, boolean animateChanges) {
-        int numLikes = post.numLikes;
-        int numComments = post.numReplies;
+        holder.likeCount.setCount(post.numLikes, animateChanges);
 
-        // if this is a discover post, show the counts from the original post
-        if (post.isDiscoverPost()) {
-            ReaderPostDiscoverData discoverData = post.getDiscoverData();
-            if (discoverData != null) {
-                numLikes = discoverData.numLikes;
-                numComments = discoverData.numComments;
-            }
-        }
-
-        holder.likeCount.setCount(numLikes, animateChanges);
-
-        if (numComments > 0 || post.isCommentsOpen) {
-            holder.commentCount.setCount(numComments, animateChanges);
+        if (post.numReplies > 0 || post.isCommentsOpen) {
+            holder.commentCount.setCount(post.numReplies, animateChanges);
             holder.commentCount.setVisibility(View.VISIBLE);
         } else {
             holder.commentCount.setVisibility(View.GONE);

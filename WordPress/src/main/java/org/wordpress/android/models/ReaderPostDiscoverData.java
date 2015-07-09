@@ -23,27 +23,27 @@ public class ReaderPostDiscoverData {
     private String blogName;
     private String blogUrl;
     private String avatarUrl;
-    private String permaLink;
+    private final String permaLink;
 
     private long blogId;
     private long postId;
 
-    public int numLikes;
-    public int numComments;
+    private int numLikes;
+    private int numComments;
 
     /*
      * passed JSONObject is the "discover_metadata" section of a reader post
      */
     public ReaderPostDiscoverData(@NonNull JSONObject json) {
-        setPermaLink(json.optString("permalink"));
+        permaLink = json.optString("permalink");
 
         JSONObject jsonAttribution = json.optJSONObject("attribution");
         if (jsonAttribution != null) {
-            setAuthorName(jsonAttribution.optString("author_name"));
-            setAuthorUrl(jsonAttribution.optString("author_url"));
-            setBlogName(jsonAttribution.optString("blog_name"));
-            setBlogUrl(jsonAttribution.optString("blog_url"));
-            setAvatarUrl(jsonAttribution.optString("avatar_url"));
+            authorName = jsonAttribution.optString("author_name");
+            authorUrl = jsonAttribution.optString("author_url");
+            blogName = jsonAttribution.optString("blog_name");
+            blogUrl = jsonAttribution.optString("blog_url");
+            avatarUrl = jsonAttribution.optString("avatar_url");
         }
 
         JSONObject jsonWpcomData = json.optJSONObject("featured_post_wpcom_data");
@@ -66,50 +66,32 @@ public class ReaderPostDiscoverData {
     private String getAuthorName() {
         return StringUtils.notNullStr(authorName);
     }
-    private void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
 
     private String getAuthorUrl() {
         return StringUtils.notNullStr(authorUrl);
     }
-    private void setAuthorUrl(String authorUrl) {
-        this.authorUrl = authorUrl;
-    }
 
-    private String getBlogName() {
+    public String getBlogName() {
         return StringUtils.notNullStr(blogName);
-    }
-    private void setBlogName(String blogName) {
-        this.blogName = blogName;
     }
 
     private String getBlogUrl() {
         return StringUtils.notNullStr(blogUrl);
     }
-    private void setBlogUrl(String blogUrl) {
-        this.blogUrl = blogUrl;
-    }
 
     public String getAvatarUrl() {
         return StringUtils.notNullStr(avatarUrl);
     }
-    private void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
 
     public String getPermaLink() {
         return StringUtils.notNullStr(permaLink);
-    }
-    private void setPermaLink(String permaLink) {
-        this.permaLink = permaLink;
     }
 
     public boolean hasPostAndBlogIds() {
         return (postId != 0 && blogId != 0);
     }
 
-    private boolean hasBlogName() {
+    public boolean hasBlogName() {
         return !TextUtils.isEmpty(blogName);
     }
 

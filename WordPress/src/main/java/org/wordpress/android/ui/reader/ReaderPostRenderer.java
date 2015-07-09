@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap.ImageSize;
 import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils;
@@ -227,10 +228,25 @@ class ReaderPostRenderer {
     private String getPostContent() {
         // some content (such as Vimeo embeds) don't have "http:" before links
         String content = mPost.getText().replace("src=\"//", "src=\"http://");
+
+        // add the featured image (if any)
         if (shouldAddFeaturedImage()) {
             AppLog.d(AppLog.T.READER, "reader renderer > added featured image");
             content = getFeaturedImageHtml() + content;
         }
+
+        // if this is a Discover post, add a section which links to the blog preview
+        if (mPost.isDiscoverPost()) {
+            ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
+            if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.hasBlogName()) {
+                String blogLink = "<a href='wordpress://blogpreview?blogId=" + Long.toString(discoverData.getBlogId()) + "'>"
+                        + discoverData.getBlogName()
+                        + "</a>";
+                String htmlDiscover = "<div id='discover'>" + blogLink + "</div>";
+                content += htmlDiscover;
+            }
+        }
+
         return content;
     }
 
@@ -356,8 +372,18 @@ class ReaderPostRenderer {
         .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
         .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
 
+        // attribution for Discover posts
+        .append("  div#discover { ")
+        .append("       border: 1px solid ").append(mResourceVars.greyLightStr).append(";")
+        .append("       background-color : ").append(mResourceVars.greyExtraLightStr).append(";")
+        .append("       padding: ").append(mResourceVars.marginSmallPx).append("px; ")
+        .append("       font-size: smaller;")
+        .append("       font-family: sans-serif;")
+        .append("       text-align: center;")
+        .append(" }")
+
         // horizontally center iframes
-        .append("   iframe { display: block; margin: 0 auto; }")
+                .append("   iframe { display: block; margin: 0 auto; }")
 
         // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
         .append("  video {")
