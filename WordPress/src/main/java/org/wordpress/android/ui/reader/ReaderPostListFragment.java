@@ -58,7 +58,6 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -70,6 +69,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -1341,17 +1341,11 @@ public class ReaderPostListFragment extends Fragment
     public void onPostSelected(ReaderPost post) {
         if (!isAdded() || post == null) return;
 
-        // "discover" posts should open the original (source) post when tapped
+        // "discover" posts that highlight another post should open the original (source) post when tapped
         if (post.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
-            if (discoverData != null && discoverData.getBlogId() != 0) {
-                // if there's no postId then this is a discover post highlighting a blog, so show
-                // the blog preview rather than post detail
-                if (discoverData.getPostId() == 0) {
-                    ReaderActivityLauncher.showReaderBlogPreview(getActivity(), discoverData.getBlogId());
-                } else {
-                    ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
-                }
+            if (discoverData != null && discoverData.hasPostAndBlogIds()) {
+                ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
                 return;
             }
         }

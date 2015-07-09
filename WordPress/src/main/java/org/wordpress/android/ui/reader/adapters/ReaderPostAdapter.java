@@ -35,7 +35,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -292,12 +291,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.imgMore.setOnClickListener(null);
         }
 
-        // discover data
-        if (isDiscoverPost) {
+        // attribution line for discover posts
+        if (isDiscoverPost && discoverData.hasAttributionHtml()) {
             postHolder.layoutDiscover.setVisibility(View.VISIBLE);
             postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
-            postHolder.txtDiscover.setText(discoverData.getAttributionHtml(postHolder.txtDiscover.getContext()));
-            postHolder.txtDiscover.setMovementMethod(WPLinkMovementMethod.getInstance());
+            postHolder.txtDiscover.setText(discoverData.getAttributionHtml());
         } else {
             postHolder.layoutDiscover.setVisibility(View.GONE);
         }
