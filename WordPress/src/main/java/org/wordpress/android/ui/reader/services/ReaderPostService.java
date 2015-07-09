@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
+import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -155,13 +156,13 @@ public class ReaderPostService extends Service {
     private static void requestPostsWithTag(final ReaderTag tag,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
-        String endpoint = getEndpointForTag(tag);
-        if (TextUtils.isEmpty(endpoint)) {
+        String path = getRelativeEndpointForTag(tag);
+        if (TextUtils.isEmpty(path)) {
             resultListener.onUpdateResult(UpdateResult.FAILED);
             return;
         }
 
-        StringBuilder sb = new StringBuilder(endpoint);
+        StringBuilder sb = new StringBuilder(path);
 
         // append #posts to retrieve
         sb.append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
@@ -195,9 +196,16 @@ public class ReaderPostService extends Service {
             }
         };
 
-        WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
+        // TODO: as of 09-July-2015 there is no v1.2 endpoint for Freshly Pressed, so we have to
+        // request FP posts using the v1.1 endpoint - this hack checks the stored endpoint to see
+        // if it's v1.1 and if so uses that REST client rather than v1.2
+        String endpoint = ReaderTagTable.getEndpointForTag(tag);
+        if (!TextUtils.isEmpty(endpoint) && endpoint.contains("rest/v1.1/")) {
+            WordPress.getRestClientUtilsV1_1().get(sb.toString(), null, null, listener, errorListener);
+        } else {
+            WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
+        }
     }
-
 
     private static void requestPostsForBlog(final long blogId,
                                             final UpdateAction updateAction,
@@ -286,7 +294,7 @@ public class ReaderPostService extends Service {
     /*
      * returns the endpoint to use when requesting posts with the passed tag
      */
-    private static String getEndpointForTag(ReaderTag tag) {
+    private static String getRelativeEndpointForTag(ReaderTag tag) {
         if (tag == null) {
             return null;
         }
