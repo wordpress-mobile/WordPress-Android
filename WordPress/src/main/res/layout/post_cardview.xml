@@ -90,7 +90,7 @@
                     wp:wpPostButtonType="edit" />
 
                 <org.wordpress.android.widgets.PostListButton
-                    android:id="@+id/btn_view_or_publish"
+                    android:id="@+id/btn_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

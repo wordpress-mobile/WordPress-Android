@@ -155,6 +155,10 @@
             android:theme="@style/Calypso.NoActionBar">
         </activity>
         <activity
+            android:name=".ui.posts.PostPreviewActivity"
+            android:label="@string/preview_post"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme"/>
 
