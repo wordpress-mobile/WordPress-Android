@@ -156,7 +156,7 @@
         </activity>
         <activity
             android:name=".ui.posts.PostPreviewActivity"
-            android:label="@string/post_preview_title"
+            android:label="@string/preview_post"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
