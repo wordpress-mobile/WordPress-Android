@@ -2,7 +2,6 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,8 @@ import org.wordpress.android.R;
  * (referred to as Progress).
  */
 
-public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarChangeListener {
+public class SeekBarPreference extends SummaryPreference
+        implements SeekBar.OnSeekBarChangeListener {
     private SeekBar mSeekBar;
     private int mMaxValue;
 
@@ -80,7 +80,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     public int getProgress() {
         if (mSeekBar == null) return -1;
 
-        return Math.round((float)mSeekBar.getProgress() / 100.f * mMaxValue);
+        return Math.round((float) mSeekBar.getProgress() / 100.f * mMaxValue);
     }
 
     public void setProgress(int progress) {
@@ -90,7 +90,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     private void updateProgress(int progress) {
         if (mSeekBar == null) return;
 
-        mSeekBar.setProgress((int)((float)progress / mMaxValue * 100));
+        mSeekBar.setProgress((int) ((float) progress / mMaxValue * 100));
 
         callChangeListener(progress);
     }

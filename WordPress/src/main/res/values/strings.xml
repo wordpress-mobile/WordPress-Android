@@ -404,7 +404,7 @@
     <string name="seekbar_pref_header">@string/site_visibility_header</string>
     <string name="site_visibility_header">Visibility</string>
     <string name="site_title_hint">What\'s this site about</string>
-    <string name="site_title_title">Title</string>
+    <string name="site_title_title">Site Title</string>
     <string name="site_tagline_hint">Words to live by</string>
     <string name="site_tagline_title">Tagline</string>
     <string name="site_settings_related_posts_title">Related Posts</string>
@@ -412,9 +412,16 @@
     <string name="site_settings_related_posts_summary">Show related content after posts</string>
     <string name="pref_key_site_title" translatable="false">wp_pref_site_title</string>
     <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
+    <string name="pref_key_site_address" translatable="false">wp_pref_site_address</string>
     <string name="pref_key_site_language" translatable="false">wp_pref_site_language</string>
     <string name="pref_key_site_visibility" translatable="false">wp_pref_site_visibility</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
+    <string name="pref_key_site_location" translatable="false">wp_pref_site_location</string>
+    <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
+    <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
+    <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
+    <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
+    <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>

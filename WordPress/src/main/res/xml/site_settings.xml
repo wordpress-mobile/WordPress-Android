@@ -7,50 +7,88 @@
     <PreferenceCategory
         android:title="General">
 
-        <EditTextPreference
-            android:title="@string/site_title_title"
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:id="@+id/pref_site_title"
             android:key="@string/pref_key_site_title"
-            android:hint="@string/site_title_hint" />
+            android:title="@string/site_title_title"
+            android:hint="@string/site_title_hint"
+            app:maxSummaryLines="2" />
 
-        <EditTextPreference
-            android:title="@string/site_tagline_title"
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:id="@+id/pref_site_tagline"
             android:key="@string/pref_key_site_tagline"
-            android:hint="@string/site_tagline_hint" />
+            android:title="@string/site_tagline_title"
+            android:hint="@string/site_tagline_hint"
+            app:maxSummaryLines="2" />
 
-        <MultiSelectListPreference
-            android:entries="@array/available_languages"
-            android:entryValues="@array/available_languages"
-            android:title="@string/language"
+        <EditTextPreference
+            android:id="@+id/pref_site_address"
+            android:key="@string/pref_key_site_address"
+            android:title="Address" />
+
+        <ListPreference
             android:id="@+id/pref_site_language"
-            android:key="@string/pref_key_site_language" />
+            android:key="@string/pref_key_site_language"
+            android:title="@string/language"
+            android:entries="@array/available_languages"
+            android:entryValues="@array/available_languages" />
 
         <org.wordpress.android.ui.prefs.SeekBarPreference
-            android:title="@string/site_visibility_header"
-            android:summary="Discourage search engines from indexing this site"
             android:id="@+id/pref_site_visibility"
             android:key="@string/pref_key_site_visibility"
+            android:title="@string/site_visibility_header"
+            android:summary="Discourage search engines from indexing this site"
+            app:summaryLines="2"
             app:maxValue="2" />
 
-        <SwitchPreference
-            android:title="@string/site_settings_related_posts_title"
-            android:summary="@string/site_settings_related_posts_summary"
-            android:id="@+id/pref_site_related_posts"
-            android:key="@string/pref_key_site_related_posts" />
-
-        <CheckBoxPreference
-            android:title="@string/site_settings_related_posts_title"
-            android:summary="@string/site_settings_related_posts_summary"
-            android:id="@+id/pref_site_related_posts"
-            android:key="@string/pref_key_site_related_posts" />
-
-        <CheckBoxPreference
-            android:title="@string/site_settings_related_posts_title"
-            android:summary="@string/site_settings_related_posts_summary"
-            android:id="@+id/pref_site_related_posts"
-            android:key="@string/pref_key_site_related_posts" />
-
     </PreferenceCategory>
+
+    <!--<PreferenceCategory-->
+        <!--android:title="Writing">-->
+
+        <!--<SwitchPreference-->
+            <!--android:id="@+id/pref_enable_location"-->
+            <!--android:key="@string/pref_key_site_location"-->
+            <!--android:title="Enable Location" />-->
+
+        <!--<MultiSelectListPreference-->
+            <!--android:id="@+id/pref_default_category"-->
+            <!--android:key="@string/pref_key_site_category"-->
+            <!--android:title="Default Category" />-->
+
+        <!--<ListPreference-->
+            <!--android:id="@+id/pref_default_format"-->
+            <!--android:key="@string/pref_key_site_format"-->
+            <!--android:title="Default Format" />-->
+
+        <!--<MultiSelectListPreference-->
+            <!--android:id="@+id/pref_related_posts"-->
+            <!--android:key="@string/pref_key_site_related_posts"-->
+            <!--android:title="Related Posts" />-->
+
+    <!--</PreferenceCategory>-->
+
+    <!--<PreferenceCategory>-->
+
+        <!--<Preference-->
+            <!--android:id="@+id/pref_discussion_settings"-->
+            <!--android:key="@string/pref_key_site_discussion"-->
+            <!--android:title="Discussion Settings" />-->
+
+    <!--</PreferenceCategory>-->
+
+    <!--<PreferenceCategory>-->
+
+        <!--<Preference-->
+            <!--android:id="@+id/pref_start_over"-->
+            <!--android:key="@string/pref_key_site_start_over"-->
+            <!--android:title="Start Over" />-->
+
+        <!--<Preference-->
+            <!--android:id="@+id/pref_delete_site"-->
+            <!--android:key="@string/pref_key_site_delete_site"-->
+            <!--android:title="Delete Site" />-->
+
+    <!--</PreferenceCategory>-->
 
 </PreferenceScreen>

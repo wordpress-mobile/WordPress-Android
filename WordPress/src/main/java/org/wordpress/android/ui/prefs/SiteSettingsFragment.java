@@ -2,9 +2,11 @@ package org.wordpress.android.ui.prefs;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,19 +22,29 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
+import java.util.Locale;
+
+/**
+ * Handles changes to WordPress site settings. Syncs with host automatically when user leaves.
+ */
 
 public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener{
     private Blog mBlog;
     private EditTextPreference mTitlePreference;
     private EditTextPreference mTaglinePreference;
-    private MultiSelectListPreference mLanguagePreference;
+    private EditTextPreference mAddressPreference;
+    private ListPreference mLanguagePreference;
+    private MultiSelectListPreference mCategoryPreference;
+    private ListPreference mFormatPreference;
     private SeekBarPreference mVisibilityPreference;
     private MenuItem mSaveItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().remove(getString(R.string.pref_key_site_language)).commit();
 
         addPreferencesFromResource(R.xml.site_settings);
 
@@ -57,9 +69,17 @@ public class SiteSettingsFragment extends PreferenceFragment
                             mTaglinePreference.setSummary(response.optString(RestClientUtils.SITE_DESC_KEY));
                         }
 
+                        if (mAddressPreference != null) {
+                            mAddressPreference.setText(response.optString(RestClientUtils.SITE_URL_KEY));
+                            mAddressPreference.setSummary(response.optString(RestClientUtils.SITE_URL_KEY));
+                            // Disabled until implemented
+                            mAddressPreference.setEnabled(false);
+                        }
+
                         if (mLanguagePreference != null) {
-                            mLanguagePreference.setDefaultValue(response.optString(RestClientUtils.SITE_LANGUAGE_KEY));
-                            mLanguagePreference.setSummary(response.optString(RestClientUtils.SITE_LANGUAGE_KEY));
+                            String languageString = getLanguageString(response.optString(RestClientUtils.SITE_LANGUAGE_KEY));
+                            mLanguagePreference.setDefaultValue(languageString);
+                            mLanguagePreference.setSummary(languageString);
                         }
 
                         if (mVisibilityPreference != null) {
@@ -74,6 +94,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     break;
                                 case 1:
                                     mVisibilityPreference.setProgress(2);
+                                    break;
+                                default:
+                                    mVisibilityPreference.setSummary("Unknown privacy setting");
+                                    mVisibilityPreference.setEnabled(false);
                                     break;
                             }
                         }
@@ -116,6 +140,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 !newValue.equals(mTitlePreference.getText())) {
             mTitlePreference.setText(newValue.toString());
             mTitlePreference.setSummary(newValue.toString());
+            getActivity().setTitle(newValue.toString());
             toggleSaveItemVisibility(true);
 
             return true;
@@ -128,12 +153,12 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mLanguagePreference &&
                 !newValue.equals(mLanguagePreference.getSummary())) {
-            mLanguagePreference.setSummary(newValue.toString());
+            mLanguagePreference.setSummary(getLanguageString(newValue.toString()));
             toggleSaveItemVisibility(true);
 
             return true;
         } else if (preference == mVisibilityPreference &&
-                !newValue.equals(convertProgress(mVisibilityPreference.getProgress()))) {
+                !newValue.equals(mVisibilityPreference.getProgress() - 1)) {
             switch ((Integer)newValue) {
                 case 0:
                     mVisibilityPreference.setSummary("I would like my site to be private, visible only to users I choose");
@@ -171,12 +196,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         if (mLanguagePreference != null) {
+            params.put("lang_id", mLanguagePreference.getValue());
 //            params.put("lang", mLanguagePreference.getSummary().toString());
         }
 
         if (mVisibilityPreference != null) {
-            params.put("blog_public", String.valueOf(
-                    convertProgress(mVisibilityPreference.getProgress())));
+            params.put("blog_public", String.valueOf(mVisibilityPreference.getProgress() - 1));
         }
 
         return params;
@@ -219,9 +244,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         mTaglinePreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_tagline));
         mLanguagePreference =
-                (MultiSelectListPreference) findPreference(getString(R.string.pref_key_site_language));
+                (ListPreference) findPreference(getString(R.string.pref_key_site_language));
         mVisibilityPreference =
                 (SeekBarPreference) findPreference(getString(R.string.pref_key_site_visibility));
+        mCategoryPreference =
+                (MultiSelectListPreference) findPreference(getString(R.string.pref_key_site_category));
+        mFormatPreference =
+                (ListPreference) findPreference(getString(R.string.pref_key_site_format));
+        mAddressPreference =
+                (EditTextPreference) findPreference(getString(R.string.pref_key_site_address));
 
         if (mTitlePreference != null) {
             mTitlePreference.setOnPreferenceChangeListener(this);
@@ -232,11 +263,41 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         if (mLanguagePreference != null) {
+            mLanguagePreference.setEntries(createLanguageDisplayStrings(mLanguagePreference.getEntryValues()));
             mLanguagePreference.setOnPreferenceChangeListener(this);
         }
 
         if (mVisibilityPreference != null) {
             mVisibilityPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (mFormatPreference != null) {
+            mFormatPreference.setOnPreferenceChangeListener(this);
+        }
+    }
+
+    private CharSequence[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
+        if (languageCodes == null || languageCodes.length < 1) return null;
+
+        CharSequence[] displayStrings = new CharSequence[languageCodes.length];
+
+        for (int i = 0; i < languageCodes.length; ++i) {
+            displayStrings[i] = getLanguageString(String.valueOf(languageCodes[i]));
+        }
+
+        return displayStrings;
+    }
+
+    /**
+     * Return a non-null display string for a given language code.
+     */
+    private String getLanguageString(String languagueCode) {
+        if (languagueCode == null || languagueCode.length() < 2) {
+            return "";
+        } else if (languagueCode.length() == 2) {
+            return new Locale(languagueCode).getDisplayLanguage();
+        } else {
+            return new Locale(languagueCode.substring(0, 2)).getDisplayLanguage() + languagueCode.substring(2);
         }
     }
 
@@ -245,11 +306,5 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSaveItem.setVisible(on);
             mSaveItem.setEnabled(on);
         }
-    }
-
-    private int convertProgress(int progress) {
-        if (progress < 33) return -1;
-        else if (progress < 67) return 0;
-        else return 1;
     }
 }

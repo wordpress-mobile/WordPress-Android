@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="summaryLines" format="integer" />
+    <attr name="maxSummaryLines" format="integer" />
+
+    <!-- SummaryPreference attributes -->
+    <declare-styleable name="SummaryPreference">
+        <attr name="summaryLines" />
+        <attr name="maxSummaryLines" />
+    </declare-styleable>
+
+    <!-- SummaryEditTextPreference attributes -->
+    <declare-styleable name="SummaryEditTextPreference">
+        <attr name="summaryLines" />
+        <attr name="maxSummaryLines" />
+    </declare-styleable>
+
     <!-- SeekBarPreference attributes -->
     <declare-styleable name="SeekBarPreference">
         <attr name="maxValue" format="integer" />
