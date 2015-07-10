@@ -27,6 +27,8 @@ public class PostsListPostList extends ArrayList<PostsListPost> {
                 return false;
             if (newPost.hasLocalChanges() != currentPost.hasLocalChanges())
                 return false;
+            if (!newPost.getDescription().equals(currentPost.getDescription()))
+                return false;
         }
 
         return true;

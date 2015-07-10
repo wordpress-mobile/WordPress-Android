@@ -24,7 +24,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -501,9 +500,7 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostSelected(PostsListPost post) {
-        if (isAdded() && !post.getStatusEnum().equals(PostStatus.TRASHED)) {
-            ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
-        }
+        onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
     }
 
     /*
@@ -511,6 +508,8 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostButtonClicked(int buttonType, PostsListPost post) {
+        if (!isAdded()) return;
+
         Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
         if (fullPost == null) {
             ToastUtils.showToast(getActivity(), R.string.post_not_found);
@@ -526,8 +525,10 @@ public class PostsListFragment extends Fragment
                 getActivity().startService(new Intent(getActivity(), PostUploadService.class));
                 break;
             case PostListButton.BUTTON_VIEW:
-            case PostListButton.BUTTON_PREVIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
+                break;
+            case PostListButton.BUTTON_PREVIEW:
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);

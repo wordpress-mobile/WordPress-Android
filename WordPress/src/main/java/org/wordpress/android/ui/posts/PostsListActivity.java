@@ -54,8 +54,6 @@ public class PostsListActivity extends AppCompatActivity {
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
         showErrorDialogIfNeeded(getIntent().getExtras());
-
-        WordPress.currentPost = null;
     }
 
     @Override
@@ -121,7 +119,7 @@ public class PostsListActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RequestCodes.EDIT_POST
+        if ((requestCode == RequestCodes.EDIT_POST || requestCode == RequestCodes.PREVIEW_POST)
                 && resultCode == RESULT_OK
                 && data != null
                 && data.getBooleanExtra(EditPostActivity.EXTRA_SHOULD_REFRESH, false)) {

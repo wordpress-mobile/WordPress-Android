@@ -11,6 +11,7 @@ public class RequestCodes {
     public static final int NOTE_DETAIL            = 600;
     public static final int SITE_PICKER            = 700;
     public static final int EDIT_POST              = 800;
+    public static final int PREVIEW_POST           = 810;
     public static final int CREATE_BLOG            = 900;
     public static final int BLOG_SETTINGS          = 1000;
 
