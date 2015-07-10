@@ -29,7 +29,48 @@ import java.util.Locale;
  */
 
 public class SiteSettingsFragment extends PreferenceFragment
-        implements Preference.OnPreferenceChangeListener{
+        implements Preference.OnPreferenceChangeListener {
+    private static final HashMap<String, Integer> LANGUAGE_CODES = new HashMap<>();
+
+    static {
+        LANGUAGE_CODES.put("en", 1);
+        LANGUAGE_CODES.put("az", 79);
+        LANGUAGE_CODES.put("de", 15);
+        LANGUAGE_CODES.put("el", 17);
+        LANGUAGE_CODES.put("es", 19);
+        LANGUAGE_CODES.put("fr", 24);
+        LANGUAGE_CODES.put("gd", 476);
+        LANGUAGE_CODES.put("hi", 30);
+        LANGUAGE_CODES.put("hu", 31);
+        LANGUAGE_CODES.put("id", 33);
+        LANGUAGE_CODES.put("it", 35);
+        LANGUAGE_CODES.put("ja", 36);
+        LANGUAGE_CODES.put("ko", 40);
+        LANGUAGE_CODES.put("nb", -1);// ??
+        LANGUAGE_CODES.put("nl", 49);
+        LANGUAGE_CODES.put("pl", 58);
+        LANGUAGE_CODES.put("ru", 62);
+        LANGUAGE_CODES.put("sv", 68);
+        LANGUAGE_CODES.put("th", 71);
+        LANGUAGE_CODES.put("uz", 458);
+        LANGUAGE_CODES.put("zh-CN", 449);
+        LANGUAGE_CODES.put("zh-TW", 452);
+        LANGUAGE_CODES.put("zh-HK", 452);// ??
+        LANGUAGE_CODES.put("en-GB", 482);
+        LANGUAGE_CODES.put("tr", 78);
+        LANGUAGE_CODES.put("eu", 429);
+        LANGUAGE_CODES.put("he", 29);
+        LANGUAGE_CODES.put("pt-BR", 438);
+        LANGUAGE_CODES.put("ar", 3);
+        LANGUAGE_CODES.put("ro", 61);
+        LANGUAGE_CODES.put("mk", 435);
+        LANGUAGE_CODES.put("en-AU", 482);// ??
+        LANGUAGE_CODES.put("sr", 67);
+        LANGUAGE_CODES.put("sk", 64);
+        LANGUAGE_CODES.put("cy", 13);
+        LANGUAGE_CODES.put("da", 14);
+    }
+
     private Blog mBlog;
     private EditTextPreference mTitlePreference;
     private EditTextPreference mTaglinePreference;
@@ -37,7 +78,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private ListPreference mLanguagePreference;
     private MultiSelectListPreference mCategoryPreference;
     private ListPreference mFormatPreference;
-    private SeekBarPreference mVisibilityPreference;
+    private ListPreference mVisibilityPreference;
     private MenuItem mSaveItem;
 
     @Override
@@ -84,22 +125,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
                         if (mVisibilityPreference != null) {
                             int visibility = response.optJSONObject("settings").optInt("blog_public");
-
-                            switch (visibility) {
-                                case -1:
-                                    mVisibilityPreference.setProgress(0);
-                                    break;
-                                case 0:
-                                    mVisibilityPreference.setProgress(1);
-                                    break;
-                                case 1:
-                                    mVisibilityPreference.setProgress(2);
-                                    break;
-                                default:
-                                    mVisibilityPreference.setSummary("Unknown privacy setting");
-                                    mVisibilityPreference.setEnabled(false);
-                                    break;
-                            }
+                            mVisibilityPreference.setValue(String.valueOf(visibility));
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -158,15 +184,15 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             return true;
         } else if (preference == mVisibilityPreference &&
-                !newValue.equals(mVisibilityPreference.getProgress() - 1)) {
-            switch ((Integer)newValue) {
-                case 0:
+                !newValue.equals(mVisibilityPreference.getValue())) {
+            switch ((Integer) newValue) {
+                case -1:
                     mVisibilityPreference.setSummary("I would like my site to be private, visible only to users I choose");
                     break;
-                case 1:
+                case 0:
                     mVisibilityPreference.setSummary("Discourage search engines from indexing this site");
                     break;
-                case 2:
+                case 1:
                     mVisibilityPreference.setSummary("Allow search engines to index this site");
                     break;
             }
@@ -196,12 +222,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         if (mLanguagePreference != null) {
-            params.put("lang_id", mLanguagePreference.getValue());
-//            params.put("lang", mLanguagePreference.getSummary().toString());
+            if (LANGUAGE_CODES.containsKey(mLanguagePreference.getValue())) {
+                params.put("lang_id", String.valueOf(LANGUAGE_CODES.get(mLanguagePreference.getValue())));
+            }
         }
 
         if (mVisibilityPreference != null) {
-            params.put("blog_public", String.valueOf(mVisibilityPreference.getProgress() - 1));
+            params.put("blog_public", mVisibilityPreference.getValue());
         }
 
         return params;
@@ -246,7 +273,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLanguagePreference =
                 (ListPreference) findPreference(getString(R.string.pref_key_site_language));
         mVisibilityPreference =
-                (SeekBarPreference) findPreference(getString(R.string.pref_key_site_visibility));
+                (ListPreference) findPreference(getString(R.string.pref_key_site_visibility));
         mCategoryPreference =
                 (MultiSelectListPreference) findPreference(getString(R.string.pref_key_site_category));
         mFormatPreference =

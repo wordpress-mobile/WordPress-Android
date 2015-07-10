@@ -33,13 +33,14 @@
             android:entries="@array/available_languages"
             android:entryValues="@array/available_languages" />
 
-        <org.wordpress.android.ui.prefs.SeekBarPreference
+        <ListPreference
             android:id="@+id/pref_site_visibility"
             android:key="@string/pref_key_site_visibility"
-            android:title="@string/site_visibility_header"
-            android:summary="Discourage search engines from indexing this site"
-            app:summaryLines="2"
-            app:maxValue="2" />
+            android:title="@string/site_visibility_header" />
+
+        <Preference
+            android:title="test"
+            android:summary="summary test" />
 
     </PreferenceCategory>
 
