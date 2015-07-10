@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
-import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
@@ -236,7 +235,7 @@ class ReaderPostRenderer {
             content = getFeaturedImageHtml() + content;
         }
 
-        // if this is a Discover post, add a section which links to the blog preview
+        // if this is a Discover post, add a link which shows the blog preview
         if (mPost.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
             if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.hasBlogName()) {
