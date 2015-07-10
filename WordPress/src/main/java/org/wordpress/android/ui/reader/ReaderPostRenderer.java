@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -239,10 +240,7 @@ class ReaderPostRenderer {
         if (mPost.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
             if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.hasBlogName()) {
-                String blogLink = "<a href='" + makeBlogPreviewUrl(discoverData.getBlogId()) + "'>"
-                        + discoverData.getBlogName()
-                        + "</a>";
-                String htmlDiscover = "<div id='discover'>" + blogLink + "</div>";
+                String htmlDiscover = "<div id='discover'>" + makeBlogPreviewLink(discoverData.getBlogId(), discoverData.getBlogName()) + "</div>";
                 content += htmlDiscover;
             }
         }
@@ -250,8 +248,15 @@ class ReaderPostRenderer {
         return content;
     }
 
-    private static String makeBlogPreviewUrl(long blogId) {
-        return "wordpress://blogpreview?blogId=" + Long.toString(blogId);
+    /*
+     * used by Discover site picks to add a "Visit [BlogName]" link which shows the
+     * native blog preview for that blog
+     */
+    private String makeBlogPreviewLink(long blogId, String blogName) {
+        String label = String.format(
+                WordPress.getContext().getString(R.string.reader_discover_visit_blog), blogName);
+        String url = "wordpress://blogpreview?blogId=" + Long.toString(blogId);
+        return "<a href='" + url + "'>" + label + "</a>";
     }
 
     public static boolean isBlogPreviewUrl(String url) {
@@ -332,8 +337,9 @@ class ReaderPostRenderer {
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
-        // use Merriweather font assets
+        // use Merriweather and OpenSans font assets
         .append("<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>")
+        .append("<link href='file:///android_asset/opensans.css' rel='stylesheet' type='text/css'>")
 
         .append("<style type='text/css'>")
         .append("  body { font-family: Merriweather, serif; font-weight: 300; margin: 0px; padding: 0px;}")
@@ -341,10 +347,10 @@ class ReaderPostRenderer {
         .append("  p, div, li { line-height: 1.6em; font-size: 0.95em; }")
         .append("  h1, h2 { line-height: 1.2em; }")
 
-        // counteract pre-defined height/width styles
+                // counteract pre-defined height/width styles
         .append("  p, div, dl, table { width: auto !important; height: auto !important; }")
 
-        // make sure long strings don't force the user to scroll horizontally
+                // make sure long strings don't force the user to scroll horizontally
         .append("  body, p, div, a { word-wrap: break-word; }")
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
@@ -391,16 +397,12 @@ class ReaderPostRenderer {
 
         // attribution for Discover posts
         .append("  div#discover { ")
-        .append("       border: 1px solid ").append(mResourceVars.greyLightStr).append(";")
-        .append("       background-color : ").append(mResourceVars.greyExtraLightStr).append(";")
-        .append("       padding: ").append(mResourceVars.marginSmallPx).append("px; ")
-        .append("       font-size: smaller;")
-        .append("       font-family: sans-serif;")
-        .append("       text-align: center;")
+        .append("       margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
+        .append("       font-family: 'Open Sans', sans-serif;")
         .append(" }")
 
-        // horizontally center iframes
-                .append("   iframe { display: block; margin: 0 auto; }")
+                // horizontally center iframes
+        .append("   iframe { display: block; margin: 0 auto; }")
 
         // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
         .append("  video {")

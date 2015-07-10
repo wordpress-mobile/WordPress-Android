@@ -800,6 +800,7 @@
     <string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>
     <string name="reader_discover_attribution_author">Originally posted by %s</string>
     <string name="reader_discover_attribution_blog">Originally posted on %s</string>
+    <string name="reader_discover_visit_blog">Visit %s</string>
 
     <!-- connection bar which appears on main activity when there's no connection -->
     <string name="connectionbar_no_connection">No connection</string>
