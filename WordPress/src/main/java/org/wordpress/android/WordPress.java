@@ -34,7 +34,6 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
@@ -83,7 +82,6 @@ import io.fabric.sdk.android.Fabric;
 public class WordPress extends Application {
     public static String versionName;
     public static Blog currentBlog;
-    public static Post currentPost;
     public static WordPressDB wpDB;
 
     private static RestClientUtils mRestClientUtils;

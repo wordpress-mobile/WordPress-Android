@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_me">我</string>
+	<string name="tabbar_accessibility_label_my_site">我的站点</string>
+	<string name="passcodelock_prompt_message">输入 PIN</string>
+	<string name="editor_toast_changes_saved">更改已保存</string>
+	<string name="push_auth_expired">请求已过期。请登录到 WordPress.com 并重试。</string>
+	<string name="stats_insights_best_ever">最受欢迎的文章</string>
+	<string name="ignore">忽略</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% 的阅读次数</string>
+	<string name="stats_insights_most_popular_hour">人气最高的时刻</string>
+	<string name="stats_insights_most_popular_day">人气最高的日期</string>
+	<string name="stats_insights_popular">人气最高的日期和时刻</string>
+	<string name="stats_insights_today">今日统计</string>
+	<string name="stats_insights_all_time">全时段的文章篇数、阅读次数和访客人数</string>
+	<string name="stats_insights">见解</string>
+	<string name="stats_sign_in_jetpack_different_com_account">要查看您的统计数据，请登录关联 Jetpack 时使用的 WordPress.com 帐户。</string>
+	<string name="stats_other_recent_stats_moved_label">要查找您的“其他最近统计数据”？我们已将其迁移至“见解”页面。</string>
 	<string name="me_disconnect_from_wordpress_com">从 WordPress.com 断开连接</string>
 	<string name="me_btn_login_logout">登录/注销</string>
 	<string name="me_connect_to_wordpress_com">连接至 WordPress.com</string>
@@ -19,8 +35,8 @@
 	<string name="my_site_btn_comments">评论</string>
 	<string name="my_site_btn_site_settings">设置</string>
 	<string name="my_site_btn_blog_posts">博客文章</string>
+	<string name="reader_label_new_posts_subtitle">轻点以显示文章</string>
 	<string name="my_site_header_configuration">配置</string>
-	<string name="reader_label_new_posts_subtitle">轻点以显示站点</string>
 	<string name="my_site_header_admin">管理员</string>
 	<string name="notifications_account_required">登录 WordPress.com，以查看通知</string>
 	<string name="stats_unknown_author">未知作者</string>
@@ -101,6 +117,7 @@
 	<string name="stats_period">时段</string>
 	<string name="logs_copied_to_clipboard">已将应用程序日志复制到剪贴板</string>
 	<string name="post_uploading">正在上传</string>
+	<string name="stats_comments_total_comments_followers">拥有评论粉丝的文章总数：%1$s</string>
 	<string name="stats_pagination_label">第 %1$s 页，共 %2$s 页</string>
 	<string name="stats_timeframe_years">年</string>
 	<string name="stats_views">浏览量</string>
@@ -139,7 +156,6 @@
 	<string name="stats_empty_followers">没有粉丝</string>
 	<string name="stats_empty_publicize_desc">借助 Publicize，随时了解各个社交网络服务的粉丝动态。</string>
 	<string name="stats_empty_publicize">未记录任何 Publicize 粉丝</string>
-	<string name="stats_comments_total_comments_followers">评论粉丝总数：%1$s</string>
 	<string name="stats_followers_total_wpcom">WordPress.com 粉丝总数：%1$s</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_followers_email_selector">电子邮件</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">预览标签</string>
 	<string name="reader_title_subs">标签和博文</string>
 	<string name="reader_page_followed_tags">关注的标签</string>
-	<string name="reader_page_popular_tags">热门标签</string>
 	<string name="reader_page_followed_blogs">关注的博客</string>
 	<string name="reader_hint_add_tag_or_url">输入要关注的标签或网址</string>
 	<string name="reader_label_followed_blog">关注的博客</string>
@@ -429,7 +444,6 @@
 	<string name="blog_name_must_include_letters">网址必须至少有1个字母（a-z）</string>
 	<string name="blog_name_invalid">无效的网址</string>
 	<string name="blog_title_invalid">无效的网站标题</string>
-	<string name="stats_view_tags_and_categories">标签和分类</string>
 	<string name="blog_removed_successfully">已成功删除站点</string>
 	<string name="remove_account">删除站点</string>
 	<string name="deleting_page">正在删除页面</string>
@@ -487,7 +501,6 @@
 	<string name="reader_toast_err_share_intent">无法共享</string>
 	<string name="reader_toast_err_view_image">无法查看图像</string>
 	<string name="reader_toast_err_url_intent">无法打开 %s</string>
-	<string name="reader_empty_popular_tags">没有热门标签</string>
 	<string name="connecting_wpcom">连接到 WordPress.com</string>
 	<string name="media_add_popup_title">添加到媒体库</string>
 	<string name="media_add_new_media_gallery">创建相册</string>
@@ -566,6 +579,7 @@
 	<string name="stats_entry_posts_and_pages">标题</string>
 	<string name="stats_entry_tags_and_categories">话题</string>
 	<string name="stats_entry_authors">作者</string>
+	<string name="stats_view_tags_and_categories">标签和类别</string>
 	<string name="upload">上传</string>
 	<string name="notifications_turn_off">关闭</string>
 	<string name="notifications_turn_off_1hr">关闭 1 小时</string>

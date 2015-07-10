@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">Min sida</string>
+	<string name="tabbar_accessibility_label_me">Jag</string>
+	<string name="passcodelock_prompt_message">Ange din PIN</string>
+	<string name="editor_toast_changes_saved">Ändringar sparades</string>
+	<string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>
+	<string name="stats_insights_best_ever">Flest visningar någonsin</string>
+	<string name="ignore">Ignorera </string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% av visningar</string>
+	<string name="stats_insights_most_popular_hour">Mest populära timme</string>
+	<string name="stats_insights_most_popular_day">Mest populära dag</string>
+	<string name="stats_insights_today">Dagens statistik </string>
+	<string name="stats_insights_popular">Mest populära dag och timme</string>
+	<string name="stats_insights_all_time">Alla inlägg, visningar och besökare</string>
+	<string name="stats_insights">Insikter</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Om du vill visa din statistik, logga in på det WordPress.com användarkonto som du använde för att ansluta till Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Letar du efter din övriga senaste statistik? Vi har flyttat den till Insikter-sidan.</string>
 	<string name="me_disconnect_from_wordpress_com">Koppla från WordPress.com </string>
 	<string name="me_btn_login_logout">Logga in/Logga ut</string>
 	<string name="me_connect_to_wordpress_com">Anslut till WordPress.com</string>
@@ -101,6 +117,7 @@
 	<string name="stats_overall">Övergripande</string>
 	<string name="stats_total">Totalt</string>
 	<string name="post_uploading">Laddar upp</string>
+	<string name="stats_comments_total_comments_followers">Totalt antal inlägg med följare av kommentarer: %1$s</string>
 	<string name="stats_views">Visningar</string>
 	<string name="stats_visitors">Besökare</string>
 	<string name="stats_pagination_label">Sida %1$s av %2$s</string>
@@ -141,7 +158,6 @@
 	<string name="stats_comments_by_authors">Efter författare</string>
 	<string name="stats_followers_email_selector">E-post</string>
 	<string name="stats_followers_total_wpcom">Totalt antal följare på WordPress.com: %1$s</string>
-	<string name="stats_comments_total_comments_followers">Totalt antal följare av kommentarer: %1$s</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_followers_total_email">Totalt antal följare via e-post: %1$s</string>
 	<string name="stats_followers_seconds_ago">sekunder sedan</string>
@@ -161,7 +177,7 @@
 	<string name="stats_for">Statistik för %s</string>
 	<string name="themes_fetching">Hämtar teman...</string>
 	<string name="ssl_certificate_details">Detaljer</string>
-	<string name="sure_to_remove_account">Ta bort den här webbplatsen?</string>
+	<string name="sure_to_remove_account">Ta bort denna webbplats?</string>
 	<string name="delete_sure_post">Radera detta inlägg</string>
 	<string name="delete_sure">Radera detta utkast</string>
 	<string name="delete_sure_page">Radera denna sida</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">Förhandsgranska tagg</string>
 	<string name="reader_title_subs">Taggar &amp; bloggar</string>
 	<string name="reader_page_followed_tags">Följda taggar</string>
-	<string name="reader_page_popular_tags">Populära taggar</string>
 	<string name="reader_page_followed_blogs">Följda bloggar</string>
 	<string name="reader_hint_add_tag_or_url">Ange en tagg eller URL att följa</string>
 	<string name="reader_label_followed_blog">Bloggen följs</string>
@@ -316,7 +331,7 @@
 	<string name="error_refresh_stats">Statistiken kunde inte uppdateras just nu</string>
 	<string name="error_refresh_notifications">Notifieringar kunde inte uppdateras just nu</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">Tidigare vald blogg är inte längre synlig</string>
-	<string name="could_not_remove_account">Det gick inte ta bort webbplatsen</string>
+	<string name="could_not_remove_account">Det gick inte att ta bort webbplatsen</string>
 	<string name="gallery_error">Medieobjektet kunde inte hämtas</string>
 	<string name="blog_not_found">Ett fel uppstod vid anslutning till bloggen</string>
 	<string name="theme_set_failed">Kunde inte ställa in tema</string>
@@ -410,7 +425,6 @@
 	<string name="blog_name_must_include_letters">Webbplatsadressen måste innehålla minst 1 bokstav (a-z)</string>
 	<string name="reader_toast_err_remove_tag">Kunde inte ta bort etiketten</string>
 	<string name="reader_toast_err_add_tag">Kunde inte lägga till etiketten</string>
-	<string name="stats_view_tags_and_categories">Etiketter &amp; kategorier</string>
 	<string name="delete_draft">Radera utkast</string>
 	<string name="remove_account">Ta bort webbplatsen</string>
 	<string name="blog_removed_successfully">Webbplatsen har tagits bort</string>
@@ -496,7 +510,6 @@
 	<string name="reader_toast_err_view_image">Kunde inte visa bild</string>
 	<string name="reader_toast_err_url_intent">Kunde inte öppna %s</string>
 	<string name="reader_empty_followed_tags">Du följer inga ämnen</string>
-	<string name="reader_empty_popular_tags">Inga populära ämnen</string>
 	<string name="create_account_wpcom">Skapa ett konto på WordPress.com</string>
 	<string name="connecting_wpcom">Ansluter till WordPress.com</string>
 	<string name="username_invalid">Ogiltigt användarnamn</string>
@@ -540,6 +553,7 @@
 	<string name="view_stats_full_site">Visa hela webbplatsen</string>
 	<string name="stats_view_visitors_and_views">Besökare och visningar</string>
 	<string name="stats_view_clicks">Klick</string>
+	<string name="stats_view_tags_and_categories">Etiketter och kategorier</string>
 	<string name="stats_view_referrers">Hänvisningar</string>
 	<string name="stats_view_comments">Kommentarer</string>
 	<string name="stats_timeframe_today">I dag</string>

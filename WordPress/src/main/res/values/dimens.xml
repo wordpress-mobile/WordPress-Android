@@ -33,6 +33,12 @@
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
 
+    <!-- featured image in post list -->
+    <dimen name="postlist_featured_image_height_normal">128dp</dimen>
+    <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
+    <dimen name="postlist_featured_image_height_tablet_large">280dp</dimen>
+    <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_normal</dimen>
+
     <!-- left/right margin for content such as Me fragment, My Site fragment, reader posts -->
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
     <dimen name="content_margin_normal_landscape">48dp</dimen>
@@ -76,12 +82,13 @@
     <dimen name="text_sz_double_extra_large">24sp</dimen>
 
     <dimen name="avatar_sz_small">32dp</dimen>
-    <dimen name="avatar_sz_medium">48dp</dimen>
+    <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
-    <dimen name="reader_button_icon">48dp</dimen>
+    <!-- like/comment icons in reader -->
+    <dimen name="reader_button_icon">40dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
