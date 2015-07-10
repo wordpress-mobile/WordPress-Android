@@ -137,7 +137,7 @@
                     android:ellipsize="end"
                     android:maxLines="3"
                     android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_small"
+                    android:textSize="@dimen/text_sz_medium"
                     tools:text="text_attribution" />
 
             </LinearLayout>

@@ -874,8 +874,8 @@ public class ReaderPostDetailFragment extends Fragment
     public boolean onUrlClick(String url) {
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
-        if (ReaderPostRenderer.isBlogPreviewUrl(url)) {
-            long blogId = ReaderPostRenderer.getBlogIdFromBlogPreviewUrl(url);
+        if (ReaderUtils.isBlogPreviewUrl(url)) {
+            long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
             if (blogId != 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
             }

@@ -240,36 +240,18 @@ class ReaderPostRenderer {
         if (mPost.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
             if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.hasBlogName()) {
-                String htmlDiscover = "<div id='discover'>" + makeBlogPreviewLink(discoverData.getBlogId(), discoverData.getBlogName()) + "</div>";
+                String label = String.format(
+                        WordPress.getContext().getString(R.string.reader_discover_visit_blog), discoverData.getBlogName());
+                String url = ReaderUtils.makeBlogPreviewUrl(discoverData.getBlogId());
+
+                String htmlDiscover = "<div id='discover'>"
+                        + "<a href='" + url + "'>" + label + "</a>"
+                        + "</div>";
                 content += htmlDiscover;
             }
         }
 
         return content;
-    }
-
-    /*
-     * used by Discover site picks to add a "Visit [BlogName]" link which shows the
-     * native blog preview for that blog
-     */
-    private String makeBlogPreviewLink(long blogId, String blogName) {
-        String label = String.format(
-                WordPress.getContext().getString(R.string.reader_discover_visit_blog), blogName);
-        String url = "wordpress://blogpreview?blogId=" + Long.toString(blogId);
-        return "<a href='" + url + "'>" + label + "</a>";
-    }
-
-    public static boolean isBlogPreviewUrl(String url) {
-        return (url != null && url.startsWith("wordpress://blogpreview"));
-    }
-
-    public static long getBlogIdFromBlogPreviewUrl(String url) {
-        if (isBlogPreviewUrl(url)) {
-            String strBlogId = Uri.parse(url).getQueryParameter("blogId");
-            return StringUtils.stringToLong(Uri.parse(url).getQueryParameter("blogId"));
-        } else {
-            return 0;
-        }
     }
 
     /*

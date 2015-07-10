@@ -18,6 +18,13 @@ import org.wordpress.android.util.StringUtils;
  * and comment counts come from the original post
  */
 public class ReaderPostDiscoverData {
+
+    public enum DiscoverType {
+        EDITOR_PICK,
+        SITE_PICK,
+        UNKNOWN
+    }
+
     private String authorName;
     private String authorUrl;
     private String blogName;
@@ -75,7 +82,7 @@ public class ReaderPostDiscoverData {
         return StringUtils.notNullStr(blogName);
     }
 
-    private String getBlogUrl() {
+    public String getBlogUrl() {
         return StringUtils.notNullStr(blogUrl);
     }
 
@@ -87,8 +94,8 @@ public class ReaderPostDiscoverData {
         return StringUtils.notNullStr(permaLink);
     }
 
-    public boolean hasPostAndBlogIds() {
-        return (postId != 0 && blogId != 0);
+    public boolean hasBlogUrl() {
+        return !TextUtils.isEmpty(blogUrl);
     }
 
     public boolean hasBlogName() {
@@ -99,27 +106,54 @@ public class ReaderPostDiscoverData {
         return !TextUtils.isEmpty(authorName);
     }
 
+    public DiscoverType getDiscoverType() {
+        if (blogId != 0 && postId != 0) {
+            return DiscoverType.EDITOR_PICK;
+        } else if (blogId != 0) {
+            return DiscoverType.SITE_PICK;
+        } else {
+            return DiscoverType.UNKNOWN; // most likely a feature
+        }
+    }
+
     /*
-     * returns the spanned html for the attribution line, ex: "Originally posted by [AuthorName] in [BlogName]"
+     * returns the spanned html for the attribution line
      */
     private transient Spanned attributionHtml;
     public Spanned getAttributionHtml() {
         if (attributionHtml == null) {
+            String html;
             String author = "<strong>" + getAuthorName() + "</strong>";
             String blog = "<strong>" + getBlogName() + "</strong>";
-            String html;
             Context context = WordPress.getContext();
-            if (hasBlogName() && hasAuthorName()) {
-                // "Originally posted by [AuthorName] on [BlogName]"
-                html = String.format(context.getString(R.string.reader_discover_attribution_author_and_blog), author, blog);
-            } else if (hasBlogName()) {
-                // "Originally posted on [BlogName]"
-                html = String.format(context.getString(R.string.reader_discover_attribution_blog), blog);
-            } else if (hasAuthorName()) {
-                // "Originally posted by [AuthorName]"
-                html = String.format(context.getString(R.string.reader_discover_attribution_author), author);
-            } else {
-                return null;
+
+            switch (getDiscoverType()) {
+                case EDITOR_PICK:
+                    if (hasBlogName() && hasAuthorName()) {
+                        // "Originally posted by [AuthorName] on [BlogName]"
+                        html = String.format(context.getString(R.string.reader_discover_attribution_author_and_blog), author, blog);
+                    } else if (hasBlogName()) {
+                        // "Originally posted on [BlogName]"
+                        html = String.format(context.getString(R.string.reader_discover_attribution_blog), blog);
+                    } else if (hasAuthorName()) {
+                        // "Originally posted by [AuthorName]"
+                        html = String.format(context.getString(R.string.reader_discover_attribution_author), author);
+                    } else {
+                        return null;
+                    }
+                    break;
+
+                case SITE_PICK:
+                    if (blogId != 0 && hasBlogName()) {
+                        // "Visit [BlogName]" - opens blog preview when tapped
+                        html = String.format(context.getString(R.string.reader_discover_visit_blog), blog);
+                    } else {
+                        return null;
+                    }
+                    break;
+
+                default:
+                    return null;
             }
 
             attributionHtml = Html.fromHtml(html);

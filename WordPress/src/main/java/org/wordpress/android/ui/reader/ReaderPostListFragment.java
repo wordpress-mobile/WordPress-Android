@@ -1344,7 +1344,7 @@ public class ReaderPostListFragment extends Fragment
         // "discover" posts that highlight another post should open the original (source) post when tapped
         if (post.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
-            if (discoverData != null && discoverData.hasPostAndBlogIds()) {
+            if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
                 return;
             }

@@ -129,9 +129,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
         ReaderTypes.ReaderPostListType postListType = getPostListType();
 
-        final ReaderPostDiscoverData discoverData = post.getDiscoverData();
-        final boolean isDiscoverPost = (discoverData != null);
-
         postHolder.txtTitle.setText(post.getTitle());
         postHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
@@ -220,7 +217,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         boolean showLikes;
         boolean showComments;
-        if (isDiscoverPost) {
+        if (post.isDiscoverPost()) {
             showLikes = false;
             showComments = false;
         } else if (mIsLoggedOutReader) {
@@ -286,11 +283,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.imgMore.setOnClickListener(null);
         }
 
-        // attribution line for discover posts
-        if (isDiscoverPost && discoverData.hasAttributionHtml()) {
-            postHolder.layoutDiscover.setVisibility(View.VISIBLE);
-            postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
-            postHolder.txtDiscover.setText(discoverData.getAttributionHtml());
+        // attribution section for discover posts
+        if (post.isDiscoverPost()) {
+            showDiscoverData(postHolder, post);
         } else {
             postHolder.layoutDiscover.setVisibility(View.GONE);
         }
@@ -307,6 +302,54 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     mPostSelectedListener.onPostSelected(post);
                 }
             });
+        }
+    }
+
+    private void showDiscoverData(final ReaderPostViewHolder postHolder,
+                                  final ReaderPost post) {
+        final ReaderPostDiscoverData discoverData = post.getDiscoverData();
+        if (discoverData == null) {
+            postHolder.layoutDiscover.setVisibility(View.GONE);
+        }
+
+        postHolder.layoutDiscover.setVisibility(View.VISIBLE);
+        postHolder.txtDiscover.setText(discoverData.getAttributionHtml());
+
+        switch (discoverData.getDiscoverType()) {
+            case EDITOR_PICK:
+                // editor picks show author avatar
+                postHolder.imgDiscoverAvatar.setVisibility(View.VISIBLE);
+                postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                postHolder.layoutDiscover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mPostSelectedListener != null) {
+                            mPostSelectedListener.onPostSelected(post);
+                        }
+                    }
+                });
+                break;
+
+            case SITE_PICK:
+                // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
+                // we have the blogId, if not show blog in internal webView
+                postHolder.imgDiscoverAvatar.setVisibility(View.GONE);
+                postHolder.layoutDiscover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (discoverData.getBlogId() != 0) {
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
+                        } else if (discoverData.hasBlogUrl()) {
+                            ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
+                        }
+                    }
+                });
+                break;
+
+            default:
+                // something else, so hide discover section
+                postHolder.layoutDiscover.setVisibility(View.GONE);
+                break;
         }
     }
 
