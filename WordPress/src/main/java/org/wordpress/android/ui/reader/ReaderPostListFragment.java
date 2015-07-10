@@ -1345,8 +1345,15 @@ public class ReaderPostListFragment extends Fragment
         if (post.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
             if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
-                ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
-                return;
+                if (discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
+                    // open the post in the native reader if we have the blogId/postId
+                    ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
+                    return;
+                } else if (discoverData.hasPermalink()) {
+                    // otherwise, we sadly resort to showing the post in a webView
+                    ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
+                    return;
+                }
             }
         }
 

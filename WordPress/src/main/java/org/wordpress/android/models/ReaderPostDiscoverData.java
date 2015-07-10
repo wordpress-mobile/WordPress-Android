@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.JSONUtils;
@@ -126,6 +127,10 @@ public class ReaderPostDiscoverData {
 
     private boolean hasAuthorName() {
         return !TextUtils.isEmpty(authorName);
+    }
+
+    public boolean hasPermalink() {
+        return !TextUtils.isEmpty(permaLink);
     }
 
     public DiscoverType getDiscoverType() {
