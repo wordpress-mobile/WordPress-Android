@@ -6,9 +6,11 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 /**
@@ -22,7 +24,7 @@ public class ReaderPostDiscoverData {
     public enum DiscoverType {
         EDITOR_PICK,
         SITE_PICK,
-        UNKNOWN
+        OTHER
     }
 
     private String authorName;
@@ -37,6 +39,8 @@ public class ReaderPostDiscoverData {
 
     private int numLikes;
     private int numComments;
+
+    private DiscoverType discoverType = DiscoverType.OTHER;
 
     /*
      * passed JSONObject is the "discover_metadata" section of a reader post
@@ -59,6 +63,24 @@ public class ReaderPostDiscoverData {
             postId = jsonWpcomData.optLong("post_id");
             numLikes = jsonWpcomData.optInt("like_count");
             numComments = jsonWpcomData.optInt("comment_count");
+        }
+
+        // walk the post formats array until we find one we know we should handle differently
+        //  - image-pick, quote-pick, and standard-pick all display as editors picks.
+        //  - site-pick` displays as a site pick
+        //  - collection + feature can be ignored cause those will just display the same way all normal posts do.
+        JSONArray jsonPostFormats = json.optJSONArray("discover_fp_post_formats");
+        if (jsonPostFormats != null) {
+            for (int i = 0; i < jsonPostFormats.length(); i++) {
+                String slug = JSONUtils.getString(jsonPostFormats.optJSONObject(i), "slug");
+                if (slug.equals("site-pick")) {
+                    discoverType = DiscoverType.SITE_PICK;
+                    break;
+                } else if (slug.equals("standard-pick") || slug.equals("image-pick") || slug.equals("quote-pick")) {
+                    discoverType = DiscoverType.EDITOR_PICK;
+                    break;
+                }
+            }
         }
     }
 
@@ -107,13 +129,7 @@ public class ReaderPostDiscoverData {
     }
 
     public DiscoverType getDiscoverType() {
-        if (blogId != 0 && postId != 0) {
-            return DiscoverType.EDITOR_PICK;
-        } else if (blogId != 0) {
-            return DiscoverType.SITE_PICK;
-        } else {
-            return DiscoverType.UNKNOWN; // most likely a feature
-        }
+        return discoverType;
     }
 
     /*
