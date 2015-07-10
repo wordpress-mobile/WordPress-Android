@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
@@ -239,7 +240,7 @@ class ReaderPostRenderer {
         if (mPost.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
             if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.hasBlogName()) {
-                String blogLink = "<a href='wordpress://blogpreview?blogId=" + Long.toString(discoverData.getBlogId()) + "'>"
+                String blogLink = "<a href='" + makeBlogPreviewUrl(discoverData.getBlogId()) + "'>"
                         + discoverData.getBlogName()
                         + "</a>";
                 String htmlDiscover = "<div id='discover'>" + blogLink + "</div>";
@@ -248,6 +249,23 @@ class ReaderPostRenderer {
         }
 
         return content;
+    }
+
+    private static String makeBlogPreviewUrl(long blogId) {
+        return "wordpress://blogpreview?blogId=" + Long.toString(blogId);
+    }
+
+    public static boolean isBlogPreviewUrl(String url) {
+        return (url != null && url.startsWith("wordpress://blogpreview"));
+    }
+
+    public static long getBlogIdFromBlogPreviewUrl(String url) {
+        if (isBlogPreviewUrl(url)) {
+            String strBlogId = Uri.parse(url).getQueryParameter("blogId");
+            return StringUtils.stringToLong(Uri.parse(url).getQueryParameter("blogId"));
+        } else {
+            return 0;
+        }
     }
 
     /*

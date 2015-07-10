@@ -872,6 +872,16 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public boolean onUrlClick(String url) {
+        // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
+        // used for Discover posts that highlight a blog
+        if (ReaderPostRenderer.isBlogPreviewUrl(url)) {
+            long blogId = ReaderPostRenderer.getBlogIdFromBlogPreviewUrl(url);
+            if (blogId != 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            }
+            return true;
+        }
+
         // open YouTube videos in external app so they launch the YouTube player, open all other
         // urls using an AuthenticatedWebViewActivity
         final OpenUrlType openUrlType;
