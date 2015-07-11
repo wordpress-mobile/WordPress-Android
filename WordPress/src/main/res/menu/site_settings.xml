@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/save_site_settings"
-        android:title="Save"
+        android:title="@string/save"
         app:showAsAction="always"
         android:enabled="true"
         android:visible="true" />

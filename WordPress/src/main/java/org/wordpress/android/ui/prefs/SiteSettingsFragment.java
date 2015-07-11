@@ -33,8 +33,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final HashMap<String, Integer> LANGUAGE_CODES = new HashMap<>();
 
     static {
-        LANGUAGE_CODES.put("en", 1);
         LANGUAGE_CODES.put("az", 79);
+        LANGUAGE_CODES.put("en", 1);
         LANGUAGE_CODES.put("de", 15);
         LANGUAGE_CODES.put("el", 17);
         LANGUAGE_CODES.put("es", 19);
@@ -80,6 +80,13 @@ public class SiteSettingsFragment extends PreferenceFragment
     private ListPreference mFormatPreference;
     private ListPreference mVisibilityPreference;
     private MenuItem mSaveItem;
+    private HashMap<String, String> mLanguageCodes = new HashMap<>();
+
+    private String mRemoteTitle;
+    private String mRemoteTagline;
+    private String mRemoteAddress;
+    private String mRemoteLanguage;
+    private int mRemotePrivacy;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,31 +108,32 @@ public class SiteSettingsFragment extends PreferenceFragment
                     @Override
                     public void onResponse(JSONObject response) {
                         if (mTitlePreference != null) {
-                            mTitlePreference.setText(response.optString(RestClientUtils.SITE_TITLE_KEY));
-                            mTitlePreference.setSummary(response.optString(RestClientUtils.SITE_TITLE_KEY));
+                            mRemoteTitle = response.optString(RestClientUtils.SITE_TITLE_KEY);
+                            mTitlePreference.setText(mRemoteTitle);
+                            mTitlePreference.setSummary(mRemoteTitle);
                         }
 
                         if (mTaglinePreference != null) {
-                            mTaglinePreference.setText(response.optString(RestClientUtils.SITE_DESC_KEY));
-                            mTaglinePreference.setSummary(response.optString(RestClientUtils.SITE_DESC_KEY));
+                            mRemoteTagline = response.optString(RestClientUtils.SITE_DESC_KEY);
+                            mTaglinePreference.setText(mRemoteTagline);
+                            mTaglinePreference.setSummary(mRemoteTagline);
                         }
 
                         if (mAddressPreference != null) {
-                            mAddressPreference.setText(response.optString(RestClientUtils.SITE_URL_KEY));
-                            mAddressPreference.setSummary(response.optString(RestClientUtils.SITE_URL_KEY));
-                            // Disabled until implemented
-                            mAddressPreference.setEnabled(false);
+                            mRemoteAddress = response.optString(RestClientUtils.SITE_URL_KEY);
+                            mAddressPreference.setText(mRemoteAddress);
+                            mAddressPreference.setSummary(mRemoteAddress);
                         }
 
                         if (mLanguagePreference != null) {
-                            String languageString = getLanguageString(response.optString(RestClientUtils.SITE_LANGUAGE_KEY));
-                            mLanguagePreference.setDefaultValue(languageString);
-                            mLanguagePreference.setSummary(languageString);
+                            mRemoteLanguage = getLanguageString(response.optString(RestClientUtils.SITE_LANGUAGE_KEY));
+                            mLanguagePreference.setDefaultValue(mRemoteLanguage);
+                            mLanguagePreference.setSummary(mRemoteLanguage);
                         }
 
                         if (mVisibilityPreference != null) {
-                            int visibility = response.optJSONObject("settings").optInt("blog_public");
-                            mVisibilityPreference.setValue(String.valueOf(visibility));
+                            mRemotePrivacy = response.optJSONObject("settings").optInt("blog_public");
+                            mVisibilityPreference.setValue(String.valueOf(mRemotePrivacy));
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -138,6 +146,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 });
 
         setHasOptionsMenu(true);
+
+        String[] languageIds = getResources().getStringArray(R.array.lang_ids);
+        String[] languageCodes = getResources().getStringArray(R.array.language_codes);
+
+        for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
+            mLanguageCodes.put(languageCodes[i], languageIds[i]);
+        }
     }
 
     @Override
@@ -167,25 +182,21 @@ public class SiteSettingsFragment extends PreferenceFragment
             mTitlePreference.setText(newValue.toString());
             mTitlePreference.setSummary(newValue.toString());
             getActivity().setTitle(newValue.toString());
-            toggleSaveItemVisibility(true);
 
             return true;
         } else if (preference == mTaglinePreference &&
                 !newValue.equals(mTaglinePreference.getText())) {
             mTaglinePreference.setText(newValue.toString());
             mTaglinePreference.setSummary(newValue.toString());
-            toggleSaveItemVisibility(true);
 
             return true;
         } else if (preference == mLanguagePreference &&
                 !newValue.equals(mLanguagePreference.getSummary())) {
             mLanguagePreference.setSummary(getLanguageString(newValue.toString()));
-            toggleSaveItemVisibility(true);
 
             return true;
-        } else if (preference == mVisibilityPreference &&
-                !newValue.equals(mVisibilityPreference.getValue())) {
-            switch ((Integer) newValue) {
+        } else if (preference == mVisibilityPreference) {
+            switch (Integer.valueOf(newValue.toString())) {
                 case -1:
                     mVisibilityPreference.setSummary("I would like my site to be private, visible only to users I choose");
                     break;
@@ -196,8 +207,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mVisibilityPreference.setSummary("Allow search engines to index this site");
                     break;
             }
-
-            toggleSaveItemVisibility(true);
 
             return true;
         }
@@ -213,21 +222,21 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
         // https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
-        if (mTitlePreference != null) {
+        if (mTitlePreference != null && !mTitlePreference.getText().equals(mRemoteTitle)) {
             params.put("blogname", mTitlePreference.getText());
         }
 
-        if (mTaglinePreference != null) {
+        if (mTaglinePreference != null && !mTaglinePreference.getText().equals(mRemoteTagline)) {
             params.put("blogdescription", mTaglinePreference.getText());
         }
 
-        if (mLanguagePreference != null) {
-            if (LANGUAGE_CODES.containsKey(mLanguagePreference.getValue())) {
-                params.put("lang_id", String.valueOf(LANGUAGE_CODES.get(mLanguagePreference.getValue())));
-            }
+        if (mLanguagePreference != null &&
+                mLanguageCodes.containsKey(mLanguagePreference.getValue()) &&
+                !mRemoteLanguage.equals(mLanguageCodes.get(mLanguagePreference.getValue()))) {
+            params.put("lang_id", String.valueOf(LANGUAGE_CODES.get(mLanguagePreference.getValue())));
         }
 
-        if (mVisibilityPreference != null) {
+        if (mVisibilityPreference != null && Integer.valueOf(mVisibilityPreference.getValue()) != mRemotePrivacy) {
             params.put("blog_public", mVisibilityPreference.getValue());
         }
 
@@ -244,8 +253,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                 String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                toggleSaveItemVisibility(false);
-
                 // Update local Blog name
                 if (params.containsKey("blogname")) {
                     mBlog.setBlogName(params.get("blogname"));
