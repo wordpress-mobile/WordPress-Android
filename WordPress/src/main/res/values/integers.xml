@@ -17,4 +17,6 @@
     <!-- MediaPicker -->
     <integer name="num_media_columns">2</integer>
 
+    <integer name="fab_animation_delay">300</integer>
+
 </resources>

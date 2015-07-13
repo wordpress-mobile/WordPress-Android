@@ -86,7 +86,7 @@ public class StatsActivity extends AppCompatActivity
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
-    private StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
+    private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
 

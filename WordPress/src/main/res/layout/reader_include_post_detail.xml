@@ -52,7 +52,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_small"
                 tools:text="text_blog_name" />
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
@@ -63,14 +63,14 @@
 
         <ImageView
             android:id="@+id/image_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/margin_small"
             android:background="?android:selectableItemBackground"
-            android:paddingBottom="@dimen/margin_large"
+            android:paddingBottom="@dimen/margin_small"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_small"
             android:src="@drawable/ic_action_more" />
 
     </LinearLayout>

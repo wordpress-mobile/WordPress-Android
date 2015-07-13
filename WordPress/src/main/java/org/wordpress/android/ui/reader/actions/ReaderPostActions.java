@@ -85,7 +85,7 @@ public class ReaderPostActions {
      */
     public static void updatePost(final ReaderPost originalPost,
                                   final UpdateResultListener resultListener) {
-        String path = "sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
+        String path = "read/sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -197,15 +197,12 @@ public class ReaderPostActions {
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestPost(final long blogId, final long postId, final ActionListener actionListener) {
-        String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
+        String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
-                // make sure the post has the passed blogId so it's saved correctly - necessary
-                // since the /sites/ endpoints return site_id="1" for Jetpack-powered blogs
-                post.blogId = blogId;
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
                 if (actionListener != null) {

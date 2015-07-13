@@ -27,9 +27,11 @@
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
+        <item name="fontFamily">merriweather</item>
     </style>
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
@@ -43,6 +45,8 @@
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
+        <item name="fontFamily">merriweather</item>
+        <item name="fontVariation">light</item>
     </style>
     <style name="ReaderTextView.Post.Tag" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
@@ -58,6 +62,7 @@
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
@@ -79,6 +84,8 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="fontFamily">merriweather</item>
+        <item name="fontVariation">light</item>
     </style>
     <style name="ReaderTextView.Comment.Action" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
@@ -137,10 +144,6 @@
     <style name="ReaderImageView.Avatar.Like" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
-    </style>
-    <style name="ReaderImageView.ButtonIcon" parent="ReaderImageView">
-        <item name="android:layout_width">@dimen/reader_button_icon</item>
-        <item name="android:layout_height">@dimen/reader_button_icon</item>
     </style>
 
     <!-- progress bars -->

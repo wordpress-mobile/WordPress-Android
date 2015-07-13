@@ -202,7 +202,7 @@ public class ReaderPostService extends Service {
     private static void requestPostsForBlog(final long blogId,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
-        String path = "sites/" + blogId + "/posts/?meta=site,likes";
+        String path = "read/sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == UpdateAction.REQUEST_OLDER) {
