@@ -30,6 +30,9 @@ public class AppPrefs {
 
         // index of the last active item in Stats activity
         STATS_ITEM_INDEX,
+
+        // index of the last app-version
+        LAST_APP_VERSION_INDEX,
     }
 
     private static SharedPreferences prefs() {
@@ -152,6 +155,13 @@ public class AppPrefs {
         }
     }
 
+    // Store the version code of the app. Used to check it the app was upgraded.
+    public static int getLastAppVersionCode() {
+        return getInt(PrefKey.LAST_APP_VERSION_INDEX);
+    }
+    public static void setLastAppVersionCode(int versionCode) {
+        setInt(PrefKey.LAST_APP_VERSION_INDEX, versionCode);
+    }
 
     /**
      * name of the last shown activity - used at startup to restore the previously selected

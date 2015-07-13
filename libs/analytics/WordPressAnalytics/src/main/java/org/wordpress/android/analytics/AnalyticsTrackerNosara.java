@@ -61,6 +61,9 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case APPLICATION_CLOSED:
                 eventName = "application_closed";
                 break;
+            case APPLICATION_UPGRADED:
+                eventName = "application_upgraded";
+                break;
             case THEMES_ACCESSED_THEMES_BROWSER:
                 eventName = "themes_theme_browser_accessed";
                 break;
@@ -256,11 +259,33 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case SIGNED_INTO_JETPACK:
                 eventName = "signed_into_jetpack";
                 break;
+            case ACCOUNT_LOGOUT:
+                eventName = "account_logout";
+                break;
             case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
                 eventName = "stats_screen_signed_into_jetpack";
                 break;
             case STATS_ACCESSED:
                 eventName = "stats_accessed";
+                break;
+            case STATS_INSIGHTS_ACCESSED:
+                eventName = "stats_insights_accessed";
+                break;
+            case STATS_PERIOD_DAYS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "days");
+                break;
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "weeks");
+                break;
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "months");
+                break;
+            case STATS_PERIOD_YEARS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "years");
                 break;
             case STATS_VIEW_ALL_ACCESSED:
                 eventName = "stats_view_all_accessed";

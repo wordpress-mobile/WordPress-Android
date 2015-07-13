@@ -899,7 +899,7 @@ public class PostUploadService extends Service {
             Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
                     : mContext.getResources().getText(R.string.post_id));
-            Intent notificationIntent = new Intent(mContext, isPage ? PagesListActivity.class : PostsListActivity.class);
+            Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
             notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, mErrorMessage);

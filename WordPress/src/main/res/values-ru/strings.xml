@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">Мой сайт</string>
+	<string name="tabbar_accessibility_label_me">Я</string>
+	<string name="editor_toast_changes_saved">Обновления сохранены</string>
+	<string name="passcodelock_prompt_message">Введите ваш PIN-код</string>
+	<string name="push_auth_expired">Время запроса истекло. Авторизуйтесь на WordPress.com и попробуйте еще раз.</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% просмотров</string>
+	<string name="ignore">Пропустить</string>
+	<string name="stats_insights_best_ever">Наибольшее количество просмотров</string>
+	<string name="stats_insights_most_popular_hour">Самое популярное время</string>
+	<string name="stats_insights_most_popular_day">Самый популярный день</string>
+	<string name="stats_insights_popular">Самый популярный день и час</string>
+	<string name="stats_insights_today">Cтатистические данные на сегодня</string>
+	<string name="stats_insights_all_time">Записи, просмотры и посетители за все время</string>
+	<string name="stats_insights">Тенденции</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Чтобы просмотреть статистику, войдите в учетную запись WordPress.com, которую вы использовали для подключения Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Ищете «Другую недавнюю статистику»? Мы перенесли эти данные на страницу «Тенденции».</string>
 	<string name="me_disconnect_from_wordpress_com">Отключение от WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Подключение к WordPress.com</string>
 	<string name="me_btn_login_logout">Вход/выход</string>
@@ -19,8 +35,8 @@
 	<string name="my_site_btn_comments">Комментарии</string>
 	<string name="my_site_btn_site_settings">Настройки</string>
 	<string name="my_site_btn_blog_posts">Записи в блоге</string>
+	<string name="reader_label_new_posts_subtitle">Нажмите, чтобы показать записи.</string>
 	<string name="my_site_header_admin">Администратор</string>
-	<string name="reader_label_new_posts_subtitle">Нажмите, чтобы показать сайты.</string>
 	<string name="my_site_header_configuration">Конфигурация</string>
 	<string name="notifications_account_required">Войти в WordPress.com для получения уведомлений</string>
 	<string name="stats_unknown_author">Неизвестный автор</string>
@@ -73,6 +89,7 @@
 	<string name="add_to_post">Добавить в запись</string>
 	<string name="language">Язык</string>
 	<string name="device">Устройство</string>
+	<string name="stats_empty_search_terms_desc">Узнайте больше о поисковом трафике, просмотрев ключевые слова, которые посетители вашего сайта использовали, чтобы найти его.</string>
 	<string name="comments_fetching">Загрузка комментариев…</string>
 	<string name="pages_fetching">Загрузка страниц…</string>
 	<string name="toast_err_post_uploading">Невозможно открыть запись во время загрузки.</string>
@@ -83,7 +100,6 @@
 	<string name="stats_view_authors">Авторы</string>
 	<string name="stats_view_search_terms">Поисковые запросы</string>
 	<string name="stats_followers_total_wpcom_paged">Подписчики на WordPress.com: %1$d–%2$d из %3$s</string>
-	<string name="stats_empty_search_terms_desc">Узнав, с помощью каких поисковых запросов пользователи попадают на ваш сайт, вы сможете более эффективно анализировать поисковый трафик.</string>
 	<string name="stats_search_terms_unknown_search_terms">Неизвестные поисковые запросы</string>
 	<string name="stats_followers_total_email_paged">Подписчики по эл. почте: %1$d–%2$d из %3$s</string>
 	<string name="error_notification_open">Не удалось открыть уведомление.</string>
@@ -101,6 +117,7 @@
 	<string name="stats_total">Итого</string>
 	<string name="stats_overall">Все время</string>
 	<string name="post_uploading">Идет отправка на сервер.</string>
+	<string name="stats_comments_total_comments_followers">Общее число записей с подписками на комментарии: %1$s</string>
 	<string name="stats_visitors">Посетителей</string>
 	<string name="stats_timeframe_years">Годы</string>
 	<string name="stats_views">Просмотров</string>
@@ -138,7 +155,6 @@
 	<string name="stats_comments_by_posts_and_pages">По записям и страницам</string>
 	<string name="stats_empty_followers_desc">Отслеживайте общее число подписчиков и продолжительность подписки каждого из них на ваш сайт.</string>
 	<string name="stats_empty_followers">Подписчики отсутствуют.</string>
-	<string name="stats_comments_total_comments_followers">Общее количество подписчиков на комментарий: %1$s</string>
 	<string name="stats_comments_by_authors">По авторам</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_followers_email_selector">Электронная почта</string>
@@ -238,7 +254,6 @@
 	<string name="schedule_verb">Запланировать</string>
 	<string name="reader_title_blog_preview">Предпросмотр</string>
 	<string name="reader_page_followed_tags">Отслеживаемые теги</string>
-	<string name="reader_page_popular_tags">Популярные теги</string>
 	<string name="reader_page_followed_blogs">Отслеживаемые блоги</string>
 	<string name="reader_hint_add_tag_or_url">Введите тег или URL для отслеживания</string>
 	<string name="reader_label_followed_blog">Блог отслеживается</string>
@@ -393,7 +408,6 @@
 	<string name="share_action_post">Новая запись</string>
 	<string name="share_action_media">Медиа-библиотека</string>
 	<string name="file_error_create">Не удалось создать временный файл для выгрузки медиа. Убедитесь, что имеется достаточно свободного места на вашем устройстве.</string>
-	<string name="stats_view_tags_and_categories">Тэги и категории</string>
 	<string name="post_format">Формат записи</string>
 	<string name="new_post">Новая запись</string>
 	<string name="new_media">Новое медиа</string>
@@ -495,7 +509,6 @@
 	<string name="reader_toast_err_share_intent">Не в состоянии поделиться</string>
 	<string name="reader_toast_err_view_image">Не удаётся просмотреть изображение</string>
 	<string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
-	<string name="reader_empty_popular_tags">Нет популярных тэгов</string>
 	<string name="connecting_wpcom">Подключиться к WordPress.com</string>
 	<string name="username_invalid">Неверное имя</string>
 	<string name="limit_reached">Достигнут лимит- попробуйте через минуту. При неудачных попытках время будет увеличиваться. Если вы думаете, что это ошибка, обратитесь к техподдержке.</string>
@@ -506,6 +519,7 @@
 	<string name="themes">Темы</string>
 	<string name="menu_search">Поиск</string>
 	<string name="media_gallery_type">Тип</string>
+	<string name="stats_view_tags_and_categories">Теги и Рубрики</string>
 	<string name="stats_timeframe_days">Дни</string>
 	<string name="passcode_enter_passcode">Введите ваш PIN</string>
 	<string name="stats_entry_authors">Автор</string>

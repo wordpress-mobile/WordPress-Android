@@ -1,40 +1,84 @@
 package org.wordpress.android.ui.posts.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.widgets.PostListButton;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Adapter for Posts/Pages list
  */
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
 
-    private final boolean mIsPage;
-    private final LayoutInflater mLayoutInflater;
+    public interface OnPostButtonClickListener {
+        void onPostButtonClicked(int buttonId, PostsListPost post);
+    }
+
     private OnLoadMoreListener mOnLoadMoreListener;
     private OnPostsLoadedListener mOnPostsLoadedListener;
     private OnPostSelectedListener mOnPostSelectedListener;
-    private int mSelectedPosition = -1;
-    private boolean mShowSelection;
-    private List<PostsListPost> mPosts = new ArrayList<>();
+    private OnPostButtonClickListener mOnPostButtonClickListener;
 
-    public PostsListAdapter(Context context, boolean isPage) {
+    private final int mLocalTableBlogId;
+    private final int mPhotonWidth;
+    private final int mPhotonHeight;
+
+    private final boolean mIsPage;
+    private final boolean mIsPrivateBlog;
+    private final boolean mIsStatsSupported;
+    private final boolean mAlwaysShowAllButtons;
+
+    private final PostsListPostList mPosts = new PostsListPostList();
+    private final LayoutInflater mLayoutInflater;
+
+    private final List<PostsListPost> mHiddenPosts = new ArrayList<>();
+
+    private static final long ROW_ANIM_DURATION = 150;
+
+    public PostsListAdapter(Context context, @NonNull Blog blog, boolean isPage) {
         mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
+
+        mLocalTableBlogId = blog.getLocalTableBlogId();
+        mIsPrivateBlog = blog.isPrivate();
+        mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
+
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
+        mPhotonWidth = displayWidth - (cardSpacing * 2);
+        mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+
+        // on larger displays we can always show all buttons
+        mAlwaysShowAllButtons = (displayWidth >= 1080);
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
@@ -49,13 +93,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         mOnPostSelectedListener = listener;
     }
 
-    private void setPosts(List<PostsListPost> postsList) {
-        if (postsList != null) {
-            this.mPosts = postsList;
-        }
+    public void setOnPostButtonClickListener(OnPostButtonClickListener listener) {
+        mOnPostButtonClickListener = listener;
     }
 
-    public PostsListPost getItem(int position) {
+    private PostsListPost getItem(int position) {
         if (isValidPosition(position)) {
             return mPosts.get(position);
         }
@@ -68,69 +110,53 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.post_list_item, parent, false);
+        View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
         return new PostViewHolder(view);
     }
 
+    private boolean canShowStatsForPost(PostsListPost post) {
+        return mIsStatsSupported
+                && post.getStatusEnum() == PostStatus.PUBLISHED
+                && !post.isLocalDraft();
+    }
+
     @Override
-    public void onBindViewHolder(PostViewHolder holder, final int position) {
+    public void onBindViewHolder(final PostViewHolder holder, final int position) {
         PostsListPost post = mPosts.get(position);
         Context context = holder.itemView.getContext();
 
-        String date = post.getFormattedDate();
-        String titleText = post.getTitle();
-        if (titleText.equals("")) {
-            titleText = "(" + context.getResources().getText(R.string.untitled) + ")";
+        if (post.hasTitle()) {
+            holder.txtTitle.setText(post.getTitle());
+        } else {
+            holder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
         }
-        holder.txtTitle.setText(titleText);
 
+        if (post.hasExcerpt()) {
+            holder.txtExcerpt.setVisibility(View.VISIBLE);
+            holder.txtExcerpt.setText(post.getExcerpt());
+        } else {
+            holder.txtExcerpt.setVisibility(View.GONE);
+        }
+
+        if (post.hasFeaturedImageUrl() && !post.isLocalDraft()) {
+            holder.imgFeatured.setVisibility(View.VISIBLE);
+            holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
+        } else {
+            holder.imgFeatured.setVisibility(View.GONE);
+        }
+
+        // local drafts say "delete" instead of "trash"
         if (post.isLocalDraft()) {
             holder.txtDate.setVisibility(View.GONE);
+            holder.btnTrash.setButtonType(PostListButton.BUTTON_DELETE);
         } else {
-            holder.txtDate.setText(date);
+            holder.txtDate.setText(post.getFormattedDate());
             holder.txtDate.setVisibility(View.VISIBLE);
+            holder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
         }
 
-        if ((post.getStatusEnum() == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.hasLocalChanges()) {
-            holder.txtStatus.setVisibility(View.GONE);
-        } else {
-            final String status;
-            holder.txtStatus.setVisibility(View.VISIBLE);
-            if (post.isUploading()) {
-                status = context.getResources().getString(R.string.post_uploading);
-            } else if (post.isLocalDraft()) {
-                status = context.getResources().getString(R.string.local_draft);
-            } else if (post.hasLocalChanges()) {
-                status = context.getResources().getString(R.string.local_changes);
-            } else {
-                switch (post.getStatusEnum()) {
-                    case DRAFT:
-                        status = context.getResources().getString(R.string.draft);
-                        break;
-                    case PRIVATE:
-                        status = context.getResources().getString(R.string.post_private);
-                        break;
-                    case PENDING:
-                        status = context.getResources().getString(R.string.pending_review);
-                        break;
-                    case SCHEDULED:
-                        status = context.getResources().getString(R.string.scheduled);
-                        break;
-                    default:
-                        status = "";
-                        break;
-                }
-            }
-
-            if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges() ||
-                    post.isUploading()) {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.orange_fire));
-            } else {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.grey_darken_10));
-            }
-            // Make status upper-case and add line break to stack vertically
-            holder.txtStatus.setText(status.toUpperCase(Locale.getDefault()).replace(" ", "\n"));
-        }
+        updateStatusText(holder.txtStatus, post);
+        configurePostButtons(holder, post);
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1
@@ -138,41 +164,168 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             mOnLoadMoreListener.onLoadMore();
         }
 
-        if (mShowSelection) {
-            holder.itemView.setSelected(position == mSelectedPosition);
-        }
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mShowSelection) {
-                    setSelectedPosition(position);
-                }
-                if (mOnPostSelectedListener != null) {
-                    PostsListPost selectedPost = getItem(position);
-                    if (selectedPost != null) {
-                        mOnPostSelectedListener.onPostSelected(selectedPost);
-                    }
+                PostsListPost selectedPost = getItem(position);
+                if (mOnPostSelectedListener != null && selectedPost != null) {
+                    mOnPostSelectedListener.onPostSelected(selectedPost);
                 }
             }
         });
     }
 
-    public void setShowSelection(boolean showSelection) {
-        mShowSelection = showSelection;
+    private void updateStatusText(TextView txtStatus, PostsListPost post) {
+        if ((post.getStatusEnum() == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.hasLocalChanges()) {
+            txtStatus.setVisibility(View.GONE);
+        } else {
+            int statusTextResId = 0;
+            int statusIconResId = 0;
+            int statusColorResId = R.color.grey_darken_10;
+
+            if (post.isUploading()) {
+                statusTextResId = R.string.post_uploading;
+                statusColorResId = R.color.alert_yellow;
+            } else if (post.isLocalDraft()) {
+                statusTextResId = R.string.local_draft;
+                statusIconResId = R.drawable.noticon_scheduled;
+                statusColorResId = R.color.alert_yellow;
+            } else if (post.hasLocalChanges()) {
+                statusTextResId = R.string.local_changes;
+                statusIconResId = R.drawable.noticon_scheduled;
+                statusColorResId = R.color.alert_yellow;
+            } else {
+                switch (post.getStatusEnum()) {
+                    case DRAFT:
+                        statusTextResId = R.string.draft;
+                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusColorResId = R.color.alert_yellow;
+                        break;
+                    case PRIVATE:
+                        statusTextResId = R.string.post_private;
+                        break;
+                    case PENDING:
+                        statusTextResId = R.string.pending_review;
+                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusColorResId = R.color.alert_yellow;
+                        break;
+                    case SCHEDULED:
+                        statusTextResId = R.string.scheduled;
+                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusColorResId = R.color.alert_yellow;
+                        break;
+                    case TRASHED:
+                        statusTextResId = R.string.trashed;
+                        statusIconResId = R.drawable.noticon_trashed;
+                        statusColorResId = R.color.alert_red;
+                        break;
+                }
+            }
+
+            Resources resources = txtStatus.getContext().getResources();
+            txtStatus.setTextColor(resources.getColor(statusColorResId));
+            txtStatus.setText(statusTextResId != 0 ? resources.getString(statusTextResId) : "");
+            Drawable drawable = (statusIconResId != 0 ? resources.getDrawable(statusIconResId) : null);
+            txtStatus.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            txtStatus.setVisibility(View.VISIBLE);
+        }
     }
 
-    public void setSelectedPosition(int position) {
-        if (position == mSelectedPosition) {
-            return;
+    private void configurePostButtons(final PostViewHolder holder,
+                                      final PostsListPost post) {
+        // posts with local changes have preview rather than view button
+        if (post.isLocalDraft() || post.hasLocalChanges()) {
+            holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
+        } else {
+            holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
-        if (isValidPosition(mSelectedPosition)) {
-            notifyItemChanged(mSelectedPosition);
+
+        boolean canShowStatsButton = canShowStatsForPost(post);
+        int numVisibleButtons = (canShowStatsButton ? 4 : 3);
+
+        // edit / view are always visible
+        holder.btnEdit.setVisibility(View.VISIBLE);
+        holder.btnView.setVisibility(View.VISIBLE);
+
+        // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash
+        if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
+            holder.btnMore.setVisibility(View.GONE);
+            holder.btnBack.setVisibility(View.GONE);
+            holder.btnTrash.setVisibility(View.VISIBLE);
+            holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
+        } else {
+            holder.btnMore.setVisibility(View.VISIBLE);
+            holder.btnBack.setVisibility(View.GONE);
+            holder.btnTrash.setVisibility(View.GONE);
+            holder.btnStats.setVisibility(View.GONE);
         }
-        mSelectedPosition = position;
-        if (isValidPosition(mSelectedPosition)) {
-            notifyItemChanged(mSelectedPosition);
-        }
+
+        View.OnClickListener btnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // handle back/more here, pass other actions to activity/fragment
+                int buttonType = ((PostListButton) view).getButtonType();
+                switch (buttonType) {
+                    case PostListButton.BUTTON_MORE:
+                        animateButtonRows(holder, post, false);
+                        break;
+                    case PostListButton.BUTTON_BACK:
+                        animateButtonRows(holder, post, true);
+                        break;
+                    default:
+                        if (mOnPostButtonClickListener != null) {
+                            mOnPostButtonClickListener.onPostButtonClicked(buttonType, post);
+                        }
+                        break;
+                }
+            }
+        };
+        holder.btnEdit.setOnClickListener(btnClickListener);
+        holder.btnView.setOnClickListener(btnClickListener);
+        holder.btnStats.setOnClickListener(btnClickListener);
+        holder.btnTrash.setOnClickListener(btnClickListener);
+        holder.btnMore.setOnClickListener(btnClickListener);
+        holder.btnBack.setOnClickListener(btnClickListener);
+    }
+
+    /*
+     * buttons may appear in two rows depending on display size and number of visible
+     * buttons - these rows are toggled through the "more" and "back" buttons - this
+     * routine is used to animate the new row in and the old row out
+     */
+    private void animateButtonRows(final PostViewHolder holder,
+                                   final PostsListPost post,
+                                   final boolean showRow1) {
+        // first animate out the button row, then show/hide the appropriate buttons,
+        // then animate the row layout back in
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0f);
+        ObjectAnimator animOut = ObjectAnimator.ofPropertyValuesHolder(holder.layoutButtons, scaleX, scaleY);
+        animOut.setDuration(ROW_ANIM_DURATION);
+        animOut.setInterpolator(new AccelerateInterpolator());
+
+        animOut.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // row 1
+                holder.btnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnView.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                // row 2
+                holder.btnStats.setVisibility(!showRow1 && canShowStatsForPost(post) ? View.VISIBLE : View.GONE);
+                holder.btnTrash.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnBack.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
+
+                PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f, 1f);
+                PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f, 1f);
+                ObjectAnimator animIn = ObjectAnimator.ofPropertyValuesHolder(holder.layoutButtons, scaleX, scaleY);
+                animIn.setDuration(ROW_ANIM_DURATION);
+                animIn.setInterpolator(new DecelerateInterpolator());
+                animIn.start();
+            }
+        });
+
+        animOut.start();
     }
 
     @Override
@@ -186,52 +339,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     public void loadPosts() {
-        if (WordPress.getCurrentBlog() == null) {
-            return;
-        }
-
-        // load posts from db
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void clear() {
-        if (mPosts.size() > 0) {
-            mPosts.clear();
-            notifyDataSetChanged();
-        }
-    }
-
-    private boolean postsListMatch(List<PostsListPost> newPostsList) {
-        if (newPostsList == null || newPostsList.size() == 0 || mPosts == null || mPosts.size() != newPostsList.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < newPostsList.size(); i++) {
-            PostsListPost newPost = newPostsList.get(i);
-            PostsListPost currentPost = mPosts.get(i);
-
-            if (newPost.getPostId() != currentPost.getPostId())
-                return false;
-            if (!newPost.getTitle().equals(currentPost.getTitle()))
-                return false;
-            if (newPost.getDateCreatedGmt() != currentPost.getDateCreatedGmt())
-                return false;
-            if (!newPost.getOriginalStatus().equals(currentPost.getOriginalStatus()))
-                return false;
-            if (newPost.isUploading() != currentPost.isUploading())
-                return false;
-            if (newPost.isLocalDraft() != currentPost.isLocalDraft())
-                return false;
-            if (newPost.hasLocalChanges() != currentPost.hasLocalChanges())
-                return false;
-        }
-
-        return true;
-    }
-
     public int getRemotePostCount() {
-        if (mPosts == null)
+        if (mPosts == null) {
             return 0;
+        }
 
         int remotePostCount = 0;
         for (PostsListPost post : mPosts) {
@@ -240,6 +354,26 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
 
         return remotePostCount;
+    }
+
+    /*
+     * hides the post - used when the post is trashed by the user but the network request
+     * to delete the post hasn't completed yet
+     */
+    public void hidePost(PostsListPost post) {
+        mHiddenPosts.add(post);
+
+        int position = mPosts.indexOfPost(post);
+        if (position > -1) {
+            mPosts.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void unhidePost(PostsListPost post) {
+        if (mHiddenPosts.remove(post)) {
+            loadPosts();
+        }
     }
 
     public interface OnLoadMoreListener {
@@ -256,36 +390,95 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     class PostViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
+        private final TextView txtExcerpt;
         private final TextView txtDate;
         private final TextView txtStatus;
 
+        private final PostListButton btnEdit;
+        private final PostListButton btnView;
+        private final PostListButton btnMore;
+
+        private final PostListButton btnStats;
+        private final PostListButton btnTrash;
+        private final PostListButton btnBack;
+
+        private final WPNetworkImageView imgFeatured;
+        private final ViewGroup layoutButtons;
+
         public PostViewHolder(View view) {
             super(view);
-            txtTitle = (TextView) view.findViewById(R.id.post_list_title);
-            txtDate = (TextView) view.findViewById(R.id.post_list_date);
-            txtStatus = (TextView) view.findViewById(R.id.post_list_status);
+
+            txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            txtStatus = (TextView) view.findViewById(R.id.text_status);
+
+            btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
+            btnView = (PostListButton) view.findViewById(R.id.btn_view);
+            btnMore = (PostListButton) view.findViewById(R.id.btn_more);
+
+            btnStats = (PostListButton) view.findViewById(R.id.btn_stats);
+            btnTrash = (PostListButton) view.findViewById(R.id.btn_trash);
+            btnBack = (PostListButton) view.findViewById(R.id.btn_back);
+
+            imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
+            layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
         }
     }
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        List<PostsListPost> loadedPosts;
+        private PostsListPostList tmpPosts;
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            loadedPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
-            return !postsListMatch(loadedPosts);
+            tmpPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
 
+            // make sure we don't return any hidden posts
+            for (PostsListPost hiddenPost : mHiddenPosts) {
+                tmpPosts.remove(hiddenPost);
+            }
+
+            // go no further if existing post list is the same
+            if (mPosts.isSameList(tmpPosts)) {
+                return false;
+            }
+
+            // generate the featured image url for each post
+            String imageUrl;
+            for (PostsListPost post : tmpPosts) {
+                if (post.isLocalDraft()) {
+                    imageUrl = null;
+                } else if (post.getFeaturedImageId() != 0) {
+                    imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, post.getFeaturedImageId());
+                } else if (post.hasDescription()) {
+                    ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mIsPrivateBlog);
+                    imageUrl = scanner.getLargestImage();
+                } else {
+                    imageUrl = null;
+                }
+
+                if (!TextUtils.isEmpty(imageUrl)) {
+                    post.setFeaturedImageUrl(
+                            ReaderUtils.getResizedImageUrl(
+                                    imageUrl,
+                                    mPhotonWidth,
+                                    mPhotonHeight,
+                                    mIsPrivateBlog));
+                }
+            }
+
+            return true;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                setPosts(loadedPosts);
+                mPosts.clear();
+                mPosts.addAll(tmpPosts);
                 notifyDataSetChanged();
-
-                if (mOnPostsLoadedListener != null && mPosts != null) {
-                    mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
-                }
+            }
+            if (mOnPostsLoadedListener != null) {
+                mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
             }
         }
     }

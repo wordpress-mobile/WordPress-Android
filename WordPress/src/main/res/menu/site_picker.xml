@@ -4,10 +4,16 @@
 
     <item
         android:id="@+id/menu_search"
-        android:title="@string/menu_search"
         android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="collapseActionView|ifRoom"
-        app:actionViewClass="org.wordpress.android.ui.main.SitePickerSearchView" />
+        android:title="@string/menu_search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+    <item
+        android:id="@+id/menu_add"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="@string/site_picker_add_site"
+        app:showAsAction="collapseActionView|ifRoom" />
 
     <item
         android:id="@+id/menu_edit"

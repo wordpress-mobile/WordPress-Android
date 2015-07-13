@@ -57,8 +57,8 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
-import org.wordpress.android.ui.reader.views.ReaderRecyclerView.ReaderItemDecoration;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -350,7 +350,7 @@ public class ReaderPostListFragment extends Fragment
         Context context = container.getContext();
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-        mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);

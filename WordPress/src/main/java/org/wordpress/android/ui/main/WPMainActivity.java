@@ -6,9 +6,12 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
@@ -20,6 +23,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -34,6 +38,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -41,6 +46,7 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -56,6 +62,7 @@ public class WPMainActivity extends Activity
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
+    private TextView mConnectionBar;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -78,6 +85,22 @@ public class WPMainActivity extends Activity
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
+        mConnectionBar = (TextView) findViewById(R.id.connection_bar);
+        mConnectionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // slide out the bar on click, then re-check connection after a brief delay
+                AniUtils.animateBottomBar(mConnectionBar, false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isFinishing()) {
+                            checkConnection();
+                        }
+                    }
+                }, 2000);
+            }
+        });
         mTabLayout = (WPMainTabLayout) findViewById(R.id.tab_layout);
         mTabLayout.createTabs();
 
@@ -241,7 +264,9 @@ public class WPMainActivity extends Activity
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-       trackLastVisibleTab(mViewPager.getCurrentItem());
+        trackLastVisibleTab(mViewPager.getCurrentItem());
+
+        checkConnection();
     }
 
     private void trackLastVisibleTab(int position) {
@@ -361,6 +386,14 @@ public class WPMainActivity extends Activity
                     resetFragments();
                 }
                 break;
+            case RequestCodes.CREATE_BLOG:
+                if (resultCode == RESULT_OK) {
+                    MySiteFragment mySiteFragment = getMySiteFragment();
+                    if (mySiteFragment != null) {
+                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
         }
     }
 
@@ -437,13 +470,37 @@ public class WPMainActivity extends Activity
         mTabLayout.checkNoteBadge();
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+        updateConnectionBar(event.isConnected());
+    }
+
+    private void checkConnection() {
+        updateConnectionBar(NetworkUtils.isNetworkAvailable(this));
+    }
+
+    private void updateConnectionBar(boolean isConnected) {
+        if (isConnected && mConnectionBar.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mConnectionBar, false);
+        } else if (!isConnected && mConnectionBar.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(mConnectionBar, true);
+        }
+    }
+
     /*
      * Simperium Note bucket listeners
      */
     @Override
     public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
         if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
-            mTabLayout.checkNoteBadge();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        mTabLayout.checkNoteBadge();
+                    }
+                }
+            });
         }
     }
 
