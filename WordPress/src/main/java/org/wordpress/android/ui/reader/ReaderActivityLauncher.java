@@ -228,7 +228,7 @@ public class ReaderActivityLauncher {
         }
     }
 
-    public static enum OpenUrlType { INTERNAL, EXTERNAL }
+    public enum OpenUrlType { INTERNAL, EXTERNAL }
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }

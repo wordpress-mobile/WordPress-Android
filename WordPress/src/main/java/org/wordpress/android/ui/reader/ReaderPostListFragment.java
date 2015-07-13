@@ -93,7 +93,6 @@ public class ReaderPostListFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private CustomSwipeRefreshLayout mSwipeToRefreshLayout;
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -120,7 +119,7 @@ public class ReaderPostListFragment extends Fragment
 
     private static class HistoryStack extends Stack<String> {
         private final String keyName;
-        HistoryStack(String keyName) {
+        HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
             this.keyName = keyName;
         }
         void restoreInstance(Bundle bundle) {
@@ -390,9 +389,8 @@ public class ReaderPostListFragment extends Fragment
         mProgress.setVisibility(View.GONE);
 
         // swipe to refresh setup
-        mSwipeToRefreshLayout = (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout);
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                mSwipeToRefreshLayout,
+                (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -486,7 +484,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * position the tag toolbar based on the recycler's scroll position - this will make it
+     * position the tag toolbar based on the recycler scroll position - this will make it
      * appear to scroll along with the recycler
      */
     private void positionTagToolbar() {
@@ -1000,16 +998,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * tell the adapter to reload a single post - called when user returns from detail, where the
-     * post may have been changed (either by the user, or because it updated)
-     */
-    private void reloadPost(ReaderPost post) {
-        if (post != null && hasPostAdapter()) {
-            getPostAdapter().reloadPost(post);
-        }
-    }
-
-    /*
      * get posts for the current blog from the server
      */
     private void updatePostsInCurrentBlogOrFeed(final UpdateAction updateAction) {
@@ -1353,7 +1341,7 @@ public class ReaderPostListFragment extends Fragment
                     postId = discoverData.getPostId();
                 } else if (discoverData.hasPermalink()) {
                     // if we don't have a blogId/postId, we sadly resort to showing the post
-                    // in a WebView activity - this will happen forn non-JP self-hosted
+                    // in a WebView activity - this will happen for non-JP self-hosted
                     ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
                     return;
                 }
