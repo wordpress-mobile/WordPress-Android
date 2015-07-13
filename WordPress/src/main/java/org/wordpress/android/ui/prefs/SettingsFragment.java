@@ -85,8 +85,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_notifications))
-                .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_reset_shared_pref))
@@ -94,7 +92,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        initNotifications();
         updatePostSignature();
     }
 
@@ -118,9 +115,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public boolean onPreferenceClick(Preference preference) {
         String preferenceKey = preference != null ? preference.getKey() : "";
 
-        if (preferenceKey.equals(getString(R.string.pref_key_notifications))) {
-            return handleNotificationPreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
+        if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
             return handleOssPreferenceClick();
@@ -131,35 +126,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         }
 
         return false;
-    }
-
-    private void initNotifications() {
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
-            hideManageNotificationCategory();
-            return;
-        }
-        // Request notification settings if needed
-        String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
-        //TODO testing
-        settingsJson = null;
-        if (settingsJson == null) {
-            com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-                @Override
-                public void onResponse(JSONObject jsonObject) {
-                    AppLog.d(T.NOTIFS, "Get settings action succeeded");
-                    Editor editor = mSettings.edit();
-                    editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, jsonObject.toString());
-                    editor.apply();
-                }
-            };
-            RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);
-                }
-            };
-            NotificationsUtils.getPushNotificationSettings(getActivity(), listener, errorListener);
-        }
     }
 
     private void hideManageNotificationCategory() {
@@ -268,12 +234,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         });
         mDialog = dialogBuilder.show();
 
-        return true;
-    }
-
-    private boolean handleNotificationPreferenceClick() {
-        Intent notificationsIntent = new Intent(getActivity(), NotificationsSettingsActivity.class);
-        ActivityLauncher.slideInFromRight(getActivity(), notificationsIntent);
         return true;
     }
 

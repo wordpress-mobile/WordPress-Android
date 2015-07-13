@@ -56,6 +56,13 @@ public class MeFragment extends Fragment {
             }
         });
 
+        rootView.findViewById(R.id.row_notifications).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewNotificationsSettings(getActivity());
+            }
+        });
+
         rootView.findViewById(R.id.row_support).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
