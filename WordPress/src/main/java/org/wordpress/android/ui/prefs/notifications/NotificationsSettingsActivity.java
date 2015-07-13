@@ -4,13 +4,20 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.notifications.NotificationEvents;
+
+import de.greenrobot.event.EventBus;
 
 // Simple wrapper activity for NotificationsSettingsFragment
 public class NotificationsSettingsActivity extends AppCompatActivity {
+    private TextView mMessageTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,7 +28,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setContentView(R.layout.settings_activity);
+        setContentView(R.layout.notifications_settings_activity);
 
         setTitle(R.string.notifications);
 
@@ -31,6 +38,20 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, new NotificationsSettingsFragment())
                     .commit();
         }
+
+        mMessageTextView = (TextView)findViewById(R.id.notifications_settings_message);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -47,5 +68,15 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         ActivityLauncher.slideOutToRight(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsSettingsStatusChanged event) {
+        if (TextUtils.isEmpty(event.getMessage())) {
+            mMessageTextView.setVisibility(View.GONE);
+        } else {
+            mMessageTextView.setVisibility(View.VISIBLE);
+            mMessageTextView.setText(event.getMessage());
+        }
     }
 }

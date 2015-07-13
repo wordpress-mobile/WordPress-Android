@@ -21,6 +21,9 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +32,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -40,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 public class NotificationsSettingsFragment extends PreferenceFragment {
     public static final String TAG = "NotificationSettingsFragment";
@@ -55,8 +61,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.notifications_settings);
 
         setHasOptionsMenu(true);
-
-        new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -65,6 +69,59 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDeviceId = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_SERVER_ID, "");
+
+        if (hasNotificationsSettings()) {
+            new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        refreshSettings();
+    }
+
+    private void refreshSettings() {
+        if (!hasNotificationsSettings()) {
+            EventBus.getDefault().post(new NotificationEvents.NotificationsSettingsStatusChanged(getString(R.string.loading)));
+        }
+
+        NotificationsUtils.getPushNotificationSettings(getActivity(), new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                AppLog.d(T.NOTIFS, "Get settings action succeeded");
+                if (!isAdded()) return;
+
+                boolean settingsExisted = hasNotificationsSettings();
+                if (!settingsExisted) {
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsSettingsStatusChanged(null));
+                }
+
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, response.toString());
+                editor.apply();
+
+                new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, !settingsExisted);
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (!isAdded()) return;
+                AppLog.e(T.NOTIFS, "Get settings action failed", error);
+
+                if (!hasNotificationsSettings()) {
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsSettingsStatusChanged(getString(R.string.error_loading_notifications)));
+                }
+            }
+        });
+    }
+
+    private boolean hasNotificationsSettings() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        return sharedPreferences.contains(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
     }
 
     @Override
@@ -101,10 +158,11 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         sightsAndSoundsCategory.setEnabled(isEnabled);
     }
 
-    private class LoadNotificationsTask extends AsyncTask<Void, Void, Void> {
+    private class LoadNotificationsTask extends AsyncTask<Boolean, Void, Void> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Boolean... params) {
+            boolean shouldUpdateUI = params[0];
             JSONObject settingsJson;
             try {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -118,8 +176,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
             mNotificationsSettings = new NotificationsSettings(settingsJson);
 
-            configureSiteSettings();
-            configureOtherSettings();
+            if (shouldUpdateUI) {
+                configureSiteSettings();
+                configureOtherSettings();
+            }
 
             return null;
         }

@@ -608,6 +608,7 @@
     <string name="mobile_notifications">Mobile notifications</string>
     <string name="comment_likes">Comment likes</string>
     <string name="replies_to_your_comments">Replies to your comments</string>
+    <string name="error_loading_notifications">Could not load notifications settings</string>
     <string-array name="notifications_site_settings">
         <item>Comments</item>
         <item>Comment likes</item>
