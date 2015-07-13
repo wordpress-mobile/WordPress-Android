@@ -67,9 +67,9 @@ public class ReaderPostDiscoverData {
         }
 
         // walk the post formats array until we find one we know we should handle differently
-        //  - image-pick, quote-pick, and standard-pick all display as editors picks.
-        //  - site-pick` displays as a site pick
-        //  - collection + feature can be ignored cause those will just display the same way all normal posts do.
+        //  - image-pick, quote-pick, and standard-pick all display as editors picks
+        //  - site-pick displays as a site pick
+        //  - collection + feature can be ignored because those display the same as normal posts
         JSONArray jsonPostFormats = json.optJSONArray("discover_fp_post_formats");
         if (jsonPostFormats != null) {
             for (int i = 0; i < jsonPostFormats.length(); i++) {
@@ -133,6 +133,10 @@ public class ReaderPostDiscoverData {
         return !TextUtils.isEmpty(permaLink);
     }
 
+    public boolean hasAvatarUrl() {
+        return !TextUtils.isEmpty(avatarUrl);
+    }
+
     public DiscoverType getDiscoverType() {
         return discoverType;
     }
@@ -180,9 +184,5 @@ public class ReaderPostDiscoverData {
             attributionHtml = Html.fromHtml(html);
         }
         return attributionHtml;
-    }
-
-    public boolean hasAttributionHtml() {
-        return getAttributionHtml() != null;
     }
 }

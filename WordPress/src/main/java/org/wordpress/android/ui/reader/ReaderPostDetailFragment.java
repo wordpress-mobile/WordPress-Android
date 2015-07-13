@@ -24,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -670,6 +671,22 @@ public class ReaderPostDetailFragment extends Fragment
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
             if (mPost == null) {
                 return false;
+            }
+
+            // "discover" Editor Pick posts should open the original (source) post
+            if (mPost.isDiscoverPost()) {
+                ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
+                if (discoverData != null
+                        && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
+                        && discoverData.getBlogId() != 0
+                        && discoverData.getPostId() != 0) {
+                    mBlogId = discoverData.getBlogId();
+                    mPostId = discoverData.getPostId();
+                    mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
+                    if (mPost == null) {
+                        return false;
+                    }
+                }
             }
 
             mReaderWebView.setIsPrivatePost(mPost.isPrivate);

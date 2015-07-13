@@ -319,7 +319,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case EDITOR_PICK:
                 // editor picks show author avatar
                 postHolder.imgDiscoverAvatar.setVisibility(View.VISIBLE);
-                postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                if (discoverData.hasAvatarUrl()) {
+                    postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                } else {
+                    postHolder.imgDiscoverAvatar.showDefaultGravatarImage();
+                }
                 postHolder.layoutDiscover.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

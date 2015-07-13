@@ -1341,16 +1341,19 @@ public class ReaderPostListFragment extends Fragment
     public void onPostSelected(ReaderPost post) {
         if (!isAdded() || post == null) return;
 
+        long blogId = post.blogId;
+        long postId = post.postId;
+
         // "discover" posts that highlight another post should open the original (source) post when tapped
         if (post.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
             if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
                 if (discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
-                    // open the post in the native reader if we have the blogId/postId
-                    ReaderActivityLauncher.showReaderPostDetail(getActivity(), discoverData.getBlogId(), discoverData.getPostId());
-                    return;
+                    blogId = discoverData.getBlogId();
+                    postId = discoverData.getPostId();
                 } else if (discoverData.hasPermalink()) {
-                    // otherwise, we sadly resort to showing the post in a webView
+                    // if we don't have a blogId/postId, we sadly resort to showing the post
+                    // in a WebView activity - this will happen forn non-JP self-hosted
                     ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
                     return;
                 }
@@ -1371,16 +1374,16 @@ public class ReaderPostListFragment extends Fragment
                         getActivity(),
                         getCurrentTag(),
                         getPostListType(),
-                        post.blogId,
-                        post.postId);
+                        blogId,
+                        postId);
                 break;
             case BLOG_PREVIEW:
                 analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
                         AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
-                        post.blogId,
-                        post.postId);
+                        blogId,
+                        postId);
                 break;
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE, analyticsProperties);
