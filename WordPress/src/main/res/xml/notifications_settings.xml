@@ -13,10 +13,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/notifications_account_emails"
-        android:key="@string/pref_notification_account_emails">
-        <Preference android:title="@string/notifications_updates_from_wordpress"
-            android:summary="@string/notifications_account_emails_summary" />
-    </PreferenceCategory>
+        android:key="@string/pref_notification_account_emails" />
     <PreferenceCategory android:title="@string/notifications_sights_and_sounds"
         android:key="@string/pref_notification_sights_sounds">
         <SwitchPreference

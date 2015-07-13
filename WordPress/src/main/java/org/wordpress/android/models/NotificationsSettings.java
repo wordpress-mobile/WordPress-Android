@@ -17,7 +17,7 @@ public class NotificationsSettings {
 
     private static final String KEY_OTHER = "other";
     private static final String KEY_SITES = "sites";
-    private static final String KEY_WPCOM = "wpcom";
+    private static final String KEY_DOTCOM = "wpcom";
 
     private JSONObject mOtherSettings;
     private Map<Long, JSONObject> mSiteSettings;
@@ -45,7 +45,7 @@ public class NotificationsSettings {
     public enum Channel {
         OTHER,
         SITES,
-        WPCOM
+        DOTCOM
     }
 
     public NotificationsSettings(JSONObject json) {
@@ -61,7 +61,7 @@ public class NotificationsSettings {
                         case KEY_OTHER:
                             mOtherSettings = settingsObject;
                             break;
-                        case KEY_WPCOM:
+                        case KEY_DOTCOM:
                             mDotcomSettings = settingsObject;
                             break;
                         default:

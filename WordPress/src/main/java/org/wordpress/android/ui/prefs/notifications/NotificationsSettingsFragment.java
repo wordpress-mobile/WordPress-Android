@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v4.view.MenuItemCompat;
@@ -179,6 +180,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             if (shouldUpdateUI) {
                 configureSiteSettings();
                 configureOtherSettings();
+                configureDotcomSettings();
             }
 
             return null;
@@ -229,6 +231,22 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                 getString(R.string.pref_notification_other_blogs));
         JSONObject otherSettings = mNotificationsSettings.getOtherSettings();
         addPreferencesForPreferenceScreen(otherPreferenceScreen, Channel.OTHER, otherSettings, 0);
+    }
+
+    private void configureDotcomSettings() {
+        if (mNotificationsSettings == null || mNotificationsSettings.getDotcomSettings() == null) {
+            return;
+        }
+
+        PreferenceGroup dotcomPreferenceGroup = (PreferenceGroup) findPreference(
+                getString(R.string.pref_notification_account_emails));
+        NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
+                getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.MOBILE, 0, mNotificationsSettings.getDotcomSettings(), mOnSettingsChangedListener
+        );
+        devicePreference.setTitle(R.string.notifications_updates_from_wordpress);
+        devicePreference.setDialogTitle(R.string.notifications_updates_from_wordpress);
+        devicePreference.setSummary(R.string.notifications_account_emails_summary);
+        dotcomPreferenceGroup.addPreference(devicePreference);
     }
 
     private void addPreferencesForPreferenceScreen(PreferenceScreen preferenceScreen, Channel channel, JSONObject settingsObject, long siteId) {
@@ -297,6 +315,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                         subObject.put(type.toString(), newValues);
 
                         settingsObject.put("other", subObject);
+                    } catch (JSONException e) {
+                        AppLog.e(T.NOTIFS, "Could not build notification settings object");
+                    }
+                    break;
+                case DOTCOM:
+                    try {
+                        settingsObject.put(type.toString(), newValues);
                     } catch (JSONException e) {
                         AppLog.e(T.NOTIFS, "Could not build notification settings object");
                     }

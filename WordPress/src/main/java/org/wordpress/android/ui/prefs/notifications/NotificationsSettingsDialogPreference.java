@@ -62,18 +62,20 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     }
 
     private View configureLayoutForView(LinearLayout view) {
-        String[] settingsArray, settingsValues;
+        String[] settingsArray = new String[0], settingsValues = new String[0];
         if (mChannel == NotificationsSettings.Channel.SITES) {
             settingsArray = getContext().getResources().getStringArray(R.array.notifications_site_settings);
             settingsValues = getContext().getResources().getStringArray(R.array.notifications_site_settings_values);
-        } else {
+        } else if (mChannel == NotificationsSettings.Channel.OTHER) {
             settingsArray = getContext().getResources().getStringArray(R.array.notifications_other_settings);
             settingsValues = getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
+        } else if (mChannel == NotificationsSettings.Channel.DOTCOM) {
+            settingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
+            settingsValues = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
         }
 
         if (settingsArray != null && settingsArray.length == settingsValues.length) {
             for (int i=0; i < settingsArray.length; i++) {
-
                 String settingName = settingsArray[i];
                 String settingValue = settingsValues[i];
                 View commentsSetting = View.inflate(getContext(), R.layout.notifications_settings_switch, null);
