@@ -26,6 +26,7 @@
             android:id="@+id/pref_site_address"
             android:key="@string/pref_key_site_address"
             android:title="@string/site_settings_address_title"
+            android:enabled="false"
             app:summaryLines="1"
             app:maxSummaryLines="1" />
 

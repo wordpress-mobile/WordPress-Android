@@ -413,7 +413,7 @@
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
 
     <!-- Site Settings -->
-    <string name="site_settings_title_format">%s Settings</string>
+    <string name="site_settings_title_format">Settings - %s</string>
     <string name="site_settings_general_header">General</string>
     <string name="site_settings_title_title">Site Title</string>
     <string name="site_settings_tagline_title">Tagline</string>
@@ -1040,5 +1040,8 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
+    <string name="site_privacy_private_desc">I would like my site to be private, visible only to users I choose</string>
+    <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
+    <string name="site_privacy_public_desc">Allow search engines to index this site</string>
 
 </resources>

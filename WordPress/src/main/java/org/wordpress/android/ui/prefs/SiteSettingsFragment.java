@@ -17,7 +17,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
@@ -124,11 +123,13 @@ public class SiteSettingsFragment extends PreferenceFragment
     private String privacyStringForValue(int value) {
         switch (value) {
             case -1:
-                return"I would like my site to be private, visible only to users I choose";
+                return getString(R.string.site_privacy_private_desc);
             case 0:
-                return "Discourage search engines from indexing this site";
+                return getString(R.string.site_privacy_hidden_desc);
             case 1:
-                return "Allow search engines to index this site";
+                return getString(R.string.site_privacy_public_desc);
+            default:
+                return "";
         }
     }
 
@@ -137,23 +138,23 @@ public class SiteSettingsFragment extends PreferenceFragment
      * If newValue is equal to the current preference text no action will be taken.
      */
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
-        if (pref != null && newValue != null && !newValue.equals(pref.getText())) {
+        if (pref != null && newValue != null && !newValue.equals(pref.getSummary())) {
             pref.setText(newValue);
             pref.setSummary(newValue);
         }
     }
 
     private void changeLanguageValue(String newValue) {
-        if (mLanguagePreference != null && !mLanguagePreference.getValue().equals(newValue)) {
+        if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
             mLanguagePreference.setValue(newValue);
-            mLanguagePreference.setSummary(StringUtils.getLanguageString(newValue));
+            mLanguagePreference.setSummary(getLanguageString(newValue, Locale.getDefault()));
         }
     }
 
     private void changePrivacyValue(int newValue) {
         if (mPrivacyPreference != null && Integer.valueOf(mPrivacyPreference.getValue()) == newValue) {
             mPrivacyPreference.setValue(String.valueOf(newValue));
-            mPrivacyPreference.setSummary(String.valueOf(newValue));
+            mPrivacyPreference.setSummary(privacyStringForValue(newValue));
         }
     }
 
@@ -190,13 +191,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mRemoteAddress = response.optString(RestClientUtils.SITE_URL_KEY);
         changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
 
-        mRemoteLanguage = StringUtils.getLanguageString(response.optString(RestClientUtils.SITE_LANGUAGE_KEY));
-        changeLanguageValue(mRemoteLanguage);
-        if (mLanguagePreference != null
-                && mRemoteLanguage != null
-                && !mRemoteLanguage.equals(mLanguagePreference.getValue())) {
-            mLanguagePreference.setValue(mRemoteLanguage);
-            mLanguagePreference.setSummary(mRemoteLanguage);
+        mRemoteLanguage = response.optString(RestClientUtils.SITE_LANGUAGE_KEY);
+        if (mLanguagePreference != null) {
+            changeLanguageValue(mRemoteLanguage);
+            mLanguagePreference.setSummary(getLanguageString(mRemoteLanguage, Locale.getDefault()));
         }
 
         mRemotePrivacy = response.optJSONObject("settings").optInt("blog_public");
@@ -204,28 +202,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
         }
         changePrivacyValue(mRemotePrivacy);
-
-//        if (mTitlePreference != null) {
-//            mTitlePreference.setText(mRemoteTitle);
-//            mTitlePreference.setSummary(mRemoteTitle);
-//        }
-//
-//        if (mTaglinePreference != null) {
-//            mTaglinePreference.setText(mRemoteTagline);
-//            mTaglinePreference.setSummary(mRemoteTagline);
-//        }
-//
-//        if (mAddressPreference != null) {
-//            mAddressPreference.setText(mRemoteAddress);
-//            mAddressPreference.setSummary(mRemoteAddress);
-//        }
-//
-//        if (mLanguagePreference != null) {
-//        }
-//
-//        if (mPrivacyPreference != null) {
-//            mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
-//        }
     }
 
     /**
@@ -242,6 +218,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         if (mTaglinePreference != null && !mTaglinePreference.getText().equals(mRemoteTagline)) {
             params.put("blogdescription", mTaglinePreference.getText());
+        }
+
+        if (mAddressPreference != null && !mAddressPreference.getText().equals(mRemoteAddress)) {
+            // TODO
         }
 
         if (mLanguagePreference != null &&
@@ -271,7 +251,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
         }
 
-        if (mRemoteLanguage != null && !mRemoteLanguage.equals(StringUtils.getLanguageString(mLanguagePreference.getValue()))) {
+        if (mRemoteLanguage != null && !mRemoteLanguage.equals(getLanguageString(mLanguagePreference.getValue(), Locale.getDefault()))) {
             mLanguagePreference.setValue(mRemoteLanguage);
         }
     }
@@ -359,7 +339,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         CharSequence[] displayStrings = new CharSequence[languageCodes.length];
 
         for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = StringUtils.getLanguageString(String.valueOf(languageCodes[i]), Locale.getDefault());
+            displayStrings[i] = getLanguageString(String.valueOf(languageCodes[i]), Locale.getDefault());
         }
 
         return displayStrings;
@@ -368,13 +348,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Return a non-null display string for a given language code.
      */
-//    private String getLanguageString(String languagueCode) {
-//        if (languagueCode == null || languagueCode.length() < 2) {
-//            return "";
-//        } else if (languagueCode.length() == 2) {
-//            return new Locale(languagueCode).getDisplayLanguage();
-//        } else {
-//            return new Locale(languagueCode.substring(0, 2)).getDisplayLanguage() + languagueCode.substring(2);
-//        }
-//    }
+    private String getLanguageString(String languagueCode, Locale displayLocale) {
+        if (languagueCode == null || languagueCode.length() < 2 || languagueCode.length() > 6) {
+            return "";
+        }
+
+        Locale languageLocale = new Locale(languagueCode.substring(0, 2));
+        return languageLocale.getDisplayLanguage(displayLocale) + languagueCode.substring(2);
+    }
 }
