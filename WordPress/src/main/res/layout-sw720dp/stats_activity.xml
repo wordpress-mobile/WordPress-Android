@@ -58,6 +58,7 @@
 
                     <org.wordpress.android.widgets.WPTextView
                         android:textAppearance="?android:attr/textAppearance"
+                        android:textSize="@dimen/text_sz_large"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_large"
@@ -203,6 +204,7 @@
                         android:layout_marginTop="@dimen/margin_large"
                         android:textColor="@color/stats_blue_labels"
                         android:gravity="start"
+                        android:textSize="@dimen/text_sz_large"
                         android:text="@string/stats_other_recent_stats_label" />
 
                     <org.wordpress.android.widgets.WPTextView
