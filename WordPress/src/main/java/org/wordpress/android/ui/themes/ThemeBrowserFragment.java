@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -100,6 +101,8 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mListView = (HeaderGridView) view.findViewById(R.id.theme_listview);
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
         mListView.addHeaderView(header);
+        SearchView searchView = new SearchView(getActivity());
+        mListView.addHeaderView(searchView);
         mListView.setRecyclerListener(this);
 
         // swipe to refresh setup but not for the search view
