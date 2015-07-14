@@ -51,6 +51,16 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     }
 
     @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+        }
+    }
+
+    @Override
     public void finish() {
         super.finish();
         ActivityLauncher.slideOutToRight(this);

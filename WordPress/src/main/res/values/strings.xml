@@ -399,17 +399,6 @@
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
     <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
-
-    <!-- Site Settings preference keys-->
-    <string name="seekbar_pref_header">@string/site_visibility_header</string>
-    <string name="site_visibility_header">Privacy</string>
-    <string name="site_title_hint">What\'s this site about</string>
-    <string name="site_title_title">Site Title</string>
-    <string name="site_tagline_hint">Words to live by</string>
-    <string name="site_tagline_title">Tagline</string>
-    <string name="site_settings_related_posts_title">Related Posts</string>
-    <string name="site_settings_related_header_title">Related Posts</string>
-    <string name="site_settings_related_posts_summary">Show related content after posts</string>
     <string name="pref_key_site_title" translatable="false">wp_pref_site_title</string>
     <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
     <string name="pref_key_site_address" translatable="false">wp_pref_site_address</string>
@@ -422,6 +411,20 @@
     <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
+
+    <!-- Site Settings -->
+    <string name="site_settings_title_format">%s Settings</string>
+    <string name="site_settings_general_header">General</string>
+    <string name="site_settings_title_title">Site Title</string>
+    <string name="site_settings_tagline_title">Tagline</string>
+    <string name="site_settings_address_title">Address</string>
+    <string name="site_settings_visibility_header">Privacy</string>
+    <string name="site_settings_language_header">@string/language</string>
+    <string name="site_title_hint">What\'s this site about</string>
+    <string name="site_tagline_hint">Words to live by</string>
+    <string name="site_settings_related_posts_title">Related Posts</string>
+    <string name="site_settings_related_header_title">Related Posts</string>
+    <string name="site_settings_related_posts_summary">Show related content after posts</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>

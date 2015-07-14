@@ -5,38 +5,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="General">
+        android:title="@string/site_settings_general_header">
 
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:id="@+id/pref_site_title"
             android:key="@string/pref_key_site_title"
-            android:title="@string/site_title_title"
+            android:title="@string/site_settings_title_title"
             android:hint="@string/site_title_hint"
             app:maxSummaryLines="2" />
 
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:id="@+id/pref_site_tagline"
             android:key="@string/pref_key_site_tagline"
-            android:title="@string/site_tagline_title"
+            android:title="@string/site_settings_tagline_title"
             android:hint="@string/site_tagline_hint"
-            app:maxSummaryLines="2" />
+            app:summaryLines="1"
+            app:maxSummaryLines="1" />
 
-        <EditTextPreference
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:id="@+id/pref_site_address"
             android:key="@string/pref_key_site_address"
-            android:title="Address" />
+            android:title="@string/site_settings_address_title"
+            app:summaryLines="1"
+            app:maxSummaryLines="1" />
 
         <ListPreference
             android:id="@+id/pref_site_privacy"
             android:key="@string/pref_key_site_visibility"
-            android:title="@string/site_visibility_header"
+            android:title="@string/site_settings_visibility_header"
             android:entries="@array/privacy_entries"
             android:entryValues="@array/privacy_values" />
 
         <ListPreference
             android:id="@+id/pref_site_language"
             android:key="@string/pref_key_site_language"
-            android:title="@string/language"
+            android:title="@string/site_settings_language_header"
             android:entries="@array/available_languages"
             android:entryValues="@array/language_codes" />
 
