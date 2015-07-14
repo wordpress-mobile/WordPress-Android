@@ -13,7 +13,7 @@
     <fragment
         android:id="@+id/theme_tab_fragment"
         android:name="org.wordpress.android.ui.themes.ThemeBrowserFragment"
-        tools:layout="@layout/theme_tab_fragment"
+        tools:layout="@layout/theme_browser_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
