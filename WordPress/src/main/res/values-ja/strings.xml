@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">参加サイト</string>
+	<string name="tabbar_accessibility_label_me">自分</string>
+	<string name="editor_toast_changes_saved">変更を保存しました</string>
+	<string name="passcodelock_prompt_message">PIN コードを入力</string>
+	<string name="push_auth_expired">リクエストの有効期限が切れています。もう一度試すには WordPress.com にログインしてください。</string>
+	<string name="ignore">無視</string>
+	<string name="stats_insights_most_popular_percent_views">表示数の%1$d%%</string>
+	<string name="stats_insights_best_ever">過去最高の表示数</string>
+	<string name="stats_insights_most_popular_hour">最も人気の時間</string>
+	<string name="stats_insights_most_popular_day">最も人気の日</string>
+	<string name="stats_insights_popular">最も人気の日と時間</string>
+	<string name="stats_insights_today">今日の統計情報</string>
+	<string name="stats_insights_all_time">全期間の投稿、表示数、訪問者</string>
+	<string name="stats_insights">まとめ</string>
+	<string name="stats_sign_in_jetpack_different_com_account">統計情報を表示するには、Jetpack 連携の際に使用した WordPress.com アカウントにログインしてください。</string>
+	<string name="stats_other_recent_stats_moved_label">他の最近の統計をお探しですか?「まとめ」ページへ移動しました。</string>
 	<string name="me_disconnect_from_wordpress_com">WordPress.com 連携を解除</string>
 	<string name="me_connect_to_wordpress_com">WordPress.com アカウントに連携</string>
 	<string name="me_btn_login_logout">ログイン/ログアウト</string>
@@ -101,6 +117,7 @@
 	<string name="stats_total">合計</string>
 	<string name="stats_overall">全体</string>
 	<string name="post_uploading">アップロード中</string>
+	<string name="stats_comments_total_comments_followers">コメントをフォロー中の人がいる投稿の合計数: %1$s</string>
 	<string name="stats_empty_geoviews_desc">リストから、どの国や地域からのトラフィックが多いのかを見ることができます。</string>
 	<string name="stats_empty_top_posts_desc">最も頻繁に表示されているコンテンツを発見し、各投稿やページの長期間に渡ったパフォーマンスをチェックできます。</string>
 	<string name="stats_empty_referrers_desc">あなたのサイトにトラフィックを送ってくれているサイトや検索エンジンを見ることで、サイトの認知度をさらに理解しましょう。</string>
@@ -139,7 +156,6 @@
 	<string name="stats_empty_followers">フォロワーなし</string>
 	<string name="stats_comments_by_authors">投稿者</string>
 	<string name="stats_comments_by_posts_and_pages">﻿投稿とページ</string>
-	<string name="stats_comments_total_comments_followers">コメントフォロワーの合計数: %1$s</string>
 	<string name="stats_followers_total_wpcom">WordPress.com フォロワーの合計数: %1$s</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_followers_email_selector">メール</string>
@@ -241,7 +257,6 @@
 	<string name="reader_toast_err_already_follow_blog">このブログをすでにフォローしています</string>
 	<string name="reader_title_blog_preview">ブログをプレビュー</string>
 	<string name="reader_toast_err_unfollow_blog">このブログをフォローできませんでした</string>
-	<string name="reader_page_popular_tags">人気のタグ</string>
 	<string name="reader_toast_err_get_blog_info">このブログを表示できません</string>
 	<string name="reader_page_followed_blogs">フォロー中のブログ</string>
 	<string name="reader_hint_add_tag_or_url">タグまたはフォローしたい URL を入力</string>
@@ -408,7 +423,6 @@
 	<string name="share_action_media">メディアギャラリー</string>
 	<string name="share_action_post">新規投稿</string>
 	<string name="site_address">インストール型 WordPress のアドレス (URL)</string>
-	<string name="stats_view_tags_and_categories">タグとカテゴリー</string>
 	<string name="sure_to_cancel_edit_comment">このコメントの修正を中止しますか ?</string>
 	<string name="theme_current_theme">現在のテーマ</string>
 	<string name="theme_premium_theme">プレミアムテーマ</string>
@@ -487,7 +501,6 @@
 	<string name="reader_hint_comment_on_post">コメントを追加</string>
 	<string name="jetpack_not_found">Jetpack プラグインが見つかりません</string>
 	<string name="reader_toast_err_view_image">画像を表示できません</string>
-	<string name="reader_empty_popular_tags">人気のタグはありません</string>
 	<string name="reader_toast_err_tag_exists">すでにこのタグをフォロー中です</string>
 	<string name="reader_toast_err_tag_invalid">有効なタグではありません</string>
 	<string name="reader_toast_err_share_intent">共有に失敗しました</string>
@@ -557,6 +570,7 @@
 	<string name="passcode_enter_old_passcode">旧 PIN 番号を入力</string>
 	<string name="passcode_enter_passcode">PIN 番号を入力</string>
 	<string name="passcode_manage">PIN 番号ロック管理</string>
+	<string name="stats_view_tags_and_categories">タグとカテゴリー</string>
 	<string name="stats_view_visitors_and_views">訪問者数・表示回数</string>
 	<string name="media_no_video_title">VideoPress が利用できません</string>
 	<string name="post_excerpt">抜粋</string>

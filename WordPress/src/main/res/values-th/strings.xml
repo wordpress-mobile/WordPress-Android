@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">เว็บของฉัน</string>
+	<string name="tabbar_accessibility_label_me">ฉัน</string>
+	<string name="passcodelock_prompt_message">ใส่ PIN ของคุณ</string>
+	<string name="editor_toast_changes_saved">บันทึกการเปลี่ยนแปลงแล้ว</string>
+	<string name="push_auth_expired">การร้องขอหมดอายุแล้ว  ลงทะเบียนเข้าสู่ WordPress.com เพื่อลองอีกครั้ง</string>
+	<string name="stats_insights_best_ever">การดูที่ดีที่สุด</string>
+	<string name="ignore">ไม่สนใจ</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% ของการดู</string>
+	<string name="stats_insights_most_popular_hour">ชั่วโมงยอดนิยมที่สุด</string>
+	<string name="stats_insights_most_popular_day">วันยอดนิยมที่สุด</string>
+	<string name="stats_insights_popular">วันและชั่วโมงยอดนิยมที่สุด</string>
+	<string name="stats_insights_today">สถิติวันนี้</string>
+	<string name="stats_insights_all_time">เรื่อง การดูและผู้เยี่ยมชมของเวลาทั้งหมด</string>
+	<string name="stats_insights">แบบละเอียด</string>
+	<string name="stats_sign_in_jetpack_different_com_account">เพื่อดูสถิติของคุณ  ลงทะเบียนเข้าสู่บัญชี WordPress.com  ที่คุณเคยเชื่อมต่อ Jetpack</string>
+	<string name="stats_other_recent_stats_moved_label">กำลังหาสถิติล่าสุดอื่น ๆ ของคุณ?  เราได้ย้ายมันไปยังหน้ารายละเอียด (insight page)</string>
 	<string name="me_disconnect_from_wordpress_com">ตัดการติดต่อกับ WordPress.com</string>
 	<string name="me_btn_login_logout">เข้าสู่ระบบ/ออกจากระบบ</string>
 	<string name="me_connect_to_wordpress_com">เชื่อมต่อกับ WordPress.com</string>
@@ -14,7 +30,23 @@
 	<string name="site_picker_title">เลือกเว็บไซต์</string>
 	<string name="my_site_btn_view_site">ดูเว็บไซต์</string>
 	<string name="my_site_btn_view_admin">ดูผู้ควบคุม</string>
+	<string name="my_site_header_publish">เผยแพร่</string>
+	<string name="my_site_header_look_and_feel">หน้าตาและสัมผัส (Look and Feel)</string>
+	<string name="my_site_btn_comments">ความเห็น</string>
+	<string name="my_site_btn_site_settings">ตั้งค่า</string>
 	<string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
+	<string name="my_site_header_admin">ผู้ควบคุม</string>
+	<string name="reader_label_new_posts_subtitle">แตะเพื่อแสดงมัน</string>
+	<string name="my_site_header_configuration">การปรับแต่ง</string>
+	<string name="notifications_account_required">ลงทะเบียนเข้าสู่ WordPress.com สำหรับการเตือน</string>
+	<string name="stats_unknown_author">ผู้เขียนนิรนาม</string>
+	<string name="signout">ตัดการเชื่อมต่อ</string>
+	<string name="image_added">รูปที่เพิ่มแล้ว</string>
+	<string name="sign_out_wpcom_confirm">ตัดการเชื่อมต่อบัญชีของคุณจะลบข้อมูบทั้งหมดของ @%s’s WordPress.com ออกจากอุปกรณ์นี้  รวมถึงฉบับร่างและการเปลี่ยนแปลงในเครื่องด้วย</string>
+	<string name="select_all">เลือกทั้งหมด</string>
+	<string name="hide">ซ่อน</string>
+	<string name="show">แสดง</string>
+	<string name="deselect_all">ไม่เลือกทั้งหมด</string>
 	<string name="select_from_new_picker">การเลือกหลายสิ่งด้วยตัวเลือกแบบใหม่</string>
 	<string name="no_blog_videos">ไม่มีวีดีโอ</string>
 	<string name="no_media_sources">ไม่สามารถดึงข้อมูลไฟล์สื่อ</string>
@@ -85,6 +117,7 @@
 	<string name="stats_overall">ทั้งหมด</string>
 	<string name="stats_total">ทั้งหมด</string>
 	<string name="post_uploading">กำลังอัปโหลด</string>
+	<string name="stats_comments_total_comments_followers">เรื่องทั้งหมดที่มีผู้ติดตามความเห็น: %1$s</string>
 	<string name="stats_empty_publicize_desc">ติดตามจำนวนผู้ติดตามจากบริการโซเชียลเน็ตเวิร์คโดยใช้การเผยแพร่</string>
 	<string name="stats_empty_followers_desc">ติดตามจำนวนผู้ติดตามทั้งหมดของคุณ  และดูว่าแต่ละคนใช้เวลานานเท่าไหร่บนเว็บของคุณ</string>
 	<string name="stats_empty_geoviews_desc">ดูรายการเพื่อดูว่าประเทศไหนและทวีปไหนที่มีคนเข้าชมเว็บคุณมากที่สุด</string>
@@ -117,7 +150,6 @@
 	<string name="stats_empty_followers">ไม่มีผู้ติดตาม</string>
 	<string name="stats_comments_by_posts_and_pages">โดยเรื่องและหน้า</string>
 	<string name="stats_comments_by_authors">โดยผู้เขียน</string>
-	<string name="stats_comments_total_comments_followers">ผู้ติดตามความเห็นทั้งหมด: %1$s</string>
 	<string name="stats_followers_total_wpcom">ผู้ติดตาม WordPress.com ทั้งหมด: %1$s</string>
 	<string name="stats_followers_email_selector">อีเมล์</string>
 	<string name="stats_empty_geoviews">ไม่มีบันทึกประเทศ</string>
@@ -145,6 +177,7 @@
 	<string name="stats_view_top_posts_and_pages">เรื่องและหน้า</string>
 	<string name="stats_entry_clicks_link">ลิงก์</string>
 	<string name="ssl_certificate_details">รายละเอียด</string>
+	<string name="sure_to_remove_account">ลบเว็บนี้?</string>
 	<string name="delete_sure_post">ลบเรื่องนี้</string>
 	<string name="delete_sure">ลบฉบับร่างนี้</string>
 	<string name="delete_sure_page">ลบหน้านี้</string>
@@ -223,7 +256,6 @@
 	<string name="reader_title_tag_preview">ดูก่อนป้ายกำกับ</string>
 	<string name="reader_title_subs">ป้ายกำกับและบล็อก</string>
 	<string name="reader_page_followed_tags">ป้ายกำกับที่ติดตามแล้ว</string>
-	<string name="reader_page_popular_tags">ป้ายกำกับยอดนิยม</string>
 	<string name="reader_page_followed_blogs">บล็อกที่ติดตามแล้ว</string>
 	<string name="reader_hint_add_tag_or_url">ใส่ป้ายกำกับหรือ URL เพื่อติดตาม</string>
 	<string name="reader_empty_recommended_blogs">ไม่มีบล็อกแนะนำ</string>
@@ -243,6 +275,7 @@
 	<string name="ssl_certificate_error">SSL certificate ใช้งานไม่ได้</string>
 	<string name="reader_label_reblog_empty">คุณไม่มีบล็อก WordPress.com ที่มองเห็นได้  เรื่องนี้สามารถรีบล็อกไปได้ที่</string>
 	<string name="ssl_certificate_ask_trust">ถ้าคุณสามารถเชื่อมต่อกับเว็บนี้บ่อย ๆ โดยไม่มีปัญหา  ความผิดพลาดนี้อาจหมายถึงมีบางคนพยายามเปลี่ยนแปลงเว็บทำให้คุณไม่สามารถดำเนินการต่อได้  คุณต้องการที่จะเชื่อใจการรับรองนี้หรือไม่?</string>
+	<string name="could_not_remove_account">ไม่สามารถลบเว็บ</string>
 	<string name="nux_cannot_log_in">เราไม่สามารถนำคุณเข้าสู่ระบบ</string>
 	<string name="username_exists">ผู้ใช้ชื่อนั้นมีอยู่แล้ว</string>
 	<string name="out_of_memory">อุปกรณ์ใช้ความจำหมดแล้ว</string>
@@ -325,7 +358,6 @@
 	<string name="error_blog_hidden">บล็อกนี้ถูกซ่อนและไม่สามารถโหลดได้  ให้เปิดใช้งานมันอีกครั้งในการตั้งค่าและลองดูอีกครั้ง</string>
 	<string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
 	<string name="jetpack_message_not_admin">ต้องการปลั๊กอิน Jetpack สำหรับการใช้งานสถิติ  ติดต่อผู้ควบคุมเว็บ</string>
-	<string name="stats_view_tags_and_categories">ป้ายกำกับและหมวดหมู่</string>
 	<string name="pending_review">รอคอยการตรวจสอบ</string>
 	<string name="post_format">รูปแบบเรื่อง</string>
 	<string name="new_post">เรื่องใหม่</string>
@@ -375,6 +407,8 @@
 	<string name="site_address">ที่อยู่เว็บแบบติดตั้งบนโฮสท์เองของคุณ (URL)</string>
 	<string name="file_not_found">ไม่สามารถหาไฟล์สื่อสำหรับการอัปโหลด  มันถูกลบหรือย้ายไปแล้วหรือไม่?</string>
 	<string name="post_settings">การตั้งค่าเรื่อง</string>
+	<string name="blog_removed_successfully">ลบเว็บสำเร็จแล้ว</string>
+	<string name="remove_account">ลบเว็บ</string>
 	<string name="themes_live_preview">ดูก่อนแบบสด</string>
 	<string name="theme_current_theme">theme ปัจจุบัน</string>
 	<string name="theme_premium_theme">theme พรีเมี่ยม</string>
@@ -454,7 +488,6 @@
 	<string name="reader_toast_err_view_image">ไม่สามารถดูรูปได้</string>
 	<string name="reader_toast_err_url_intent">ไม่สามารถเปิด %s</string>
 	<string name="reader_empty_followed_tags">คุณยังไม่ได้ติดตามป้ายกำกับใด ๆ</string>
-	<string name="reader_empty_popular_tags">ไม่มีป้ายกำกับยอดนิยม</string>
 	<string name="create_account_wpcom">สร้างบัญชีบน  WordPress.com</string>
 	<string name="reader_likes_one">หนึ่งคนชอบสิ่งนี้</string>
 	<string name="reader_likes_only_you">คุณชอบสิ่งนี้</string>
@@ -509,6 +542,7 @@
 	<string name="view_stats_full_site">ดูทั้งเว็บ</string>
 	<string name="stats_view_visitors_and_views">ผู้เยี่ยมชมและการดู</string>
 	<string name="stats_view_clicks">การกด</string>
+	<string name="stats_view_tags_and_categories">ป้ายกำกับและหมวดหมู่</string>
 	<string name="themes_features_label">ลักษณะพิเศษ</string>
 	<string name="theme_activate_button">เปิดใช้</string>
 	<string name="theme_activating_button">การเปิดใช้</string>

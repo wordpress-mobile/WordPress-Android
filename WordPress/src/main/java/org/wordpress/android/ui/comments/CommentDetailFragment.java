@@ -266,6 +266,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnSpamComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!hasComment()) return;
+
                 if (mComment.getStatusEnum() == CommentStatus.SPAM) {
                     moderateComment(CommentStatus.APPROVED);
                 } else {
@@ -759,7 +761,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * post comment box text as a reply to the current comment
      */
     private void submitReply() {
-        if (!isAdded() || mIsSubmittingReply)
+        if (!hasComment() || !isAdded() || mIsSubmittingReply)
             return;
 
         if (!NetworkUtils.checkConnection(getActivity()))

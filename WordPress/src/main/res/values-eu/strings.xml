@@ -164,7 +164,6 @@
 	<string name="local_draft">Zirriborro lokala</string>
 	<string name="view_in_browser">Nabigatzailean ikusi</string>
 	<string name="open_source_licenses">Open source lizentzia</string>
-	<string name="stats_view_tags_and_categories">Etiketak eta kategoriak</string>
 	<string name="reader_share_link">Esteka partekatu</string>
 	<string name="reader_title_applog">Aplikazioaren erregistroa</string>
 	<string name="reader_toast_err_add_tag">Ezin izan da etiketa hau gehitu</string>
@@ -250,7 +249,6 @@
 	<string name="reader_toast_err_tag_invalid">Hau ez da etiketa zuzen bat</string>
 	<string name="reader_toast_err_share_intent">Ezin izan da partekatu</string>
 	<string name="limit_reached">Mugara iritsi zara. Minutu batean proba dezakezu. Lehenago saiatzeak debekua ezabatu arte itxarote denbora handitzea besterik ez du egingo. Errore bat baldin bada uste baduzu, kontaktatu laguntzarekin. </string>
-	<string name="reader_empty_popular_tags">Ez dago etiketa aipagarririk</string>
 	<string name="reader_toast_err_comment_failed">Ezin izan da zure iruzkina argitaratu </string>
 	<string name="reader_toast_err_view_image">Ezin izan da irudia ikusi</string>
 	<string name="reader_toast_err_url_intent">Ezin izan da %s ireki</string>

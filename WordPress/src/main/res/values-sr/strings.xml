@@ -110,7 +110,6 @@
 	<string name="stats_empty_comments_desc">Ако сте дозволили коментаре на свом веб месту, пратите посетиоце који остављају највише коментара и сазнајте који садржај подстиче најактивније разговоре, засновано на последњих 1000 коментара.</string>
 	<string name="stats_empty_followers">Без пратилаца</string>
 	<string name="stats_comments_by_authors">По ауторима</string>
-	<string name="stats_comments_total_comments_followers">Укупан број пратилаца коментара: %1$s</string>
 	<string name="stats_followers_total_wpcom">Укупан број WordPress.com пратилаца: %1$s</string>
 	<string name="stats_followers_email_selector">Е-пошта</string>
 	<string name="stats_followers_total_email">Укупан број пратилаца преко е-поште: %1$s</string>
@@ -213,7 +212,6 @@
 	<string name="reader_label_tag_preview">Чланци означени са %s</string>
 	<string name="reader_label_followed_blog">Блог се прати</string>
 	<string name="reader_hint_add_tag_or_url">Унесите ознаку или URL који желите да пратите</string>
-	<string name="reader_page_popular_tags">Популарне ознаке</string>
 	<string name="reader_page_followed_blogs">Блогови које пратите</string>
 	<string name="reader_title_subs">Ознаке и блогови</string>
 	<string name="reader_page_followed_tags">Ознаке које пратите</string>
@@ -353,7 +351,6 @@
 	<string name="http_authorization_required">Неопходно овлашћење</string>
 	<string name="http_credentials">HTTP акредитиви (опционо)</string>
 	<string name="pending_review">Чека преглед</string>
-	<string name="stats_view_tags_and_categories">Ознаке и категорије</string>
 	<string name="preview_post">Прегледајте чланак</string>
 	<string name="delete_draft">Обриши нацрт</string>
 	<string name="toast_comment_unedited">Коментар није промењен</string>
@@ -442,7 +439,6 @@
 	<string name="username_invalid">Неисправно корисничко име</string>
 	<string name="connecting_wpcom">Повезивање на WordPress.com</string>
 	<string name="create_account_wpcom">Направите налог на WordPress.com</string>
-	<string name="reader_empty_popular_tags">Нема популарних ознака</string>
 	<string name="reader_toast_err_url_intent">Није могуће отворити %s</string>
 	<string name="reader_toast_err_view_image">Није могуће прегледати слику</string>
 	<string name="reader_btn_share">Поделите</string>
