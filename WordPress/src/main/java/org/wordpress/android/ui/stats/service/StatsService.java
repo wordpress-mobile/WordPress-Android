@@ -252,7 +252,7 @@ public class StatsService extends Service {
         synchronized (mStatsNetworkRequests) {
             switch (sectionToUpdate) {
                 case VISITS:
-                    path = String.format(path + "?unit=%s&quantity=10&date=%s", period, date);
+                    path = String.format(path + "?unit=%s&quantity=15&date=%s", period, date);
                     break;
                 case TOP_POSTS:
                 case REFERRERS:
