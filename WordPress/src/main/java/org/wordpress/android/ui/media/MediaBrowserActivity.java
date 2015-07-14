@@ -120,7 +120,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
             ft.hide(mMediaItemFragment);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
 
         setupAddMenuPopup();
 
