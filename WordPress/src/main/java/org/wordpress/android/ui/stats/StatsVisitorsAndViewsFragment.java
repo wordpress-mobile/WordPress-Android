@@ -494,12 +494,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         } else if (mSelectedBarGraphBarIndex < dataToShowOnGraph.length) {
             barSelectedOnGraph = mSelectedBarGraphBarIndex;
         } else {
-            // A previous bar was highlighted, but it's out of the screen now. Device Rotated.
-            // This cannot happen now, since we've fixed number of bars on a device. # of bars doesn't change with device rotation.
+            // A previous bar was highlighted, but it's out of the screen now. This should never happen atm.
             barSelectedOnGraph = dataToShowOnGraph.length - 1;
             mSelectedBarGraphBarIndex = barSelectedOnGraph;
-            // TODO: make sure to handle this case in the modules below, otherwise the graph is updated but not other fragments
-            // that are still pointing to the old selected date.
         }
 
         updateUIBelowTheGraph(barSelectedOnGraph);
