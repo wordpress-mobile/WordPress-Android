@@ -152,6 +152,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         }
         mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
         setEmptyViewVisible(mAdapter.getCount() == 0);
+        mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setSelection(mSavedScrollPosition);
     }
