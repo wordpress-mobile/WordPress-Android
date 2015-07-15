@@ -783,8 +783,8 @@
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
-    <string name="error_fetch_remote_site_settings">Couldn't retrieve site info</string>
-    <string name="error_post_remote_site_settings">Couldn't save site info</string>
+    <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
+    <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
