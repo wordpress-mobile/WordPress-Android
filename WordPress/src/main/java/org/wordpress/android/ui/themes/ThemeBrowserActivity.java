@@ -27,7 +27,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeTabFragmentCallback;
+import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 /**
  * The theme browser.
  */
-public class ThemeBrowserActivity extends AppCompatActivity implements ThemeTabFragmentCallback {
+public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
 
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;

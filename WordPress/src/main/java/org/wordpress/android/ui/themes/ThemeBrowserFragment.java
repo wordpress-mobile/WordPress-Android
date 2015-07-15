@@ -55,7 +55,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         }
     }
 
-    public interface ThemeTabFragmentCallback {
+    public interface ThemeBrowserFragmentCallback {
         public void onThemeSelected(String themeId);
     }
 
@@ -66,7 +66,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     protected TextView mEmptyView;
     protected TextView mNoResultText;
     protected ThemeBrowserAdapter mAdapter;
-    protected ThemeTabFragmentCallback mCallback;
+    protected ThemeBrowserFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
     private boolean mShouldRefreshOnStart;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -84,9 +84,9 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         super.onAttach(activity);
 
         try {
-            mCallback = (ThemeTabFragmentCallback) activity;
+            mCallback = (ThemeBrowserFragmentCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement ThemeTabFragmentCallback");
+            throw new ClassCastException(activity.toString() + " must implement ThemeBrowserFragmentCallback");
         }
     }
 
