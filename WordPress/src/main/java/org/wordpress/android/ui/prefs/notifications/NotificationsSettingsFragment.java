@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -18,7 +17,6 @@ import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
@@ -289,8 +287,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.MOBILE, siteId, deviceSettings, mOnSettingsChangedListener
         );
-        devicePreference.setTitle(R.string.mobile_notifications);
-        devicePreference.setDialogTitle(R.string.mobile_notifications);
+        devicePreference.setTitle(R.string.app_notifications);
+        devicePreference.setDialogTitle(R.string.app_notifications);
         devicePreference.setEnabled(mNotificationsEnabled);
         rootCategory.addPreference(devicePreference);
 

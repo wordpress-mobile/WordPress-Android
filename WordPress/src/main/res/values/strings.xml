@@ -578,11 +578,6 @@
 
     <!-- notifications -->
     <string name="notifications">Notifications</string>
-    <string name="manage_notifications">Manage notifications</string>
-    <string name="enable_notifications">Enable notifications</string>
-    <string name="notifications_turn_off">Turn off</string>
-    <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
-    <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
     <string name="note_reply_successful">Reply published</string>
     <string name="new_notifications">%d new notifications</string>
     <string name="more_notifications">and %d more.</string>
@@ -605,12 +600,12 @@
     <string name="notifications_comments_other_blogs">Comments on other blogs</string>
     <string name="timeline">Timeline</string>
     <string name="email">Email</string>
-    <string name="mobile_notifications">Mobile notifications</string>
+    <string name="app_notifications">App notifications</string>
     <string name="comment_likes">Comment likes</string>
     <string name="replies_to_your_comments">Replies to your comments</string>
     <string name="error_loading_notifications">Could not load notifications settings</string>
     <string name="notification_types">Notification Types</string>
-    <string name="notifications_disabled">Notifications have been disabled. Tap here to enable them in Settings.</string>
+    <string name="notifications_disabled">App notifications have been disabled. Tap here to enable them in Settings.</string>
     <string-array name="notifications_site_settings">
         <item>Comments</item>
         <item>Comment likes</item>
