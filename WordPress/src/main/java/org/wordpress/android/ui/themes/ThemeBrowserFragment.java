@@ -2,7 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -100,9 +99,10 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mEmptyView = (TextView) view.findViewById(R.id.text_empty);
         mListView = (HeaderGridView) view.findViewById(R.id.theme_listview);
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
+
         mListView.addHeaderView(header);
-        SearchView searchView = new SearchView(getActivity());
-        mListView.addHeaderView(searchView);
+        View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
+        mListView.addHeaderView(headerSearch);
         mListView.setRecyclerListener(this);
 
         // swipe to refresh setup but not for the search view
