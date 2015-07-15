@@ -609,6 +609,8 @@
     <string name="comment_likes">Comment likes</string>
     <string name="replies_to_your_comments">Replies to your comments</string>
     <string name="error_loading_notifications">Could not load notifications settings</string>
+    <string name="notification_types">Notification Types</string>
+    <string name="notifications_disabled">Notifications have been disabled. Tap here to enable them in Settings.</string>
     <string-array name="notifications_site_settings">
         <item>Comments</item>
         <item>Comment likes</item>

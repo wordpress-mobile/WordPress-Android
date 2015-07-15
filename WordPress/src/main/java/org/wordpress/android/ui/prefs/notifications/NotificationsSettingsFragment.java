@@ -2,25 +2,24 @@ package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.v4.view.MenuItemCompat;
+import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -41,6 +40,7 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,17 +51,21 @@ import de.greenrobot.event.EventBus;
 public class NotificationsSettingsFragment extends PreferenceFragment {
     public static final String TAG = "NotificationSettingsFragment";
 
+    // The number of notification types we support (e.g. timeline, email, mobile)
+    private static final int TYPE_COUNT = 3;
+
     private NotificationsSettings mNotificationsSettings;
-    private Switch mEnabledSwitch;
 
     private String mDeviceId;
+    private boolean mNotificationsEnabled;
+
+    List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.notifications_settings);
 
-        setHasOptionsMenu(true);
+        addPreferencesFromResource(R.xml.notifications_settings);
     }
 
     @Override
@@ -70,15 +74,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDeviceId = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_SERVER_ID, "");
-
-        if (hasNotificationsSettings()) {
-            new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true);
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        mNotificationsEnabled = NotificationsUtils.isNotificationsEnabled(getActivity());
+
+        if (hasNotificationsSettings()) {
+            new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true);
+        }
 
         refreshSettings();
     }
@@ -125,45 +131,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         return sharedPreferences.contains(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.notifications_settings, menu);
-
-        MenuItem enabledMenuItem = menu.findItem(R.id.notifications_enabled);
-        if (enabledMenuItem != null && MenuItemCompat.getActionView(enabledMenuItem) != null) {
-            mEnabledSwitch = (Switch)MenuItemCompat.getActionView(enabledMenuItem).findViewById(R.id.notifications_enabled_switch);
-            mEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    setAllCategoriesEnabled(isChecked);
-                }
-            });
-        }
-    }
-
-    private void setAllCategoriesEnabled(boolean isEnabled) {
-        Preference blogsCategory = findPreference(
-                getString(R.string.pref_notification_blogs));
-        Preference otherBlogsCategory = findPreference(
-                getString(R.string.pref_notification_other_blogs));
-        Preference accountEmailsCategory = findPreference(
-                getString(R.string.pref_notification_account_emails));
-        Preference sightsAndSoundsCategory = findPreference(
-                getString(R.string.pref_notification_sights_sounds));
-
-        blogsCategory.setEnabled(isEnabled);
-        otherBlogsCategory.setEnabled(isEnabled);
-        accountEmailsCategory.setEnabled(isEnabled);
-        sightsAndSoundsCategory.setEnabled(isEnabled);
-    }
-
     private class LoadNotificationsTask extends AsyncTask<Boolean, Void, Void> {
+        private boolean mShouldUpdateUI;
 
         @Override
         protected Void doInBackground(Boolean... params) {
-            boolean shouldUpdateUI = params[0];
+            mShouldUpdateUI = params[0];
             JSONObject settingsJson;
             try {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -177,14 +150,54 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
             mNotificationsSettings = new NotificationsSettings(settingsJson);
 
-            if (shouldUpdateUI) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void nada) {
+            if (mShouldUpdateUI) {
                 configureSiteSettings();
                 configureOtherSettings();
                 configureDotcomSettings();
             }
 
-            return null;
+            updateMobileNotificationsState();
         }
+    }
+
+    // Updates the UI for preference screens based on if notifications are enabled or not
+    private void updateMobileNotificationsState() {
+        if (mTypePreferenceCategories == null || mTypePreferenceCategories.size() == 0) {
+            return;
+        }
+
+        for (final PreferenceCategory category : mTypePreferenceCategories) {
+            if (mNotificationsEnabled && category.getPreferenceCount() > TYPE_COUNT) {
+                category.removePreference(category.getPreference(TYPE_COUNT));
+            } else if (!mNotificationsEnabled && category.getPreferenceCount() == TYPE_COUNT) {
+                Preference disabledMessage = new Preference(getActivity());
+                disabledMessage.setSummary(R.string.notifications_disabled);
+                disabledMessage.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getActivity().getApplicationContext().getPackageName(), null);
+                        intent.setData(uri);
+
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+
+                category.addPreference(disabledMessage);
+            }
+
+            if (category.getPreference(TYPE_COUNT - 1) != null) {
+                category.getPreference(TYPE_COUNT - 1).setEnabled(mNotificationsEnabled);
+            }
+        }
+
     }
 
     private void configureSiteSettings() {
@@ -192,7 +205,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             return;
         }
 
-        // Retrieve blogs that are .com or jetpack powered
+        // Retrieve blogs that are .com or Jetpack powered
         List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("NOT(dotcomFlag=0 AND wpVersion!='')", null, 0, false);
 
         Context context = getActivity();
@@ -217,7 +230,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             }
 
             addPreferencesForPreferenceScreen(prefScreen, Channel.SITES, siteSettings, siteId);
-
             blogsCategory.addPreference(prefScreen);
         }
     }
@@ -227,10 +239,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             return;
         }
 
-        PreferenceScreen otherPreferenceScreen = (PreferenceScreen) findPreference(
+        PreferenceScreen otherBlogsScreen = (PreferenceScreen) findPreference(
                 getString(R.string.pref_notification_other_blogs));
         JSONObject otherSettings = mNotificationsSettings.getOtherSettings();
-        addPreferencesForPreferenceScreen(otherPreferenceScreen, Channel.OTHER, otherSettings, 0);
+        addPreferencesForPreferenceScreen(otherBlogsScreen, Channel.OTHER, otherSettings, 0);
     }
 
     private void configureDotcomSettings() {
@@ -253,13 +265,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         Context context = getActivity();
         if (context == null) return;
 
+        PreferenceCategory rootCategory = new PreferenceCategory(context);
+        rootCategory.setTitle(R.string.notification_types);
+        preferenceScreen.addPreference(rootCategory);
+
         JSONObject timelineSettings = JSONUtils.queryJSON(settingsObject, "timeline", new JSONObject());
         NotificationsSettingsDialogPreference timelinePreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.TIMELINE, siteId, timelineSettings, mOnSettingsChangedListener
         );
         timelinePreference.setTitle(R.string.timeline);
         timelinePreference.setDialogTitle(R.string.timeline);
-        preferenceScreen.addPreference(timelinePreference);
+        rootCategory.addPreference(timelinePreference);
 
         JSONObject emailSettings = JSONUtils.queryJSON(settingsObject, "email", new JSONObject());
         NotificationsSettingsDialogPreference emailPreference = new NotificationsSettingsDialogPreference(
@@ -267,7 +283,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         );
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
-        preferenceScreen.addPreference(emailPreference);
+        rootCategory.addPreference(emailPreference);
 
         JSONObject deviceSettings = JSONUtils.queryJSON(settingsObject, "device", new JSONObject());
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
@@ -275,7 +291,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         );
         devicePreference.setTitle(R.string.mobile_notifications);
         devicePreference.setDialogTitle(R.string.mobile_notifications);
-        preferenceScreen.addPreference(devicePreference);
+        devicePreference.setEnabled(mNotificationsEnabled);
+        rootCategory.addPreference(devicePreference);
+
+        mTypePreferenceCategories.add(rootCategory);
     }
 
     private NotificationsSettingsDialogPreference.OnSiteSettingsChangedListener mOnSettingsChangedListener =
@@ -329,31 +348,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             }
 
             if (settingsObject.length() > 0) {
-                new SendNotificationSettingsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, settingsObject);
+                WordPress.getRestClientUtilsV1_1().post("/me/notifications/settings", settingsObject, null, null, null);
             }
         }
     };
-
-    /**
-     * Performs the notification settings save in the background
-     */
-    private class SendNotificationSettingsTask extends AsyncTask<JSONObject, Void, Void> {
-        // Sends updated notification settings to WP.com
-        @Override
-        protected Void doInBackground(JSONObject... params) {
-            if (params.length < 1) return null;
-
-            JSONObject apiParams = params[0];
-
-            WordPress.getRestClientUtilsV1_1().post("/me/notifications/settings", apiParams, null, null, null);
-            return null;
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, @Nonnull Preference preference) {

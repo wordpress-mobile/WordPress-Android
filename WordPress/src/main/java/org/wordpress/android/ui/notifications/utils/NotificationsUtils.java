@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.notifications.utils;
 
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -24,8 +26,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
-import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -52,10 +52,11 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +78,9 @@ public class NotificationsUtils {
     private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
     private static final String WPCOM_PUSH_KEY_MUTE_UNTIL = "mute_until";
     private static final String WPCOM_PUSH_KEY_VALUE = "value";
+
+    private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
+    private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
 
     private static boolean mSnackbarDidUndo;
 
@@ -516,5 +520,32 @@ public class NotificationsUtils {
             // Show undo bar for trash or spam actions
             showUndoBarForNote(note, newStatus, parentView);
         }
+    }
+
+    // Checks if global notifications toggle is enabled in the Android app settings
+    // See: https://code.google.com/p/android/issues/detail?id=38482#c15
+    @SuppressWarnings("unchecked")
+    public static boolean isNotificationsEnabled(Context context) {
+        AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        ApplicationInfo appInfo = context.getApplicationInfo();
+        String pkg = context.getApplicationContext().getPackageName();
+        int uid = appInfo.uid;
+
+        Class appOpsClass;
+        try {
+            appOpsClass = Class.forName(AppOpsManager.class.getName());
+
+            Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
+
+            Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
+            int value = (int)opPostNotificationValue.get(Integer.class);
+
+            return ((int)checkOpNoThrowMethod.invoke(mAppOps,value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
+        } catch (ClassNotFoundException | NoSuchFieldException | NoSuchMethodException |
+                IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
