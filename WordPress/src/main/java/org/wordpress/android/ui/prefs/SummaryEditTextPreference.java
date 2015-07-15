@@ -14,7 +14,13 @@ import org.wordpress.android.R;
 /**
  * Standard EditTextPreference that has attributes to limit summary length.
  *
- * Re: {@link SummaryPreference}
+ * Created for and used by {@link SiteSettingsFragment} to style some Preferences.
+ *
+ * When declaring this class in a layout file you can use the following attributes:
+ *  - app:summaryLines : sets the number of lines to display in the Summary field
+ *                       (see {@link TextView#setLines(int)} for details)
+ *  - app:maxSummaryLines : sets the maximum number of lines the Summary field can display
+ *                       (see {@link TextView#setMaxLines(int)} for details)
  */
 
 public class SummaryEditTextPreference extends EditTextPreference {

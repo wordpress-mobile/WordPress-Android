@@ -255,8 +255,8 @@ public class WPRestClient {
         getXL(path, params, listener, errorListener);
     }
 
-    public void getSiteDescription(String sideId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("rest/v1.1/sites/%s", sideId);
+    public void getSiteDescription(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("rest/v1.1/sites/%s", siteId);
         Map<String, String> params = new HashMap<String, String>();
         params.put("fields", "description");
         get(path, params, null, listener, errorListener);

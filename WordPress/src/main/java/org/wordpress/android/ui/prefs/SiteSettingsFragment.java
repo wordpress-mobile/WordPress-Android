@@ -17,6 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
@@ -171,8 +172,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error GETing site settings: " + error);
                         if (isAdded()) {
-                            ToastUtils.showToast(getActivity(), "Error getting site info");
+                            ToastUtils.showToast(getActivity(), getString(R.string.error_fetch_remote_site_settings));
+                            getActivity().finish();
                         }
                     }
                 });
@@ -275,9 +278,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            if (mTaglinePreference != null) {
-                                mTaglinePreference.setEnabled(false);
-                                mTaglinePreference.setSummary("Failed to retrieve :(");
+                            AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
+                            if (isAdded()) {
+                                ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
                             }
                         }
                     }, params);
@@ -348,12 +351,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Return a non-null display string for a given language code.
      */
-    private String getLanguageString(String languagueCode, Locale displayLocale) {
-        if (languagueCode == null || languagueCode.length() < 2 || languagueCode.length() > 6) {
+    private String getLanguageString(String languageCode, Locale displayLocale) {
+        if (languageCode == null || languageCode.length() < 2 || languageCode.length() > 6) {
             return "";
         }
 
-        Locale languageLocale = new Locale(languagueCode.substring(0, 2));
-        return languageLocale.getDisplayLanguage(displayLocale) + languagueCode.substring(2);
+        Locale languageLocale = new Locale(languageCode.substring(0, 2));
+        return languageLocale.getDisplayLanguage(displayLocale) + languageCode.substring(2);
     }
 }
