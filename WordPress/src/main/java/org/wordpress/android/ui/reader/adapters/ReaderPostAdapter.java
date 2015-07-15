@@ -317,13 +317,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         switch (discoverData.getDiscoverType()) {
             case EDITOR_PICK:
-                // editor picks show author avatar
-                postHolder.imgDiscoverAvatar.setVisibility(View.VISIBLE);
                 if (discoverData.hasAvatarUrl()) {
                     postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
                 } else {
                     postHolder.imgDiscoverAvatar.showDefaultGravatarImage();
                 }
+                // tapping an editor pick opens the source post, which is handled by the existing
+                // post selection handler
                 postHolder.layoutDiscover.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -335,9 +335,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
 
             case SITE_PICK:
+                if (discoverData.hasAvatarUrl()) {
+                    postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                } else {
+                    postHolder.imgDiscoverAvatar.showDefaultBlavatarImage();
+                }
                 // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
                 // we have the blogId, if not show blog in internal webView
-                postHolder.imgDiscoverAvatar.setVisibility(View.GONE);
                 postHolder.layoutDiscover.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
