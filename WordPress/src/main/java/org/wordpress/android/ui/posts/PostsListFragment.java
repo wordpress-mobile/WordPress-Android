@@ -132,7 +132,7 @@ public class PostsListFragment extends Fragment
                         if (!isAdded()) {
                             return;
                         }
-                        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                        if (!NetworkUtils.checkConnection(getActivity())) {
                             setRefreshing(false);
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
