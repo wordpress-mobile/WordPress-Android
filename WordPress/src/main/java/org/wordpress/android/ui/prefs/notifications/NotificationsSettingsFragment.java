@@ -72,7 +72,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDeviceId = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_SERVER_ID, "");
+
+        if (hasNotificationsSettings()) {
+            loadNotificationsAndUpdateUI(true);
+        }
     }
+
 
     @Override
     public void onResume() {
@@ -80,16 +85,16 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         mNotificationsEnabled = NotificationsUtils.isNotificationsEnabled(getActivity());
 
-        if (hasNotificationsSettings()) {
-            new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true);
-        }
-
         refreshSettings();
     }
 
     private void refreshSettings() {
         if (!hasNotificationsSettings()) {
             EventBus.getDefault().post(new NotificationEvents.NotificationsSettingsStatusChanged(getString(R.string.loading)));
+        }
+
+        if (hasNotificationsSettings()) {
+            updateUIForNotificationsEnabledState();
         }
 
         NotificationsUtils.getPushNotificationSettings(getActivity(), new RestRequest.Listener() {
@@ -108,7 +113,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                 editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, response.toString());
                 editor.apply();
 
-                new LoadNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, !settingsExisted);
+                loadNotificationsAndUpdateUI(!settingsExisted);
+                updateUIForNotificationsEnabledState();
             }
         }, new RestRequest.ErrorListener() {
             @Override
@@ -123,48 +129,35 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         });
     }
 
+    private void loadNotificationsAndUpdateUI(boolean shouldUpdateUI) {
+        JSONObject settingsJson;
+        try {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            settingsJson = new JSONObject(
+                    sharedPreferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, "")
+            );
+        } catch (JSONException e) {
+            AppLog.e(T.NOTIFS, "Could not parse notifications settings JSON");
+            return;
+        }
+
+        mNotificationsSettings = new NotificationsSettings(settingsJson);
+
+        if (shouldUpdateUI) {
+            configureSiteSettings();
+            configureOtherSettings();
+            configureDotcomSettings();
+        }
+    }
+
     private boolean hasNotificationsSettings() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         return sharedPreferences.contains(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
     }
 
-    private class LoadNotificationsTask extends AsyncTask<Boolean, Void, Void> {
-        private boolean mShouldUpdateUI;
-
-        @Override
-        protected Void doInBackground(Boolean... params) {
-            mShouldUpdateUI = params[0];
-            JSONObject settingsJson;
-            try {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                settingsJson = new JSONObject(
-                        sharedPreferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, "")
-                );
-            } catch (JSONException e) {
-                AppLog.e(T.NOTIFS, "Could not parse notifications settings JSON");
-                return null;
-            }
-
-            mNotificationsSettings = new NotificationsSettings(settingsJson);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void nada) {
-            if (mShouldUpdateUI) {
-                configureSiteSettings();
-                configureOtherSettings();
-                configureDotcomSettings();
-            }
-
-            updateMobileNotificationsState();
-        }
-    }
-
     // Updates the UI for preference screens based on if notifications are enabled or not
-    private void updateMobileNotificationsState() {
+    private void updateUIForNotificationsEnabledState() {
         if (mTypePreferenceCategories == null || mTypePreferenceCategories.size() == 0) {
             return;
         }
