@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- SummaryEditTextPreference attributes -->
+    <declare-styleable name="SummaryEditTextPreference">
+        <attr name="summaryLines" format="integer" />
+        <attr name="maxSummaryLines" format="integer" />
+    </declare-styleable>
+
     <declare-styleable name="FlowLayout">
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="verticalSpacing" format="dimension" />

@@ -22,6 +22,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public class RestClientUtils {
+    public static final String SITE_TITLE_KEY = "name";
+    public static final String SITE_DESC_KEY = "description";
+    public static final String SITE_LANGUAGE_KEY = "lang";
+    public static final String SITE_URL_KEY = "URL";
+
     private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static final String COMMENT_REPLY_CONTENT_FIELD = "content";
     private static String sUserAgent = "WordPress Networking Android";
@@ -216,6 +221,19 @@ public class RestClientUtils {
     public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format("sites/%s/themes/mine", siteId);
         get(path, listener, errorListener);
+    }
+
+    public void getGeneralSettings(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/settings", siteId);
+        Map<String, String> params = new HashMap<String, String>();
+//        params.put("fields", "blogname,blogdescription,lang_id,blog_public");
+        get(path, params, null, listener, errorListener);
+    }
+
+    public void setGeneralSiteSettings(String siteId, Listener listener, ErrorListener errorListener,
+                                       Map<String, String> params) {
+        String path = String.format("sites/%s/settings", siteId);
+        post(path, params, null, listener, errorListener);
     }
 
     /**
