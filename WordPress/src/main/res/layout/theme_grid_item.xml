@@ -4,8 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/theme_grid_card_view"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    >
+    android:layout_width="match_parent">
 
     <android.support.v7.widget.CardView
         android:layout_height="wrap_content"
