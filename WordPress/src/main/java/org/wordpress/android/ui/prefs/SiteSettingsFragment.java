@@ -5,9 +5,6 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -28,11 +25,9 @@ import java.util.Locale;
  */
 
 public class SiteSettingsFragment extends PreferenceFragment
-        implements Preference.OnPreferenceChangeListener,
-                   MenuItem.OnMenuItemClickListener {
+        implements Preference.OnPreferenceChangeListener {
     private HashMap<String, String> mLanguageCodes = new HashMap<>();
     private Blog mBlog;
-    private MenuItem mUndoItem;
     private EditTextPreference mTitlePreference;
     private EditTextPreference mTaglinePreference;
     private EditTextPreference mAddressPreference;
@@ -58,9 +53,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         // inflate Site Settings preferences from XML
         addPreferencesFromResource(R.xml.site_settings);
 
-        // declare an options menu for this fragment
-        setHasOptionsMenu(true);
-
         // set preference references, add change listeners, and setup various entries and values
         initPreferences();
 
@@ -72,25 +64,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onPause() {
         super.onPause();
 
+        // Assume user wanted changes propagated when they leave
         applyChanges();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        undoChanges();
-
-        return true;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        super.onCreateOptionsMenu(menu, menuInflater);
-
-        menuInflater.inflate(R.menu.site_settings, menu);
-
-        if (menu == null || (mUndoItem = menu.findItem(R.id.save_site_settings)) == null) return;
-
-        mUndoItem.setOnMenuItemClickListener(this);
     }
 
     @Override
