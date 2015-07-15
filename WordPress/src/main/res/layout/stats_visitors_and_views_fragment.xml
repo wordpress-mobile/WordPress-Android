@@ -53,16 +53,41 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/stats_bar_chart_fragment_container"
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_large"
-            android:paddingLeft="@dimen/margin_medium"
-            android:paddingRight="@dimen/margin_extra_small"
-            android:paddingBottom="@dimen/margin_large"
-            android:minHeight="@dimen/stats_barchart_height"
-            android:orientation="vertical" />
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/stats_bar_chart_fragment_container"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_large"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_extra_small"
+                android:paddingBottom="@dimen/margin_large"
+                android:minHeight="@dimen/stats_barchart_height"
+                android:orientation="vertical" />
+            <LinearLayout
+                android:id="@+id/stats_bar_chart_no_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:visibility="gone"
+                android:background="@drawable/stats_barchart_no_activity_background">
+                <TextView
+                    android:drawableLeft="@drawable/ic_action_spam"
+                    android:drawableStart="@drawable/ic_action_spam"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="@dimen/margin_large"
+                    android:paddingLeft="@dimen/margin_large"
+                    android:paddingRight="24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/stats_text_color"
+                    android:textSize="@dimen/text_sz_medium"
+                    android:text="No activity this period"/>
+            </LinearLayout>
+        </RelativeLayout>
 
         <!-- Bottom Legend -->
         <LinearLayout
