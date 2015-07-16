@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -33,8 +33,9 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
-import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
+import org.wordpress.android.ui.posts.services.PostUploadEvents.PostUploadFailed;
+import org.wordpress.android.ui.posts.services.PostUploadEvents.PostUploadSucceed;
+import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;

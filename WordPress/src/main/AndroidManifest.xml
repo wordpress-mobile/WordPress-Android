@@ -291,11 +291,11 @@
 
 		<!-- Services -->
         <service
-            android:name=".ui.posts.PostUploadService"
+            android:name=".ui.posts.services.PostUploadService"
             android:label="Post Upload Service" >
         </service>
         <service
-            android:name=".ui.posts.PostMediaService"
+            android:name=".ui.posts.services.PostMediaService"
             android:label="Post Media Service"
             android:exported="false">
         </service>

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts.services;
 
 public class PostUploadEvents {
     public static class PostUploadSucceed {

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts.services;
 
 import android.app.Service;
 import android.content.Context;
@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * service which downloads featured images in posts that don't already exist in local media library
+ * service which downloads media that doesn't already exist in local media library - currently
+ * used only for featured images but can be used for any media items
  */
 
 public class PostMediaService extends Service {

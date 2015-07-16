@@ -16,6 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.util.ProfilingUtils;
 
 public class PostsListActivity extends AppCompatActivity {
