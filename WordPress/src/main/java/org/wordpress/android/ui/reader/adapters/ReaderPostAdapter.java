@@ -336,7 +336,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             case SITE_PICK:
                 if (discoverData.hasAvatarUrl()) {
-                    postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                    postHolder.imgDiscoverAvatar.setImageUrl(
+                            GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.BLAVATAR);
                 } else {
                     postHolder.imgDiscoverAvatar.showDefaultBlavatarImage();
                 }
