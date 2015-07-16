@@ -30,31 +30,47 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/reader_button_icon"
                 android:orientation="horizontal">
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/theme_grid_item_name"
-                    style="@style/ReaderTextView.Post.Title"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="@dimen/reader_button_icon"
-                    android:layout_weight="2" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2">
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/theme_grid_item_name"
+                        style="@style/ReaderTextView.Post.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/alert_green"
+                        android:text="$125"
+                        android:layout_marginLeft="5dp"/>
+
+                </LinearLayout>
+
+
 
                 <View
                     android:id="@+id/divider"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
                     android:layout_alignParentRight="true"
                     android:background="@color/reader_divider_grey" />
 
                 <ImageView
                     android:id="@+id/image_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/reader_button_icon"
+                    android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_small"
                     android:background="?android:selectableItemBackground"
                     android:paddingBottom="@dimen/margin_large"
                     android:paddingTop="@dimen/margin_large"
