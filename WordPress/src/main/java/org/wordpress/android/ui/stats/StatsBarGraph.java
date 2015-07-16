@@ -31,6 +31,7 @@ class StatsBarGraph extends GraphView {
     // Keep tracks of every bar drawn on the graph.
     private final List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
     private int mBarPositionToHighlight = -1;
+    private boolean[] mIsBackgroundAvailable;
 
     private final GestureDetectorCompat mDetector;
     private OnGestureListener mGestureListener;
@@ -125,6 +126,7 @@ class StatsBarGraph extends GraphView {
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
             private NumberFormat numberFormatter;
+
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
@@ -180,9 +182,18 @@ class StatsBarGraph extends GraphView {
             float bottom = graphheight + border - 1;
 
             // Draw the orange selection behind the selected bar
-            if (mBarPositionToHighlight == i && style.outerhighlightColor != 0x00ffffff) {
-                paint.setColor(style.outerhighlightColor);
-                canvas.drawRect(left, 10f, right, bottom, paint);
+            if (style.outerhighlightColor != 0x00ffffff) {
+                if (mBarPositionToHighlight == i) {
+                    paint.setColor(style.outerhighlightColor);
+                    canvas.drawRect(left, 10f, right, bottom, paint);
+                } else {
+                    if (mIsBackgroundAvailable != null) {
+                        if (mIsBackgroundAvailable[i]) {
+                            paint.setColor(getResources().getColor(R.color.grey_lighten_30));
+                            canvas.drawRect(left, 10f, right, bottom, paint);
+                        }
+                    }
+                }
             }
 
             if ((top - bottom) == 1) {
@@ -253,6 +264,11 @@ class StatsBarGraph extends GraphView {
         }, 500);
     }
 */
+
+    public void setBackgroundAvailableIndexes(boolean[] bgAvailable) {
+        mIsBackgroundAvailable = bgAvailable;
+    }
+
     public void highlightBar(int barPosition) {
         mBarPositionToHighlight = barPosition;
         this.redrawAll();

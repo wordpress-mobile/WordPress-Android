@@ -404,6 +404,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
 
+        // index of days that should be XXX on the graph
+        final boolean[] isWeekEndDay;
+        switch (getTimeframe()) {
+            case DAY:
+                isWeekEndDay = new boolean[dataToShowOnGraph.length];
+                break;
+            default:
+                isWeekEndDay = null;
+        }
+
         // Fill series variables with data
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
@@ -430,6 +440,25 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
             horLabels[i] = getDateLabelForBarInGraph(currentItemStatsDate);
             mStatsDate[i] = currentItemStatsDate;
+
+            if (isWeekEndDay != null) {
+                SimpleDateFormat from = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+                try {
+                    Date date = from.parse(currentItemStatsDate);
+                    Calendar c = Calendar.getInstance();
+                    c.setFirstDayOfWeek(Calendar.MONDAY);
+                    c.setTimeInMillis(date.getTime());
+                    if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ||
+                        c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                        isWeekEndDay[i] = true;
+                    } else {
+                        isWeekEndDay[i] = false;
+                    }
+                } catch (ParseException e) {
+                    isWeekEndDay[i] = false;
+                    AppLog.e(AppLog.T.STATS, e);
+                }
+            }
         }
 
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
@@ -479,6 +508,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         );
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
+        mGraphView.setBackgroundAvailableIndexes(isWeekEndDay);
 
         // Make sure we have results and not all zero in the model. If zero disable clicks on the graph.
         boolean resultsAvailable = false;
