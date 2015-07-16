@@ -50,54 +50,68 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/my_site_blog_posts_icon"
+                        android:layout_width="match_parent"
                         style="@style/MySiteListRowIcon"
-                        android:layout_gravity="center"
                         android:contentDescription="@string/my_site_btn_blog_posts"
                         android:src="@drawable/my_site_icon_posts" />
+
                     <org.wordpress.android.widgets.WPTextView
-                        android:layout_height="60dp"
                         android:gravity="center_horizontal"
+                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
                         android:textColor="@color/black"
                         android:text="customize" />
+
                 </LinearLayout>
 
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:background="@color/reader_divider_grey" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
+                    android:orientation="vertical"
                     android:gravity="center">
+
                     <ImageView
                         android:id="@+id/my_site_blog_posts_2icon"
                         style="@style/MySiteListRowIcon"
-                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:contentDescription="@string/my_site_btn_blog_posts"
                         android:src="@drawable/my_site_icon_posts" />
+
                     <org.wordpress.android.widgets.WPTextView
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:textColor="@color/black"
                         android:text="details" />
+
                 </LinearLayout>
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:background="@color/reader_divider_grey" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
+                    android:orientation="vertical"
                     android:gravity="center">
+
                     <ImageView
                         android:id="@+id/my_site_blog_post2s_icon"
                         style="@style/MySiteListRowIcon"
@@ -106,14 +120,16 @@
                         android:src="@drawable/my_site_icon_posts" />
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
                         android:gravity="center_horizontal"
                         android:textColor="@color/black"
                         android:text="support" />
+
                 </LinearLayout>
 
             </LinearLayout>
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
