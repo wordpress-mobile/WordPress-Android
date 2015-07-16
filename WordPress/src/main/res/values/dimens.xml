@@ -120,6 +120,7 @@
     <dimen name="comment_avatar_margin_top">6dp</dimen>
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
+    <dimen name="notifications_content_margin">0dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
 
