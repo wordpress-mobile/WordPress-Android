@@ -32,7 +32,6 @@ import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadSucceed;
-import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -48,7 +47,6 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -58,8 +56,7 @@ public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
                    PostsListAdapter.OnLoadMoreListener,
                    PostsListAdapter.OnPostSelectedListener,
-                   PostsListAdapter.OnPostButtonClickListener,
-                   PostsListAdapter.OnRequestMediaListener {
+                   PostsListAdapter.OnPostButtonClickListener {
 
     public static final int POSTS_REQUEST_COUNT = 20;
 
@@ -189,7 +186,6 @@ public class PostsListFragment extends Fragment
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
             mPostsListAdapter.setOnPostButtonClickListener(this);
-            mPostsListAdapter.setOnRequestMediaListener(this);
         }
 
         return mPostsListAdapter;
@@ -351,9 +347,9 @@ public class PostsListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostMediaDownloaded event) {
-        // PostMediaService has downloaded the featured media for a post, tell the adapter so
-        // it can show the image
+    public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
+        // PostMediaService has downloaded the media info for a post's featured image, tell
+        // the adapter so it can show the featured image now that we have its URL
         if (isAdded()) {
             getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
@@ -552,17 +548,6 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_DELETE:
                 trashPost(post);
                 break;
-        }
-    }
-
-    /*
-     * called from the adapter when featured images in displayed posts are missing from the local
-     * media library - starts service to download and store them
-     */
-    @Override
-    public void onRequestMedia(int blogId, ArrayList<Long> mediaIds) {
-        if (isAdded()) {
-            PostMediaService.startService(getActivity(), blogId, mediaIds);
         }
     }
 

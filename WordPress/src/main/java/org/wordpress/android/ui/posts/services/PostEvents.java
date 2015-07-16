@@ -23,11 +23,11 @@ public class PostEvents {
         }
     }
 
-    public static class PostMediaDownloaded {
+    public static class PostMediaInfoUpdated {
         private long mMediaId;
         private String mMediaUrl;
 
-        PostMediaDownloaded(long mediaId, String mediaUrl) {
+        PostMediaInfoUpdated(long mediaId, String mediaUrl) {
             mMediaId = mediaId;
             mMediaUrl = mediaUrl;
         }

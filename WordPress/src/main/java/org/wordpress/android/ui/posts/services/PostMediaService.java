@@ -20,12 +20,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.greenrobot.event.EventBus;
 
 /**
- * service which downloads media that doesn't already exist in local media library - currently
- * used only for featured images but can be used for any media items
+ * service which retrieves media info for a list of media IDs in a specific blog - currently used
+ * only for featured images in the post list but could be used for any blog-specific media
  */
 
 public class PostMediaService extends Service {
@@ -33,8 +34,7 @@ public class PostMediaService extends Service {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_MEDIA_IDS = "media_ids";
 
-    private final ArrayList<Long> mMediaIds = new ArrayList<>();
-    private XMLRPCClientInterface mClient;
+    private final ConcurrentLinkedQueue<Long> mMediaIdQueue = new ConcurrentLinkedQueue<>();
     private Blog mBlog;
 
     public static void startService(Context context, int blogId, ArrayList<Long> mediaIds) {
@@ -68,49 +68,32 @@ public class PostMediaService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
-            return START_NOT_STICKY;
-        }
+        if (intent == null) return START_NOT_STICKY;
+
+        int blogId = intent.getIntExtra(ARG_BLOG_ID, 0);
+        mBlog = WordPress.getBlog(blogId);
 
         Serializable serializable = intent.getSerializableExtra(ARG_MEDIA_IDS);
         if (serializable != null && serializable instanceof List) {
             List list = (List) serializable;
-            for (Object id: list) {
+            for (Object id : list) {
                 if (id instanceof Long) {
-                    mMediaIds.add((Long) id);
+                    mMediaIdQueue.add((Long) id);
                 }
             }
         }
 
-        if (mMediaIds.size() == 0) {
-            AppLog.w(AppLog.T.POSTS, "PostMediaService > nothing to download");
-            return START_NOT_STICKY;
-        }
-
-        int blogId = intent.getIntExtra(ARG_BLOG_ID, 0);
-        mBlog = WordPress.getBlog(blogId);
-        if (mBlog == null) {
-            AppLog.w(AppLog.T.POSTS, "PostMediaService > null blog");
-            return START_NOT_STICKY;
-        }
-
-        mClient = XMLRPCFactory.instantiate(
-                mBlog.getUri(),
-                mBlog.getHttpuser(),
-                mBlog.getHttppassword());
-
-        new Thread() {
-            @Override
-            public void run() {
-                while (mMediaIds.size() > 0) {
-                    long id = mMediaIds.get(0);
-                    mMediaIds.remove(0);
-                    downloadMediaItem(id);
+        if (mMediaIdQueue.size() > 0 && mBlog != null) {
+            new Thread() {
+                @Override
+                public void run() {
+                    while (!mMediaIdQueue.isEmpty()) {
+                        long mediaId = mMediaIdQueue.poll();
+                        downloadMediaItem(mediaId);
+                    }
                 }
-
-                stopSelf();
-            }
-        }.start();
+            }.start();
+        }
 
         return START_NOT_STICKY;
     }
@@ -122,14 +105,19 @@ public class PostMediaService extends Service {
                 mBlog.getPassword(),
                 mediaId};
 
-        String strBlogId = Integer.toString(mBlog.getLocalTableBlogId());
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(
+                mBlog.getUri(),
+                mBlog.getHttpuser(),
+                mBlog.getHttppassword());
+
         try {
-            Map<?, ?> results = (Map<?, ?>) mClient.call("wp.getMediaItem", apiParams);
+            Map<?, ?> results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
             if (results != null) {
+                String strBlogId = Integer.toString(mBlog.getLocalTableBlogId());
                 MediaFile mediaFile = new MediaFile(strBlogId, results, mBlog.isDotcomFlag());
                 WordPress.wpDB.saveMediaFile(mediaFile);
                 AppLog.d(AppLog.T.POSTS, "PostMediaService > downloaded " + mediaFile.getFileURL());
-                EventBus.getDefault().post(new PostEvents.PostMediaDownloaded(mediaId, mediaFile.getFileURL()));
+                EventBus.getDefault().post(new PostEvents.PostMediaInfoUpdated(mediaId, mediaFile.getFileURL()));
             }
         } catch (ClassCastException | XMLRPCException | XmlPullParserException | IOException e) {
             AppLog.e(AppLog.T.POSTS, e);
