@@ -45,6 +45,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -54,7 +55,8 @@ public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
                    PostsListAdapter.OnLoadMoreListener,
                    PostsListAdapter.OnPostSelectedListener,
-                   PostsListAdapter.OnPostButtonClickListener {
+                   PostsListAdapter.OnPostButtonClickListener,
+                   PostsListAdapter.OnRequestMediaListener {
 
     public static final int POSTS_REQUEST_COUNT = 20;
 
@@ -184,6 +186,7 @@ public class PostsListFragment extends Fragment
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
             mPostsListAdapter.setOnPostButtonClickListener(this);
+            mPostsListAdapter.setOnRequestMediaListener(this);
         }
 
         return mPostsListAdapter;
@@ -537,6 +540,17 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_DELETE:
                 trashPost(post);
                 break;
+        }
+    }
+
+    /*
+     * called from the adapter when featured images in displayed posts are missing from the local
+     * media library - starts service to download and store them
+     */
+    @Override
+    public void onRequestMedia(int blogId, ArrayList<Long> mediaIds) {
+        if (isAdded()) {
+            PostMediaService.startService(getActivity(), blogId, mediaIds);
         }
     }
 

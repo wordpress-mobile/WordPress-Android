@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -54,6 +53,13 @@ public class PostsListActivity extends AppCompatActivity {
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
         showErrorDialogIfNeeded(getIntent().getExtras());
+    }
+
+    @Override
+    protected void onDestroy() {
+        // fragment may have started service to download missing media, stop it now that we're done
+        stopService(new Intent(this, PostMediaService.class));
+        super.onDestroy();
     }
 
     @Override

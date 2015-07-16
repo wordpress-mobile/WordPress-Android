@@ -33,8 +33,8 @@ public class PostMediaService extends Service {
     private int mBlogId;
     private final ArrayList<Long> mMediaIds = new ArrayList<>();
 
-    public static void downloadMediaItems(Context context, int blogId, ArrayList<Long> mediaIds) {
-        if (mediaIds == null || mediaIds.size() == 0) {
+    public static void startService(Context context, int blogId, ArrayList<Long> mediaIds) {
+        if (context == null || mediaIds == null || mediaIds.size() == 0) {
             return;
         }
 
@@ -83,13 +83,13 @@ public class PostMediaService extends Service {
     private void startDownloading() {
         final Blog blog = WordPress.getBlog(mBlogId);
         if (blog == null) {
-            AppLog.w(AppLog.T.POSTS, "PostMediaDownloader > null blog");
+            AppLog.w(AppLog.T.POSTS, "PostMediaService > null blog");
             stopSelf();
             return;
         }
 
         if (mMediaIds == null || mMediaIds.size() == 0) {
-            AppLog.w(AppLog.T.POSTS, "PostMediaDownloader > nothing to download");
+            AppLog.w(AppLog.T.POSTS, "PostMediaService > nothing to download");
             stopSelf();
             return;
         }
@@ -102,7 +102,6 @@ public class PostMediaService extends Service {
         new Thread() {
             @Override
             public void run() {
-                AppLog.d(AppLog.T.POSTS, "PostMediaDownloader > starting");
                 String strBlogId = Integer.toString(blog.getLocalTableBlogId());
                 while (mMediaIds.size() > 0) {
                     long thisMediaId = mMediaIds.get(0);
@@ -119,7 +118,7 @@ public class PostMediaService extends Service {
                         if (results != null) {
                             MediaFile mediaFile = new MediaFile(strBlogId, results, blog.isDotcomFlag());
                             WordPress.wpDB.saveMediaFile(mediaFile);
-                            AppLog.d(AppLog.T.POSTS, "PostMediaDownloader > downloaded " + mediaFile.getFileURL());
+                            AppLog.d(AppLog.T.POSTS, "PostMediaService > downloaded " + mediaFile.getFileURL());
                         }
                     } catch (ClassCastException | XMLRPCException | XmlPullParserException | IOException e) {
                         AppLog.e(AppLog.T.POSTS, e);

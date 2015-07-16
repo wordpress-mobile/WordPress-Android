@@ -24,7 +24,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
-import org.wordpress.android.ui.posts.PostMediaService;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -43,11 +42,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     public interface OnPostButtonClickListener {
         void onPostButtonClicked(int buttonId, PostsListPost post);
     }
+    public interface OnRequestMediaListener {
+        void onRequestMedia(int blogId, ArrayList<Long> mediaIds);
+    }
 
     private OnLoadMoreListener mOnLoadMoreListener;
     private OnPostsLoadedListener mOnPostsLoadedListener;
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnPostButtonClickListener mOnPostButtonClickListener;
+    private OnRequestMediaListener mOnRequestMediaListener;
 
     private final int mLocalTableBlogId;
     private final int mPhotonWidth;
@@ -96,6 +99,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     public void setOnPostButtonClickListener(OnPostButtonClickListener listener) {
         mOnPostButtonClickListener = listener;
+    }
+
+    public void setOnRequestMediaListener(OnRequestMediaListener listener) {
+        mOnRequestMediaListener = listener;
     }
 
     private PostsListPost getItem(int position) {
@@ -429,7 +436,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private PostsListPostList tmpPosts;
-        private final ArrayList<Long> mediaIdsToDownload = new ArrayList();
+        private final ArrayList<Long> mediaIdsToDownload = new ArrayList<>();
 
         @Override
         protected Boolean doInBackground(Void... nada) {
@@ -486,9 +493,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             if (mOnPostsLoadedListener != null) {
                 mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
             }
-            // download missing featured images
-            if (mediaIdsToDownload.size() > 0) {
-                PostMediaService.downloadMediaItems(WordPress.getContext(), mLocalTableBlogId, mediaIdsToDownload);
+            // tell fragment to download missing images
+            if (mediaIdsToDownload.size() > 0 && mOnRequestMediaListener != null) {
+                mOnRequestMediaListener.onRequestMedia(mLocalTableBlogId, mediaIdsToDownload);
             }
         }
     }
