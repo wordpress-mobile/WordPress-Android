@@ -18,21 +18,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <org.wordpress.android.widgets.WPTextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CURRENT THEME" />
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/header_theme_text"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:textColor="@color/black"
-                android:text="TwentyFifteen" />
+                android:orientation="vertical"
+                android:layout_margin="10dp">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CURRENT THEME" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/header_theme_text"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="TwentyFifteen" />
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/reader_divider_grey" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
