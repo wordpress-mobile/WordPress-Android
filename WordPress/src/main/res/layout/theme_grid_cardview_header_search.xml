@@ -8,6 +8,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="2dp"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
