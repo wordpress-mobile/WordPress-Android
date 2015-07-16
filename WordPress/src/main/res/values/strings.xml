@@ -927,4 +927,10 @@
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
 
+    <string-array name="themes_filter_array">
+        <item>All</item>
+        <item>Free</item>
+        <item>Premium</item>
+    </string-array>
+
 </resources>
