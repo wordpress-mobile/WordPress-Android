@@ -495,14 +495,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 mPosts.clear();
                 mPosts.addAll(tmpPosts);
                 notifyDataSetChanged();
+
+                if (mediaIdsToUpdate.size() > 0) {
+                    PostMediaService.startService(WordPress.getContext(), mLocalTableBlogId, mediaIdsToUpdate);
+                }
             }
 
             if (mOnPostsLoadedListener != null) {
                 mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
-            }
-
-            if (mediaIdsToUpdate.size() > 0) {
-                PostMediaService.startService(WordPress.getContext(), mLocalTableBlogId, mediaIdsToUpdate);
             }
         }
     }
