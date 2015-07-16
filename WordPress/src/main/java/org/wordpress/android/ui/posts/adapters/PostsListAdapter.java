@@ -146,7 +146,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             holder.txtExcerpt.setVisibility(View.GONE);
         }
 
-        if (post.hasFeaturedImageUrl() && !post.isLocalDraft()) {
+        if (post.hasFeaturedImageId() || post.hasFeaturedImageUrl()) {
             holder.imgFeatured.setVisibility(View.VISIBLE);
             holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
         } else {
@@ -434,6 +434,18 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
+    /*
+     * called after the media (featured image) for a post has been downloaded - locate the post
+     * and set its featured image url to the passed url
+     */
+    public void mediaUpdated(long mediaId, String mediaUrl) {
+        int position = mPosts.indexOfFeaturedMediaId(mediaId);
+        if (isValidPosition(position)) {
+            mPosts.get(position).setFeaturedImageUrl(mediaUrl);
+            notifyItemChanged(position);
+        }
+    }
+
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private PostsListPostList tmpPosts;
         private final ArrayList<Long> mediaIdsToDownload = new ArrayList<>();
@@ -459,7 +471,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                     imageUrl = null;
                 } else if (post.getFeaturedImageId() != 0) {
                     imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, post.getFeaturedImageId());
-                    // if the imageUrl isn't found, it means the featured image hasn't been added to the local media library yet
+                    // if the imageUrl isn't found it means the featured image hasn't been added to the local
+                    // media library yet, so add this to the list of media that needs to be downloaded
                     if (TextUtils.isEmpty(imageUrl)) {
                         mediaIdsToDownload.add(post.getFeaturedImageId());
                     }

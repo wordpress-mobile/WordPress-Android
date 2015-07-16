@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * service which downloads media that doesn't already exist in local media library - currently
  * used only for featured images but can be used for any media items
@@ -31,8 +33,9 @@ public class PostMediaService extends Service {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_MEDIA_IDS = "media_ids";
 
-    private int mBlogId;
     private final ArrayList<Long> mMediaIds = new ArrayList<>();
+    private XMLRPCClientInterface mClient;
+    private Blog mBlog;
 
     public static void startService(Context context, int blogId, ArrayList<Long> mediaIds) {
         if (context == null || mediaIds == null || mediaIds.size() == 0) {
@@ -69,65 +72,67 @@ public class PostMediaService extends Service {
             return START_NOT_STICKY;
         }
 
-        mBlogId = intent.getIntExtra(ARG_BLOG_ID, 0);
         Serializable serializable = intent.getSerializableExtra(ARG_MEDIA_IDS);
         if (serializable != null && serializable instanceof List) {
-            List ids = (List) serializable;
-            mMediaIds.addAll(ids);
+            List list = (List) serializable;
+            for (Object id: list) {
+                if (id instanceof Long) {
+                    mMediaIds.add((Long) id);
+                }
+            }
         }
 
-        startDownloading();
-
-        return START_NOT_STICKY;
-    }
-
-    private void startDownloading() {
-        final Blog blog = WordPress.getBlog(mBlogId);
-        if (blog == null) {
-            AppLog.w(AppLog.T.POSTS, "PostMediaService > null blog");
-            stopSelf();
-            return;
-        }
-
-        if (mMediaIds == null || mMediaIds.size() == 0) {
+        if (mMediaIds.size() == 0) {
             AppLog.w(AppLog.T.POSTS, "PostMediaService > nothing to download");
-            stopSelf();
-            return;
+            return START_NOT_STICKY;
         }
 
-        final XMLRPCClientInterface client = XMLRPCFactory.instantiate(
-                blog.getUri(),
-                blog.getHttpuser(),
-                blog.getHttppassword());
+        int blogId = intent.getIntExtra(ARG_BLOG_ID, 0);
+        mBlog = WordPress.getBlog(blogId);
+        if (mBlog == null) {
+            AppLog.w(AppLog.T.POSTS, "PostMediaService > null blog");
+            return START_NOT_STICKY;
+        }
+
+        mClient = XMLRPCFactory.instantiate(
+                mBlog.getUri(),
+                mBlog.getHttpuser(),
+                mBlog.getHttppassword());
 
         new Thread() {
             @Override
             public void run() {
-                String strBlogId = Integer.toString(blog.getLocalTableBlogId());
                 while (mMediaIds.size() > 0) {
-                    long thisMediaId = mMediaIds.get(0);
+                    long id = mMediaIds.get(0);
                     mMediaIds.remove(0);
-
-                    Object[] apiParams = {
-                            blog.getRemoteBlogId(),
-                            blog.getUsername(),
-                            blog.getPassword(),
-                            thisMediaId};
-
-                    try {
-                        Map<?, ?> results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
-                        if (results != null) {
-                            MediaFile mediaFile = new MediaFile(strBlogId, results, blog.isDotcomFlag());
-                            WordPress.wpDB.saveMediaFile(mediaFile);
-                            AppLog.d(AppLog.T.POSTS, "PostMediaService > downloaded " + mediaFile.getFileURL());
-                        }
-                    } catch (ClassCastException | XMLRPCException | XmlPullParserException | IOException e) {
-                        AppLog.e(AppLog.T.POSTS, e);
-                    }
+                    downloadMediaItem(id);
                 }
 
                 stopSelf();
             }
         }.start();
+
+        return START_NOT_STICKY;
+    }
+
+    private void downloadMediaItem(long mediaId) {
+        Object[] apiParams = {
+                mBlog.getRemoteBlogId(),
+                mBlog.getUsername(),
+                mBlog.getPassword(),
+                mediaId};
+
+        String strBlogId = Integer.toString(mBlog.getLocalTableBlogId());
+        try {
+            Map<?, ?> results = (Map<?, ?>) mClient.call("wp.getMediaItem", apiParams);
+            if (results != null) {
+                MediaFile mediaFile = new MediaFile(strBlogId, results, mBlog.isDotcomFlag());
+                WordPress.wpDB.saveMediaFile(mediaFile);
+                AppLog.d(AppLog.T.POSTS, "PostMediaService > downloaded " + mediaFile.getFileURL());
+                EventBus.getDefault().post(new PostEvents.PostMediaDownloaded(mediaId, mediaFile.getFileURL()));
+            }
+        } catch (ClassCastException | XMLRPCException | XmlPullParserException | IOException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+        }
     }
 }

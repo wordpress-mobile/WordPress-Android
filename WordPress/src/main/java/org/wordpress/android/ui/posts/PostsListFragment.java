@@ -28,9 +28,10 @@ import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.posts.services.PostUploadEvents.PostUploadFailed;
-import org.wordpress.android.ui.posts.services.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.posts.services.PostEvents;
+import org.wordpress.android.ui.posts.services.PostEvents.PostUploadFailed;
+import org.wordpress.android.ui.posts.services.PostEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
@@ -346,6 +347,15 @@ public class PostsListFragment extends Fragment
     private void hideLoadMoreProgress() {
         if (mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.GONE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostMediaDownloaded event) {
+        // PostMediaService has downloaded the featured media for a post, tell the adapter so
+        // it can show the image
+        if (isAdded()) {
+            getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
 

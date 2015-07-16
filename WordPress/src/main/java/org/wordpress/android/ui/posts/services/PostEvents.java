@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts.services;
 
-public class PostUploadEvents {
+import org.wordpress.android.util.StringUtils;
+
+public class PostEvents {
     public static class PostUploadSucceed {
         public final int mLocalBlogId;
         public final String mRemotePostId;
@@ -18,6 +20,22 @@ public class PostUploadEvents {
 
         PostUploadFailed(int localId) {
             mLocalId = localId;
+        }
+    }
+
+    public static class PostMediaDownloaded {
+        private long mMediaId;
+        private String mMediaUrl;
+
+        PostMediaDownloaded(long mediaId, String mediaUrl) {
+            mMediaId = mediaId;
+            mMediaUrl = mediaUrl;
+        }
+        public long getMediaId() {
+            return mMediaId;
+        }
+        public String getMediaUrl() {
+            return StringUtils.notNullStr(mMediaUrl);
         }
     }
 }
