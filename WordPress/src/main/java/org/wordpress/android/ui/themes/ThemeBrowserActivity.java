@@ -70,7 +70,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         actionBar.setElevation(0.0f);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.themes));
+        actionBar.setTitle("back");
 
         mThemeBrowserFragment = (ThemeBrowserFragment) getFragmentManager().findFragmentById(R.id.theme_tab_fragment);
     }
