@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:minHeight="56dp"
+                android:minHeight="@dimen/avatar_sz_small"
                 android:gravity="center_horizontal|center_vertical"
                 android:visibility="gone"
                 android:background="@drawable/stats_barchart_no_activity_background">
@@ -79,13 +79,13 @@
                     android:drawableLeft="@drawable/stats_icon_info"
                     android:drawableStart="@drawable/stats_icon_info"
                     android:gravity="center_vertical"
-                    android:drawablePadding="@dimen/margin_large"
+                    android:drawablePadding="@dimen/margin_medium"
                     android:paddingLeft="@dimen/margin_large"
-                    android:paddingRight="24dp"
+                    android:paddingRight="@dimen/margin_extra_large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/stats_text_color"
-                    android:textSize="@dimen/text_sz_large"
+                    android:textSize="@dimen/text_sz_medium"
                     android:text="@string/stats_no_activity_this_period"/>
             </LinearLayout>
         </RelativeLayout>
