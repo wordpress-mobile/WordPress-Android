@@ -89,7 +89,8 @@
 
         </LinearLayout>
 
-        <View style="@style/MeListSectionDividerView" />
+        <View android:id="@+id/me_notifications_divider"
+            style="@style/MeListSectionDividerView" />
 
         <LinearLayout
             android:id="@+id/row_support"
