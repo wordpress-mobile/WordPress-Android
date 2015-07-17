@@ -261,6 +261,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     return true;
                 }
             });
+
+            MenuItem mnuStats = popup.getMenu().add(context.getString(R.string.button_stats));
+            mnuStats.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_STATS, page);
+                    return true;
+                }
+            });
         }
 
         MenuItem mnuEdit = popup.getMenu().add(context.getString(R.string.button_edit));
