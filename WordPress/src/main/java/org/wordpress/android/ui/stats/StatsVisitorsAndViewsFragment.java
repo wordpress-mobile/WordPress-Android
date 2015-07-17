@@ -404,6 +404,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
 
+        // Check we have at least one result in the current section.
+        boolean atLeastOneResultIsAvailable = false;
+
         // Fill series variables with data
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
@@ -422,6 +425,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     break;
             }
             mainSeriesItems[i] = new GraphView.GraphViewData(i, currentItemValue);
+
+            if (currentItemValue > 0) {
+                atLeastOneResultIsAvailable = true;
+            }
 
             if (mIsCheckboxChecked && secondarySeriesItems != null) {
                 secondarySeriesItems[i] = new GraphView.GraphViewData(i, dataToShowOnGraph[i].getVisitors());
@@ -480,21 +487,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
 
-        // Make sure we have results and not all zero in the model. If zero disable clicks on the graph.
-        boolean resultsAvailable = false;
-        for (int i = 0; i < dataToShowOnGraph.length; i++) {
-            if (dataToShowOnGraph[i].getViews() != 0 ||
-                    dataToShowOnGraph[i].getVisitors() != 0 ||
-                    dataToShowOnGraph[i].getLikes() != 0 ||
-                    dataToShowOnGraph[i].getComments() != 0
-                    ) {
-                resultsAvailable = true;
-                break;
-            }
-        }
-        mNoActivtyThisPeriodContainer.setVisibility(resultsAvailable ? View.GONE : View.VISIBLE);
-        mGraphView.setClickable(resultsAvailable);
-
+        // If zero results in the current section disable clicks on the graph and show the dialog.
+        mNoActivtyThisPeriodContainer.setVisibility(atLeastOneResultIsAvailable ? View.GONE : View.VISIBLE);
+        mGraphView.setClickable(atLeastOneResultIsAvailable);
 
         // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
         // Only happens on 720DP tablets
