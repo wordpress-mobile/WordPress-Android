@@ -96,8 +96,11 @@ class StatsBarGraph extends GraphView {
 
     @Override
     public boolean onTouchEvent (MotionEvent event) {
-        this.mDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+        boolean handled = super.onTouchEvent(event);
+        if (mDetector != null && handled) {
+            this.mDetector.onTouchEvent(event);
+        }
+       return handled;
     }
 
     private class HorizontalLabelsColor implements IndexDependentColor {
