@@ -71,17 +71,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:minHeight="@dimen/avatar_sz_small"
                 android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingRight="@dimen/margin_extra_large"
+                android:paddingEnd="@dimen/margin_extra_large"
                 android:visibility="gone"
-                android:background="@drawable/stats_barchart_no_activity_background">
+                android:background="@drawable/stats_barchart_no_activity_background"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/stats_icon_info"
+                    android:paddingEnd="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium"/>
                 <TextView
-                    android:drawableLeft="@drawable/stats_icon_info"
-                    android:drawableStart="@drawable/stats_icon_info"
-                    android:gravity="center_vertical"
-                    android:drawablePadding="@dimen/margin_medium"
-                    android:paddingLeft="@dimen/margin_large"
-                    android:paddingRight="@dimen/margin_extra_large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/stats_text_color"
