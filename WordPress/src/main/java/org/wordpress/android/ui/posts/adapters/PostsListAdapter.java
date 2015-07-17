@@ -12,10 +12,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -185,13 +187,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 showDate = true;
             }
-            pageHolder.txtDate.setVisibility(showDate ? View.VISIBLE : View.GONE);
-            pageHolder.dateDivider.setVisibility(showDate ? View.VISIBLE : View.GONE);
+            pageHolder.dateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
 
             pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: show menu
+                    showPagePopupMenu(v, position);
                 }
             });
         }
@@ -211,6 +212,49 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
         });
+    }
+
+    /*
+     * user tapped "..." next to a page, show a menu of choices
+     */
+    void showPagePopupMenu(View view, int position) {
+        final PostsListPost page = getItem(position);
+        if (page == null || mOnPostButtonClickListener == null) {
+            return;
+        }
+
+        Context context = view.getContext();
+        PopupMenu popup = new PopupMenu(context, view);
+
+        MenuItem mnuView = popup.getMenu().add(context.getString(R.string.button_view));
+        mnuView.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_VIEW, page);
+                return true;
+            }
+        });
+
+        MenuItem mnuEdit = popup.getMenu().add(context.getString(R.string.button_edit));
+        mnuEdit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_EDIT, page);
+                return true;
+            }
+        });
+
+        String trashTitle = page.isLocalDraft() ? context.getString(R.string.button_delete) : context.getString(R.string.button_trash);
+        MenuItem mnuTrash = popup.getMenu().add(trashTitle);
+        mnuTrash.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_TRASH, page);
+                return true;
+            }
+        });
+
+        popup.show();
     }
 
     private void updateStatusText(TextView txtStatus, PostsListPost post) {
@@ -467,15 +511,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     class PageViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
         private final TextView txtDate;
-        private final View dateDivider;
+        private final ViewGroup dateHeader;
         private final View btnMore;
 
         public PageViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
-            txtDate = (TextView) view.findViewById(R.id.text_date);
-            dateDivider = view.findViewById(R.id.divider_date);
             btnMore = view.findViewById(R.id.btn_more);
+            dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
+            txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
         }
     }
 
