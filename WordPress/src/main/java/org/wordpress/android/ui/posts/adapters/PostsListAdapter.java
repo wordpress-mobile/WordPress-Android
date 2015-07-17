@@ -25,6 +25,7 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -146,7 +147,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
 
-            if (post.hasFeaturedImageUrl()) {
+            if (post.hasFeaturedImageId() || post.hasFeaturedImageUrl()) {
                 postHolder.imgFeatured.setVisibility(View.VISIBLE);
                 postHolder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
             } else {
@@ -270,11 +271,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostsListPost post) {
-        // posts with local changes have publish button rather than view button
+        // posts with local changes have preview rather than view button
         if (post.isLocalDraft() || post.hasLocalChanges()) {
-            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+            holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
         } else {
-            holder.btnViewOrPublish.setButtonType(PostListButton.BUTTON_VIEW);
+            holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
         boolean canShowStatsButton = canShowStatsForPost(post);
@@ -282,7 +283,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         // edit / view are always visible
         holder.btnEdit.setVisibility(View.VISIBLE);
-        holder.btnViewOrPublish.setVisibility(View.VISIBLE);
+        holder.btnView.setVisibility(View.VISIBLE);
 
         // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash
         if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
@@ -318,7 +319,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         };
         holder.btnEdit.setOnClickListener(btnClickListener);
-        holder.btnViewOrPublish.setOnClickListener(btnClickListener);
+        holder.btnView.setOnClickListener(btnClickListener);
         holder.btnStats.setOnClickListener(btnClickListener);
         holder.btnTrash.setOnClickListener(btnClickListener);
         holder.btnMore.setOnClickListener(btnClickListener);
@@ -346,7 +347,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public void onAnimationEnd(Animator animation) {
                 // row 1
                 holder.btnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnViewOrPublish.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.btnView.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 holder.btnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 // row 2
                 holder.btnStats.setVisibility(!showRow1 && canShowStatsForPost(post) ? View.VISIBLE : View.GONE);
@@ -432,7 +433,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final TextView txtStatus;
 
         private final PostListButton btnEdit;
-        private final PostListButton btnViewOrPublish;
+        private final PostListButton btnView;
         private final PostListButton btnMore;
 
         private final PostListButton btnStats;
@@ -451,7 +452,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             txtStatus = (TextView) view.findViewById(R.id.text_status);
 
             btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
-            btnViewOrPublish = (PostListButton) view.findViewById(R.id.btn_view_or_publish);
+            btnView = (PostListButton) view.findViewById(R.id.btn_view);
             btnMore = (PostListButton) view.findViewById(R.id.btn_more);
 
             btnStats = (PostListButton) view.findViewById(R.id.btn_stats);
@@ -478,8 +479,21 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    /*
+     * called after the media (featured image) for a post has been downloaded - locate the post
+     * and set its featured image url to the passed url
+     */
+    public void mediaUpdated(long mediaId, String mediaUrl) {
+        int position = mPosts.indexOfFeaturedMediaId(mediaId);
+        if (isValidPosition(position)) {
+            mPosts.get(position).setFeaturedImageUrl(mediaUrl);
+            notifyItemChanged(position);
+        }
+    }
+
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private PostsListPostList tmpPosts;
+        private final ArrayList<Long> mediaIdsToUpdate = new ArrayList<>();
 
         @Override
         protected Boolean doInBackground(Void... nada) {
@@ -502,6 +516,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     imageUrl = null;
                 } else if (post.getFeaturedImageId() != 0) {
                     imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, post.getFeaturedImageId());
+                    // if the imageUrl isn't found it means the featured image info hasn't been added to
+                    // the local media library yet, so add to the list of media IDs to request info for
+                    if (TextUtils.isEmpty(imageUrl)) {
+                        mediaIdsToUpdate.add(post.getFeaturedImageId());
+                    }
                 } else if (post.hasDescription()) {
                     ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mIsPrivateBlog);
                     imageUrl = scanner.getLargestImage();
@@ -528,7 +547,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 mPosts.clear();
                 mPosts.addAll(tmpPosts);
                 notifyDataSetChanged();
+
+                if (mediaIdsToUpdate.size() > 0) {
+                    PostMediaService.startService(WordPress.getContext(), mLocalTableBlogId, mediaIdsToUpdate);
+                }
             }
+
             if (mOnPostsLoadedListener != null) {
                 mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
             }
