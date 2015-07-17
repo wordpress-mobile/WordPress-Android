@@ -45,4 +45,16 @@ public class PostsListPostList extends ArrayList<PostsListPost> {
         }
         return -1;
     }
+
+    public int indexOfFeaturedMediaId(long mediaId) {
+        if (mediaId == 0) {
+            return -1;
+        }
+        for (int i = 0; i < size(); i++) {
+            if (this.get(i).getFeaturedImageId() == mediaId) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

@@ -7,7 +7,7 @@ import android.test.ServiceTestCase;
 
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
-import org.wordpress.android.ui.posts.PostUploadService;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AppLog;
 
 public class PostUploadServiceTest extends ServiceTestCase<PostUploadService> {
