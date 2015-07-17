@@ -74,8 +74,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
-        mPhotonWidth = displayWidth - (cardSpacing * 2);
+        int contentSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
+        mPhotonWidth = displayWidth - (contentSpacing * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // on larger displays we can always show all buttons
@@ -112,7 +112,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (mIsPage) {
-            View view = mLayoutInflater.inflate(R.layout.page_cardview, parent, false);
+            View view = mLayoutInflater.inflate(R.layout.page_item, parent, false);
             return new PageViewHolder(view);
         } else {
             View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
