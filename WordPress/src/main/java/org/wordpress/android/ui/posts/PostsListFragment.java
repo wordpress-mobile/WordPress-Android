@@ -24,14 +24,15 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
-import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.posts.services.PostEvents;
+import org.wordpress.android.ui.posts.services.PostEvents.PostUploadFailed;
+import org.wordpress.android.ui.posts.services.PostEvents.PostUploadSucceed;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -346,6 +347,15 @@ public class PostsListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
+        // PostMediaService has downloaded the media info for a post's featured image, tell
+        // the adapter so it can show the featured image now that we have its URL
+        if (isAdded()) {
+            getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
+        }
+    }
+
+    @SuppressWarnings("unused")
     public void onEventMainThread(PostUploadSucceed event) {
         if (!isAdded()) {
             return;
@@ -501,9 +511,7 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostSelected(PostsListPost post) {
-        if (isAdded() && !post.getStatusEnum().equals(PostStatus.TRASHED)) {
-            ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
-        }
+        onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
     }
 
     /*
@@ -511,6 +519,8 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostButtonClicked(int buttonType, PostsListPost post) {
+        if (!isAdded()) return;
+
         Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
         if (fullPost == null) {
             ToastUtils.showToast(getActivity(), R.string.post_not_found);
@@ -526,8 +536,10 @@ public class PostsListFragment extends Fragment
                 getActivity().startService(new Intent(getActivity(), PostUploadService.class));
                 break;
             case PostListButton.BUTTON_VIEW:
-            case PostListButton.BUTTON_PREVIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
+                break;
+            case PostListButton.BUTTON_PREVIEW:
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);

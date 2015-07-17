@@ -40,7 +40,7 @@ public class ReaderBlogTable {
                  + "    is_jetpack    INTEGER DEFAULT 0,"
                  + "    is_following  INTEGER DEFAULT 0,"
                  + "    num_followers INTEGER DEFAULT 0,"
-                 + "    PRIMARY KEY (blog_id, feed_id)"
+                 + "    PRIMARY KEY (blog_id)"
                  + ")");
 
         db.execSQL("CREATE TABLE tbl_recommended_blogs ("

@@ -57,6 +57,7 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
@@ -627,13 +628,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
             // if no changes have been made to the post, set it back to the original don't save it
             WordPress.wpDB.updatePost(mOriginalPost);
-            WordPress.currentPost = mOriginalPost;
         } else {
             // changes have been made, save the post and ask for the post list to refresh.
             // We consider this being "manual save", it will replace some Android "spans" by an html
             // or a shortcode replacement (for instance for images and galleries)
             savePost(false);
-            WordPress.currentPost = mPost;
             Intent i = new Intent();
             i.putExtra(EXTRA_SHOULD_REFRESH, true);
             i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);

@@ -27,6 +27,8 @@ public class PostsListPostList extends ArrayList<PostsListPost> {
                 return false;
             if (newPost.hasLocalChanges() != currentPost.hasLocalChanges())
                 return false;
+            if (!newPost.getDescription().equals(currentPost.getDescription()))
+                return false;
         }
 
         return true;
@@ -38,6 +40,18 @@ public class PostsListPostList extends ArrayList<PostsListPost> {
         }
         for (int i = 0; i < size(); i++) {
             if (this.get(i).getPostId() == post.getPostId() && this.get(i).getBlogId() == post.getBlogId()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int indexOfFeaturedMediaId(long mediaId) {
+        if (mediaId == 0) {
+            return -1;
+        }
+        for (int i = 0; i < size(); i++) {
+            if (this.get(i).getFeaturedImageId() == mediaId) {
                 return i;
             }
         }
