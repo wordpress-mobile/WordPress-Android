@@ -30,11 +30,13 @@ import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -176,13 +178,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 pageHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
             }
 
-            String dateStr = post.getFormattedDate();
+            String dateStr = getPageDateHeaderText(context, post);
             pageHolder.txtDate.setText(dateStr);
 
             // don't show date header if same as previous
             boolean showDate;
             if (position > 0) {
-                String prevDateStr = mPosts.get(position - 1).getFormattedDate();
+                String prevDateStr = getPageDateHeaderText(context, mPosts.get(position - 1));
                 showDate = !prevDateStr.equals(dateStr);
             } else {
                 showDate = true;
@@ -215,6 +217,30 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     /*
+     * returns the caption to show in the date header for the passed page (unused for posts)
+     */
+    private static String getPageDateHeaderText(Context context, PostsListPost page) {
+        if (page.isLocalDraft()) {
+            return context.getString(R.string.local_draft);
+        } else if (page.getStatusEnum() == PostStatus.SCHEDULED) {
+            return context.getString(R.string.scheduled);
+        } else {
+            Date dtCreated = new Date(page.getDateCreatedGmt());
+            Date dtNow = DateTimeUtils.nowUTC();
+            int daysBetween = DateTimeUtils.daysBetween(dtCreated, dtNow);
+            if (daysBetween == 0) {
+                return context.getString(R.string.today);
+            } else if (daysBetween == 1) {
+                return context.getString(R.string.yesterday);
+            } else if (daysBetween <= 10) {
+                return String.format(context.getString(R.string.days_ago), daysBetween);
+            } else {
+                return DateTimeUtils.javaDateToTimeSpan(dtCreated);
+            }
+        }
+    }
+
+    /*
      * user tapped "..." next to a page, show a menu of choices
      */
     void showPagePopupMenu(View view, int position) {
@@ -226,14 +252,16 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Context context = view.getContext();
         PopupMenu popup = new PopupMenu(context, view);
 
-        MenuItem mnuView = popup.getMenu().add(context.getString(R.string.button_view));
-        mnuView.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_VIEW, page);
-                return true;
-            }
-        });
+        if (!page.isLocalDraft()) {
+            MenuItem mnuView = popup.getMenu().add(context.getString(R.string.button_view));
+            mnuView.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_VIEW, page);
+                    return true;
+                }
+            });
+        }
 
         MenuItem mnuEdit = popup.getMenu().add(context.getString(R.string.button_edit));
         mnuEdit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

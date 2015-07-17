@@ -107,6 +107,21 @@ public class DateTimeUtils {
     /*
      * routines to return a diff between two dates - always return a positive number
      */
+    public static int daysBetween(Date dt1, Date dt2) {
+        long hrDiff = hoursBetween(dt1, dt2);
+        if (hrDiff == 0) {
+            return 0;
+        }
+        return (int) (hrDiff / 24);
+    }
+
+    public static int hoursBetween(Date dt1, Date dt2) {
+        long minDiff = minutesBetween(dt1, dt2);
+        if (minDiff == 0) {
+            return 0;
+        }
+        return (int) (minDiff / 60);
+    }
     public static int minutesBetween(Date dt1, Date dt2) {
         long msDiff = millisecondsBetween(dt1, dt2);
         if (msDiff==0)

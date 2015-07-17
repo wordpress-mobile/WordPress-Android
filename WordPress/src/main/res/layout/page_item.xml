@@ -17,10 +17,8 @@
             android:layout_height="wrap_content"
             android:background="@color/grey_lighten_30"
             android:drawableLeft="@drawable/noticon_clock"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingLeft="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/margin_medium"
+            android:drawablePadding="@dimen/margin_small"
+            android:padding="@dimen/margin_medium"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_date" />
@@ -65,11 +63,12 @@
 
             <ImageView
                 android:id="@+id/btn_more"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:padding="@dimen/margin_extra_small"
+                android:background="?android:selectableItemBackground"
+                android:padding="@dimen/margin_medium"
                 android:src="@drawable/ic_action_more" />
         </RelativeLayout>
 
