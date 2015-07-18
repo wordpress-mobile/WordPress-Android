@@ -265,8 +265,21 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         boolean showTrashItem = !page.isLocalDraft();
         boolean showDeleteItem = !showTrashItem;
 
+        if (showEditItem) {
+            MenuItem mnuEdit = popup.getMenu().add(context.getString(R.string.button_edit));
+            mnuEdit.setIcon(R.drawable.noticon_edit);
+            mnuEdit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_EDIT, page);
+                    return true;
+                }
+            });
+        }
+
         if (showViewItem) {
             MenuItem mnuView = popup.getMenu().add(context.getString(R.string.button_view));
+            mnuView.setIcon(R.drawable.noticon_view);
             mnuView.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -278,6 +291,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (showStatsItem) {
             MenuItem mnuStats = popup.getMenu().add(context.getString(R.string.button_stats));
+            mnuStats.setIcon(R.drawable.noticon_stats);
             mnuStats.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -287,19 +301,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
         }
 
-        if (showEditItem) {
-            MenuItem mnuEdit = popup.getMenu().add(context.getString(R.string.button_edit));
-            mnuEdit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_EDIT, page);
-                    return true;
-                }
-            });
-        }
-
         if (showTrashItem) {
             MenuItem mnuTrash = popup.getMenu().add(context.getString(R.string.button_trash));
+            mnuTrash.setIcon(R.drawable.noticon_trash);
             mnuTrash.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -311,6 +315,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (showDeleteItem) {
             MenuItem mnuDelete = popup.getMenu().add(context.getString(R.string.button_delete));
+            mnuDelete.setIcon(R.drawable.noticon_trash);
             mnuDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
