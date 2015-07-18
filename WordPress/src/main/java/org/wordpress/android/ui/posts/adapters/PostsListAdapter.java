@@ -36,6 +36,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -225,7 +226,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     /*
-     * returns the caption to show in the date header for the passed page (unused for posts)
+     * returns the caption to show in the date header for the passed page - pages with the same
+     * caption will be grouped together
+     *  - if page is local draft, returns "Local draft"
+     *  - if page is scheduled, returns formatted date w/o time
+     *  - if created today or yesterday, returns "Today" or "Yesterday"
+     *  - if created this month, returns the number of days ago
+     *  - if created this year, returns the month name
+     *  - if created before this year, returns the month name with year
      */
     private static String getPageDateHeaderText(Context context, PostsListPost page) {
         if (page.isLocalDraft()) {
@@ -240,10 +248,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 return context.getString(R.string.today);
             } else if (daysBetween == 1) {
                 return context.getString(R.string.yesterday);
-            } else if (daysBetween <= 10) {
+            } else if (DateTimeUtils.isSameMonthAndYear(dtCreated, dtNow)) {
                 return String.format(context.getString(R.string.days_ago), daysBetween);
+            } else if (DateTimeUtils.isSameYear(dtCreated, dtNow)) {
+                return new SimpleDateFormat("MMMM").format(dtCreated);
             } else {
-                return DateTimeUtils.javaDateToTimeSpan(dtCreated);
+                return new SimpleDateFormat("MMMM yyyy").format(dtCreated);
             }
         }
     }

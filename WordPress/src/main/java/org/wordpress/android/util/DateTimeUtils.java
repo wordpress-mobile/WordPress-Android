@@ -147,6 +147,21 @@ public class DateTimeUtils {
         return (date.getTime() / 1000);
     }
 
+    public static boolean isSameYear(Date dt1, Date dt2) {
+        if (dt1 == null || dt2 == null) {
+            return false;
+        }
+        return dt1.getYear() == dt2.getYear();
+    }
+
+    public static boolean isSameMonthAndYear(Date dt1, Date dt2) {
+        if (dt1 == null || dt2 == null) {
+            return false;
+        }
+        return dt1.getYear() == dt2.getYear()
+                && dt1.getMonth() == dt2.getMonth();
+    }
+
     /*
      * routines involving Unix timestamps (GMT assumed)
      */
