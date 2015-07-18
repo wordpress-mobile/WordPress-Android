@@ -121,6 +121,9 @@ public class PostsListPost {
     public long getFeaturedImageId() {
         return featuredImageId;
     }
+    public boolean hasFeaturedImageId() {
+        return featuredImageId != 0;
+    }
 
     public String getFeaturedImageUrl() {
         return StringUtils.notNullStr(featuredImageUrl);
