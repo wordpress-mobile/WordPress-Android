@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -181,6 +182,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String dateStr = getPageDateHeaderText(context, post);
             pageHolder.txtDate.setText(dateStr);
 
+            updateStatusText(pageHolder.txtStatus, post);
+
             // don't show date header if same as previous
             boolean showDate;
             if (position > 0) {
@@ -191,6 +194,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             pageHolder.dateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
 
+            // no "..." more button when uploading
+            pageHolder.btnMore.setVisibility(post.isUploading() ? View.GONE : View.VISIBLE);
             pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -223,7 +228,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (page.isLocalDraft()) {
             return context.getString(R.string.local_draft);
         } else if (page.getStatusEnum() == PostStatus.SCHEDULED) {
-            return context.getString(R.string.scheduled);
+            return DateUtils.formatDateTime(context, page.getDateCreatedGmt(), DateUtils.FORMAT_ABBREV_ALL);
         } else {
             Date dtCreated = new Date(page.getDateCreatedGmt());
             Date dtNow = DateTimeUtils.nowUTC();
@@ -252,7 +257,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Context context = view.getContext();
         PopupMenu popup = new PopupMenu(context, view);
 
-        if (!page.isLocalDraft()) {
+        boolean isPublished = !page.isLocalDraft() && page.getStatusEnum() == PostStatus.PUBLISHED;
+        boolean showViewItem = isPublished;
+        boolean showStatsItem = isPublished;
+        boolean showEditItem = true;
+        boolean showTrashItem = !page.isLocalDraft();
+        boolean showDeleteItem = !showTrashItem;
+
+        if (showViewItem) {
             MenuItem mnuView = popup.getMenu().add(context.getString(R.string.button_view));
             mnuView.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
@@ -261,7 +273,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     return true;
                 }
             });
+        }
 
+        if (showStatsItem) {
             MenuItem mnuStats = popup.getMenu().add(context.getString(R.string.button_stats));
             mnuStats.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
@@ -272,24 +286,38 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
         }
 
-        MenuItem mnuEdit = popup.getMenu().add(context.getString(R.string.button_edit));
-        mnuEdit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_EDIT, page);
-                return true;
-            }
-        });
+        if (showEditItem) {
+            MenuItem mnuEdit = popup.getMenu().add(context.getString(R.string.button_edit));
+            mnuEdit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_EDIT, page);
+                    return true;
+                }
+            });
+        }
 
-        String trashTitle = page.isLocalDraft() ? context.getString(R.string.button_delete) : context.getString(R.string.button_trash);
-        MenuItem mnuTrash = popup.getMenu().add(trashTitle);
-        mnuTrash.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_TRASH, page);
-                return true;
-            }
-        });
+        if (showTrashItem) {
+            MenuItem mnuTrash = popup.getMenu().add(context.getString(R.string.button_trash));
+            mnuTrash.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_TRASH, page);
+                    return true;
+                }
+            });
+        }
+
+        if (showDeleteItem) {
+            MenuItem mnuDelete = popup.getMenu().add(context.getString(R.string.button_delete));
+            mnuDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_DELETE, page);
+                    return true;
+                }
+            });
+        }
 
         popup.show();
     }
@@ -548,12 +576,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     class PageViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
         private final TextView txtDate;
+        private final TextView txtStatus;
         private final ViewGroup dateHeader;
         private final View btnMore;
 
         public PageViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtStatus = (TextView) view.findViewById(R.id.text_status);
             btnMore = view.findViewById(R.id.btn_more);
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
             txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
