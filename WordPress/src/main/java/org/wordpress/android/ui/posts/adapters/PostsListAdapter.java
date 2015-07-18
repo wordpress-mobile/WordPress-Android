@@ -133,7 +133,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        PostsListPost post = mPosts.get(position);
+        final PostsListPost post = mPosts.get(position);
         Context context = holder.itemView.getContext();
 
         if (holder instanceof PostViewHolder) {
@@ -199,7 +199,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showPagePopupMenu(v, position);
+                    showPagePopupMenu(v, post);
                 }
             });
 
@@ -249,10 +249,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     /*
-     * user tapped "..." next to a page, show a menu of choices
+     * user tapped "..." next to a page, show a popup menu of choices
      */
-    private void showPagePopupMenu(View view, int position) {
-        final PostsListPost page = getItem(position);
+    private void showPagePopupMenu(View view, final PostsListPost page) {
         if (page == null || mOnPostButtonClickListener == null) {
             return;
         }
