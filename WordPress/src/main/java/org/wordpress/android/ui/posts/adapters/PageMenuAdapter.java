@@ -69,15 +69,29 @@ public class PageMenuAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.page_menu_item, parent, false);
-
-        TextView text = (TextView) view.findViewById(R.id.text);
-        ImageView icon = (ImageView) view.findViewById(R.id.image);
+        PageMenuHolder holder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.page_menu_item, parent, false);
+            holder = new PageMenuHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (PageMenuHolder) convertView.getTag();
+        }
 
         int buttonType = mMenuItems.get(position);
-        text.setText(PostListButton.getButtonTextResId(buttonType));
-        icon.setImageResource(PostListButton.getButtonIconResId(buttonType));
+        holder.text.setText(PostListButton.getButtonTextResId(buttonType));
+        holder.icon.setImageResource(PostListButton.getButtonIconResId(buttonType));
 
-        return view;
+        return convertView;
+    }
+
+    class PageMenuHolder {
+        private final TextView text;
+        private final ImageView icon;
+
+        PageMenuHolder(View view) {
+            text = (TextView) view.findViewById(R.id.text);
+            icon = (ImageView) view.findViewById(R.id.image);
+        }
     }
 }

@@ -1,13 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/menu_item_height"
     android:gravity="left|center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_large"
-    android:paddingLeft="@dimen/margin_extra_large"
-    android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_large">
+    android:paddingLeft="@dimen/menu_item_margin"
+    android:paddingRight="@dimen/menu_item_margin">
 
     <ImageView
         android:id="@+id/image"
@@ -21,10 +19,7 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="none"
-        android:maxLines="1"
-        android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_large"
-        tools:text="text" />
+        android:textAppearance="?textAppearanceSmallPopupMenu"
+        tools:text="Menu item" />
 
 </LinearLayout>
