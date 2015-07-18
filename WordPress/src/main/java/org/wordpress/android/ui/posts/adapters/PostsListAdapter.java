@@ -9,16 +9,16 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.PopupMenu;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -252,80 +252,24 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * user tapped "..." next to a page, show a popup menu of choices
      */
     private void showPagePopupMenu(View view, final PostsListPost page) {
-        if (page == null || mOnPostButtonClickListener == null) {
-            return;
-        }
-
         Context context = view.getContext();
-        PopupMenu popup = new PopupMenu(context, view);
+        final ListPopupWindow listPopup = new ListPopupWindow(context);
+        listPopup.setAnchorView(view);
 
-        boolean showViewItem = !page.isLocalDraft() && page.getStatusEnum() == PostStatus.PUBLISHED;
-        boolean showStatsItem = !page.isLocalDraft() && page.getStatusEnum() == PostStatus.PUBLISHED;
-        boolean showEditItem = true;
-        boolean showTrashItem = !page.isLocalDraft();
-        boolean showDeleteItem = !showTrashItem;
-
-        if (showEditItem) {
-            MenuItem mnuEdit = popup.getMenu().add(context.getString(R.string.button_edit));
-            mnuEdit.setIcon(R.drawable.noticon_edit);
-            mnuEdit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_EDIT, page);
-                    return true;
+        // width is a multiple of 56dp - https://www.google.com/design/spec/components/menus.html#menus-simple-menus
+        listPopup.setWidth(DisplayUtils.dpToPx(context, 168));
+        listPopup.setAdapter(new PageMenuAdapter(context, page));
+        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listPopup.dismiss();
+                if (mOnPostButtonClickListener != null) {
+                    int buttonId = (int) id;
+                    mOnPostButtonClickListener.onPostButtonClicked(buttonId, page);
                 }
-            });
-        }
-
-        if (showViewItem) {
-            MenuItem mnuView = popup.getMenu().add(context.getString(R.string.button_view));
-            mnuView.setIcon(R.drawable.noticon_view);
-            mnuView.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_VIEW, page);
-                    return true;
-                }
-            });
-        }
-
-        if (showStatsItem) {
-            MenuItem mnuStats = popup.getMenu().add(context.getString(R.string.button_stats));
-            mnuStats.setIcon(R.drawable.noticon_stats);
-            mnuStats.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_STATS, page);
-                    return true;
-                }
-            });
-        }
-
-        if (showTrashItem) {
-            MenuItem mnuTrash = popup.getMenu().add(context.getString(R.string.button_trash));
-            mnuTrash.setIcon(R.drawable.noticon_trash);
-            mnuTrash.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_TRASH, page);
-                    return true;
-                }
-            });
-        }
-
-        if (showDeleteItem) {
-            MenuItem mnuDelete = popup.getMenu().add(context.getString(R.string.button_delete));
-            mnuDelete.setIcon(R.drawable.noticon_trash);
-            mnuDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    mOnPostButtonClickListener.onPostButtonClicked(PostListButton.BUTTON_DELETE, page);
-                    return true;
-                }
-            });
-        }
-
-        popup.show();
+            }
+        });
+        listPopup.show();
     }
 
     private void updateStatusText(TextView txtStatus, PostsListPost post) {
