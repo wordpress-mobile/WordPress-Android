@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <View
-        android:id="@+id/divder_top"
+        android:id="@+id/divider_top"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_lighten_20" />
@@ -36,70 +36,64 @@
             android:background="@color/grey_lighten_20" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
-        android:orientation="vertical">
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_large">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_large">
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btn_more"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/btn_more"
-                android:orientation="vertical">
+                android:layout_below="@+id/text_date"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                app:fontFamily="merriweather"
+                app:fontVariation="light"
+                tools:text="text_title" />
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_date"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/text_sz_large"
-                    app:fontFamily="merriweather"
-                    app:fontVariation="light"
-                    tools:text="text_title" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/grey_darken_10"
+                android:textSize="@dimen/text_sz_small"
+                android:visibility="gone"
+                tools:drawableLeft="@drawable/noticon_scheduled"
+                tools:text="text_status"
+                tools:visibility="visible" />
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/grey_darken_10"
-                    android:textSize="@dimen/text_sz_small"
-                    android:visibility="gone"
-                    tools:drawableLeft="@drawable/noticon_scheduled"
-                    tools:text="text_status"
-                    tools:visibility="visible" />
+        </LinearLayout>
 
-            </LinearLayout>
+        <ImageView
+            android:id="@+id/btn_more"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_medium"
+            android:src="@drawable/ic_action_more" />
+    </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/btn_more"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:background="?android:selectableItemBackground"
-                android:padding="@dimen/margin_medium"
-                android:src="@drawable/ic_action_more" />
-        </RelativeLayout>
-
-    </LinearLayout>
 
     <View
-        android:id="@+id/divder_bottom"
+        android:id="@+id/divider_bottom"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_lighten_20" />

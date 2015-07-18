@@ -251,7 +251,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     /*
      * user tapped "..." next to a page, show a menu of choices
      */
-    void showPagePopupMenu(View view, int position) {
+    private void showPagePopupMenu(View view, int position) {
         final PostsListPost page = getItem(position);
         if (page == null || mOnPostButtonClickListener == null) {
             return;
@@ -260,9 +260,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Context context = view.getContext();
         PopupMenu popup = new PopupMenu(context, view);
 
-        boolean isPublished = !page.isLocalDraft() && page.getStatusEnum() == PostStatus.PUBLISHED;
-        boolean showViewItem = isPublished;
-        boolean showStatsItem = isPublished;
+        boolean showViewItem = !page.isLocalDraft() && page.getStatusEnum() == PostStatus.PUBLISHED;
+        boolean showStatsItem = !page.isLocalDraft() && page.getStatusEnum() == PostStatus.PUBLISHED;
         boolean showEditItem = true;
         boolean showTrashItem = !page.isLocalDraft();
         boolean showDeleteItem = !showTrashItem;
@@ -583,15 +582,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final ViewGroup dateHeader;
         private final View btnMore;
         private final View dividerTop;
-        private final View dividerBottom;
 
         public PageViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
             btnMore = view.findViewById(R.id.btn_more);
-            dividerTop = view.findViewById(R.id.divder_top);
-            dividerBottom = view.findViewById(R.id.divder_bottom);
+            dividerTop = view.findViewById(R.id.divider_top);
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
             txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
         }
