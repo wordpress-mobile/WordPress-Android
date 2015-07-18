@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <View
+        android:id="@+id/divder_top"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_lighten_20" />
@@ -96,4 +97,10 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divder_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_lighten_20" />
 </LinearLayout>
