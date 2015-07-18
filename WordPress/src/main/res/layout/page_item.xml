@@ -1,21 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@drawable/page_item_background"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_lighten_20" />
 
     <LinearLayout
         android:id="@+id/header_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/grey_light"
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/grey_lighten_30"
             android:drawableLeft="@drawable/noticon_clock"
             android:drawablePadding="@dimen/margin_small"
             android:padding="@dimen/margin_medium"
@@ -24,7 +30,6 @@
             tools:text="text_date" />
 
         <View
-            android:id="@+id/divider_date"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey_lighten_20" />
@@ -33,7 +38,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/header_date"
         android:background="?android:selectableItemBackground"
         android:orientation="vertical">
 
@@ -91,11 +95,5 @@
                 android:src="@drawable/ic_action_more" />
         </RelativeLayout>
 
-        <View
-            android:id="@+id/divider_page"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_lighten_20" />
-
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
