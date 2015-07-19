@@ -11,7 +11,6 @@ import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -57,13 +56,13 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     }
 
     public interface ThemeBrowserFragmentCallback {
-        public void onThemeSelected(String themeId);
+        void onThemeSelected(String themeId);
     }
 
     protected static final String ARGS_SORT = "ARGS_SORT";
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
-    protected HeaderGridView mListView;
+    protected HeaderGridView mGridView;
     protected TextView mEmptyView;
     protected TextView mNoResultText;
     protected ThemeBrowserAdapter mAdapter;
@@ -99,16 +98,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         mEmptyView = (TextView) view.findViewById(R.id.text_empty);
-        mListView = (HeaderGridView) view.findViewById(R.id.theme_listview);
-        View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
-        mListView.addHeaderView(header);
-        View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
-        Spinner filterSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.themes_filter_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        filterSpinner.setAdapter(adapter);
-        mListView.addHeaderView(headerSearch);
-        mListView.setRecyclerListener(this);
+        configureGridView(inflater, view);
 
         // swipe to refresh setup but not for the search view
         if (!(this instanceof ThemeSearchFragment)) {
@@ -135,6 +125,52 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Cursor cursor = fetchThemes(getThemeSortType());
+        if (cursor == null) {
+            return;
+        }
+        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
+        setEmptyViewVisible(mAdapter.getCount() == 0);
+        mGridView.setAdapter(mAdapter);
+        mGridView.setOnItemClickListener(this);
+        mGridView.setSelection(mSavedScrollPosition);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mGridView != null)
+            outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
+    }
+
+    private void configureGridView(LayoutInflater inflater, View view) {
+        mGridView = (HeaderGridView) view.findViewById(R.id.theme_listview);
+        addHeaderViews(inflater);
+        mGridView.setRecyclerListener(this);
+    }
+
+    private void addHeaderViews(LayoutInflater inflater) {
+        addMainHeader(inflater);
+        configureAndAddSearchHeader(inflater);
+    }
+
+    private void configureAndAddSearchHeader(LayoutInflater inflater) {
+        View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
+        Spinner filterSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.themes_filter_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        filterSpinner.setAdapter(adapter);
+        mGridView.addHeaderView(headerSearch);
+    }
+
+    private void addMainHeader(LayoutInflater inflater) {
+        View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
+        mGridView.addHeaderView(header);
+    }
+
     public void setRefreshing(boolean refreshing) {
         mShouldRefreshOnStart = refreshing;
         if (mSwipeToRefreshHelper != null) {
@@ -151,40 +187,15 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         }
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Cursor cursor = fetchThemes(getThemeSortType());
-        if (cursor == null) {
-            return;
-        }
-        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
-        setEmptyViewVisible(mAdapter.getCount() == 0);
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);
-        mListView.setSelection(mSavedScrollPosition);
-    }
-
     private void setEmptyViewVisible(boolean visible) {
         if (getView() == null || !isAdded()) {
             return;
         }
         mEmptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
-        mListView.setVisibility(visible ? View.GONE : View.VISIBLE);
+        mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
         if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
             mEmptyView.setText(R.string.no_network_title);
         }
-    }
-
-    public void setEmptyViewText(int stringId) {
-        mEmptyView.setText(stringId);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mListView != null)
-            outState.putInt(BUNDLE_SCROLL_POSTION, mListView.getFirstVisiblePosition());
     }
 
     private ThemeSortType getThemeSortType() {

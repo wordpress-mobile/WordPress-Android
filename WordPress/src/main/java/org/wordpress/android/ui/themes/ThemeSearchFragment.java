@@ -142,7 +142,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         Cursor cursor = WordPress.wpDB.getThemes(blogId, searchTerm);
 
         mAdapter.changeCursor(cursor);
-        mListView.invalidateViews();
+        mGridView.invalidateViews();
 
         if (cursor == null || cursor.getCount() == 0) {
             mNoResultText.setVisibility(View.VISIBLE);
