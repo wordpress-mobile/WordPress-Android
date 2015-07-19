@@ -549,7 +549,10 @@ public class PostsListFragment extends Fragment
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
-                trashPost(post);
+                // prevent deleting post while it's being uploaded
+                if (!post.isUploading()) {
+                    trashPost(post);
+                }
                 break;
         }
     }
