@@ -28,6 +28,7 @@ import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.WrapperListAdapter;
 
 import java.util.ArrayList;
