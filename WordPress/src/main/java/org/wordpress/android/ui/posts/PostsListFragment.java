@@ -134,7 +134,7 @@ public class PostsListFragment extends Fragment
                         if (!isAdded()) {
                             return;
                         }
-                        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                        if (!NetworkUtils.checkConnection(getActivity())) {
                             setRefreshing(false);
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
@@ -213,7 +213,9 @@ public class PostsListFragment extends Fragment
         // posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
             loadPosts();
-            requestPosts(false);
+            if (NetworkUtils.checkConnection(getActivity())) {
+                requestPosts(false);
+            }
         }
     }
 
