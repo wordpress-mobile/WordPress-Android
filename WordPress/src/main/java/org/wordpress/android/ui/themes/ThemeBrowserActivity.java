@@ -91,7 +91,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
                 && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
             fetchThemes();
-            setRefreshing(true);
+            mThemeBrowserFragment.setRefreshing(true);
         }
     }
 
@@ -142,7 +142,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                             Theme theme = Theme.fromJSON(response);
                             if (theme != null) {
                                 WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
-                                setRefreshing(false);
+                                mThemeBrowserFragment.setRefreshing(false);
                             }
                         } catch (JSONException e) {
                             AppLog.e(T.THEMES, e);
@@ -233,7 +233,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT)
                              .show();
                     }
-                    setRefreshing(false);
+                    mThemeBrowserFragment.setRefreshing(false);
                 }
             });
         }
@@ -249,10 +249,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_IS_ACTIVATING_THEME, mIsActivatingTheme);
-    }
-
-    private void setRefreshing(boolean refreshing) {
-        mThemeBrowserFragment.setRefreshing(refreshing);
     }
 
     public static boolean isAccessible() {
