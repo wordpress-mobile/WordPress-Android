@@ -21,7 +21,6 @@
             <Spinner
                 android:id="@+id/theme_filter_spinner"
                 android:layout_width="wrap_content"
-                android:backgroundTint="@color/alert_green"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp"
                 android:background="@color/alert_green"
