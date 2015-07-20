@@ -57,6 +57,11 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // inflate Site Settings preferences from XML
         addPreferencesFromResource(R.xml.site_settings);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         // set preference references, add change listeners, and setup various entries and values
         initPreferences();
