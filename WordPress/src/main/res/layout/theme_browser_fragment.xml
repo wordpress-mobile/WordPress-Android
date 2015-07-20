@@ -26,9 +26,6 @@
             android:scrollbarStyle="outsideOverlay"
             android:numColumns="auto_fit"
             android:divider="@android:color/transparent"
-            android:dividerHeight="4dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
             android:stretchMode="columnWidth"
             android:layout_below="@id/theme_no_search_result_text">
         </org.wordpress.android.widgets.HeaderGridView>
