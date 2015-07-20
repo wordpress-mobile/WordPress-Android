@@ -30,23 +30,27 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
+        showReaderPostDetail(context, blogId, postId, null);
+    }
+    public static void showReaderPostDetail(Context context, long blogId, long postId, CharSequence title) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
 
-        if (context instanceof Activity) {
+        if (title == null && context instanceof Activity) {
             // For AppCompatActivity subclasses, we need to pull the title from the Toolbar
-            CharSequence title = null;
             if (context instanceof AppCompatActivity && ((AppCompatActivity) context).getSupportActionBar() != null) {
                 title = ((AppCompatActivity) context).getSupportActionBar().getTitle();
             }
-
             if (title == null) {
                 // Not an AppCompatActivity, or getSupportActionBar().getTitle() returned null.
                 // Try to read the title from the Activity
                 title = ((Activity)context).getTitle();
             }
+        }
+
+        if (!TextUtils.isEmpty(title)) {
             intent.putExtra(ReaderConstants.ARG_TITLE, title);
         }
 
