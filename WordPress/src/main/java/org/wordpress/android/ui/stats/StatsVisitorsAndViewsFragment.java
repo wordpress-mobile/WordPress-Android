@@ -405,13 +405,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         // index of days that should be XXX on the graph
-        final boolean[] isWeekEndDay;
+        final boolean[] weekendDays;
         switch (getTimeframe()) {
             case DAY:
-                isWeekEndDay = new boolean[dataToShowOnGraph.length];
+                weekendDays = new boolean[dataToShowOnGraph.length];
                 break;
             default:
-                isWeekEndDay = null;
+                weekendDays = null;
         }
 
         // Check we have at least one result in the current section.
@@ -448,7 +448,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             horLabels[i] = getDateLabelForBarInGraph(currentItemStatsDate);
             mStatsDate[i] = currentItemStatsDate;
 
-            if (isWeekEndDay != null) {
+            if (weekendDays != null) {
                 SimpleDateFormat from = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
                 try {
                     Date date = from.parse(currentItemStatsDate);
@@ -457,12 +457,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.setTimeInMillis(date.getTime());
                     if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ||
                             c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                        isWeekEndDay[i] = true;
+                        weekendDays[i] = true;
                     } else {
-                        isWeekEndDay[i] = false;
+                        weekendDays[i] = false;
                     }
                 } catch (ParseException e) {
-                    isWeekEndDay[i] = false;
+                    weekendDays[i] = false;
                     AppLog.e(AppLog.T.STATS, e);
                 }
             }
@@ -480,6 +480,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
         mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
+        mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.grey_lighten_30);
         mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
         mainSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
@@ -521,7 +522,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.setClickable(atLeastOneResultIsAvailable);
 
         // Draw the background on weekend days
-        mGraphView.setBackgroundAvailableIndexes(isWeekEndDay);
+        mGraphView.setWeekendDays(weekendDays);
 
         // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
         // Only happens on 720DP tablets
