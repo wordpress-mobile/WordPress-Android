@@ -216,25 +216,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     /**
-     * Reverts changed preferences
-     */
-    private void undoChanges() {
-        changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
-        changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
-        changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
-
-        // Privacy must exist in the set {-1, 0, 1} to be valid
-        if (mRemotePrivacy > -2 && mRemotePrivacy < 2 &&
-                mRemotePrivacy != Integer.valueOf(mPrivacyPreference.getValue())) {
-            mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
-        }
-
-        if (mRemoteLanguage != null && !mRemoteLanguage.equals(getLanguageString(mLanguagePreference.getValue(), Locale.getDefault()))) {
-            mLanguagePreference.setValue(mRemoteLanguage);
-        }
-    }
-
-    /**
      * Persists changed settings remotely
      */
     private void applyChanges() {
