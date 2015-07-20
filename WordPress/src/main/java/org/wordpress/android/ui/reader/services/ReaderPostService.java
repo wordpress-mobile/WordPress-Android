@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
-import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -40,7 +39,7 @@ public class ReaderPostService extends Service {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_FEED_ID = "feed_id";
 
-    public static enum UpdateAction {REQUEST_NEWER, REQUEST_OLDER}
+    public enum UpdateAction {REQUEST_NEWER, REQUEST_OLDER}
 
     /*
      * update posts with the passed tag
@@ -118,7 +117,7 @@ public class ReaderPostService extends Service {
         return START_NOT_STICKY;
     }
 
-    void updatePostsWithTag(final ReaderTag tag, final UpdateAction action) {
+    private void updatePostsWithTag(final ReaderTag tag, final UpdateAction action) {
         requestPostsWithTag(
                 tag,
                 action,
@@ -131,7 +130,7 @@ public class ReaderPostService extends Service {
                 });
     }
 
-    void updatePostsInBlog(long blogId, final UpdateAction action) {
+    private void updatePostsInBlog(long blogId, final UpdateAction action) {
         UpdateResultListener listener = new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
@@ -142,7 +141,7 @@ public class ReaderPostService extends Service {
         requestPostsForBlog(blogId, action, listener);
     }
 
-    void updatePostsInFeed(long feedId, final UpdateAction action) {
+    private void updatePostsInFeed(long feedId, final UpdateAction action) {
         UpdateResultListener listener = new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
