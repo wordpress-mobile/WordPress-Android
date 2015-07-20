@@ -404,6 +404,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
 
+        // index of days that should be XXX on the graph
+        final boolean[] isWeekEndDay;
+        switch (getTimeframe()) {
+            case DAY:
+                isWeekEndDay = new boolean[dataToShowOnGraph.length];
+                break;
+            default:
+                isWeekEndDay = null;
+        }
+
         // Check we have at least one result in the current section.
         boolean atLeastOneResultIsAvailable = false;
 
@@ -437,6 +447,25 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
             horLabels[i] = getDateLabelForBarInGraph(currentItemStatsDate);
             mStatsDate[i] = currentItemStatsDate;
+
+            if (isWeekEndDay != null) {
+                SimpleDateFormat from = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+                try {
+                    Date date = from.parse(currentItemStatsDate);
+                    Calendar c = Calendar.getInstance();
+                    c.setFirstDayOfWeek(Calendar.MONDAY);
+                    c.setTimeInMillis(date.getTime());
+                    if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ||
+                            c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                        isWeekEndDay[i] = true;
+                    } else {
+                        isWeekEndDay[i] = false;
+                    }
+                } catch (ParseException e) {
+                    isWeekEndDay[i] = false;
+                    AppLog.e(AppLog.T.STATS, e);
+                }
+            }
         }
 
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
@@ -490,6 +519,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // If zero results in the current section disable clicks on the graph and show the dialog.
         mNoActivtyThisPeriodContainer.setVisibility(atLeastOneResultIsAvailable ? View.GONE : View.VISIBLE);
         mGraphView.setClickable(atLeastOneResultIsAvailable);
+
+        // Draw the background on weekend days
+        mGraphView.setBackgroundAvailableIndexes(isWeekEndDay);
 
         // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
         // Only happens on 720DP tablets
