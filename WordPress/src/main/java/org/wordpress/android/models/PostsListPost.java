@@ -45,7 +45,7 @@ public class PostsListPost {
 
         status = post.getPostStatus();
         isLocalDraft = post.isLocalDraft();
-        hasLocalChanges = post.hasChangedFromLocalDraftToPublished();
+        hasLocalChanges = post.isLocalChange();
         isUploading = post.isUploading();
 
         setDateCreatedGmt(post.getDate_created_gmt());
