@@ -25,6 +25,7 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -138,7 +139,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             holder.txtExcerpt.setVisibility(View.GONE);
         }
 
-        if (post.hasFeaturedImageUrl() && !post.isLocalDraft()) {
+        if (post.hasFeaturedImageId() || post.hasFeaturedImageUrl()) {
             holder.imgFeatured.setVisibility(View.VISIBLE);
             holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
         } else {
@@ -426,8 +427,21 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
+    /*
+     * called after the media (featured image) for a post has been downloaded - locate the post
+     * and set its featured image url to the passed url
+     */
+    public void mediaUpdated(long mediaId, String mediaUrl) {
+        int position = mPosts.indexOfFeaturedMediaId(mediaId);
+        if (isValidPosition(position)) {
+            mPosts.get(position).setFeaturedImageUrl(mediaUrl);
+            notifyItemChanged(position);
+        }
+    }
+
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private PostsListPostList tmpPosts;
+        private final ArrayList<Long> mediaIdsToUpdate = new ArrayList<>();
 
         @Override
         protected Boolean doInBackground(Void... nada) {
@@ -450,6 +464,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                     imageUrl = null;
                 } else if (post.getFeaturedImageId() != 0) {
                     imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, post.getFeaturedImageId());
+                    // if the imageUrl isn't found it means the featured image info hasn't been added to
+                    // the local media library yet, so add to the list of media IDs to request info for
+                    if (TextUtils.isEmpty(imageUrl)) {
+                        mediaIdsToUpdate.add(post.getFeaturedImageId());
+                    }
                 } else if (post.hasDescription()) {
                     ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mIsPrivateBlog);
                     imageUrl = scanner.getLargestImage();
@@ -476,7 +495,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                 mPosts.clear();
                 mPosts.addAll(tmpPosts);
                 notifyDataSetChanged();
+
+                if (mediaIdsToUpdate.size() > 0) {
+                    PostMediaService.startService(WordPress.getContext(), mLocalTableBlogId, mediaIdsToUpdate);
+                }
             }
+
             if (mOnPostsLoadedListener != null) {
                 mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
             }

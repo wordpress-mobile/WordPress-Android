@@ -28,9 +28,11 @@ import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
-import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.posts.services.PostEvents;
+import org.wordpress.android.ui.posts.services.PostEvents.PostUploadFailed;
+import org.wordpress.android.ui.posts.services.PostEvents.PostUploadSucceed;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -132,7 +134,7 @@ public class PostsListFragment extends Fragment
                         if (!isAdded()) {
                             return;
                         }
-                        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                        if (!NetworkUtils.checkConnection(getActivity())) {
                             setRefreshing(false);
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
@@ -211,7 +213,9 @@ public class PostsListFragment extends Fragment
         // posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
             loadPosts();
-            requestPosts(false);
+            if (NetworkUtils.checkConnection(getActivity())) {
+                requestPosts(false);
+            }
         }
     }
 
@@ -341,6 +345,15 @@ public class PostsListFragment extends Fragment
     private void hideLoadMoreProgress() {
         if (mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.GONE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
+        // PostMediaService has downloaded the media info for a post's featured image, tell
+        // the adapter so it can show the featured image now that we have its URL
+        if (isAdded()) {
+            getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
 
