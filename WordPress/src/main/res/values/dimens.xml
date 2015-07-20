@@ -176,4 +176,7 @@
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
 
+    <!-- height of the end list indicator in page list -->
+    <dimen name="endlist_indicator_height">82dp</dimen>
+
 </resources>

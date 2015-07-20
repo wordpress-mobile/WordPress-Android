@@ -206,6 +206,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             // only show the top divider for the first item
             pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+
+            // show the endlist indicator if this is the last item - without this the fab
+            // would overlap the "..." icon on the last item
+            boolean isLastItem = (position == mPosts.size() - 1);
+            pageHolder.endlistIndicator.setVisibility(isLastItem ? View.VISIBLE : View.GONE);
         }
 
         // load more posts when we near the end
@@ -541,6 +546,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final ViewGroup dateHeader;
         private final View btnMore;
         private final View dividerTop;
+        private final ViewGroup endlistIndicator;
 
         public PageViewHolder(View view) {
             super(view);
@@ -550,6 +556,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             dividerTop = view.findViewById(R.id.divider_top);
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
             txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
+            endlistIndicator = (ViewGroup) view.findViewById(R.id.endlist_indicator);
         }
     }
 
