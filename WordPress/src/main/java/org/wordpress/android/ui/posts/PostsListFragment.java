@@ -140,44 +140,18 @@ public class PostsListFragment extends Fragment
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
-                        refreshPosts();
+                        if (hasLocalChanges()) {
+                            confirmRequestPosts();
+                        } else {
+                            requestPosts(false);
+                        }
                     }
                 });
     }
 
-    private void refreshPosts() {
-        if (!isAdded()) return;
-
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null) {
-            ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
-                    Duration.LONG);
-            return;
-        }
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
-        if (hasLocalChanges) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
-            dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
-            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            setRefreshing(true);
-                            requestPosts(false);
-                        }
-                    }
-            );
-            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    setRefreshing(false);
-                }
-            });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-            setRefreshing(true);
-            requestPosts(false);
-        }
+    private boolean hasLocalChanges() {
+        Blog blog = WordPress.getCurrentBlog();
+        return blog != null && WordPress.wpDB.blogHasLocalChanges(blog.getLocalTableBlogId(), mIsPage);
     }
 
     public PostsListAdapter getPostListAdapter() {
@@ -214,7 +188,7 @@ public class PostsListFragment extends Fragment
         // posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
             loadPosts();
-            if (NetworkUtils.checkConnection(getActivity())) {
+            if (NetworkUtils.checkConnection(getActivity()) && !hasLocalChanges()) {
                 requestPosts(false);
             }
         }
@@ -255,19 +229,37 @@ public class PostsListFragment extends Fragment
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
+    /*
+     * called when the user performs a ptr and there are local changes which would be overwritten
+     * by the refresh
+     */
+    private void confirmRequestPosts() {
+        if (!isAdded()) return;
+
+        setRefreshing(false);
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
+        dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        requestPosts(false);
+                    }
+                }
+        );
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.create().show();
+    }
+
     private void requestPosts(boolean loadMore) {
         if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
             return;
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            setRefreshing(false);
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            return;
-        }
-
-        // if user has local changes, don't refresh
-        if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
             return;
         }
 
@@ -505,8 +497,9 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onLoadMore() {
-        if (mCanLoadMorePosts && !mIsFetchingPosts)
+        if (mCanLoadMorePosts && !mIsFetchingPosts) {
             requestPosts(true);
+        }
     }
 
     /*
