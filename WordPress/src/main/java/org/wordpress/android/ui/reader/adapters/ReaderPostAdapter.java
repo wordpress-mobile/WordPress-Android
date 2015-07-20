@@ -310,6 +310,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPostDiscoverData discoverData = post.getDiscoverData();
         if (discoverData == null) {
             postHolder.layoutDiscover.setVisibility(View.GONE);
+            return;
         }
 
         postHolder.layoutDiscover.setVisibility(View.VISIBLE);
