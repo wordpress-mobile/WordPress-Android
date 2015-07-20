@@ -641,7 +641,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
         }
-        finish();
+        supportFinishAfterTransition();
     }
 
     /**

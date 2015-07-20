@@ -3,9 +3,11 @@ package org.wordpress.android.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -126,18 +128,29 @@ public class ActivityLauncher {
         slideInFromRightForResult(activity, intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
+    /*
+     * start activity to create a new post or page - optional passed view will be used
+     * for a shared element transition
+     */
+    public static void addNewBlogPostOrPageForResult(Activity activity, Blog blog, boolean isPage, View view) {
         if (blog == null) return;
 
         // Create a new post object
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
         WordPress.wpDB.savePost(newPost);
 
-        Intent intent = new Intent(context, EditPostActivity.class);
+        Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
-        context.startActivityForResult(intent, RequestCodes.EDIT_POST);
+
+        if (view != null) {
+            String transitionName = activity.getString(R.string.transition_fab);
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view, transitionName).toBundle();
+            activity.startActivityForResult(intent, RequestCodes.EDIT_POST, bundle);
+        } else {
+            activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+        }
     }
 
     public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {

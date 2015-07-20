@@ -393,6 +393,7 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/gridicon_create_light"
+        android:transitionName="@string/transition_fab"
         app:borderWidth="0dp"
         app:elevation="@dimen/fab_elevation"
         app:rippleColor="@color/fab_pressed" />

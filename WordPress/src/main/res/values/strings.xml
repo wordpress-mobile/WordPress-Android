@@ -928,4 +928,6 @@
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
 
+    <!-- transition names - do not translate -->
+    <string name="transition_fab" translatable="false">transition_fab</string>
 </resources>

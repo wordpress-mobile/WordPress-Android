@@ -117,7 +117,7 @@ public class PostsListFragment extends Fragment
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newPost();
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), mIsPage, v);
             }
         });
 
@@ -216,16 +216,6 @@ public class PostsListFragment extends Fragment
             if (NetworkUtils.checkConnection(getActivity())) {
                 requestPosts(false);
             }
-        }
-    }
-
-    private void newPost() {
-        if (!isAdded()) return;
-
-        if (WordPress.getCurrentBlog() != null) {
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), mIsPage);
-        } else {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found);
         }
     }
 
