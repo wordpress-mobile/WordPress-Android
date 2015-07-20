@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +63,7 @@ public class PostsListFragment extends Fragment
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
-    private View mFabView;
+    private FloatingActionButton mFabView;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
 
@@ -102,7 +103,7 @@ public class PostsListFragment extends Fragment
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
-        mFabView = view.findViewById(R.id.fab_button);
+        mFabView = (FloatingActionButton) view.findViewById(R.id.fab_button);
 
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewTitle = (TextView) mEmptyView.findViewById(R.id.title_empty);
@@ -229,7 +230,7 @@ public class PostsListFragment extends Fragment
                 @Override
                 public void run() {
                     if (isAdded()) {
-                        AniUtils.scaleIn(mFabView, AniUtils.Duration.MEDIUM);
+                        AniUtils.showFab(mFabView, true);
                     }
                 }
             }, delayMs);
