@@ -329,10 +329,10 @@ class ReaderPostRenderer {
         .append("  p, div, li { line-height: 1.6em; font-size: 0.95em; }")
         .append("  h1, h2 { line-height: 1.2em; }")
 
-                // counteract pre-defined height/width styles
+        // counteract pre-defined height/width styles
         .append("  p, div, dl, table { width: auto !important; height: auto !important; }")
 
-                // make sure long strings don't force the user to scroll horizontally
+        // make sure long strings don't force the user to scroll horizontally
         .append("  body, p, div, a { word-wrap: break-word; }")
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
@@ -383,7 +383,7 @@ class ReaderPostRenderer {
         .append("       font-family: 'Open Sans', sans-serif;")
         .append(" }")
 
-                // horizontally center iframes
+        // horizontally center iframes
         .append("   iframe { display: block; margin: 0 auto; }")
 
         // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
