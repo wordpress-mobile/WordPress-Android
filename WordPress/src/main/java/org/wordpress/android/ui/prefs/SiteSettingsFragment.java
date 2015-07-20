@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
@@ -44,6 +45,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            getActivity().finish();
+        }
 
         // make sure we have local site data
         mBlog = WordPress.getBlog(
