@@ -60,6 +60,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     public static final String ARG_ITEM_URL = "ARG_ITEM_URL";
     private static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
+    private static final String ARG_PREV_NUMBER_OF_BARS = "ARG_PREV_NUMBER_OF_BARS";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
     private boolean mIsUpdatingStats;
@@ -89,6 +90,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private String mRemoteBlogID, mRemoteItemID, mRemoteItemType, mItemTitle, mItemURL;
     private PostViewsModel mRestResponseParsed;
     private int mSelectedBarGraphIndex = -1;
+    private int mPrevNumberOfBarsGraph = -1;
 
     private SparseBooleanArray mYearsIdToExpandedMap;
     private SparseBooleanArray mAveragesIdToExpandedMap;
@@ -163,6 +165,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             mItemURL = savedInstanceState.getString(ARG_ITEM_URL);
             mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
+            mPrevNumberOfBarsGraph = savedInstanceState.getInt(ARG_PREV_NUMBER_OF_BARS, -1);
+
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
             if(yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
@@ -228,6 +232,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
+        outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
         outState.putString(ARG_REMOTE_BLOG_ID, mRemoteBlogID);
         outState.putString(ARG_REMOTE_ITEM_ID, mRemoteItemID);
         outState.putString(ARG_REMOTE_ITEM_TYPE, mRemoteItemType);
@@ -261,16 +266,9 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 mSwipeToRefreshHelper.setRefreshing(false);
                 setupEmptyUI();
             } else {
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isFinishing()) {
-                            setupEmptyGraph("");
-                            showHideEmptyModulesIndicator(true);
-                            refreshStats();
-                        }
-                    }
-                }, 75L);
+                setupEmptyGraph("");
+                showHideEmptyModulesIndicator(true);
+                refreshStats();
             }
         } else {
             updateUI();
@@ -457,8 +455,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         );
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
-        mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
+
+        // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
+        // Only happens on 720DP tablets
+        if (mPrevNumberOfBarsGraph != -1 && mPrevNumberOfBarsGraph != dataToShowOnGraph.length) {
+            mSelectedBarGraphIndex = dataToShowOnGraph.length - 1;
+        } else {
+            mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
+        }
+
         mGraphView.highlightBar(mSelectedBarGraphIndex);
+        mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
 
         setMainViewsLabel(
                 StatsUtils.parseDate(
@@ -551,7 +558,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             // show the trophy indicator if the value is the maximum reached
             if (currentDay.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.stats_icon_trophy));
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -631,7 +638,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.stats_icon_trophy));
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -710,7 +717,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             // show the trophy indicator if the value is the maximum reached
             if (currentMonth.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.stats_icon_trophy));
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -777,7 +784,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
-                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+                holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.stats_icon_trophy));
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -848,10 +855,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            if (volleyError != null) {
-                AppLog.e(AppLog.T.STATS, "Error while reading Stats details "
-                        + volleyError.getMessage(), volleyError);
-            }
+            StatsUtils.logVolleyErrorDetails(volleyError);
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }

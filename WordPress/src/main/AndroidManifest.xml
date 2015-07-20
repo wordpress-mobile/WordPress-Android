@@ -155,7 +155,8 @@
             android:theme="@style/Calypso.NoActionBar">
         </activity>
         <activity
-            android:name=".ui.posts.PagesListActivity"
+            android:name=".ui.posts.PostPreviewActivity"
+            android:label="@string/preview_post"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
@@ -290,8 +291,13 @@
 
 		<!-- Services -->
         <service
-            android:name=".ui.posts.PostUploadService"
+            android:name=".ui.posts.services.PostUploadService"
             android:label="Post Upload Service" >
+        </service>
+        <service
+            android:name=".ui.posts.services.PostMediaService"
+            android:label="Post Media Service"
+            android:exported="false">
         </service>
 
         <service
@@ -330,5 +336,12 @@
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
+
+        <receiver android:name=".networking.ConnectionChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

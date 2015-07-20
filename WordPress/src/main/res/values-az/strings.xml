@@ -79,7 +79,6 @@
 	<string name="reader_title_tag_preview">Etiket Önizləməsi</string>
 	<string name="reader_title_subs">Etiketlər &amp; Bloqlar</string>
 	<string name="reader_page_followed_tags">İzlənilən etiketlər</string>
-	<string name="reader_page_popular_tags">Populyar etiketlər</string>
 	<string name="reader_page_followed_blogs">İzlənilən bloqlar</string>
 	<string name="reader_label_followed_blog">Bloq izlənilir</string>
 	<string name="reader_label_tag_preview">Yazılar %s etiketləndi</string>
@@ -196,7 +195,6 @@
 	<string name="wordpress_blog">WordPress bloqu</string>
 	<string name="error_blog_hidden">Bu bloq gizlidir və yüklənmədi. Parametrlərdən yenidən aktivləşdirin və təkrar yoxlayın.</string>
 	<string name="fatal_db_error">Proqram üçün verilənlər bazası yaradılarkən bir xəta baş verdi. Proqramı təkrar qurmağa cəhd edin.</string>
-	<string name="stats_view_tags_and_categories">Etiketlər və kateqoriyalar</string>
 	<string name="pending_review">Ön baxış üçün gözləyir</string>
 	<string name="http_credentials">HTTP məlumatları (seçimə bağlı)</string>
 	<string name="http_authorization_required">Qeydiyyat gərəklidir</string>
@@ -324,7 +322,6 @@
 	<string name="connecting_wpcom">WordPress.com-a qoşulma</string>
 	<string name="limit_reached">Limit həddini aşdınız. 1 dəqiqə ərzində təkrar yoxlaya bilərsiniz. Bir daha cəhd etsəniz qadağanın ləğv edilməsi üçün bir az gözləməli olacaqsınız. Bunun bir xəta olduğunu düşünürsünüzsə dəstək xidmətinə müraciət edin.</string>
 	<string name="reader_empty_followed_tags">Siz hər hansı bir etiketi izləyə bilməyəcəksiniz</string>
-	<string name="reader_empty_popular_tags">Populyar hər hansı bir etiket yoxdur</string>
 	<string name="create_account_wpcom">WordPress.com-da hesab yaradın</string>
 	<string name="reader_btn_follow">İzlə</string>
 	<string name="reader_btn_unfollow">İzlənən</string>
@@ -344,6 +341,7 @@
 	<string name="media_gallery_type_slideshow">Slaydşou</string>
 	<string name="media_edit_description_text">Açıqlama</string>
 	<string name="share_action">Göndər</string>
+	<string name="stats_view_tags_and_categories">Etiketlər və Kateqoriyalar</string>
 	<string name="stats_view_comments">Şərhlər</string>
 	<string name="stats_entry_authors">Müəllif</string>
 	<string name="stats_entry_posts_and_pages">Başlıq</string>

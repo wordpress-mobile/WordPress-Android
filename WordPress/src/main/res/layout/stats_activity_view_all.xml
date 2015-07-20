@@ -22,6 +22,7 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_summary_date"
                 android:textAppearance="?android:attr/textAppearance"
+                android:textSize="@dimen/text_sz_large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
