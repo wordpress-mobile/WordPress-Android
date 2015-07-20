@@ -15,8 +15,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 
-import org.wordpress.android.R;
-
 public class AniUtils {
 
     public enum Duration {
@@ -68,43 +66,6 @@ public class AniUtils {
             }
             target.startAnimation(animation);
         }
-    }
-
-    /*
-     * in/out animation for floating action button
-     */
-    public static void showFab(final View view, final boolean show) {
-        if (view == null) return;
-
-        Context context = view.getContext();
-        int fabHeight = context.getResources().getDimensionPixelSize(R.dimen.fab_size_normal);
-        int fabMargin = context.getResources().getDimensionPixelSize(R.dimen.fab_margin);
-        int max = (fabHeight + fabMargin) * 2;
-        float fromY = (show ? max : 0f);
-        float toY   = (show ? 0f : max);
-
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, fromY, toY);
-        anim.setInterpolator(show ? new DecelerateInterpolator() : new AccelerateInterpolator());
-        anim.setDuration(show ? Duration.LONG.toMillis(context) : Duration.SHORT.toMillis(context));
-
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                if (view.getVisibility() != View.VISIBLE) {
-                    view.setVisibility(View.VISIBLE);
-                }
-            }
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                if (!show) {
-                    view.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        anim.start();
     }
 
     /*
@@ -244,5 +205,16 @@ public class AniUtils {
         });
 
         animator.start();
+    }
+
+    /*
+     * in/out animation for floating action button
+     */
+    public static void showFab(View fabView, boolean show) {
+        if (show) {
+            scaleIn(fabView, Duration.MEDIUM);
+        } else {
+            scaleOut(fabView, Duration.MEDIUM);
+        }
     }
 }

@@ -109,7 +109,7 @@ public class PostPreviewActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_edit) {
-            ActivityLauncher.editBlogPostOrPageForResult(this, mLocalPostId, mIsPage);
+            ActivityLauncher.editBlogPostOrPageForResult(this, mLocalPostId, mIsPage, null);
             return true;
         } else {
             return super.onOptionsItemSelected(item);

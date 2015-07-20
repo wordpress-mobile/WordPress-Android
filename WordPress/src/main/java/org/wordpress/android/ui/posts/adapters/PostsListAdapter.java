@@ -41,7 +41,19 @@ import java.util.List;
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
 
     public interface OnPostButtonClickListener {
-        void onPostButtonClicked(int buttonId, PostsListPost post);
+        void onPostButtonClicked(View itemView, int buttonId, PostsListPost post);
+    }
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
+    public interface OnPostSelectedListener {
+        void onPostSelected(View itemView, PostsListPost post);
+    }
+
+    public interface OnPostsLoadedListener {
+        void onPostsLoaded(int postCount);
     }
 
     private OnLoadMoreListener mOnLoadMoreListener;
@@ -170,7 +182,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             public void onClick(View v) {
                 PostsListPost selectedPost = getItem(position);
                 if (mOnPostSelectedListener != null && selectedPost != null) {
-                    mOnPostSelectedListener.onPostSelected(selectedPost);
+                    mOnPostSelectedListener.onPostSelected(holder.itemView, selectedPost);
                 }
             }
         });
@@ -275,7 +287,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
                         break;
                     default:
                         if (mOnPostButtonClickListener != null) {
-                            mOnPostButtonClickListener.onPostButtonClicked(buttonType, post);
+                            mOnPostButtonClickListener.onPostButtonClicked(holder.itemView, buttonType, post);
                         }
                         break;
                 }
@@ -375,18 +387,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         if (mHiddenPosts.remove(post)) {
             loadPosts();
         }
-    }
-
-    public interface OnLoadMoreListener {
-        void onLoadMore();
-    }
-
-    public interface OnPostSelectedListener {
-        void onPostSelected(PostsListPost post);
-    }
-
-    public interface OnPostsLoadedListener {
-        void onPostsLoaded(int postCount);
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {

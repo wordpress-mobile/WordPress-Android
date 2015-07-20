@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +63,7 @@ public class PostsListFragment extends Fragment
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
-    private View mFabView;
+    private FloatingActionButton mFabView;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
 
@@ -102,7 +103,7 @@ public class PostsListFragment extends Fragment
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
-        mFabView = view.findViewById(R.id.fab_button);
+        mFabView = (FloatingActionButton) view.findViewById(R.id.fab_button);
 
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewTitle = (TextView) mEmptyView.findViewById(R.id.title_empty);
@@ -117,7 +118,7 @@ public class PostsListFragment extends Fragment
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newPost();
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), mIsPage, v);
             }
         });
 
@@ -219,16 +220,6 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    private void newPost() {
-        if (!isAdded()) return;
-
-        if (WordPress.getCurrentBlog() != null) {
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), mIsPage);
-        } else {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found);
-        }
-    }
-
     public void onResume() {
         super.onResume();
 
@@ -239,7 +230,7 @@ public class PostsListFragment extends Fragment
                 @Override
                 public void run() {
                     if (isAdded()) {
-                        AniUtils.scaleIn(mFabView, AniUtils.Duration.MEDIUM);
+                        AniUtils.showFab(mFabView, true);
                     }
                 }
             }, delayMs);
@@ -512,15 +503,15 @@ public class PostsListFragment extends Fragment
      * called by the adapter when the user clicks a post
      */
     @Override
-    public void onPostSelected(PostsListPost post) {
-        onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
+    public void onPostSelected(View itemView, PostsListPost post) {
+        onPostButtonClicked(itemView, PostListButton.BUTTON_PREVIEW, post);
     }
 
     /*
      * called by the adapter when the user clicks the edit/view/stats/trash button for a post
      */
     @Override
-    public void onPostButtonClicked(int buttonType, PostsListPost post) {
+    public void onPostButtonClicked(View itemView, int buttonType, PostsListPost post) {
         if (!isAdded()) return;
 
         Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
@@ -531,7 +522,7 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
+                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage, itemView);
                 break;
             case PostListButton.BUTTON_PUBLISH:
                 PostUploadService.addPostToUpload(fullPost);

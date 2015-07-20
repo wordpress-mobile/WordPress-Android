@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +48,7 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
-    private View mFabView;
+    private FloatingActionButton mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
@@ -70,12 +71,6 @@ public class MySiteFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBlog = WordPress.getCurrentBlog();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        AniUtils.showFab(mFabView, false);
     }
 
     @Override
@@ -116,12 +111,12 @@ public class MySiteFragment extends Fragment
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
-        mFabView = rootView.findViewById(R.id.fab_button);
+        mFabView = (FloatingActionButton) rootView.findViewById(R.id.fab_button);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false, v);
             }
         });
 
@@ -151,6 +146,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AniUtils.showFab(mFabView, false);
                 ActivityLauncher.viewCurrentBlogPosts(getActivity());
             }
         });
@@ -165,6 +161,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AniUtils.showFab(mFabView, false);
                 ActivityLauncher.viewCurrentBlogPages(getActivity());
             }
         });
