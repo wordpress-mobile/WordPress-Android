@@ -145,7 +145,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
 
         if (view != null) {
-            String transitionName = activity.getString(R.string.transition_fab);
+            String transitionName = activity.getString(R.string.transition_post_editor);
             Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view, transitionName).toBundle();
             activity.startActivityForResult(intent, RequestCodes.EDIT_POST, bundle);
         } else {
@@ -153,11 +153,17 @@ public class ActivityLauncher {
         }
     }
 
-    public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {
+    public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage, View view) {
         Intent intent = new Intent(activity.getApplicationContext(), EditPostActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
-        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+        if (view != null) {
+            String transitionName = activity.getString(R.string.transition_post_editor);
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view, transitionName).toBundle();
+            activity.startActivityForResult(intent, RequestCodes.EDIT_POST, bundle);
+        } else {
+            activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+        }
     }
 
     /*

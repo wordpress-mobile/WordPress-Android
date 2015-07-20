@@ -503,15 +503,15 @@ public class PostsListFragment extends Fragment
      * called by the adapter when the user clicks a post
      */
     @Override
-    public void onPostSelected(PostsListPost post) {
-        onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
+    public void onPostSelected(View itemView, PostsListPost post) {
+        onPostButtonClicked(itemView, PostListButton.BUTTON_PREVIEW, post);
     }
 
     /*
      * called by the adapter when the user clicks the edit/view/stats/trash button for a post
      */
     @Override
-    public void onPostButtonClicked(int buttonType, PostsListPost post) {
+    public void onPostButtonClicked(View itemView, int buttonType, PostsListPost post) {
         if (!isAdded()) return;
 
         Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
@@ -522,7 +522,7 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
+                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage, itemView);
                 break;
             case PostListButton.BUTTON_PUBLISH:
                 PostUploadService.addPostToUpload(fullPost);

@@ -929,5 +929,5 @@
     <string name="tabbar_accessibility_label_me">Me</string>
 
     <!-- transition names - do not translate -->
-    <string name="transition_fab" translatable="false">transition_fab</string>
+    <string name="transition_post_editor" translatable="false">transition_post_editor</string>
 </resources>
