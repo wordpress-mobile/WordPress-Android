@@ -1778,16 +1778,13 @@ public class WordPressDB {
         return id;
     }
 
-    public boolean findLocalChanges(int blogId, boolean isPage) {
-        Cursor c = db.query(POSTS_TABLE, null,
-                "isLocalChange=? AND blogID=? AND isPage=?", new String[]{"1", String.valueOf(blogId), (isPage) ? "1" : "0"}, null, null, null);
-        int numRows = c.getCount();
-        c.close();
-        if (numRows > 0) {
-            return true;
-        }
-
-        return false;
+    /*
+     * returns true if any posts in the passed blog have changes which haven't been uploaded yet
+     */
+    public boolean blogHasLocalChanges(int localBlogId, boolean isPage) {
+        String sql = "SELECT 1 FROM " + POSTS_TABLE + " WHERE isLocalChange=1 AND blogID=? AND isPage=?";
+        String[] args = {String.valueOf(localBlogId), isPage ? "1" : "0"};
+        return SqlUtils.boolForQuery(db, sql, args);
     }
 
     public boolean saveTheme(Theme theme) {
