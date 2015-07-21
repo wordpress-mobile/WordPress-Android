@@ -53,19 +53,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/my_site_blog_posts_icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
                         style="@style/MySiteListRowIcon"
                         android:contentDescription="@string/my_site_btn_blog_posts"
                         android:src="@drawable/my_site_icon_posts" />
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:textColor="@color/black"
@@ -86,9 +84,8 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/my_site_blog_posts_2icon"
                         android:layout_width="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="0dp"
                         style="@style/MySiteListRowIcon"
                         android:contentDescription="@string/my_site_btn_blog_posts"
                         android:src="@drawable/my_site_icon_posts" />
@@ -115,14 +112,14 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/my_site_blog_post2s_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="0dp"
                         style="@style/MySiteListRowIcon"
-                        android:layout_gravity="center"
                         android:contentDescription="@string/my_site_btn_blog_posts"
                         android:src="@drawable/my_site_icon_posts" />
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:textColor="@color/black"
