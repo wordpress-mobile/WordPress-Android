@@ -7,7 +7,7 @@
 	<string name="push_auth_expired">İstek süresi doldu. WordPress.com sitesinde giriş yaparak tekrar deneyin.</string>
 	<string name="ignore">Yoksay</string>
 	<string name="stats_insights_best_ever">Şimdiye Kadarki En İyi Görüntülemeler</string>
-	<string name="stats_insights_most_popular_percent_views">Görüntülemelerde %%1$d%</string>
+	<string name="stats_insights_most_popular_percent_views">Görüntülemelerde %1$d%</string>
 	<string name="stats_insights_most_popular_hour">En popüler saat</string>
 	<string name="stats_insights_most_popular_day">En popüler gün</string>
 	<string name="stats_insights_today">Bugünün İstatistikleri</string>
