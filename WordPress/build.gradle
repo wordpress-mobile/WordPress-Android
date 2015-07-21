@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.2.1"
-        versionCode 192
+        versionName "4.3"
+        versionCode 194
         minSdkVersion 14
         targetSdkVersion 22
 
@@ -70,7 +70,7 @@ dependencies {
     compile 'com.crashlytics.sdk.android:crashlytics:2.2.2'
 
     // Provided by maven central
-    compile ('org.wordpress:mediapicker:1.2.3') {
+    compile ('org.wordpress:mediapicker:1.2.4') {
         exclude group:'com.android.support'
     }
     compile 'com.google.code.gson:gson:2.2.2'
