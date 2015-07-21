@@ -77,6 +77,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final long ENDLIST_INDICATOR_ID = -1;
 
     public PostsListAdapter(Context context, @NonNull Blog blog, boolean isPage) {
+        setHasStableIds(true);
+
         mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
 
