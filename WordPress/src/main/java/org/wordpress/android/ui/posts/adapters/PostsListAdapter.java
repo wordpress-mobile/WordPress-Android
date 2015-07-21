@@ -254,7 +254,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         // load more posts when we near the end
-        if (mOnLoadMoreListener != null && position >= getItemCount() - 1
+        if (mOnLoadMoreListener != null && position >= mPosts.size() - 1
                 && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
