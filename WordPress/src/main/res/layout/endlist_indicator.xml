@@ -7,11 +7,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/endlist_indicator"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/endlist_indicator_height"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:visibility="gone"
-    tools:background="@color/white"
-    tools:visibility="visible">
+    tools:background="@color/white">
 
     <View
         android:layout_width="match_parent"

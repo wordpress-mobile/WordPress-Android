@@ -58,6 +58,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int mLocalTableBlogId;
     private final int mPhotonWidth;
     private final int mPhotonHeight;
+    private final int mEndlistIndicatorHeight;
 
     private final boolean mIsPage;
     private final boolean mIsPrivateBlog;
@@ -71,6 +72,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private static final long ROW_ANIM_DURATION = 150;
 
+    private static final int VIEW_TYPE_POST_OR_PAGE = 0;
+    private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
+    private static final long ENDLIST_INDICATOR_ID = -1;
+
     public PostsListAdapter(Context context, @NonNull Blog blog, boolean isPage) {
         mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
@@ -83,6 +88,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         int contentSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mPhotonWidth = displayWidth - (contentSpacing * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+
+        // endlist indicator height is hard-coded here so that its horz line is in the middle of the fab
+        mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
 
         // on larger displays we can always show all buttons
         mAlwaysShowAllButtons = (displayWidth >= 1080);
@@ -105,19 +113,49 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private PostsListPost getItem(int position) {
-        if (isValidPosition(position)) {
+        if (isValidPostPosition(position)) {
             return mPosts.get(position);
         }
         return null;
     }
 
-    private boolean isValidPosition(int position) {
+    private boolean isValidPostPosition(int position) {
         return (position >= 0 && position < mPosts.size());
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position == mPosts.size()) {
+            return VIEW_TYPE_ENDLIST_INDICATOR;
+        }
+        return VIEW_TYPE_POST_OR_PAGE;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (getItemViewType(position) == VIEW_TYPE_ENDLIST_INDICATOR) {
+            return ENDLIST_INDICATOR_ID;
+        } else {
+            return mPosts.get(position).getPostId();
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (mPosts.size() == 0) {
+            return 0;
+        } else {
+            return mPosts.size() + 1; // +1 for the endlist indicator
+        }
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (mIsPage) {
+        if (viewType == VIEW_TYPE_ENDLIST_INDICATOR) {
+            View view = mLayoutInflater.inflate(R.layout.endlist_indicator, parent, false);
+            view.getLayoutParams().height = mEndlistIndicatorHeight;
+            return new EndListViewHolder(view);
+        } else if (mIsPage) {
             View view = mLayoutInflater.inflate(R.layout.page_item, parent, false);
             return new PageViewHolder(view);
         } else {
@@ -134,6 +172,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        // nothing to do if this is the static endlist indicator
+        if (getItemViewType(position) == VIEW_TYPE_ENDLIST_INDICATOR) {
+            return;
+        }
+
         final PostsListPost post = mPosts.get(position);
         Context context = holder.itemView.getContext();
 
@@ -206,11 +249,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             // only show the top divider for the first item
             pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
-
-            // show the endlist indicator if this is the last item - without this the fab
-            // would overlap the "..." icon on the last item
-            boolean isLastItem = (position == mPosts.size() - 1);
-            pageHolder.endlistIndicator.setVisibility(isLastItem ? View.VISIBLE : View.GONE);
         }
 
         // load more posts when we near the end
@@ -441,16 +479,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         animOut.start();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return mPosts.get(position).getPostId();
-    }
-
-    @Override
-    public int getItemCount() {
-        return mPosts.size();
-    }
-
     public void loadPosts() {
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -546,7 +574,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final ViewGroup dateHeader;
         private final View btnMore;
         private final View dividerTop;
-        private final ViewGroup endlistIndicator;
 
         public PageViewHolder(View view) {
             super(view);
@@ -556,7 +583,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             dividerTop = view.findViewById(R.id.divider_top);
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
             txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
-            endlistIndicator = (ViewGroup) view.findViewById(R.id.endlist_indicator);
+        }
+    }
+
+    class EndListViewHolder extends RecyclerView.ViewHolder {
+        public EndListViewHolder(View view) {
+            super(view);
         }
     }
 
@@ -566,7 +598,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      */
     public void mediaUpdated(long mediaId, String mediaUrl) {
         int position = mPosts.indexOfFeaturedMediaId(mediaId);
-        if (isValidPosition(position)) {
+        if (isValidPostPosition(position)) {
             mPosts.get(position).setFeaturedImageUrl(mediaUrl);
             notifyItemChanged(position);
         }
