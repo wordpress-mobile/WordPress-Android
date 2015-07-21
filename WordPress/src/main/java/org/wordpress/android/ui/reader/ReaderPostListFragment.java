@@ -2,15 +2,15 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -31,8 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.cocosw.undobar.UndoBarController;
-
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -43,6 +42,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -54,6 +54,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -68,7 +69,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -84,7 +84,8 @@ public class ReaderPostListFragment extends Fragment
                    ReaderInterfaces.OnPostPopupListener,
                    WPMainActivity.OnScrollToTopListener {
 
-    private Spinner mSpinner;
+    private Toolbar mTagToolbar;
+    private Spinner mTagSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
     private ReaderPostAdapter mPostAdapter;
@@ -96,7 +97,6 @@ public class ReaderPostListFragment extends Fragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-    private Toolbar mFragmentToolbar;
 
     private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
@@ -108,10 +108,12 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
+    private int mTagToolbarOffset;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
     private boolean mIsAnimatingOutNewPostsBar;
+    private boolean mIsLoggedOutReader;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -216,6 +218,8 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
@@ -334,7 +338,7 @@ public class ReaderPostListFragment extends Fragment
         if (mRecyclerView != null && hasPostAdapter()) {
             return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
-            return 0;
+            return -1;
         }
     }
 
@@ -354,11 +358,8 @@ public class ReaderPostListFragment extends Fragment
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideNewPostsBar();
-                mRecyclerView.scrollToPosition(0);
-                if (hasFragmentToolbar()) {
-                    showFragmentToolbar(true);
-                }
+                scrollRecycleViewToPosition(0);
+                refreshPosts();
             }
         });
 
@@ -464,45 +465,87 @@ public class ReaderPostListFragment extends Fragment
         });
     }
 
+    private void scrollRecycleViewToPosition(int position) {
+        if (!isAdded() || mRecyclerView == null) return;
+
+        mRecyclerView.scrollToPosition(position);
+
+        // we need to reposition the tag toolbar here, but we need to wait for the
+        // recycler to settle before doing so - note that RecyclerView doesn't
+        // fire it's scroll listener when scrollToPosition() is called, so we
+        // can't rely on that to position the toolbar in this situation
+        if (shouldShowTagToolbar()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    positionTagToolbar();
+                }
+            }, 250);
+        }
+    }
+
+    /*
+     * position the tag toolbar based on the recycler's scroll position - this will make it
+     * appear to scroll along with the recycler
+     */
+    private void positionTagToolbar() {
+        if (!isAdded() || mTagToolbar == null) return;
+
+        int distance = mRecyclerView.getVerticalScrollOffset();
+        int newVisibility;
+        if (distance <= mTagToolbarOffset) {
+            newVisibility = View.VISIBLE;
+            mTagToolbar.setTranslationY(-distance);
+        } else {
+            newVisibility = View.GONE;
+        }
+        if (mTagToolbar.getVisibility() != newVisibility) {
+            mTagToolbar.setVisibility(newVisibility);
+        }
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         // configure the toolbar for posts in followed tags (shown in main viewpager activity)
-        if (hasFragmentToolbar()) {
-            mFragmentToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-            mFragmentToolbar.setVisibility(View.VISIBLE);
-            mFragmentToolbar.inflateMenu(R.menu.reader_list);
-            mFragmentToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    if (menuItem.getItemId() == R.id.menu_tags) {
-                        ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                        return true;
+        if (shouldShowTagToolbar()) {
+            mTagToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
+
+            // the toolbar is hidden by the layout, so we need to show it here unless we know we're
+            // going to restore the list position once the adapter is loaded (which will take care
+            // of showing/hiding the toolbar)
+            mTagToolbar.setVisibility(mRestorePosition > 0 ? View.GONE : View.VISIBLE);
+
+            // enable customizing followed tags/blogs if user is logged in
+            if (!mIsLoggedOutReader) {
+                mTagToolbar.inflateMenu(R.menu.reader_list);
+                mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.menu_tags) {
+                            ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
+                });
+            }
+
+            // scroll the tag toolbar with the recycler
+            int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+            mTagToolbarOffset = (int) (toolbarHeight + (toolbarHeight * 0.25));
+            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    positionTagToolbar();
                 }
             });
-            // auto-hide the reader toolbar when user scrolls
-            mRecyclerView.setScrollDirectionListener(new ScrollDirectionListener() {
-                @Override
-                public void onScrollUp() {
-                    showFragmentToolbar(true);
-                    checkSwipeToRefresh();
-                }
-                @Override
-                public void onScrollDown() {
-                    showFragmentToolbar(false);
-                    checkSwipeToRefresh();
-                }
-                @Override
-                public void onScrollCompleted() {
-                    checkSwipeToRefresh();
-                }
-            });
+
             // create the tag spinner in the toolbar
-            if (mSpinner == null) {
-                enableTagSpinner(mFragmentToolbar);
+            if (mTagSpinner == null) {
+                enableTagSpinner();
             }
             selectTagInSpinner(getCurrentTag());
         }
@@ -521,7 +564,7 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        if (getPostListType().isPreviewType()) {
+        if (getPostListType().isPreviewType() && !mIsLoggedOutReader) {
             createFollowButton();
         }
 
@@ -535,15 +578,6 @@ public class ReaderPostListFragment extends Fragment
                 animateHeaderDelayed();
                 break;
         }
-    }
-
-    /*
-     * disable swipe-to-refresh if posts can be scrolled upwards - only necessary when the fragment
-     * toolbar is enabled since it can intercept the touch event and pass it on to the swipe layout,
-     * cause a refresh to begin even though the user is simply scrolling up the posts
-     */
-    private void checkSwipeToRefresh() {
-        mSwipeToRefreshLayout.setEnabled(!mRecyclerView.canScrollUp());
     }
 
     /*
@@ -626,7 +660,6 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    hideUndoBar();
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
                 }
             }
@@ -641,37 +674,38 @@ public class ReaderPostListFragment extends Fragment
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
 
-        // show the undo bar enabling the user to undo the block
-        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+        // show the undo snackbar enabling the user to undo the block
+        View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
-            public void onUndo(Parcelable parcelable) {
+            public void onClick(View v) {
                 ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 refreshPosts();
             }
         };
-        new UndoBarController.UndoBar(getActivity())
-                .message(getString(R.string.reader_toast_blog_blocked))
-                .listener(undoListener)
-                .translucent(true)
+        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener)
                 .show();
 
-    }
-
-    private void hideUndoBar() {
-        if (isAdded()) {
-            UndoBarController.clear(getActivity());
+        // make sure the tag toolbar is correctly positioned once the snackbar goes away
+        if (shouldShowTagToolbar()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    positionTagToolbar();
+                }
+            }, Constants.SNACKBAR_LONG_DURATION_MS);
         }
     }
 
     /*
      * enables the tag spinner in the toolbar, used only for posts in followed tags
      */
-    private void enableTagSpinner(Toolbar toolbar) {
+    private void enableTagSpinner() {
         if (!isAdded()) return;
 
-        mSpinner = (Spinner) toolbar.findViewById(R.id.reader_spinner);
-        mSpinner.setAdapter(getSpinnerAdapter());
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mTagSpinner = (Spinner) mTagToolbar.findViewById(R.id.reader_spinner);
+        mTagSpinner.setAdapter(getSpinnerAdapter());
+        mTagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
@@ -701,21 +735,8 @@ public class ReaderPostListFragment extends Fragment
      * returns true if the fragment should have it's own toolbar - used when showing posts in
      * followed tags so user can select a different tag from the toolbar spinner
      */
-    private boolean hasFragmentToolbar() {
+    private boolean shouldShowTagToolbar() {
         return (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
-    }
-
-    /*
-     * animates the toolbar above the reader fragment containing the tag spinner
-     */
-    public void showFragmentToolbar(boolean show) {
-        if (isAdded() && mFragmentToolbar != null) {
-            ReaderAnim.animateTopBar(mFragmentToolbar, show);
-        }
-    }
-
-    public boolean isFragmentToolbarShowing() {
-        return mFragmentToolbar != null && mFragmentToolbar.getVisibility() == View.VISIBLE;
     }
 
     /*
@@ -797,7 +818,8 @@ public class ReaderPostListFragment extends Fragment
             } else {
                 mEmptyView.setVisibility(View.GONE);
                 if (mRestorePosition > 0) {
-                    mRecyclerView.scrollToPosition(mRestorePosition);
+                    AppLog.d(T.READER, "reader post list > restoring position");
+                    scrollRecycleViewToPosition(mRestorePosition);
                 }
             }
             mRestorePosition = 0;
@@ -842,30 +864,18 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    /*
-     * called by post adapter when user requests to reblog a post
-     */
-    private final ReaderInterfaces.RequestReblogListener mRequestReblogListener = new ReaderInterfaces.RequestReblogListener() {
-        @Override
-        public void onRequestReblog(ReaderPost post, View view) {
-            if (isAdded()) {
-                ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, view);
-            }
-        }
-    };
-
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
-            mPostAdapter.setHasSpacer(hasFragmentToolbar());
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnTagSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
-            mPostAdapter.setOnReblogRequestedListener(mRequestReblogListener);
+            // show spacer above the first post to accommodate toolbar
+            mPostAdapter.setShowToolbarSpacer(shouldShowTagToolbar());
         }
         return mPostAdapter;
     }
@@ -925,7 +935,6 @@ public class ReaderPostListFragment extends Fragment
 
         getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
-        hideUndoBar();
         showLoadingProgress(false);
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
@@ -983,6 +992,7 @@ public class ReaderPostListFragment extends Fragment
      * refresh adapter so latest posts appear
      */
     private void refreshPosts() {
+        hideNewPostsBar();
         if (hasPostAdapter()) {
             getPostAdapter().refresh();
         }
@@ -1030,34 +1040,37 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // show "new posts" bar if new posts were downloaded in a followed tag and the adapter
-        // isn't empty (if it's empty, we want to display the new posts immediately)
-        boolean showNewPostsBar;
+        // determine whether to show the "new posts" bar - when this is shown, the newly
+        // downloaded posts aren't displayed until the user taps the bar - only appears
+        // when there are new posts in a followed tag and the user has scrolled the list
+        // beyond the first post
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW
-                && !isPostAdapterEmpty()
                 && event.getAction() == UpdateAction.REQUEST_NEWER
-                && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            // make sure that these new posts will actually appear at the top of the list - we
-            // don't want to show "new posts" if the new posts are older ones since the user
-            // expects to see the new posts at the top of the list. we do this by getting the
-            // id of the newest post in the database (which will contain the newly downloaded
-            // posts) and comparing it to the id of the first post in the adapter
-            long newestPostId = ReaderPostTable.getNewestPostIdWithTag(getCurrentTag());
-            ReaderPost post = getPostAdapter().getItem(0);
-            showNewPostsBar = (post != null && post.postId != newestPostId);
-        } else {
-            showNewPostsBar = false;
-        }
-
-        if (showNewPostsBar) {
+                && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                && !isPostAdapterEmpty()
+                && !isFirstPostVisible()) {
             showNewPostsBar();
-            refreshPosts();
         } else if (event.getResult().isNewOrChanged()) {
             refreshPosts();
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
             setEmptyTitleAndDescription(requestFailed);
         }
+    }
+
+    /*
+     * returns true if the first post is still visible in the RecyclerView - will return
+     * false if the first post is scrolled out of view, or if the list is empty
+     */
+    private boolean isFirstPostVisible() {
+        if (!isAdded()
+                || mRecyclerView == null
+                || mRecyclerView.getLayoutManager() == null) {
+            return false;
+        }
+
+        View child = mRecyclerView.getLayoutManager().getChildAt(0);
+        return (child != null && mRecyclerView.getLayoutManager().getPosition(child) == 0);
     }
 
     /*
@@ -1131,14 +1144,6 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
-
-        // hide after a short delay
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideNewPostsBar();
-            }
-        }, 3000);
     }
 
     private void hideNewPostsBar() {
@@ -1153,8 +1158,10 @@ public class ReaderPostListFragment extends Fragment
             public void onAnimationStart(Animation animation) { }
             @Override
             public void onAnimationEnd(Animation animation) {
-                mNewPostsBar.setVisibility(View.GONE);
-                mIsAnimatingOutNewPostsBar = false;
+                if (isAdded()) {
+                    mNewPostsBar.setVisibility(View.GONE);
+                    mIsAnimatingOutNewPostsBar = false;
+                }
             }
             @Override
             public void onAnimationRepeat(Animation animation) { }
@@ -1234,12 +1241,12 @@ public class ReaderPostListFragment extends Fragment
      * make sure the passed tag is the one selected in the spinner
      */
     private void selectTagInSpinner(final ReaderTag tag) {
-        if (mSpinner == null || !hasSpinnerAdapter()) {
+        if (mTagSpinner == null || !hasSpinnerAdapter()) {
             return;
         }
         int position = getSpinnerAdapter().getIndexOfTag(tag);
-        if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
-            mSpinner.setSelection(position);
+        if (position > -1 && position != mTagSpinner.getSelectedItemPosition()) {
+            mTagSpinner.setSelection(position);
         }
     }
 
@@ -1408,7 +1415,7 @@ public class ReaderPostListFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             // user just returned from the tags/subs activity
-            case ReaderConstants.INTENT_READER_SUBS:
+            case RequestCodes.READER_SUBS:
                 if (data != null) {
                     boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
                     boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
@@ -1424,16 +1431,6 @@ public class ReaderPostListFragment extends Fragment
                             && getCurrentTag().isBlogsIFollow()) {
                         refreshPosts();
                     }
-                }
-                break;
-
-            // user just returned from reblogging activity, reload the displayed post if reblogging
-            // succeeded
-            case ReaderConstants.INTENT_READER_REBLOG:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    reloadPost(ReaderPostTable.getPost(blogId, postId, true));
                 }
                 break;
         }
@@ -1487,10 +1484,6 @@ public class ReaderPostListFragment extends Fragment
     public void onScrollToTop() {
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, 0);
-            if (hasFragmentToolbar()) {
-                showFragmentToolbar(true);
-            }
         }
     }
-
 }

@@ -7,12 +7,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.wordpress.android.editor.R;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
 
 public class WPEditImageSpan extends WPImageSpan {
     private Bitmap mEditIconBitmap;
+
+    protected WPEditImageSpan() {
+        super();
+    }
 
     public WPEditImageSpan(Context context, Bitmap b, Uri src) {
         super(context, b, src);
@@ -25,7 +32,9 @@ public class WPEditImageSpan extends WPImageSpan {
     }
 
     private void init(Context context) {
-        mEditIconBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ab_icon_edit);
+        if (context != null) {
+            mEditIconBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ab_icon_edit);
+        }
     }
 
     @Override
@@ -33,7 +42,7 @@ public class WPEditImageSpan extends WPImageSpan {
                      Paint paint) {
         super.draw(canvas, text, start, end, x, top, y, bottom, paint);
 
-        if (!mMediaFile.isVideo()) {
+        if (mEditIconBitmap != null && !mMediaFile.isVideo()) {
             // Add 'edit' icon at bottom right of image
             int width = getSize(paint, text, start, end, paint.getFontMetricsInt());
             float editIconXPosition = (x + width) - mEditIconBitmap.getWidth();
@@ -49,4 +58,17 @@ public class WPEditImageSpan extends WPImageSpan {
             canvas.drawBitmap(mEditIconBitmap, editIconXPosition, editIconYPosition, paint);
         }
     }
+
+    public static final Parcelable.Creator<WPEditImageSpan> CREATOR = new Parcelable.Creator<WPEditImageSpan>() {
+        public WPEditImageSpan createFromParcel(Parcel in) {
+            WPEditImageSpan editSpan = new WPEditImageSpan();
+            editSpan.setupFromParcel(in);
+
+            return editSpan;
+        }
+
+        public WPEditImageSpan[] newArray(int size) {
+            return new WPEditImageSpan[size];
+        }
+    };
 }

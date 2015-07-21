@@ -19,7 +19,6 @@
 	<string name="reader_likes_you_and_one">Siz va yana bir kishi buni yoqtiradi</string>
 	<string name="select_date">Sana tanlang</string>
 	<string name="pick_photo">Rasm tanlang</string>
-	<string name="add_self_hosted_blog">O‘z blogingizni qo‘shish</string>
 	<string name="pick_video">Video tanlang</string>
 	<string name="nux_tap_continue">Davom</string>
 	<string name="nux_welcome_create_account">Akkaunt ochish</string>
@@ -28,10 +27,10 @@
 	<string name="reader_timespan_now">hozir</string>
 	<string name="jetpack_not_found">Jetpack plagini topilmadi</string>
 	<string name="media_add_popup_title">Media kutubxonasiga qo‘sh</string>
+	<string name="empty_list_default">Ushbu ro‘yxat bo‘sh</string>
 	<string name="select_from_media_library">Media kutubxonadan tanla</string>
 	<string name="jetpack_message">Statistikalar uchun JetPack plagini lozim. JetPack plaginini o‘rnatasizmi?</string>
 	<string name="reader_btn_share">Bo‘lish</string>
-	<string name="reader_btn_reblog">Qayta chop etish</string>
 	<string name="reader_btn_follow">Kuzatish</string>
 	<string name="reader_btn_unfollow">Kuzatmoqda</string>
 	<string name="reader_hint_comment_on_post">Mulohaza kiriting</string>
@@ -51,6 +50,8 @@
 	<string name="reader_label_removed_tag">%s o‘chirildi</string>
 	<string name="reader_likes_one">Bir kishi yoqtirgan</string>
 	<string name="reader_likes_only_you">Siz yoqtirgansiz</string>
+	<string name="reader_empty_followed_tags">Birorta ham teg kuzatmayapsiz</string>
+	<string name="create_account_wpcom">Wordpress.com da akkaunt oching</string>
 	<string name="connecting_wpcom">Wordpress.com ga bog‘lanmoqda</string>
 	<string name="username_invalid">Yaroqsiz foydalanuvchi nomi</string>
 	<string name="limit_reached">Chegaraga yetib keldik. Bir minutdan keyin harakat qilib ko‘rishingiz mumkin. Bu vaqtdan avval harakatga o‘tishingiz kutish vaqtining yanada uzayishiga olib keladi. Agar bu biror tushunmovchilik natijasi deb o‘ylasangiz, yordam xizmatiga murojaat qiling.</string>
@@ -84,13 +85,13 @@
 	<string name="view_stats_full_site">Saytni ko‘rish</string>
 	<string name="stats_view_visitors_and_views">Kirivchular va ko‘rishlar</string>
 	<string name="stats_view_clicks">Bosishlar</string>
+	<string name="stats_view_tags_and_categories">Teg va bo‘limlar</string>
 	<string name="stats_view_comments">Mulohazalar</string>
 	<string name="stats_timeframe_today">Bugun</string>
 	<string name="stats_timeframe_yesterday">Kecha</string>
 	<string name="stats_timeframe_days">Kunlar</string>
 	<string name="stats_timeframe_weeks">Xaftalar</string>
 	<string name="stats_timeframe_months">Oylar</string>
-	<string name="stats_summary">Qisqacha</string>
 	<string name="stats_entry_country">Mamlakat</string>
 	<string name="stats_entry_posts_and_pages">Sarlavha</string>
 	<string name="stats_entry_tags_and_categories">Mavzu</string>
@@ -99,8 +100,6 @@
 	<string name="stats_totals_clicks">Bosishlar</string>
 	<string name="stats_totals_plays">Ko‘rishlar</string>
 	<string name="stats_totals_comments">Mulohazalar</string>
-	<string name="stats_totals_visitors">Kiruvchilar</string>
-	<string name="stats_visitors_and_views_header_today">Bugun</string>
 	<string name="custom_date">Ixtiyoriy sana</string>
 	<string name="media_add_popup_capture_photo">Sur‘atga oling</string>
 	<string name="media_add_popup_capture_video">Videoga oling</string>
@@ -121,7 +120,6 @@
 	<string name="media_edit_caption_hint">Titr kiriting</string>
 	<string name="media_edit_description_hint">Izoh kiriting</string>
 	<string name="upload">Yuklash</string>
-	<string name="manage">Boshqarish</string>
 	<string name="notifications">Xabarlar</string>
 	<string name="manage_notifications">Xabarlarni moslash</string>
 	<string name="enable_notifications">Xabarlardan foydalanish</string>
@@ -133,9 +131,7 @@
 	<string name="note_reply_successful">Javob chop qilindi</string>
 	<string name="new_notifications">%d ta yangi xabarlar</string>
 	<string name="more_notifications">va yana %d ta.</string>
-	<string name="tooltip_follow">Blogni kuzatish yoxud kuzatishni to‘xtatish</string>
 	<string name="sign_in">Kirish</string>
-	<string name="sign_out">Chiqish</string>
 	<string name="loading">Yuklanmoqda...</string>
 	<string name="httppassword">HTTP parol</string>
 	<string name="post_signature">Imzo</string>
@@ -167,7 +163,6 @@
 	<string name="scheduled">Jadvalga kiritildi</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">WordPress Android orqali chop etildi</string>
-	<string name="uploading">Yuklanmoqda</string>
 	<string name="version">Versiya</string>
 	<string name="tos">Xizmat shartlari</string>
 	<string name="app_title">WordPress for Android</string>
@@ -176,7 +171,6 @@
 	<string name="image_alignment">Tekislash</string>
 	<string name="refresh">Yangila</string>
 	<string name="untitled">Nomsiz</string>
-	<string name="edit">Tahrir qil</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Sahifa</string>
 	<string name="post_password">Parol (ixtiyoriy)</string>
@@ -192,7 +186,6 @@
 	<string name="tags_separate_with_commas">Teglar (vergul bilan ajrating)</string>
 	<string name="title">Sarlavha</string>
 	<string name="categories">Bo‘limlar</string>
-	<string name="tab_stats">Statistika</string>
 	<string name="notification_vibrate">Vibratsiya</string>
 	<string name="notification_blink">Yonib-o‘chuvchi xabar</string>
 	<string name="notification_sound">Ovozli xabar</string>

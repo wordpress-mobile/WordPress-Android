@@ -6,32 +6,44 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.SettingsFragment;
+import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
+import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
+import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.SlidingTabLayout;
-import org.wordpress.android.widgets.WPMainViewPager;
+import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
 
@@ -39,11 +51,10 @@ import de.greenrobot.event.EventBus;
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends Activity
-    implements ViewPager.OnPageChangeListener,
-        SlidingTabLayout.SingleTabClickListener,
-        Bucket.Listener<Note> {
-    private WPMainViewPager mViewPager;
-    private SlidingTabLayout mTabs;
+    implements MediaAddFragment.MediaAddFragmentCallback, Bucket.Listener<Note> {
+
+    private WPViewPager mViewPager;
+    private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
@@ -61,25 +72,67 @@ public class WPMainActivity extends Activity
         setStatusBarColor();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
-        mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
-        mTabs = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.tab_indicator));
-        mTabs.setDistributeEvenly(true);
-        Integer icons[] = {R.drawable.main_tab_sites,
-                           R.drawable.main_tab_reader,
-                           R.drawable.main_tab_me,
-                           R.drawable.main_tab_notifications};
-        mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
-        mTabs.setViewPager(mViewPager);
-        mTabs.setOnSingleTabClickListener(this);
+        mTabLayout = (WPMainTabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.createTabs();
 
-        // page change listener must be set on the tab layout rather than the ViewPager
-        mTabs.setOnPageChangeListener(this);
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //  nop
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // scroll the active fragment to the top, if available
+                Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
+                if (fragment instanceof OnScrollToTopListener) {
+                    ((OnScrollToTopListener) fragment).onScrollToTop();
+                }
+            }
+        });
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                AppPrefs.setMainTabIndex(position);
+
+                switch (position) {
+                    case WPMainTabAdapter.TAB_NOTIFS:
+                        if (getNotificationListFragment() != null) {
+                            getNotificationListFragment().updateLastSeenTime();
+                            mTabLayout.showNoteBadge(false);
+                        }
+                        break;
+                }
+                trackLastVisibleTab(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // noop
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // fire event if the "My Site" page is being scrolled so the fragment can
+                // animate its fab to match
+                if (position == WPMainTabAdapter.TAB_MY_SITE) {
+                    EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
+                }
+            }
+        });
 
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
@@ -113,7 +166,7 @@ public class WPMainActivity extends Activity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppLog.i(AppLog.T.NOTIFS, "Main activity new intent");
+        AppLog.i(T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
@@ -126,63 +179,32 @@ public class WPMainActivity extends Activity
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
 
+        // Check for push authorization request
+        if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
+            Bundle extras = getIntent().getExtras();
+            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
+            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
+            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
+            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
+
+            long now = System.currentTimeMillis() / 1000;
+            if (expires > 0 && now > expires) {
+                // Show a toast if the user took too long to open the notification
+                ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+            } else {
+                NotificationsUtils.showPushAuthAlert(this, token, title, message);
+            }
+        }
+
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
         String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
 
         if (!TextUtils.isEmpty(noteId)) {
-            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard);
+            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
             GCMIntentService.clearNotificationsMap();
-        }
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        // remember the index of this page
-        AppPrefs.setMainTabIndex(position);
-
-        switch (position) {
-            case WPMainTabAdapter.TAB_NOTIFS:
-                if (getNotificationListFragment() != null) {
-                    getNotificationListFragment().updateLastSeenTime();
-                    mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, false);
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        int position = mViewPager.getCurrentItem();
-        if (position == WPMainTabAdapter.TAB_READER) {
-            ReaderPostListFragment fragment = getReaderListFragment();
-            if (fragment != null) {
-                if (state == ViewPager.SCROLL_STATE_DRAGGING && fragment.isFragmentToolbarShowing()) {
-                    fragment.showFragmentToolbar(false);
-                } else if (state == ViewPager.SCROLL_STATE_SETTLING && !fragment.isFragmentToolbarShowing()) {
-                    fragment.showFragmentToolbar(true);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // nop
-    }
-
-    /*
-     * user tapped a tab above the viewPager - detect when the active tab is clicked and scroll
-     * the fragment to the top if available
-     */
-    @Override
-    public void onTabClick(View view, int position) {
-        if (position == mViewPager.getCurrentItem()) {
-            Fragment fragment = mTabAdapter.getFragment(position);
-            if (fragment instanceof OnScrollToTopListener) {
-                ((OnScrollToTopListener) fragment).onScrollToTop();
-            }
         }
     }
 
@@ -215,26 +237,92 @@ public class WPMainActivity extends Activity
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
         }
+        mTabLayout.checkNoteBadge();
 
-        checkNoteBadge();
+        // We need to track the current item on the screen when this activity is resumed.
+        // Ex: Notifications -> notifications detail -> back to notifications
+       trackLastVisibleTab(mViewPager.getCurrentItem());
+    }
+
+    private void trackLastVisibleTab(int position) {
+        switch (position) {
+            case WPMainTabAdapter.TAB_MY_SITE:
+                ActivityId.trackLastActivity(ActivityId.MY_SITE);
+                break;
+            case WPMainTabAdapter.TAB_READER:
+                ActivityId.trackLastActivity(ActivityId.READER);
+                break;
+            case WPMainTabAdapter.TAB_ME:
+                ActivityId.trackLastActivity(ActivityId.ME);
+                break;
+            case WPMainTabAdapter.TAB_NOTIFS:
+                ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /*
+     * re-create the fragment adapter so all its fragments are also re-created - used when
+     * user signs in/out so the fragments reflect the active account
+     */
+    private void resetFragments() {
+        AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
+
+        // remove the event that determines when followed tags/blogs are updated so they're
+        // updated when the fragment is recreated (necessary after signin/disconnect)
+        EventBus.getDefault().removeStickyEvent(ReaderEvents.UpdatedFollowedTagsAndBlogs.class);
+
+        // remember the current tab position, then recreate the adapter so new fragments are created
+        int position = mViewPager.getCurrentItem();
+        mTabAdapter = new WPMainTabAdapter(getFragmentManager());
+        mViewPager.setAdapter(mTabAdapter);
+
+        // restore previous position
+        if (mTabAdapter.isValidPosition(position)) {
+            mViewPager.setCurrentItem(position);
+        }
+    }
+
+    private void moderateCommentOnActivityResult(Intent data) {
+        try {
+            if (SimperiumUtils.getNotesBucket() != null) {
+                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
+                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                CommentStatus status = CommentStatus.fromString(data.getStringExtra(
+                        NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+                NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
+            }
+        } catch (BucketObjectMissingException e) {
+            AppLog.e(T.NOTIFS, e);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case RequestCodes.EDIT_POST:
+                if (resultCode == RESULT_OK) {
+                    MySiteFragment mySiteFragment = getMySiteFragment();
+                    if (mySiteFragment != null) {
+                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
             case RequestCodes.READER_SUBS:
-            case RequestCodes.READER_REBLOG:
                 ReaderPostListFragment readerFragment = getReaderListFragment();
-                // TODO:
                 if (readerFragment != null) {
-                    //readerFragment.handleActivityResult(requestCode, resultCode, data);
+                    readerFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     WordPress.registerForCloudMessaging(this);
-                } else {
+                    resetFragments();
+                } else if (!AccountHelper.isSignedIn()) {
+                    // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
                 break;
@@ -245,26 +333,39 @@ public class WPMainActivity extends Activity
                     WordPress.registerForCloudMessaging(this);
                 }
                 break;
-            case RequestCodes.SETTINGS:
-                // user returned from settings
-                if (AccountHelper.isSignedIn()) {
-                    WordPress.registerForCloudMessaging(this);
-                } else {
-                    ActivityLauncher.showSignInForResult(this);
+            case RequestCodes.NOTE_DETAIL:
+                if (resultCode == RESULT_OK && data != null) {
+                    moderateCommentOnActivityResult(data);
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                if (resultCode == RESULT_OK && data != null) {
-                    int localId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, 0);
-                    //String blogId = data.getStringExtra(SitePickerActivity.KEY_BLOG_ID);
-
-                    // when a new blog is picked, set it to the current blog
-                    Blog blog = WordPress.setCurrentBlog(localId);
-                    WordPress.wpDB.updateLastBlogId(localId);
-
+                if (getMySiteFragment() != null) {
+                    getMySiteFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            case RequestCodes.BLOG_SETTINGS:
+                if (resultCode == BlogPreferencesActivity.RESULT_BLOG_REMOVED) {
+                    // user removed the current (self-hosted) blog from blog settings
+                    if (!AccountHelper.isSignedIn()) {
+                        ActivityLauncher.showSignInForResult(this);
+                    } else {
+                        MySiteFragment mySiteFragment = getMySiteFragment();
+                        if (mySiteFragment != null) {
+                            mySiteFragment.setBlog(WordPress.getCurrentBlog());
+                        }
+                    }
+                }
+                break;
+            case RequestCodes.ACCOUNT_SETTINGS:
+                if (resultCode == SettingsFragment.LANGUAGE_CHANGED) {
+                    resetFragments();
+                }
+                break;
+            case RequestCodes.CREATE_BLOG:
+                if (resultCode == RESULT_OK) {
                     MySiteFragment mySiteFragment = getMySiteFragment();
                     if (mySiteFragment != null) {
-                        mySiteFragment.setBlog(blog);
+                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
                     }
                 }
                 break;
@@ -275,70 +376,42 @@ public class WPMainActivity extends Activity
      * returns the reader list fragment from the reader tab
      */
     private ReaderPostListFragment getReaderListFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_READER);
-        if (fragment != null && fragment instanceof ReaderPostListFragment) {
-            return (ReaderPostListFragment) fragment;
-        }
-        return null;
+        return getFragmentByPosition(WPMainTabAdapter.TAB_READER, ReaderPostListFragment.class);
     }
 
     /*
      * returns the notification list fragment from the notification tab
      */
     private NotificationsListFragment getNotificationListFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
-        if (fragment != null && fragment instanceof NotificationsListFragment) {
-            return (NotificationsListFragment) fragment;
-        }
-        return null;
+        return getFragmentByPosition(WPMainTabAdapter.TAB_NOTIFS, NotificationsListFragment.class);
     }
 
     /*
      * returns the my site fragment from the sites tab
      */
-    private MySiteFragment getMySiteFragment() {
-        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_SITES);
-        if (fragment != null && fragment instanceof MySiteFragment) {
-            return (MySiteFragment) fragment;
-        }
-        return null;
+    public MySiteFragment getMySiteFragment() {
+        return getFragmentByPosition(WPMainTabAdapter.TAB_MY_SITE, MySiteFragment.class);
     }
 
-    /*
-     * badges the notifications tab depending on whether there are unread notes
-     */
-    private boolean mIsCheckingNoteBadge;
-    private void checkNoteBadge() {
-        if (mIsCheckingNoteBadge) {
-            AppLog.v(AppLog.T.NOTIFS, "already checking note badge");
-            return;
+    private <T> T getFragmentByPosition(int position, Class<T> type) {
+        Fragment fragment = mTabAdapter != null ? mTabAdapter.getFragment(position) : null;
+
+        if (fragment != null && type.isInstance(fragment)) {
+            return type.cast(fragment);
         }
 
-        mIsCheckingNoteBadge = true;
-        new Thread() {
-            @Override
-            public void run() {
-                final boolean hasUnreadNotes = SimperiumUtils.hasUnreadNotes();
-                boolean isBadged = mTabs.isBadged(WPMainTabAdapter.TAB_NOTIFS);
-                if (hasUnreadNotes != isBadged) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTabs.setBadge(WPMainTabAdapter.TAB_NOTIFS, hasUnreadNotes);
-                            mIsCheckingNoteBadge = false;
-                        }
-                    });
-                } else {
-                    mIsCheckingNoteBadge = false;
-                }
-            }
-        }.start();
+        return null;
     }
 
     // Events
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.UserSignedOut event) {
+    public void onEventMainThread(UserSignedOutWordPressCom event) {
+        resetFragments();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UserSignedOutCompletely event) {
         ActivityLauncher.showSignInForResult(this);
     }
 
@@ -368,13 +441,8 @@ public class WPMainActivity extends Activity
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.BlogListChanged event) {
-        // TODO: reload blog list if showing
-    }
-
-    @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        checkNoteBadge();
+        mTabLayout.checkNoteBadge();
     }
 
     /*
@@ -383,7 +451,14 @@ public class WPMainActivity extends Activity
     @Override
     public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
         if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
-            checkNoteBadge();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        mTabLayout.checkNoteBadge();
+                    }
+                }
+            });
         }
     }
 
@@ -400,5 +475,9 @@ public class WPMainActivity extends Activity
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
+    }
+
+    @Override
+    public void onMediaAdded(String mediaId) {
     }
 }

@@ -7,6 +7,7 @@ import org.wordpress.android.WordPress;
  * Timeframes for the stats pages.
  */
 public enum StatsTimeframe {
+    INSIGHTS(R.string.stats_insights),
     DAY(R.string.stats_timeframe_days),
     WEEK(R.string.stats_timeframe_weeks),
     MONTH(R.string.stats_timeframe_months),
@@ -15,7 +16,7 @@ public enum StatsTimeframe {
 
     private final int mLabelResId;
 
-    private StatsTimeframe(int labelResId) {
+    StatsTimeframe(int labelResId) {
         mLabelResId = labelResId;
     }
 

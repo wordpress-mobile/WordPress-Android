@@ -46,7 +46,6 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -54,7 +53,6 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
-import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -311,8 +309,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     // Set blog for Jetpack auth
-    public void setBlog(Blog blog) {
+    public void setBlogAndCustomMessageForJetpackAuth(Blog blog, String customAuthMessage) {
         mJetpackBlog = blog;
+        if(customAuthMessage != null && mJetpackAuthLabel != null) {
+            mJetpackAuthLabel.setText(customAuthMessage);
+        }
 
         if (mAddSelfHostedButton != null) {
             mJetpackAuthLabel.setVisibility(View.VISIBLE);
@@ -388,15 +389,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void wpcomPostLoginActions() {
-        // get reader tags so they're available as soon as the Reader is accessed - note that
-        // this uses the application context since the activity is finished immediately below
-        if (isAdded()) {
-            ReaderUpdateService.startService(getActivity().getApplicationContext(), EnumSet.of(
-                    UpdateTask.TAGS));
-        }
-    }
-
     private void trackAnalyticsSignIn() {
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
@@ -433,20 +425,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 if (isWPComLogin()) {
                     BlogUtils.addBlogs(userBlogList, mUsername);
                 } else {
-                    // If app is signed out, check for a matching username. No match? Then delete existing accounts
-                    if (AccountHelper.getDefaultAccount().isUserTappedSignedOutButton()) {
-                        AccountHelper.getDefaultAccount().setUserTappedSignedOutButton(false);
-                        if (userBlogList.size() > 0) {
-                            String xmlrpcUrl = MapUtils.getMapStr(userBlogList.get(0), "xmlrpc");
-                            if (!WordPress.wpDB.hasDotOrgBlogForUsernameAndUrl(mUsername, xmlrpcUrl)) {
-                                WordPress.wpDB.dangerouslyDeleteAllContent();
-                                // Clear WPCom login info (could have been set up for Jetpack stats auth)
-                                WordPress.removeWpComUserRelatedData(WordPress.getContext());
-                                WordPress.currentBlog = null;
-                            }
-                        }
-                    }
-
                     BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
                 }
 
@@ -456,8 +434,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
             trackAnalyticsSignIn();
 
+            // get reader tags so they're available as soon as the Reader is accessed - done for
+            // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
+            // uses the application context since the activity is finished immediately below
+            ReaderUpdateService.startService(getActivity().getApplicationContext(),
+                    EnumSet.of(UpdateTask.TAGS));
+
             if (isWPComLogin()) {
-                wpcomPostLoginActions();
                 // Fire off a synchronous request to get the primary blog
                 WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override

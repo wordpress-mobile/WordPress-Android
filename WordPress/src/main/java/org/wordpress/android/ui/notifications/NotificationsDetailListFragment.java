@@ -21,17 +21,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
+import org.wordpress.android.ui.notifications.blocks.BlockType;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
+import org.wordpress.android.ui.notifications.blocks.FooterNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.services.ReaderCommentService;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -50,7 +56,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private int mRestoredListPosition;
 
     public interface OnNoteChangeListener {
-        public void onNoteChanged(Note note);
+        void onNoteChanged(Note note);
     }
 
     private Note mNote;
@@ -59,6 +65,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
+    private boolean mIsUnread;
+
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private OnNoteChangeListener mOnNoteChangeListener;
     private NoteBlockAdapter mNoteBlockAdapter;
@@ -120,10 +128,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Override
     public void onPause() {
-        // remove the bucket listener
+        // Remove the simperium bucket listener
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().removeListener(this);
         }
+
+        // Stop the reader comment service if it is running
+        ReaderCommentService.stopService(getActivity());
 
         super.onPause();
     }
@@ -144,6 +155,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         if (SimperiumUtils.getNotesBucket() != null) {
             try {
                 Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                mIsUnread = note.isUnread();
                 setNote(note);
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
@@ -188,9 +200,15 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
-            if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
-                // show comment detail
-                detailActivity.showCommentDetailForNote(mNote);
+            if (mNote.isCommentReplyType() || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
+                long commentId = mNote.isCommentReplyType() ? mNote.getParentCommentId() : mNote.getCommentId();
+
+                // show comments list if it exists in the reader
+                if (ReaderUtils.postAndCommentExists(mNote.getSiteId(), mNote.getPostId(), commentId)) {
+                    detailActivity.showReaderCommentsList(mNote.getSiteId(), mNote.getPostId(), commentId);
+                } else {
+                    detailActivity.showWebViewActivityForUrl(mNote.getUrl());
+                }
             } else if (mNote.isFollowType()) {
                 detailActivity.showBlogPreviewActivity(mNote.getSiteId());
             } else {
@@ -242,6 +260,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         protected List<NoteBlock> doInBackground(Void... params) {
             if (mNote == null) return null;
 
+            requestReaderContentForNote();
+
             JSONArray bodyArray = mNote.getBody();
             final List<NoteBlock> noteList = new ArrayList<>();
 
@@ -268,7 +288,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         NoteBlock noteBlock;
                         String noteBlockTypeString = JSONUtils.queryJSON(noteObject, "type", "");
 
-                        if (NoteBlockRangeType.fromString(noteBlockTypeString) == NoteBlockRangeType.USER) {
+                        if (BlockType.fromString(noteBlockTypeString) == BlockType.USER) {
                             if (mNote.isCommentType()) {
                                 // Set comment position so we can target it later
                                 // See refreshBlocksForCommentStatus()
@@ -304,6 +324,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         mOnGravatarClickedListener
                                 );
                             }
+                        } else if (isFooterBlock(noteObject)) {
+                            noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                            ((FooterNoteBlock)noteBlock).setClickableSpan(
+                                    JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
+                                    mNote.getType()
+                            );
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
@@ -350,6 +376,24 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     }
 
+    private boolean isFooterBlock(JSONObject blockObject) {
+        if (mNote == null || blockObject == null) return false;
+
+        if (mNote.isCommentType()) {
+            // Check if this is a comment notification that has been replied to
+            // The block will not have a type, and its id will match the comment reply id in the Note.
+            return (JSONUtils.queryJSON(blockObject, "type", null) == null &&
+                    mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
+        } else if (mNote.isFollowType() || mNote.isLikeType() ||
+                mNote.isCommentLikeType() || mNote.isReblogType()) {
+            // User list notifications have a footer if they have 10 or more users in the body
+            // The last block will not have a type, so we can use that to determine if it is the footer
+            return JSONUtils.queryJSON(blockObject, "type", null) == null;
+        }
+
+        return false;
+    }
+
     public void refreshBlocksForCommentStatus(CommentStatus newStatus) {
         if (mOnCommentStatusChangeListener != null) {
             mOnCommentStatusChangeListener.onCommentStatusChanged(newStatus);
@@ -369,6 +413,22 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                     break;
                 }
             }
+        }
+    }
+
+    // Requests Reader content for certain notification types
+    private void requestReaderContentForNote() {
+        if (mNote == null || !isAdded()) return;
+
+        // Request the reader post so that loading reader activities will work.
+        if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
+            ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
+        }
+
+        // Request reader comments until we retrieve the comment for this note
+        if (mNote.isCommentLikeType() || mNote.isCommentReplyType() &&
+                !ReaderCommentTable.commentExists(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId())) {
+            ReaderCommentService.startServiceForComment(getActivity(), mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
         }
     }
 
@@ -398,6 +458,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             try {
                 mNote = noteBucket.get(noteId);
+
+                // Don't refresh if the note was just marked as read
+                if (!mNote.isUnread() && mIsUnread) {
+                    mIsUnread = false;
+                    return;
+                }
 
                 // Mark note as read since we are looking at it already
                 if (mNote.isUnread()) {

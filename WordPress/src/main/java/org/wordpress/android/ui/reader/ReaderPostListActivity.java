@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
@@ -23,7 +24,7 @@ import de.greenrobot.event.EventBus;
  * serves as the host for ReaderPostListFragment
  */
 
-public class ReaderPostListActivity extends ActionBarActivity {
+public class ReaderPostListActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,8 +131,7 @@ public class ReaderPostListActivity extends ActionBarActivity {
                 break;
 
             // pass reader-related results to the fragment
-            case ReaderConstants.INTENT_READER_SUBS:
-            case ReaderConstants.INTENT_READER_REBLOG:
+            case RequestCodes.READER_SUBS:
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null) {
                     listFragment.onActivityResult(requestCode, resultCode, data);

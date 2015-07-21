@@ -1,23 +1,22 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.passcodelock.PasscodePreferenceFragment;
 
-public class SettingsActivity extends ActionBarActivity {
-    public static final String CURRENT_BLOG_CHANGED = "CURRENT_BLOG_CHANGED";
-    private Blog mCurrentBlogOnCreate;
+public class SettingsActivity extends AppCompatActivity {
+    private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
+    private static final String KEY_PASSCODE_FRAGMENT = "passcode-fragment";
+
     private SettingsFragment mSettingsFragment;
+    private PasscodePreferenceFragment mPasscodePreferenceFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,13 +27,60 @@ public class SettingsActivity extends ActionBarActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        mCurrentBlogOnCreate = WordPress.getCurrentBlog();
         setContentView(R.layout.settings_activity);
-        mSettingsFragment = new SettingsFragment();
-        getFragmentManager().beginTransaction()
-                            .add(R.id.fragment_container, mSettingsFragment)
-                            .commit();
+
+        FragmentManager fragmentManager = getFragmentManager();
+        if (savedInstanceState == null) {
+            Bundle passcodeArgs = new Bundle();
+            passcodeArgs.putBoolean(PasscodePreferenceFragment.KEY_SHOULD_INFLATE, false);
+            mSettingsFragment = new SettingsFragment();
+            mPasscodePreferenceFragment = new PasscodePreferenceFragment();
+            mPasscodePreferenceFragment.setArguments(passcodeArgs);
+
+            fragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, mSettingsFragment)
+                    .add(R.id.fragment_container, mPasscodePreferenceFragment)
+                    .commit();
+        } else {
+            mSettingsFragment = (SettingsFragment)
+                    fragmentManager.getFragment(savedInstanceState, KEY_SETTINGS_FRAGMENT);
+            mPasscodePreferenceFragment = (PasscodePreferenceFragment)
+                    fragmentManager.getFragment(savedInstanceState, KEY_PASSCODE_FRAGMENT);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        getFragmentManager().putFragment(
+                savedInstanceState, KEY_SETTINGS_FRAGMENT, mSettingsFragment);
+        getFragmentManager().putFragment(
+                savedInstanceState, KEY_PASSCODE_FRAGMENT, mPasscodePreferenceFragment);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Preference togglePref =
+                mSettingsFragment.findPreference(getString(R.string.pref_key_passcode_toggle));
+        Preference changePref =
+                mSettingsFragment.findPreference(getString(R.string.pref_key_change_passcode));
+
+        if (togglePref != null && changePref != null) {
+            mPasscodePreferenceFragment.setPreferences(togglePref, changePref);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -47,49 +93,9 @@ public class SettingsActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkForBlogChangeAndFinish() {
-        Intent data = new Intent();
-        boolean currentBlogChanged = false;
-        if (mCurrentBlogOnCreate != null) {
-            if (mCurrentBlogOnCreate.isDotcomFlag()) {
-                if (!WordPress.wpDB.isDotComBlogVisible(mCurrentBlogOnCreate.getRemoteBlogId())) {
-                    // dotcom blog has been hidden or removed
-                    currentBlogChanged = true;
-                }
-            } else {
-                if (!WordPress.wpDB.isBlogInDatabase(mCurrentBlogOnCreate.getRemoteBlogId(), mCurrentBlogOnCreate.getUrl())) {
-                    // self hosted blog has been removed
-                    currentBlogChanged = true;
-                }
-            }
-        } else {
-            // no visible blogs when settings opened
-            if (WordPress.wpDB.getNumVisibleBlogs() != 0) {
-                // now at least one blog could be selected
-                currentBlogChanged = true;
-            }
-        }
-        data.putExtra(SettingsActivity.CURRENT_BLOG_CHANGED, currentBlogChanged);
-        setResult(Activity.RESULT_OK, data);
-        AnalyticsTracker.loadPrefHasUserOptedOut(this, true);
-        AnalyticsUtils.refreshMetadata();
-
-        finish();
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSettingsFragment.refreshWPComAuthCategory();
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 }

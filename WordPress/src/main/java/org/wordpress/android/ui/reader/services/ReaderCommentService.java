@@ -17,7 +17,6 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
@@ -31,17 +30,36 @@ import de.greenrobot.event.EventBus;
 
 public class ReaderCommentService extends Service {
 
-    private static final String ARG_POST_ID   = "post_id";
-    private static final String ARG_BLOG_ID   = "blog_id";
-    private static final String ARG_NEXT_PAGE = "next_page";
+    private static final String ARG_POST_ID     = "post_id";
+    private static final String ARG_BLOG_ID     = "blog_id";
+    private static final String ARG_COMMENT_ID  = "comment_id";
+    private static final String ARG_NEXT_PAGE   = "next_page";
 
-    public static void startService(Context context, ReaderPost post, boolean requestNextPage) {
+    private static int mCurrentPage;
+
+    public static void startService(Context context, long blogId, long postId, boolean requestNextPage) {
         Intent intent = new Intent(context, ReaderCommentService.class);
-        intent.putExtra(ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ARG_POST_ID, post.postId);
+        intent.putExtra(ARG_BLOG_ID, blogId);
+        intent.putExtra(ARG_POST_ID, postId);
         intent.putExtra(ARG_NEXT_PAGE, requestNextPage);
         context.startService(intent);
     }
+
+    // Requests comments until the passed commentId is found
+    public static void startServiceForComment(Context context, long blogId, long postId, long commentId) {
+        Intent intent = new Intent(context, ReaderCommentService.class);
+        intent.putExtra(ARG_BLOG_ID, blogId);
+        intent.putExtra(ARG_POST_ID, postId);
+        intent.putExtra(ARG_COMMENT_ID, commentId);
+        context.startService(intent);
+    }
+
+    public static void stopService(Context context) {
+        if (context == null) return;
+
+        Intent intent = new Intent(context, ReaderCommentService.class);
+        context.stopService(intent);
+     }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -68,23 +86,34 @@ public class ReaderCommentService extends Service {
 
         EventBus.getDefault().post(new ReaderEvents.UpdateCommentsStarted());
 
-        long blogId = intent.getLongExtra(ARG_BLOG_ID, 0);
-        long postId = intent.getLongExtra(ARG_POST_ID, 0);
+        final long blogId = intent.getLongExtra(ARG_BLOG_ID, 0);
+        final long postId = intent.getLongExtra(ARG_POST_ID, 0);
+        final long commentId = intent.getLongExtra(ARG_COMMENT_ID, 0);
         boolean requestNextPage = intent.getBooleanExtra(ARG_NEXT_PAGE, false);
 
-        int pageNumber;
         if (requestNextPage) {
             int prevPage = ReaderCommentTable.getLastPageNumberForPost(blogId, postId);
-            pageNumber = prevPage + 1;
+            mCurrentPage = prevPage + 1;
         } else {
-            pageNumber = 1;
+            mCurrentPage = 1;
         }
 
-        updateCommentsForPost(blogId, postId, pageNumber, new UpdateResultListener() {
+        updateCommentsForPost(blogId, postId, mCurrentPage, new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
-                EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(result));
-                stopSelf();
+                if (commentId > 0) {
+                    if (ReaderCommentTable.commentExists(blogId, postId, commentId) || !result.isNewOrChanged()) {
+                        EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(result));
+                        stopSelf();
+                    } else {
+                        // Comment not found yet, request the next page
+                        mCurrentPage++;
+                        updateCommentsForPost(blogId, postId, mCurrentPage, this);
+                    }
+                } else {
+                    EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(result));
+                    stopSelf();
+                }
             }
         });
 

@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -35,21 +36,21 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
 
         if (context instanceof Activity) {
-            // For ActionBarActivity subclasses, we need to pull the title from the Toolbar
+            // For AppCompatActivity subclasses, we need to pull the title from the Toolbar
             CharSequence title = null;
-            if (context instanceof ActionBarActivity && ((ActionBarActivity) context).getSupportActionBar() != null) {
-                title = ((ActionBarActivity) context).getSupportActionBar().getTitle();
+            if (context instanceof AppCompatActivity && ((AppCompatActivity) context).getSupportActionBar() != null) {
+                title = ((AppCompatActivity) context).getSupportActionBar().getTitle();
             }
 
             if (title == null) {
-                // Not an ActionBarActivity, or getSupportActionBar().getTitle() returned null.
+                // Not an AppCompatActivity, or getSupportActionBar().getTitle() returned null.
                 // Try to read the title from the Activity
                 title = ((Activity)context).getTitle();
             }
             intent.putExtra(ReaderConstants.ARG_TITLE, title);
         }
 
-        showReaderPostPager(context, intent);
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
@@ -68,11 +69,11 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getTagName());
+        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getCapitalizedTagName());
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
-        showReaderPostPager(context, intent);
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
@@ -87,19 +88,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
-        showReaderPostPager(context, intent);
-    }
-
-    private static void showReaderPostPager(Context context, Intent intent) {
-        if (context instanceof Activity) {
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    context,
-                    R.anim.reader_activity_slide_in,
-                    R.anim.do_nothing);
-            ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
@@ -152,49 +141,40 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    /*
-     * show comments for the passed post
-     */
-    public static void showReaderComments(Context context, ReaderPost post) {
-        if (post == null) {
-            return;
-        }
-        Intent intent = new Intent(context, ReaderCommentListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
 
-        if (context instanceof Activity) {
-            Activity activity = (Activity) context;
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.reader_flyin,
-                    R.anim.reader_activity_scale_out);
-            ActivityCompat.startActivity(activity, intent, options.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
+    /*
+     * show comments for the passed Ids
+     */
+    public static void showReaderComments(Context context, long blogId, long postId) {
+        showReaderComments(context, blogId, postId, 0);
+    }
+
+
+    /*
+     * Show comments for passed Ids. Passing a commentId will scroll that comment into view
+     */
+    public static void showReaderComments(Context context, long blogId, long postId, long commentId) {
+        Intent intent = new Intent(context, ReaderCommentListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
-     * show users who liked the passed post
+     * show users who liked a post
      */
-    public static void showReaderLikingUsers(Context context, ReaderPost post) {
-        if (post == null) {
-            return;
-        }
+    public static void showReaderLikingUsers(Context context, long blogId, long postId) {
         Intent intent = new Intent(context, ReaderUserListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
-        context.startActivity(intent);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        ActivityLauncher.slideInFromRight(context, intent);
     }
 
     /*
      * show users who liked the passed comment
      */
     public static void showReaderLikingUsers(Context context, ReaderComment comment) {
-        if (comment == null) {
-            return;
-        }
         Intent intent = new Intent(context, ReaderUserListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, comment.blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, comment.postId);
@@ -207,7 +187,7 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderSubsForResult(Activity activity) {
         Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        activity.startActivityForResult(intent, RequestCodes.READER_SUBS);
+        ActivityLauncher.slideInFromRightForResult(activity, intent, RequestCodes.READER_SUBS);
     }
 
     /*
@@ -248,28 +228,6 @@ public class ReaderActivityLauncher {
         }
     }
 
-    /*
-     * show the reblog activity for the passed post
-     */
-    public static void showReaderReblogForResult(Activity activity, ReaderPost post, View source) {
-        if (activity == null || post == null) {
-            return;
-        }
-        Intent intent = new Intent(activity, ReaderReblogActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
-        ActivityOptionsCompat options;
-        if (source != null) {
-            int startX = source.getLeft();
-            int startY = source.getTop();
-            options = ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, 0, 0);
-        } else {
-            options = ActivityOptionsCompat.makeCustomAnimation(activity, R.anim.reader_flyin, 0);
-        }
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.READER_REBLOG, options.toBundle());
-
-    }
-
     public static enum OpenUrlType { INTERNAL, EXTERNAL }
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);
@@ -290,7 +248,8 @@ public class ReaderActivityLauncher {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 context.startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                ToastUtils.showToast(context, context.getString(R.string.reader_toast_err_url_intent, url), ToastUtils.Duration.LONG);
+                String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
+                ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
             }
         }
     }

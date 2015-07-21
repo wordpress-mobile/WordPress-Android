@@ -12,4 +12,9 @@ public class StatsConstants {
 
     public static final int STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP = 100;
 
+    public static final long STATS_SCROLL_TO_DELAY = 75L;
+
+    public static final String ITEM_TYPE_POST = "post";
+    public static final String ITEM_TYPE_PAGE = "page";
+    public static final String ITEM_TYPE_HOME_PAGE = "homepage";
 }

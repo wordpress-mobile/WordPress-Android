@@ -5,10 +5,7 @@ import android.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,29 +13,29 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
-import com.cocosw.undobar.UndoBarController;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
-import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import javax.annotation.Nonnull;
+
+import de.greenrobot.event.EventBus;
 
 public class NotificationsListFragment extends Fragment
         implements Bucket.Listener<Note>,
@@ -47,15 +44,13 @@ public class NotificationsListFragment extends Fragment
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
-    private static final int NOTE_DETAIL_REQUEST_CODE = 0;
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
-    private SwipeToRefreshHelper mFauxSwipeToRefreshHelper;
     private NotesAdapter mNotesAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
-    private TextView mEmptyTextView;
+    private ViewGroup mEmptyView;
 
     private int mRestoredScrollPosition;
 
@@ -63,7 +58,7 @@ public class NotificationsListFragment extends Fragment
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
-   }
+    }
 
     /**
      * For responding to tapping of notes
@@ -77,6 +72,8 @@ public class NotificationsListFragment extends Fragment
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
+        mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
+
         RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
         animator.setSupportsChangeAnimations(true);
         mRecyclerView.setItemAnimator(animator);
@@ -91,22 +88,30 @@ public class NotificationsListFragment extends Fragment
                 mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
                     @Override
                     public void onClickNote(String noteId) {
+                        if (!isAdded()) {
+                            return;
+                        }
+
                         if (TextUtils.isEmpty(noteId)) return;
 
                         // open the latest version of this note just in case it has changed - this can
                         // happen if the note was tapped from the list fragment after it was updated
                         // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(getActivity(), noteId, false);
+                        openNote(getActivity(), noteId, false, true);
                     }
                 });
             }
 
             mRecyclerView.setAdapter(mNotesAdapter);
         } else {
-            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
+            if (!AccountHelper.isSignedInWordPressDotCom()) {
+                // let user know that notifications require a wp.com account and enable sign-in
+                showEmptyView(R.string.notifications_account_required, true);
+            } else {
+                // failed for some other reason
+                showEmptyView(R.string.error_refresh_notifications, false);
+            }
         }
-
-        mEmptyTextView = (TextView) view.findViewById(R.id.empty_view);
 
         return view;
     }
@@ -114,8 +119,6 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        initSwipeToRefreshHelper();
 
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
@@ -161,45 +164,29 @@ public class NotificationsListFragment extends Fragment
         super.onDestroy();
     }
 
-    private void initSwipeToRefreshHelper() {
-        mFauxSwipeToRefreshHelper = new SwipeToRefreshHelper(
-                getActivity(),
-                (CustomSwipeRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        // Show a fake refresh animation for a few seconds
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isAdded()) {
-                                    mFauxSwipeToRefreshHelper.setRefreshing(false);
-                                }
-                            }
-                        }, 2000);
-                    }
-                });
-    }
-
     /**
      * Open a note fragment based on the type of note
      */
-    public static void openNote(Activity activity, final String noteId, boolean shouldShowKeyboard) {
+    public static void openNote(Activity activity,
+                                String noteId,
+                                boolean shouldShowKeyboard,
+                                boolean shouldSlideIn) {
         if (noteId == null || activity == null) {
+            return;
+        }
+
+        if (activity.isFinishing()) {
             return;
         }
 
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.reader_activity_slide_in,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, detailIntent, NOTE_DETAIL_REQUEST_CODE, options.toBundle());
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
+        if (shouldSlideIn) {
+            ActivityLauncher.slideInFromRightForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL);
+        } else {
+            activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
+        }
     }
 
     private void setNoteIsHidden(String noteId, boolean isHidden) {
@@ -245,6 +232,29 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    private void showEmptyView(@StringRes int stringResId, boolean showSignIn) {
+        if (isAdded() && mEmptyView != null) {
+            ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(stringResId);
+            mEmptyView.setVisibility(View.VISIBLE);
+            Button btnSignIn = (Button) mEmptyView.findViewById(R.id.button_sign_in);
+            btnSignIn.setVisibility(showSignIn ? View.VISIBLE : View.GONE);
+            if (showSignIn) {
+                btnSignIn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ActivityLauncher.showSignInForResult(getActivity());
+                    }
+                });
+            }
+        }
+    }
+
+    private void hideEmptyView() {
+        if (isAdded() && mEmptyView != null) {
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
     void refreshNotes() {
         if (!isAdded() || mNotesAdapter == null) {
             return;
@@ -255,7 +265,11 @@ public class NotificationsListFragment extends Fragment
             public void run() {
                 mNotesAdapter.reloadNotes();
                 restoreListScrollPosition();
-                mEmptyTextView.setVisibility(mNotesAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
+                if (mNotesAdapter.getCount() > 0) {
+                    hideEmptyView();
+                } else {
+                    showEmptyView(R.string.notifications_empty_list, false);
+                }
             }
         });
     }
@@ -291,88 +305,6 @@ public class NotificationsListFragment extends Fragment
 
     private void setRestoredListPosition(int listPosition) {
         mRestoredScrollPosition = listPosition;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == NOTE_DETAIL_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            if (SimperiumUtils.getNotesBucket() == null) return;
-
-            try {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra(NOTE_MODERATE_ID_EXTRA)));
-                CommentStatus commentStatus = CommentStatus.fromString(data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA));
-                moderateCommentForNote(note, commentStatus);
-            } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void moderateCommentForNote(final Note note, final CommentStatus newStatus) {
-        if (!isAdded()) return;
-
-        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
-            note.save();
-            setNoteIsModerating(note.getId(), true);
-            CommentActions.moderateCommentForNote(note, newStatus,
-                    new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(boolean succeeded) {
-                            if (!isAdded()) return;
-
-                            setNoteIsModerating(note.getId(), false);
-
-                            if (!succeeded) {
-                                note.setLocalStatus(null);
-                                note.save();
-                                ToastUtils.showToast(getActivity(),
-                                        R.string.error_moderate_comment,
-                                        ToastUtils.Duration.LONG
-                                );
-                            }
-                        }
-                    });
-        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
-            setNoteIsHidden(note.getId(), true);
-            // Show undo bar for trash or spam actions
-            new UndoBarController.UndoBar(getActivity())
-                    .message(newStatus == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
-                    .listener(new UndoBarController.AdvancedUndoListener() {
-                        @Override
-                        public void onHide(Parcelable parcelable) {
-                            // Deleted notifications in Simperium never come back, so we won't
-                            // make the request until the undo bar fades away
-                            CommentActions.moderateCommentForNote(note, newStatus,
-                                    new CommentActions.CommentActionListener() {
-                                        @Override
-                                        public void onActionResult(boolean succeeded) {
-                                            if (!isAdded()) return;
-
-                                            if (!succeeded) {
-                                                setNoteIsHidden(note.getId(), false);
-                                                ToastUtils.showToast(getActivity(),
-                                                        R.string.error_moderate_comment,
-                                                        ToastUtils.Duration.LONG
-                                                );
-                                            }
-                                        }
-                                    });
-                        }
-
-                        @Override
-                        public void onClear(@Nonnull Parcelable[] token) {
-                            //noop
-                        }
-
-                        @Override
-                        public void onUndo(Parcelable parcelable) {
-                            setNoteIsHidden(note.getId(), false);
-                        }
-                    }).show();
-        }
     }
 
     /**
@@ -418,4 +350,38 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NoteModerationStatusChanged event) {
+        setNoteIsModerating(event.mNoteId, event.mIsModerating);
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
+        setNoteIsHidden(event.mNoteId, event.mIsHidden);
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NoteModerationFailed event) {
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, Duration.LONG);
+        }
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
+    }
 }

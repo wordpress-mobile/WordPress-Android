@@ -8,8 +8,8 @@ import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.R;
 
@@ -28,16 +28,26 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private int[] mIndices;
     private boolean mPressed;
     private boolean mShouldLink;
-    private Context mContext;
+    private boolean mIsFooter;
+
     private int mTextColor;
+    private int mBackgroundColor;
+    private int mLinkColor;
+    private int mLightTextColor;
 
     private final JSONObject mBlockData;
 
-    public NoteBlockClickableSpan(Context context, JSONObject idData, boolean shouldLink) {
-        mBlockData = idData;
+    public NoteBlockClickableSpan(Context context, JSONObject blockData, boolean shouldLink, boolean isFooter) {
+        mBlockData = blockData;
         mShouldLink = shouldLink;
-        mContext = context;
+        mIsFooter = isFooter;
+
+        // Text/background colors
         mTextColor = context.getResources().getColor(R.color.grey_dark);
+        mBackgroundColor = context.getResources().getColor(R.color.pressed_wordpress);
+        mLinkColor = context.getResources().getColor(R.color.blue_medium);
+        mLightTextColor = context.getResources().getColor(R.color.grey);
+
         processRangeData();
     }
 
@@ -49,32 +59,33 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             mPostId = JSONUtils.queryJSON(mBlockData, "post_id", 0);
             mRangeType = NoteBlockRangeType.fromString(JSONUtils.queryJSON(mBlockData, "type", ""));
             mUrl = JSONUtils.queryJSON(mBlockData, "url", "");
-            mIndices = new int[]{0,0};
-            JSONArray indicesArray = mBlockData.optJSONArray("indices");
-            if (indicesArray != null) {
-                mIndices[0] = indicesArray.optInt(0);
-                mIndices[1] = indicesArray.optInt(1);
-            }
+            mIndices = NotificationsUtils.getIndicesForRange(mBlockData);
 
-            // Don't link certain range types, or unknown ones, unless we have a URL
-            mShouldLink = mShouldLink && mRangeType != NoteBlockRangeType.BLOCKQUOTE &&
-                    (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
+            mShouldLink = shouldLinkRangeType();
 
             // Apply grey color to some types
-            if (getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
-                mTextColor = mContext.getResources().getColor(R.color.grey);
+            if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
+                mTextColor = mLightTextColor;
             }
         }
+    }
+
+    // Don't link certain range types, or unknown ones, unless we have a URL
+    private boolean shouldLinkRangeType() {
+        return  mShouldLink &&
+                mRangeType != NoteBlockRangeType.BLOCKQUOTE &&
+                mRangeType != NoteBlockRangeType.MATCH &&
+                (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
     }
 
     @Override
     public void updateDrawState(@Nonnull TextPaint textPaint) {
         // Set background color
-        textPaint.bgColor = mPressed && !isBlockquoteType() ?
-                mContext.getResources().getColor(R.color.grey_lighten_20) : Color.TRANSPARENT;
-        textPaint.setColor(mShouldLink ? mContext.getResources().getColor(R.color.blue_medium) : mTextColor);
+        textPaint.bgColor = mShouldLink && mPressed && !isBlockquoteType() ?
+                mBackgroundColor : Color.TRANSPARENT;
+        textPaint.setColor(mShouldLink && !mIsFooter ? mLinkColor : mTextColor);
         // No underlines
-        textPaint.setUnderlineText(false);
+        textPaint.setUnderlineText(mIsFooter);
     }
 
     private boolean isBlockquoteType() {
@@ -83,8 +94,13 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     // return the desired style for this id type
     public int getSpanStyle() {
+        if (mIsFooter) {
+            return Typeface.BOLD;
+        }
+
         switch (getRangeType()) {
             case USER:
+            case MATCH:
                 return Typeface.BOLD;
             case SITE:
             case POST:
@@ -127,5 +143,9 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     public String getUrl() {
         return mUrl;
+    }
+
+    public void setCustomType(String type) {
+        mRangeType = NoteBlockRangeType.fromString(type);
     }
 }

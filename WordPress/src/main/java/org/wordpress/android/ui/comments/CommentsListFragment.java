@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -358,8 +358,8 @@ public class CommentsListFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // enable CAB if it's not already enabled
                 if (mActionMode == null) {
-                    if (getActivity() instanceof ActionBarActivity) {
-                        ((ActionBarActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+                    if (getActivity() instanceof AppCompatActivity) {
+                        ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
                         getCommentAdapter().setEnableSelection(true);
                         getCommentAdapter().setItemSelected(position, true, view);
                     }
@@ -674,22 +674,21 @@ public class CommentsListFragment extends Fragment {
             if (numSelected == 0)
                 return false;
 
-            switch (menuItem.getItemId()) {
-                case R.id.menu_approve :
-                    moderateSelectedComments(CommentStatus.APPROVED);
-                    return true;
-                case R.id.menu_unapprove :
-                    moderateSelectedComments(CommentStatus.UNAPPROVED);
-                    return true;
-                case R.id.menu_spam :
-                    moderateSelectedComments(CommentStatus.SPAM);
-                    return true;
-                case R.id.menu_trash :
-                    // unlike the other status changes, we ask the user to confirm trashing
-                    confirmDeleteComments();
-                    return true;
-                default:
-                    return false;
+            int i = menuItem.getItemId();
+            if (i == R.id.menu_approve) {
+                moderateSelectedComments(CommentStatus.APPROVED);
+                return true;
+            } else if (i == R.id.menu_unapprove) {
+                moderateSelectedComments(CommentStatus.UNAPPROVED);
+                return true;
+            } else if (i == R.id.menu_spam) {
+                moderateSelectedComments(CommentStatus.SPAM);
+                return true;
+            } else if (i == R.id.menu_trash) {// unlike the other status changes, we ask the user to confirm trashing
+                confirmDeleteComments();
+                return true;
+            } else {
+                return false;
             }
         }
 

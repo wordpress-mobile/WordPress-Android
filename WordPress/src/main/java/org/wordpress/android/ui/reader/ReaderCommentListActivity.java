@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -18,19 +18,21 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -47,7 +49,7 @@ import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
-public class ReaderCommentListActivity extends ActionBarActivity {
+public class ReaderCommentListActivity extends AppCompatActivity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
@@ -68,6 +70,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     private boolean mHasUpdatedComments;
     private boolean mIsSubmittingComment;
     private long mReplyToCommentId;
+    private long mCommentId;
     private int mRestorePosition;
 
     @Override
@@ -94,9 +97,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+            mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             // remove all but the first page of comments for this post if there's an active
             // connection - infinite scroll will take care of filling in subsequent pages
-            if (NetworkUtils.isNetworkAvailable(this)) {
+            if (NetworkUtils.isNetworkAvailable(this) && mCommentId == 0) {
                 ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
             }
         }
@@ -141,9 +145,9 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(SuggestionEvents.SuggestionListUpdated event) {
+    public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         // check if the updated suggestions are for the current blog and update the suggestions
-        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mBlogId) {
+        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mBlogId && mSuggestionAdapter != null) {
             List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
             mSuggestionAdapter.setSuggestionList(suggestions);
         }
@@ -153,6 +157,12 @@ public class ReaderCommentListActivity extends ActionBarActivity {
     public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     private void setReplyToCommentId(long commentId) {
@@ -202,7 +212,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
         imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
 
-        if (mPost.isCommentsOpen) {
+        if (ReaderUtils.isLoggedOutReader()) {
+            mCommentBox.setVisibility(View.GONE);
+            txtCommentsClosed.setVisibility(View.GONE);
+        } else if (mPost.isCommentsOpen) {
             mCommentBox.setVisibility(View.VISIBLE);
             txtCommentsClosed.setVisibility(View.GONE);
 
@@ -226,6 +239,18 @@ public class ReaderCommentListActivity extends ActionBarActivity {
             mCommentBox.setVisibility(View.GONE);
             mEditComment.setEnabled(false);
             txtCommentsClosed.setVisibility(View.VISIBLE);
+        }
+
+        if (mCommentId > 0) {
+            txtTitle.setBackgroundResource(R.drawable.selectable_background_wordpress);
+            txtTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isFinishing()) return;
+
+                    ReaderActivityLauncher.showReaderPostDetail(ReaderCommentListActivity.this, mBlogId, mPostId);
+                }
+            });
         }
 
         return true;
@@ -264,6 +289,10 @@ public class ReaderCommentListActivity extends ActionBarActivity {
                             updateComments(isEmpty, false);
                         } else if (mRestorePosition > 0) {
                             mRecyclerView.scrollToPosition(mRestorePosition);
+                        } else if (mCommentId > 0) {
+                            // Scroll to the commentId once if it was passed to this activity
+                            smoothScrollToCommentId(mCommentId);
+                            mCommentId = 0;
                         }
                         mRestorePosition = 0;
                         checkEmptyView();
@@ -337,7 +366,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         if (showProgress) {
             showProgress();
         }
-        ReaderCommentService.startService(this, mPost, requestNextPage);
+        ReaderCommentService.startService(this, mPost.blogId, mPost.postId, requestNextPage);
     }
 
     private void checkEmptyView() {
@@ -356,7 +385,6 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         }
     }
 
-
     /*
      * refresh adapter so latest comments appear
      */
@@ -372,6 +400,16 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         int position = getCommentAdapter().indexOfCommentId(commentId);
         if (position > -1) {
             mRecyclerView.scrollToPosition(position);
+        }
+    }
+
+    /*
+     * Smoothly scrolls the passed comment to the top of the listView
+     */
+    private void smoothScrollToCommentId(long commentId) {
+        int position = getCommentAdapter().indexOfCommentId(commentId);
+        if (position > -1) {
+            mRecyclerView.smoothScrollToPosition(position);
         }
     }
 

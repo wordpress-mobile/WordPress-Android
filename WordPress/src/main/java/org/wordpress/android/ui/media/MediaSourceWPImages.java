@@ -3,6 +3,7 @@ package org.wordpress.android.ui.media;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcel;
@@ -20,6 +21,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
+import org.wordpress.mediapicker.MediaUtils.LimitedBackgroundOperation;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -94,8 +96,9 @@ public class MediaSourceWPImages implements MediaSource {
                     }
 
                     if (imageBitmap == null) {
-                        imageView.setImageResource(R.color.grey_darken_10);
-                        WordPressMediaUtils.BackgroundDownloadWebImage bgDownload = new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
+                        imageView.setImageDrawable(placeholderDrawable(convertView.getContext()));
+                        WordPressMediaUtils.BackgroundDownloadWebImage bgDownload =
+                                new WordPressMediaUtils.BackgroundDownloadWebImage(imageView);
                         imageView.setTag(bgDownload);
                         bgDownload.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mediaItem.getPreviewSource());
                     } else {
@@ -114,6 +117,14 @@ public class MediaSourceWPImages implements MediaSource {
     @Override
     public boolean onMediaItemSelected(MediaItem mediaItem, boolean selected) {
         return !selected;
+    }
+
+    private Drawable placeholderDrawable(Context context) {
+        if (context != null && context.getResources() != null) {
+            return context.getResources().getDrawable(R.drawable.media_item_placeholder);
+        }
+
+        return null;
     }
 
     private void addWordPressImagesFromCursor(Cursor cursor) {
@@ -166,16 +177,16 @@ public class MediaSourceWPImages implements MediaSource {
     }
 
     private void removeDeletedEntries() {
-        List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
+        final List<MediaItem> existingItems = new ArrayList<>(mMediaItems);
+        final List<MediaItem> failedItems = new ArrayList<>();
 
-        for (MediaItem mediaItem : existingItems) {
-            final boolean callLoaded = existingItems.indexOf(mediaItem) == existingItems.size() - 1;
-
-            AsyncTask<MediaItem, Void, MediaItem> backgroundCheck = new AsyncTask<MediaItem, Void, MediaItem>() {
-                int responseCode;
+        for (final MediaItem mediaItem : existingItems) {
+            LimitedBackgroundOperation<MediaItem, Void, MediaItem> backgroundCheck =
+                    new LimitedBackgroundOperation<MediaItem, Void, MediaItem>() {
+                private int responseCode;
 
                 @Override
-                protected MediaItem doInBackground(MediaItem[] params) {
+                protected MediaItem performBackgroundOperation(MediaItem[] params) {
                     MediaItem mediaItem = params[0];
                         try {
                             URL mediaUrl = new URL(mediaItem.getSource().toString());
@@ -183,7 +194,6 @@ public class MediaSourceWPImages implements MediaSource {
                             connection.setRequestMethod("GET");
                             connection.connect();
                             responseCode = connection.getResponseCode();
-
                         } catch (IOException ioException) {
                             Log.e("", "Error reading from " + mediaItem.getSource() + "\nexception:" + ioException);
 
@@ -194,22 +204,37 @@ public class MediaSourceWPImages implements MediaSource {
                 }
 
                 @Override
-                public void onPostExecute(MediaItem result) {
+                public void performPostExecute(MediaItem result) {
                     if (mListener != null && result != null) {
-                        List<MediaItem> resultList = new ArrayList<>();
-                        resultList.add(result);
                         if (responseCode == 200) {
                             mVerifiedItems.add(result);
-                            mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+                            List<MediaItem> resultList = new ArrayList<>();
+                            resultList.add(result);
+
+                            // Only signal newly loaded data every 3 images
+                            if ((existingItems.size() - mVerifiedItems.size()) % 3 == 0) {
+                                mListener.onMediaAdded(MediaSourceWPImages.this, resultList);
+                            }
+                        } else {
+                            failedItems.add(result);
                         }
 
-                        if (callLoaded) {
+                        // Notify of all media loaded if all have been processed
+                        if ((failedItems.size() + mVerifiedItems.size()) == existingItems.size()) {
                             mListener.onMediaLoaded(true);
                         }
                     }
                 }
+
+                @Override
+                public void startExecution(Object params) {
+                    if (!(params instanceof MediaItem)) {
+                        throw new IllegalArgumentException("Params must be of type MediaItem");
+                    }
+                    executeOnExecutor(THREAD_POOL_EXECUTOR, (MediaItem) params);
+                }
             };
-            backgroundCheck.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem);
+            backgroundCheck.executeWithLimit(mediaItem);
         }
     }
 

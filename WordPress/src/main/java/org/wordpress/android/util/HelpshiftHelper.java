@@ -7,13 +7,16 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.helpshift.Helpshift;
+import com.helpshift.Helpshift.HelpshiftDelegate;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.models.AccountHelper;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +45,8 @@ public class HelpshiftHelper {
     public enum Tag {
         ORIGIN_UNKNOWN("origin:unknown"),
         ORIGIN_LOGIN_SCREEN_HELP("origin:login-screen-help"),
-        ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error");
+        ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error"),
+        ORIGIN_ME_SCREEN_HELP("origin:me-screen-help");
 
         private final String mStringValue;
 
@@ -81,6 +85,32 @@ public class HelpshiftHelper {
         config.put("enableInAppNotification", false);
         Helpshift.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
                 BuildConfig.HELPSHIFT_API_ID, config);
+        Helpshift.setDelegate(new HelpshiftDelegate() {
+            @Override
+            public void helpshiftSessionBegan() {
+            }
+
+            @Override
+            public void helpshiftSessionEnded() {
+            }
+
+            @Override
+            public void newConversationStarted(String s) {
+            }
+
+            @Override
+            public void userRepliedToConversation(String s) {
+                AnalyticsTracker.track(Stat.SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE);
+            }
+
+            @Override
+            public void userCompletedCustomerSatisfactionSurvey(int i, String s) {
+            }
+
+            @Override
+            public void displayAttachmentFile(File file) {
+            }
+        });
     }
 
     /**

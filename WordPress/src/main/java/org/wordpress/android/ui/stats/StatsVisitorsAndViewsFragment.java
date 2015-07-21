@@ -26,7 +26,6 @@ import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -63,8 +62,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private boolean mIsCheckboxChecked;
 
     private OnDateChangeListener mListener;
+    private OnOverviewItemChangeListener mOverviewItemChangeListener;
 
-    final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
+    private final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
             OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
@@ -74,7 +74,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     // Container Activity must implement this interface
     public interface OnDateChangeListener {
-        public void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
+        void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
+    }
+
+    // Container Activity must implement this interface
+    public interface OnOverviewItemChangeListener {
+        void onOverviewItemChanged(OverviewLabel newItem);
     }
 
     @Override
@@ -84,6 +89,20 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mListener = (OnDateChangeListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnDateChangeListener");
+        }
+        try {
+            mOverviewItemChangeListener = (OnOverviewItemChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnOverviewItemChangeListener");
+        }
+    }
+
+    void setSelectedOverviewItem(OverviewLabel itemToSelect) {
+        for (int i = 0; i < overviewItems.length; i++) {
+            if (overviewItems[i] == itemToSelect) {
+                mSelectedOverviewItemIndex = i;
+                return;
+            }
         }
     }
 
@@ -120,16 +139,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
             mModuleButtonsContainer.setVisibility(View.VISIBLE);
         }
+
         return view;
     }
 
     private class TabViewHolder {
-        LinearLayout tab;
-        LinearLayout innerContainer;
-        TextView label;
-        TextView value;
-        ImageView icon;
-        OverviewLabel labelItem;
+        final LinearLayout tab;
+        final LinearLayout innerContainer;
+        final TextView label;
+        final TextView value;
+        final ImageView icon;
+        final OverviewLabel labelItem;
         boolean isChecked = false;
         boolean isLastItem = false;
 
@@ -195,7 +215,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     }
 
-    private View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {
@@ -227,12 +247,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 return;
 
             mSelectedOverviewItemIndex = checkedId;
+            if (mOverviewItemChangeListener != null) {
+                mOverviewItemChangeListener.onOverviewItemChanged(
+                        overviewItems[mSelectedOverviewItemIndex]
+                );
+            }
             updateUI();
         }
     };
 
 
-    View.OnClickListener onCheckboxClicked = new View.OnClickListener() {
+    private final View.OnClickListener onCheckboxClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             // Is the view now checked?
@@ -245,7 +270,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > restoring instance state");
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 mVisitsData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             }
@@ -298,8 +322,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mVisitsData != null) {
             updateUI();
         } else {
-            setupNoResultsUI(true);
-            mMoreDataListener.onRefreshRequested(new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.VISITS});
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                setupNoResultsUI(true);
+                refreshStats();
+            } else {
+                setupNoResultsUI(false);
+            }
         }
     }
 
@@ -469,8 +497,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
         double largest = Integer.MIN_VALUE;
 
-        for (int i = 0; i < dataToShowOnGraph.length; i++) {
-            int currentItemValue = dataToShowOnGraph[i].getViews();
+        for (VisitModel aDataToShowOnGraph : dataToShowOnGraph) {
+            int currentItemValue = aDataToShowOnGraph.getViews();
             if (currentItemValue > largest) {
                 largest = currentItemValue;
             }
@@ -579,7 +607,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return "";
     }
 
-
     /**
      * Return the date string that is displayed under each bar in the graph
      */
@@ -656,6 +683,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
+        if (!getDate().equals(event.mDate)) {
+            return;
+        }
+
+        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+            return;
+        }
+
+        if (event.mTimeframe != getTimeframe()) {
+            return;
+        }
+
         StatsService.StatsEndpointsEnum sectionToUpdate = event.mEndPointName;
         if (sectionToUpdate != StatsService.StatsEndpointsEnum.VISITS) {
             return;
@@ -665,7 +704,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
         mSelectedBarGraphBarIndex = -1;
-        mSelectedOverviewItemIndex = 0;
 
         // Reset the bar to highlight
         if (mGraphView != null) {
@@ -677,6 +715,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     @Override
     public void onBarTapped(int tappedBar) {
+        if (!isAdded()) {
+            return;
+        }
         //AppLog.d(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
         mSelectedBarGraphBarIndex = tappedBar;
         updateUIBelowTheGraph(tappedBar);
@@ -757,7 +798,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART);
     }
 
-    private enum OverviewLabel {
+    public enum OverviewLabel {
         VIEWS(R.string.stats_views),
         VISITORS(R.string.stats_visitors),
         LIKES(R.string.stats_likes),
@@ -766,7 +807,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         private final int mLabelResId;
 
-        private OverviewLabel(int labelResId) {
+        OverviewLabel(int labelResId) {
             mLabelResId = labelResId;
         }
 
@@ -786,7 +827,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @Override
-    protected void resetDataModel() {
-        mVisitsData = null;
+    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+        return new StatsService.StatsEndpointsEnum[]{
+                StatsService.StatsEndpointsEnum.VISITS
+        };
     }
 }

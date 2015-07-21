@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/site_picker_container_padding_bottom"
+        android:paddingTop="@dimen/site_picker_container_padding_top">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_blavatar"
+            android:layout_width="@dimen/blavatar_sz"
+            android:layout_height="@dimen/blavatar_sz"
+            android:layout_marginLeft="@dimen/site_picker_blavatar_margin_left"
+            android:layout_marginRight="@dimen/site_picker_blavatar_margin_right"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:padding="1dp"
+            tools:src="@drawable/blavatar_placeholder" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/image_blavatar"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="text_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_domain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_title"
+            android:layout_toRightOf="@id/image_blavatar"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_domain" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_lighten_20" />
+
+</LinearLayout>

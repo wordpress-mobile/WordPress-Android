@@ -1,4 +1,5 @@
 <resources>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal_landscape</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal_landscape</dimen>
+    <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_landscape</dimen>
 </resources>

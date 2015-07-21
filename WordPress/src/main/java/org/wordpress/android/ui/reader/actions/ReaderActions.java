@@ -69,4 +69,13 @@ public class ReaderActions {
     public interface UpdateBlogInfoListener {
         public void onResult(ReaderBlog blogInfo);
     }
+
+    /*
+     * used when checking whether a blog's url is reachable
+     */
+    public interface OnCheckUrlReachableListener {
+        void onSuccess();
+        void onFailed(int statusCode);
+    }
+
 }

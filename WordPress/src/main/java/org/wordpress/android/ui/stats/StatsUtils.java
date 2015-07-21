@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -20,6 +21,9 @@ import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsPopularModel;
+import org.wordpress.android.ui.stats.models.InsightsTodayModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
@@ -29,7 +33,6 @@ import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -43,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
     @SuppressLint("SimpleDateFormat")
-    public static long toMs(String date, String pattern) {
+    private static long toMs(String date, String pattern) {
         if (date == null) {
             return -1;
         }
@@ -395,16 +398,31 @@ public class StatsUtils {
             case SEARCH_TERMS:
                 model = new SearchTermsModel(blogID, response);
                 break;
+            case INSIGHTS_ALL_TIME:
+                model = new InsightsAllTimeModel(blogID, response);
+                break;
+            case INSIGHTS_POPULAR:
+                model = new InsightsPopularModel(blogID, response);
+                break;
+            case INSIGHTS_TODAY:
+                model = new InsightsTodayModel(blogID, response);
+                break;
         }
         return model;
     }
 
-    public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
-        final String postType = post.getPostType();
-        final String url = post.getUrl();
-        final long blogID = Long.parseLong(post.getBlogID());
-        final long itemID = Long.parseLong(post.getItemID());
-        if (postType.equals("post") || postType.equals("page")) {
+    public static void openPostInReaderOrInAppWebview(Context ctx, final String remoteBlogID,
+                                                      final String remoteItemID,
+                                                      final String itemType,
+                                                      final String itemURL) {
+        final long blogID = Long.parseLong(remoteBlogID);
+        final long itemID = Long.parseLong(remoteItemID);
+        if (itemType == null) {
+            // If we don't know the type of the item, open it with the browser.
+            AppLog.d(AppLog.T.UTILS, "Type of the item is null. Opening it in the in-app browser: " + itemURL);
+            WPWebViewActivity.openURL(ctx, itemURL);
+        } else if (itemType.equals(StatsConstants.ITEM_TYPE_POST)
+                || itemType.equals(StatsConstants.ITEM_TYPE_PAGE)) {
             // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
             // otherwise 404 is returned if we try to show the post in the reader
             if (itemID == 0) {
@@ -419,15 +437,23 @@ public class StatsUtils {
                         itemID
                 );
             }
-        } else if (postType.equals("homepage")) {
+        } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     blogID
             );
         } else {
-            AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
-            WPWebViewActivity.openURL(ctx, url);
+            AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
+            WPWebViewActivity.openURL(ctx, itemURL);
         }
+    }
+
+    public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
+        final String postType = post.getPostType();
+        final String url = post.getUrl();
+        final String blogID = post.getBlogID();
+        final String itemID = post.getItemID();
+        openPostInReaderOrInAppWebview(ctx, blogID, itemID, postType, url);
     }
 
     /*

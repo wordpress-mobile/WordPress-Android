@@ -17,6 +17,7 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.EnumMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
@@ -31,6 +32,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String VERSION_CODE = "version_code";
+    private static final String APP_LOCALE = "app_locale";
 
     public AnalyticsTrackerMixpanel(Context context, String token) {
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
@@ -174,6 +176,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             properties.put(JETPACK_USER, isJetpackUser);
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
             properties.put(VERSION_CODE, versionCode);
+            properties.put(APP_LOCALE, mContext.getResources().getConfiguration().locale.toString());
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
@@ -561,6 +564,36 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_stats");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_stats");
                 break;
+            case STATS_INSIGHTS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Insights Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_insights_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_insights_screen_stats");
+                break;
+            case STATS_PERIOD_DAYS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Days Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_days_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_days_screen_stats");
+                break;
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Weeks Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_weeks_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_weeks_screen_stats");
+                break;
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Months Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_months_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_months_screen_stats");
+                break;
+            case STATS_PERIOD_YEARS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Years Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_years_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_years_screen_stats");
+                break;
             case STATS_VIEW_ALL_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - View All Accessed");
@@ -604,6 +637,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Support - Opened Helpshift Screen");
                 instructions.addSuperPropertyToFlag("opened_helpshift_screen");
                 break;
+            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - Replied to Helpshift");
+                instructions.addSuperPropertyToFlag("support_replied_to_helpshift");
+                break;
             case LOGIN_FAILED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed Login");
@@ -611,6 +649,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
+                break;
+            case SETTINGS_LANGUAGE_SELECTION_FORCED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Forced Language Selection");
                 break;
             default:
                 instructions = null;

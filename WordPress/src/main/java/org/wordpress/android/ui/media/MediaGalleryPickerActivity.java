@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +27,7 @@ import java.util.List;
  * An activity where the user can add new images to their media gallery or where the user
  * can choose a single image to embed into their post.
  */
-public class MediaGalleryPickerActivity extends ActionBarActivity
+public class MediaGalleryPickerActivity extends AppCompatActivity
         implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
                    AdapterView.OnItemClickListener {
     private GridView mGridView;

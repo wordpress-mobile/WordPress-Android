@@ -14,7 +14,8 @@
     <color name="color_control_activated">@color/blue_light</color>
     <color name="color_control_highlight">@color/pressed_wordpress</color>
 
-    <color name="fab_color">@color/color_accent</color>
+    <color name="fab_normal">@color/color_accent</color>
+    <color name="fab_pressed">@color/orange_fire</color>
     <color name="list_selected">@color/semi_transparent_blue_light</color>
 
     <!-- Default Colors -->
@@ -40,6 +41,7 @@
     <color name="grey">#87a6bc</color>
     <color name="grey_light">#f3f6f8</color>
     <color name="grey_dark">#2e4453</color>
+    <color name="grey_disabled">@color/grey_darken_10</color>
 
     <!-- Secondary Greys -->
     <color name="grey_lighten_30">#e9eff3</color>
@@ -65,6 +67,8 @@
     <color name="translucent_grey_lighten_10">#80a8bece</color>
     <color name="translucent_grey_lighten_20">#80c8d7e1</color>
     <color name="translucent_grey_lighten_30">#80e9eff3</color>
+    <color name="translucent_grey">#80888888</color>
+
     <!-- END WordPress.com Colors -->
     <!-- ======================== -->
 
@@ -101,9 +105,7 @@
     <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>
     <color name="stats_bar_graph_outer_highlight">#1Af0821e</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
     <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
-    <color name="stats_bar_graph_secondary_series_highlight">@color/orange_fire</color>
     <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
-
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
@@ -116,7 +118,6 @@
     <!-- Notification Status -->
     <color name="notification_status_unapproved">@color/alert_yellow</color>
     <color name="notification_status_unapproved_dark">#eeac31</color>
-    <color name="notification_status_unapproved_darker">#6d1818</color>
     <color name="notification_status_unapproved_background">#fef8ee</color>
 
     <!-- NUX -->
@@ -139,4 +140,9 @@
 
     <!--Me-->
     <color name="me_list_row_border">#D8E3EA</color>
+
+    <color name="passcodelock_background">@color/color_primary</color>
+    <color name="passcodelock_prompt_text_color">@color/white</color>
+    <color name="passcodelock_button_text_color">@color/white</color>
+
 </resources>

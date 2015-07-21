@@ -7,9 +7,10 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,8 +25,8 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.MediaPickerFragment;
@@ -46,7 +47,7 @@ import java.util.List;
  *  - Use DEVICE_VIDEO_MEDIA_SOURCES_KEY with a {@link java.util.List} of {@link org.wordpress.mediapicker.source.MediaSource}'s to pass video sources via the Intent
  */
 
-public class MediaPickerActivity extends ActionBarActivity
+public class MediaPickerActivity extends AppCompatActivity
                               implements MediaPickerFragment.OnMediaSelected {
     /**
      * Request code for the {@link android.content.Intent} to start media selection.
@@ -89,7 +90,7 @@ public class MediaPickerActivity extends ActionBarActivity
 
     private MediaPickerAdapter     mMediaPickerAdapter;
     private ArrayList<MediaSource>[] mMediaSources;
-    private SlidingTabLayout       mTabLayout;
+    private TabLayout              mTabLayout;
     private WPViewPager            mViewPager;
     private ActionMode             mActionMode;
     private String                 mCapturePath;
@@ -153,7 +154,7 @@ public class MediaPickerActivity extends ActionBarActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case WordPressMediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+            case RequestCodes.TAKE_PHOTO:
                 File file = new File(mCapturePath);
                 Uri imageUri = Uri.fromFile(file);
 
@@ -169,7 +170,7 @@ public class MediaPickerActivity extends ActionBarActivity
                     finishWithResults(imageResult, ACTIVITY_RESULT_CODE_MEDIA_SELECTED);
                 }
                 break;
-            case WordPressMediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+            case RequestCodes.TAKE_VIDEO:
                 Uri videoUri = data != null ? data.getData() : null;
 
                 if (videoUri != null) {
@@ -344,7 +345,7 @@ public class MediaPickerActivity extends ActionBarActivity
      * Helper method; sets up the tab bar, media adapter, and ViewPager for displaying media content
      */
     private void initializeContentView() {
-        setContentView(R.layout.activity_media_picker);
+        setContentView(R.layout.media_picker_activity);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -357,7 +358,7 @@ public class MediaPickerActivity extends ActionBarActivity
         }
 
         mMediaPickerAdapter = new MediaPickerAdapter(getFragmentManager());
-        mTabLayout = (SlidingTabLayout) findViewById(R.id.media_picker_tabs);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (WPViewPager) findViewById(R.id.media_picker_pager);
 
         if (mViewPager != null) {
@@ -391,9 +392,11 @@ public class MediaPickerActivity extends ActionBarActivity
             mViewPager.setAdapter(mMediaPickerAdapter);
 
             if (mTabLayout != null) {
-                mTabLayout.setCustomTabView(R.layout.tab_text, R.id.text_tab);
-                mTabLayout.setDistributeEvenly(true);
-                mTabLayout.setViewPager(mViewPager);
+                int normalColor = getResources().getColor(R.color.blue_light);
+                int selectedColor = getResources().getColor(R.color.white);
+                mTabLayout.setTabTextColors(normalColor, selectedColor);
+                mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+                mTabLayout.setupWithViewPager(mViewPager);
             }
         }
     }

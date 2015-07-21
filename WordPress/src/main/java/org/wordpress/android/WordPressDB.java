@@ -18,7 +18,6 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -31,6 +30,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -74,7 +74,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 32;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -84,12 +84,39 @@ public class WordPressDB {
     private static final String DATABASE_NAME = "wordpress";
     private static final String MEDIA_TABLE = "media";
 
-    private static final String CREATE_TABLE_POSTS = "create table if not exists posts (id integer primary key autoincrement, blogID text, "
-            + "postid text, title text default '', dateCreated date, date_created_gmt date, categories text default '', custom_fields text default '', "
-            + "description text default '', link text default '', mt_allow_comments boolean, mt_allow_pings boolean, "
-            + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
-            + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
-            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text);";
+    private static final String CREATE_TABLE_POSTS =
+        "create table if not exists posts ("
+            + "id integer primary key autoincrement,"
+            + "blogID text,"
+            + "postid text,"
+            + "title text default '',"
+            + "dateCreated date,"
+            + "date_created_gmt date,"
+            + "categories text default '',"
+            + "custom_fields text default '',"
+            + "description text default '',"
+            + "link text default '',"
+            + "mt_allow_comments boolean,"
+            + "mt_allow_pings boolean,"
+            + "mt_excerpt text default '',"
+            + "mt_keywords text default '',"
+            + "mt_text_more text default '',"
+            + "permaLink text default '',"
+            + "post_status text default '',"
+            + "userid integer default 0,"
+            + "wp_author_display_name text default '',"
+            + "wp_author_id text default '',"
+            + "wp_password text default '',"
+            + "wp_post_format text default '',"
+            + "wp_slug text default '',"
+            + "mediaPaths text default '',"
+            + "latitude real,"
+            + "longitude real,"
+            + "localDraft boolean default 0,"
+            + "uploaded boolean default 0,"
+            + "isPage boolean default 0,"
+            + "wp_page_parent_id text,"
+            + "wp_page_parent_title text);";
 
     private static final String POSTS_TABLE = "posts";
 
@@ -139,6 +166,9 @@ public class WordPressDB {
 
     // Add boolean to POSTS to track posts currently being uploaded
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
+
+    // add wp_post_thumbnail to posts table
+    private static final String ADD_POST_THUMBNAIL = "alter table posts add wp_post_thumbnail integer default 0;";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -191,6 +221,8 @@ public class WordPressDB {
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
+        boolean isNewInstall = (currentVersion == 0);
+
         switch (currentVersion) {
             case 0:
                 // New install
@@ -287,9 +319,20 @@ public class WordPressDB {
             case 29:
                 // Migrate WordPress.com token and infos to the DB
                 AccountTable.createTables(db);
-                migratePreferencesToAccountTable(context);
+                if (!isNewInstall) {
+                    migratePreferencesToAccountTable(context);
+                }
+                currentVersion++;
+            case 30:
+                // Fix big comments issue #2855
+                CommentTable.deleteBigComments(db);
+                currentVersion++;
+            case 31:
+                // add wp_post_thumbnail to posts table
+                db.execSQL(ADD_POST_THUMBNAIL);
                 currentVersion++;
         }
+
         db.setVersion(DATABASE_VERSION);
     }
 
@@ -301,7 +344,6 @@ public class WordPressDB {
         account.setUserName(oldUsername);
         if (oldAccessToken != null) {
             account.setAccessToken(oldAccessToken);
-            account.setIsWordPressComUser(true);
         }
         AccountTable.save(account, db);
 
@@ -442,6 +484,10 @@ public class WordPressDB {
         return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE dotcomFlag = 1", null);
     }
 
+    public int getNumBlogs() {
+        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE, null);
+    }
+
     // Removes stored DotCom credentials. As of March 2015 only the OAuth token is used
     private void removeDotComCredentials() {
         // First clear out the password for all WP.com sites
@@ -553,8 +599,21 @@ public class WordPressDB {
 
     public boolean deleteBlog(Context ctx, int id) {
         int rowsAffected = db.delete(BLOGS_TABLE, "id=?", new String[]{Integer.toString(id)});
-        deleteQuickPressShortcutsForBlog(ctx, id);
+        deleteQuickPressShortcutsForLocalTableBlogId(ctx, id);
         deleteAllPostsForLocalTableBlogId(id);
+        return (rowsAffected > 0);
+    }
+
+    public boolean deleteWordPressComBlogs(Context ctx) {
+        List<Map<String, Object>> wordPressComBlogs = getBlogsBy("isHidden = 0 AND dotcomFlag = 1", null);
+        for (Map<String, Object> blog : wordPressComBlogs) {
+            int localBlogId = MapUtils.getMapInt(blog, "id");
+            deleteQuickPressShortcutsForLocalTableBlogId(ctx, localBlogId);
+            deleteAllPostsForLocalTableBlogId(localBlogId);
+        }
+
+        // Delete blogs
+        int rowsAffected = db.delete(BLOGS_TABLE, "dotcomFlag=1", null);
         return (rowsAffected > 0);
     }
 
@@ -920,6 +979,7 @@ public class WordPressDB {
                     values.put("wp_password", MapUtils.getMapStr(postMap, "wp_password"));
                     values.put("wp_author_id", MapUtils.getMapStr(postMap, "wp_author_id"));
                     values.put("wp_author_display_name", MapUtils.getMapStr(postMap, "wp_author_display_name"));
+                    values.put("wp_post_thumbnail", MapUtils.getMapInt(postMap, "wp_post_thumbnail"));
                     values.put("post_status", MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
                     values.put("userid", MapUtils.getMapStr(postMap, "userid"));
 
@@ -1019,6 +1079,7 @@ public class WordPressDB {
             putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            values.put("wp_post_thumbnail", post.getFeaturedImageId());
 
             result = db.insert(POSTS_TABLE, null, values);
 
@@ -1055,6 +1116,8 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            values.put("wp_post_thumbnail", post.getFeaturedImageId());
+
             putPostLocation(post, values);
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
@@ -1158,6 +1221,7 @@ public class WordPressDB {
                 post.setAuthorId(c.getString(c.getColumnIndex("wp_author_id")));
                 post.setPassword(c.getString(c.getColumnIndex("wp_password")));
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
+                post.setFeaturedImageId(c.getInt(c.getColumnIndex("wp_post_thumbnail")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
 
@@ -1294,7 +1358,7 @@ public class WordPressDB {
     /*
      * delete QuickPress home screen shortcuts connected with the passed blog
      */
-    private void deleteQuickPressShortcutsForBlog(Context ctx, int blogId) {
+    private void deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId) {
         List<Map<String, Object>> shortcuts = getQuickPressShortcuts(blogId);
         if (shortcuts.size() == 0)
             return;

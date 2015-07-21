@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderAnim;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
 
 /*
@@ -80,6 +80,13 @@ public class ReaderIconCountView extends LinearLayout {
         mImageView.setSelected(selected);
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mImageView.setEnabled(enabled);
+        mTextCount.setEnabled(enabled);
+    }
+
     public void setCount(int count, boolean animateChanges) {
         if (count != 0) {
             mTextCount.setText(FormatUtils.formatInt(count));
@@ -87,9 +94,9 @@ public class ReaderIconCountView extends LinearLayout {
 
         if (animateChanges && count != mCurrentCount) {
             if (count == 0 && mTextCount.getVisibility() == View.VISIBLE) {
-                ReaderAnim.scaleOut(mTextCount, View.GONE, ReaderAnim.Duration.LONG, null);
+                AniUtils.scaleOut(mTextCount, View.GONE, AniUtils.Duration.LONG, null);
             } else if (mCurrentCount == 0 && mTextCount.getVisibility() != View.VISIBLE) {
-                ReaderAnim.scaleIn(mTextCount, ReaderAnim.Duration.LONG);
+                AniUtils.scaleIn(mTextCount, AniUtils.Duration.LONG);
             } else {
                 mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
             }

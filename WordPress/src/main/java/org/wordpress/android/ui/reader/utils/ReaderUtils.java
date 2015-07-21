@@ -4,6 +4,9 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -50,16 +53,18 @@ public class ReaderUtils {
     /*
      * returns the passed string formatted for use with our API - see sanitize_title_with_dashes
      * https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php#L1258
+     * http://stackoverflow.com/a/1612015/1673548
      */
     public static String sanitizeWithDashes(final String title) {
         if (title == null) {
             return "";
         }
+
         return title.trim()
-                .replaceAll("&[^\\s]*;", "")        // remove html entities
-                .replaceAll("[\\.\\s]+", "-")       // replace periods and whitespace with a dash
-                .replaceAll("[^A-Za-z0-9\\-]", "")  // remove remaining non-alphanum/non-dash chars
-                .replaceAll("--", "-");             // reduce double dashes potentially added above
+                .replaceAll("&[^\\s]*;", "")            // remove html entities
+                .replaceAll("[\\.\\s]+", "-")           // replace periods and whitespace with a dash
+                .replaceAll("[^\\p{L}\\p{Nd}\\-]+", "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                .replaceAll("--", "-");                 // reduce double dashes potentially added above
     }
 
     /*
@@ -73,11 +78,32 @@ public class ReaderUtils {
                 case 2:
                     return context.getString(R.string.reader_likes_you_and_one);
                 default:
-                    return context.getString(R.string.reader_likes_you_and_multi, numLikes - 1);
+                    String youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi);
+                    return String.format(youAndMultiLikes, numLikes - 1);
             }
         } else {
-            return (numLikes == 1 ?
-                    context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
+            if (numLikes == 1) {
+                return context.getString(R.string.reader_likes_one);
+            } else {
+                String likes = context.getString(R.string.reader_likes_multi);
+                return String.format(likes, numLikes);
+            }
         }
+    }
+
+    /*
+     * returns true if the reader should provide a "logged out" experience - no likes,
+     * comments, or anything else that requires a wp.com account
+     */
+    public static boolean isLoggedOutReader() {
+        return !AccountHelper.isSignedInWordPressDotCom();
+    }
+
+    /*
+     * returns true if a ReaderPost and ReaderComment exist for the passed Ids
+     */
+    public static boolean postAndCommentExists(long blogId, long postId, long commentId) {
+        return ReaderPostTable.postExists(blogId, postId) &&
+                ReaderCommentTable.commentExists(blogId, postId, commentId);
     }
 }

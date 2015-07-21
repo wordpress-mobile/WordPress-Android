@@ -6,7 +6,6 @@
 	<string name="confirm_delete_multi_media">Kiválasztott sablon törlése?</string>
 	<string name="confirm_delete_media">Kiválasztott tétel törlése?</string>
 	<string name="cab_selected">%d kiválasztva</string>
-	<string name="sign_out_confirm">Kijelentkezés?</string>
 	<string name="reader_empty_followed_blogs_title">Még egy honlap sincs követve</string>
 	<string name="reader_empty_posts_liked">Még egy bejegyzés sincs tetszettként jelölve</string>
 	<string name="faq_button">GYIK</string>
@@ -21,7 +20,6 @@
 	<string name="error_refresh_unauthorized_pages">Az oldalak megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
 	<string name="error_refresh_unauthorized_comments">A hozzászólások megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
 	<string name="older_month">Egy hónapnál régebbi</string>
-	<string name="more">Bövebben</string>
 	<string name="older_two_days">2 napnál régebbi</string>
 	<string name="older_last_week">Egy hétnél régebbi</string>
 	<string name="pages_empty_list">Még nincs egy oldal sem. Létrehozzunk egyet?</string>
@@ -31,7 +29,6 @@
 	<string name="reader_toast_err_block_blog">Nem sikerült a blog letiltása</string>
 	<string name="reader_toast_blog_blocked">Ennek a blognak a bejegyzései a továbbiakban nem jelennek meg</string>
 	<string name="contact_us">Kapcsolat</string>
-	<string name="contact_us_pref_summary">Segítség kérés az Automattictól</string>
 	<string name="hs__invalid_email_error">Adjunk meg valós e-mail címet</string>
 	<string name="hs__username_blank_error">Adjunk meg valós nevet</string>
 	<string name="hs__conversation_detail_error">Írjuk le a problémát, amivel találkoztunk</string>
@@ -49,14 +46,10 @@
 	<string name="reader_label_reblog_to">Post újrablogolása ide</string>
 	<string name="update_verb">Frissítést</string>
 	<string name="schedule_verb">Időzítés</string>
-	<string name="sign_in_again">Újra bejelentkezés</string>
-	<string name="simperium_connection_error">Nem sikerült bejelentkezni az értesítésekhez.</string>
 	<string name="reader_title_subs">Címkék és blogok</string>
 	<string name="reader_page_followed_blogs">Követett blogok</string>
-	<string name="reader_page_popular_tags">Népszerű címkék</string>
 	<string name="reader_title_blog_preview">Blog előnézete</string>
 	<string name="reader_label_followed_blog">Követett blogok</string>
-	<string name="reader_label_followers">%s követő</string>
 	<string name="reader_page_followed_tags">Követett címkék</string>
 	<string name="reader_title_tag_preview">Címke előnézete</string>
 	<string name="reader_hint_add_tag_or_url">Adjunk meg egy címkét vagy webcímet a követéshez</string>
@@ -64,13 +57,9 @@
 	<string name="reader_empty_recommended_blogs">Nincsenek ajánlott blogok</string>
 	<string name="reader_toast_err_already_follow_blog">Ezt a blogot már követjük</string>
 	<string name="reader_toast_err_unfollow_blog">Nem sikerült ezt a blogot követni</string>
-	<string name="blogs_visibility">Blogok</string>
 	<string name="saving">Mentés...</string>
-	<string name="wpcom_signin_dialog_title">WordPress.com bejelentkezés</string>
 	<string name="media_empty_list">Nincs média</string>
-	<string name="need_help_signin_wpcom">Segítségre van szükség?</string>
 	<string name="ptr_tip_message">Tipp: A frissítéshez húzzuk le</string>
-	<string name="reader_label_reblog_empty_link">Blog láthatóságának módosítása</string>
 	<string name="help">Segítség</string>
 	<string name="forgot_password">Elfelejtett jelszó?</string>
 	<string name="forums">Fórumok</string>
@@ -80,7 +69,6 @@
 	<string name="theme_no_search_result_found">Nincsenek találatok</string>
 	<string name="comments_empty_list">Nincsenek hozzászólások</string>
 	<string name="mnu_comment_unspam">Nem spam</string>
-	<string name="mnu_comment_edit">Szerkesztés</string>
 	<string name="no_network_message">Nincs elérehtő hálózat</string>
 	<string name="stats_empty_comments">Nincsenek még hozzászólások</string>
 	<string name="sdcard_message">SD kártya csatlakoztatása szükséges a média feltötéshez</string>
@@ -89,7 +77,6 @@
 	<string name="error_refresh_comments">A hozzászólásokat most nem lehet frissíténi</string>
 	<string name="username_must_be_at_least_four_characters">Felhasználó névnek legalább 4 karakter hosszúnak kell lenni</string>
 	<string name="error_refresh_notifications">Értesitéseket most nem lehet frissíteni</string>
-	<string name="could_not_remove_account">Nem lehetséges a blogot eltávolítani</string>
 	<string name="gallery_error">Nem sikerült a média elemet letölteni</string>
 	<string name="theme_fetch_failed">A sablonok lekérdezése nem sikerült</string>
 	<string name="notifications_empty_list">Nincsenek értesítések</string>
@@ -102,7 +89,6 @@
 	<string name="category_parent">Kategória szülő (opcionális)</string>
 	<string name="wordpress_blog">WordPress blog</string>
 	<string name="media_gallery_settings_title">Galléria beálitások</string>
-	<string name="new_page">Új oldal</string>
 	<string name="preview_post">Bejegyzés előnézet</string>
 	<string name="comment_status_spam">Spam</string>
 	<string name="account_details">Felhasználói fiók részletei</string>
@@ -117,11 +103,9 @@
 	<string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
 	<string name="share_action_post">Új bejegyzés</string>
 	<string name="post_settings">Bejegyzés beálitások</string>
-	<string name="quick_photo">Gyors fénykép</string>
 	<string name="upload_failed">Sikertelen feltöltés</string>
 	<string name="edit_comment">Hozzászólás szerkesztése</string>
 	<string name="dlg_trashing_comments">Lomtárba küldés</string>
-	<string name="hide_all">Összes elrejtése</string>
 	<string name="pending_review">Áttekintésre várakozik</string>
 	<string name="always_use_these_settings_to_share">Mindig ezeket a beálitásokat használja</string>
 	<string name="download">Média letöltés folyamatban</string>
@@ -149,10 +133,9 @@
 	<string name="stats_timeframe_today">Ma</string>
 	<string name="stats_timeframe_yesterday">Tegnap</string>
 	<string name="stats_view_clicks">Kattintások</string>
+	<string name="stats_view_tags_and_categories">Címkék és kategóriák</string>
 	<string name="view_stats_full_site">Teljes oldal megtekintése</string>
 	<string name="menu_search">Keresés</string>
-	<string name="stats_visitors_and_views_header_today">Ma</string>
-	<string name="stats_totals_visitors">Látogatók</string>
 	<string name="stats_entry_tags_and_categories">Téma</string>
 	<string name="stats_entry_authors">Szerző</string>
 	<string name="themes_details_label">Részletek</string>
@@ -172,7 +155,6 @@
 	<string name="stats_timeframe_days">nap</string>
 	<string name="stats_timeframe_weeks">hét</string>
 	<string name="stats_timeframe_months">hónap</string>
-	<string name="stats_summary">összes</string>
 	<string name="stats_entry_country">ország</string>
 	<string name="stats_entry_referrers">Hivatkozók</string>
 	<string name="stats_totals_views">Megtekintések</string>
@@ -197,9 +179,7 @@
 	<string name="stats">Statisztika</string>
 	<string name="passcode_preference_title">Azonosítókód lezárás</string>
 	<string name="upload">Feltöltés</string>
-	<string name="manage">Kezelés</string>
 	<string name="sign_in">Bejelentkezés</string>
-	<string name="sign_out">Kijelentkezés</string>
 	<string name="notifications">Értesítések</string>
 	<string name="manage_notifications">Értesítések kezelése</string>
 	<string name="enable_notifications">Értesítések engedélyezése</string>
@@ -211,7 +191,6 @@
 	<string name="note_reply_successful">Válasz elküldve</string>
 	<string name="new_notifications">%d új értesítés</string>
 	<string name="more_notifications">és %d további.</string>
-	<string name="tooltip_follow">Honlap követés bejelölése, vagy a követés törlése</string>
 	<string name="loading">Betöltés</string>
 	<string name="add_tagline">Aláírás hozzáadása a bejegyzéshez</string>
 	<string name="post_signature">Bejegyzés aláírás</string>
@@ -243,7 +222,6 @@
 	<string name="scheduled">Időzítve</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Ez a bejegyzés WordPress for Android alkalmazással készült</string>
-	<string name="uploading">Feltöltés</string>
 	<string name="tos">Szolgáltatási feltételek</string>
 	<string name="version">verzió</string>
 	<string name="app_title">WordPress for Android</string>
@@ -252,7 +230,6 @@
 	<string name="image_alignment">Kép igazítás</string>
 	<string name="refresh">Frissítés</string>
 	<string name="untitled">Cím nélküli</string>
-	<string name="edit">Szerkesztés</string>
 	<string name="post_id">Bejegyzés</string>
 	<string name="page_id">Oldal</string>
 	<string name="post_password">Jelszó (opcionális)</string>
@@ -269,7 +246,6 @@
 	<string name="tags_separate_with_commas">Címkék (vesszővel elválasztva)</string>
 	<string name="categories">Kategóriák</string>
 	<string name="title">Címsor</string>
-	<string name="tab_stats">Statisztikák</string>
 	<string name="notification_blink">Figyelmeztető fényjelzés</string>
 	<string name="notification_sound">Figyelmeztető hang lejátszása</string>
 	<string name="notification_vibrate">Rezgés</string>

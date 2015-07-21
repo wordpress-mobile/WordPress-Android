@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <bitmap
+            android:src="@drawable/format_bar_button_ul_highlighted"
+            android:gravity="center"/>
+    </item>
+    <item android:top="@dimen/format_bar_button_highlighted_underline_top">
+        <shape android:shape="line">
+            <stroke
+                android:width="@dimen/format_bar_button_highlighted_underline_width"
+                android:color="@color/format_bar_button_highlighted_color"/>
+        </shape>
+    </item>
+</layer-list>

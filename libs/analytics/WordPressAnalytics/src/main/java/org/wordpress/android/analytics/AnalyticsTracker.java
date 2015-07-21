@@ -11,7 +11,7 @@ import java.util.Map;
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
 
-    public static final String READER_DETAIL_TYPE_KEY = "post-detail-type";
+    public static final String READER_DETAIL_TYPE_KEY = "post_detail_type";
     public static final String READER_DETAIL_TYPE_NORMAL = "normal";
     public static final String READER_DETAIL_TYPE_BLOG_PREVIEW = "preview-blog";
     public static final String READER_DETAIL_TYPE_TAG_PREVIEW = "preview-tag";
@@ -37,6 +37,11 @@ public final class AnalyticsTracker {
         READER_BLOG_PREVIEW,
         READER_TAG_PREVIEW,
         STATS_ACCESSED,
+        STATS_INSIGHTS_ACCESSED,
+        STATS_PERIOD_DAYS_ACCESSED,
+        STATS_PERIOD_WEEKS_ACCESSED,
+        STATS_PERIOD_MONTHS_ACCESSED,
+        STATS_PERIOD_YEARS_ACCESSED,
         STATS_VIEW_ALL_ACCESSED,
         STATS_SINGLE_POST_ACCESSED,
         STATS_OPENED_WEB_VERSION,
@@ -88,8 +93,14 @@ public final class AnalyticsTracker {
         APPLICATION_STARTED,
         PUSH_NOTIFICATION_RECEIVED,
         SUPPORT_OPENED_HELPSHIFT_SCREEN,
+        SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE,
         LOGIN_FAILED,
-        LOGIN_FAILED_TO_GUESS_XMLRPC
+        LOGIN_FAILED_TO_GUESS_XMLRPC,
+        PUSH_AUTHENTICATION_APPROVED,
+        PUSH_AUTHENTICATION_EXPIRED,
+        PUSH_AUTHENTICATION_FAILED,
+        PUSH_AUTHENTICATION_IGNORED,
+        SETTINGS_LANGUAGE_SELECTION_FORCED,
     }
 
     public interface Tracker {

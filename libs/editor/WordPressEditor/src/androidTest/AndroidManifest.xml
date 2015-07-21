@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.wordpress.android.editor" >
+    <application>
+        <activity android:name=".MockActivity"
+                  android:exported="false" />
+        <activity android:name=".MockEditorActivity"
+                  android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+                  android:exported="false"/>
+    </application>>
+</manifest>

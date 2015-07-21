@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,7 +21,6 @@ public class PostViewsModel implements Serializable {
     private int mHighestMonth, mHighestDayAverage, mHighestWeekAverage;
     private String mDate;
     private VisitModel[] mDayViews; //Used to build the graph
-    private HashMap<String, Integer> fieldColumnsMapping;
     private List<Year> mYears;
     private List<Year> mAverages;
     private List<Week> mWeeks;
@@ -90,6 +90,7 @@ public class PostViewsModel implements Serializable {
         if (dataJSON != null) {
             // Read the position/index of each field in the response
             JSONArray fieldsJSON = response.getJSONArray("fields");
+            HashMap<String, Integer> fieldColumnsMapping;
             try {
                 fieldColumnsMapping = new HashMap<>(2);
                 for (int i = 0; i < fieldsJSON.length(); i++) {
@@ -145,9 +146,8 @@ public class PostViewsModel implements Serializable {
             // Keys could not be ordered fine. Reordering them.
             String[] orderedKeys = orderKeys(yearsJSON.keys(), yearsJSON.length());
 
-            for (int j = 0; j < orderedKeys.length; j++) {
+            for (String currentYearKey : orderedKeys) {
                 Year currentYear = new Year();
-                String currentYearKey = orderedKeys[j];
                 currentYear.setLabel(currentYearKey);
 
                 JSONObject currentYearObj = yearsJSON.getJSONObject(currentYearKey);
@@ -163,7 +163,7 @@ public class PostViewsModel implements Serializable {
                     monthsList.add(new Month(currentMonthKey, currentMonthVisits));
                 }
 
-                Collections.sort(monthsList, new java.util.Comparator<Month>() {
+                Collections.sort(monthsList, new Comparator<Month>() {
                     public int compare(Month o1, Month o2) {
                         int v1 = Integer.parseInt(o1.getMonth());
                         int v2 = Integer.parseInt(o2.getMonth());
@@ -352,8 +352,8 @@ public class PostViewsModel implements Serializable {
     }
 
     public class Month implements Serializable {
-        private int mCount;
-        private String mMonth;
+        private final int mCount;
+        private final String mMonth;
 
         Month(String label, int count) {
             this.mMonth = label;

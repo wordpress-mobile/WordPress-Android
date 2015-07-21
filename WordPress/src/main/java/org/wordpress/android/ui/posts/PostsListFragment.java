@@ -2,19 +2,18 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -23,7 +22,11 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
+import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -31,7 +34,6 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.wordpress.android.widgets.FloatingActionButton;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -39,27 +41,30 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 import java.util.List;
 import java.util.Vector;
 
-public class PostsListFragment extends ListFragment
-        implements WordPress.OnPostUploadedListener, EmptyViewAnimationHandler.OnAnimationProgressListener {
+import de.greenrobot.event.EventBus;
+
+public class PostsListFragment extends Fragment implements EmptyViewAnimationHandler.OnAnimationProgressListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
-    private FloatingActionButton mFabButton;
+    private View mFabView;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
-    private View mProgressFooterView;
 
+    private RecyclerView mRecyclerView;
     private View mEmptyView;
     private View mEmptyViewImage;
+    private ProgressBar mProgressLoadMore;
     private TextView mEmptyViewTitle;
     private EmptyViewMessageType mEmptyViewMessage = EmptyViewMessageType.NO_CONTENT;
 
     private EmptyViewAnimationHandler mEmptyViewAnimationHandler;
     private boolean mSwipedToRefresh;
     private boolean mKeepSwipeRefreshLayoutVisible;
+    private boolean mShowSelection;
 
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
@@ -70,7 +75,7 @@ public class PostsListFragment extends ListFragment
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
-                mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
+                mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
             // If PostUploadService is not running, check for posts stuck with an uploading state
             Blog currentBlog = WordPress.getCurrentBlog();
@@ -82,10 +87,17 @@ public class PostsListFragment extends ListFragment
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.post_listview, container, false);
+        View view = inflater.inflate(R.layout.post_list, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
+        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(0, spacingVertical));
+
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
+        mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
+
         return view;
     }
 
@@ -105,12 +117,12 @@ public class PostsListFragment extends ListFragment
                             return;
                         }
                         mSwipedToRefresh = true;
-                        refreshPosts((PostsActivity) getActivity());
+                        refreshPosts((PostsListActivity) getActivity());
                     }
                 });
     }
 
-    private void refreshPosts(PostsActivity postsActivity) {
+    private void refreshPosts(PostsListActivity postsListActivity) {
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog == null) {
             ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
@@ -119,7 +131,7 @@ public class PostsListFragment extends ListFragment
         }
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsListActivity);
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
             dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
@@ -184,26 +196,31 @@ public class PostsListFragment extends ListFragment
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
-                        if (mPostsListAdapter.getCount() > 0) {
-                            PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
+                        if (mPostsListAdapter.getItemCount() > 0) {
+                            PostsListPost postsListPost = mPostsListAdapter.getItem(0);
                             if (postsListPost != null) {
-                                showPost(postsListPost.getPostId());
-                                getListView().setItemChecked(0, true);
-                            }
-                        }
-                    } else if (isAdded() && ((PostsActivity) getActivity()).isDualPane()) {
-                        // Reload the last selected position, if available
-                        int selectedPosition = getListView().getCheckedItemPosition();
-                        if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
-                            PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(selectedPosition);
-                            if (postsListPost != null) {
+                                mPostsListAdapter.setSelectedPosition(0);
                                 showPost(postsListPost.getPostId());
                             }
                         }
                     }
                 }
             };
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
+
+            PostsListAdapter.OnPostSelectedListener postSelectedListener = new PostsListAdapter.OnPostSelectedListener() {
+                @Override
+                public void onPostSelected(PostsListPost post) {
+                    if (isAdded()) {
+                        showPost(post.getPostId());
+                    }
+                }
+            };
+
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage);
+            mPostsListAdapter.setOnLoadMoreListener(loadMoreListener);
+            mPostsListAdapter.setOnPostsLoadedListener(postsLoadedListener);
+            mPostsListAdapter.setOnPostSelectedListener(postSelectedListener);
+            mPostsListAdapter.setShowSelection(mShowSelection);
         }
 
         return mPostsListAdapter;
@@ -212,36 +229,11 @@ public class PostsListFragment extends ListFragment
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
-        getListView().addFooterView(mProgressFooterView, null, false);
-        mProgressFooterView.setVisibility(View.GONE);
-        getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
-        getListView().setDividerHeight(1);
-
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
-                if (position >= getPostListAdapter().getCount()) //out of bounds
-                    return;
-                if (v == null) //view is gone
-                    return;
-                PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(position);
-                if (postsListPost == null)
-                    return;
-                if (!mIsFetchingPosts || isLoadingMorePosts()) {
-                    showPost(postsListPost.getPostId());
-                } else if (isAdded()) {
-                    Toast.makeText(getActivity(), mIsPage ? R.string.pages_fetching : R.string.posts_fetching,
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         initSwipeToRefreshHelper();
-        WordPress.setOnPostUploadedListener(this);
 
-        mFabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
+        mFabView = getView().findViewById(R.id.fab_button);
+        mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 newPost();
@@ -251,15 +243,16 @@ public class PostsListFragment extends ListFragment
         mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            ((PostsActivity) getActivity()).requestPosts();
+            // If we remove or throttle the following call, we should make PostUpload events sticky
+            ((PostsListActivity) getActivity()).requestPosts();
         } else {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
         }
     }
 
     private void newPost() {
-        if (getActivity() instanceof PostsActivity) {
-            ((PostsActivity)getActivity()).newPost();
+        if (getActivity() instanceof PostsListActivity) {
+            ((PostsListActivity)getActivity()).newPost();
         }
     }
 
@@ -279,10 +272,9 @@ public class PostsListFragment extends ListFragment
     public void onResume() {
         super.onResume();
         if (WordPress.getCurrentBlog() != null) {
-            if (getListView().getAdapter() == null) {
-                getListView().setAdapter(getPostListAdapter());
+            if (mRecyclerView.getAdapter() == null) {
+                mRecyclerView.setAdapter(getPostListAdapter());
             }
-
             getPostListAdapter().loadPosts();
         }
     }
@@ -290,8 +282,8 @@ public class PostsListFragment extends ListFragment
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (mFabButton != null) {
-            mFabButton.setVisibility(hidden ? View.GONE : View.VISIBLE);
+        if (mFabView != null) {
+            mFabView.setVisibility(hidden ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -321,10 +313,6 @@ public class PostsListFragment extends ListFragment
         }
     }
 
-    boolean isLoadingMorePosts() {
-        return mIsFetchingPosts && (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE);
-    }
-
     public void requestPosts(boolean loadMore) {
         if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
             return;
@@ -343,13 +331,15 @@ public class PostsListFragment extends ListFragment
             mCanLoadMorePosts = true;
             postCount = POSTS_REQUEST_COUNT;
         }
-        List<Object> apiArgs = new Vector<Object>();
+        List<Object> apiArgs = new Vector<>();
         apiArgs.add(WordPress.getCurrentBlog());
         apiArgs.add(mIsPage);
         apiArgs.add(postCount);
         apiArgs.add(loadMore);
-        if (mProgressFooterView != null && loadMore) {
-            mProgressFooterView.setVisibility(View.VISIBLE);
+
+        // show progress bar at the bottom if we're loading more posts
+        if (loadMore) {
+            showLoadMoreProgress();
         }
 
         mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
@@ -367,9 +357,7 @@ public class PostsListFragment extends ListFragment
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
 
-                if (mProgressFooterView != null) {
-                    mProgressFooterView.setVisibility(View.GONE);
-                }
+                hideLoadMoreProgress();
 
                 if (postCount == 0) {
                     mCanLoadMorePosts = false;
@@ -387,10 +375,10 @@ public class PostsListFragment extends ListFragment
                 if (!isAdded()) {
                     return;
                 }
+
                 mSwipeToRefreshHelper.setRefreshing(false);
-                if (mProgressFooterView != null) {
-                    mProgressFooterView.setVisibility(View.GONE);
-                }
+                hideLoadMoreProgress();
+
                 if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
                     switch (errorType) {
                         case UNAUTHORIZED:
@@ -400,13 +388,13 @@ public class PostsListFragment extends ListFragment
                                                 R.string.error_refresh_unauthorized_posts, Duration.LONG);
                             }
                             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            return;
+                            break;
                         default:
                             ToastUtils.showToast(getActivity(),
                                     mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
                                     Duration.LONG);
                             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            return;
+                            break;
                     }
                 }
             }
@@ -416,30 +404,41 @@ public class PostsListFragment extends ListFragment
         mCurrentFetchPostsTask.execute(apiArgs);
     }
 
-    protected void clear() {
-        if (getPostListAdapter() != null) {
-            getPostListAdapter().clear();
+    private void showLoadMoreProgress() {
+        if (mProgressLoadMore != null) {
+            mProgressLoadMore.setVisibility(View.VISIBLE);
         }
-        mCanLoadMorePosts = true;
-        if (mProgressFooterView != null && mProgressFooterView.getVisibility() == View.VISIBLE) {
-            mProgressFooterView.setVisibility(View.GONE);
+    }
+
+    private void hideLoadMoreProgress() {
+        if (mProgressLoadMore != null) {
+            mProgressLoadMore.setVisibility(View.GONE);
         }
-        mEmptyViewAnimationHandler.clear();
     }
 
     public void setShouldSelectFirstPost(boolean shouldSelect) {
         mShouldSelectFirstPost = shouldSelect;
     }
 
-    @Override
-    public void OnPostUploaded(int localBlogId, String postId, boolean isPage) {
+    /*
+     * determines whether the adapter highlights the selected post - used in dual-pane mode
+     */
+    public void setShowSelection(boolean showSelection) {
+        mShowSelection = showSelection;
+        if (mPostsListAdapter != null) {
+            mPostsListAdapter.setShowSelection(showSelection);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostUploadSucceed event) {
         if (!isAdded()) {
             return;
         }
 
         // If the user switched to a different blog while uploading his post, don't reload posts and refresh the view
         boolean sameBlogId = true;
-        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != localBlogId) {
+        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != event.mLocalBlogId) {
             sameBlogId = false;
         }
 
@@ -450,12 +449,12 @@ public class PostsListFragment extends ListFragment
         }
 
         // Fetch the newly uploaded post
-        if (!TextUtils.isEmpty(postId)) {
+        if (!TextUtils.isEmpty(event.mRemotePostId)) {
             final boolean reloadPosts = sameBlogId;
-            List<Object> apiArgs = new Vector<Object>();
-            apiArgs.add(WordPress.wpDB.instantiateBlogByLocalId(localBlogId));
-            apiArgs.add(postId);
-            apiArgs.add(isPage);
+            List<Object> apiArgs = new Vector<>();
+            apiArgs.add(WordPress.wpDB.instantiateBlogByLocalId(event.mLocalBlogId));
+            apiArgs.add(event.mRemotePostId);
+            apiArgs.add(event.mIsPage);
 
             mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(
                     new ApiHelper.FetchSinglePostTask.Callback() {
@@ -492,8 +491,8 @@ public class PostsListFragment extends ListFragment
         }
     }
 
-    @Override
-    public void OnPostUploadFailed(int localBlogId) {
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostUploadFailed event) {
         mSwipeToRefreshHelper.setRefreshing(true);
 
         if (!isAdded()) {
@@ -501,7 +500,7 @@ public class PostsListFragment extends ListFragment
         }
 
         // If the user switched to a different blog while uploading his post, don't reload posts and refresh the view
-        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != localBlogId) {
+        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != event.mLocalId) {
             return;
         }
 
@@ -516,19 +515,8 @@ public class PostsListFragment extends ListFragment
         getPostListAdapter().loadPosts();
     }
 
-    public void onBlogChanged() {
-        if (mCurrentFetchPostsTask != null) {
-            mCurrentFetchPostsTask.cancel(true);
-        }
-        if (mCurrentFetchSinglePostTask != null) {
-            mCurrentFetchSinglePostTask.cancel(true);
-        }
-        mIsFetchingPosts = false;
-        mSwipeToRefreshHelper.setRefreshing(false);
-    }
-
     private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
-        if (mPostsListAdapter != null && mPostsListAdapter.getCount() == 0) {
+        if (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0) {
             // Handle animation display
             if (mEmptyViewMessage == EmptyViewMessageType.NO_CONTENT &&
                     emptyViewMessageType == EmptyViewMessageType.LOADING) {
@@ -589,18 +577,6 @@ public class PostsListFragment extends ListFragment
         }
     }
 
-    public interface OnPostSelectedListener {
-        public void onPostSelected(Post post);
-    }
-
-    public interface OnPostActionListener {
-        public void onPostAction(int action, Post post);
-    }
-
-    public interface OnSinglePostLoadedListener {
-        public void onSinglePostLoaded();
-    }
-
     @Override
     public void onSequenceStarted(EmptyViewMessageType emptyViewMessageType) {
         mEmptyViewMessage = emptyViewMessageType;
@@ -622,5 +598,29 @@ public class PostsListFragment extends ListFragment
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public interface OnPostSelectedListener {
+        void onPostSelected(Post post);
+    }
+
+    public interface OnPostActionListener {
+        void onPostAction(int action, Post post);
+    }
+
+    public interface OnSinglePostLoadedListener {
+        void onSinglePostLoaded();
     }
 }

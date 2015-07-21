@@ -20,4 +20,7 @@ public class Constants {
     public static int QUICK_POST_PHOTO_LIBRARY = 1;
 
     public static final int INTENT_COMMENT_EDITOR     = 1010;
+
+    // SnackbarManager.LONG_DURATION_MS
+    public static final long SNACKBAR_LONG_DURATION_MS = 2750;
 }

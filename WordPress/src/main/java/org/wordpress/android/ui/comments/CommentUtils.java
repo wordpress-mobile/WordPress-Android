@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.Layout;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
@@ -49,7 +48,7 @@ public class CommentUtils {
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
             Drawable loading = textView.getContext().getResources().getDrawable(
-                    R.drawable.dashicon_format_image_big_grey);
+                org.wordpress.android.editor.R.drawable.legacy_dashicon_format_image_big_grey);
             Drawable failed = textView.getContext().getResources().getDrawable(R.drawable.noticon_warning_big_grey);
             html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, WordPress.imageLoader, loading,
                     failed));

@@ -25,16 +25,19 @@ android {
         exclude "META-INF/LICENSE.txt"
         exclude "META-INF/NOTICE.txt"
     }
+    dexOptions {
+        jumboMode = true
+    }
 
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.9"
-        versionCode 175
+        versionName "4.3-rc1"
+        versionCode 193
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 22
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
     }
@@ -53,7 +56,7 @@ android {
             // Proguard is only used to fix an issue with some Samsung device
             // https://github.com/wordpress-mobile/WordPress-Android/issues/2151
             minifyEnabled true
-            proguardFile 'proguard.cfg'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
         }
 
         debug {
@@ -67,22 +70,25 @@ dependencies {
     compile 'com.crashlytics.sdk.android:crashlytics:2.2.2'
 
     // Provided by maven central
-    compile ('org.wordpress:mediapicker:1.2.1') {
+    compile ('org.wordpress:mediapicker:1.2.4') {
         exclude group:'com.android.support'
     }
     compile 'com.google.code.gson:gson:2.2.2'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-    compile 'com.android.support:support-v13:21.0.+'
-    compile 'com.android.support:appcompat-v7:21.0.+'
-    compile 'com.android.support:cardview-v7:21.0.+'
-    compile 'com.android.support:recyclerview-v7:21.0.+'
+    compile 'com.android.support:support-v13:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:design:22.2.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
-    compile 'com.helpshift:android-aar:3.7.2'
+    compile 'com.helpshift:android-aar:3.8.0'
     compile 'commons-lang:commons-lang:2.6'
-    compile 'com.cocosw:undobar:1.6@aar'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.automattic:rest:1.0.1'
+    compile 'org.wordpress:graphview:3.3.0'
+    compile 'org.wordpress:persistentedittext:1.0.1'
 
-    compile 'com.mcxiaoke.volley:library:1.0.+'
+    compile 'com.mcxiaoke.volley:library:1.0.16'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
@@ -92,22 +98,16 @@ dependencies {
     compile 'org.wordpress:gcm:1.0.0' // not found in maven central
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:android-passcodelock:0.0.6'
+    compile 'org.wordpress:passcodelock:1.0.0'
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile 'com.simperium.android:simperium:0.6.2'
+    compile 'com.simperium.android:simperium:0.6.4'
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
     releaseCompile project(path:':libs:networking:WordPressNetworking', configuration: 'release')
     debugCompile project(path:':libs:networking:WordPressNetworking', configuration: 'debug')
-    releaseCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'release')
-    debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'debug')
-    releaseCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'release')
-    debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
-    releaseCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'release')
-    debugCompile project(path:':libs:persistentedittext:PersistentEditText', configuration: 'debug')
     releaseCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'release')
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')

@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="settings_padding">16dp</dimen>
-    <dimen name="settings_list_item_padding">12dp</dimen>
     <dimen name="format_bar_height">40dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
 
-    <dimen name="fab_size">56dp</dimen>
-    <dimen name="fab_padding">10dp</dimen>
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
-    <dimen name="fab_elevation">8dp</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
@@ -44,6 +40,12 @@
     <dimen name="content_margin_tablet_landscape">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
+    <!-- spacing between icons in main tab strip -->
+    <dimen name="tabstrip_icon_spacing_normal">0dp</dimen>
+    <dimen name="tabstrip_icon_spacing_landscape">24dp</dimen>
+    <dimen name="tabstrip_icon_spacing_tablet">24dp</dimen>
+    <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_normal</dimen>
+
     <!--
         native reader dimens
     -->
@@ -71,6 +73,7 @@
     <dimen name="text_sz_medium">14sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
+    <dimen name="text_sz_double_extra_large">24sp</dimen>
 
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">48dp</dimen>
@@ -110,8 +113,6 @@
     <dimen name="comment_avatar_margin_top">6dp</dimen>
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
-    <dimen name="comment_user_margin_adjustment">-6dp</dimen>
-    <dimen name="comment_snippet_margin_adjustment">15dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
 
@@ -145,11 +146,21 @@
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
+    <dimen name="my_site_no_site_view_margin">24dp</dimen>
+    <dimen name="my_site_no_site_view_subtitle_margin_top">18dp</dimen>
+    <dimen name="my_site_no_site_view_subtitle_font">21sp</dimen>
+    <dimen name="my_site_no_site_view_button_margin_top">50dp</dimen>
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
     <dimen name="me_list_margin_top">20dp</dimen>
     <dimen name="me_list_row_height">56dp</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
+
+    <!--site picker-->
+    <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
+    <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
+    <dimen name="site_picker_container_padding_bottom">11dp</dimen>
+    <dimen name="site_picker_container_padding_top">10dp</dimen>
 
 </resources>

@@ -59,6 +59,9 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             @Override
             public void onGlobalLayout() {
                 mTopPagerContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                if (!isAdded()) {
+                    return;
+                }
 
                 StringBuilder dataToLoad = new StringBuilder();
 
@@ -72,29 +75,28 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 String label = getResources().getString(getTotalsLabelResId());
 
                 // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
-                StringBuilder htmlPage = new StringBuilder().append("<html>")
-                        .append("<head>")
-                        .append("<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>")
-                        .append("<script type=\"text/javascript\">")
-                            .append("google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});")
-                            .append("google.setOnLoadCallback(drawRegionsMap);")
-                            .append("function drawRegionsMap() {")
-                                .append("var data = google.visualization.arrayToDataTable(")
-                                .append("[")
-                                .append("['Country', '").append(label).append("'],")
-                                        .append(dataToLoad)
-                                .append("]);")
-                                .append("var options = {legend: 'none', keepAspectRatio: true, region: 'world', enableRegionInteractivity: true};")
-                                .append("var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));")
-                                .append("chart.draw(data, options);")
-                            .append("}")
-                            .append("</script>")
-                        .append("</head>")
-                        .append("<body>")
-                        .append("<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>")
-                        .append("</body>")
-                        .append("</html>");
-
+                String htmlPage = "<html>" +
+                        "<head>" +
+                        "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
+                        "<script type=\"text/javascript\">" +
+                            "google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});" +
+                            "google.setOnLoadCallback(drawRegionsMap);" +
+                            "function drawRegionsMap() {" +
+                                "var data = google.visualization.arrayToDataTable(" +
+                                "[" +
+                                "['Country', '" + label + "']," +
+                                        dataToLoad +
+                                "]);" +
+                                "var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
+                                "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
+                                "chart.draw(data, options);" +
+                            "}" +
+                            "</script>" +
+                        "</head>" +
+                        "<body>" +
+                        "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>" +
+                        "</body>" +
+                        "</html>";
 
                 WebView webView = new WebView(getActivity());
                 mTopPagerContainer.addView(webView);
@@ -111,7 +113,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 webView.setWebViewClient(new MyWebViewClient()); // Hide map in case of unrecoverable errors
                 webView.getSettings().setJavaScriptEnabled(true);
                 webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-                webView.loadData(htmlPage.toString(), "text/html", "UTF-8");
+                webView.loadData(htmlPage, "text/html", "UTF-8");
 
             }
         });

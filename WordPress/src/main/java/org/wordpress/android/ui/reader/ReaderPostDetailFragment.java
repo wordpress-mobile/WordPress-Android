@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -39,6 +38,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -71,6 +71,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsBlockBlogDisabled;
+    private boolean mIsLoggedOutReader;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
     private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
@@ -99,6 +100,12 @@ public class ReaderPostDetailFragment extends Fragment
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
     }
 
     @Override
@@ -200,6 +207,7 @@ public class ReaderPostDetailFragment extends Fragment
                 && !mIsBlockBlogDisabled
                 && !mPost.isPrivate
                 && !mPost.isExternal
+                && !mIsLoggedOutReader
                 && (mOnPopupListener != null)
                 && (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
     }
@@ -229,18 +237,18 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_browse:
-                if (hasPost()) {
-                    ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
-                }
-                return true;
-            case R.id.menu_share:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
-                sharePage();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.menu_browse) {
+            if (hasPost()) {
+                ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
+            }
+            return true;
+        } else if (i == R.id.menu_share) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
+            sharePage();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -253,12 +261,23 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * animate in/out the layout containing the reblog/comment/like icons
+     * animate in/out the layout containing the comment/like icons
      */
     private void showIconBar(boolean show) {
-        if (isAdded()) {
-            ReaderAnim.animateBottomBar(mLayoutIcons, show);
+        if (isAdded() && canShowIconBar()) {
+            AniUtils.animateBottomBar(mLayoutIcons, show);
         }
+    }
+
+    /*
+     * action icons don't appear for feeds or when logged out, otherwise they appear
+     * only if the user can act upon them
+     */
+    private boolean canShowIconBar() {
+        if (mPost == null || mPost.isExternal || mIsLoggedOutReader) {
+            return false;
+        }
+        return (mPost.isLikesEnabled || mPost.isCommentsOpen);
     }
 
     @Override
@@ -370,42 +389,10 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * called when user chooses to reblog the post
-     */
-    private void reblogPost() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        if (mPost.isRebloggedByCurrentUser) {
-            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_already_reblogged);
-            return;
-        }
-
-        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-        ReaderAnim.animateReblogButton(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), mPost, imgBtnReblog);
-    }
-
-    /*
-     * called after the post has been reblogged
-     */
-    void doPostReblogged() {
-        if (!isAdded()) {
-            return;
-        }
-
-        // get the post again since reblog status has changed
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
-
-        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-        imgBtnReblog.setSelected(mPost != null && mPost.isRebloggedByCurrentUser);
-    }
-
-    /*
      * display the standard Android share chooser to share this post
      */
     private static final int MAX_SHARE_TITLE_LEN = 100;
+
     private void sharePage() {
         if (!isAdded() || !hasPost()) {
             return;
@@ -486,7 +473,7 @@ public class ReaderPostDetailFragment extends Fragment
             countComments.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
+                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId);
                 }
             });
         } else {
@@ -498,12 +485,16 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setCount(mPost.numLikes, animateChanges);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
-            countLikes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    togglePostLike();
-                }
-            });
+            if (mIsLoggedOutReader) {
+                countLikes.setEnabled(false);
+            } else {
+                countLikes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        togglePostLike();
+                    }
+                });
+            }
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now
             if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
@@ -529,7 +520,7 @@ public class ReaderPostDetailFragment extends Fragment
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
             if (mLayoutLikes.getVisibility() != View.GONE) {
-                ReaderAnim.fadeOut(mLayoutLikes, ReaderAnim.Duration.SHORT);
+                AniUtils.fadeOut(mLayoutLikes, AniUtils.Duration.SHORT);
             }
             return;
         }
@@ -538,12 +529,12 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutLikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost);
+                ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost.blogId, mPost.postId);
             }
         });
 
         if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
+            AniUtils.fadeIn(mLayoutLikes, AniUtils.Duration.SHORT);
         }
 
         mLikingUsersView.showLikingUsers(mPost);
@@ -570,7 +561,7 @@ public class ReaderPostDetailFragment extends Fragment
             btnCommentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
+                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId);
                 }
             });
         }
@@ -653,7 +644,6 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtBlogName;
         TextView txtDateAndAuthor;
 
-        ImageView imgBtnReblog;
         ImageView imgMore;
 
         ReaderFollowButton followButton;
@@ -690,7 +680,6 @@ public class ReaderPostDetailFragment extends Fragment
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
-            imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
             followButton = (ReaderFollowButton) container.findViewById(R.id.follow_button);
@@ -726,13 +715,17 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-            followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    togglePostFollowed();
-                }
-            });
+            if (mIsLoggedOutReader) {
+                followButton.setVisibility(View.GONE);
+            } else {
+                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
+                followButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        togglePostFollowed();
+                    }
+                });
+            }
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
@@ -774,32 +767,6 @@ public class ReaderPostDetailFragment extends Fragment
                 });
             }
 
-            // enable reblogging wp posts
-            if (mPost.canReblog()) {
-                imgBtnReblog.setVisibility(View.VISIBLE);
-                imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
-                imgBtnReblog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        reblogPost();
-                    }
-                });
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
-                }
-            } else {
-                imgBtnReblog.setVisibility(View.INVISIBLE);
-            }
-
-            // external blogs (feeds) don't support action icons
-            if (!mPost.isExternal && (mPost.isLikesEnabled
-                    || mPost.canReblog()
-                    || mPost.isCommentsOpen)) {
-                mLayoutIcons.setVisibility(View.VISIBLE);
-            } else {
-                mLayoutIcons.setVisibility(View.GONE);
-            }
-
             // enable blocking the associated blog
             if (canBlockBlog()) {
                 imgMore.setVisibility(View.VISIBLE);
@@ -815,8 +782,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imgMore.setVisibility(View.GONE);
             }
 
-            // only show action buttons for WP posts
-            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            mLayoutIcons.setVisibility(canShowIconBar() ? View.VISIBLE : View.GONE);
             refreshIconBarCounts(false);
         }
     }

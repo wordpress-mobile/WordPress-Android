@@ -22,7 +22,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -31,7 +30,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -48,7 +47,7 @@ public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
 
     private OnDetailPostActionListener mOnDetailPostActionListener;
-    PostsActivity mParentActivity;
+    PostsListActivity mParentActivity;
 
     private ViewGroup mLayoutCommentBox;
     private SuggestionAutoCompleteText mEditComment;
@@ -72,14 +71,14 @@ public class ViewPostFragment extends Fragment {
         if (WordPress.currentPost != null && !getView().isLayoutRequested()) {
             loadPost(WordPress.currentPost);
         }
-        mParentActivity = (PostsActivity) getActivity();
+        mParentActivity = (PostsListActivity) getActivity();
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(SuggestionEvents.SuggestionListUpdated event) {
+    public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         int remoteBlogId = WordPress.getCurrentRemoteBlogId();
         // check if the updated suggestions are for the current blog and update the suggestions
-        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == remoteBlogId) {
+        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == remoteBlogId && mSuggestionAdapter != null) {
             List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
             mSuggestionAdapter.setSuggestionList(suggestions);
         }
@@ -136,7 +135,7 @@ public class ViewPostFragment extends Fragment {
         editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (WordPress.currentPost != null && !mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_EDIT, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_EDIT, WordPress.currentPost);
                     long postId = WordPress.currentPost.getLocalTablePostId();
                     boolean isPage = WordPress.currentPost.isPage();
                     ActivityLauncher.editBlogPostOrPageForResult(getActivity(), postId, isPage);
@@ -148,7 +147,7 @@ public class ViewPostFragment extends Fragment {
         mShareUrlButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_SHARE, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_SHARE, WordPress.currentPost);
                 }
             }
         });
@@ -157,14 +156,14 @@ public class ViewPostFragment extends Fragment {
         deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!mParentActivity.isRefreshing()) {
-                    mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_DELETE, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_DELETE, WordPress.currentPost);
                 }
             }
         });
 
         mViewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                mOnDetailPostActionListener.onDetailPostAction(PostsActivity.POST_VIEW, WordPress.currentPost);
+                mOnDetailPostActionListener.onDetailPostAction(PostsListActivity.POST_VIEW, WordPress.currentPost);
                 if (!mParentActivity.isRefreshing()) {
                     loadPostPreview();
                 }
@@ -197,31 +196,18 @@ public class ViewPostFragment extends Fragment {
     }
 
     /**
-     * Load the post preview. If the post is in a non-public state (e.g. draft status, part of a
-     * non-public blog, etc), load the preview as an authenticated URL. Otherwise, just load the
-     * preview normally.
+     * Load the post preview as an authenticated URL so stats aren't bumped.
      */
     protected void loadPostPreview() {
         if (WordPress.currentPost != null && !TextUtils.isEmpty(WordPress.currentPost.getPermaLink())) {
             Post post = WordPress.currentPost;
             String url = post.getPermaLink();
-            if ( WordPress.getCurrentBlog().isPrivate() //blog private
-                    || post.isLocalDraft()
-                    || post.isLocalChange()
-                    || post.getStatusEnum() != PostStatus.PUBLISHED) {
-                if (-1 == url.indexOf('?')) {
-                    url = url.concat("?preview=true");
-                } else {
-                    url = url.concat("&preview=true");
-                }
-                WPWebViewActivity.openUrlByUsingBlogCredentials(
-                        getActivity(),
-                        WordPress.currentBlog,
-                        url
-                );
+            if (-1 == url.indexOf('?')) {
+                url = url.concat("?preview=true");
             } else {
-                WPWebViewActivity.openURL(getActivity(), url);
+                url = url.concat("&preview=true");
             }
+            WPWebViewActivity.openUrlByUsingBlogCredentials(getActivity(), WordPress.currentBlog, url);
         }
     }
 

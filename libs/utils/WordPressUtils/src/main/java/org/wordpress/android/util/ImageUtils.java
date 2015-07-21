@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -42,13 +43,17 @@ public class ImageUtils {
 
         if (uri.toString().contains("content:")) {
             String[] projection = new String[] { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
-            Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
-            if (cur != null) {
-                if (cur.moveToFirst()) {
+            Cursor cur = null;
+            try {
+                cur = context.getContentResolver().query(uri, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
                     int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
                     path = cur.getString(dataColumn);
                 }
-                cur.close();
+            } catch (IllegalStateException stateException) {
+                Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + uri);
+            } finally {
+                SqlUtils.closeCursor(cur);
             }
         }
 
@@ -406,13 +411,17 @@ public class ImageUtils {
         String filePath = null;
         if (imageUri.toString().contains("content:")) {
             String[] projection = new String[] { MediaStore.Images.Media.DATA };
-            Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
-            if (cur != null) {
-                if (cur.moveToFirst()) {
+            Cursor cur = null;
+            try {
+                cur = context.getContentResolver().query(imageUri, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
                     int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
                     filePath = cur.getString(dataColumn);
                 }
-                cur.close();
+            } catch (IllegalStateException stateException) {
+                Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + imageUri);
+            } finally {
+                SqlUtils.closeCursor(cur);
             }
         }
 

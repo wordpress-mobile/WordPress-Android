@@ -3,13 +3,13 @@ package org.wordpress.android.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
@@ -21,7 +21,7 @@ import org.wordpress.android.util.ToastUtils;
  *
  * Redirects users to the reader activity along with IDs passed in the intent
  */
-public class DeepLinkingIntentReceiverActivity extends ActionBarActivity {
+public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final int INTENT_WELCOME = 0;
 
     private String mBlogId;
@@ -41,7 +41,7 @@ public class DeepLinkingIntentReceiverActivity extends ActionBarActivity {
 
             // if user is logged in, show the post right away - otherwise show welcome activity
             // and then show the post once the user has logged in
-            if (AccountHelper.getDefaultAccount().hasAccessToken()) {
+            if (AccountHelper.isSignedInWordPressDotCom()) {
                 showPost();
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);

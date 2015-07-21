@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
+
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
@@ -45,7 +47,9 @@ public class TestUtils {
             InputStreamReader inputStreamReader = new InputStreamReader(is);
             BufferedReader f = new BufferedReader(inputStreamReader);
             for (String line = f.readLine(); line != null; line = f.readLine()) {
-                if (TextUtils.isEmpty(line)) continue;
+                if (TextUtils.isEmpty(line)) {
+                    continue;
+                }
                 try {
                     db.execSQL(line);
                 } catch (android.database.sqlite.SQLiteException e) {
@@ -64,6 +68,19 @@ public class TestUtils {
         return null;
     }
 
+    public static void resetEventBus() {
+        Field dbField;
+        try {
+            dbField = EventBus.class.getDeclaredField("defaultInstance");
+            dbField.setAccessible(true);
+            dbField.set(EventBus.class, null);
+        } catch (NoSuchFieldException e) {
+            assertTrue(e.toString(), false);
+        } catch (IllegalAccessException e) {
+            assertTrue(e.toString(), false);
+        }
+    }
+
     public static void clearDefaultSharedPreferences(Context targetContext) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(targetContext);
         Editor editor = settings.edit();
@@ -79,11 +96,11 @@ public class TestUtils {
         WordPress.currentBlog = null;
         if (WordPress.getContext() != null) {
             try {
-                WordPress.signOut(context);
+                WordPress.WordPressComSignOut(context);
             } catch (Exception e) {
                 // noop
             }
-       }
+        }
         TestUtils.clearDefaultSharedPreferences(context);
         TestUtils.dropDB(context);
     }

@@ -46,7 +46,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.media.WordPressMediaUtils.RequestCode;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -62,7 +62,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
@@ -70,7 +69,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
-    private EditPostActivity mActivity;
+    private Post mPost;
 
     private Spinner mStatusSpinner, mPostFormatSpinner;
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
@@ -94,6 +93,13 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mPost = ((EditPostActivity) getActivity()).getPost();
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
+
+        if (rootView == null || mPost == null) {
+            return null;
+        }
+
         Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -101,15 +107,6 @@ public class EditPostSettingsFragment extends Fragment
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
         mCategories = new ArrayList<String>();
-
-        ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_edit_post_settings, container, false);
-
-        if (rootView == null) {
-            return null;
-        }
-
-        mActivity = (EditPostActivity) getActivity();
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
@@ -130,7 +127,7 @@ public class EditPostSettingsFragment extends Fragment
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
 
-        if (mActivity.getPost().isPage()) { // remove post specific views
+        if (mPost.isPage()) { // remove post specific views
             mExcerptEditText.setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionTags)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
@@ -142,10 +139,7 @@ public class EditPostSettingsFragment extends Fragment
                     new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
                                  "video"};
             if (WordPress.getCurrentBlog().getPostFormats().equals("")) {
-                List<Object> args = new Vector<Object>();
-                args.add(WordPress.getCurrentBlog());
-                args.add(mActivity);
-                new ApiHelper.GetPostFormatsTask().execute(args);
+                new ApiHelper.GetPostFormatsTask().execute(WordPress.getCurrentBlog());
             } else {
                 try {
                     Gson gson = new Gson();
@@ -167,14 +161,14 @@ public class EditPostSettingsFragment extends Fragment
                 }
             }
             mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
-            ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, mPostFormatTitles);
+            ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
+                    mPostFormatTitles);
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mPostFormatSpinner.setAdapter(pfAdapter);
             String activePostFormat = "standard";
 
-
-            if (!TextUtils.isEmpty(mActivity.getPost().getPostFormat())) {
-                activePostFormat = mActivity.getPost().getPostFormat();
+            if (!TextUtils.isEmpty(mPost.getPostFormat())) {
+                activePostFormat = mPost.getPostFormat();
             }
 
             for (int i = 0; i < mPostFormats.length; i++) {
@@ -192,91 +186,80 @@ public class EditPostSettingsFragment extends Fragment
             );
         }
 
-        Post post = mActivity.getPost();
-        if (post != null) {
-            mExcerptEditText.setText(post.getPostExcerpt());
-
-            String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
-                    getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, items);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mStatusSpinner.setAdapter(adapter);
-            mStatusSpinner.setOnTouchListener(
-                    new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-                            return false;
-                        }
-                    }
-            );
-
-            if (post.isUploaded()) {
-                items = new String[]{
-                        getResources().getString(R.string.publish_post),
-                        getResources().getString(R.string.draft),
-                        getResources().getString(R.string.pending_review),
-                        getResources().getString(R.string.post_private)
-                };
-                adapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, items);
-                mStatusSpinner.setAdapter(adapter);
-            }
-
-            long pubDate = post.getDate_created_gmt();
-            if (pubDate != 0) {
-                try {
-                    int flags = 0;
-                    flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                    flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                    flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                    flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                    String formattedDate = DateUtils.formatDateTime(getActivity(), pubDate,
-                            flags);
-                    mPubDateText.setText(formattedDate);
-                } catch (RuntimeException e) {
-                    AppLog.e(T.POSTS, e);
-                }
-            }
-
-            if (!TextUtils.isEmpty(post.getPassword()))
-                mPasswordEditText.setText(post.getPassword());
-
-            switch (post.getStatusEnum()) {
-                case PUBLISHED:
-                case SCHEDULED:
-                case UNKNOWN:
-                    mStatusSpinner.setSelection(0, true);
-                    break;
-                case DRAFT:
-                    mStatusSpinner.setSelection(1, true);
-                    break;
-                case PENDING:
-                    mStatusSpinner.setSelection(2, true);
-                    break;
-                case PRIVATE:
-                    mStatusSpinner.setSelection(3, true);
-                    break;
-            }
-
-            if (!post.isPage()) {
-                if (post.getJSONCategories() != null) {
-                    mCategories = JSONUtils.fromJSONArrayToStringList(post.getJSONCategories());
-                }
-            }
-            String tags = post.getKeywords();
-            if (!tags.equals("")) {
-                mTagsEditText.setText(tags);
-            }
-
-            populateSelectedCategories();
-        }
-
+        initSettingsFields();
+        populateSelectedCategories();
         initLocation(rootView);
 
         return rootView;
     }
 
+    private void initSettingsFields() {
+        mExcerptEditText.setText(mPost.getPostExcerpt());
 
+        String[] items = new String[]{ getResources().getString(R.string.publish_post),
+                                       getResources().getString(R.string.draft),
+                                       getResources().getString(R.string.pending_review),
+                                       getResources().getString(R.string.post_private) };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mStatusSpinner.setAdapter(adapter);
+        mStatusSpinner.setOnTouchListener(
+                new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        return false;
+                    }
+                }
+        );
+
+        long pubDate = mPost.getDate_created_gmt();
+        if (pubDate != 0) {
+            try {
+                int flags = 0;
+                flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+                flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+                flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+                flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+                String formattedDate = DateUtils.formatDateTime(getActivity(), pubDate,
+                        flags);
+                mPubDateText.setText(formattedDate);
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
+            }
+        }
+
+        if (!TextUtils.isEmpty(mPost.getPassword())) {
+            mPasswordEditText.setText(mPost.getPassword());
+        }
+
+        switch (mPost.getStatusEnum()) {
+            case PUBLISHED:
+            case SCHEDULED:
+            case UNKNOWN:
+                mStatusSpinner.setSelection(0, true);
+                break;
+            case DRAFT:
+                mStatusSpinner.setSelection(1, true);
+                break;
+            case PENDING:
+                mStatusSpinner.setSelection(2, true);
+                break;
+            case PRIVATE:
+                mStatusSpinner.setSelection(3, true);
+                break;
+        }
+
+        if (!mPost.isPage()) {
+            if (mPost.getJSONCategories() != null) {
+                mCategories = JSONUtils.fromJSONArrayToStringList(mPost.getJSONCategories());
+            }
+        }
+        String tags = mPost.getKeywords();
+        if (!tags.equals("")) {
+            mTagsEditText.setText(tags);
+        }
+    }
 
     private String getPostStatusForSpinnerPosition(int position) {
         switch (position) {
@@ -297,8 +280,8 @@ public class EditPostSettingsFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO ||
-                requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
+                requestCode == RequestCodes.TAKE_VIDEO))) {
             Bundle extras;
 
             switch (requestCode) {
@@ -438,67 +421,73 @@ public class EditPostSettingsFragment extends Fragment
      * Updates post object with content of this fragment
      */
     public void updatePostSettings() {
-        Post post = mActivity.getPost();
-        if (post == null)
+        if (!isAdded() || mPost == null) {
             return;
+        }
 
-        String password = (mPasswordEditText.getText() != null) ? mPasswordEditText.getText().toString() : "";
-        String pubDate = (mPubDateText.getText() != null) ? mPubDateText.getText().toString() : "";
-        String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
+        String password = EditTextUtils.getText(mPasswordEditText);
+        String pubDate = EditTextUtils.getText(mPubDateText);
+        String excerpt = EditTextUtils.getText(mExcerptEditText);
 
         long pubDateTimestamp = 0;
-        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !post.isLocalDraft()) {
+        if (mIsCustomPubDate && pubDate.equals(getText(R.string.immediately)) && !mPost.isLocalDraft()) {
             Date d = new Date();
             pubDateTimestamp = d.getTime();
-        } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
+        } else if (!pubDate.equals(getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
-            else if (post.getDate_created_gmt() > 0)
-                pubDateTimestamp = post.getDate_created_gmt();
-        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && post.isLocalDraft()) {
-            post.setDate_created_gmt(0);
-            post.setDateCreated(0);
+            else if (mPost.getDate_created_gmt() > 0)
+                pubDateTimestamp = mPost.getDate_created_gmt();
+        } else if (pubDate.equals(getText(R.string.immediately)) && mPost.isLocalDraft()) {
+            mPost.setDate_created_gmt(0);
+            mPost.setDateCreated(0);
         }
 
         String tags = "", postFormat = "";
-        if (!post.isPage()) {
-            tags = (mTagsEditText.getText() != null) ? mTagsEditText.getText().toString() : "";
+        if (!mPost.isPage()) {
+            tags = EditTextUtils.getText(mTagsEditText);
 
             // post format
-            if (mPostFormats != null && mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
+            if (mPostFormats != null && mPostFormatSpinner != null &&
+                mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
                 postFormat = mPostFormats[mPostFormatSpinner.getSelectedItemPosition()];
             }
         }
 
-        String status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
+        String status;
+        if (mStatusSpinner != null) {
+            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
+        } else {
+            status = mPost.getPostStatus();
+        }
 
         // We want to flag this post as having changed statuses from draft to published so that we
         // properly track stats we care about for when users first publish posts.
-        if (post.isUploaded() && post.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
+        if (mPost.isUploaded() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
                 && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
-            post.setChangedFromLocalDraftToPublished(true);
+            mPost.setChangedFromLocalDraftToPublished(true);
         }
 
-        if (post.supportsLocation()) {
-            post.setLocation(mPostLocation);
+        if (mPost.supportsLocation()) {
+            mPost.setLocation(mPostLocation);
         }
 
-        post.setPostExcerpt(excerpt);
-        post.setDate_created_gmt(pubDateTimestamp);
-        post.setJSONCategories(new JSONArray(mCategories));
-        post.setKeywords(tags);
-        post.setPostStatus(status);
-        post.setPassword(password);
-        post.setPostFormat(postFormat);
+        mPost.setPostExcerpt(excerpt);
+        mPost.setDate_created_gmt(pubDateTimestamp);
+        mPost.setJSONCategories(new JSONArray(mCategories));
+        mPost.setKeywords(tags);
+        mPost.setPostStatus(status);
+        mPost.setPassword(password);
+        mPost.setPostFormat(postFormat);
     }
 
     /*
      * Saves settings to post object and updates save button text in the ActionBar
      */
     private void updatePostSettingsAndSaveButton() {
-        if (mActivity != null) {
+        if (isAdded()) {
             updatePostSettings();
-            mActivity.invalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
         }
     }
 
@@ -618,10 +607,8 @@ public class EditPostSettingsFragment extends Fragment
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
-        Post post = mActivity.getPost();
-
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider() && post.supportsLocation()) {
+        if (hasLocationProvider() && mPost.supportsLocation()) {
             View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
             TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
@@ -650,10 +637,10 @@ public class EditPostSettingsFragment extends Fragment
             removeLocation.setOnClickListener(this);
 
             // if this post has location attached to it, look up the location address
-            if (post.hasLocation()) {
+            if (mPost.hasLocation()) {
                 showLocationView();
 
-                PostLocation location = post.getLocation();
+                PostLocation location = mPost.getLocation();
                 setLocation(location.getLatitude(), location.getLongitude());
             } else {
                 showLocationAdd();
@@ -662,6 +649,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private boolean hasLocationProvider() {
+        if (!isAdded()) {
+            return false;
+        }
         boolean hasLocationProvider = false;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
@@ -713,8 +703,12 @@ public class EditPostSettingsFragment extends Fragment
      * get the current location
      */
     private void fetchCurrentLocation() {
-        if (mLocationHelper == null)
+        if (!isAdded()) {
+            return;
+        }
+        if (mLocationHelper == null) {
             mLocationHelper = new LocationHelper();
+        }
         boolean canGetLocation = mLocationHelper.getLocation(getActivity(), locationResult);
 
         if (canGetLocation) {
@@ -747,7 +741,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void removeLocation() {
         mPostLocation = null;
-        mActivity.getPost().unsetLocation();
+        mPost.unsetLocation();
 
         updateLocationText("");
         setLocationStatus(LocationStatus.NONE);
@@ -764,6 +758,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showLocationNotAvailableError() {
+        if (!isAdded()) {
+            return;
+        }
         Toast.makeText(getActivity(), getResources().getText(R.string.location_not_found), Toast.LENGTH_SHORT).show();
     }
 
@@ -775,13 +772,18 @@ public class EditPostSettingsFragment extends Fragment
      * changes the left drawable on the location text to match the passed status
      */
     private void setLocationStatus(LocationStatus status) {
+        if (!isAdded()) {
+            return;
+        }
+
         // animate location text when searching
         if (status == LocationStatus.SEARCHING) {
             updateLocationText(getString(R.string.loading));
 
             Animation aniBlink = AnimationUtils.loadAnimation(getActivity(), R.anim.blink);
-            if (aniBlink != null)
+            if (aniBlink != null) {
                 mLocationText.startAnimation(aniBlink);
+            }
         } else {
             mLocationText.clearAnimation();
         }

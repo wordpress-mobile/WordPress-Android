@@ -4,7 +4,7 @@ package org.wordpress.android.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +20,8 @@ import com.google.gson.reflect.TypeToken;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AccountHelper;
+import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
@@ -31,7 +32,7 @@ import java.util.Map;
 /**
  * Activity to view the WordPress blog in a WebView
  */
-public class ViewSiteActivity extends ActionBarActivity {
+public class ViewSiteActivity extends AppCompatActivity {
     /**
      * Blog for which this activity is loading content.
      */
@@ -47,6 +48,7 @@ public class ViewSiteActivity extends ActionBarActivity {
             Toast.makeText(this, getResources().getText(R.string.blog_not_found),
                     Toast.LENGTH_SHORT).show();
             finish();
+            return;
         }
 
         setContentView(R.layout.webview);
@@ -63,8 +65,16 @@ public class ViewSiteActivity extends ActionBarActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        this.setTitle(mBlog.getBlogName());
+        setTitle(StringUtils.unescapeHTML(mBlog.getBlogName()));
         loadSiteURL();
+
+        ActivityId.trackLastActivity(ActivityId.VIEW_SITE);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityLauncher.slideOutToRight(this);
     }
 
     private void loadSiteURL() {
@@ -111,29 +121,29 @@ public class ViewSiteActivity extends ActionBarActivity {
             return false;
         }
 
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_refresh:
-                mWebView.reload();
-                return true;
-            case R.id.menu_share:
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
-                startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
-                return true;
-            case R.id.menu_browser:
-                String url = mWebView.getUrl();
-                if (url != null) {
-                    Uri uri = Uri.parse(url);
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(uri);
-                    startActivity(i);
-                    AppLockManager.getInstance().setExtendedTimeout();
-                }
-                return true;
+        int i1 = item.getItemId();
+        if (i1 == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (i1 == R.id.menu_refresh) {
+            mWebView.reload();
+            return true;
+        } else if (i1 == R.id.menu_share) {
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
+            startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
+            return true;
+        } else if (i1 == R.id.menu_browser) {
+            String url = mWebView.getUrl();
+            if (url != null) {
+                Uri uri = Uri.parse(url);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(uri);
+                startActivity(i);
+                AppLockManager.getInstance().setExtendedTimeout();
+            }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
