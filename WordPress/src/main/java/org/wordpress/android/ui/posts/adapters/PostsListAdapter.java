@@ -74,11 +74,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private static final int VIEW_TYPE_POST_OR_PAGE = 0;
     private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
-    private static final long ENDLIST_INDICATOR_ID = -1;
 
     public PostsListAdapter(Context context, @NonNull Blog blog, boolean isPage) {
-        setHasStableIds(true);
-
         mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
 
@@ -131,15 +128,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return VIEW_TYPE_ENDLIST_INDICATOR;
         }
         return VIEW_TYPE_POST_OR_PAGE;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        if (getItemViewType(position) == VIEW_TYPE_ENDLIST_INDICATOR) {
-            return ENDLIST_INDICATOR_ID;
-        } else {
-            return mPosts.get(position).getPostId();
-        }
     }
 
     @Override
