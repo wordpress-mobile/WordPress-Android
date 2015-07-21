@@ -24,6 +24,7 @@
             android:layout_height="match_parent"
             android:horizontalSpacing="0dp"
             android:scrollbarStyle="outsideOverlay"
+            android:columnWidth="400dp"
             android:numColumns="auto_fit"
             android:divider="@android:color/transparent"
             android:stretchMode="columnWidth"
