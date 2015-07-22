@@ -404,9 +404,11 @@ public class ApiHelper {
         private Callback mCallback;
         private String mErrorMessage;
         private int mPostCount;
+        private boolean mOverwriteLocalChanges;
 
-        public FetchPostsTask(Callback callback) {
+        public FetchPostsTask(boolean overwriteLocalChanges, Callback callback) {
             mCallback = callback;
+            mOverwriteLocalChanges = overwriteLocalChanges;
         }
 
         @Override
@@ -452,7 +454,7 @@ public class ApiHelper {
                         postsList.add(postMap);
                     }
 
-                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, mOverwriteLocalChanges);
                 }
                 return true;
             } catch (XMLRPCFault e) {

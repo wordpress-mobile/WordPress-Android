@@ -897,13 +897,27 @@ public class WordPressDB {
         return (Object[]) array;
     }
 
+    /*
+     * returns true if the post matching the passed local blog ID and remote post ID
+     * has local changes
+     */
+    private boolean postHasLocalChanges(int localBlogId, String remotePostId) {
+        if (TextUtils.isEmpty(remotePostId)) {
+            return false;
+        }
+        String[] args = {String.valueOf(localBlogId), remotePostId};
+        String sql = "SELECT 1 FROM " + POSTS_TABLE + " WHERE blogID=? AND postid=? AND isLocalChange=1";
+        return SqlUtils.boolForQuery(db, sql, args);
+    }
+
     /**
      * Saves a list of posts to the db
      * @param postsList: list of post objects
      * @param localBlogId: the posts table blog id
      * @param isPage: boolean to save as pages
+     * @param overwriteLocalChanges boolean which determines whether to overwrite posts with local changes
      */
-    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean shouldOverwrite) {
+    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean overwriteLocalChanges) {
         if (postsList != null && postsList.size() != 0) {
             db.beginTransaction();
             try {
@@ -993,15 +1007,11 @@ public class WordPressDB {
                         values.put("wp_post_format", MapUtils.getMapStr(postMap, "wp_post_format"));
                     }
 
-                    String whereClause = "blogID=? AND postID=? AND isPage=?";
-                    if (!shouldOverwrite) {
-                        whereClause += " AND NOT isLocalChange=1";
+                    // skip insert if we're not overwriting changes and this post has local changes
+                    boolean skipInsert = !overwriteLocalChanges && postHasLocalChanges(localBlogId, postID);
+                    if (!skipInsert) {
+                        db.insertWithOnConflict(POSTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                     }
-
-                    int result = db.update(POSTS_TABLE, values, whereClause,
-                            new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
-                    if (result == 0)
-                        db.insert(POSTS_TABLE, null, values);
                 }
 
                 db.setTransactionSuccessful();
@@ -1156,9 +1166,9 @@ public class WordPressDB {
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
                     new String[]{
-                        String.valueOf(post.getLocalTableBlogId()),
-                        String.valueOf(post.getLocalTablePostId()),
-                        String.valueOf(SqlUtils.boolToSql(post.isPage()))
+                            String.valueOf(post.getLocalTableBlogId()),
+                            String.valueOf(post.getLocalTablePostId()),
+                            String.valueOf(SqlUtils.boolToSql(post.isPage()))
                     });
         }
 
@@ -1218,28 +1228,39 @@ public class WordPressDB {
         return returnVector;
     }
 
+    /*
+     * removes all posts/pages in the passed blog that don't have local changes
+     */
     public void deleteUploadedPosts(int blogID, boolean isPage) {
-        if (isPage)
-            db.delete(POSTS_TABLE, "blogID=" + blogID
-                    + " AND localDraft != 1 AND isPage=1", null);
-        else
-            db.delete(POSTS_TABLE, "blogID=" + blogID
-                    + " AND localDraft != 1 AND isPage=0", null);
-
+        String[] args = {String.valueOf(blogID), isPage ? "1" : "0"};
+        db.delete(POSTS_TABLE, "blogID=? AND isPage=? AND localDraft=0 AND isLocalChange=0", args);
     }
 
     public Post getPostForLocalTablePostId(long localTablePostId) {
         Cursor c = db.query(POSTS_TABLE, null, "id=?", new String[]{String.valueOf(localTablePostId)}, null, null, null);
-
-        Post post = new Post();
-        if (c.moveToFirst()) {
-            post = getPostFromCursor(c);
-        } else {
-            post = null;
+        try {
+            if (c.moveToFirst()) {
+                return getPostFromCursor(c);
+            } else {
+                return null;
+            }
+        } finally {
+            SqlUtils.closeCursor(c);
         }
+    }
 
-        c.close();
-        return post;
+    public Post getPostForRemotePostId(int blogID, String remotePostID) {
+        String[] args = {String.valueOf(blogID), remotePostID};
+        Cursor c = db.query(POSTS_TABLE, null, "blogID=? AND postid=?", args, null, null, null);
+        try {
+            if (c.moveToFirst()) {
+                return getPostFromCursor(c);
+            } else {
+                return null;
+            }
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
     }
 
     // Categories
