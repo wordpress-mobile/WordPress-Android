@@ -1020,10 +1020,18 @@ public class WordPressDB {
                         values.put("wp_post_format", MapUtils.getMapStr(postMap, "wp_post_format"));
                     }
 
-                    // skip insert if we're not overwriting changes and this post has local changes
-                    boolean skipInsert = !overwriteLocalChanges && postHasLocalChanges(localBlogId, postID);
-                    if (!skipInsert) {
-                        db.insertWithOnConflict(POSTS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                    String whereClause = "blogID=? AND postID=? AND isPage=?";
+                    if (!overwriteLocalChanges) {
+                        whereClause += " AND NOT isLocalChange=1";
+                    }
+
+                    String[] args = {String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))};
+                    int updateResult = db.update(POSTS_TABLE, values, whereClause, args);
+
+                    // only perform insert if update didn't match any rows, and only then if we're
+                    // overwriting local changes or local changes for this post don't exist
+                    if (updateResult == 0 && (overwriteLocalChanges || !postHasLocalChanges(localBlogId, postID))) {
+                        db.insert(POSTS_TABLE, null, values);
                     }
                 }
 
