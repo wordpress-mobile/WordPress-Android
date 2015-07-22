@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -739,8 +740,8 @@ public class WordPressDB {
     }
 
     public List<String> loadStatsLogin(int id) {
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "dotcom_username",
-                "dotcom_password" }, "id=" + id, null, null, null, null);
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"dotcom_username",
+                "dotcom_password"}, "id=" + id, null, null, null, null);
 
         c.moveToFirst();
 
@@ -1291,8 +1292,8 @@ public class WordPressDB {
     }
 
     public int getCategoryParentId(int id, String category) {
-        Cursor c = db.query(CATEGORIES_TABLE, new String[] { "parent_id" },
-                "category_name=? AND blog_id=?", new String[] {category, String.valueOf(id)},
+        Cursor c = db.query(CATEGORIES_TABLE, new String[]{"parent_id"},
+                "category_name=? AND blog_id=?", new String[]{category, String.valueOf(id)},
                 null, null, null);
         if (c.getCount() == 0)
             return -1;
@@ -1544,7 +1545,7 @@ public class WordPressDB {
 
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
         String query = "SELECT " + COLUMN_NAME_THUMBNAIL_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?";
-        return SqlUtils.stringForQuery(db, query, new String[] { Integer.toString(blogId), Long.toString(mediaId) });
+        return SqlUtils.stringForQuery(db, query, new String[]{Integer.toString(blogId), Long.toString(mediaId)});
     }
 
     public int getMediaCountAll(String blogId) {
@@ -1557,7 +1558,7 @@ public class WordPressDB {
 
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
-                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "image%", "uploading" });
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
     }
 
     /** Ids in the filteredIds will not be selected **/
@@ -1603,7 +1604,7 @@ public class WordPressDB {
         }
         mediaIdsStr = mediaIdsStr.subSequence(0, mediaIdsStr.length() - 1) + ")";
 
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId IN " + mediaIdsStr, new String[] { blogId });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId IN " + mediaIdsStr, new String[]{blogId});
     }
 
     public MediaFile getMediaFile(String src, Post post) {
@@ -1722,7 +1723,7 @@ public class WordPressDB {
 
     /** Delete a media item from a blog locally **/
     public void deleteMediaFile(String blogId, String mediaId) {
-        db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+        db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
 
     /** Mark media files for deletion without actually deleting them. **/
@@ -1818,7 +1819,7 @@ public class WordPressDB {
     }
 
     public Cursor getThemesAtoZ(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY name COLLATE NOCASE ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY name COLLATE NOCASE ASC", new String[]{blogId});
     }
 
     public Cursor getThemesTrending(String blogId) {
@@ -1846,7 +1847,7 @@ public class WordPressDB {
     }*/
 
     public String getCurrentThemeId(String blogId) {
-        return DatabaseUtils.stringForQuery(db, "SELECT themeId FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrent='1'", new String[] { blogId });
+        return DatabaseUtils.stringForQuery(db, "SELECT themeId FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrent='1'", new String[]{blogId});
     }
 
     public void setCurrentTheme(String blogId, String themeId) {
@@ -1925,5 +1926,54 @@ public class WordPressDB {
 
     public boolean hasAnyJetpackBlogs() {
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
+    }
+
+    /*
+     * returns a list of posts in the passed blog which have local changes
+     */
+    public List<Post> getLocalChangesForBlog(int localBlogId, boolean isPage) {
+        String sql = "SELECT * FROM " + POSTS_TABLE + " WHERE isLocalChange=1 AND blogId=? AND isPage=? ORDER BY date_created_gmt DESC";
+        String[] args = {String.valueOf(localBlogId), isPage ? "1" : "0"};
+        Cursor c = db.rawQuery(sql, args);
+        try {
+            List<Post> postList = new ArrayList<>();
+            while (c.moveToNext()) {
+                Post post = getPostFromCursor(c);
+                postList.add(post);
+            }
+            return postList;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
+    /*
+     * merges the passed posts which were retrieved using getLocalChangesForBlog() above
+     */
+    public void restoreLocalChangesForBlog(int localBlogId, List<Post> changedPosts) {
+        if (changedPosts == null || changedPosts.size() == 0) {
+            return;
+        }
+
+        db.beginTransaction();
+        SQLiteStatement stmt = db.compileStatement("DELETE FROM " + POSTS_TABLE + " WHERE blogId=?1 AND postid=?2");
+        try {
+            // first delete existing versions of these posts
+            for (Post post : changedPosts) {
+                stmt.bindLong(1, localBlogId);
+                stmt.bindString(2, post.getRemotePostId());
+                stmt.executeUpdateDelete();
+            }
+
+            // now save passed list
+            for (Post post : changedPosts) {
+                savePost(post);
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            SqlUtils.closeStatement(stmt);
+            db.endTransaction();
+        }
     }
 }
