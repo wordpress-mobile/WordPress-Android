@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -140,18 +138,10 @@ public class PostsListFragment extends Fragment
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
-                        if (hasLocalChanges()) {
-                            confirmRequestPosts();
-                        } else {
-                            requestPosts(false);
-                        }
+
+                        requestPosts(false);
                     }
                 });
-    }
-
-    private boolean hasLocalChanges() {
-        Blog blog = WordPress.getCurrentBlog();
-        return blog != null && WordPress.wpDB.blogHasLocalChanges(blog.getLocalTableBlogId(), mIsPage);
     }
 
     public PostsListAdapter getPostListAdapter() {
@@ -188,7 +178,7 @@ public class PostsListFragment extends Fragment
         // posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
             loadPosts();
-            if (NetworkUtils.checkConnection(getActivity()) && !hasLocalChanges()) {
+            if (NetworkUtils.checkConnection(getActivity())) {
                 requestPosts(false);
             }
         }
@@ -229,30 +219,6 @@ public class PostsListFragment extends Fragment
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    /*
-     * called when the user performs a ptr and there are local changes which would be overwritten
-     * by the refresh
-     */
-    private void confirmRequestPosts() {
-        if (!isAdded()) return;
-
-        setRefreshing(false);
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
-        dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        requestPosts(false);
-                    }
-                }
-        );
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
-        dialogBuilder.setCancelable(true);
-        dialogBuilder.create().show();
-    }
-
     private void requestPosts(boolean loadMore) {
         if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
             return;
@@ -285,6 +251,7 @@ public class PostsListFragment extends Fragment
             public void onSuccess(int postCount) {
                 mCurrentFetchPostsTask = null;
                 mIsFetchingPosts = false;
+
                 if (!isAdded()) {
                     return;
                 }

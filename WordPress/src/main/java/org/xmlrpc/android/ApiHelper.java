@@ -13,6 +13,7 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
@@ -420,6 +421,18 @@ public class ApiHelper {
             boolean isPage = (Boolean) arguments.get(1);
             int recordCount = (Integer) arguments.get(2);
             boolean loadMore = (Boolean) arguments.get(3);
+
+            // if we're not loading more posts, then the code below will overwrite posts with
+            // local changes - counteract this by retaining a list of changed posts so we can
+            // restore them after updating
+            boolean retainChangedPosts = !loadMore;
+            final List<Post> changedPosts;
+            if (retainChangedPosts) {
+                changedPosts = WordPress.wpDB.getLocalChangesForBlog(blog.getLocalTableBlogId(), isPage);
+            } else {
+                changedPosts = null;
+            }
+
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
@@ -453,6 +466,11 @@ public class ApiHelper {
                     }
 
                     WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
+
+                    // restore changed posts retained above
+                    if (retainChangedPosts && changedPosts != null && changedPosts.size() > 0) {
+                        WordPress.wpDB.restoreLocalChangesForBlog(blog.getLocalTableBlogId(), changedPosts);
+                    }
                 }
                 return true;
             } catch (XMLRPCFault e) {
