@@ -75,7 +75,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 32;
+    private static final int DATABASE_VERSION = 33;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -171,6 +171,10 @@ public class WordPressDB {
     // add wp_post_thumbnail to posts table
     private static final String ADD_POST_THUMBNAIL = "alter table posts add wp_post_thumbnail integer default 0;";
 
+    // add postid and blogID indexes to posts table
+    private static final String ADD_POST_ID_INDEX = "CREATE INDEX idx_posts_post_id ON posts(postid);";
+    private static final String ADD_BLOG_ID_INDEX = "CREATE INDEX idx_posts_blog_id ON posts(blogID);";
+
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
 
@@ -223,6 +227,10 @@ public class WordPressDB {
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
         boolean isNewInstall = (currentVersion == 0);
+
+        if (!isNewInstall && currentVersion != DATABASE_VERSION) {
+            AppLog.d(T.DB, "updgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
+        }
 
         switch (currentVersion) {
             case 0:
@@ -331,6 +339,11 @@ public class WordPressDB {
             case 31:
                 // add wp_post_thumbnail to posts table
                 db.execSQL(ADD_POST_THUMBNAIL);
+                currentVersion++;
+            case 32:
+                // add postid index and blogID index to posts table
+                db.execSQL(ADD_POST_ID_INDEX);
+                db.execSQL(ADD_BLOG_ID_INDEX);
                 currentVersion++;
         }
 
