@@ -21,6 +21,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.themes.ThemeBrowserAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -166,9 +167,22 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mGridView.addHeaderView(headerSearch);
     }
 
+    private String getBlogId() {
+        if (WordPress.getCurrentBlog() == null)
+            return "0";
+        return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+    }
+
     private void addMainHeader(LayoutInflater inflater) {
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
+        setCurrentThemeHeaderText(header);
         mGridView.addHeaderView(header);
+    }
+
+    private void setCurrentThemeHeaderText(View header) {
+        String currentTheme = WordPress.wpDB.getCurrentThemeId(getBlogId());
+        TextView currentThemeTextView = (TextView) header.findViewById(R.id.header_theme_text);
+        currentThemeTextView.setText(currentTheme);
     }
 
     public void setRefreshing(boolean refreshing) {
