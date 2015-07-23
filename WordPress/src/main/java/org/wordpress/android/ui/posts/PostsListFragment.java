@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +29,13 @@ import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadSucceed;
+import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -61,8 +60,6 @@ public class PostsListFragment extends Fragment
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
-    private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
-    private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
 
     private RecyclerView mRecyclerView;
     private View mEmptyView;
@@ -219,7 +216,7 @@ public class PostsListFragment extends Fragment
     }
 
     private void requestPosts(boolean loadMore) {
-        if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
+        if (!isAdded() || mIsFetchingPosts) {
             return;
         }
 
@@ -228,74 +225,24 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        int postCount;
+        mIsFetchingPosts = true;
         if (loadMore) {
-            postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
             showLoadMoreProgress();
-        } else {
-            mCanLoadMorePosts = true;
-            postCount = POSTS_REQUEST_COUNT;
-            setRefreshing(true);
-            updateEmptyView(EmptyViewMessageType.LOADING);
+        }
+        PostUpdateService.startServiceForBlog(getActivity(), WordPress.getCurrentLocalTableBlogId(), mIsPage, loadMore);
+    }
+
+    private void requestSinglePost(int blogId, String remotePostId) {
+        if (!isAdded() || mIsFetchingPosts) {
+            return;
         }
 
-        List<Object> apiArgs = new Vector<>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        apiArgs.add(mIsPage);
-        apiArgs.add(postCount);
-        apiArgs.add(loadMore);
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            return;
+        }
 
-        // don't overwrite posts with local changes unless we're loading more posts (since that
-        // retrieves posts that don't exist locally)
-        boolean overwriteLocalChanges = loadMore;
-
-        mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(overwriteLocalChanges, new ApiHelper.FetchPostsTask.Callback() {
-            @Override
-            public void onSuccess(int postCount) {
-                mCurrentFetchPostsTask = null;
-                mIsFetchingPosts = false;
-                if (!isAdded()) {
-                    return;
-                }
-
-                setRefreshing(false);
-                hideLoadMoreProgress();
-
-                if (postCount == 0) {
-                    mCanLoadMorePosts = false;
-                } else if (postCount == getPostListAdapter().getRemotePostCount() && postCount != POSTS_REQUEST_COUNT) {
-                    mCanLoadMorePosts = false;
-                }
-
-                loadPosts();
-            }
-
-            @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                mCurrentFetchPostsTask = null;
-                mIsFetchingPosts = false;
-                if (!isAdded()) {
-                    return;
-                }
-
-                setRefreshing(false);
-                hideLoadMoreProgress();
-
-                if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
-                    switch (errorType) {
-                        case UNAUTHORIZED:
-                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            break;
-                        default:
-                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            break;
-                    }
-                }
-            }
-        });
-
-        mIsFetchingPosts = true;
-        mCurrentFetchPostsTask.execute(apiArgs);
+        PostUpdateService.startServiceForPost(getActivity(), blogId, remotePostId, mIsPage);
     }
 
     private void showLoadMoreProgress() {
@@ -325,58 +272,9 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        // If the user switched to a different blog while uploading his post, don't reload posts and refresh the view
-        boolean sameBlogId = true;
-        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != event.mLocalBlogId) {
-            sameBlogId = false;
-        }
-
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            setRefreshing(false);
-            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            return;
-        }
-
-        // Fetch the newly uploaded post
-        if (!TextUtils.isEmpty(event.mRemotePostId)) {
-            final boolean reloadPosts = sameBlogId;
-            List<Object> apiArgs = new Vector<>();
-            apiArgs.add(WordPress.wpDB.instantiateBlogByLocalId(event.mLocalBlogId));
-            apiArgs.add(event.mRemotePostId);
-            apiArgs.add(event.mIsPage);
-
-            mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(
-                    new ApiHelper.FetchSinglePostTask.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            mCurrentFetchSinglePostTask = null;
-                            mIsFetchingPosts = false;
-                            if (!isAdded() || !reloadPosts) {
-                                return;
-                            }
-                            setRefreshing(false);
-                            loadPosts();
-                        }
-
-                        @Override
-                        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                            mCurrentFetchSinglePostTask = null;
-                            mIsFetchingPosts = false;
-                            if (!isAdded() || !reloadPosts) {
-                                return;
-                            }
-                            if (errorType != ErrorType.TASK_CANCELLED) {
-                                ToastUtils.showToast(getActivity(),
-                                        mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
-                            }
-                            setRefreshing(false);
-                        }
-                    });
-
-            setRefreshing(true);
-            mIsFetchingPosts = true;
-            mCurrentFetchSinglePostTask.execute(apiArgs);
-        }
+        setRefreshing(false);
+        mIsFetchingPosts = false;
+        requestSinglePost(event.mLocalBlogId, event.mRemotePostId);
     }
 
     @SuppressWarnings("unused")
@@ -399,6 +297,48 @@ public class PostsListFragment extends Fragment
 
         // Refresh the posts list to revert post status back to local draft or local changes
         loadPosts();
+    }
+
+    /*
+     * PostUpdateService finished a request to retrieve a single post
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.RequestSinglePost event) {
+        mIsFetchingPosts = false;
+        if (isAdded() && event.getBlogId() == WordPress.getCurrentLocalTableBlogId()) {
+            setRefreshing(false);
+            if (!event.getFailed()) {
+                loadPosts();
+            }
+        }
+    }
+
+    /*
+     * PostUpdateService finished a request to retrieve new posts
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.RequestPosts event) {
+        mIsFetchingPosts = false;
+        if (isAdded() && event.getBlogId() == WordPress.getCurrentLocalTableBlogId()) {
+            setRefreshing(false);
+            hideLoadMoreProgress();
+            if (!event.getFailed()) {
+                mCanLoadMorePosts = event.canLoadMore();
+                loadPosts();
+            } else {
+                ApiHelper.ErrorType errorType = event.getErrorType();
+                if (errorType != null && errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
+                    switch (errorType) {
+                        case UNAUTHORIZED:
+                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                            break;
+                        default:
+                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {

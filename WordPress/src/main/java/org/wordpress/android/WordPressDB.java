@@ -751,8 +751,8 @@ public class WordPressDB {
     }
 
     public List<String> loadStatsLogin(int id) {
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "dotcom_username",
-                "dotcom_password" }, "id=" + id, null, null, null, null);
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"dotcom_username",
+                "dotcom_password"}, "id=" + id, null, null, null, null);
 
         c.moveToFirst();
 
@@ -1524,7 +1524,7 @@ public class WordPressDB {
 
     public Cursor getMediaUnattachedForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND " +
-                "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND postId=0 ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "uploading" });
+                "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND postId=0 ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "uploading"});
     }
 
     public int getMediaCountUnattached(String blogId) {
@@ -1664,7 +1664,7 @@ public class WordPressDB {
 
     /** Delete a media item from a blog locally **/
     public void deleteMediaFile(String blogId, String mediaId) {
-        db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+        db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
 
     /** Mark media files for deletion without actually deleting them. **/
@@ -1685,7 +1685,7 @@ public class WordPressDB {
 
     /** Delete files marked as deleted **/
     public void deleteFilesMarkedForDeleted(String blogId) {
-        db.delete(MEDIA_TABLE, "blogId=? AND uploadState=?", new String[] { blogId, "deleted" });
+        db.delete(MEDIA_TABLE, "blogId=? AND uploadState=?", new String[]{blogId, "deleted"});
     }
 
     /** Get a media file scheduled for delete for a given blogId **/
@@ -1729,6 +1729,15 @@ public class WordPressDB {
         return SqlUtils.boolForQuery(db, sql, args);
     }
 
+    /*
+     * returns the number of posts/pages in the passed blog that aren't local drafts
+     */
+    public int getUploadedCountInBlog(int localBlogId, boolean isPage) {
+        String sql = "SELECT COUNT(*) FROM " + POSTS_TABLE + " WHERE blogID=? AND isPage=? AND localDraft=0";
+        String[] args = {String.valueOf(localBlogId), isPage ? "1" : "0"};
+        return SqlUtils.intForQuery(db, sql, args);
+    }
+
     public boolean saveTheme(Theme theme) {
         boolean returnValue = false;
 
@@ -1764,7 +1773,7 @@ public class WordPressDB {
     }
 
     public Cursor getThemesTrending(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY trendingRank ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY trendingRank ASC", new String[]{ blogId });
     }
 
     public Cursor getThemesPopularity(String blogId) {
@@ -1772,7 +1781,7 @@ public class WordPressDB {
     }
 
     public Cursor getThemesNewest(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[]{ blogId });
     }
 
     /*public Cursor getThemesPremium(String blogId) {

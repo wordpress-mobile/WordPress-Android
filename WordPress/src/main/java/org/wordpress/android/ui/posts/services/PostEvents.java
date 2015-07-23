@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.services;
 
 import org.wordpress.android.util.StringUtils;
+import org.xmlrpc.android.ApiHelper;
 
 public class PostEvents {
     public static class PostUploadSucceed {
@@ -38,4 +39,71 @@ public class PostEvents {
             return StringUtils.notNullStr(mMediaUrl);
         }
     }
+
+    public static class RequestPosts {
+        private int mBlogId;
+        private boolean mIsPage;
+        private boolean mCanLoadMore;
+        private boolean mFailed;
+        private ApiHelper.ErrorType mErrorType = null;
+
+        RequestPosts(int blogId, boolean isPage) {
+            mBlogId = blogId;
+            mIsPage = isPage;
+            mFailed = false;
+        }
+        public int getBlogId() {
+            return mBlogId;
+        }
+        public boolean isPage() {
+            return mIsPage;
+        }
+        public boolean canLoadMore() {
+            return mCanLoadMore;
+        }
+        public void setCanLoadMore(boolean canLoadMore) {
+            mCanLoadMore = canLoadMore;
+        }
+        public boolean getFailed() {
+            return mFailed;
+        }
+        public ApiHelper.ErrorType getErrorType() {
+            return mErrorType;
+        }
+        public void setErrorType(ApiHelper.ErrorType errorType) {
+            mErrorType = errorType;
+            mFailed = true;
+        }
+    }
+
+    public static class RequestSinglePost {
+        private int mBlogId;
+        private String mPostId;
+        private boolean mIsPage;
+        private boolean mFailed;
+
+        RequestSinglePost(int blogId, String remotePostId, boolean isPage) {
+            mBlogId = blogId;
+            mPostId = remotePostId;
+            mIsPage = isPage;
+            mFailed = false;
+        }
+
+        public int getBlogId() {
+            return mBlogId;
+        }
+        public String getPostId() {
+            return StringUtils.notNullStr(mPostId);
+        }
+        public boolean isPage() {
+            return mIsPage;
+        }
+        public boolean getFailed() {
+            return mFailed;
+        }
+        public void setFailed(boolean failed) {
+            mFailed = failed;
+        }
+    }
+
 }
