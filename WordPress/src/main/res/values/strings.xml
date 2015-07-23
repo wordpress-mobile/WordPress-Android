@@ -927,6 +927,7 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
+    <string name="current_theme">CURRENT THEME</string>
 
     <string-array name="themes_filter_array">
         <item>All</item>
