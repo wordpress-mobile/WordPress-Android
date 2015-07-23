@@ -43,7 +43,6 @@ public class Post implements Serializable {
     private String slug;
 
     private boolean localDraft;
-    private boolean uploaded;
     private boolean mIsUploading;
     private boolean mChangedFromLocalDraftToPublished;
     private boolean isPage;
@@ -377,14 +376,6 @@ public class Post implements Serializable {
 
     public void setUploading(boolean uploading) {
         this.mIsUploading = uploading;
-    }
-
-    public boolean isUploaded() {
-        return uploaded;
-    }
-
-    public void setUploaded(boolean uploaded) {
-        this.uploaded = uploaded;
     }
 
     public boolean isLocalChange() {

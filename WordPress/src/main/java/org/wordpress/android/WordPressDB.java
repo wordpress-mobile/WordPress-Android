@@ -114,7 +114,6 @@ public class WordPressDB {
             + "latitude real,"
             + "longitude real,"
             + "localDraft boolean default 0,"
-            + "uploaded boolean default 0,"
             + "isPage boolean default 0,"
             + "wp_page_parent_id text,"
             + "wp_page_parent_title text);";
@@ -848,48 +847,6 @@ public class WordPressDB {
         return preferences.getInt("last_blog_id", -1);
     }
 
-    public List<Map<String, Object>> loadDrafts(int blogID,
-            boolean loadPages) {
-        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
-        Cursor c;
-        if (loadPages)
-            c = db.query(POSTS_TABLE, new String[] { "id", "title",
-                    "post_status", "uploaded", "date_created_gmt",
-                    "post_status" }, "blogID=" + blogID
-                    + " AND localDraft=1 AND uploaded=0 AND isPage=1", null,
-                    null, null, null);
-        else
-            c = db.query(POSTS_TABLE, new String[] { "id", "title",
-                    "post_status", "uploaded", "date_created_gmt",
-                    "post_status" }, "blogID=" + blogID
-                    + " AND localDraft=1 AND uploaded=0 AND isPage=0", null,
-                    null, null, null);
-
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        for (int i = 0; i < numRows; ++i) {
-            if (c.getString(0) != null) {
-                Map<String, Object> returnHash = new HashMap<String, Object>();
-                returnHash.put("id", c.getString(0));
-                returnHash.put("title", c.getString(1));
-                returnHash.put("status", c.getString(2));
-                returnHash.put("uploaded", c.getInt(3));
-                returnHash.put("date_created_gmt", c.getLong(4));
-                returnHash.put("post_status", c.getString(5));
-                returnVector.add(i, returnHash);
-            }
-            c.moveToNext();
-        }
-        c.close();
-
-        if (numRows == 0) {
-            returnVector = null;
-        }
-
-        return returnVector;
-    }
-
     public boolean deletePost(Post post) {
         int result = db.delete(POSTS_TABLE,
                 "blogID=? AND id=?",
@@ -1053,9 +1010,7 @@ public class WordPressDB {
         PostsListPostList listPosts = new PostsListPostList();
 
         String[] args = {Integer.toString(localBlogId), Integer.toString(loadPages ? 1 : 0)};
-        String query = "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)";
-
-        Cursor c = db.query(POSTS_TABLE, null, query, args, null, null, "localDraft DESC, date_created_gmt DESC");
+        Cursor c = db.query(POSTS_TABLE, null, "blogID=? AND isPage=?", args, null, null, "localDraft DESC, date_created_gmt DESC");
         try {
             while (c.moveToNext()) {
                 listPosts.add(new PostsListPost(getPostFromCursor(c)));
@@ -1103,7 +1058,6 @@ public class WordPressDB {
 
         post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
         post.setUploading(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading"))));
-        post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
         post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
         post.setPageParentId(c.getString(c.getColumnIndex("wp_page_parent_id")));
         post.setPageParentTitle(c.getString(c.getColumnIndex("wp_page_parent_title")));
@@ -1142,7 +1096,6 @@ public class WordPressDB {
             values.put("wp_password", post.getPassword());
             values.put("post_status", post.getPostStatus());
             values.put("isUploading", post.isUploading());
-            values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
             putPostLocation(post, values);
@@ -1152,7 +1105,7 @@ public class WordPressDB {
 
             result = db.insert(POSTS_TABLE, null, values);
 
-            if (result >= 0 && post.isLocalDraft() && !post.isUploaded()) {
+            if (result >= 0 && post.isLocalDraft()) {
                 post.setLocalTablePostId(result);
             }
         }
@@ -1169,7 +1122,6 @@ public class WordPressDB {
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
             values.put("isUploading", post.isUploading());
-            values.put("uploaded", post.isUploaded());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
             if (categoriesJsonArray != null) {
@@ -1209,48 +1161,6 @@ public class WordPressDB {
             values.putNull("latitude");
             values.putNull("longitude");
         }
-    }
-
-    public List<Map<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {
-        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
-        Cursor c;
-        if (loadPages)
-            c = db.query(POSTS_TABLE,
-                    new String[] { "id", "blogID", "postid", "title",
-                            "date_created_gmt", "dateCreated", "post_status" },
-                    "blogID=" + blogID + " AND localDraft != 1 AND isPage=1",
-                    null, null, null, null);
-        else
-            c = db.query(POSTS_TABLE,
-                    new String[] { "id", "blogID", "postid", "title",
-                            "date_created_gmt", "dateCreated", "post_status" },
-                    "blogID=" + blogID + " AND localDraft != 1 AND isPage=0",
-                    null, null, null, null);
-
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        for (int i = 0; i < numRows; ++i) {
-            if (c.getString(0) != null) {
-                Map<String, Object> returnHash = new HashMap<String, Object>();
-                returnHash.put("id", c.getInt(0));
-                returnHash.put("blogID", c.getString(1));
-                returnHash.put("postID", c.getString(2));
-                returnHash.put("title", c.getString(3));
-                returnHash.put("date_created_gmt", c.getLong(4));
-                returnHash.put("dateCreated", c.getLong(5));
-                returnHash.put("post_status", c.getString(6));
-                returnVector.add(i, returnHash);
-            }
-            c.moveToNext();
-        }
-        c.close();
-
-        if (numRows == 0) {
-            returnVector = null;
-        }
-
-        return returnVector;
     }
 
     /*

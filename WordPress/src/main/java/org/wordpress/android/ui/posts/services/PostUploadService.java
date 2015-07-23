@@ -379,7 +379,7 @@ public class PostUploadService extends Service {
             contentStruct.put("wp_password", mPost.getPassword());
 
             Object[] params;
-            if (mPost.isLocalDraft() && !mPost.isUploaded())
+            if (mPost.isLocalDraft())
                 params = new Object[]{mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(),
                         contentStruct, false};
             else
@@ -387,7 +387,7 @@ public class PostUploadService extends Service {
                         false};
 
             try {
-                if (mPost.isLocalDraft() && !mPost.isUploaded()) {
+                if (mPost.isLocalDraft()) {
                     Object newPostId = mClient.call("metaWeblog.newPost", params);
                     if (newPostId instanceof String) {
                         mPost.setRemotePostId((String) newPostId);
@@ -396,7 +396,7 @@ public class PostUploadService extends Service {
                     mClient.call("metaWeblog.editPost", params);
                 }
 
-                mPost.setUploaded(true);
+                mPost.setLocalDraft(false);
                 mPost.setLocalChange(false);
                 WordPress.wpDB.updatePost(mPost);
                 trackUploadAnalytics();
@@ -417,7 +417,7 @@ public class PostUploadService extends Service {
 
             boolean isFirstTimePublishing = false;
             if (mPost.hasChangedFromLocalDraftToPublished() ||
-                    (!mPost.isUploaded() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
+                    (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
                 isFirstTimePublishing = true;
             }
 
