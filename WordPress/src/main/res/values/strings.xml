@@ -73,6 +73,11 @@
     <string name="signout">Disconnect</string>
     <string name="undo">Undo</string>
 
+    <!-- timestamps for posts / pages -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="days_ago">%d days ago</string>
+
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>
     <string name="media_picker_title">Select media</string>
@@ -418,6 +423,7 @@
     <string name="stats_view_all">View all</string>
     <string name="stats_view">View</string>
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
+    <string name="stats_no_activity_this_period">No activity this period</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>

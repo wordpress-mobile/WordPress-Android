@@ -75,7 +75,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 32;
+    private static final int DATABASE_VERSION = 33;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -171,6 +171,10 @@ public class WordPressDB {
     // add wp_post_thumbnail to posts table
     private static final String ADD_POST_THUMBNAIL = "alter table posts add wp_post_thumbnail integer default 0;";
 
+    // add postid and blogID indexes to posts table
+    private static final String ADD_POST_ID_INDEX = "CREATE INDEX idx_posts_post_id ON posts(postid);";
+    private static final String ADD_BLOG_ID_INDEX = "CREATE INDEX idx_posts_blog_id ON posts(blogID);";
+
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
 
@@ -223,6 +227,10 @@ public class WordPressDB {
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
         boolean isNewInstall = (currentVersion == 0);
+
+        if (!isNewInstall && currentVersion != DATABASE_VERSION) {
+            AppLog.d(T.DB, "updgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
+        }
 
         switch (currentVersion) {
             case 0:
@@ -331,6 +339,11 @@ public class WordPressDB {
             case 31:
                 // add wp_post_thumbnail to posts table
                 db.execSQL(ADD_POST_THUMBNAIL);
+                currentVersion++;
+            case 32:
+                // add postid index and blogID index to posts table
+                db.execSQL(ADD_POST_ID_INDEX);
+                db.execSQL(ADD_BLOG_ID_INDEX);
                 currentVersion++;
         }
 
@@ -909,13 +922,27 @@ public class WordPressDB {
         return (Object[]) array;
     }
 
+    /*
+     * returns true if the post matching the passed local blog ID and remote post ID
+     * has local changes
+     */
+    private boolean postHasLocalChanges(int localBlogId, String remotePostId) {
+        if (TextUtils.isEmpty(remotePostId)) {
+            return false;
+        }
+        String[] args = {String.valueOf(localBlogId), remotePostId};
+        String sql = "SELECT 1 FROM " + POSTS_TABLE + " WHERE blogID=? AND postid=? AND isLocalChange=1";
+        return SqlUtils.boolForQuery(db, sql, args);
+    }
+
     /**
      * Saves a list of posts to the db
      * @param postsList: list of post objects
      * @param localBlogId: the posts table blog id
      * @param isPage: boolean to save as pages
+     * @param overwriteLocalChanges boolean which determines whether to overwrite posts with local changes
      */
-    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean shouldOverwrite) {
+    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean overwriteLocalChanges) {
         if (postsList != null && postsList.size() != 0) {
             db.beginTransaction();
             try {
@@ -1005,15 +1032,23 @@ public class WordPressDB {
                         values.put("wp_post_format", MapUtils.getMapStr(postMap, "wp_post_format"));
                     }
 
+                    if (overwriteLocalChanges) {
+                        values.put("isLocalChange", false);
+                    }
+
                     String whereClause = "blogID=? AND postID=? AND isPage=?";
-                    if (!shouldOverwrite) {
+                    if (!overwriteLocalChanges) {
                         whereClause += " AND NOT isLocalChange=1";
                     }
 
-                    int result = db.update(POSTS_TABLE, values, whereClause,
-                            new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
-                    if (result == 0)
+                    String[] args = {String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))};
+                    int updateResult = db.update(POSTS_TABLE, values, whereClause, args);
+
+                    // only perform insert if update didn't match any rows, and only then if we're
+                    // overwriting local changes or local changes for this post don't exist
+                    if (updateResult == 0 && (overwriteLocalChanges || !postHasLocalChanges(localBlogId, postID))) {
                         db.insert(POSTS_TABLE, null, values);
+                    }
                 }
 
                 db.setTransactionSuccessful();
@@ -1168,9 +1203,9 @@ public class WordPressDB {
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
                     new String[]{
-                        String.valueOf(post.getLocalTableBlogId()),
-                        String.valueOf(post.getLocalTablePostId()),
-                        String.valueOf(SqlUtils.boolToSql(post.isPage()))
+                            String.valueOf(post.getLocalTableBlogId()),
+                            String.valueOf(post.getLocalTablePostId()),
+                            String.valueOf(SqlUtils.boolToSql(post.isPage()))
                     });
         }
 
@@ -1230,28 +1265,25 @@ public class WordPressDB {
         return returnVector;
     }
 
+    /*
+     * removes all posts/pages in the passed blog that don't have local changes
+     */
     public void deleteUploadedPosts(int blogID, boolean isPage) {
-        if (isPage)
-            db.delete(POSTS_TABLE, "blogID=" + blogID
-                    + " AND localDraft != 1 AND isPage=1", null);
-        else
-            db.delete(POSTS_TABLE, "blogID=" + blogID
-                    + " AND localDraft != 1 AND isPage=0", null);
-
+        String[] args = {String.valueOf(blogID), isPage ? "1" : "0"};
+        db.delete(POSTS_TABLE, "blogID=? AND isPage=? AND localDraft=0 AND isLocalChange=0", args);
     }
 
     public Post getPostForLocalTablePostId(long localTablePostId) {
         Cursor c = db.query(POSTS_TABLE, null, "id=?", new String[]{String.valueOf(localTablePostId)}, null, null, null);
-
-        Post post = new Post();
-        if (c.moveToFirst()) {
-            post = getPostFromCursor(c);
-        } else {
-            post = null;
+        try {
+            if (c.moveToFirst()) {
+                return getPostFromCursor(c);
+            } else {
+                return null;
+            }
+        } finally {
+            SqlUtils.closeCursor(c);
         }
-
-        c.close();
-        return post;
     }
 
     // Categories
@@ -1790,16 +1822,13 @@ public class WordPressDB {
         return id;
     }
 
-    public boolean findLocalChanges(int blogId, boolean isPage) {
-        Cursor c = db.query(POSTS_TABLE, null,
-                "isLocalChange=? AND blogID=? AND isPage=?", new String[]{"1", String.valueOf(blogId), (isPage) ? "1" : "0"}, null, null, null);
-        int numRows = c.getCount();
-        c.close();
-        if (numRows > 0) {
-            return true;
-        }
-
-        return false;
+    /*
+     * returns true if any posts in the passed blog have changes which haven't been uploaded yet
+     */
+    public boolean blogHasLocalChanges(int localBlogId, boolean isPage) {
+        String sql = "SELECT 1 FROM " + POSTS_TABLE + " WHERE isLocalChange=1 AND blogID=? AND isPage=?";
+        String[] args = {String.valueOf(localBlogId), isPage ? "1" : "0"};
+        return SqlUtils.boolForQuery(db, sql, args);
     }
 
     public boolean saveTheme(Theme theme) {

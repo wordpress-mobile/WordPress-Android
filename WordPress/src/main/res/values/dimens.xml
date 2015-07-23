@@ -120,6 +120,7 @@
     <dimen name="comment_avatar_margin_top">6dp</dimen>
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
+    <dimen name="notifications_content_margin">0dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
 
@@ -169,5 +170,10 @@
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
     <dimen name="site_picker_container_padding_bottom">11dp</dimen>
     <dimen name="site_picker_container_padding_top">10dp</dimen>
+
+    <dimen name="menu_item_height">48dp</dimen>
+    <dimen name="menu_item_margin_normal">16dp</dimen>
+    <dimen name="menu_item_margin_tablet">24dp</dimen>
+    <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
 
 </resources>

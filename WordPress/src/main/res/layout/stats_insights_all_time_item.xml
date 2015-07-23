@@ -56,6 +56,7 @@
 
         </LinearLayout>
 
+        <include layout="@layout/stats_vertical_line" />
 
         <!-- Views Item -->
         <LinearLayout
@@ -128,7 +129,7 @@
                     android:layout_height="12dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
-                    android:src="@drawable/stats_icon_views" />
+                    android:src="@drawable/stats_icon_visitors" />
 
                 <org.wordpress.android.widgets.WPAutoResizeTextView
                     style="@style/StatsInsightsLabel"
@@ -152,6 +153,8 @@
 
         </LinearLayout>
 
+        <include layout="@layout/stats_vertical_line" />
+
         <!-- Best Ever Item -->
         <LinearLayout
             android:orientation="vertical"
@@ -171,11 +174,11 @@
                     android:layout_height="12dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
-                    android:src="@drawable/ic_action_like_active" />
+                    android:src="@drawable/stats_icon_trophy" />
 
                 <org.wordpress.android.widgets.WPAutoResizeTextView
                     style="@style/StatsInsightsLabel"
-                    android:textColor="@color/orange_jazzy"
+                    android:textColor="@color/alert_yellow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"

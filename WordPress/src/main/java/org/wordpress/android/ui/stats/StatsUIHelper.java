@@ -21,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.DisplayUtils;
 
 class StatsUIHelper {
     // Max number of rows to show in a stats fragment
@@ -331,7 +333,9 @@ class StatsUIHelper {
     }
 
     public static int getNumOfBarsToShow() {
-        if(shouldLoadMoreBars()) {
+        if (StatsUtils.getSmallestWidthDP() >= TABLET_720DP && DisplayUtils.isLandscape(WordPress.getContext())) {
+            return 15;
+        } else if (StatsUtils.getSmallestWidthDP() >= TABLET_600DP) {
             return 10;
         } else {
             return 7;
