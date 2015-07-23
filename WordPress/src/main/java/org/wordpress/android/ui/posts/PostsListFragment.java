@@ -147,14 +147,7 @@ public class PostsListFragment extends Fragment
     private void refreshPosts() {
         if (!isAdded()) return;
 
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null) {
-            ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
-                    Duration.LONG);
-            return;
-        }
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
-        if (hasLocalChanges) {
+        if (hasLocalChanges()) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
             dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
@@ -213,7 +206,7 @@ public class PostsListFragment extends Fragment
         // posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
             loadPosts();
-            if (NetworkUtils.checkConnection(getActivity())) {
+            if (!hasLocalChanges() && NetworkUtils.checkConnection(getActivity())) {
                 requestPosts(false);
             }
         }
@@ -254,6 +247,10 @@ public class PostsListFragment extends Fragment
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
+    private boolean hasLocalChanges() {
+        return WordPress.wpDB.findLocalChanges(WordPress.getCurrentLocalTableBlogId(), mIsPage);
+    }
+
     private void requestPosts(boolean loadMore) {
         if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
             return;
@@ -262,11 +259,6 @@ public class PostsListFragment extends Fragment
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             setRefreshing(false);
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            return;
-        }
-
-        // if user has local changes, don't refresh
-        if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
             return;
         }
 
