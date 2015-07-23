@@ -1274,20 +1274,6 @@ public class WordPressDB {
         }
     }
 
-    public Post getPostForRemotePostId(int blogID, String remotePostID) {
-        String[] args = {String.valueOf(blogID), remotePostID};
-        Cursor c = db.query(POSTS_TABLE, null, "blogID=? AND postid=?", args, null, null, null);
-        try {
-            if (c.moveToFirst()) {
-                return getPostFromCursor(c);
-            } else {
-                return null;
-            }
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
     // Categories
     public boolean insertCategory(int id, int wp_id, int parent_id, String category_name) {
         ContentValues values = new ContentValues();
