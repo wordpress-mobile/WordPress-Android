@@ -253,10 +253,10 @@ public class ReaderPostActions {
             return;
         }
 
-        // don't bump stats for posts authored by the current user
-        long currentUserId = AccountHelper.getDefaultAccount().getUserId();
-        if (post.authorId == currentUserId) {
-            AppLog.d(T.READER, "skipped bump page view - user is author");
+        // don't bump stats for posts in blogs the current user is an admin of, unless
+        // this is a private post (we count views for private blogs from admins)
+        if (!post.isPrivate && WordPress.wpDB.isCurrentUserAdminOfRemoteBlogId(post.blogId)) {
+            AppLog.d(T.READER, "skipped bump page view - user is admin");
             return;
         }
 
