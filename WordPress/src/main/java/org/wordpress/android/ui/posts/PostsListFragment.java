@@ -232,19 +232,6 @@ public class PostsListFragment extends Fragment
         PostUpdateService.startServiceForBlog(getActivity(), WordPress.getCurrentLocalTableBlogId(), mIsPage, loadMore);
     }
 
-    private void requestSinglePost(int blogId, String remotePostId) {
-        if (!isAdded() || mIsFetchingPosts) {
-            return;
-        }
-
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            return;
-        }
-
-        PostUpdateService.startServiceForPost(getActivity(), blogId, remotePostId, mIsPage);
-    }
-
     private void showLoadMoreProgress() {
         if (mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.VISIBLE);
@@ -257,59 +244,34 @@ public class PostsListFragment extends Fragment
         }
     }
 
+    /*
+     * PostMediaService has downloaded the media info for a post's featured image, tell
+     * the adapter so it can show the featured image now that we have its URL
+     */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
-        // PostMediaService has downloaded the media info for a post's featured image, tell
-        // the adapter so it can show the featured image now that we have its URL
         if (isAdded()) {
             getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
 
+    /*
+     * upload succeeded, reload so new post appears
+     */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostUploadSucceed event) {
-        if (!isAdded()) {
-            return;
+        if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalBlogId) {
+            loadPosts();
         }
-
-        setRefreshing(false);
-        mIsFetchingPosts = false;
-        requestSinglePost(event.mLocalBlogId, event.mRemotePostId);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostUploadFailed event) {
-        if (!isAdded()) {
-            return;
-        }
-
-        // If the user switched to a different blog while uploading his post, don't reload posts and refresh the view
-        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != event.mLocalId) {
-            return;
-        }
-
-        setRefreshing(false);
-
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            return;
-        }
-
-        // Refresh the posts list to revert post status back to local draft or local changes
-        loadPosts();
     }
 
     /*
-     * PostUpdateService finished a request to retrieve a single post
+     * upload failed, reload so correct status on failed post appears
      */
     @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.RequestSinglePost event) {
-        mIsFetchingPosts = false;
-        if (isAdded() && event.getBlogId() == WordPress.getCurrentLocalTableBlogId()) {
-            setRefreshing(false);
-            if (!event.getFailed()) {
-                loadPosts();
-            }
+    public void onEventMainThread(PostUploadFailed event) {
+        if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalId) {
+            loadPosts();
         }
     }
 

@@ -2,6 +2,7 @@ package org.xmlrpc.android;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -31,6 +33,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1010,5 +1013,55 @@ public class ApiHelper {
             }
         }
         return null; // never found the rsd tag
+    }
+
+    /*
+     * fetches a single post saves it to the db - note that this should NOT be called from main thread
+     */
+    public static boolean updateSinglePost(int localBlogId, String remotePostId, boolean isPage) {
+        Blog blog = WordPress.getBlog(localBlogId);
+        if (blog == null || TextUtils.isEmpty(remotePostId)) {
+            return false;
+        }
+
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(
+                blog.getUri(),
+                blog.getHttpuser(),
+                blog.getHttppassword());
+
+        Object[] apiParams;
+        if (isPage) {
+            apiParams = new Object[]{
+                    blog.getRemoteBlogId(),
+                    remotePostId,
+                    blog.getUsername(),
+                    blog.getPassword()
+            };
+        } else {
+            apiParams = new Object[]{
+                    remotePostId,
+                    blog.getUsername(),
+                    blog.getPassword()
+            };
+        }
+
+        try {
+            Object result = client.call(isPage ? "wp.getPage" : "metaWeblog.getPost", apiParams);
+
+            if (result != null && result instanceof Map) {
+                Map postMap = (HashMap) result;
+                List<Map<?, ?>> postsList = new ArrayList<>();
+                postsList.add(postMap);
+
+                WordPress.wpDB.savePosts(postsList, localBlogId, isPage, true);
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (XMLRPCException | IOException | XmlPullParserException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+            return false;
+        }
     }
 }

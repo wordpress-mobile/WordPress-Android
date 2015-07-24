@@ -174,7 +174,7 @@ public class PostUploadService extends Service {
 
             if (postUploadedSuccessfully) {
                 EventBus.getDefault().post(new PostUploadSucceed(mPost.getLocalTableBlogId(), mPost.getRemotePostId(),
-                                mPost.isPage()));
+                        mPost.isPage()));
                 mPostUploadNotifier.cancelNotification();
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
@@ -391,6 +391,9 @@ public class PostUploadService extends Service {
                     Object object = mClient.call("metaWeblog.newPost", params);
                     if (object instanceof String) {
                         mPost.setRemotePostId((String) object);
+                        // request the new post from the server since local draft version will
+                        // be missing some information
+                        ApiHelper.updateSinglePost(mBlog.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
                     }
                 } else {
                     mClient.call("metaWeblog.editPost", params);
@@ -400,6 +403,7 @@ public class PostUploadService extends Service {
                 mPost.setLocalChange(false);
                 WordPress.wpDB.updatePost(mPost);
                 trackUploadAnalytics();
+
                 return true;
             } catch (final XMLRPCException e) {
                 setUploadPostErrorMessage(e);

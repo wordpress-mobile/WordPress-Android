@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -20,20 +18,18 @@ import org.xmlrpc.android.XMLRPCFault;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
 /**
- * service which retrieves posts, primarily for the post list
+ * service which retrieves posts for the post list
  */
 
 public class PostUpdateService extends Service {
 
     private static final String ARG_BLOG_ID = "blog_id";
-    private static final String ARG_POST_ID = "post_id";
     private static final String ARG_LOAD_MORE = "load_more";
     private static final String ARG_IS_PAGE = "is_page";
 
@@ -47,17 +43,6 @@ public class PostUpdateService extends Service {
         intent.putExtra(ARG_BLOG_ID, blogId);
         intent.putExtra(ARG_IS_PAGE, isPage);
         intent.putExtra(ARG_LOAD_MORE, loadMore);
-        context.startService(intent);
-    }
-
-    /*
-     * fetch a single post
-     */
-    public static void startServiceForPost(Context context, int blogId, String remotePostId, boolean isPage) {
-        Intent intent = new Intent(context, PostUpdateService.class);
-        intent.putExtra(ARG_BLOG_ID, blogId);
-        intent.putExtra(ARG_POST_ID, StringUtils.notNullStr(remotePostId));
-        intent.putExtra(ARG_IS_PAGE, isPage);
         context.startService(intent);
     }
 
@@ -87,15 +72,9 @@ public class PostUpdateService extends Service {
             @Override
             public void run() {
                 int blogId = intent.getIntExtra(ARG_BLOG_ID, 0);
-                String remotePostId = intent.getStringExtra(ARG_POST_ID);
                 boolean isPage = intent.getBooleanExtra(ARG_IS_PAGE, false);
-
-                if (!TextUtils.isEmpty(remotePostId)) {
-                    fetchSinglePost(blogId, remotePostId, isPage);
-                } else {
-                    boolean loadMore = intent.getBooleanExtra(ARG_LOAD_MORE, false);
-                    fetchPostsInBlog(blogId, isPage, loadMore);
-                }
+                boolean loadMore = intent.getBooleanExtra(ARG_LOAD_MORE, false);
+                fetchPostsInBlog(blogId, isPage, loadMore);
             }
         }.start();
 
@@ -174,53 +153,6 @@ public class PostUpdateService extends Service {
             }
 
             event.setErrorType(errorType);
-        }
-
-        EventBus.getDefault().post(event);
-    }
-
-    private void fetchSinglePost(int blogId, String remotePostId, boolean isPage) {
-        Blog blog = WordPress.getBlog(blogId);
-        if (blog == null) {
-            return;
-        }
-
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                blog.getHttppassword());
-
-        Object[] apiParams;
-        if (isPage) {
-            apiParams = new Object[]{
-                    blog.getRemoteBlogId(),
-                    remotePostId,
-                    blog.getUsername(),
-                    blog.getPassword()
-            };
-        } else {
-            apiParams = new Object[]{
-                    remotePostId,
-                    blog.getUsername(),
-                    blog.getPassword()
-            };
-        }
-
-        PostEvents.RequestSinglePost event = new PostEvents.RequestSinglePost(blogId, remotePostId, isPage);
-        try {
-            Object result = client.call((isPage) ? "wp.getPage" : "metaWeblog.getPost", apiParams);
-            if (result != null && result instanceof Map) {
-                Map postMap = (HashMap) result;
-                List<Map<?, ?>> postsList = new ArrayList<>();
-                postsList.add(postMap);
-
-                WordPress.wpDB.savePosts(postsList, blogId, isPage, true);
-                event.setFailed(false);
-            } else {
-                event.setFailed(true);
-            }
-
-        } catch (XMLRPCException | IOException | XmlPullParserException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-            event.setFailed(true);
         }
 
         EventBus.getDefault().post(event);

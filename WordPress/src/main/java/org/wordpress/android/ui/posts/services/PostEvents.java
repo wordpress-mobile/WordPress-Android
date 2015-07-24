@@ -76,34 +76,4 @@ public class PostEvents {
         }
     }
 
-    public static class RequestSinglePost {
-        private int mBlogId;
-        private String mPostId;
-        private boolean mIsPage;
-        private boolean mFailed;
-
-        RequestSinglePost(int blogId, String remotePostId, boolean isPage) {
-            mBlogId = blogId;
-            mPostId = remotePostId;
-            mIsPage = isPage;
-            mFailed = false;
-        }
-
-        public int getBlogId() {
-            return mBlogId;
-        }
-        public String getPostId() {
-            return StringUtils.notNullStr(mPostId);
-        }
-        public boolean isPage() {
-            return mIsPage;
-        }
-        public boolean getFailed() {
-            return mFailed;
-        }
-        public void setFailed(boolean failed) {
-            mFailed = failed;
-        }
-    }
-
 }
