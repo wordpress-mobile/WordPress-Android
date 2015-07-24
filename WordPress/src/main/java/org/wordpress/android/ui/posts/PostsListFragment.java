@@ -19,7 +19,6 @@ import android.widget.TextView;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
@@ -27,14 +26,11 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostEvents.PostUploadFailed;
-import org.wordpress.android.ui.posts.services.PostEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -82,11 +78,6 @@ public class PostsListFragment extends Fragment
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
-            }
-            // If PostUploadService is not running, check for posts stuck with an uploading state
-            Blog currentBlog = WordPress.getCurrentBlog();
-            if (!ServiceUtils.isServiceRunning(getActivity(), PostUploadService.class) && currentBlog != null) {
-                WordPress.wpDB.clearAllUploadingPosts(currentBlog.getLocalTableBlogId(), mIsPage);
             }
         }
     }
@@ -256,21 +247,21 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * upload succeeded, reload so new post appears
+     * upload start, reload so correct status on uploading post appears
      */
     @SuppressWarnings("unused")
-    public void onEventMainThread(PostUploadSucceed event) {
+    public void onEventMainThread(PostEvents.PostUploadStarted event) {
         if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalBlogId) {
             loadPosts();
         }
     }
 
     /*
-     * upload failed, reload so correct status on failed post appears
+     * upload ended, reload regardless of success/fail so correct status of uploaded post appears
      */
     @SuppressWarnings("unused")
-    public void onEventMainThread(PostUploadFailed event) {
-        if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalId) {
+    public void onEventMainThread(PostEvents.PostUploadEnded event) {
+        if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalBlogId) {
             loadPosts();
         }
     }

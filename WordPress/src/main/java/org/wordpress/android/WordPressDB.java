@@ -164,7 +164,7 @@ public class WordPressDB {
     //add boolean to posts to check uploaded posts that have local changes
     private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
 
-    // Add boolean to POSTS to track posts currently being uploaded
+    // Add boolean to POSTS to track posts currently being uploaded - no longer used as of v4.5
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
 
     // add wp_post_thumbnail to posts table
@@ -1057,23 +1057,12 @@ public class WordPressDB {
         }
 
         post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
-        post.setUploading(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading"))));
         post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
         post.setPageParentId(c.getString(c.getColumnIndex("wp_page_parent_id")));
         post.setPageParentTitle(c.getString(c.getColumnIndex("wp_page_parent_title")));
         post.setLocalChange(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
 
         return post;
-    }
-
-    public int clearAllUploadingPosts(int localTableBlogId, boolean isPage) {
-        ContentValues values = new ContentValues();
-        values.put("isUploading", 0);
-        return db.update(POSTS_TABLE, values, "blogID=? AND isPage=? AND isUploading=1",
-                new String[]{
-                        String.valueOf(localTableBlogId),
-                        String.valueOf(SqlUtils.boolToSql(isPage))
-                });
     }
 
     public long savePost(Post post) {
@@ -1095,7 +1084,6 @@ public class WordPressDB {
             values.put("mt_keywords", post.getKeywords());
             values.put("wp_password", post.getPassword());
             values.put("post_status", post.getPostStatus());
-            values.put("isUploading", post.isUploading());
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
             putPostLocation(post, values);
@@ -1121,7 +1109,6 @@ public class WordPressDB {
             values.put("date_created_gmt", post.getDate_created_gmt());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
-            values.put("isUploading", post.isUploading());
             values.put("postid", post.getRemotePostId());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();

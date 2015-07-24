@@ -4,23 +4,22 @@ import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.ApiHelper;
 
 public class PostEvents {
-    public static class PostUploadSucceed {
-        public final int mLocalBlogId;
-        public final String mRemotePostId;
-        public final boolean mIsPage;
 
-        PostUploadSucceed(int localBlogId, String remotePostId, boolean isPage) {
+    public static class PostUploadStarted {
+        public final int mLocalBlogId;
+
+        PostUploadStarted(int localBlogId) {
             mLocalBlogId = localBlogId;
-            mRemotePostId = remotePostId;
-            mIsPage = isPage;
         }
     }
 
-    public static class PostUploadFailed {
-        public final int mLocalId;
+    public static class PostUploadEnded {
+        public final int mLocalBlogId;
+        public final boolean mSucceeded;
 
-        PostUploadFailed(int localId) {
-            mLocalId = localId;
+        PostUploadEnded(boolean succeeded, int localBlogId) {
+            mSucceeded = succeeded;
+            mLocalBlogId = localBlogId;
         }
     }
 
@@ -41,8 +40,8 @@ public class PostEvents {
     }
 
     public static class RequestPosts {
-        private int mBlogId;
-        private boolean mIsPage;
+        private final int mBlogId;
+        private final boolean mIsPage;
         private boolean mCanLoadMore;
         private boolean mFailed;
         private ApiHelper.ErrorType mErrorType = null;
