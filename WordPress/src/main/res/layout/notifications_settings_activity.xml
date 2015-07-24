@@ -13,16 +13,23 @@
         android:background="@color/default_background"
         android:orientation="vertical" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/notifications_settings_message"
-        style="@style/WordPress.EmptyList.Title"
+    <LinearLayout
+        android:id="@+id/notifications_settings_message_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/default_background"
-        android:layout_gravity="center"
+        android:orientation="vertical"
         android:visibility="gone"
-        app:fixWidowWords="true"
-        tools:text="Loading..."
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/notifications_settings_message"
+            style="@style/WordPress.EmptyList.Title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:fixWidowWords="true"
+            tools:text="Loading..." />
+    </LinearLayout>
 
 </FrameLayout>

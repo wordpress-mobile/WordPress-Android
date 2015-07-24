@@ -17,6 +17,7 @@ import de.greenrobot.event.EventBus;
 
 // Simple wrapper activity for NotificationsSettingsFragment
 public class NotificationsSettingsActivity extends AppCompatActivity {
+    private View mMessageContainer;
     private TextView mMessageTextView;
 
     @Override
@@ -39,6 +40,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
                     .commit();
         }
 
+        mMessageContainer = findViewById(R.id.notifications_settings_message_container);
         mMessageTextView = (TextView)findViewById(R.id.notifications_settings_message);
     }
 
@@ -73,9 +75,9 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsSettingsStatusChanged event) {
         if (TextUtils.isEmpty(event.getMessage())) {
-            mMessageTextView.setVisibility(View.GONE);
+            mMessageContainer.setVisibility(View.GONE);
         } else {
-            mMessageTextView.setVisibility(View.VISIBLE);
+            mMessageContainer.setVisibility(View.VISIBLE);
             mMessageTextView.setText(event.getMessage());
         }
     }
