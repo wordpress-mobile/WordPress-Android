@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.actions;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
@@ -15,7 +16,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
@@ -235,22 +238,25 @@ public class ReaderPostActions {
         WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 
-    private static String getTrackingPixelForPost(long blogId, long postId) {
-        String blogUrl = ReaderPostTable.getPostBlogUrl(blogId, postId);
-        if (TextUtils.isEmpty(blogUrl)) {
-            return null;
-        }
+    private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
         return "https://pixel.wp.com/g.gif?v=wpcom&reader=1"
-                + "&blog=" + blogId
-                + "&post=" + postId
-                + "&host=" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl))
+                + "&blog=" + post.blogId
+                + "&post=" + post.postId
+                + "&host=" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(post.getBlogUrl()))
                 + "&ref="  + UrlUtils.urlEncode(TRACKING_REFERRER)
                 + "&t="    + mRandom.nextInt();
     }
 
     public static void bumpPageViewForPost(long blogId, long postId) {
-        String pixelUrl = getTrackingPixelForPost(blogId, postId);
-        if (pixelUrl == null) {
+        ReaderPost post = ReaderPostTable.getPost(blogId, postId, true);
+        if (post == null) {
+            return;
+        }
+
+        // don't bump stats for posts authored by the current user
+        long currentUserId = AccountHelper.getDefaultAccount().getUserId();
+        if (post.authorId == currentUserId) {
+            AppLog.d(T.READER, "skipped bump page view - user is author");
             return;
         }
 
@@ -270,7 +276,7 @@ public class ReaderPostActions {
 
         Request request = new StringRequest(
                 Request.Method.GET,
-                pixelUrl,
+                getTrackingPixelForPost(post),
                 listener,
                 errorListener) {
             @Override
