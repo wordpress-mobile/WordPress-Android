@@ -164,9 +164,6 @@ public class WordPressDB {
     //add boolean to posts to check uploaded posts that have local changes
     private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
 
-    // Add boolean to POSTS to track posts currently being uploaded - no longer used as of v4.5
-    private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
-
     // add wp_post_thumbnail to posts table
     private static final String ADD_POST_THUMBNAIL = "alter table posts add wp_post_thumbnail integer default 0;";
 
@@ -317,8 +314,8 @@ public class WordPressDB {
                 db.execSQL("DROP TABLE IF EXISTS notes;");
                 currentVersion++;
             case 27:
-                // Add isUploading column to POSTS
-                db.execSQL(ADD_IS_UPLOADING);
+                // versions prior to v4.5 added an "isUploading" column here, but that's no longer used
+                // so we don't bother to add it
                 currentVersion++;
             case 28:
                 // Remove WordPress.com credentials
@@ -376,7 +373,7 @@ public class WordPressDB {
     }
 
     private void migrateWPComAccount() {
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "username" }, "dotcomFlag=1", null, null,
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"username"}, "dotcomFlag=1", null, null,
                 null, null);
 
         if (c.getCount() > 0) {
@@ -1380,7 +1377,7 @@ public class WordPressDB {
         Cursor c = db
                 .rawQuery(
                         "select count(*) from comments where blogID=? AND status='hold'",
-                        new String[] { String.valueOf(blogID) });
+                        new String[]{String.valueOf(blogID)});
         int numRows = c.getCount();
         c.moveToFirst();
 
@@ -1474,7 +1471,7 @@ public class WordPressDB {
 
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
         String query = "SELECT " + COLUMN_NAME_THUMBNAIL_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?";
-        return SqlUtils.stringForQuery(db, query, new String[] { Integer.toString(blogId), Long.toString(mediaId) });
+        return SqlUtils.stringForQuery(db, query, new String[]{Integer.toString(blogId), Long.toString(mediaId)});
     }
 
     public int getMediaCountAll(String blogId) {
@@ -1520,7 +1517,7 @@ public class WordPressDB {
     }
 
     public Cursor getMediaFilesForBlog(String blogId, long startDate, long endDate) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND (uploadState IS NULL OR uploadState ='uploaded') AND (date_created_gmt >= ? AND date_created_gmt <= ?) ", new String[] { blogId , String.valueOf(startDate), String.valueOf(endDate) });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND (uploadState IS NULL OR uploadState ='uploaded') AND (date_created_gmt >= ? AND date_created_gmt <= ?) ", new String[]{blogId, String.valueOf(startDate), String.valueOf(endDate)});
     }
 
     public Cursor getMediaFiles(String blogId, ArrayList<String> mediaIds) {
