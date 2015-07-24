@@ -880,6 +880,16 @@ public class WordPressDB {
         return SqlUtils.boolForQuery(db, sql, args);
     }
 
+    /*
+     * updates the remote post id for the post with the passed local id
+     */
+    public void updateRemotePostId(long localPostId, String remotePostId) {
+        String[] args = {String.valueOf(localPostId)};
+        ContentValues values = new ContentValues();
+        values.put("postid", remotePostId);
+        db.update(POSTS_TABLE, values, "id=?", args);
+    }
+
     /**
      * Saves a list of posts to the db
      * @param postsList: list of post objects

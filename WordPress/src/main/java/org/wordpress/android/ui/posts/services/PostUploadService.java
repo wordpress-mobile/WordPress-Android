@@ -388,9 +388,12 @@ public class PostUploadService extends Service {
 
             try {
                 if (mPost.isLocalDraft()) {
-                    Object newPostId = mClient.call("metaWeblog.newPost", params);
-                    if (newPostId instanceof String) {
-                        mPost.setRemotePostId((String) newPostId);
+                    Object object = mClient.call("metaWeblog.newPost", params);
+                    if (object instanceof String) {
+                        String newRemotePostId = (String) object;
+                        mPost.setRemotePostId(newRemotePostId);
+                        // update the existing row for this post so it has the new postid
+                        WordPress.wpDB.updateRemotePostId(mPost.getLocalTablePostId(), newRemotePostId);
                     }
                 } else {
                     mClient.call("metaWeblog.editPost", params);
