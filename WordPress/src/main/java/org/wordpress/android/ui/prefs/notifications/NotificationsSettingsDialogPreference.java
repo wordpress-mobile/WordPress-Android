@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 public class NotificationsSettingsDialogPreference extends DialogPreference {
     private NotificationsSettings.Channel mChannel;
     private NotificationsSettings.Type mType;
-    private JSONObject mSettingsJson;
+    private NotificationsSettings mSettings;
     private JSONObject mUpdatedJson = new JSONObject();
 
     private long mBlogId;
@@ -37,14 +37,14 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     }
 
     public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs, Channel channel,
-                                                 Type type, long blogId, JSONObject settings,
+                                                 Type type, long blogId, NotificationsSettings settings,
                                                  OnNotificationsSettingsChangedListener listener) {
         super(context, attrs);
 
         mChannel = channel;
         mType = type;
         mBlogId = blogId;
-        mSettingsJson = settings;
+        mSettings = settings;
         mOnNotificationsSettingsChangedListener = listener;
     }
 
@@ -64,19 +64,34 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     }
 
     private View configureLayoutForView(LinearLayout view) {
+        JSONObject settingsJson = null;
+
         String[] settingsArray = new String[0], settingsValues = new String[0];
-        if (mChannel == NotificationsSettings.Channel.BLOGS) {
-            settingsArray = getContext().getResources().getStringArray(R.array.notifications_blog_settings);
-            settingsValues = getContext().getResources().getStringArray(R.array.notifications_blog_settings_values);
-        } else if (mChannel == NotificationsSettings.Channel.OTHER) {
-            settingsArray = getContext().getResources().getStringArray(R.array.notifications_other_settings);
-            settingsValues = getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
-        } else if (mChannel == NotificationsSettings.Channel.DOTCOM) {
-            settingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
-            settingsValues = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
+        String typeString = mType.toString();
+
+        switch (mChannel) {
+            case BLOGS:
+                settingsJson = JSONUtils.queryJSON(mSettings.getBlogSettings().get(mBlogId),
+                        typeString, new JSONObject());
+                settingsArray = getContext().getResources().getStringArray(R.array.notifications_blog_settings);
+                settingsValues = getContext().getResources().getStringArray(R.array.notifications_blog_settings_values);
+                break;
+            case OTHER:
+                settingsJson = JSONUtils.queryJSON(mSettings.getOtherSettings(),
+                        typeString, new JSONObject());
+                settingsArray = getContext().getResources().getStringArray(R.array.notifications_other_settings);
+                settingsValues = getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
+                break;
+            case DOTCOM:
+                settingsJson = JSONUtils.queryJSON(mSettings.getDotcomSettings(),
+                        typeString, new JSONObject());
+                settingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
+                settingsValues = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
+                break;
         }
 
-        if (settingsArray != null && settingsArray.length == settingsValues.length) {
+
+            if (settingsJson != null && settingsArray != null && settingsArray.length == settingsValues.length) {
             for (int i=0; i < settingsArray.length; i++) {
                 String settingName = settingsArray[i];
                 String settingValue = settingsValues[i];
@@ -85,7 +100,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 title.setText(settingName);
 
                 Switch toggleSwitch = (Switch)commentsSetting.findViewById(R.id.notifications_switch);
-                toggleSwitch.setChecked(JSONUtils.queryJSON(mSettingsJson, settingValue, true));
+                toggleSwitch.setChecked(JSONUtils.queryJSON(settingsJson, settingValue, true));
                 toggleSwitch.setTag(settingValue);
                 toggleSwitch.setOnCheckedChangeListener(mOnCheckedChangedListener);
 
@@ -107,7 +122,10 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                     mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
                 }
 
-                mSettingsJson.put(compoundButton.getTag().toString(), isChecked);
+                mSettings.updateSettingForChannelAndType(
+                        mChannel, mType, compoundButton.getTag().toString(),
+                        isChecked, mBlogId
+                );
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
             }

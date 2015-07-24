@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.JSONUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -83,6 +84,37 @@ public class NotificationsSettings {
             }
         }
     }
+
+    public void updateSettingForChannelAndType(Channel channel, Type type, String settingName, boolean newValue, long blogId) {
+        String typeName = type.toString();
+        try {
+            switch (channel) {
+                case BLOGS:
+                    JSONObject blogJson = getBlogSettings().get(blogId);
+                    if (blogJson != null) {
+                        JSONObject blogSetting = JSONUtils.queryJSON(blogJson, typeName, new JSONObject());
+                        blogSetting.put(settingName, newValue);
+                        blogJson.put(typeName, blogSetting);
+
+                        getBlogSettings().put(blogId, blogJson);
+                    }
+                    break;
+                case OTHER:
+                    JSONObject otherSetting = JSONUtils.queryJSON(getOtherSettings(), typeName, new JSONObject());
+                    otherSetting.put(settingName, newValue);
+                    getOtherSettings().put(typeName, otherSetting);
+                    break;
+                case DOTCOM:
+                    JSONObject dotcomSetting = JSONUtils.queryJSON(getDotcomSettings(), typeName, new JSONObject());
+                    dotcomSetting.put(settingName, newValue);
+                    getDotcomSettings().put(typeName, dotcomSetting);
+            }
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.NOTIFS, "Could not update notifications settings JSON");
+        }
+    }
+
+
 
     public JSONObject getOtherSettings() {
         return mOtherSettings;

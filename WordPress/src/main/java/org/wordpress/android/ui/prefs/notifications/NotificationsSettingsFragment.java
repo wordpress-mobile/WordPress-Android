@@ -218,12 +218,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             prefScreen.setTitle(title);
             prefScreen.setSummary(UrlUtils.getDomainFromUrl(siteUrl));
 
-            JSONObject blogSettings = mNotificationsSettings.getBlogSettings().get(blogId);
-            if (blogSettings == null) {
-                blogSettings = new JSONObject();
-            }
-
-            addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, blogSettings, blogId);
+            addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, blogId);
             blogsCategory.addPreference(prefScreen);
         }
     }
@@ -235,7 +230,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         PreferenceScreen otherBlogsScreen = (PreferenceScreen) findPreference(
                 getString(R.string.pref_notification_other_blogs));
-        addPreferencesForPreferenceScreen(otherBlogsScreen, Channel.OTHER, mNotificationsSettings.getOtherSettings(), 0);
+        addPreferencesForPreferenceScreen(otherBlogsScreen, Channel.OTHER, 0);
     }
 
     private void configureDotcomSettings() {
@@ -246,7 +241,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         PreferenceGroup dotcomPreferenceGroup = (PreferenceGroup) findPreference(
                 getString(R.string.pref_notification_account_emails));
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
-                getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.MOBILE, 0, mNotificationsSettings.getDotcomSettings(), mOnSettingsChangedListener
+                getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.MOBILE, 0, mNotificationsSettings, mOnSettingsChangedListener
         );
         devicePreference.setTitle(R.string.notifications_updates_from_wordpress);
         devicePreference.setDialogTitle(R.string.notifications_updates_from_wordpress);
@@ -254,7 +249,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         dotcomPreferenceGroup.addPreference(devicePreference);
     }
 
-    private void addPreferencesForPreferenceScreen(PreferenceScreen preferenceScreen, Channel channel, JSONObject settingsObject, long blogId) {
+    private void addPreferencesForPreferenceScreen(PreferenceScreen preferenceScreen, Channel channel, long blogId) {
         Context context = getActivity();
         if (context == null) return;
 
@@ -262,25 +257,22 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         rootCategory.setTitle(R.string.notification_types);
         preferenceScreen.addPreference(rootCategory);
 
-        JSONObject timelineSettings = JSONUtils.queryJSON(settingsObject, "timeline", new JSONObject());
         NotificationsSettingsDialogPreference timelinePreference = new NotificationsSettingsDialogPreference(
-                context, null, channel, NotificationsSettings.Type.TIMELINE, blogId, timelineSettings, mOnSettingsChangedListener
+                context, null, channel, NotificationsSettings.Type.TIMELINE, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
         timelinePreference.setTitle(R.string.timeline);
         timelinePreference.setDialogTitle(R.string.timeline);
         rootCategory.addPreference(timelinePreference);
 
-        JSONObject emailSettings = JSONUtils.queryJSON(settingsObject, "email", new JSONObject());
         NotificationsSettingsDialogPreference emailPreference = new NotificationsSettingsDialogPreference(
-                context, null, channel, NotificationsSettings.Type.EMAIL, blogId, emailSettings, mOnSettingsChangedListener
+                context, null, channel, NotificationsSettings.Type.EMAIL, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
         rootCategory.addPreference(emailPreference);
 
-        JSONObject deviceSettings = JSONUtils.queryJSON(settingsObject, "device", new JSONObject());
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
-                context, null, channel, NotificationsSettings.Type.MOBILE, blogId, deviceSettings, mOnSettingsChangedListener
+                context, null, channel, NotificationsSettings.Type.MOBILE, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
         devicePreference.setTitle(R.string.app_notifications);
         devicePreference.setDialogTitle(R.string.app_notifications);
