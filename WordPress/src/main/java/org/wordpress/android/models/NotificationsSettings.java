@@ -4,23 +4,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 // Maps to notification settings returned from the /me/notifications/settings endpoint on wp.com
 public class NotificationsSettings {
 
-    private static final String KEY_OTHER = "other";
-    private static final String KEY_SITES = "sites";
-    private static final String KEY_DOTCOM = "wpcom";
+    public static final String KEY_BLOGS = "blogs";
+    public static final String KEY_OTHER = "other";
+    public static final String KEY_DOTCOM = "wpcom";
+
+    public static final String KEY_DEVICE_ID = "device_id";
+    public static final String KEY_BLOG_ID = "blog_id";
 
     private JSONObject mOtherSettings;
-    private Map<Long, JSONObject> mSiteSettings;
+    private Map<Long, JSONObject> mBlogSettings;
     private JSONObject mDotcomSettings;
 
     public enum Type {
@@ -44,12 +44,16 @@ public class NotificationsSettings {
 
     public enum Channel {
         OTHER,
-        SITES,
+        BLOGS,
         DOTCOM
     }
 
     public NotificationsSettings(JSONObject json) {
-        mSiteSettings = new HashMap<>();
+        updateJson(json);
+    }
+
+    public void updateJson(JSONObject json) {
+        mBlogSettings = new HashMap<>();
 
         Iterator<?> keys = json.keys();
         while(keys.hasNext()) {
@@ -67,11 +71,11 @@ public class NotificationsSettings {
                         default:
                             AppLog.i(AppLog.T.NOTIFS, "Unknown notification channel found");
                     }
-                } else if (json.get(key) instanceof JSONArray && key.equals(KEY_SITES)) {
+                } else if (json.get(key) instanceof JSONArray && key.equals(KEY_BLOGS)) {
                     JSONArray siteSettingsArray = (JSONArray)json.get(key);
                     for (int i=0; i < siteSettingsArray.length(); i++) {
                         JSONObject siteSetting = siteSettingsArray.getJSONObject(i);
-                        mSiteSettings.put(siteSetting.optLong("site_id"), siteSetting);
+                        mBlogSettings.put(siteSetting.optLong(KEY_BLOG_ID), siteSetting);
                     }
                 }
             } catch (JSONException e) {
@@ -84,8 +88,8 @@ public class NotificationsSettings {
         return mOtherSettings;
     }
 
-    public Map<Long, JSONObject> getSiteSettings() {
-        return mSiteSettings;
+    public Map<Long, JSONObject> getBlogSettings() {
+        return mBlogSettings;
     }
 
     public JSONObject getDotcomSettings() {

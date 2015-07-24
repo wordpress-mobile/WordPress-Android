@@ -13,6 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.models.NotificationsSettings;
+import org.wordpress.android.models.NotificationsSettings.Channel;
+import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
@@ -26,22 +28,22 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     private JSONObject mSettingsJson;
     private JSONObject mUpdatedJson = new JSONObject();
 
-    private long mSiteId;
+    private long mBlogId;
 
-    private OnSiteSettingsChangedListener mOnNotificationsSettingsChangedListener;
+    private OnNotificationsSettingsChangedListener mOnNotificationsSettingsChangedListener;
 
-    public interface OnSiteSettingsChangedListener {
-        void OnNotificationsSettingsChanged(NotificationsSettings.Channel channel, NotificationsSettings.Type type, long siteId, JSONObject newValues);
+    public interface OnNotificationsSettingsChangedListener {
+        void onSettingsChanged(Channel channel, Type type, long siteId, JSONObject newValues);
     }
 
-    public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs, NotificationsSettings.Channel channel,
-                                                 NotificationsSettings.Type type, long siteId, JSONObject settings,
-                                                 OnSiteSettingsChangedListener listener) {
+    public NotificationsSettingsDialogPreference(Context context, AttributeSet attrs, Channel channel,
+                                                 Type type, long blogId, JSONObject settings,
+                                                 OnNotificationsSettingsChangedListener listener) {
         super(context, attrs);
 
         mChannel = channel;
         mType = type;
-        mSiteId = siteId;
+        mBlogId = blogId;
         mSettingsJson = settings;
         mOnNotificationsSettingsChangedListener = listener;
     }
@@ -63,9 +65,9 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
 
     private View configureLayoutForView(LinearLayout view) {
         String[] settingsArray = new String[0], settingsValues = new String[0];
-        if (mChannel == NotificationsSettings.Channel.SITES) {
-            settingsArray = getContext().getResources().getStringArray(R.array.notifications_site_settings);
-            settingsValues = getContext().getResources().getStringArray(R.array.notifications_site_settings_values);
+        if (mChannel == NotificationsSettings.Channel.BLOGS) {
+            settingsArray = getContext().getResources().getStringArray(R.array.notifications_blog_settings);
+            settingsValues = getContext().getResources().getStringArray(R.array.notifications_blog_settings_values);
         } else if (mChannel == NotificationsSettings.Channel.OTHER) {
             settingsArray = getContext().getResources().getStringArray(R.array.notifications_other_settings);
             settingsValues = getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
@@ -115,7 +117,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult && mUpdatedJson.length() > 0 && mOnNotificationsSettingsChangedListener != null) {
-            mOnNotificationsSettingsChangedListener.OnNotificationsSettingsChanged(mChannel, mType, mSiteId, mUpdatedJson);
+            mOnNotificationsSettingsChangedListener.onSettingsChanged(mChannel, mType, mBlogId, mUpdatedJson);
         }
     }
 }

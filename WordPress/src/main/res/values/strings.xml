@@ -612,7 +612,7 @@
     <string name="error_loading_notifications">Could not load notifications settings</string>
     <string name="notification_types">Notification Types</string>
     <string name="notifications_disabled">App notifications have been disabled. Tap here to enable them in Settings.</string>
-    <string-array name="notifications_site_settings">
+    <string-array name="notifications_blog_settings">
         <item>Comments</item>
         <item>Comment likes</item>
         <item>Post likes</item>
@@ -620,7 +620,7 @@
         <item>Achievements</item>
         <item>Mentions</item>
     </string-array>
-    <string-array name="notifications_site_settings_values" translatable="false">
+    <string-array name="notifications_blog_settings_values" translatable="false">
         <item>new_comment</item>
         <item>comment_like</item>
         <item>post_like</item>
