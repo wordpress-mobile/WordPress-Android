@@ -70,14 +70,9 @@ public class NotificationsUtils {
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
-    public static final String WPCOM_PUSH_AUTH_TOKEN = "wp_pref_push_auth_token";
 
     public static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
-
-    private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
-    private static final String WPCOM_PUSH_KEY_MUTE_UNTIL = "mute_until";
-    private static final String WPCOM_PUSH_KEY_VALUE = "value";
 
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
