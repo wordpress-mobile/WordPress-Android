@@ -3,7 +3,9 @@ package org.wordpress.android.ui.reader.actions;
 import android.os.Handler;
 import android.text.TextUtils;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
@@ -25,9 +27,13 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class ReaderPostActions {
+
+    private static final String TRACKING_REFERRER = "https://wordpress.com/";
 
     private ReaderPostActions() {
         throw new AssertionError();
@@ -237,22 +243,44 @@ public class ReaderPostActions {
                 + "&blog=" + blogId
                 + "&post=" + postId
                 + "&host=" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl))
-                + "&ref="  + UrlUtils.urlEncode("https://wordpress.com/")
+                + "&ref="  + UrlUtils.urlEncode(TRACKING_REFERRER)
                 + "&t="    + new Random().nextInt();
     }
 
     public static void bumpPageViewForPost(long blogId, long postId) {
         String pixelUrl = getTrackingPixelForPost(blogId, postId);
         if (pixelUrl == null) {
-            AppLog.w(T.READER, "unable to bump page view");
             return;
         }
-        StringRequest request = new StringRequest(
+
+        Response.Listener<String> listener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                AppLog.d(T.READER, "bump page view succeeded");
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                AppLog.w(T.READER, "bump page view failed");
+            }
+        };
+
+        Request request = new StringRequest(
                 Request.Method.GET,
                 pixelUrl,
-                null,
-                null);
-        // TODO: uncomment
-        //WordPress.requestQueue.add(request);
+                listener,
+                errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                // call will fail without correct refer(r)er
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Referer", TRACKING_REFERRER);
+                return headers;
+            }
+        };
+
+        WordPress.requestQueue.add(request);
     }
 }
