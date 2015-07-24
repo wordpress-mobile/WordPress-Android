@@ -324,7 +324,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                     break;
                 case DOTCOM:
                     try {
-                        settingsObject.put(type.toString(), newValues);
+                        settingsObject.put(NotificationsSettings.KEY_DOTCOM, newValues);
                     } catch (JSONException e) {
                         AppLog.e(T.NOTIFS, "Could not build notification settings object");
                     }

@@ -637,9 +637,9 @@
         <item>comment_reply</item>
     </string-array>
     <string-array name="notifications_wpcom_settings">
-        <item>Marketing</item>
-        <item>Research</item>
-        <item>Community</item>
+        <item>Tips for getting the most out of WordPress.com</item>
+        <item>Opportunities to participate in WordPress.com research &amp; surveys</item>
+        <item>Information on WordPress.com courses and events (online &amp; in-person)</item>
     </string-array>
     <string-array name="notifications_wpcom_settings_values" translatable="false">
         <item>marketing</item>
