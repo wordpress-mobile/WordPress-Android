@@ -34,6 +34,7 @@ import java.util.Random;
 public class ReaderPostActions {
 
     private static final String TRACKING_REFERRER = "https://wordpress.com/";
+    private static final Random mRandom = new Random();
 
     private ReaderPostActions() {
         throw new AssertionError();
@@ -244,7 +245,7 @@ public class ReaderPostActions {
                 + "&post=" + postId
                 + "&host=" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl))
                 + "&ref="  + UrlUtils.urlEncode(TRACKING_REFERRER)
-                + "&t="    + new Random().nextInt();
+                + "&t="    + mRandom.nextInt();
     }
 
     public static void bumpPageViewForPost(long blogId, long postId) {
