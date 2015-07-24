@@ -621,9 +621,9 @@
         <item>Mentions</item>
     </string-array>
     <string-array name="notifications_site_settings_values" translatable="false">
-        <item>new-comment</item>
-        <item>comment-like</item>
-        <item>post-like</item>
+        <item>new_comment</item>
+        <item>comment_like</item>
+        <item>post_like</item>
         <item>follow</item>
         <item>achievement</item>
         <item>mentions</item>
@@ -633,8 +633,8 @@
         <item>Replies to your comments</item>
     </string-array>
     <string-array name="notifications_other_settings_values" translatable="false">
-        <item>comment-like</item>
-        <item>comment-reply</item>
+        <item>comment_like</item>
+        <item>comment_reply</item>
     </string-array>
     <string-array name="notifications_wpcom_settings">
         <item>Marketing</item>
