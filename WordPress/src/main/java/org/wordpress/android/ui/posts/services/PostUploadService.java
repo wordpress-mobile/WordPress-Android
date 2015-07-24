@@ -33,9 +33,9 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadSucceed;
-import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -390,10 +390,7 @@ public class PostUploadService extends Service {
                 if (mPost.isLocalDraft()) {
                     Object object = mClient.call("metaWeblog.newPost", params);
                     if (object instanceof String) {
-                        String newRemotePostId = (String) object;
-                        mPost.setRemotePostId(newRemotePostId);
-                        // update the existing row for this post so it has the new postid
-                        WordPress.wpDB.updateRemotePostId(mPost.getLocalTablePostId(), newRemotePostId);
+                        mPost.setRemotePostId((String) object);
                     }
                 } else {
                     mClient.call("metaWeblog.editPost", params);
