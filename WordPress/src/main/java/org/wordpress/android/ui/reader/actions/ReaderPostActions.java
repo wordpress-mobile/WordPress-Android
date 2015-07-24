@@ -3,7 +3,9 @@ package org.wordpress.android.ui.reader.actions;
 import android.os.Handler;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -20,7 +22,10 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListene
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
+
+import java.util.Random;
 
 public class ReaderPostActions {
 
@@ -221,5 +226,33 @@ public class ReaderPostActions {
         };
         AppLog.d(T.READER, "requesting post");
         WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+    }
+
+    private static String getTrackingPixelForPost(long blogId, long postId) {
+        String blogUrl = ReaderPostTable.getPostBlogUrl(blogId, postId);
+        if (TextUtils.isEmpty(blogUrl)) {
+            return null;
+        }
+        return "https://pixel.wp.com/g.gif?v=wpcom&reader=1"
+                + "&blog=" + blogId
+                + "&post=" + postId
+                + "&host=" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl))
+                + "&ref="  + UrlUtils.urlEncode("https://wordpress.com/")
+                + "&t="    + new Random().nextInt();
+    }
+
+    public static void bumpPageViewForPost(long blogId, long postId) {
+        String pixelUrl = getTrackingPixelForPost(blogId, postId);
+        if (pixelUrl == null) {
+            AppLog.w(T.READER, "unable to bump page view");
+            return;
+        }
+        StringRequest request = new StringRequest(
+                Request.Method.GET,
+                pixelUrl,
+                null,
+                null);
+        // TODO: uncomment
+        //WordPress.requestQueue.add(request);
     }
 }

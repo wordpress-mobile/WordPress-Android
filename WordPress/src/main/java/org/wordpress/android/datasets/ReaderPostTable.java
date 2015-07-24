@@ -260,6 +260,13 @@ public class ReaderPostTable {
                 args);
     }
 
+    public static String getPostBlogUrl(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT blog_url FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
+    }
+
     public static boolean postExists(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
