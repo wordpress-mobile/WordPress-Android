@@ -404,9 +404,6 @@ public class PostUploadService extends Service {
                     Object object = mClient.call("metaWeblog.newPost", params);
                     if (object instanceof String) {
                         mPost.setRemotePostId((String) object);
-                        // request the new post from the server since local draft version will
-                        // be missing some information
-                        ApiHelper.updateSinglePost(mBlog.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
                     }
                 } else {
                     mClient.call("metaWeblog.editPost", params);
@@ -415,6 +412,10 @@ public class PostUploadService extends Service {
                 mPost.setLocalDraft(false);
                 mPost.setLocalChange(false);
                 WordPress.wpDB.updatePost(mPost);
+
+                // request the new/updated post from the server to ensure local copy matches server
+                ApiHelper.updateSinglePost(mBlog.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
+
                 trackUploadAnalytics();
 
                 return true;
