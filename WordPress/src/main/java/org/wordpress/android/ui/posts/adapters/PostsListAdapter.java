@@ -122,8 +122,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     @Override
-    public void onBindViewHolder(final PostViewHolder holder, final int position) {
-        PostsListPost post = mPosts.get(position);
+    public void onBindViewHolder(PostViewHolder holder, int position) {
+        final PostsListPost post = mPosts.get(position);
         Context context = holder.itemView.getContext();
 
         if (post.hasTitle()) {
@@ -168,9 +168,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostsListPost selectedPost = getItem(position);
-                if (mOnPostSelectedListener != null && selectedPost != null) {
-                    mOnPostSelectedListener.onPostSelected(selectedPost);
+                if (mOnPostSelectedListener != null) {
+                    mOnPostSelectedListener.onPostSelected(post);
                 }
             }
         });
