@@ -117,17 +117,6 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == RequestCodes.EDIT_POST || requestCode == RequestCodes.PREVIEW_POST)
-                && resultCode == RESULT_OK
-                && data != null
-                && data.getBooleanExtra(EditPostActivity.EXTRA_SHOULD_REFRESH, false)) {
-            mPostList.getPostListAdapter().loadPosts();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);

@@ -157,17 +157,10 @@ public class PostsListFragment extends Fragment
 
         initSwipeToRefreshHelper();
 
-        if (WordPress.getCurrentBlog() != null && mRecyclerView.getAdapter() == null) {
-            mRecyclerView.setAdapter(getPostListAdapter());
-        }
-
-        // since setRetainInstance(true) is used, we only need to load adapter and request latest
+        // since setRetainInstance(true) is used, we only need to request latest
         // posts the first time this is called (ie: not after device rotation)
-        if (bundle == null) {
-            loadPosts();
-            if (NetworkUtils.checkConnection(getActivity())) {
-                requestPosts(false);
-            }
+        if (bundle == null && NetworkUtils.checkConnection(getActivity())) {
+            requestPosts(false);
         }
     }
 
@@ -183,6 +176,13 @@ public class PostsListFragment extends Fragment
 
     public void onResume() {
         super.onResume();
+
+        if (WordPress.getCurrentBlog() != null && mRecyclerView.getAdapter() == null) {
+            mRecyclerView.setAdapter(getPostListAdapter());
+        }
+
+        // always (re)load when resumed to reflect changes made elsewhere
+        loadPosts();
 
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
