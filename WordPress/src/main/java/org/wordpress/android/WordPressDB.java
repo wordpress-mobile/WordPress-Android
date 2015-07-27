@@ -652,6 +652,12 @@ public class WordPressDB {
         }
     }
 
+    public boolean isCurrentUserAdminOfRemoteBlogId(long remoteBlogId) {
+        String args[] = {String.valueOf(remoteBlogId)};
+        String sql = "SELECT isAdmin FROM " + BLOGS_TABLE + " WHERE blogId=?";
+        return SqlUtils.boolForQuery(db, sql, args);
+    }
+
     /**
      * Instantiate a new Blog object from it's local id
      *
@@ -1254,8 +1260,8 @@ public class WordPressDB {
      *
      */
     public List<Map<String, Object>> getQuickPressShortcuts(int blogId) {
-        Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
-                "accountId", "name" }, "accountId = " + blogId, null, null,
+        Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[]{"id",
+                        "accountId", "name"}, "accountId = " + blogId, null, null,
                 null, null);
         String id, name;
         int numRows = c.getCount();
@@ -1466,7 +1472,7 @@ public class WordPressDB {
 
     /** For a given blogId, get the media file with the given media_id **/
     public Cursor getMediaFile(String blogId, String mediaId) {
-        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
 
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
@@ -1500,7 +1506,7 @@ public class WordPressDB {
         }
 
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
-                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? " + mediaIdsStr + " ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "image%", "uploading" });
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? " + mediaIdsStr + " ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
     }
 
     public int getMediaCountImages(String blogId) {
@@ -1590,9 +1596,9 @@ public class WordPressDB {
         else values.put("uploadState", uploadState);
 
         if (mediaId == null) {
-            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[] { blogId });
+            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[]{blogId});
         } else {
-            db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+            db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
         }
     }
 
@@ -1644,7 +1650,7 @@ public class WordPressDB {
 
         ContentValues values = new ContentValues();
         values.putNull("uploadState");
-        db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[] { blogId, "uploaded" });
+        db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[]{blogId, "uploaded"});
     }
 
     /** Delete a media item from a blog locally **/

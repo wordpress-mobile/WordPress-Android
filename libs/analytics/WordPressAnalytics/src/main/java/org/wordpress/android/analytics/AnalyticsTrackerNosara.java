@@ -320,6 +320,33 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 eventName = "login_failed_to_guess_xmlrpc";
                 break;
+            case PUSH_AUTHENTICATION_APPROVED:
+                eventName = "push_authentication_approved";
+                break;
+            case PUSH_AUTHENTICATION_EXPIRED:
+                eventName = "push_authentication_expired";
+                break;
+            case PUSH_AUTHENTICATION_FAILED:
+                eventName = "push_authentication_failed";
+                break;
+            case PUSH_AUTHENTICATION_IGNORED:
+                eventName = "push_authentication_ignored";
+                break;
+            case SETTINGS_LANGUAGE_SELECTION_FORCED:
+                eventName = "settings_language_selection_forced";
+                break;
+            case NOTIFICATION_SETTINGS_LIST_OPENED:
+                eventName = "notification_settings_list_opened";
+                break;
+            case NOTIFICATION_SETTINGS_STREAMS_OPENED:
+                eventName = "notification_settings_streams_opened";
+                break;
+            case NOTIFICATION_SETTINGS_DETAILS_OPENED:
+                eventName = "notification_settings_details_opened";
+                break;
+            case NOTIFICATION_SETTINGS_UPDATED:
+                eventName = "notification_settings_updated";
+                break;
             default:
                 eventName = null;
                 break;
