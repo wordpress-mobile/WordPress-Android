@@ -33,9 +33,9 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.ui.posts.services.PostEvents.PostUploadFailed;
-import org.wordpress.android.ui.posts.services.PostEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
+import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -76,10 +76,28 @@ public class PostUploadService extends Service {
     public static void addPostToUpload(Post currentPost) {
         synchronized (mPostsList) {
             mPostsList.add(currentPost);
-            // Enable 'isUploading' flag for post
-            currentPost.setUploading(true);
-            WordPress.wpDB.updatePost(currentPost);
         }
+    }
+
+    /*
+     * returns true if the passed post is either uploading or waiting to be uploaded
+     */
+    public static boolean isPostUploading(long localPostId) {
+        // first check the currently uploading post
+        if (mCurrentUploadingPost != null && mCurrentUploadingPost.getLocalTablePostId() == localPostId) {
+            return true;
+        }
+        // then check the list of posts waiting to be uploaded
+        if (mPostsList.size() > 0) {
+            synchronized (mPostsList) {
+                for (Post post : mPostsList) {
+                    if (post.getLocalTablePostId() == localPostId) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -168,22 +186,16 @@ public class PostUploadService extends Service {
 
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
-            // Update the 'isUploading' flag for post
-            mPost.setUploading(false);
-            WordPress.wpDB.updatePost(mPost);
-
             if (postUploadedSuccessfully) {
-                EventBus.getDefault().post(new PostUploadSucceed(mPost.getLocalTableBlogId(), mPost.getRemotePostId(),
-                                mPost.isPage()));
                 mPostUploadNotifier.cancelNotification();
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
-                EventBus.getDefault().post(new PostUploadFailed(mPost.getLocalTableBlogId()));
                 mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
             }
 
             postUploaded();
+            EventBus.getDefault().post(new PostUploadEnded(postUploadedSuccessfully, mPost.getLocalTableBlogId()));
         }
 
         @Override
@@ -193,7 +205,6 @@ public class PostUploadService extends Service {
             if (mPostUploadNotifier != null && mPost != null) {
                 mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
-                EventBus.getDefault().post(new PostUploadFailed(mPost.getLocalTableBlogId()));
             }
         }
 
@@ -379,7 +390,7 @@ public class PostUploadService extends Service {
             contentStruct.put("wp_password", mPost.getPassword());
 
             Object[] params;
-            if (mPost.isLocalDraft() && !mPost.isUploaded())
+            if (mPost.isLocalDraft())
                 params = new Object[]{mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(),
                         contentStruct, false};
             else
@@ -387,19 +398,26 @@ public class PostUploadService extends Service {
                         false};
 
             try {
-                if (mPost.isLocalDraft() && !mPost.isUploaded()) {
-                    Object newPostId = mClient.call("metaWeblog.newPost", params);
-                    if (newPostId instanceof String) {
-                        mPost.setRemotePostId((String) newPostId);
+                EventBus.getDefault().post(new PostUploadStarted(mPost.getLocalTableBlogId()));
+
+                if (mPost.isLocalDraft()) {
+                    Object object = mClient.call("metaWeblog.newPost", params);
+                    if (object instanceof String) {
+                        mPost.setRemotePostId((String) object);
                     }
                 } else {
                     mClient.call("metaWeblog.editPost", params);
                 }
 
-                mPost.setUploaded(true);
+                mPost.setLocalDraft(false);
                 mPost.setLocalChange(false);
                 WordPress.wpDB.updatePost(mPost);
+
+                // request the new/updated post from the server to ensure local copy matches server
+                ApiHelper.updateSinglePost(mBlog.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
+
                 trackUploadAnalytics();
+
                 return true;
             } catch (final XMLRPCException e) {
                 setUploadPostErrorMessage(e);
@@ -417,7 +435,7 @@ public class PostUploadService extends Service {
 
             boolean isFirstTimePublishing = false;
             if (mPost.hasChangedFromLocalDraftToPublished() ||
-                    (!mPost.isUploaded() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
+                    (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
                 isFirstTimePublishing = true;
             }
 

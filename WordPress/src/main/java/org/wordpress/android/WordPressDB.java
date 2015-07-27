@@ -114,7 +114,6 @@ public class WordPressDB {
             + "latitude real,"
             + "longitude real,"
             + "localDraft boolean default 0,"
-            + "uploaded boolean default 0,"
             + "isPage boolean default 0,"
             + "wp_page_parent_id text,"
             + "wp_page_parent_title text);";
@@ -164,9 +163,6 @@ public class WordPressDB {
 
     //add boolean to posts to check uploaded posts that have local changes
     private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
-
-    // Add boolean to POSTS to track posts currently being uploaded
-    private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
 
     // add wp_post_thumbnail to posts table
     private static final String ADD_POST_THUMBNAIL = "alter table posts add wp_post_thumbnail integer default 0;";
@@ -318,8 +314,8 @@ public class WordPressDB {
                 db.execSQL("DROP TABLE IF EXISTS notes;");
                 currentVersion++;
             case 27:
-                // Add isUploading column to POSTS
-                db.execSQL(ADD_IS_UPLOADING);
+                // versions prior to v4.5 added an "isUploading" column here, but that's no longer used
+                // so we don't bother to add it
                 currentVersion++;
             case 28:
                 // Remove WordPress.com credentials
@@ -377,7 +373,7 @@ public class WordPressDB {
     }
 
     private void migrateWPComAccount() {
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "username" }, "dotcomFlag=1", null, null,
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"username"}, "dotcomFlag=1", null, null,
                 null, null);
 
         if (c.getCount() > 0) {
@@ -854,48 +850,6 @@ public class WordPressDB {
         return preferences.getInt("last_blog_id", -1);
     }
 
-    public List<Map<String, Object>> loadDrafts(int blogID,
-            boolean loadPages) {
-        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
-        Cursor c;
-        if (loadPages)
-            c = db.query(POSTS_TABLE, new String[] { "id", "title",
-                    "post_status", "uploaded", "date_created_gmt",
-                    "post_status" }, "blogID=" + blogID
-                    + " AND localDraft=1 AND uploaded=0 AND isPage=1", null,
-                    null, null, null);
-        else
-            c = db.query(POSTS_TABLE, new String[] { "id", "title",
-                    "post_status", "uploaded", "date_created_gmt",
-                    "post_status" }, "blogID=" + blogID
-                    + " AND localDraft=1 AND uploaded=0 AND isPage=0", null,
-                    null, null, null);
-
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        for (int i = 0; i < numRows; ++i) {
-            if (c.getString(0) != null) {
-                Map<String, Object> returnHash = new HashMap<String, Object>();
-                returnHash.put("id", c.getString(0));
-                returnHash.put("title", c.getString(1));
-                returnHash.put("status", c.getString(2));
-                returnHash.put("uploaded", c.getInt(3));
-                returnHash.put("date_created_gmt", c.getLong(4));
-                returnHash.put("post_status", c.getString(5));
-                returnVector.add(i, returnHash);
-            }
-            c.moveToNext();
-        }
-        c.close();
-
-        if (numRows == 0) {
-            returnVector = null;
-        }
-
-        return returnVector;
-    }
-
     public boolean deletePost(Post post) {
         int result = db.delete(POSTS_TABLE,
                 "blogID=? AND id=?",
@@ -1059,9 +1013,7 @@ public class WordPressDB {
         PostsListPostList listPosts = new PostsListPostList();
 
         String[] args = {Integer.toString(localBlogId), Integer.toString(loadPages ? 1 : 0)};
-        String query = "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)";
-
-        Cursor c = db.query(POSTS_TABLE, null, query, args, null, null, "localDraft DESC, date_created_gmt DESC");
+        Cursor c = db.query(POSTS_TABLE, null, "blogID=? AND isPage=?", args, null, null, "localDraft DESC, date_created_gmt DESC");
         try {
             while (c.moveToNext()) {
                 listPosts.add(new PostsListPost(getPostFromCursor(c)));
@@ -1108,24 +1060,12 @@ public class WordPressDB {
         }
 
         post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
-        post.setUploading(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading"))));
-        post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
         post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
         post.setPageParentId(c.getString(c.getColumnIndex("wp_page_parent_id")));
         post.setPageParentTitle(c.getString(c.getColumnIndex("wp_page_parent_title")));
         post.setLocalChange(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
 
         return post;
-    }
-
-    public int clearAllUploadingPosts(int localTableBlogId, boolean isPage) {
-        ContentValues values = new ContentValues();
-        values.put("isUploading", 0);
-        return db.update(POSTS_TABLE, values, "blogID=? AND isPage=? AND isUploading=1",
-                new String[]{
-                        String.valueOf(localTableBlogId),
-                        String.valueOf(SqlUtils.boolToSql(isPage))
-                });
     }
 
     public long savePost(Post post) {
@@ -1147,8 +1087,6 @@ public class WordPressDB {
             values.put("mt_keywords", post.getKeywords());
             values.put("wp_password", post.getPassword());
             values.put("post_status", post.getPostStatus());
-            values.put("isUploading", post.isUploading());
-            values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
             putPostLocation(post, values);
@@ -1158,7 +1096,7 @@ public class WordPressDB {
 
             result = db.insert(POSTS_TABLE, null, values);
 
-            if (result >= 0 && post.isLocalDraft() && !post.isUploaded()) {
+            if (result >= 0 && post.isLocalDraft()) {
                 post.setLocalTablePostId(result);
             }
         }
@@ -1174,8 +1112,7 @@ public class WordPressDB {
             values.put("date_created_gmt", post.getDate_created_gmt());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
-            values.put("isUploading", post.isUploading());
-            values.put("uploaded", post.isUploaded());
+            values.put("postid", post.getRemotePostId());
 
             JSONArray categoriesJsonArray = post.getJSONCategories();
             if (categoriesJsonArray != null) {
@@ -1215,48 +1152,6 @@ public class WordPressDB {
             values.putNull("latitude");
             values.putNull("longitude");
         }
-    }
-
-    public List<Map<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {
-        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
-        Cursor c;
-        if (loadPages)
-            c = db.query(POSTS_TABLE,
-                    new String[] { "id", "blogID", "postid", "title",
-                            "date_created_gmt", "dateCreated", "post_status" },
-                    "blogID=" + blogID + " AND localDraft != 1 AND isPage=1",
-                    null, null, null, null);
-        else
-            c = db.query(POSTS_TABLE,
-                    new String[] { "id", "blogID", "postid", "title",
-                            "date_created_gmt", "dateCreated", "post_status" },
-                    "blogID=" + blogID + " AND localDraft != 1 AND isPage=0",
-                    null, null, null, null);
-
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        for (int i = 0; i < numRows; ++i) {
-            if (c.getString(0) != null) {
-                Map<String, Object> returnHash = new HashMap<String, Object>();
-                returnHash.put("id", c.getInt(0));
-                returnHash.put("blogID", c.getString(1));
-                returnHash.put("postID", c.getString(2));
-                returnHash.put("title", c.getString(3));
-                returnHash.put("date_created_gmt", c.getLong(4));
-                returnHash.put("dateCreated", c.getLong(5));
-                returnHash.put("post_status", c.getString(6));
-                returnVector.add(i, returnHash);
-            }
-            c.moveToNext();
-        }
-        c.close();
-
-        if (numRows == 0) {
-            returnVector = null;
-        }
-
-        return returnVector;
     }
 
     /*
@@ -1488,7 +1383,7 @@ public class WordPressDB {
         Cursor c = db
                 .rawQuery(
                         "select count(*) from comments where blogID=? AND status='hold'",
-                        new String[] { String.valueOf(blogID) });
+                        new String[]{String.valueOf(blogID)});
         int numRows = c.getCount();
         c.moveToFirst();
 
@@ -1582,7 +1477,7 @@ public class WordPressDB {
 
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
         String query = "SELECT " + COLUMN_NAME_THUMBNAIL_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?";
-        return SqlUtils.stringForQuery(db, query, new String[] { Integer.toString(blogId), Long.toString(mediaId) });
+        return SqlUtils.stringForQuery(db, query, new String[]{Integer.toString(blogId), Long.toString(mediaId)});
     }
 
     public int getMediaCountAll(String blogId) {
@@ -1628,7 +1523,7 @@ public class WordPressDB {
     }
 
     public Cursor getMediaFilesForBlog(String blogId, long startDate, long endDate) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND (uploadState IS NULL OR uploadState ='uploaded') AND (date_created_gmt >= ? AND date_created_gmt <= ?) ", new String[] { blogId , String.valueOf(startDate), String.valueOf(endDate) });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND (uploadState IS NULL OR uploadState ='uploaded') AND (date_created_gmt >= ? AND date_created_gmt <= ?) ", new String[]{blogId, String.valueOf(startDate), String.valueOf(endDate)});
     }
 
     public Cursor getMediaFiles(String blogId, ArrayList<String> mediaIds) {
@@ -1760,7 +1655,7 @@ public class WordPressDB {
 
     /** Delete a media item from a blog locally **/
     public void deleteMediaFile(String blogId, String mediaId) {
-        db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+        db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
 
     /** Mark media files for deletion without actually deleting them. **/
@@ -1781,7 +1676,7 @@ public class WordPressDB {
 
     /** Delete files marked as deleted **/
     public void deleteFilesMarkedForDeleted(String blogId) {
-        db.delete(MEDIA_TABLE, "blogId=? AND uploadState=?", new String[] { blogId, "deleted" });
+        db.delete(MEDIA_TABLE, "blogId=? AND uploadState=?", new String[]{blogId, "deleted"});
     }
 
     /** Get a media file scheduled for delete for a given blogId **/
@@ -1825,6 +1720,15 @@ public class WordPressDB {
         return SqlUtils.boolForQuery(db, sql, args);
     }
 
+    /*
+     * returns the number of posts/pages in the passed blog that aren't local drafts
+     */
+    public int getUploadedCountInBlog(int localBlogId, boolean isPage) {
+        String sql = "SELECT COUNT(*) FROM " + POSTS_TABLE + " WHERE blogID=? AND isPage=? AND localDraft=0";
+        String[] args = {String.valueOf(localBlogId), isPage ? "1" : "0"};
+        return SqlUtils.intForQuery(db, sql, args);
+    }
+
     public boolean saveTheme(Theme theme) {
         boolean returnValue = false;
 
@@ -1860,7 +1764,7 @@ public class WordPressDB {
     }
 
     public Cursor getThemesTrending(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY trendingRank ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY trendingRank ASC", new String[]{ blogId });
     }
 
     public Cursor getThemesPopularity(String blogId) {
@@ -1868,7 +1772,7 @@ public class WordPressDB {
     }
 
     public Cursor getThemesNewest(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[]{ blogId });
     }
 
     /*public Cursor getThemesPremium(String blogId) {

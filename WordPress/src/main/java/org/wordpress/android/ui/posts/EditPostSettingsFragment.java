@@ -463,7 +463,7 @@ public class EditPostSettingsFragment extends Fragment
 
         // We want to flag this post as having changed statuses from draft to published so that we
         // properly track stats we care about for when users first publish posts.
-        if (mPost.isUploaded() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
+        if (!mPost.isLocalDraft() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
                 && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
             mPost.setChangedFromLocalDraftToPublished(true);
         }

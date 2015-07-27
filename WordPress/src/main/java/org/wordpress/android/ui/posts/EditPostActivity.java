@@ -416,7 +416,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         PostStatus status = mPost.getStatusEnum();
         switch (status) {
             case PUBLISHED:
-                if (mPost.isUploaded()) {
+                if (!mPost.isLocalDraft()) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST,
@@ -424,7 +424,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
                 break;
             case SCHEDULED:
-                if (mPost.isUploaded()) {
+                if (!mPost.isLocalDraft()) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,

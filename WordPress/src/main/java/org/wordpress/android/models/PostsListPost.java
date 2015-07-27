@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
@@ -46,7 +47,7 @@ public class PostsListPost {
         status = post.getPostStatus();
         isLocalDraft = post.isLocalDraft();
         hasLocalChanges = post.isLocalChange();
-        isUploading = post.isUploading();
+        isUploading = PostUploadService.isPostUploading(postId);
 
         setDateCreatedGmt(post.getDate_created_gmt());
 
