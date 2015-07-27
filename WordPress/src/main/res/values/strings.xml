@@ -647,8 +647,8 @@
     <string name="local_changes">Local changes</string>
 
     <!-- message on post preview explaining what local changes and local drafts are -->
-    <string name="local_changes_explainer">This post has local changes which haven\'t been published yet</string>
-    <string name="local_draft_explainer">This post is a local draft which hasn\'t been published yet</string>
+    <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
+    <string name="local_draft_explainer">This post is a local draft which hasn\'t been published</string>
 
     <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>
