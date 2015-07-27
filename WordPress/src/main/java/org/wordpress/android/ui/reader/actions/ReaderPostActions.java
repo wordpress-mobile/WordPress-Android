@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.reader.actions;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -20,9 +25,17 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListene
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 public class ReaderPostActions {
+
+    private static final String TRACKING_REFERRER = "https://wordpress.com/";
+    private static final Random mRandom = new Random();
 
     private ReaderPostActions() {
         throw new AssertionError();
@@ -221,5 +234,58 @@ public class ReaderPostActions {
         };
         AppLog.d(T.READER, "requesting post");
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+    }
+
+    private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
+        return "https://pixel.wp.com/g.gif?v=wpcom&reader=1"
+                + "&blog=" + post.blogId
+                + "&post=" + post.postId
+                + "&host=" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(post.getBlogUrl()))
+                + "&ref="  + UrlUtils.urlEncode(TRACKING_REFERRER)
+                + "&t="    + mRandom.nextInt();
+    }
+
+    public static void bumpPageViewForPost(long blogId, long postId) {
+        ReaderPost post = ReaderPostTable.getPost(blogId, postId, true);
+        if (post == null) {
+            return;
+        }
+
+        // don't bump stats for posts in blogs the current user is an admin of, unless
+        // this is a private post since we count views for private posts from admins
+        if (!post.isPrivate && WordPress.wpDB.isCurrentUserAdminOfRemoteBlogId(post.blogId)) {
+            AppLog.d(T.READER, "skipped bump page view - user is admin");
+            return;
+        }
+
+        Response.Listener<String> listener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                AppLog.d(T.READER, "bump page view succeeded");
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                AppLog.w(T.READER, "bump page view failed");
+            }
+        };
+
+        Request request = new StringRequest(
+                Request.Method.GET,
+                getTrackingPixelForPost(post),
+                listener,
+                errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                // call will fail without correct refer(r)er
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Referer", TRACKING_REFERRER);
+                return headers;
+            }
+        };
+
+        WordPress.requestQueue.add(request);
     }
 }
