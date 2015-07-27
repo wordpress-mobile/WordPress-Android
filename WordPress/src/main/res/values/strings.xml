@@ -215,6 +215,7 @@
     <string name="button_delete">Delete</string>
     <string name="button_more">More</string>
     <string name="button_back">Back</string>
+    <string name="button_revert">Revert</string>
 
     <!-- dropdown filter above post cards -->
     <string-array name="post_filters_array">
@@ -644,7 +645,10 @@
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
-    <string name="overwrite_local_changes">You\'ve made changes to a post that haven\'t been uploaded yet. Proceed with the refresh and overwrite local changes?</string>
+
+    <!-- message on post preview explaining what local changes and local drafts are -->
+    <string name="local_changes_explainer">This post has local changes which haven\'t been published yet</string>
+    <string name="local_draft_explainer">This post is a local draft which hasn\'t been published yet</string>
 
     <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>
