@@ -650,9 +650,41 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
                 break;
+            case PUSH_AUTHENTICATION_APPROVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Authentication - Approved");
+                break;
+            case PUSH_AUTHENTICATION_EXPIRED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Authentication - Expired");
+                break;
+            case PUSH_AUTHENTICATION_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Authentication - Failed");
+                break;
+            case PUSH_AUTHENTICATION_IGNORED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Authentication - Ignored");
+                break;
             case SETTINGS_LANGUAGE_SELECTION_FORCED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Forced Language Selection");
+                break;
+            case NOTIFICATION_SETTINGS_LIST_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification Settings - Accessed List");
+                break;
+            case NOTIFICATION_SETTINGS_STREAMS_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification Settings - Accessed Stream");
+                break;
+            case NOTIFICATION_SETTINGS_DETAILS_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification Settings - Accessed Details");
+                break;
+            case NOTIFICATION_SETTINGS_UPDATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification Settings - Updated");
                 break;
             default:
                 instructions = null;

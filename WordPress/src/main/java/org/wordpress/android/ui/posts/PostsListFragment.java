@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -110,8 +108,9 @@ public class PostsListFragment extends Fragment
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
-        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mFabView.setOnClickListener(new View.OnClickListener() {
@@ -139,44 +138,9 @@ public class PostsListFragment extends Fragment
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
-                        refreshPosts();
+                        requestPosts(false);
                     }
                 });
-    }
-
-    private void refreshPosts() {
-        if (!isAdded()) return;
-
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null) {
-            ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
-                    Duration.LONG);
-            return;
-        }
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
-        if (hasLocalChanges) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
-            dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
-            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            setRefreshing(true);
-                            requestPosts(false);
-                        }
-                    }
-            );
-            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    setRefreshing(false);
-                }
-            });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-            setRefreshing(true);
-            requestPosts(false);
-        }
     }
 
     public PostsListAdapter getPostListAdapter() {
@@ -260,13 +224,7 @@ public class PostsListFragment extends Fragment
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            setRefreshing(false);
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            return;
-        }
-
-        // if user has local changes, don't refresh
-        if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
             return;
         }
 
@@ -287,7 +245,11 @@ public class PostsListFragment extends Fragment
         apiArgs.add(postCount);
         apiArgs.add(loadMore);
 
-        mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
+        // don't overwrite posts with local changes unless we're loading more posts (since that
+        // retrieves posts that don't exist locally)
+        boolean overwriteLocalChanges = loadMore;
+
+        mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(overwriteLocalChanges, new ApiHelper.FetchPostsTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
                 mCurrentFetchPostsTask = null;
@@ -504,8 +466,9 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onLoadMore() {
-        if (mCanLoadMorePosts && !mIsFetchingPosts)
+        if (mCanLoadMorePosts && !mIsFetchingPosts) {
             requestPosts(true);
+        }
     }
 
     /*
@@ -548,7 +511,10 @@ public class PostsListFragment extends Fragment
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
-                trashPost(post);
+                // prevent deleting post while it's being uploaded
+                if (!post.isUploading()) {
+                    trashPost(post);
+                }
                 break;
         }
     }
