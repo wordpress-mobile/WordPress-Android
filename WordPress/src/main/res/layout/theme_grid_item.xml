@@ -47,6 +47,7 @@
                         android:layout_marginLeft="10dp" />
 
                     <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/theme_grid_item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/alert_green"

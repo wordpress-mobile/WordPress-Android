@@ -34,11 +34,12 @@ public class Theme {
     private boolean isCurrent = false;
     private boolean isPremium = false;
     private String features;
+    private String price;
 
     public Theme() {
     }
 
-    public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL, boolean isPremium, String features) {
+    public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL, boolean isPremium, String features, String price) {
         setThemeId(themeId);
         setScreenshotURL(screenshotURL);
         setName(name);
@@ -50,10 +51,15 @@ public class Theme {
         setPreviewURL(previewURL);
         setPremium(isPremium);
         setFeatures(features);
+        setPrice(price);
     }
 
     public void setFeatures(String features) {
         this.features = features;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public ArrayList<String> getFeaturesArray() {
@@ -63,6 +69,10 @@ public class Theme {
             Collections.addAll(features, arr);
         }
         return features;
+    }
+
+    public String getPrice() {
+        return this.price;
     }
 
     public String getFeatures() {
@@ -176,6 +186,7 @@ public class Theme {
         // },
         JSONObject costObject = object.getJSONObject("cost");
         boolean isPremium = costObject.getInt("number") > 0;
+        String price = costObject.getString("display");
 
         // if the theme is free, set the blogId to be empty
         // if the theme is not free, set the blogId to the current blog
@@ -200,7 +211,7 @@ public class Theme {
         }
         String features = sbFeatures.toString();
 
-        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL, isPremium, features);
+        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL, isPremium, features, price);
     }
 
     public void setCurrent(boolean isCurrent) {
