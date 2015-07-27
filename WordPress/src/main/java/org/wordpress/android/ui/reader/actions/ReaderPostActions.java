@@ -252,7 +252,7 @@ public class ReaderPostActions {
         }
 
         // don't bump stats for posts in blogs the current user is an admin of, unless
-        // this is a private post (we count views for private blogs from admins)
+        // this is a private post since we count views for private posts from admins
         if (!post.isPrivate && WordPress.wpDB.isCurrentUserAdminOfRemoteBlogId(post.blogId)) {
             AppLog.d(T.READER, "skipped bump page view - user is admin");
             return;
