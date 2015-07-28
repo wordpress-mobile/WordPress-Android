@@ -10,4 +10,5 @@
     <dimen name="notifications_content_margin">@dimen/content_margin</dimen>
     <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_tablet</dimen>
     <dimen name="fab_margin">@dimen/fab_margin_tablet</dimen>
+    <dimen name="menu_item_margin">@dimen/menu_item_margin_tablet</dimen>
 </resources>

@@ -301,7 +301,7 @@ public class WPNetworkImageView extends ImageView {
                 showDefaultGravatarImage();
                 break;
             case BLAVATAR:
-                setImageResource(R.drawable.blavatar_placeholder);
+                showDefaultBlavatarImage();
                 break;
             default :
                 // grey box for all others
@@ -316,6 +316,10 @@ public class WPNetworkImageView extends ImageView {
                 getContext().getResources(),
                 R.drawable.gravatar_placeholder
         ));
+    }
+
+    public void showDefaultBlavatarImage() {
+        setImageResource(R.drawable.blavatar_placeholder);
     }
 
     // --------------------------------------------------------------------------------------------------

@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/menu_item_height"
+    android:gravity="left|center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/menu_item_margin"
+    android:paddingRight="@dimen/menu_item_margin">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_large"
+        android:tint="@color/grey_dark"
+        tools:src="@drawable/noticon_trash" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?textAppearanceSmallPopupMenu"
+        tools:text="Menu item" />
+
+</LinearLayout>

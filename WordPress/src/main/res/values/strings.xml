@@ -73,6 +73,11 @@
     <string name="signout">Disconnect</string>
     <string name="undo">Undo</string>
 
+    <!-- timestamps for posts / pages -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="days_ago">%d days ago</string>
+
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>
     <string name="media_picker_title">Select media</string>
@@ -912,6 +917,12 @@
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
+
+    <!-- attribution line for Discover posts, ex: "Originally posted by [AuthorName] on [BlogName] -->
+    <string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>
+    <string name="reader_discover_attribution_author">Originally posted by %s</string>
+    <string name="reader_discover_attribution_blog">Originally posted on %s</string>
+    <string name="reader_discover_visit_blog">Visit %s</string>
 
     <!-- connection bar which appears on main activity when there's no connection -->
     <string name="connectionbar_no_connection">No connection</string>
