@@ -608,6 +608,11 @@
     <!-- reader -->
     <string name="reader">Reader</string>
 
+    <!-- editor -->
+    <string name="editor_post_title_placeholder">Post Title</string>
+    <string name="editor_page_title_placeholder">Page Title</string>
+    <string name="editor_content_placeholder">Share your story here…</string>
+
     <!-- Post Formats -->
     <string-array name="post_formats_array">
         <item>Aside</item>
