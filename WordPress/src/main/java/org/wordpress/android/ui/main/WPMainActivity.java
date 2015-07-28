@@ -273,15 +273,19 @@ public class WPMainActivity extends Activity
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
                 break;
             case WPMainTabAdapter.TAB_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
                 break;
             case WPMainTabAdapter.TAB_ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
                 break;
             case WPMainTabAdapter.TAB_NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
                 break;
             default:
                 break;

@@ -59,10 +59,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_SETTINGS);
-        }
-
         addPreferencesFromResource(R.xml.settings);
 
         OnPreferenceChangeListener preferenceChangeListener = new OnPreferenceChangeListener() {
