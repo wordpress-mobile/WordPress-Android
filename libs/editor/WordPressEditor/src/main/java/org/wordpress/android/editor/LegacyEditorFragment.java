@@ -1129,4 +1129,14 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         editableText.insert(selectionEnd + 1, "\n\n");
     }
+
+    @Override
+    public void setTitlePlaceholder(CharSequence text) {
+
+    }
+
+    @Override
+    public void setContentPlaceholder(CharSequence text) {
+
+    }
 }

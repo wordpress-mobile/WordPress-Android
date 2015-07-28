@@ -72,8 +72,4 @@ public abstract class EditorWebViewAbstract extends WebView {
         }
         return super.onKeyPreIme(keyCode, event);
     }
-
-    public interface OnImeBackListener {
-        void onImeBack();
-    }
 }

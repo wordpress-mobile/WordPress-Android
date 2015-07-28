@@ -18,6 +18,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
+    public abstract void setTitlePlaceholder(CharSequence text);
+    public abstract void setContentPlaceholder(CharSequence text);
 
     // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
     public abstract Spanned getSpannedContent();

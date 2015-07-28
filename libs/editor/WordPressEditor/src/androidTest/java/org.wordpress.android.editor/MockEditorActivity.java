@@ -11,6 +11,8 @@ import org.wordpress.android.util.helpers.MediaFile;
 public class MockEditorActivity extends AppCompatActivity implements EditorFragmentAbstract.EditorFragmentListener {
     public static final int LAYOUT_ID = 999;
 
+    EditorFragment mEditorFragment;
+
     @SuppressWarnings("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +25,15 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        EditorFragment fragment = new EditorFragmentForTests();
-        fragmentTransaction.add(linearLayout.getId(), fragment, "editorFragment");
+        mEditorFragment = new EditorFragmentForTests();
+        fragmentTransaction.add(linearLayout.getId(), mEditorFragment, "editorFragment");
         fragmentTransaction.commit();
     }
 
     @Override
     public void onEditorFragmentInitialized() {
-
+        mEditorFragment.setTitle("A title");
+        mEditorFragment.setContent(Utils.getHtmlFromFile(this, "example-content.html"));
     }
 
     @Override
