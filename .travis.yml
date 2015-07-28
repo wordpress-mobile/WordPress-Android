@@ -1,5 +1,6 @@
 language: android
 jdk: oraclejdk7
+sudo: false
 
 notifications:
   # Slack notification on failure (secured token).

@@ -120,7 +120,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
             ft.hide(mMediaItemFragment);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
 
         setupAddMenuPopup();
 
@@ -368,7 +368,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
-                ft.commit();
+                ft.commitAllowingStateLoss();
             } else {
                 // tablet layout: update edit fragment
                 mMediaEditFragment.loadMedia(mediaId);

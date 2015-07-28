@@ -73,6 +73,11 @@
     <string name="signout">Disconnect</string>
     <string name="undo">Undo</string>
 
+    <!-- timestamps for posts / pages -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="days_ago">%d days ago</string>
+
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>
     <string name="media_picker_title">Select media</string>

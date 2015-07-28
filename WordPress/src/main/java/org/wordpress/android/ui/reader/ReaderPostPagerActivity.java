@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
@@ -37,6 +38,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
+
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 
@@ -62,6 +65,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
+
+    private final HashSet<Integer> mBumpedPageViewPositions = new HashSet<>();
 
     private static final String ARG_IS_SINGLE_POST = "is_single_post";
 
@@ -121,6 +126,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 super.onPageSelected(position);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                 onShowHideToolbar(true);
+                bumpPageViewIfNeeded(position);
             }
 
             @Override
@@ -218,6 +224,20 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     /*
+     * "bumps" the pageview for the post at the passed position if it hasn't already been done
+     */
+    private void bumpPageViewIfNeeded(int position) {
+        if (!mBumpedPageViewPositions.contains(position)) {
+            ReaderBlogIdPostId idPair = getPagerAdapter().getBlogIdPostIdAtPosition(position);
+            if (idPair != null) {
+                AppLog.d(AppLog.T.READER, "reader pager > bumping page view for position " + position);
+                mBumpedPageViewPositions.add(position);
+                ReaderPostActions.bumpPageViewForPost(idPair.getBlogId(), idPair.getPostId());
+            }
+        }
+    }
+
+    /*
      * loads the blogId/postId pairs used to populate the pager adapter - passed blogId/postId will
      * be made active after loading unless gotoNext=true, in which case the post after the passed
      * one will be made active
@@ -257,8 +277,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mViewPager.setAdapter(adapter);
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
+                            bumpPageViewIfNeeded(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
+                            bumpPageViewIfNeeded(currentPosition);
                         }
                     }
                 });
@@ -548,7 +570,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         private ReaderBlogIdPostId getCurrentBlogIdPostId() {
-            int position = mViewPager.getCurrentItem();
+            return getBlogIdPostIdAtPosition(mViewPager.getCurrentItem());
+
+        }
+
+        ReaderBlogIdPostId getBlogIdPostIdAtPosition(int position) {
             if (isValidPosition(position)) {
                 return mIdList.get(position);
             } else {
