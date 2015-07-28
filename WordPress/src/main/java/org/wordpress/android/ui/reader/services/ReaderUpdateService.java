@@ -131,7 +131,7 @@ public class ReaderUpdateService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
-        WordPress.getRestClientUtilsV1_1().get("read/menu", null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get("read/menu", null, null, listener, errorListener);
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
