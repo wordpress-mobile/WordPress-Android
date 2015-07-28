@@ -1,24 +1,56 @@
 @font-face {
     font-family: 'OpenSans';
-    src: local("OpenSans");
+    src: local("OpenSans"),
+         url('fonts/OpenSans-Regular.ttf');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'OpenSans';
-    src: local("OpenSans-Italic");
+    src: local("OpenSans-Italic"),
+         url('fonts/OpenSans-Italic.ttf');
     font-weight: normal;
     font-style: italic;
 }
 @font-face {
     font-family: 'OpenSans';
-    src: local("OpenSans-Bold");
+    src: local("OpenSans-Bold"),
+         url('fonts/OpenSans-Bold.ttf');
     font-weight: bold;
     font-style: normal;
 }
 @font-face {
     font-family: 'OpenSans';
-    src: local("OpenSans-BoldItalic");
+    src: local("OpenSans-BoldItalic"),
+         url('fonts/OpenSans-BoldItalic.ttf');
+    font-weight: bold;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Merriweather';
+    src: local("Merriweather Light"),
+         url('fonts/Merriweather-Light.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Merriweather';
+    src: local("Merriweather-Italic"),
+         url('fonts/Merriweather-Italic.otf');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Merriweather';
+    src: local("Merriweather-Bold"),
+         url('fonts/Merriweather-Bold.ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Merriweather';
+    src: local("Merriweather-BoldItalic"),
+         url('fonts/Merriweather-BoldItalic.otf');
     font-weight: bold;
     font-style: italic;
 }
@@ -35,16 +67,16 @@ html {
 
 html, body {
     margin:0;
-    font-family:OpenSans, sans-serif;
+    font-family:'Merriweather', sans-serif;
     font-size:1em;
     color:#2D2D2D;
 }
 
 body {
-    padding-left:5px;
-    padding-right:5px;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding-left:15px;
+    padding-right:15px;
+    padding-top: 15px;
+    padding-bottom: 5px;
     overflow-y: auto;
     min-height: 100vh;
     word-wrap: break-word;
@@ -59,8 +91,8 @@ p {
 hr {
     border: none;
     height: 1px;
-    color: #e8f0f5;
-    background-color: #e8f0f5;
+    color: #E9EFF3;
+    background-color: #E9EFF3;
     width: 100%;
 }
 
@@ -141,6 +173,7 @@ span.img_container.failed::after {
     padding:27px 0 0 0;
     top:50%;
     left:0%;
+    font-family:OpenSans;
     font-size:20px;
     font-weight:600;
     text-align: center;
@@ -159,6 +192,7 @@ span.img_container.failed.largeFail::after {
 }
 
 span.img_container.failed.smallFail::after {
+    font-family:OpenSans;
     content:attr(data-failed);
 }
 
@@ -203,6 +237,7 @@ span.img_container.failed.smallFail::after {
 }
 
 .edit-container .edit-content {
+    font-family:OpenSans;
     font-size:20px;
     font-weight:600;
     text-align: center;
@@ -245,13 +280,13 @@ progress.wp_media_indicator.failed::-webkit-progress-value {
 
 
 div.field[contenteditable] {
-    padding: 15px 10px 5px 10px;
     box-sizing: border-box;
     font-size: 16px;
 }
 
 div.field[placeholderText][contenteditable=true]:empty:before {
     content: attr(placeholderText);
+    color: #87a6bc;
     transition: 0.2s ease opacity;
 }
 
@@ -261,18 +296,21 @@ div.field[placeholderText][contenteditable=true]:empty:focus:before {
 
 #separatorDiv {
     -webkit-user-select: none;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 15px;
 }
 
 #zss_field_title, #zss_field_title p {
     font-family:'Merriweather', serif;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 24px;
+    line-height: 32px;
     margin-bottom: 0px;
 }
 
 #zss_field_content {
+    font-size: 16px;
+    line-height: 24px;
     margin-bottom: 10px;
 }
 
@@ -290,14 +328,4 @@ div.field[placeholderText][contenteditable=true]:empty:focus:before {
 .ipad_body {
     padding-left: 80px;
     padding-right: 80px;
-}
-
-.ipad_field_title {
-    font-size: 1.3em;
-}
-
-.ipad_field_content {
-    font-size: 1.125em;
-    line-height: 28px;
-}
 }
