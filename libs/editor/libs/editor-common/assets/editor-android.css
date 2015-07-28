@@ -1,13 +1,13 @@
 @media screen and (min-width: 720px) and (max-width: 1279px) {
     body {
-        padding-left:80px;
-        padding-right:80px;
+        padding-left:90px;
+        padding-right:90px;
     }
 }
 
 @media screen and (min-width: 1280px){
     body {
-        padding-left:160px;
-        padding-right:160px;
+        padding-left:170px;
+        padding-right:170px;
     }
 }
