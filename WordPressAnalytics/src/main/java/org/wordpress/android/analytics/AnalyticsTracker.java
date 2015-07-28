@@ -84,7 +84,7 @@ public final class AnalyticsTracker {
         OPENED_VIEW_SITE,
         OPENED_VIEW_ADMIN,
         OPENED_MEDIA_LIBRARY,
-        OPENED_SETTINGS,
+        OPENED_BLOG_SETTINGS,
         CREATED_ACCOUNT,
         SHARED_ITEM,
         ADDED_SELF_HOSTED_SITE,

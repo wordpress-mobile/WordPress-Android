@@ -17,7 +17,6 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.EnumMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
 public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
@@ -525,7 +524,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Media Library");
                 break;
-            case OPENED_SETTINGS:
+            case OPENED_BLOG_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Settings");
                 break;

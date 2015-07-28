@@ -237,7 +237,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "media_library");
                 break;
-            case OPENED_SETTINGS:
+            case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "settings");
                 break;
