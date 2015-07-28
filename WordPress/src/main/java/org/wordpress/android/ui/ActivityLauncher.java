@@ -103,7 +103,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         slideInFromRightForResult(activity, intent, RequestCodes.BLOG_SETTINGS);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS);
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {
