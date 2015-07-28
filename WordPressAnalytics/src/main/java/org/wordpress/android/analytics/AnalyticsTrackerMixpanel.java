@@ -654,6 +654,16 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Forced Language Selection");
                 break;
+            case ME_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me Tab - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_me_tab");
+                break;
+            case MY_SITE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("My Site - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_my_site");
+                break;
             default:
                 instructions = null;
                 break;
