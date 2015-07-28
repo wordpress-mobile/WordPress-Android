@@ -845,6 +845,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mEditorFragment.setBlogSettingMaxImageWidth(WordPress.getCurrentBlog().getMaxImageWidth());
         }
 
+        // Set up the placeholder text
+        mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
+        mEditorFragment.setTitlePlaceholder(getString(mIsPage ? R.string.editor_page_title_placeholder :
+                R.string.editor_post_title_placeholder));
+
         // Set post title and content
         Post post = getPost();
         if (post != null) {
