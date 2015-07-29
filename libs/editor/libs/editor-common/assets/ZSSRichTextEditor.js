@@ -2019,7 +2019,6 @@ function ZSSField(wrappedObject) {
 
     this.multiline = false;
     this.wrappedObject = wrappedObject;
-    this.bodyPlaceholderColor = '#000000';
 
     if (this.wrappedDomNode().hasAttribute('nostyle')) {
         this.hasNoStyle = true;
@@ -2055,7 +2054,7 @@ ZSSField.prototype.emptyFieldIfNoContents = function() {
     var nbsp = '\xa0';
     var text = this.wrappedObject.text().replace(nbsp, '');
 
-    if (text.length == 0) {
+    if (text.length == 0 || text == '\u000A') {
 
         var hasChildImages = (this.wrappedObject.find('img').length > 0);
         var hasUnorderedList = (this.wrappedObject.find('ul').length > 0);
@@ -2067,17 +2066,12 @@ ZSSField.prototype.emptyFieldIfNoContents = function() {
     }
 };
 
-ZSSField.prototype.emptyFieldIfNoContentsAndRefreshPlaceholderColor = function() {
-    this.emptyFieldIfNoContents();
-    this.refreshPlaceholderColor();
-};
-
 // MARK: - Handle event listeners
 
 ZSSField.prototype.handleBlurEvent = function(e) {
     ZSSEditor.focusedField = null;
 
-    this.emptyFieldIfNoContentsAndRefreshPlaceholderColor();
+    this.emptyFieldIfNoContents();
 
     this.callback("callback-focus-out");
 };
@@ -2085,10 +2079,6 @@ ZSSField.prototype.handleBlurEvent = function(e) {
 ZSSField.prototype.handleFocusEvent = function(e) {
     ZSSEditor.focusedField = this;
 
-    // IMPORTANT: this is the only case where checking the current focus will not work.
-    // We sidestep this issue by indicating that the field is about to gain focus.
-    //
-    this.refreshPlaceholderColorAboutToGainFocus(true);
     this.callback("callback-focus-in");
 };
 
@@ -2115,7 +2105,7 @@ ZSSField.prototype.handleInputEvent = function(e) {
     // as the field could become empty because of a cut or paste operation as well as a key press.
     // This event takes care of all cases.
     //
-    this.emptyFieldIfNoContentsAndRefreshPlaceholderColor();
+    this.emptyFieldIfNoContents();
 
     var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
     ZSSEditor.callback('callback-selection-changed', joinedArguments);
@@ -2371,7 +2361,6 @@ ZSSField.prototype.strippedHTML = function() {
 ZSSField.prototype.setPlainText = function(text) {
     ZSSEditor.currentEditingImage = null;
     this.wrappedObject.text(text);
-    this.refreshPlaceholderColor();
 };
 
 ZSSField.prototype.setHTML = function(html) {
@@ -2379,7 +2368,6 @@ ZSSField.prototype.setHTML = function(html) {
     var mutatedHTML = wp.loadText(html);
     mutatedHTML = ZSSEditor.applyVisualFormatting(mutatedHTML);
     this.wrappedObject.html(mutatedHTML);
-    this.refreshPlaceholderColor();
 };
 
 // MARK: - Placeholder
@@ -2389,41 +2377,7 @@ ZSSField.prototype.hasPlaceholderText = function() {
 };
 
 ZSSField.prototype.setPlaceholderText = function(placeholder) {
-
     this.wrappedObject.attr('placeholderText', placeholder);
-};
-
-ZSSField.prototype.setPlaceholderColor = function(color) {
-    this.bodyPlaceholderColor = color;
-    this.refreshPlaceholderColor();
-};
-
-ZSSField.prototype.refreshPlaceholderColor = function() {
-     this.refreshPlaceholderColorForAttributes(this.hasPlaceholderText(),
-                                               this.isFocused(),
-                                               this.isEmpty());
-};
-
-ZSSField.prototype.refreshPlaceholderColorAboutToGainFocus = function(willGainFocus) {
-    this.refreshPlaceholderColorForAttributes(this.hasPlaceholderText(),
-                                              willGainFocus,
-                                              this.isEmpty());
-};
-
-ZSSField.prototype.refreshPlaceholderColorForAttributes = function(hasPlaceholderText, isFocused, isEmpty) {
-
-    var shouldColorText = hasPlaceholderText && isEmpty;
-
-    if (shouldColorText) {
-        if (isFocused) {
-            this.wrappedObject.css('color', this.bodyPlaceholderColor);
-        } else {
-            this.wrappedObject.css('color', this.bodyPlaceholderColor);
-        }
-    } else {
-        this.wrappedObject.css('color', '');
-    }
-
 };
 
 // MARK: - Wrapped Object

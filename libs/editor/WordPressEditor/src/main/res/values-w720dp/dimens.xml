@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="sourceview_side_margin">@dimen/sourceview_side_margin_large</dimen>
+</resources>

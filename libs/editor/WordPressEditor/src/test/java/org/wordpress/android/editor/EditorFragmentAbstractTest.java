@@ -70,6 +70,16 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
+        public void setTitlePlaceholder(CharSequence text) {
+
+        }
+
+        @Override
+        public void setContentPlaceholder(CharSequence text) {
+
+        }
+
+        @Override
         public Spanned getSpannedContent() {
             return null;
         }

@@ -67,63 +67,68 @@ public class PostListButton extends LinearLayout {
         setButtonType(buttonType);
     }
 
+
+    public int getButtonType() {
+        return mButtonType;
+    }
+
     public void setButtonType(int buttonType) {
         if (buttonType == mButtonType) {
             return;
         }
 
         mButtonType = buttonType;
-
-        int textResId;
-        int iconResId;
-        switch (buttonType) {
-            case BUTTON_EDIT:
-                textResId = R.string.button_edit;
-                iconResId = R.drawable.noticon_edit;
-                break;
-            case BUTTON_VIEW:
-                textResId = R.string.button_view;
-                iconResId = R.drawable.noticon_view;
-                break;
-            case BUTTON_PREVIEW:
-                textResId = R.string.button_preview;
-                iconResId = R.drawable.noticon_view;
-                break;
-            case BUTTON_STATS:
-                textResId = R.string.button_stats;
-                iconResId = R.drawable.noticon_stats;
-                break;
-            case BUTTON_TRASH:
-                textResId = R.string.button_trash;
-                iconResId = R.drawable.noticon_trash;
-                break;
-            case BUTTON_DELETE:
-                textResId = R.string.button_delete;
-                iconResId = R.drawable.noticon_trash;
-                break;
-            case BUTTON_PUBLISH:
-                textResId = R.string.button_publish;
-                iconResId = R.drawable.noticon_publish;
-                break;
-            case BUTTON_MORE:
-                textResId = R.string.button_more;
-                iconResId = R.drawable.noticon_more;
-                break;
-            case BUTTON_BACK:
-                textResId = R.string.button_back;
-                iconResId = R.drawable.noticon_back;
-                break;
-            default:
-                mTextView.setText(null);
-                mImageView.setImageBitmap(null);
-                return;
-        }
-
-        mTextView.setText(textResId);
-        mImageView.setImageResource(iconResId);
+        mTextView.setText(getButtonTextResId(buttonType));
+        mImageView.setImageResource(getButtonIconResId(buttonType));
     }
 
-    public int getButtonType() {
-        return mButtonType;
+    public static int getButtonTextResId(int buttonType) {
+        switch (buttonType) {
+            case BUTTON_EDIT:
+                return R.string.button_edit;
+            case BUTTON_VIEW:
+                return R.string.button_view;
+            case BUTTON_PREVIEW:
+                return R.string.button_preview;
+            case BUTTON_STATS:
+                return R.string.button_stats;
+            case BUTTON_TRASH:
+                return R.string.button_trash;
+            case BUTTON_DELETE:
+                return R.string.button_delete;
+            case BUTTON_PUBLISH:
+                return R.string.button_publish;
+            case BUTTON_MORE:
+                return R.string.button_more;
+            case BUTTON_BACK:
+                return R.string.button_back;
+            default:
+                return 0;
+        }
+    }
+
+    public static int getButtonIconResId(int buttonType) {
+        switch (buttonType) {
+            case BUTTON_EDIT:
+                return R.drawable.noticon_edit;
+            case BUTTON_VIEW:
+                return R.drawable.noticon_view;
+            case BUTTON_PREVIEW:
+                return R.drawable.noticon_view;
+            case BUTTON_STATS:
+                return R.drawable.noticon_stats;
+            case BUTTON_TRASH:
+                return R.drawable.noticon_trash;
+            case BUTTON_DELETE:
+                return R.drawable.noticon_trash;
+            case BUTTON_PUBLISH:
+                return R.drawable.noticon_publish;
+            case BUTTON_MORE:
+                return R.drawable.noticon_more;
+            case BUTTON_BACK:
+                return R.drawable.noticon_back;
+            default:
+                return 0;
+        }
     }
 }

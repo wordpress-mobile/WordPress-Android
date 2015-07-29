@@ -16,6 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -41,7 +43,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
-    private final int mAvatarSz;
+    private final int mAvatarSzMedium;
+    private final int mAvatarSzSmall;
     private final int mMarginLarge;
 
     private boolean mCanRequestMorePosts;
@@ -82,6 +85,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ViewGroup layoutPostHeader;
         private final View toolbarSpacer;
 
+        private final ViewGroup layoutDiscover;
+        private final WPNetworkImageView imgDiscoverAvatar;
+        private final TextView txtDiscover;
+
         public ReaderPostViewHolder(View itemView) {
             super(itemView);
 
@@ -103,6 +110,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
             toolbarSpacer = itemView.findViewById(R.id.spacer_toolbar);
+
+            layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
+            imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
+            txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
         }
     }
 
@@ -129,7 +140,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.layoutPostHeader.setVisibility(View.GONE);
         } else {
             postHolder.layoutPostHeader.setVisibility(View.VISIBLE);
-            postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+            postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
             if (post.hasBlogName()) {
                 postHolder.txtBlogName.setText(post.getBlogName());
             } else if (post.hasAuthorName()) {
@@ -206,7 +217,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         boolean showLikes;
         boolean showComments;
-        if (mIsLoggedOutReader) {
+        if (post.isDiscoverPost()) {
+            showLikes = false;
+            showComments = false;
+        } else if (mIsLoggedOutReader) {
             showLikes = post.numLikes > 0;
             showComments = post.numReplies > 0;
         } else {
@@ -221,9 +235,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (showLikes) {
             postHolder.likeCount.setSelected(post.isLikedByCurrentUser);
             postHolder.likeCount.setVisibility(View.VISIBLE);
+            // can't like when logged out
             if (mIsLoggedOutReader) {
                 postHolder.likeCount.setEnabled(false);
+                postHolder.likeCount.setOnClickListener(null);
             } else {
+                postHolder.likeCount.setEnabled(true);
                 postHolder.likeCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -238,6 +255,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (showComments) {
             postHolder.commentCount.setVisibility(View.VISIBLE);
+            postHolder.commentCount.setEnabled(true);
             postHolder.commentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -265,6 +283,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.imgMore.setOnClickListener(null);
         }
 
+        // attribution section for discover posts
+        if (post.isDiscoverPost()) {
+            showDiscoverData(postHolder, post);
+        } else {
+            postHolder.layoutDiscover.setVisibility(View.GONE);
+        }
+
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getItemCount() - 1)) {
             mDataRequestedListener.onRequestData();
@@ -274,9 +299,67 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                    mPostSelectedListener.onPostSelected(post);
                 }
             });
+        }
+    }
+
+    private void showDiscoverData(final ReaderPostViewHolder postHolder,
+                                  final ReaderPost post) {
+        final ReaderPostDiscoverData discoverData = post.getDiscoverData();
+        if (discoverData == null) {
+            postHolder.layoutDiscover.setVisibility(View.GONE);
+            return;
+        }
+
+        postHolder.layoutDiscover.setVisibility(View.VISIBLE);
+        postHolder.txtDiscover.setText(discoverData.getAttributionHtml());
+
+        switch (discoverData.getDiscoverType()) {
+            case EDITOR_PICK:
+                if (discoverData.hasAvatarUrl()) {
+                    postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                } else {
+                    postHolder.imgDiscoverAvatar.showDefaultGravatarImage();
+                }
+                // tapping an editor pick opens the source post, which is handled by the existing
+                // post selection handler
+                postHolder.layoutDiscover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mPostSelectedListener != null) {
+                            mPostSelectedListener.onPostSelected(post);
+                        }
+                    }
+                });
+                break;
+
+            case SITE_PICK:
+                if (discoverData.hasAvatarUrl()) {
+                    postHolder.imgDiscoverAvatar.setImageUrl(
+                            GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.BLAVATAR);
+                } else {
+                    postHolder.imgDiscoverAvatar.showDefaultBlavatarImage();
+                }
+                // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
+                // we have the blogId, if not show blog in internal webView
+                postHolder.layoutDiscover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (discoverData.getBlogId() != 0) {
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
+                        } else if (discoverData.hasBlogUrl()) {
+                            ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
+                        }
+                    }
+                });
+                break;
+
+            default:
+                // something else, so hide discover section
+                postHolder.layoutDiscover.setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -286,7 +369,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         super();
 
         mPostListType = postListType;
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
