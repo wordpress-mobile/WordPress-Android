@@ -177,17 +177,33 @@ public class SiteSettingsFragment extends PreferenceFragment
         mRemoteAddress = response.optString(RestClientUtils.SITE_URL_KEY);
         changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
 
-        mRemoteLanguage = response.optString(RestClientUtils.SITE_LANGUAGE_KEY);
-        if (mLanguagePreference != null) {
-            changeLanguageValue(mRemoteLanguage);
-            mLanguagePreference.setSummary(getLanguageString(mRemoteLanguage, Locale.getDefault()));
+        JSONObject settingsObject = response.optJSONObject("settings");
+
+        if (settingsObject != null) {
+            mRemoteLanguage = convertLanguageId(settingsObject.optString("lang_id"));
+            if (mLanguagePreference != null) {
+                changeLanguageValue(mRemoteLanguage);
+                mLanguagePreference.setSummary(getLanguageString(mRemoteLanguage, Locale.getDefault()));
+            }
+
+            mRemotePrivacy = settingsObject.optInt("blog_public");
+            if (mPrivacyPreference != null) {
+                mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
+            }
+            changePrivacyValue(mRemotePrivacy);
+        }
+    }
+
+    private String convertLanguageId(String id) {
+        if (id != null) {
+            for (String key : mLanguageCodes.keySet()) {
+                if (id.equals(mLanguageCodes.get(key))) {
+                    return key;
+                }
+            }
         }
 
-        mRemotePrivacy = response.optJSONObject("settings").optInt("blog_public");
-        if (mPrivacyPreference != null) {
-            mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
-        }
-        changePrivacyValue(mRemotePrivacy);
+        return "";
     }
 
     /**

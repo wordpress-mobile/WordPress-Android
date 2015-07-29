@@ -226,7 +226,6 @@ public class RestClientUtils {
     public void getGeneralSettings(String siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format("sites/%s/settings", siteId);
         Map<String, String> params = new HashMap<String, String>();
-//        params.put("fields", "blogname,blogdescription,lang_id,blog_public");
         get(path, params, null, listener, errorListener);
     }
 
