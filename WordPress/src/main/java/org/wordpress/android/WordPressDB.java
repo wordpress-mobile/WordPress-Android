@@ -123,7 +123,7 @@ public class WordPressDB {
 
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
-            + "themeId text, name text, description text, screenshotURL text, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrent boolean default false, isPremium boolean default false, features text);";
+            + "themeId text, name text, description text, screenshotURL text, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrent boolean default false, isPremium boolean default false, features text, price text);";
 
     // categories
     private static final String CREATE_TABLE_CATEGORIES = "create table if not exists cats (id integer primary key autoincrement, "
@@ -1806,6 +1806,7 @@ public class WordPressDB {
         values.put("isCurrent", theme.isCurrent());
         values.put("isPremium", theme.isPremium());
         values.put("features", theme.getFeatures());
+        values.put("price", theme.getPrice());
 
         synchronized (this) {
             int result = db.update(
@@ -1821,19 +1822,19 @@ public class WordPressDB {
     }
 
     public Cursor getThemesAtoZ(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY name COLLATE NOCASE ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY name COLLATE NOCASE ASC", new String[] { blogId });
     }
 
     public Cursor getThemesTrending(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY trendingRank ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY trendingRank ASC", new String[] { blogId });
     }
 
     public Cursor getThemesPopularity(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY popularityRank ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY popularityRank ASC", new String[] { blogId });
     }
 
     public Cursor getThemesNewest(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[] { blogId });
     }
 
     /*public Cursor getThemesPremium(String blogId) {

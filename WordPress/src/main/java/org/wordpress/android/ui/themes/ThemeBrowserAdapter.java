@@ -33,10 +33,12 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     private static class ThemeViewHolder {
         private final NetworkImageView imageView;
         private final TextView nameView;
+        private final TextView priceView;
 
         ThemeViewHolder(View view) {
             imageView = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
             nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
+            priceView = (TextView) view.findViewById(R.id.theme_grid_item_price);
         }
     }
 
@@ -56,8 +58,10 @@ public class ThemeBrowserAdapter extends CursorAdapter {
 
         final String screenshotURL =  cursor.getString(cursor.getColumnIndex("screenshotURL"));
         final String name = cursor.getString(cursor.getColumnIndex("name"));
+        final String price = cursor.getString(cursor.getColumnIndex("price"));
 
         themeViewHolder.nameView.setText(name);
+        themeViewHolder.priceView.setText(price);
 
         ScreenshotHolder urlHolder = (ScreenshotHolder) themeViewHolder.imageView.getTag();
         if (urlHolder == null) {
