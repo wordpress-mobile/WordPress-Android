@@ -84,7 +84,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         @Override
         public boolean areItemsTheSame(ReaderPost item1, ReaderPost item2) {
-            return item1.isSamePost(item2);
+            return item1.getStableId() == item2.getStableId();
         }
     });
 
