@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--
-    empty "spacer" view used by ReaderPostListAdapter to make room for tag toolbar
--->
-
-<View xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbar_height" />

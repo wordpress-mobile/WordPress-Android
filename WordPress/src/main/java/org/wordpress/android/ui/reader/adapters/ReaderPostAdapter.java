@@ -161,7 +161,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         if (viewType == VIEW_TYPE_SPACER) {
-            View spacerView = LayoutInflater.from(context).inflate(R.layout.reader_toolbar_spacer, parent, false);
+            View spacerView = new View(context);
+            int toolbarHeight = context.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+            int dividerHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
+            int spacerHeight = toolbarHeight - dividerHeight;
+            spacerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, spacerHeight));
             return new SpacerViewHolder(spacerView);
         } else {
             View postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
