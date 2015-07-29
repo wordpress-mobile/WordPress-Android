@@ -50,6 +50,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             getActivity().finish();
         }
 
+        getActivity().setTitle(R.string.settings);
+
         // make sure we have local site data
         mBlog = WordPress.getBlog(
                 getArguments().getInt(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, -1));
@@ -83,10 +85,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (newValue == null) return false;
 
         if (preference == mTitlePreference) {
-            // update the Activity title to reflect the changes
-            String titleFormat = getString(R.string.site_settings_title_format, "%s");
-            getActivity().setTitle(String.format(titleFormat, newValue));
-
             changeEditTextPreferenceValue(mTitlePreference, newValue.toString());
             return true;
         } else if (preference == mTaglinePreference) {
