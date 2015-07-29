@@ -645,10 +645,13 @@
     </string-array>
 
     <!-- Privacy Entries in Site Settings -->
+    <string name="privacy_public">Public</string>
+    <string name="privacy_hidden">Hidden</string>
+    <string name="privacy_private">Private</string>
     <string-array name="privacy_entries">
-        <item>Public</item>
-        <item>Hidden</item>
-        <item>Private</item>
+        <item>@string/privacy_public</item>
+        <item>@string/privacy_hidden</item>
+        <item>@string/privacy_private</item>
     </string-array>
 
     <!-- Privacy Entries in Site Settings -->

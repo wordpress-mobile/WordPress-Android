@@ -107,11 +107,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private String privacyStringForValue(int value) {
         switch (value) {
             case -1:
-                return getString(R.string.site_privacy_private_desc);
+                return getString(R.string.privacy_private);
             case 0:
-                return getString(R.string.site_privacy_hidden_desc);
+                return getString(R.string.privacy_hidden);
             case 1:
-                return getString(R.string.site_privacy_public_desc);
+                return getString(R.string.privacy_public);
             default:
                 return "";
         }
