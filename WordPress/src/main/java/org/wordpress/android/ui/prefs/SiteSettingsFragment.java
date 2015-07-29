@@ -16,10 +16,15 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Handles changes to WordPress site settings. Syncs with host automatically when user leaves.
@@ -146,28 +151,72 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Request remote site data via the WordPress REST API.
      */
     private void fetchRemoteData() {
-        WordPress.getRestClientUtils().getGeneralSettings(
-                String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        handleResponseToGeneralSettingsRequest(response);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error GETing site settings: " + error);
-                        if (isAdded()) {
-                            ToastUtils.showToast(getActivity(), getString(R.string.error_fetch_remote_site_settings));
-                            getActivity().finish();
+        if (mBlog.isDotcomFlag()) {
+            WordPress.getRestClientUtils().getGeneralSettings(
+                    String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (isAdded()) {
+                                handleResponseToWPComSettingsRequest(response);
+                            }
                         }
-                    }
-                });
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            handleSettingsFetchError(error.toString());
+                        }
+                    });
+        } else {
+            // self-hosted settings
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(),
+                    mBlog.getHttpuser(),
+                    mBlog.getHttppassword());
+            Object[] params = {
+                    mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()
+            };
+
+            client.callAsync(new XMLRPCCallback() {
+                @Override
+                public void onSuccess(long id, final Object result) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            handleResponseToSelfHostedSettingsRequest((HashMap<String, Map<String, String>>) result);
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(long id, Exception error) {
+                    handleSettingsFetchError(error.toString());
+                }
+            }, "wp.getOptions", params);
+        }
+    }
+
+    private void handleSettingsFetchError(String error) {
+        AppLog.w(AppLog.T.API, "Error GETing site settings: " + error);
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), getString(R.string.error_fetch_remote_site_settings));
+            getActivity().finish();
+        }
+    }
+
+    private void handleResponseToSelfHostedSettingsRequest(Map<String, Map<String, String>> result) {
+        mRemoteTitle = StringUtils.notNullStr(result.get("blog_title").get("value"));
+        changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+
+        mRemoteTagline = StringUtils.notNullStr(result.get("blog_tagline").get("value"));
+        changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
+
+        mRemoteAddress = StringUtils.notNullStr(result.get("blog_url").get("value"));
+        changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
     }
 
     /**
      * Helper method to parse JSON response to REST request.
      */
-    private void handleResponseToGeneralSettingsRequest(JSONObject response) {
+    private void handleResponseToWPComSettingsRequest(JSONObject response) {
         mRemoteTitle = response.optString(RestClientUtils.SITE_TITLE_KEY);
         changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
 
@@ -180,7 +229,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         JSONObject settingsObject = response.optJSONObject("settings");
 
         if (settingsObject != null) {
-            mRemoteLanguage = convertLanguageId(settingsObject.optString("lang_id"));
+            mRemoteLanguage = convertLanguageIdToLanguageCode(settingsObject.optString("lang_id"));
             if (mLanguagePreference != null) {
                 changeLanguageValue(mRemoteLanguage);
                 mLanguagePreference.setSummary(getLanguageString(mRemoteLanguage, Locale.getDefault()));
@@ -192,18 +241,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
             changePrivacyValue(mRemotePrivacy);
         }
-    }
-
-    private String convertLanguageId(String id) {
-        if (id != null) {
-            for (String key : mLanguageCodes.keySet()) {
-                if (id.equals(mLanguageCodes.get(key))) {
-                    return key;
-                }
-            }
-        }
-
-        return "";
     }
 
     /**
@@ -338,5 +375,17 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         Locale languageLocale = new Locale(languageCode.substring(0, 2));
         return languageLocale.getDisplayLanguage(displayLocale) + languageCode.substring(2);
+    }
+
+    private String convertLanguageIdToLanguageCode(String id) {
+        if (id != null) {
+            for (String key : mLanguageCodes.keySet()) {
+                if (id.equals(mLanguageCodes.get(key))) {
+                    return key;
+                }
+            }
+        }
+
+        return "";
     }
 }
