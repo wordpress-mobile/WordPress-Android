@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -512,10 +514,22 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (isVisible) {
             mTwoStepEditText.requestFocus();
             mTwoStepEditText.setText("");
+            showSoftKeyboard();
         } else {
             mTwoStepEditText.setText("");
             mTwoStepEditText.clearFocus();
         }
+    }
+
+    private void showSoftKeyboard() {
+        if (!hasHardwareKeyboard()) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    private boolean hasHardwareKeyboard() {
+        return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
     private void signInAndFetchBlogListWPCom() {
