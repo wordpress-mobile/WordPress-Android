@@ -34,7 +34,7 @@ public class Theme {
     private boolean isCurrent = false;
     private boolean isPremium = false;
     private String features;
-    private String price;
+    private String price = "";
 
     public Theme() {
     }
@@ -58,10 +58,6 @@ public class Theme {
         this.features = features;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
     public ArrayList<String> getFeaturesArray() {
         ArrayList<String> features = new ArrayList<String>();
         if (!TextUtils.isEmpty(this.features)) {
@@ -69,10 +65,6 @@ public class Theme {
             Collections.addAll(features, arr);
         }
         return features;
-    }
-
-    public String getPrice() {
-        return this.price;
     }
 
     public String getFeatures() {
@@ -186,7 +178,12 @@ public class Theme {
         // },
         JSONObject costObject = object.getJSONObject("cost");
         boolean isPremium = costObject.getInt("number") > 0;
-        String price = costObject.getString("display");
+        String price = "free";
+        try {
+            price = costObject.getString("display");
+        } catch (JSONException e) {
+            price = "free";
+        }
 
         // if the theme is free, set the blogId to be empty
         // if the theme is not free, set the blogId to the current blog
@@ -228,5 +225,13 @@ public class Theme {
 
     public void setPremium(boolean isPremium) {
         this.isPremium = isPremium;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 }
