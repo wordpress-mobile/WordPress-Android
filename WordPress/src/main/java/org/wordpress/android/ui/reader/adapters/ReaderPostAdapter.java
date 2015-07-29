@@ -2,8 +2,10 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.Date;
+
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -52,7 +56,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final boolean mIsLoggedOutReader;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
-    private final ReaderPostList mPosts = new ReaderPostList();
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
@@ -63,6 +66,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
+
+    private final SortedList<ReaderPost> mPosts = new SortedList<>(ReaderPost.class, new SortedListAdapterCallback<ReaderPost>(this) {
+        @Override
+        public int compare(ReaderPost item1, ReaderPost item2) {
+            Date dt1 = item1.getDatePublished();
+            Date dt2 = item2.getDatePublished();
+            if (dt1 == null || dt2 == null) {
+                return 0;
+            } else {
+                return dt2.compareTo(dt1);
+            }
+        }
+        @Override
+        public boolean areContentsTheSame(ReaderPost oldItem, ReaderPost newItem) {
+            return oldItem.isSamePost(newItem);
+        }
+        @Override
+        public boolean areItemsTheSame(ReaderPost item1, ReaderPost item2) {
+            return item1.isSamePost(item2);
+        }
+    });
 
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
@@ -434,7 +458,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void clear() {
-        if (!mPosts.isEmpty()) {
+        if (mPosts.size() > 0) {
             mPosts.clear();
             notifyDataSetChanged();
         }
@@ -453,33 +477,25 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void removePost(ReaderPost post) {
-        int index = mPosts.indexOfPost(post);
-        if (index > -1) {
-            mPosts.remove(index);
-            notifyItemRemoved(index);
-        }
+        mPosts.remove(post);
     }
 
     public void removePostsInBlog(long blogId) {
-        ReaderPostList postsInBlog = mPosts.getPostsInBlog(blogId);
-        for (ReaderPost post : postsInBlog) {
-            removePost(post);
+        ReaderPostList postsInBlog = new ReaderPostList();
+        for (int i = 0; i < mPosts.size(); i ++) {
+            if (mPosts.get(i).blogId == blogId) {
+                postsInBlog.add(mPosts.get(i));
+            }
         }
-    }
-
-    /*
-     * reload a single post
-     */
-    public void reloadPost(ReaderPost post) {
-        int index = mPosts.indexOfPost(post);
-        if (index == -1) {
-            return;
-        }
-
-        final ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
-        if (updatedPost != null) {
-            mPosts.set(index, updatedPost);
-            notifyItemChanged(index);
+        if (postsInBlog.size() > 0) {
+            mPosts.beginBatchedUpdates();
+            try {
+                for (ReaderPost post : postsInBlog) {
+                    removePost(post);
+                }
+            } finally {
+                mPosts.endBatchedUpdates();
+            }
         }
     }
 
@@ -504,19 +520,22 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean followStatus = post.isFollowedByCurrentUser;
         boolean isMatched;
 
-        for (ReaderPost thisPost : mPosts) {
-            if (hasBlogId) {
-                isMatched = (blogId == thisPost.blogId && skipPostId != thisPost.postId);
-            } else {
-                isMatched = blogUrl.equals(thisPost.getBlogUrl());
-            }
-            if (isMatched && thisPost.isFollowedByCurrentUser != followStatus) {
-                thisPost.isFollowedByCurrentUser = followStatus;
-                int position = mPosts.indexOfPost(thisPost);
-                if (position > -1) {
-                    notifyItemChanged(position);
+        mPosts.beginBatchedUpdates();
+        try {
+            for (int i = 0; i < mPosts.size(); i++) {
+                ReaderPost thisPost = mPosts.get(i);
+                if (hasBlogId) {
+                    isMatched = (blogId == thisPost.blogId && skipPostId != thisPost.postId);
+                } else {
+                    isMatched = blogUrl.equals(thisPost.getBlogUrl());
+                }
+                if (isMatched && thisPost.isFollowedByCurrentUser != followStatus) {
+                    thisPost.isFollowedByCurrentUser = followStatus;
+                    mPosts.updateItemAt(i, thisPost);
                 }
             }
+        } finally {
+            mPosts.endBatchedUpdates();
         }
     }
 
@@ -538,7 +557,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public boolean isEmpty() {
-        return (mPosts == null || mPosts.size() == 0);
+        return (mPosts.size() == 0);
     }
 
     @Override
@@ -585,7 +604,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // update post in array and on screen
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
         if (updatedPost != null) {
-            mPosts.set(position, updatedPost);
+            mPosts.updateItemAt(position, updatedPost);
             holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
             showCounts(holder, updatedPost, true);
         }
@@ -617,7 +636,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
             ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
             if (updatedPost != null) {
-                mPosts.set(position, updatedPost);
+                mPosts.updateItemAt(position, updatedPost);
                 copyBlogFollowStatus(updatedPost);
             }
         }
@@ -658,7 +677,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return false;
             }
 
-            if (mPosts.isSameList(allPosts)) {
+            boolean isSame;
+            if (allPosts.size() != mPosts.size()) {
+                isSame = false;
+            } else {
+                isSame = true;
+                for (int i = 0; i < allPosts.size(); i++) {
+                    if (mPosts.indexOf(allPosts.get(i)) == -1) {
+                        isSame = false;
+                        break;
+                    }
+                }
+            }
+            if (isSame) {
                 return false;
             }
 
@@ -672,9 +703,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mPosts.clear();
                 mPosts.addAll(allPosts);
-                notifyDataSetChanged();
             }
 
             if (mDataLoadedListener != null) {
