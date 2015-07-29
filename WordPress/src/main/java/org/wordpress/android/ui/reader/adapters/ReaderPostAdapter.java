@@ -647,9 +647,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private boolean mIsTaskRunning = false;
 
-    private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderPostList allPosts;
-
+    private class LoadPostsTask extends AsyncTask<Void, Void, ReaderPostList> {
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -661,55 +659,38 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected ReaderPostList doInBackground(Void... params) {
             final int numExisting;
+            final ReaderPostList posts;
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
-                    allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    posts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
-                    allPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    posts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     break;
                 default:
-                    return false;
-            }
-
-            boolean isSame;
-            if (allPosts.size() != mPosts.size()) {
-                isSame = false;
-            } else {
-                isSame = true;
-                for (int i = 0; i < allPosts.size(); i++) {
-                    if (mPosts.indexOf(allPosts.get(i)) == -1) {
-                        isSame = false;
-                        break;
-                    }
-                }
-            }
-            if (isSame) {
-                return false;
+                    return null;
             }
 
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
-            return true;
+            return posts;
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                mPosts.addAll(allPosts);
+        protected void onPostExecute(ReaderPostList posts) {
+            if (posts != null) {
+                mPosts.addAll(posts);
             }
-
             if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
             }
-
             mIsTaskRunning = false;
         }
     }
