@@ -14,6 +14,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     public static final String TITLE_PARAM = "TITLE_PARAM";
     public static final String CONTENT_PARAM = "CONTENT_PARAM";
     public static final String DRAFT_PARAM = "DRAFT_PARAM";
+    public static final String TITLE_PLACEHOLDER_PARAM = "TITLE_PLACEHOLDER_PARAM";
+    public static final String CONTENT_PLACEHOLDER_PARAM = "CONTENT_PLACEHOLDER_PARAM";
     public static final int USE_NEW_EDITOR = 1;
     public static final int USE_LEGACY_EDITOR = 2;
 
@@ -61,6 +63,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
         mEditorFragment.setTitle(title);
         mEditorFragment.setContent(content);
+        mEditorFragment.setTitlePlaceholder(getIntent().getStringExtra(TITLE_PLACEHOLDER_PARAM));
+        mEditorFragment.setContentPlaceholder(getIntent().getStringExtra(CONTENT_PLACEHOLDER_PARAM));
         mEditorFragment.setLocalDraft(isLocalDraft);
     }
 

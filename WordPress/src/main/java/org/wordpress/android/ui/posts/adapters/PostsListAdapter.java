@@ -473,20 +473,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public int getRemotePostCount() {
-        if (mPosts == null) {
-            return 0;
-        }
-
-        int remotePostCount = 0;
-        for (PostsListPost post : mPosts) {
-            if (!post.isLocalDraft())
-                remotePostCount++;
-        }
-
-        return remotePostCount;
-    }
-
     /*
      * hides the post - used when the post is trashed by the user but the network request
      * to delete the post hasn't completed yet

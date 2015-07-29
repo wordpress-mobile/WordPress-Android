@@ -7,6 +7,12 @@
 
     <color name="image_options_label">#cccccc</color>
 
-    <color name="format_bar_button_normal_color">@color/wp_gray</color>
+    <color name="format_bar_button_normal_color">@color/wp_gray_lighten_10</color>
     <color name="format_bar_button_highlighted_color">@color/wp_blue</color>
+    <color name="format_bar_background">#f9fbfc</color>
+    <color name="format_bar_ripple_animation">@color/wp_gray_lighten_10</color>
+
+    <color name="format_bar_divider">@color/wp_gray_lighten_10</color>
+    <color name="sourceview_separator">@color/wp_gray_lighten_30</color>
+    <color name="sourceview_placeholder_text">@color/wp_gray</color>
 </resources>

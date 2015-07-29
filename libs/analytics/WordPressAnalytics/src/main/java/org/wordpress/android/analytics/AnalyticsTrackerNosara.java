@@ -240,7 +240,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "media_library");
                 break;
-            case OPENED_SETTINGS:
+            case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "settings");
                 break;
@@ -346,6 +346,12 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
             case NOTIFICATION_SETTINGS_UPDATED:
                 eventName = "notification_settings_updated";
+                break;
+            case ME_ACCESSED:
+                eventName = "me_tab_accessed";
+                break;
+            case MY_SITE_ACCESSED:
+                eventName = "my_site_tab_accessed";
                 break;
             default:
                 eventName = null;
