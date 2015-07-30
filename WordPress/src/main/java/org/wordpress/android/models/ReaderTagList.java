@@ -9,7 +9,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         return super.clone();
     }
 
-    public int indexOfTagName(final String tagName) {
+    public int indexOfTagName(String tagName) {
         if (tagName == null || isEmpty()) {
             return -1;
         }
@@ -23,18 +23,18 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         return -1;
     }
 
-    private boolean hasSameTag(ReaderTag tag) {
+    private int indexOfTag(ReaderTag tag) {
         if (tag == null || isEmpty()) {
-            return false;
+            return -1;
         }
 
-        for (ReaderTag thisTag : this) {
-            if (ReaderTag.isSameTag(thisTag, tag)) {
-                return true;
+        for (int i = 0; i < this.size(); i++) {
+            if (ReaderTag.isSameTag(tag, this.get(i))) {
+                return i;
             }
         }
 
-        return false;
+        return -1;
     }
 
     public boolean isSameList(ReaderTagList tagList) {
@@ -42,8 +42,11 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
             return false;
         }
 
-        for (ReaderTag thisTag: tagList) {
-            if (!hasSameTag(thisTag)) {
+        for (ReaderTag tag: tagList) {
+            int i = indexOfTag(tag);
+            if (i == -1) {
+                return false;
+            } else if (!tag.getEndpoint().equals(this.get(i).getEndpoint())) {
                 return false;
             }
         }
@@ -60,9 +63,9 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
             return deletions;
         }
 
-        for (ReaderTag thisTag: this) {
-            if (!tagList.hasSameTag(thisTag)) {
-                deletions.add(thisTag);
+        for (ReaderTag tag: this) {
+            if (indexOfTag(tag) == -1) {
+                deletions.add(tag);
             }
         }
 
