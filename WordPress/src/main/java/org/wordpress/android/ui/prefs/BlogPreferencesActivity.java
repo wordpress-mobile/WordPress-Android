@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,43 +21,41 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
     public static final int RESULT_BLOG_REMOVED = RESULT_FIRST_USER;
 
+    private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
+    private static final String KEY_PASSCODE_FRAGMENT = "passcode-fragment";
+
     // The blog this activity is managing settings for.
-    private Blog blog;
+    private Blog mBlog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Integer id = getIntent().getIntExtra(ARG_LOCAL_BLOG_ID, -1);
-        blog = WordPress.getBlog(id);
+        mBlog = WordPress.getBlog(id);
 
-        if (blog == null) {
+        if (mBlog == null) {
             Toast.makeText(this, getString(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        Fragment siteSettingsFragment = new SiteSettingsFragment();
-        siteSettingsFragment.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, siteSettingsFragment)
-                .commit();
-
+        setTitle(R.string.settings);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setElevation(0.0f);
-            actionBar.setTitle(StringUtils.unescapeHTML(blog.getNameOrHostUrl()));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-    }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment siteSettingsFragment = fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(title);
+        if (siteSettingsFragment == null) {
+            siteSettingsFragment = new SiteSettingsFragment();
+            siteSettingsFragment.setArguments(getIntent().getExtras());
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
+                    .commit();
         }
     }
 
@@ -70,10 +69,10 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        WordPress.wpDB.saveBlog(blog);
+        WordPress.wpDB.saveBlog(mBlog);
 
-        if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId()) {
-            WordPress.currentBlog = blog;
+        if (WordPress.getCurrentBlog().getLocalTableBlogId() == mBlog.getLocalTableBlogId()) {
+            WordPress.currentBlog = mBlog;
         }
     }
 

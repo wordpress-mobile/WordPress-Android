@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/pref_key_site_general"
         android:title="@string/site_settings_general_header">
 
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference

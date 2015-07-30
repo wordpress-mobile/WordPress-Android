@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -15,8 +17,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -51,11 +53,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
+
         if (!NetworkUtils.checkConnection(getActivity())) {
             getActivity().finish();
         }
-
-        getActivity().setTitle(R.string.settings);
 
         // make sure we have local site data
         mBlog = WordPress.getBlog(
@@ -64,11 +66,12 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // inflate Site Settings preferences from XML
         addPreferencesFromResource(R.xml.site_settings);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+        mRemoteTitle = "";
+        mRemoteTagline = "";
+        mRemoteAddress = "";
+        mRemotePrivacy = 1;
+        mRemoteLanguage = "";
 
         // set preference references, add change listeners, and setup various entries and values
         initPreferences();
@@ -78,11 +81,22 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
 
         // Assume user wanted changes propagated when they leave
         applyChanges();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("remote-title", mRemoteTitle);
+        outState.putString("remote-tagline", mRemoteTagline);
+        outState.putString("remote-address", mRemoteAddress);
+        outState.putInt("remote-privacy", mRemotePrivacy);
+        outState.putString("remote-language", mRemoteLanguage);
     }
 
     @Override
@@ -175,22 +189,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()
             };
 
-            client.callAsync(new XMLRPCCallback() {
-                @Override
-                public void onSuccess(long id, final Object result) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            handleResponseToSelfHostedSettingsRequest((HashMap<String, Map<String, String>>) result);
-                        }
-                    });
-                }
-
-                @Override
-                public void onFailure(long id, Exception error) {
-                    handleSettingsFetchError(error.toString());
-                }
-            }, "wp.getOptions", params);
+            client.callAsync(mXmlRpcFetchCallback, "wp.getOptions", params);
         }
     }
 
@@ -202,15 +201,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void handleResponseToSelfHostedSettingsRequest(Map<String, Map<String, String>> result) {
-        mRemoteTitle = StringUtils.notNullStr(result.get("blog_title").get("value"));
+    private void handleResponseToSelfHostedSettingsRequest(Map result) {
+        mRemoteTitle = getNestedMapValue(result, "blog_title");
         changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
 
-        mRemoteTagline = StringUtils.notNullStr(result.get("blog_tagline").get("value"));
+        mRemoteTagline = getNestedMapValue(result, "blog_tagline");
         changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
 
-        mRemoteAddress = StringUtils.notNullStr(result.get("blog_url").get("value"));
+        mRemoteAddress = getNestedMapValue(result, "blog_url");
         changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
+
+        mRemotePrivacy = 0;
+        mRemoteLanguage = convertLanguageIdToLanguageCode("1");
     }
 
     /**
@@ -321,32 +323,47 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         if (mTitlePreference != null) {
             mTitlePreference.setOnPreferenceChangeListener(this);
+            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
         }
 
         if (mTaglinePreference != null) {
             mTaglinePreference.setOnPreferenceChangeListener(this);
+            changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
         }
 
         if (mAddressPreference != null) {
             mAddressPreference.setOnPreferenceChangeListener(this);
+            changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
         }
 
         if (mPrivacyPreference != null) {
-            mRemotePrivacy = -2;
-            mPrivacyPreference.setOnPreferenceChangeListener(this);
+            if (!mBlog.isDotcomFlag()) {
+                ((PreferenceCategory) findPreference(getString(R.string.pref_key_site_general)))
+                        .removePreference(mPrivacyPreference);
+            } else {
+                mPrivacyPreference.setOnPreferenceChangeListener(this);
+                changePrivacyValue(mRemotePrivacy);
+            }
         }
 
         if (mLanguagePreference != null) {
-            // Generate map of language codes
-            String[] languageIds = getResources().getStringArray(R.array.lang_ids);
-            String[] languageCodes = getResources().getStringArray(R.array.language_codes);
-            for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
-                mLanguageCodes.put(languageCodes[i], languageIds[i]);
-            }
+            if (!mBlog.isDotcomFlag()) {
+                ((PreferenceCategory) findPreference(getString(R.string.pref_key_site_general)))
+                        .removePreference(mLanguagePreference);
+            } else {
+                // Generate map of language codes
+                String[] languageIds = getResources().getStringArray(R.array.lang_ids);
+                String[] languageCodes = getResources().getStringArray(R.array.language_codes);
+                for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
+                    mLanguageCodes.put(languageCodes[i], languageIds[i]);
+                }
 
-            mLanguagePreference.setEntries(
-                    createLanguageDisplayStrings(mLanguagePreference.getEntryValues()));
-            mLanguagePreference.setOnPreferenceChangeListener(this);
+                mLanguagePreference.setEntries(
+                        createLanguageDisplayStrings(mLanguagePreference.getEntryValues()));
+                mLanguagePreference.setOnPreferenceChangeListener(this);
+
+                changeLanguageValue(mRemoteLanguage);
+            }
         }
     }
 
@@ -388,4 +405,39 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         return "";
     }
+
+    private String getNestedMapValue(Map map, String key) {
+        if (map != null && key != null) {
+            return MapUtils.getMapStr((Map) map.get(key), "value");
+        }
+
+        return "";
+    }
+
+    /**
+     * Handles response to XML-RPC settings fetch
+     */
+    private final XMLRPCCallback mXmlRpcFetchCallback = new XMLRPCCallback() {
+        @Override
+        public void onSuccess(long id, final Object result) {
+            if (isAdded() && result instanceof Map) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        handleResponseToSelfHostedSettingsRequest((Map) result);
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void onFailure(long id, final Exception error) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    handleSettingsFetchError(error.toString());
+                }
+            });
+        }
+    };
 }
