@@ -196,7 +196,7 @@ public class RestClientUtils {
      * Get all a site's themes
      */
     public void getThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes?limit=%d&offset=%d", siteId, limit, offset);
+        String path = String.format("sites/%s/themes/?tier=all?limit=%d&offset=%d", siteId, limit, offset);
         get(path, listener, errorListener);
     }
 
