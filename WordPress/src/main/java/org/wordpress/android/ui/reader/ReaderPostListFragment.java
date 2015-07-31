@@ -670,8 +670,8 @@ public class ReaderPostListFragment extends Fragment
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        // remove posts in this blog from the adapter
-        getPostAdapter().removePostsInBlog(post.blogId);
+        // reload adapter so deleted posts no long appear
+        reloadPosts();
 
         // show the undo snackbar enabling the user to undo the block
         View.OnClickListener undoListener = new View.OnClickListener() {
@@ -994,6 +994,13 @@ public class ReaderPostListFragment extends Fragment
         hideNewPostsBar();
         if (hasPostAdapter()) {
             getPostAdapter().refresh();
+        }
+    }
+
+    private void reloadPosts() {
+        hideNewPostsBar();
+        if (hasPostAdapter()) {
+            getPostAdapter().reload();
         }
     }
 

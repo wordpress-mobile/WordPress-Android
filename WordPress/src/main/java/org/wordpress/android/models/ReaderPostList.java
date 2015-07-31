@@ -23,11 +23,6 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         return posts;
     }
 
-    @Override
-    public Object clone() {
-        return super.clone();
-    }
-
     public int indexOfPost(ReaderPost post) {
         if (post == null) {
             return -1;
@@ -44,34 +39,4 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         return -1;
     }
 
-    /*
-     * does passed list contain the same posts as this list?
-     */
-    public boolean isSameList(ReaderPostList posts) {
-        if (posts == null || posts.size() != this.size()) {
-            return false;
-        }
-
-        for (ReaderPost post: posts) {
-            int index = indexOfPost(post);
-            if (index == -1 || !post.isSamePost(this.get(index))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /*
-     * returns posts in this list which are in the passed blog
-     */
-    public ReaderPostList getPostsInBlog(long blogId) {
-        ReaderPostList postsInBlog = new ReaderPostList();
-        for (ReaderPost post: this) {
-            if (post.blogId == blogId) {
-                postsInBlog.add(post);
-            }
-        }
-        return postsInBlog;
-    }
 }
