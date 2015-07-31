@@ -16,6 +16,7 @@ public class NotificationsSettings {
     public static final String KEY_BLOGS = "blogs";
     public static final String KEY_OTHER = "other";
     public static final String KEY_DOTCOM = "wpcom";
+    public static final String KEY_DEVICES = "devices";
 
     public static final String KEY_DEVICE_ID = "device_id";
     public static final String KEY_BLOG_ID = "blog_id";
@@ -27,7 +28,7 @@ public class NotificationsSettings {
     public enum Type {
         TIMELINE,
         EMAIL,
-        MOBILE;
+        DEVICE;
 
         public String toString() {
             switch (this) {
@@ -35,7 +36,7 @@ public class NotificationsSettings {
                     return "timeline";
                 case EMAIL:
                     return "email";
-                case MOBILE:
+                case DEVICE:
                     return "device";
                 default:
                     return "";

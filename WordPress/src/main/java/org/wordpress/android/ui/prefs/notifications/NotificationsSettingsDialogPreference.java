@@ -115,12 +115,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
             try {
-                String settingName = StringUtils.notNullStr(compoundButton.getTag().toString());
-                if (mUpdatedJson.has(settingName)) {
-                    mUpdatedJson.remove(settingName);
-                } else {
-                    mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
-                }
+                mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
 
                 mSettings.updateSettingForChannelAndType(
                         mChannel, mType, compoundButton.getTag().toString(),

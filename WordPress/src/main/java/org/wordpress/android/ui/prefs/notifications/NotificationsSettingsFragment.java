@@ -33,7 +33,6 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -241,7 +240,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         PreferenceGroup dotcomPreferenceGroup = (PreferenceGroup) findPreference(
                 getString(R.string.pref_notification_account_emails));
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
-                getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.MOBILE, 0, mNotificationsSettings, mOnSettingsChangedListener
+                getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.DEVICE, 0, mNotificationsSettings, mOnSettingsChangedListener
         );
         devicePreference.setTitle(R.string.notifications_updates_from_wordpress);
         devicePreference.setDialogTitle(R.string.notifications_updates_from_wordpress);
@@ -272,7 +271,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         rootCategory.addPreference(emailPreference);
 
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
-                context, null, channel, NotificationsSettings.Type.MOBILE, blogId, mNotificationsSettings, mOnSettingsChangedListener
+                context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
         devicePreference.setTitle(R.string.app_notifications);
         devicePreference.setDialogTitle(R.string.app_notifications);
@@ -294,15 +293,20 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             switch (channel) {
                 case BLOGS:
                     try {
-                        JSONObject subObject = new JSONObject();
-                        if (type == Type.MOBILE) {
-                            newValues.put(NotificationsSettings.KEY_DEVICE_ID, Long.parseLong(mDeviceId));
-                        }
-                        subObject.put(type.toString(), newValues);
-                        subObject.put(NotificationsSettings.KEY_BLOG_ID, blogId);
+                        JSONObject blogObject = new JSONObject();
+                        blogObject.put(NotificationsSettings.KEY_BLOG_ID, blogId);
 
                         JSONArray blogsArray = new JSONArray();
-                        blogsArray.put(subObject);
+                        if (type == Type.DEVICE) {
+                            newValues.put(NotificationsSettings.KEY_DEVICE_ID, Long.parseLong(mDeviceId));
+                            JSONArray devicesArray = new JSONArray();
+                            devicesArray.put(newValues);
+                            blogObject.put(NotificationsSettings.KEY_DEVICES, devicesArray);
+                            blogsArray.put(blogObject);
+                        } else {
+                            blogObject.put(type.toString(), newValues);
+                            blogsArray.put(blogObject);
+                        }
 
                         settingsObject.put(NotificationsSettings.KEY_BLOGS, blogsArray);
                     } catch (JSONException e) {
@@ -311,13 +315,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                     break;
                 case OTHER:
                     try {
-                        JSONObject subObject = new JSONObject();
-                        if (type == Type.MOBILE) {
+                        JSONObject otherObject = new JSONObject();
+                        if (type == Type.DEVICE) {
                             newValues.put(NotificationsSettings.KEY_DEVICE_ID, Long.parseLong(mDeviceId));
+                            JSONArray devicesArray = new JSONArray();
+                            devicesArray.put(newValues);
+                            otherObject.put(NotificationsSettings.KEY_DEVICES, devicesArray);
+                        } else {
+                            otherObject.put(type.toString(), newValues);
                         }
-                        subObject.put(type.toString(), newValues);
 
-                        settingsObject.put(NotificationsSettings.KEY_OTHER, subObject);
+                        settingsObject.put(NotificationsSettings.KEY_OTHER, otherObject);
                     } catch (JSONException e) {
                         AppLog.e(T.NOTIFS, "Could not build notification settings object");
                     }
