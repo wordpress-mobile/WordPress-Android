@@ -64,6 +64,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
 
+    private static final int VIEW_TYPE_SPACER = 1;
+    private static final int VIEW_TYPE_POST = 2;
+    private static final long ITEM_ID_SPACER = -1L;
+
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
 
@@ -83,7 +87,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgAvatar;
 
         private final ViewGroup layoutPostHeader;
-        private final View toolbarSpacer;
 
         private final ViewGroup layoutDiscover;
         private final WPNetworkImageView imgDiscoverAvatar;
@@ -109,7 +112,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
-            toolbarSpacer = itemView.findViewById(R.id.spacer_toolbar);
 
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
@@ -117,22 +119,48 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    class SpacerViewHolder extends RecyclerView.ViewHolder {
+        public SpacerViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0 && mShowToolbarSpacer) {
+            return VIEW_TYPE_SPACER;
+        }
+        return VIEW_TYPE_POST;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View postView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_cardview_post, parent, false);
-        return new ReaderPostViewHolder(postView);
+        Context context = parent.getContext();
+        if (viewType == VIEW_TYPE_SPACER) {
+            View spacerView = new View(context);
+            int toolbarHeight = context.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+            int dividerHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
+            int spacerHeight = toolbarHeight - dividerHeight;
+            spacerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, spacerHeight));
+            return new SpacerViewHolder(spacerView);
+        } else {
+            View postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
+            return new ReaderPostViewHolder(postView);
+        }
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof SpacerViewHolder) {
+            return;
+        }
+
         final ReaderPost post = getItem(position);
         final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
         ReaderTypes.ReaderPostListType postListType = getPostListType();
 
         postHolder.txtTitle.setText(post.getTitle());
         postHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
-
-        postHolder.toolbarSpacer.setVisibility(position == 0 && mShowToolbarSpacer ? View.VISIBLE : View.GONE);
 
         // hide the post header (avatar, blog name & follow button) if we're showing posts
         // in a specific blog
@@ -529,11 +557,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private ReaderPost getItem(int position) {
-        return mPosts.get(position);
+        if (mShowToolbarSpacer) {
+            return position == 0 ? null : mPosts.get(position - 1);
+        } else {
+            return mPosts.get(position);
+        }
     }
 
     @Override
     public int getItemCount() {
+        if (mShowToolbarSpacer && mPosts.size() > 0) {
+            return mPosts.size() + 1;
+        }
         return mPosts.size();
     }
 
@@ -543,6 +578,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public long getItemId(int position) {
+        if (getItemViewType(position) == VIEW_TYPE_SPACER) {
+            return ITEM_ID_SPACER;
+        }
         return getItem(position).getStableId();
     }
 
