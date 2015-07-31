@@ -406,12 +406,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         // index of days that should be XXX on the graph
         final boolean[] weekendDays;
-        switch (getTimeframe()) {
-            case DAY:
-                weekendDays = new boolean[dataToShowOnGraph.length];
-                break;
-            default:
-                weekendDays = null;
+        if (getTimeframe() == StatsTimeframe.DAY) {
+            weekendDays = new boolean[dataToShowOnGraph.length];
+        } else {
+            weekendDays = null;
         }
 
         // Check we have at least one result in the current section.
@@ -455,12 +453,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     Calendar c = Calendar.getInstance();
                     c.setFirstDayOfWeek(Calendar.MONDAY);
                     c.setTimeInMillis(date.getTime());
-                    if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ||
-                            c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                        weekendDays[i] = true;
-                    } else {
-                        weekendDays[i] = false;
-                    }
+                    weekendDays[i] = c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
                 } catch (ParseException e) {
                     weekendDays[i] = false;
                     AppLog.e(AppLog.T.STATS, e);
