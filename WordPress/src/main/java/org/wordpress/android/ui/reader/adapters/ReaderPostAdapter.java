@@ -71,7 +71,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_POST = 2;
     private static final long ITEM_ID_SPACER = -1L;
 
-    private final SortedList<ReaderPost> mPosts = new SortedList<>(ReaderPost.class, new SortedListAdapterCallback<ReaderPost>(this) {
+    private final SortedListAdapterCallback<ReaderPost> mSortedListCallback = new SortedListAdapterCallback<ReaderPost>(this) {
         @Override
         public int compare(ReaderPost item1, ReaderPost item2) {
             Date dt1 = item1.getDatePublished();
@@ -90,7 +90,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public boolean areItemsTheSame(ReaderPost item1, ReaderPost item2) {
             return item1.getStableId() == item2.getStableId();
         }
-    });
+    };
+
+    private final SortedList<ReaderPost> mPosts = new SortedList<>(ReaderPost.class, mSortedListCallback);
 
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
@@ -499,32 +501,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * same as refresh() above but first clears the existing posts
      */
-    private void reload() {
+    public void reload() {
         clear();
         loadPosts();
-    }
-
-    private void removePost(ReaderPost post) {
-        mPosts.remove(post);
-    }
-
-    public void removePostsInBlog(long blogId) {
-        ReaderPostList postsInBlog = new ReaderPostList();
-        for (int i = 0; i < mPosts.size(); i ++) {
-            if (mPosts.get(i).blogId == blogId) {
-                postsInBlog.add(mPosts.get(i));
-            }
-        }
-        if (postsInBlog.size() > 0) {
-            mPosts.beginBatchedUpdates();
-            try {
-                for (ReaderPost post : postsInBlog) {
-                    removePost(post);
-                }
-            } finally {
-                mPosts.endBatchedUpdates();
-            }
-        }
     }
 
     /*
@@ -700,32 +679,45 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected ReaderPostList doInBackground(Void... params) {
             final int numExisting;
-            final ReaderPostList posts;
+            final ReaderPostList allPosts;
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
-                    posts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
-                    posts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    allPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     break;
                 default:
                     return null;
             }
 
+            // determine if any posts are new/changed
+            boolean isSameList = true;
+            for (ReaderPost post: allPosts) {
+                int i = mPosts.indexOf(post);
+                if (i == -1 || !post.isSamePost(mPosts.get(i))) {
+                    isSameList = false;
+                    break;
+                }
+            }
+            if (isSameList) {
+                return null;
+            }
+
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
-            return posts;
+            return allPosts;
         }
 
         @Override
-        protected void onPostExecute(ReaderPostList posts) {
-            if (posts != null) {
-                mPosts.addAll(posts);
+        protected void onPostExecute(ReaderPostList allPosts) {
+            if (allPosts != null) {
+                mPosts.addAll(allPosts);
             }
             if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());

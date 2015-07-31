@@ -23,4 +23,20 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         return posts;
     }
 
+    public int indexOfPost(ReaderPost post) {
+        if (post == null) {
+            return -1;
+        }
+        for (int i = 0; i < size(); i++) {
+            if (this.get(i).postId == post.postId) {
+                if (post.isExternal && post.feedId == this.get(i).feedId) {
+                    return i;
+                } else if (!post.isExternal && post.blogId == this.get(i).blogId) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
 }
