@@ -4,15 +4,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Theme {
-    private static final String ID = "id";
-    private static final String AUTHOR = "author";
-    private static final String SCREENSHOT = "screenshot";
-    private static final String AUTHOR_URI = "author_uri";
-    private static final String DEMO_URI = "demo_uri";
-    private static final String NAME = "demo";
-    private static final String STYLESHEET = "stylesheet";
-    private static final String PRICE = "price";
-
+    public static final String ID = "id";
+    public static final String AUTHOR = "author";
+    public static final String SCREENSHOT = "screenshot";
+    public static final String AUTHOR_URI = "author_uri";
+    public static final String DEMO_URI = "demo_uri";
+    public static final String NAME = "demo";
+    public static final String STYLESHEET = "stylesheet";
+    public static final String PRICE = "price";
 
     private String mId;
     private String mAuthor;
@@ -38,9 +37,6 @@ public class Theme {
 
             return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price);
         }
-    }
-
-    public Theme() {
     }
 
     public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name, String stylesheet, String price) {
@@ -69,7 +65,6 @@ public class Theme {
     public String getAuthor() {
         return mAuthor;
     }
-
 
     public String getScreenshot() {
         return mScreenshot;

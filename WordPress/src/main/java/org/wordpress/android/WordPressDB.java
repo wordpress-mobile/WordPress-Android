@@ -1733,19 +1733,14 @@ public class WordPressDB {
         boolean returnValue = false;
 
         ContentValues values = new ContentValues();
-        values.put("themeId", theme.getThemeId());
-        values.put("name", theme.getName());
-        values.put("description", theme.getDescription());
-        values.put("screenshotURL", theme.getScreenshotURL());
-        values.put("trendingRank", theme.getTrendingRank());
-        values.put("popularityRank", theme.getPopularityRank());
-        values.put("launchDate", theme.getLaunchDateMs());
-        values.put("previewURL", theme.getPreviewURL());
-        values.put("blogId", theme.getBlogId());
-        values.put("isCurrent", theme.isCurrent());
-        values.put("isPremium", theme.isPremium());
-        values.put("features", theme.getFeatures());
-        values.put("price", theme.getPrice());
+        values.put(Theme.ID, theme.getId());
+        values.put(Theme.AUTHOR, theme.getAuthor());
+        values.put(Theme.AUTHOR_URI, theme.getAuthorURI());
+        values.put(Theme.DEMO_URI, theme.getDemoURI());
+        values.put(Theme.NAME, theme.getName());
+        values.put(Theme.PRICE, theme.getPrice());
+        values.put(Theme.SCREENSHOT, theme.getScreenshot());
+        values.put(Theme.STYLESHEET, theme.getStylesheet());
 
         synchronized (this) {
             int result = db.update(
