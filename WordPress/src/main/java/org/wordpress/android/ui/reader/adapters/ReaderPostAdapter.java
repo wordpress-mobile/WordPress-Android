@@ -263,7 +263,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 postHolder.likeCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggleLike(v.getContext(), postHolder, position);
+                        toggleLike(v.getContext(), postHolder, post);
                     }
                 });
             }
@@ -471,18 +471,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         loadPosts();
     }
 
-    private void removePost(ReaderPost post) {
-        int index = mPosts.indexOfPost(post);
-        if (index > -1) {
-            mPosts.remove(index);
-            notifyItemRemoved(index);
-        }
-    }
-
     public void removePostsInBlog(long blogId) {
+        int numRemoved = 0;
         ReaderPostList postsInBlog = mPosts.getPostsInBlog(blogId);
         for (ReaderPost post : postsInBlog) {
-            removePost(post);
+            int index = mPosts.indexOfPost(post);
+            if (index > -1) {
+                numRemoved++;
+                mPosts.remove(index);
+            }
+        }
+        if (numRemoved > 0) {
+            notifyDataSetChanged();
         }
     }
 
@@ -539,8 +539,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * triggered when user taps the like button (textView)
      */
-    private void toggleLike(Context context, ReaderPostViewHolder holder, int position) {
-        ReaderPost post = getItem(position);
+    private void toggleLike(Context context, ReaderPostViewHolder holder, ReaderPost post) {
         if (post == null) {
             return;
         }
@@ -559,8 +558,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         // update post in array and on screen
+        int position = mPosts.indexOfPost(post);
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
-        if (updatedPost != null) {
+        if (updatedPost != null && position > -1) {
             mPosts.set(position, updatedPost);
             holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
             showCounts(holder, updatedPost, true);
