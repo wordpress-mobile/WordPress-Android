@@ -15,10 +15,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 /*
  * header view showing blog name, description, and blavatar (if it exists) for a
@@ -79,7 +76,6 @@ public class ReaderBlogInfoView extends FrameLayout {
 
         final TextView txtBlogName = (TextView) layoutInner.findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) layoutInner.findViewById(R.id.text_blog_description);
-        final WPNetworkImageView imgBlavatar = (WPNetworkImageView) layoutInner.findViewById(R.id.image_blavatar);
 
         if (blogInfo.hasUrl()) {
             // clicking the blog name shows the blog in the browser
@@ -99,7 +95,9 @@ public class ReaderBlogInfoView extends FrameLayout {
             txtBlogName.setText(getContext().getString(R.string.reader_untitled_post));
         }
 
-        if (blogInfo.hasDescription()) {
+        if (blogInfo.getDescription().equalsIgnoreCase(blogInfo.getName())) {
+            txtDescription.setVisibility(View.GONE);
+        } else if (blogInfo.hasDescription()) {
             txtDescription.setText(blogInfo.getDescription());
             txtDescription.setVisibility(View.VISIBLE);
         } else if (blogInfo.hasUrl()) {
@@ -108,17 +106,6 @@ public class ReaderBlogInfoView extends FrameLayout {
         } else {
             txtDescription.setVisibility(View.GONE);
         }
-
-        int imageSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-        String imageUrl = "";
-        if (blogInfo.hasImageUrl()) {
-            imageUrl = GravatarUtils.fixGravatarUrl(blogInfo.getImageUrl(), imageSz);
-        } else {
-            if (blogInfo.getUrl() != null) {
-                imageUrl = GravatarUtils.blavatarFromUrl(blogInfo.getUrl(), imageSz);
-            }
-        }
-        imgBlavatar.setImageUrl(imageUrl, ImageType.BLAVATAR);
 
         // layout is invisible at design time
         if (layoutInner.getVisibility() != View.VISIBLE) {
