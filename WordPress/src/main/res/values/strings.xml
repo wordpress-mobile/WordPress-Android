@@ -646,6 +646,7 @@
     </string-array>
 
     <!-- Privacy Entries in Site Settings -->
+    <string name="privacy">Privacy</string>
     <string name="privacy_public">Public</string>
     <string name="privacy_hidden">Hidden</string>
     <string name="privacy_private">Private</string>
@@ -653,6 +654,12 @@
         <item>@string/privacy_public</item>
         <item>@string/privacy_hidden</item>
         <item>@string/privacy_private</item>
+    </string-array>
+
+    <string-array name="privacy_details">
+        <item>Your site is visible to everyone and may be indexed by search engines</item>
+        <item>Your site is visible to everyone but asks search engines not to index it</item>
+        <item>Your site is visible only to you and users you approve</item>
     </string-array>
 
     <!-- Privacy Entries in Site Settings -->

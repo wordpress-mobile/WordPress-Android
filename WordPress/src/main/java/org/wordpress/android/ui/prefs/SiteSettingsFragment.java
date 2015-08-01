@@ -123,19 +123,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         return false;
     }
 
-    private String privacyStringForValue(int value) {
-        switch (value) {
-            case -1:
-                return getString(R.string.privacy_private);
-            case 0:
-                return getString(R.string.privacy_hidden);
-            case 1:
-                return getString(R.string.privacy_public);
-            default:
-                return "";
-        }
-    }
-
     /**
      * Helper method to perform validation and set multiple properties on an EditTextPreference.
      * If newValue is equal to the current preference text no action will be taken.
@@ -364,6 +351,19 @@ public class SiteSettingsFragment extends PreferenceFragment
 
                 changeLanguageValue(mRemoteLanguage);
             }
+        }
+    }
+
+    private String privacyStringForValue(int value) {
+        switch (value) {
+            case -1:
+                return getString(R.string.privacy_private);
+            case 0:
+                return getString(R.string.privacy_hidden);
+            case 1:
+                return getString(R.string.privacy_public);
+            default:
+                return "";
         }
     }
 

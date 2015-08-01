@@ -16,20 +16,20 @@ public class TypefaceCache {
      * Merriweather is also available via the "fontFamily" attribute
      */
 
-    private static final int VARIATION_NORMAL = 0;
-    private static final int VARIATION_LIGHT = 1;
-    private static final int VARIATION_DEFAULT = VARIATION_NORMAL;
+    public static final int VARIATION_NORMAL = 0;
+    public static final int VARIATION_LIGHT = 1;
+    public static final int VARIATION_DEFAULT = VARIATION_NORMAL;
 
-    private static final int FAMILY_OPEN_SANS = 0;
-    private static final int FAMILY_MERRIWEATHER = 1;
-    private static final int FAMILY_DEFAULT = FAMILY_OPEN_SANS;
+    public static final int FAMILY_OPEN_SANS = 0;
+    public static final int FAMILY_MERRIWEATHER = 1;
+    public static final int FAMILY_DEFAULT = FAMILY_OPEN_SANS;
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
     public static Typeface getTypeface(Context context) {
         return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_DEFAULT);
     }
-    private static Typeface getTypeface(Context context,
+    public static Typeface getTypeface(Context context,
                                         int family,
                                         int fontStyle,
                                         int variation) {
