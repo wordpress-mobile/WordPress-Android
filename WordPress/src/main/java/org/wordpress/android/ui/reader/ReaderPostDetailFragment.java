@@ -894,7 +894,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (ReaderUtils.isBlogPreviewUrl(url)) {
             long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
             if (blogId != 0) {
-                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, mPost.getBlogName());
             }
             return true;
         }

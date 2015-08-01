@@ -369,7 +369,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         if (discoverData.getBlogId() != 0) {
-                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
+                            ReaderActivityLauncher.showReaderBlogPreview(
+                                    v.getContext(),
+                                    discoverData.getBlogId(),
+                                    discoverData.getBlogName());
                         } else if (discoverData.hasBlogUrl()) {
                             ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
                         }

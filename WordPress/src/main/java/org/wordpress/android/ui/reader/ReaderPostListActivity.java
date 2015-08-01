@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -59,6 +60,8 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
+        String title = intent.getStringExtra(ReaderConstants.ARG_TITLE);
+
         if (savedInstanceState == null) {
             if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -68,7 +71,9 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
                 } else {
                     showListFragmentForBlog(blogId);
                 }
-                setTitle(R.string.reader_title_blog_preview);
+                if (TextUtils.isEmpty(title)) {
+                    title = getString(R.string.reader_title_blog_preview);
+                }
             } else {
                 // get the tag name from the intent, if not there get it from prefs
                 ReaderTag tag;
@@ -84,10 +89,10 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
 
                 showListFragmentForTag(tag, mPostListType);
 
-                if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-                    setTitle(tag.getCapitalizedTagName());
-                }
+                title = tag.getCapitalizedTagName();
             }
+
+            setTitle(title);
         }
     }
 

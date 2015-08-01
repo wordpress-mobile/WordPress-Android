@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.reader;
 
-import android.animation.Animator;
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -16,10 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -35,7 +29,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
@@ -53,7 +46,6 @@ import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -90,8 +82,6 @@ public class ReaderPostListFragment extends Fragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-
-    private ReaderBlogInfoView mBlogInfoView;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -356,14 +346,6 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-        // add the blog header - note that this remains invisible until animated in
-        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            ViewGroup header = (ViewGroup) rootView.findViewById(R.id.frame_header);
-            mBlogInfoView = new ReaderBlogInfoView(context);
-            header.addView(mBlogInfoView);
-            header.setVisibility(View.INVISIBLE);
-        }
-
         // view that appears when current tag/blog has no posts - box images in this view are
         // displayed and animated for tags only
         mEmptyView = rootView.findViewById(R.id.empty_view);
@@ -402,51 +384,6 @@ public class ReaderPostListFragment extends Fragment
         );
 
         return rootView;
-    }
-
-    /*
-     * animate in the blog info header after a brief delay
-     */
-    @SuppressLint("NewApi")
-    private void animateHeaderDelayed() {
-        if (!isAdded()) {
-            return;
-        }
-
-        final ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
-        if (header == null || header.getVisibility() == View.VISIBLE) {
-            return;
-        }
-
-        // must wait for header to be fully laid out (ie: measured) or else we risk
-        // "IllegalStateException: Cannot start this animator on a detached view"
-        header.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                header.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        header.setVisibility(View.VISIBLE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            Animator animator = ViewAnimationUtils.createCircularReveal(
-                                    header,
-                                    header.getWidth() / 2,
-                                    0,
-                                    0,
-                                    (float) Math.hypot(header.getWidth(), header.getHeight()));
-                            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                            animator.start();
-                        } else {
-                            AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
-                        }
-                    }
-                }, 250);
-            }
-        });
     }
 
     private void scrollRecycleViewToPosition(int position) {
@@ -544,17 +481,19 @@ public class ReaderPostListFragment extends Fragment
         // if adapter didn't already exist, populate it now then update the tag - this
         // check is important since without it the adapter would be reset and posts would
         // be updated every time the user moves between fragments
-        if (!adapterAlreadyExists && getPostListType().isTagType()) {
+        if (!adapterAlreadyExists) {
             boolean isRecreated = (savedInstanceState != null);
-            getPostAdapter().setCurrentTag(mCurrentTag);
-            if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+            if (getPostListType().isTagType()) {
+                getPostAdapter().setCurrentTag(mCurrentTag);
+                if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                    updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+                }
+            } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                if (!isRecreated) {
+                    updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
+                }
             }
-        }
-
-        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            loadBlogOrFeedInfo();
-            animateHeaderDelayed();
         }
     }
 
@@ -1171,40 +1110,6 @@ public class ReaderPostListFragment extends Fragment
         int position = getSpinnerAdapter().getIndexOfTag(tag);
         if (position > -1 && position != mTagSpinner.getSelectedItemPosition()) {
             mTagSpinner.setSelection(position);
-        }
-    }
-
-    /*
-     * used by blog preview - tell the blog info view to show the current blog/feed
-     * if it's not already loaded, then shows/updates posts once the info is loaded
-     */
-    private void loadBlogOrFeedInfo() {
-        if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
-            AppLog.d(T.READER, "reader post list > loading blogInfo");
-            ReaderBlogInfoView.BlogInfoListener listener = new ReaderBlogInfoView.BlogInfoListener() {
-                @Override
-                public void onBlogInfoLoaded(ReaderBlog blogInfo) {
-                    if (isAdded()) {
-                        mCurrentBlogId = blogInfo.blogId;
-                        mCurrentFeedId = blogInfo.feedId;
-                        if (isPostAdapterEmpty()) {
-                            getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                            updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
-                        }
-                    }
-                }
-                @Override
-                public void onBlogInfoFailed() {
-                    if (isAdded()) {
-                        ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info, ToastUtils.Duration.LONG);
-                    }
-                }
-            };
-            if (mCurrentFeedId != 0) {
-                mBlogInfoView.loadFeedInfo(mCurrentFeedId, listener);
-            } else {
-                mBlogInfoView.loadBlogInfo(mCurrentBlogId, listener);
-            }
         }
     }
 

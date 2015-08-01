@@ -181,7 +181,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
+                    ReaderActivityLauncher.showReaderBlogPreview(
+                            view.getContext(),
+                            comment.authorBlogId,
+                            null
+                    );
                 }
             };
             holder.imgAvatar.setOnClickListener(authorListener);
