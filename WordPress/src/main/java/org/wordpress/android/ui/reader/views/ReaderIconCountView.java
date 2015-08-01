@@ -78,6 +78,7 @@ public class ReaderIconCountView extends LinearLayout {
 
     public void setSelected(boolean selected) {
         mImageView.setSelected(selected);
+        mTextCount.setSelected(selected);
     }
 
     @Override
