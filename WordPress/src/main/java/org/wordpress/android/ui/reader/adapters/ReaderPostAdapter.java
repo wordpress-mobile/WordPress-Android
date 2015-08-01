@@ -112,6 +112,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
             txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
+
+            if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+                txtBlogName.setTextColor(R.color.grey_lighten_10);
+            }
         }
     }
 

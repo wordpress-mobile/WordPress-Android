@@ -92,7 +92,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
                     tag = ReaderTag.getDefaultTag();
                 }
                 if (tag != null) {
-                    title = tag.getCapitalizedTagName();
+                    title = tag.getHashTagName();
                 }
                 showListFragmentForTag(tag, mPostListType);
             }
@@ -209,7 +209,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
     @Override
     public void onNavigateTagHistory(ReaderTag newTag) {
         updateFollowMenu();
-        setTitle(newTag.getCapitalizedTagName());
+        setTitle(newTag.getHashTagName());
     }
 
     @Override
