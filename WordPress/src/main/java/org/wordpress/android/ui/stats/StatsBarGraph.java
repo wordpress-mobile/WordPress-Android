@@ -31,6 +31,7 @@ class StatsBarGraph extends GraphView {
     // Keep tracks of every bar drawn on the graph.
     private final List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
     private int mBarPositionToHighlight = -1;
+    private boolean[] mWeekendDays;
 
     private final GestureDetectorCompat mDetector;
     private OnGestureListener mGestureListener;
@@ -125,6 +126,7 @@ class StatsBarGraph extends GraphView {
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
             private NumberFormat numberFormatter;
+
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
@@ -180,8 +182,16 @@ class StatsBarGraph extends GraphView {
             float bottom = graphheight + border - 1;
 
             // Draw the orange selection behind the selected bar
-            if (mBarPositionToHighlight == i && style.outerhighlightColor != 0x00ffffff) {
+            if (style.outerhighlightColor != 0x00ffffff && mBarPositionToHighlight == i) {
                 paint.setColor(style.outerhighlightColor);
+                canvas.drawRect(left, 10f, right, bottom, paint);
+            }
+
+            // Draw the grey background color on weekend days
+            if (style.outerColor != 0x00ffffff
+                    && mBarPositionToHighlight != i
+                    && mWeekendDays != null && mWeekendDays[i]) {
+                paint.setColor(style.outerColor);
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
 
@@ -253,6 +263,11 @@ class StatsBarGraph extends GraphView {
         }, 500);
     }
 */
+
+    public void setWeekendDays(boolean[] days) {
+        mWeekendDays = days;
+    }
+
     public void highlightBar(int barPosition) {
         mBarPositionToHighlight = barPosition;
         this.redrawAll();
