@@ -643,6 +643,34 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
+     * called when user taps follow item in popup menu for a post
+     */
+    private void toggleFollowStatusForPost(final ReaderPost post) {
+        if (post == null
+                || !hasPostAdapter()
+                || !NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
+        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(post);
+
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (isAdded() && !succeeded) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(getActivity(), resId);
+                    getPostAdapter().setFollowStatusForBlog(post.blogId, !isAskingToFollow);
+                }
+            }
+        };
+
+        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
+            getPostAdapter().setFollowStatusForBlog(post.blogId, isAskingToFollow);
+        }
+    }
+
+    /*
      * blocks the blog associated with the passed post and removes all posts in that blog
      * from the adapter
      */
@@ -1397,8 +1425,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called when user taps dropdown arrow icon next to a post - shows a popup menu
-     * that enables blocking the blog the post is in
+     * called when user taps "..." icon next to a post
      */
     @Override
     public void onShowPostPopup(View view, final ReaderPost post) {
@@ -1407,14 +1434,31 @@ public class ReaderPostListFragment extends Fragment
         }
 
         PopupMenu popup = new PopupMenu(getActivity(), view);
-        MenuItem menuItem = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
-        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+        boolean isFollowed = ReaderPostTable.isPostFollowed(post);
+        MenuItem mnuFollow = popup.getMenu().add(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        mnuFollow.setCheckable(true);
+        mnuFollow.setChecked(isFollowed);
+        mnuFollow.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                blockBlogForPost(post);
-                return true;
+                toggleFollowStatusForPost(post);
+                return false;
             }
         });
+
+        // enable blocking a blog when viewing a followed tag
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            MenuItem mnuBlock = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
+            mnuBlock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    blockBlogForPost(post);
+                    return true;
+                }
+            });
+        }
+
         popup.show();
     }
 
