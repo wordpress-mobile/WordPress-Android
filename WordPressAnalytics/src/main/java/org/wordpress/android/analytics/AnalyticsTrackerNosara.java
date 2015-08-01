@@ -61,6 +61,9 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case APPLICATION_CLOSED:
                 eventName = "application_closed";
                 break;
+            case APPLICATION_UPGRADED:
+                eventName = "application_upgraded";
+                break;
             case THEMES_ACCESSED_THEMES_BROWSER:
                 eventName = "themes_theme_browser_accessed";
                 break;
@@ -237,7 +240,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "media_library");
                 break;
-            case OPENED_SETTINGS:
+            case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "settings");
                 break;
@@ -256,11 +259,33 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case SIGNED_INTO_JETPACK:
                 eventName = "signed_into_jetpack";
                 break;
+            case ACCOUNT_LOGOUT:
+                eventName = "account_logout";
+                break;
             case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
                 eventName = "stats_screen_signed_into_jetpack";
                 break;
             case STATS_ACCESSED:
                 eventName = "stats_accessed";
+                break;
+            case STATS_INSIGHTS_ACCESSED:
+                eventName = "stats_insights_accessed";
+                break;
+            case STATS_PERIOD_DAYS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "days");
+                break;
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "weeks");
+                break;
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "months");
+                break;
+            case STATS_PERIOD_YEARS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "years");
                 break;
             case STATS_VIEW_ALL_ACCESSED:
                 eventName = "stats_view_all_accessed";
@@ -294,6 +319,39 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 eventName = "login_failed_to_guess_xmlrpc";
+                break;
+            case PUSH_AUTHENTICATION_APPROVED:
+                eventName = "push_authentication_approved";
+                break;
+            case PUSH_AUTHENTICATION_EXPIRED:
+                eventName = "push_authentication_expired";
+                break;
+            case PUSH_AUTHENTICATION_FAILED:
+                eventName = "push_authentication_failed";
+                break;
+            case PUSH_AUTHENTICATION_IGNORED:
+                eventName = "push_authentication_ignored";
+                break;
+            case SETTINGS_LANGUAGE_SELECTION_FORCED:
+                eventName = "settings_language_selection_forced";
+                break;
+            case NOTIFICATION_SETTINGS_LIST_OPENED:
+                eventName = "notification_settings_list_opened";
+                break;
+            case NOTIFICATION_SETTINGS_STREAMS_OPENED:
+                eventName = "notification_settings_streams_opened";
+                break;
+            case NOTIFICATION_SETTINGS_DETAILS_OPENED:
+                eventName = "notification_settings_details_opened";
+                break;
+            case NOTIFICATION_SETTINGS_UPDATED:
+                eventName = "notification_settings_updated";
+                break;
+            case ME_ACCESSED:
+                eventName = "me_tab_accessed";
+                break;
+            case MY_SITE_ACCESSED:
+                eventName = "my_site_tab_accessed";
                 break;
             default:
                 eventName = null;
