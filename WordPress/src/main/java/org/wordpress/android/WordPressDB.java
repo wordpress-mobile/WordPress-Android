@@ -1776,18 +1776,6 @@ public class WordPressDB {
         return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[] { blogId });
     }
 
-    /*public Cursor getThemesPremium(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND price > 0 ORDER BY name ASC", new String[] { blogId });
-    }
-
-    public Cursor getThemesFriendsOfWP(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND themeId LIKE ? ORDER BY popularityRank ASC", new String[] { blogId, "partner-%" });
-    }
-
-    public Cursor getCurrentTheme(String blogId) {
-        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrentTheme='true'", new String[] { blogId });
-    }*/
-
     public String getCurrentThemeId(String blogId) {
         return DatabaseUtils.stringForQuery(db, "SELECT themeId FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrent='1'", new String[] { blogId });
     }

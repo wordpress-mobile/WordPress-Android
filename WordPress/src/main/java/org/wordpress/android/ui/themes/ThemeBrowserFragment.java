@@ -32,14 +32,14 @@ import org.wordpress.android.widgets.HeaderGridView;
  * A fragment display the themes on a grid view.
  */
 public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener {
-    public enum ThemeSortType {
-        TRENDING("Trending"),
-        NEWEST("Newest"),
-        POPULAR("Popular");
+    public enum ThemeFilterType {
+        ALL("All"),
+        FREE("Free"),
+        POPULAR("Premium");
 
         private String mTitle;
 
-        private ThemeSortType(String title) {
+        private ThemeFilterType(String title) {
             mTitle = title;
         }
 
@@ -47,11 +47,11 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return mTitle;
         }
 
-        public static ThemeSortType getTheme(int position) {
-            if (position < ThemeSortType.values().length)
-                return ThemeSortType.values()[position];
+        public static ThemeFilterType getTheme(int position) {
+            if (position < ThemeFilterType.values().length)
+                return ThemeFilterType.values()[position];
             else
-                return TRENDING;
+                return ALL;
         }
     }
 
@@ -71,7 +71,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     private boolean mShouldRefreshOnStart;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
-    public static ThemeBrowserFragment newInstance(ThemeSortType sort) {
+    public static ThemeBrowserFragment newInstance(ThemeFilterType sort) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, sort.ordinal());
@@ -198,33 +198,31 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         }
     }
 
-    private ThemeSortType getThemeSortType() {
-        int sortType = ThemeSortType.TRENDING.ordinal();
+    private ThemeFilterType getThemeSortType() {
+        int sortType = ThemeFilterType.ALL.ordinal();
         if (getArguments() != null && getArguments().containsKey(ARGS_SORT))  {
             sortType = getArguments().getInt(ARGS_SORT);
         }
 
-        return ThemeSortType.getTheme(sortType);
+        return ThemeFilterType.getTheme(sortType);
     }
 
     /**
-     * Fetch themes for a given ThemeSortType.
+     * Fetch themes for a given ThemeFilterType.
      *
      * @return a db Cursor or null if current blog is null
      */
-    private Cursor fetchThemes(ThemeSortType themeSortType) {
+    private Cursor fetchThemes(ThemeFilterType themeFilterType) {
         if (WordPress.getCurrentBlog() == null) {
             return null;
         }
         String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-        switch (themeSortType) {
+        switch (themeFilterType) {
             case POPULAR:
-                return WordPress.wpDB.getThemesPopularity(blogId);
-            case NEWEST:
-                return WordPress.wpDB.getThemesNewest(blogId);
-            case TRENDING:
+            case FREE:
+            case ALL:
             default:
-                return WordPress.wpDB.getThemesTrending(blogId);
+                return WordPress.wpDB.getThemesNewest(blogId);
         }
     }
 

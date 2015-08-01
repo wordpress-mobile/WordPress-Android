@@ -164,26 +164,13 @@ public class Theme {
         String themeId = object.getString("id");
         String screenshotURL = object.getString("screenshot") ;
         String name = object.getString("name");
-        String description = object.getString("description");
-        int trendingRank = object.getInt("trending_rank");
-        int popularityRank = object.getInt("popularity_rank");
-        String launchDate = object.getString("launch_date");
-        String previewURL = object.has("preview_url") ? object.getString("preview_url") : ""; // we don't receive preview_url when we fetch current theme
-
-        // parse cost, e.g
-        // "cost": {
-        //   "display": "$80",
-        //   "number": 80,
-        //   "currency": "USD"
-        // },
-        JSONObject costObject = object.getJSONObject("cost");
-        boolean isPremium = costObject.getInt("number") > 0;
-        String price = "free";
-        try {
-            price = costObject.getString("display");
-        } catch (JSONException e) {
-            price = "free";
-        }
+        String description = "hey";
+        int trendingRank = 1;
+        int popularityRank = 1;
+        String launchDate = "hdas";
+        String previewURL = object.has("screenshot") ? object.getString("screenshot") : ""; // we don't receive preview_url when we fetch current theme
+        boolean isPremium = false;
+        String price = object.getString("price");
 
         // if the theme is free, set the blogId to be empty
         // if the theme is not free, set the blogId to the current blog
