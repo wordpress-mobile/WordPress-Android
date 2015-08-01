@@ -170,7 +170,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.layoutPostHeader.setVisibility(View.GONE);
         } else {
             postHolder.layoutPostHeader.setVisibility(View.VISIBLE);
-            postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
+            if (post.hasBlogUrl()) {
+                String imageUrl = GravatarUtils.blavatarFromUrl(post.getUrl(), mAvatarSzMedium);
+                postHolder.imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            } else {
+                postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
+            }
             if (post.hasBlogName()) {
                 postHolder.txtBlogName.setText(post.getBlogName());
             } else if (post.hasAuthorName()) {
