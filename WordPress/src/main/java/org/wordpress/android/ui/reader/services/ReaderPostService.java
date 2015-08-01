@@ -39,7 +39,7 @@ public class ReaderPostService extends Service {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_FEED_ID = "feed_id";
 
-    public static enum UpdateAction {REQUEST_NEWER, REQUEST_OLDER}
+    public enum UpdateAction {REQUEST_NEWER, REQUEST_OLDER}
 
     /*
      * update posts with the passed tag
@@ -117,7 +117,7 @@ public class ReaderPostService extends Service {
         return START_NOT_STICKY;
     }
 
-    void updatePostsWithTag(final ReaderTag tag, final UpdateAction action) {
+    private void updatePostsWithTag(final ReaderTag tag, final UpdateAction action) {
         requestPostsWithTag(
                 tag,
                 action,
@@ -130,7 +130,7 @@ public class ReaderPostService extends Service {
                 });
     }
 
-    void updatePostsInBlog(long blogId, final UpdateAction action) {
+    private void updatePostsInBlog(long blogId, final UpdateAction action) {
         UpdateResultListener listener = new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
@@ -141,7 +141,7 @@ public class ReaderPostService extends Service {
         requestPostsForBlog(blogId, action, listener);
     }
 
-    void updatePostsInFeed(long feedId, final UpdateAction action) {
+    private void updatePostsInFeed(long feedId, final UpdateAction action) {
         UpdateResultListener listener = new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
@@ -155,13 +155,13 @@ public class ReaderPostService extends Service {
     private static void requestPostsWithTag(final ReaderTag tag,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
-        String endpoint = getEndpointForTag(tag);
-        if (TextUtils.isEmpty(endpoint)) {
+        String path = getRelativeEndpointForTag(tag);
+        if (TextUtils.isEmpty(path)) {
             resultListener.onUpdateResult(UpdateResult.FAILED);
             return;
         }
 
-        StringBuilder sb = new StringBuilder(endpoint);
+        StringBuilder sb = new StringBuilder(path);
 
         // append #posts to retrieve
         sb.append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
@@ -195,14 +195,21 @@ public class ReaderPostService extends Service {
             }
         };
 
-        WordPress.getRestClientUtilsV1_1().get(sb.toString(), null, null, listener, errorListener);
+        // TODO: as of 09-July-2015 there is no v1.2 endpoint for Freshly Pressed, so we have to
+        // request FP posts using the v1.1 endpoint - this hack checks the stored endpoint to see
+        // if it's v1.1 and if so uses that REST client rather than v1.2
+        String endpoint = ReaderTagTable.getEndpointForTag(tag);
+        if (!TextUtils.isEmpty(endpoint) && endpoint.contains("rest/v1.1/")) {
+            WordPress.getRestClientUtilsV1_1().get(sb.toString(), null, null, listener, errorListener);
+        } else {
+            WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
+        }
     }
-
 
     private static void requestPostsForBlog(final long blogId,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
-        String path = "sites/" + blogId + "/posts/?meta=site,likes";
+        String path = "read/sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == UpdateAction.REQUEST_OLDER) {
@@ -226,7 +233,7 @@ public class ReaderPostService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "updating posts in blog " + blogId);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     private static void requestPostsForFeed(final long feedId,
@@ -255,7 +262,7 @@ public class ReaderPostService extends Service {
         };
 
         AppLog.d(AppLog.T.READER, "updating posts in feed " + feedId);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     /*
@@ -286,7 +293,7 @@ public class ReaderPostService extends Service {
     /*
      * returns the endpoint to use when requesting posts with the passed tag
      */
-    private static String getEndpointForTag(ReaderTag tag) {
+    private static String getRelativeEndpointForTag(ReaderTag tag) {
         if (tag == null) {
             return null;
         }

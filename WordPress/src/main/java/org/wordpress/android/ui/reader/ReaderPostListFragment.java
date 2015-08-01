@@ -2,14 +2,13 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,8 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.cocosw.undobar.UndoBarController;
-
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -42,6 +40,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.RequestCodes;
@@ -60,7 +59,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
-import org.wordpress.android.ui.reader.views.ReaderRecyclerView.ReaderItemDecoration;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -71,6 +69,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -94,7 +93,6 @@ public class ReaderPostListFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private CustomSwipeRefreshLayout mSwipeToRefreshLayout;
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -121,7 +119,7 @@ public class ReaderPostListFragment extends Fragment
 
     private static class HistoryStack extends Stack<String> {
         private final String keyName;
-        HistoryStack(String keyName) {
+        HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
             this.keyName = keyName;
         }
         void restoreInstance(Bundle bundle) {
@@ -352,7 +350,7 @@ public class ReaderPostListFragment extends Fragment
         Context context = container.getContext();
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-        mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
@@ -391,9 +389,8 @@ public class ReaderPostListFragment extends Fragment
         mProgress.setVisibility(View.GONE);
 
         // swipe to refresh setup
-        mSwipeToRefreshLayout = (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout);
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                mSwipeToRefreshLayout,
+                (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -487,7 +484,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * position the tag toolbar based on the recycler's scroll position - this will make it
+     * position the tag toolbar based on the recycler scroll position - this will make it
      * appear to scroll along with the recycler
      */
     private void positionTagToolbar() {
@@ -662,7 +659,6 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    hideUndoBar();
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
                 }
             }
@@ -677,25 +673,26 @@ public class ReaderPostListFragment extends Fragment
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
 
-        // show the undo bar enabling the user to undo the block
-        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+        // show the undo snackbar enabling the user to undo the block
+        View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
-            public void onUndo(Parcelable parcelable) {
+            public void onClick(View v) {
                 ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 refreshPosts();
             }
         };
-        new UndoBarController.UndoBar(getActivity())
-                .message(getString(R.string.reader_toast_blog_blocked))
-                .listener(undoListener)
-                .translucent(true)
+        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener)
                 .show();
 
-    }
-
-    private void hideUndoBar() {
-        if (isAdded()) {
-            UndoBarController.clear(getActivity());
+        // make sure the tag toolbar is correctly positioned once the snackbar goes away
+        if (shouldShowTagToolbar()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    positionTagToolbar();
+                }
+            }, Constants.SNACKBAR_LONG_DURATION_MS);
         }
     }
 
@@ -866,18 +863,6 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    /*
-     * called by post adapter when user requests to reblog a post
-     */
-    private final ReaderInterfaces.RequestReblogListener mRequestReblogListener = new ReaderInterfaces.RequestReblogListener() {
-        @Override
-        public void onRequestReblog(ReaderPost post, View view) {
-            if (isAdded()) {
-                ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, view);
-            }
-        }
-    };
-
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
@@ -888,7 +873,6 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
-            mPostAdapter.setOnReblogRequestedListener(mRequestReblogListener);
             // show spacer above the first post to accommodate toolbar
             mPostAdapter.setShowToolbarSpacer(shouldShowTagToolbar());
         }
@@ -950,7 +934,6 @@ public class ReaderPostListFragment extends Fragment
 
         getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
-        hideUndoBar();
         showLoadingProgress(false);
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
@@ -1011,16 +994,6 @@ public class ReaderPostListFragment extends Fragment
         hideNewPostsBar();
         if (hasPostAdapter()) {
             getPostAdapter().refresh();
-        }
-    }
-
-    /*
-     * tell the adapter to reload a single post - called when user returns from detail, where the
-     * post may have been changed (either by the user, or because it updated)
-     */
-    private void reloadPost(ReaderPost post) {
-        if (post != null && hasPostAdapter()) {
-            getPostAdapter().reloadPost(post);
         }
     }
 
@@ -1353,8 +1326,29 @@ public class ReaderPostListFragment extends Fragment
      * called from adapter when user taps a post
      */
     @Override
-    public void onPostSelected(long blogId, long postId) {
-        if (!isAdded()) return;
+    public void onPostSelected(ReaderPost post) {
+        if (!isAdded() || post == null) return;
+
+        // "discover" posts that highlight another post should open the original (source) post when tapped
+        if (post.isDiscoverPost()) {
+            ReaderPostDiscoverData discoverData = post.getDiscoverData();
+            if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
+                if (discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
+                    String title = getCurrentTagName();
+                    ReaderActivityLauncher.showReaderPostDetail(
+                            getActivity(),
+                            discoverData.getBlogId(),
+                            discoverData.getPostId(),
+                            title);
+                    return;
+                } else if (discoverData.hasPermalink()) {
+                    // if we don't have a blogId/postId, we sadly resort to showing the post
+                    // in a WebView activity - this will happen for non-JP self-hosted
+                    ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
+                    return;
+                }
+            }
+        }
 
         ReaderPostListType type = getPostListType();
         Map<String, Object> analyticsProperties = new HashMap<>();
@@ -1370,16 +1364,16 @@ public class ReaderPostListFragment extends Fragment
                         getActivity(),
                         getCurrentTag(),
                         getPostListType(),
-                        blogId,
-                        postId);
+                        post.blogId,
+                        post.postId);
                 break;
             case BLOG_PREVIEW:
                 analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
                         AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
-                        blogId,
-                        postId);
+                        post.blogId,
+                        post.postId);
                 break;
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE, analyticsProperties);
@@ -1447,16 +1441,6 @@ public class ReaderPostListFragment extends Fragment
                             && getCurrentTag().isBlogsIFollow()) {
                         refreshPosts();
                     }
-                }
-                break;
-
-            // user just returned from reblogging activity, reload the displayed post if reblogging
-            // succeeded
-            case RequestCodes.READER_REBLOG:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    reloadPost(ReaderPostTable.getPost(blogId, postId, true));
                 }
                 break;
         }

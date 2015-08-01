@@ -22,6 +22,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -37,35 +39,28 @@
                         android:id="@+id/stats_insights_most_popular_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <!-- ALL TIME SECTION -->
                     <FrameLayout
                         android:id="@+id/stats_insights_all_time_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <!-- TODAY SECTION -->
                     <FrameLayout
                         android:id="@+id/stats_insights_today_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:textAppearance="?android:attr/textAppearance"
+                        android:textSize="@dimen/text_sz_large"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium"
                         android:layout_marginBottom="@dimen/margin_extra_small"
                         android:textColor="@color/stats_blue_labels"
                         android:gravity="start"
@@ -75,33 +70,25 @@
                         android:id="@+id/stats_comments_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_tags_and_categories_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_followers_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_publicize_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                 </LinearLayout>
 
@@ -116,65 +103,49 @@
                         android:id="@+id/stats_visitors_and_views_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_top_posts_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_referrers_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_clicks_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_top_authors_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_geoviews_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_search_terms_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
                     <FrameLayout
                         android:id="@+id/stats_video_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium" />
+                        android:layout_marginTop="@dimen/margin_large" />
 
 
                     <org.wordpress.android.widgets.WPTextView
@@ -182,10 +153,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium"
                         android:textColor="@color/stats_blue_labels"
                         android:gravity="start"
+                        android:textSize="@dimen/text_sz_large"
                         android:text="@string/stats_other_recent_stats_label" />
 
                     <org.wordpress.android.widgets.WPTextView
@@ -195,8 +165,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:layout_marginLeft="@dimen/margin_medium"
-                        android:layout_marginRight="@dimen/margin_medium"
                         android:textColor="@color/stats_link_text_color"
                         android:gravity="start"
                         android:textSize="@dimen/text_sz_small"

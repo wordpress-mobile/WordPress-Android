@@ -31,6 +31,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ActivityUtils;
@@ -57,10 +58,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_SETTINGS);
-        }
 
         addPreferencesFromResource(R.xml.settings);
 
@@ -275,10 +272,8 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     }
 
     private boolean handleNotificationPreferenceClick() {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new NotificationSettingsFragment())
-                .addToBackStack(null)
-                .commit();
+        Intent notificationsIntent = new Intent(getActivity(), NotificationsSettingsActivity.class);
+        ActivityLauncher.slideInFromRight(getActivity(), notificationsIntent);
         return true;
     }
 

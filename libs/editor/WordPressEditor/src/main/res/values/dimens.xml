@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="format_bar_height">40dp</dimen>
+    <dimen name="format_bar_height">44dp</dimen>
+    <dimen name="format_bar_height_tablet">49dp</dimen>
     <dimen name="format_bar_left_margin">5dp</dimen>
     <dimen name="format_bar_right_margin">2dp</dimen>
-    <dimen name="format_bar_button_right_margin">4dp</dimen>
     <dimen name="format_bar_html_button_left_margin">3dp</dimen>
+    <dimen name="format_bar_scroll_right_margin">-7dp</dimen>
 
-    <dimen name="format_bar_button_margin_tablet">2dp</dimen>
+    <dimen name="format_bar_button_margin_tablet">@dimen/format_bar_button_margin_tablet_small</dimen>
+    <dimen name="format_bar_button_margin_tablet_small">2dp</dimen>
+    <dimen name="format_bar_button_margin_tablet_large">7dp</dimen>
+    <dimen name="format_bar_button_margin_tablet_extra_large">12dp</dimen>
+
+    <dimen name="format_bar_button_group_tablet">@dimen/format_bar_button_group_tablet_small</dimen>
+    <dimen name="format_bar_button_group_tablet_small">15dp</dimen>
+    <dimen name="format_bar_button_group_tablet_large">25dp</dimen>
+    <dimen name="format_bar_button_group_tablet_extra_large">35dp</dimen>
 
     <dimen name="format_bar_horizontal_divider_height">1dp</dimen>
     <dimen name="format_bar_vertical_divider_width">0.6dp</dimen>
     <dimen name="format_bar_vertical_divider_height">28dp</dimen>
 
-    <dimen name="format_bar_button_highlighted_underline_top">37dp</dimen>
-    <dimen name="format_bar_button_highlighted_underline_width">2dp</dimen>
+    <dimen name="sourceview_side_margin">15dp</dimen>
+    <dimen name="sourceview_side_margin_large">90dp</dimen>
+    <dimen name="sourceview_side_margin_extra_large">170dp</dimen>
+    <dimen name="sourceview_top_margin">15dp</dimen>
+    <dimen name="sourceview_title_bottom_margin">15dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
 

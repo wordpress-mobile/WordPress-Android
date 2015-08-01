@@ -238,11 +238,15 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     private String getTotalFollowersLabel(int total) {
-        if ( mTopPagerSelectedButtonIndex == 0 ) {
-            return getString(R.string.stats_followers_total_wpcom, FormatUtils.formatDecimal(total));
+        final String totalFollowersLabel;
+
+        if (mTopPagerSelectedButtonIndex == 0) {
+            totalFollowersLabel = getString(R.string.stats_followers_total_wpcom);
+        } else {
+            totalFollowersLabel = getString(R.string.stats_followers_total_email);
         }
 
-        return  getString(R.string.stats_followers_total_email, FormatUtils.formatDecimal(total));
+        return String.format(totalFollowersLabel, FormatUtils.formatDecimal(total));
     }
 
     @Override

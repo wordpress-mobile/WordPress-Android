@@ -7,7 +7,7 @@ import org.wordpress.android.models.ReaderPost;
 public class ReaderInterfaces {
 
     public static interface OnPostSelectedListener {
-        public void onPostSelected(long blogId, long postId);
+        public void onPostSelected(ReaderPost post);
     }
 
     public static interface OnTagSelectedListener {
@@ -33,13 +33,6 @@ public class ReaderInterfaces {
      */
     public interface DataLoadedListener {
         public void onDataLoaded(boolean isEmpty);
-    }
-
-    /*
-     * used by post list & post list adapter when user asks to reblog a post
-     */
-    public interface RequestReblogListener {
-        public void onRequestReblog(ReaderPost post, View sourceView);
     }
 
 }

@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -30,23 +30,27 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
+        showReaderPostDetail(context, blogId, postId, null);
+    }
+    public static void showReaderPostDetail(Context context, long blogId, long postId, CharSequence title) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
 
-        if (context instanceof Activity) {
-            // For ActionBarActivity subclasses, we need to pull the title from the Toolbar
-            CharSequence title = null;
-            if (context instanceof ActionBarActivity && ((ActionBarActivity) context).getSupportActionBar() != null) {
-                title = ((ActionBarActivity) context).getSupportActionBar().getTitle();
+        if (title == null && context instanceof Activity) {
+            // For AppCompatActivity subclasses, we need to pull the title from the Toolbar
+            if (context instanceof AppCompatActivity && ((AppCompatActivity) context).getSupportActionBar() != null) {
+                title = ((AppCompatActivity) context).getSupportActionBar().getTitle();
             }
-
             if (title == null) {
-                // Not an ActionBarActivity, or getSupportActionBar().getTitle() returned null.
+                // Not an AppCompatActivity, or getSupportActionBar().getTitle() returned null.
                 // Try to read the title from the Activity
                 title = ((Activity)context).getTitle();
             }
+        }
+
+        if (!TextUtils.isEmpty(title)) {
             intent.putExtra(ReaderConstants.ARG_TITLE, title);
         }
 
@@ -228,29 +232,7 @@ public class ReaderActivityLauncher {
         }
     }
 
-    /*
-     * show the reblog activity for the passed post
-     */
-    public static void showReaderReblogForResult(Activity activity, ReaderPost post, View source) {
-        if (activity == null || post == null) {
-            return;
-        }
-        Intent intent = new Intent(activity, ReaderReblogActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
-        ActivityOptionsCompat options;
-        if (source != null) {
-            int startX = source.getLeft();
-            int startY = source.getTop();
-            options = ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, 0, 0);
-        } else {
-            options = ActivityOptionsCompat.makeCustomAnimation(activity, R.anim.reader_flyin, 0);
-        }
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.READER_REBLOG, options.toBundle());
-
-    }
-
-    public static enum OpenUrlType { INTERNAL, EXTERNAL }
+    public enum OpenUrlType { INTERNAL, EXTERNAL }
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
@@ -270,7 +252,8 @@ public class ReaderActivityLauncher {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 context.startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                ToastUtils.showToast(context, context.getString(R.string.reader_toast_err_url_intent, url), ToastUtils.Duration.LONG);
+                String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
+                ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
             }
         }
     }

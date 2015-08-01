@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -30,6 +30,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.AppLog;
@@ -45,7 +46,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditCommentActivity extends ActionBarActivity {
+public class EditCommentActivity extends AppCompatActivity {
     static final String ARG_LOCAL_BLOG_ID = "blog_id";
     static final String ARG_COMMENT_ID = "comment_id";
     static final String ARG_NOTE_ID = "note_id";
@@ -72,6 +73,8 @@ public class EditCommentActivity extends ActionBarActivity {
         }
 
         loadComment(getIntent());
+
+        ActivityId.trackLastActivity(ActivityId.COMMENT_EDITOR);
     }
 
     private void loadComment(Intent intent) {

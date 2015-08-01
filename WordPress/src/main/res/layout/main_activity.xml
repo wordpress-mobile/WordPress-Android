@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <org.wordpress.android.widgets.SlidingTabLayout
-        android:id="@+id/sliding_tabs"
+    <org.wordpress.android.ui.main.WPMainTabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/tab_background"
         android:elevation="@dimen/tabs_elevation"
-        android:paddingLeft="@dimen/tabstrip_padding"
-        android:paddingRight="@dimen/tabstrip_padding" />
+        app:tabIndicatorColor="@color/tab_indicator" />
 
-    <org.wordpress.android.widgets.WPMainViewPager
+    <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/connection_bar"
+        android:layout_below="@+id/tab_layout" />
 
-</LinearLayout>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/connection_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/alert_yellow"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
+        android:text="@string/connectionbar_no_connection"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_small"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>

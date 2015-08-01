@@ -22,6 +22,7 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_summary_date"
                 android:textAppearance="?android:attr/textAppearance"
+                android:textSize="@dimen/text_sz_large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
@@ -34,8 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin" />
 
         </LinearLayout>
     </org.wordpress.android.ui.stats.ScrollViewExt>

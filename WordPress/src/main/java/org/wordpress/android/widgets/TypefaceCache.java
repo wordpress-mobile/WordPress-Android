@@ -12,10 +12,10 @@ import java.util.Hashtable;
 
 public class TypefaceCache {
     /**
-     * Cache used for all views that support custom fonts. The default is Open Sans, which
-     * supports both normal and light variations. Merriweather is also available via the
-     * "fontFamily" attribute, but it doesn't have a light variation.
+     * Cache used for all views that support custom fonts. The default is Open Sans, but
+     * Merriweather is also available via the "fontFamily" attribute
      */
+
     private static final int VARIATION_NORMAL = 0;
     private static final int VARIATION_LIGHT = 1;
     private static final int VARIATION_DEFAULT = VARIATION_NORMAL;
@@ -39,19 +39,32 @@ public class TypefaceCache {
 
         final String typefaceName;
         if (family == FAMILY_MERRIWEATHER) {
-            switch (fontStyle) {
-                case Typeface.BOLD:
-                    typefaceName = "Merriweather-Bold.ttf";
-                    break;
-                case Typeface.ITALIC:
-                    typefaceName = "Merriweather-Italic.otf";
-                    break;
-                case Typeface.BOLD_ITALIC:
-                    typefaceName = "Merriweather-BoldItalic.otf";
-                    break;
-                default:
-                    typefaceName = "Merriweather-Regular.ttf";
-                    break;
+            if (variation == VARIATION_LIGHT) {
+                // note that there isn't a light bold style
+                switch (fontStyle) {
+                    case Typeface.ITALIC:
+                    case Typeface.BOLD_ITALIC:
+                        typefaceName = "Merriweather-LightItalic.otf";
+                        break;
+                    default:
+                        typefaceName = "Merriweather-Light.ttf";
+                        break;
+                }
+            } else {
+                switch (fontStyle) {
+                    case Typeface.BOLD:
+                        typefaceName = "Merriweather-Bold.ttf";
+                        break;
+                    case Typeface.ITALIC:
+                        typefaceName = "Merriweather-Italic.otf";
+                        break;
+                    case Typeface.BOLD_ITALIC:
+                        typefaceName = "Merriweather-BoldItalic.otf";
+                        break;
+                    default:
+                        typefaceName = "Merriweather-Regular.ttf";
+                        break;
+                }
             }
         } else {
             // Open Sans

@@ -1,19 +1,84 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="org.wordpress.android.editor.EditorFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:editor="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.wordpress.android.editor.EditorFragment">
 
     <include
         layout="@layout/editor_webview"
-        android:id="@+id/webview" />
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/format_bar"/>
+
+    <ScrollView
+        android:id="@+id/sourceview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:layout_above="@id/format_bar"
+        android:fillViewport="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/post_content_wrapper"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <org.wordpress.android.editor.SourceViewEditText
+                android:id="@+id/sourceview_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/sourceview_side_margin"
+                android:layout_marginRight="@dimen/sourceview_side_margin"
+                android:layout_marginTop="@dimen/sourceview_top_margin"
+                android:layout_marginBottom="@dimen/sourceview_title_bottom_margin"
+                android:background="@null"
+                android:textSize="24sp"
+                android:textColorHint="@color/sourceview_placeholder_text"
+                android:inputType="textCapSentences|textAutoCorrect"
+                android:imeOptions="flagNoExtractUi"
+                editor:fontFile="Merriweather-Bold.ttf"/>
+
+            <View
+                android:id="@+id/sourceview_horizontal_divider"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/format_bar_horizontal_divider_height"
+                android:layout_marginLeft="@dimen/sourceview_side_margin"
+                android:layout_marginRight="@dimen/sourceview_side_margin"
+                style="@style/DividerSourceView"/>
+
+            <org.wordpress.android.editor.SourceViewEditText
+                android:id="@+id/sourceview_content"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:layout_marginLeft="@dimen/sourceview_side_margin"
+                android:layout_marginRight="@dimen/sourceview_side_margin"
+                android:layout_marginTop="@dimen/sourceview_top_margin"
+                android:background="@null"
+                android:textSize="16sp"
+                android:maxLength="10000000"
+                android:textColorHint="@color/sourceview_placeholder_text"
+                android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+                android:lineSpacingExtra="4dp"
+                android:imeOptions="flagNoExtractUi"
+                android:typeface="monospace"/>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/format_bar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/format_bar_height"
         android:layout_gravity="bottom"
-        android:background="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:background="@color/format_bar_background"
         android:orientation="vertical">
 
         <View
@@ -34,7 +99,8 @@
             <HorizontalScrollView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginRight="@dimen/format_bar_scroll_right_margin">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -43,65 +109,70 @@
                     android:orientation="horizontal"
                     tools:ignore="RtlHardcoded">
 
-                    <ToggleButton
+                    <org.wordpress.android.editor.RippleToggleButton
                         android:id="@+id/format_bar_button_media"
-                        style="@style/FormatBarScrollViewButton"
+                        style="@style/FormatBarButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:background="@drawable/format_bar_button_media_selector"/>
 
-                    <ToggleButton
+                    <org.wordpress.android.editor.RippleToggleButton
                         android:id="@+id/format_bar_button_bold"
-                        style="@style/FormatBarScrollViewButton"
+                        style="@style/FormatBarButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:background="@drawable/format_bar_button_bold_selector"/>
+                        android:background="@drawable/format_bar_button_bold_selector"
+                        android:tag="@string/format_bar_tag_bold"/>
 
-                    <ToggleButton
+                    <org.wordpress.android.editor.RippleToggleButton
                         android:id="@+id/format_bar_button_italic"
-                        style="@style/FormatBarScrollViewButton"
+                        style="@style/FormatBarButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:background="@drawable/format_bar_button_italic_selector"/>
+                        android:background="@drawable/format_bar_button_italic_selector"
+                        android:tag="@string/format_bar_tag_italic"/>
 
-                    <ToggleButton
+                    <org.wordpress.android.editor.RippleToggleButton
                         android:id="@+id/format_bar_button_quote"
-                        style="@style/FormatBarScrollViewButton"
+                        style="@style/FormatBarButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:background="@drawable/format_bar_button_quote_selector"/>
+                        android:background="@drawable/format_bar_button_quote_selector"
+                        android:tag="@string/format_bar_tag_blockquote"/>
 
-                    <ToggleButton
+                    <org.wordpress.android.editor.RippleToggleButton
                         android:id="@+id/format_bar_button_ul"
-                        style="@style/FormatBarScrollViewButton"
+                        style="@style/FormatBarButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:background="@drawable/format_bar_button_ul_selector"/>
+                        android:background="@drawable/format_bar_button_ul_selector"
+                        android:tag="@string/format_bar_tag_unorderedList"/>
 
-                    <ToggleButton
+                    <org.wordpress.android.editor.RippleToggleButton
                         android:id="@+id/format_bar_button_ol"
-                        style="@style/FormatBarScrollViewButton"
+                        style="@style/FormatBarButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
-                        android:background="@drawable/format_bar_button_ol_selector"/>
+                        android:background="@drawable/format_bar_button_ol_selector"
+                        android:tag="@string/format_bar_tag_orderedList"/>
 
-                    <ToggleButton
+                    <org.wordpress.android.editor.RippleToggleButton
                         android:id="@+id/format_bar_button_link"
-                        style="@style/FormatBarScrollViewButton"
+                        style="@style/FormatBarButton"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:background="@drawable/format_bar_button_link_selector"/>
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <View
-                android:id="@+id/format_bar_vertical_divider"
-                android:layout_width="@dimen/format_bar_vertical_divider_width"
-                android:layout_height="@dimen/format_bar_vertical_divider_height"
-                android:layout_gravity="center"
-                style="@style/Divider"/>
+            <ImageView
+                android:src="@drawable/format_bar_chevron"
+                android:background="@android:color/transparent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView" />
 
-            <ToggleButton
+            <org.wordpress.android.editor.RippleToggleButton
                 android:id="@+id/format_bar_button_html"
                 style="@style/FormatBarHtmlButton"
                 android:layout_width="wrap_content"
@@ -110,4 +181,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

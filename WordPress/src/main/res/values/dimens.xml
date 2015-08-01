@@ -33,6 +33,12 @@
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
 
+    <!-- featured image in post list -->
+    <dimen name="postlist_featured_image_height_normal">128dp</dimen>
+    <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
+    <dimen name="postlist_featured_image_height_tablet_large">280dp</dimen>
+    <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_normal</dimen>
+
     <!-- left/right margin for content such as Me fragment, My Site fragment, reader posts -->
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
     <dimen name="content_margin_normal_landscape">48dp</dimen>
@@ -43,13 +49,8 @@
     <!-- spacing between icons in main tab strip -->
     <dimen name="tabstrip_icon_spacing_normal">0dp</dimen>
     <dimen name="tabstrip_icon_spacing_landscape">24dp</dimen>
+    <dimen name="tabstrip_icon_spacing_tablet">24dp</dimen>
     <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_normal</dimen>
-
-    <!-- spacing between first tab and left edge -->
-    <dimen name="tabstrip_padding_normal">0dp</dimen>
-    <dimen name="tabstrip_padding_tablet">@dimen/content_margin</dimen>
-    <dimen name="tabstrip_padding_landscape">@dimen/content_margin</dimen>
-    <dimen name="tabstrip_padding">@dimen/tabstrip_padding_normal</dimen>
 
     <!--
         native reader dimens
@@ -78,14 +79,16 @@
     <dimen name="text_sz_medium">14sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
+    <dimen name="text_sz_double_extra_large">24sp</dimen>
 
     <dimen name="avatar_sz_small">32dp</dimen>
-    <dimen name="avatar_sz_medium">48dp</dimen>
+    <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
-    <dimen name="reader_button_icon">48dp</dimen>
+    <!-- like/comment icons in reader -->
+    <dimen name="reader_button_icon">40dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
@@ -117,6 +120,7 @@
     <dimen name="comment_avatar_margin_top">6dp</dimen>
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
+    <dimen name="notifications_content_margin">0dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
 
@@ -150,6 +154,10 @@
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
+    <dimen name="my_site_no_site_view_margin">24dp</dimen>
+    <dimen name="my_site_no_site_view_subtitle_margin_top">18dp</dimen>
+    <dimen name="my_site_no_site_view_subtitle_font">21sp</dimen>
+    <dimen name="my_site_no_site_view_button_margin_top">50dp</dimen>
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
@@ -162,5 +170,10 @@
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
     <dimen name="site_picker_container_padding_bottom">11dp</dimen>
     <dimen name="site_picker_container_padding_top">10dp</dimen>
+
+    <dimen name="menu_item_height">48dp</dimen>
+    <dimen name="menu_item_margin_normal">16dp</dimen>
+    <dimen name="menu_item_margin_tablet">24dp</dimen>
+    <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
 
 </resources>

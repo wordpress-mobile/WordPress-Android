@@ -45,11 +45,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
     private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
+    private static final String ARG_PREV_NUMBER_OF_BARS = "ARG_PREV_NUMBER_OF_BARS";
     private static final String ARG_SELECTED_OVERVIEW_ITEM = "ARG_SELECTED_OVERVIEW_ITEM";
     private static final String ARG_CHECKBOX_SELECTED = "ARG_CHECKBOX_SELECTED";
 
 
     private LinearLayout mGraphContainer;
+    private LinearLayout mNoActivtyThisPeriodContainer;
     private StatsBarGraph mGraphView;
     private LinearLayout mModuleButtonsContainer;
     private TextView mDateTextView;
@@ -71,6 +73,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private Serializable mVisitsData; //VisitModel or VolleyError
     private int mSelectedOverviewItemIndex = 0;
     private int mSelectedBarGraphBarIndex = -1;
+    private int mPrevNumberOfBarsGraph = -1;
 
     // Container Activity must implement this interface
     public interface OnDateChangeListener {
@@ -113,6 +116,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mDateTextView = (TextView) view.findViewById(R.id.stats_summary_date);
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         mModuleButtonsContainer = (LinearLayout) view.findViewById(R.id.stats_pager_tabs);
+        mNoActivtyThisPeriodContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_no_activity);
 
         mLegendContainer = (LinearLayout) view.findViewById(R.id.stats_legend_container);
         mLegendLabel = (CheckedTextView) view.findViewById(R.id.stats_legend_label);
@@ -279,6 +283,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (savedInstanceState.containsKey(ARG_SELECTED_GRAPH_BAR)) {
                 mSelectedBarGraphBarIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
             }
+            if (savedInstanceState.containsKey(ARG_PREV_NUMBER_OF_BARS)) {
+                mPrevNumberOfBarsGraph = savedInstanceState.getInt(ARG_PREV_NUMBER_OF_BARS, -1);
+            }
 
             mIsCheckboxChecked = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, true);
         } else {
@@ -297,6 +304,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
         outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
+        outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
         outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
         outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
 
@@ -366,6 +374,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
+        // Hide the "no-activity this period" message
+        mNoActivtyThisPeriodContainer.setVisibility(View.GONE);
+
         // Read the selected Tab in the UI
         OverviewLabel selectedStatsType = overviewItems[mSelectedOverviewItemIndex];
 
@@ -393,6 +404,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
 
+        // Check we have at least one result in the current section.
+        boolean atLeastOneResultIsAvailable = false;
+
         // Fill series variables with data
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
@@ -411,6 +425,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     break;
             }
             mainSeriesItems[i] = new GraphView.GraphViewData(i, currentItemValue);
+
+            if (currentItemValue > 0) {
+                atLeastOneResultIsAvailable = true;
+            }
 
             if (mIsCheckboxChecked && secondarySeriesItems != null) {
                 secondarySeriesItems[i] = new GraphView.GraphViewData(i, dataToShowOnGraph[i].getVisitors());
@@ -467,9 +485,23 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
         );
         mGraphView.setHorizontalLabels(horLabels);
-
         mGraphView.setGestureListener(this);
 
+        // If zero results in the current section disable clicks on the graph and show the dialog.
+        mNoActivtyThisPeriodContainer.setVisibility(atLeastOneResultIsAvailable ? View.GONE : View.VISIBLE);
+        mGraphView.setClickable(atLeastOneResultIsAvailable);
+
+        // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
+        // Only happens on 720DP tablets
+        if (mPrevNumberOfBarsGraph != -1 && mPrevNumberOfBarsGraph != dataToShowOnGraph.length) {
+            mSelectedBarGraphBarIndex = -1;
+            mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
+            onBarTapped(dataToShowOnGraph.length - 1);
+            mGraphView.highlightBar(dataToShowOnGraph.length - 1);
+            return;
+        }
+
+        mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
         int barSelectedOnGraph;
         if (mSelectedBarGraphBarIndex == -1) {
             // No previous bar was highlighted, highlight the most recent one
@@ -477,12 +509,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         } else if (mSelectedBarGraphBarIndex < dataToShowOnGraph.length) {
             barSelectedOnGraph = mSelectedBarGraphBarIndex;
         } else {
-            // A previous bar was highlighted, but it's out of the screen now. Device Rotated.
-            // This cannot happen now, since we've fixed number of bars on a device. # of bars doesn't change with device rotation.
+            // A previous bar was highlighted, but it's out of the screen now. This should never happen atm.
             barSelectedOnGraph = dataToShowOnGraph.length - 1;
             mSelectedBarGraphBarIndex = barSelectedOnGraph;
-            // TODO: make sure to handle this case in the modules below, otherwise the graph is updated but not other fragments
-            // that are still pointing to the old selected date.
         }
 
         updateUIBelowTheGraph(barSelectedOnGraph);
@@ -648,10 +677,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
 
-          // We could show loading indicator here
-            if (isLoading) {
-                final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
-                emptyLabel.setText("");
+            final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+            emptyLabel.setText("");
+            if (!isLoading) {
+                mNoActivtyThisPeriodContainer.setVisibility(View.VISIBLE);
             }
 
             if (emptyBarGraphView != null) {
@@ -715,6 +744,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     @Override
     public void onBarTapped(int tappedBar) {
+        if (!isAdded()) {
+            return;
+        }
         //AppLog.d(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
         mSelectedBarGraphBarIndex = tappedBar;
         updateUIBelowTheGraph(tappedBar);

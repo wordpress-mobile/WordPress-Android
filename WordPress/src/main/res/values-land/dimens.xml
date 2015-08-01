@@ -1,6 +1,6 @@
 <resources>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal_landscape</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal_landscape</dimen>
+    <dimen name="notifications_content_margin">@dimen/content_margin</dimen>
     <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_landscape</dimen>
-    <dimen name="tabstrip_padding">@dimen/tabstrip_padding_landscape</dimen>
 </resources>

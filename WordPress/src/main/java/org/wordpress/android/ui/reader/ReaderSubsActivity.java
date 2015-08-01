@@ -1,16 +1,14 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -45,6 +43,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -56,15 +55,14 @@ import de.greenrobot.event.EventBus;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
- * followed tags, popular tags, followed blogs, and recommended blogs
+ * followed tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends ActionBarActivity
-                                implements ReaderTagAdapter.TagDeletedListener,
-                                           ActionBar.TabListener {
+public class ReaderSubsActivity extends AppCompatActivity
+                                implements ReaderTagAdapter.TagDeletedListener {
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
-    private ViewPager mViewPager;
+    private WPViewPager mViewPager;
     private SubsPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
@@ -87,8 +85,16 @@ public class ReaderSubsActivity extends ActionBarActivity
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        int normalColor = getResources().getColor(R.color.blue_light);
+        int selectedColor = getResources().getColor(R.color.white);
+        tabLayout.setTabTextColors(normalColor, selectedColor);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setupWithViewPager(mViewPager);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -100,10 +106,6 @@ public class ReaderSubsActivity extends ActionBarActivity
         });
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
-        tabStrip.setTabIndicatorColorResource(R.color.tab_indicator);
-        tabStrip.setTextColor(getResources().getColor(R.color.tab_text_selected));
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -131,7 +133,7 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         // remember which page the user last viewed - note this listener must be assigned
         // after we've already called restorePreviousPage()
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
@@ -350,10 +352,12 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
+            mTagsChanged = true;
             mLastAddedTagName = tag.getTagName();
             // make sure addition is reflected on followed tags
             getPageAdapter().refreshFollowedTagFragment();
-            showInfoToast(getString(R.string.reader_label_added_tag, tag.getCapitalizedTagName()));
+            String labelAddedTag = getString(R.string.reader_label_added_tag);
+            showInfoToast(String.format(labelAddedTag, tag.getCapitalizedTagName()));
         }
     }
 
@@ -370,21 +374,35 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         showAddUrlProgress();
 
-        ReaderActions.ActionListener urlActionListener = new ReaderActions.ActionListener() {
+        ReaderActions.OnCheckUrlReachableListener urlListener = new ReaderActions.OnCheckUrlReachableListener() {
             @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) {
-                    return;
-                }
-                if (succeeded) {
+            public void onSuccess() {
+                if (!isFinishing()) {
                     followBlogUrl(blogUrl);
-                } else {
+                }
+            }
+            @Override
+            public void onFailed(int statusCode) {
+                if (!isFinishing()) {
                     hideAddUrlProgress();
-                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                    String errMsg;
+                    switch (statusCode) {
+                        case 401:
+                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_authorized);
+                            break;
+                        case 0: // can happen when host name not found
+                        case 404:
+                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
+                            break;
+                        default:
+                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + Integer.toString(statusCode) + ")";
+                            break;
+                    }
+                    ToastUtils.showToast(ReaderSubsActivity.this, errMsg);
                 }
             }
         };
-        ReaderBlogActions.checkBlogUrlReachable(blogUrl, urlActionListener);
+        ReaderBlogActions.checkUrlReachable(blogUrl, urlListener);
     }
 
     private void followBlogUrl(String normUrl) {
@@ -452,7 +470,8 @@ public class ReaderSubsActivity extends ActionBarActivity
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
             mLastAddedTagName = null;
         }
-        showInfoToast(getString(R.string.reader_label_removed_tag, tag.getCapitalizedTagName()));
+        String labelRemovedTag = getString(R.string.reader_label_removed_tag);
+        showInfoToast(String.format(labelRemovedTag, tag.getCapitalizedTagName()));
     }
 
     /*
@@ -477,24 +496,6 @@ public class ReaderSubsActivity extends ActionBarActivity
         }
     }
 
-    /*
-     * Note: Make sure we don't mix android.app.FragmentTransaction with support Fragment.
-     * As long as the android.app.FragmentTransaction passed to the tab handlers isn't used, we should be fine.
-     * If at some point we do want to make use of the transaction, the solution suggested here
-     * http://stackoverflow.com/a/14685927/1673548  would work.
-     */
-    @Override
-    public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) { }
-
-    @Override
-    public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) { }
-
-
     private class SubsPageAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments;
 
@@ -505,23 +506,16 @@ public class ReaderSubsActivity extends ActionBarActivity
 
         @Override
         public CharSequence getPageTitle(int position) {
-            final String title;
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    title = getString(R.string.reader_page_followed_tags);
-                    break;
+                    return getString(R.string.reader_page_followed_tags);
                 case TAB_IDX_RECOMMENDED_BLOGS:
-                    title = getString(R.string.reader_page_recommended_blogs);
-                    break;
+                    return getString(R.string.reader_page_recommended_blogs);
                 case TAB_IDX_FOLLOWED_BLOGS:
-                    title = getString(R.string.reader_page_followed_blogs);
-                    break;
+                    return getString(R.string.reader_page_followed_blogs);
                 default:
                     return super.getPageTitle(position);
             }
-
-            // force titles to two lines by replacing the first space with a new line
-            return title.replaceFirst(" ", "\n");
         }
 
         @Override

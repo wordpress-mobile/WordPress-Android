@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -25,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -262,7 +262,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * animate in/out the layout containing the reblog/comment/like icons
+     * animate in/out the layout containing the comment/like icons
      */
     private void showIconBar(boolean show) {
         if (isAdded() && canShowIconBar()) {
@@ -271,16 +271,14 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * action icons don't appear for feeds or when logged out, otherwise they appear
-     * only if the user can act upon them
+     * action icons don't appear for feeds or discover posts or when logged out, otherwise
+     * they appear only if the user can act upon them
      */
     private boolean canShowIconBar() {
-        if (mPost == null || mPost.isExternal || mIsLoggedOutReader) {
+        if (mPost == null || mPost.isExternal || mPost.isDiscoverPost() || mIsLoggedOutReader) {
             return false;
         }
-        return (mPost.isLikesEnabled
-                || mPost.canReblog()
-                || mPost.isCommentsOpen);
+        return (mPost.isLikesEnabled || mPost.isCommentsOpen);
     }
 
     @Override
@@ -389,39 +387,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, actionListener)) {
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         }
-    }
-
-    /*
-     * called when user chooses to reblog the post
-     */
-    private void reblogPost() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        if (mPost.isRebloggedByCurrentUser) {
-            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_already_reblogged);
-            return;
-        }
-
-        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-        ReaderAnim.animateReblogButton(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), mPost, imgBtnReblog);
-    }
-
-    /*
-     * called after the post has been reblogged
-     */
-    void doPostReblogged() {
-        if (!isAdded()) {
-            return;
-        }
-
-        // get the post again since reblog status has changed
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
-
-        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-        imgBtnReblog.setSelected(mPost != null && mPost.isRebloggedByCurrentUser);
     }
 
     /*
@@ -680,7 +645,6 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtBlogName;
         TextView txtDateAndAuthor;
 
-        ImageView imgBtnReblog;
         ImageView imgMore;
 
         ReaderFollowButton followButton;
@@ -709,6 +673,22 @@ public class ReaderPostDetailFragment extends Fragment
                 return false;
             }
 
+            // "discover" Editor Pick posts should open the original (source) post
+            if (mPost.isDiscoverPost()) {
+                ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
+                if (discoverData != null
+                        && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
+                        && discoverData.getBlogId() != 0
+                        && discoverData.getPostId() != 0) {
+                    mBlogId = discoverData.getBlogId();
+                    mPostId = discoverData.getPostId();
+                    mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
+                    if (mPost == null) {
+                        return false;
+                    }
+                }
+            }
+
             mReaderWebView.setIsPrivatePost(mPost.isPrivate);
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
@@ -717,7 +697,6 @@ public class ReaderPostDetailFragment extends Fragment
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
-            imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
             followButton = (ReaderFollowButton) container.findViewById(R.id.follow_button);
@@ -803,23 +782,6 @@ public class ReaderPostDetailFragment extends Fragment
                         ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
                     }
                 });
-            }
-
-            // enable reblogging wp posts
-            if (mPost.canReblog() && !mIsLoggedOutReader) {
-                imgBtnReblog.setVisibility(View.VISIBLE);
-                imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
-                imgBtnReblog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        reblogPost();
-                    }
-                });
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    imgBtnReblog.setBackgroundResource(R.drawable.ripple_oval);
-                }
-            } else {
-                imgBtnReblog.setVisibility(View.INVISIBLE);
             }
 
             // enable blocking the associated blog
@@ -927,6 +889,16 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public boolean onUrlClick(String url) {
+        // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
+        // used for Discover posts that highlight a blog
+        if (ReaderUtils.isBlogPreviewUrl(url)) {
+            long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
+            if (blogId != 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            }
+            return true;
+        }
+
         // open YouTube videos in external app so they launch the YouTube player, open all other
         // urls using an AuthenticatedWebViewActivity
         final OpenUrlType openUrlType;

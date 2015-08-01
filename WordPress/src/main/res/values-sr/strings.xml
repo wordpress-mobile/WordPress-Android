@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="me_btn_support">Помоћ &amp; Подршка</string>
+	<string name="tabbar_accessibility_label_me">Ја</string>
+	<string name="tabbar_accessibility_label_my_site">Моје веб место</string>
+	<string name="passcodelock_prompt_message">Унесите свој PIN</string>
+	<string name="editor_toast_changes_saved">Измене су сачуване</string>
+	<string name="push_auth_expired">Захтев је истекао. Пријавите се на WordPress.com да бисте покушали поново.</string>
+	<string name="ignore">Занемари</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% прегледа</string>
+	<string name="stats_insights_best_ever">Најбољи погледи икада</string>
+	<string name="stats_insights_most_popular_hour">Најпопуларнији час</string>
+	<string name="stats_insights_most_popular_day">Најпопуларнији дан</string>
+	<string name="stats_insights_popular">Најпопуларнији дан и час</string>
+	<string name="stats_insights_today">Данашње статистике</string>
+	<string name="stats_insights_all_time">Чланци, погледи и посетиоци целог времена</string>
+	<string name="stats_insights">Увиди</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Да бисте видели своје статистике, пријавите се на WordPress.com налог који сте користили да се повежете са Џетпеком.</string>
+	<string name="stats_other_recent_stats_moved_label">Тражите своје друге скорашње статистике? Померили смо их на страницу Увиди.</string>
+	<string name="me_disconnect_from_wordpress_com">Прекини везу са WordPress.com</string>
+	<string name="me_btn_login_logout">Пријава/одјава</string>
+	<string name="me_connect_to_wordpress_com">Повежи са WordPress.com</string>
+	<string name="me_btn_support">Помоћ и подршка</string>
+	<string name="me_btn_settings">Подешавање налога</string>
+	<string name="site_picker_cant_hide_current_site">"%s" није сакривен зато што је тренутно веб место</string>
+	<string name="site_picker_create_dotcom">Направи WordPress.com веб место</string>
+	<string name="site_picker_add_self_hosted">Додај самостално угошћено веб место</string>
+	<string name="site_picker_add_site">Додај веб место</string>
+	<string name="site_picker_edit_visibility">Прикажи/сакриј веб места</string>
+	<string name="my_site_btn_switch_site">Промени веб место</string>
+	<string name="my_site_btn_view_site">Види веб место</string>
+	<string name="site_picker_title">Одабери веб место</string>
+	<string name="my_site_btn_view_admin">Види управљање</string>
+	<string name="my_site_btn_comments">Коментари</string>
+	<string name="my_site_header_look_and_feel">Изглед и осећај</string>
+	<string name="my_site_header_publish">Објави</string>
+	<string name="my_site_btn_blog_posts">Чланци блога</string>
+	<string name="my_site_btn_site_settings">Подешавања</string>
+	<string name="my_site_header_configuration">Поставка</string>
+	<string name="my_site_header_admin">Управљање</string>
+	<string name="reader_label_new_posts_subtitle">Притисните да бисте их показали</string>
+	<string name="notifications_account_required">Пријавите се на WordPress.com за пријаве</string>
+	<string name="stats_unknown_author">Непознат аутор</string>
+	<string name="image_added">Слика је додата</string>
+	<string name="signout">Прекини везу</string>
+	<string name="deselect_all">Одбаци све</string>
+	<string name="hide">Сакриј</string>
+	<string name="sign_out_wpcom_confirm">Прекидање везе са својим налогом ће уклонити све @%s’s WordPress.com податке са овог уређаја, укључујући локалне нацрте и локалне измене.</string>
+	<string name="select_all">Изабери све</string>
+	<string name="show">Прикажи</string>
 	<string name="select_from_new_picker">Изаберите више опција помоћу новог бирача</string>
 	<string name="stats_generic_error">Тражене статистике се не могу учитати</string>
 	<string name="no_media_sources">Није могуће добавити медије</string>
@@ -110,7 +156,6 @@
 	<string name="stats_empty_comments_desc">Ако сте дозволили коментаре на свом веб месту, пратите посетиоце који остављају највише коментара и сазнајте који садржај подстиче најактивније разговоре, засновано на последњих 1000 коментара.</string>
 	<string name="stats_empty_followers">Без пратилаца</string>
 	<string name="stats_comments_by_authors">По ауторима</string>
-	<string name="stats_comments_total_comments_followers">Укупан број пратилаца коментара: %1$s</string>
 	<string name="stats_followers_total_wpcom">Укупан број WordPress.com пратилаца: %1$s</string>
 	<string name="stats_followers_email_selector">Е-пошта</string>
 	<string name="stats_followers_total_email">Укупан број пратилаца преко е-поште: %1$s</string>
@@ -130,6 +175,7 @@
 	<string name="stats_for">Статистике за %s</string>
 	<string name="stats_other_recent_stats_label">Друге недавне статистике</string>
 	<string name="themes_fetching">Добављам теме...</string>
+	<string name="stats_comments_total_comments_followers">Укупан број чланака са пратиоцима коментара: %1$s</string>
 	<string name="ssl_certificate_details">Детаљи</string>
 	<string name="delete_sure_page">Обриши ову страну</string>
 	<string name="media_gallery_date_range">Приказ медија од %1$s до %2$s</string>
@@ -138,6 +184,7 @@
 	<string name="confirm_delete_multi_media">Обрисати изабране ставке?</string>
 	<string name="delete_sure">Обриши овај нацрт</string>
 	<string name="delete_sure_post">Обриши овај чланак</string>
+	<string name="sure_to_remove_account">Уклонити ово веб место?</string>
 	<string name="browse_our_faq_button">Прегледајте наша ЧПП</string>
 	<string name="agree_terms_of_service">Прављењем налога прихватате фасцинантне %1$sУслове сервиса%2$s</string>
 	<string name="faq_button">ЧПП</string>
@@ -213,7 +260,6 @@
 	<string name="reader_label_tag_preview">Чланци означени са %s</string>
 	<string name="reader_label_followed_blog">Блог се прати</string>
 	<string name="reader_hint_add_tag_or_url">Унесите ознаку или URL који желите да пратите</string>
-	<string name="reader_page_popular_tags">Популарне ознаке</string>
 	<string name="reader_page_followed_blogs">Блогови које пратите</string>
 	<string name="reader_title_subs">Ознаке и блогови</string>
 	<string name="reader_page_followed_tags">Ознаке које пратите</string>
@@ -294,6 +340,7 @@
 	<string name="cat_name_required">Име категорије је неопходно</string>
 	<string name="adding_cat_success">Категорија успешно додата</string>
 	<string name="adding_cat_failed">Додавање категорије неуспешно</string>
+	<string name="could_not_remove_account">Није могуће уклонити веб место</string>
 	<string name="view_site">Погледај веб место</string>
 	<string name="site_address">Адреса блога (URL)</string>
 	<string name="page_not_published">Стање стране није објављено</string>
@@ -353,7 +400,6 @@
 	<string name="http_authorization_required">Неопходно овлашћење</string>
 	<string name="http_credentials">HTTP акредитиви (опционо)</string>
 	<string name="pending_review">Чека преглед</string>
-	<string name="stats_view_tags_and_categories">Ознаке и категорије</string>
 	<string name="preview_post">Прегледајте чланак</string>
 	<string name="delete_draft">Обриши нацрт</string>
 	<string name="toast_comment_unedited">Коментар није промењен</string>
@@ -398,6 +444,8 @@
 	<string name="page_settings">Подешавања стране</string>
 	<string name="select_categories">Одаберите категорије</string>
 	<string name="reader_toast_err_reblog_requires_blog">Одаберите блог</string>
+	<string name="remove_account">Уклони веб место</string>
+	<string name="blog_removed_successfully">Веб место је успешно уклоњено</string>
 	<string name="share_link">Подели везу</string>
 	<string name="share_url_post">Поделите чланак</string>
 	<string name="deleting_post">Брисање чланка</string>
@@ -442,7 +490,6 @@
 	<string name="username_invalid">Неисправно корисничко име</string>
 	<string name="connecting_wpcom">Повезивање на WordPress.com</string>
 	<string name="create_account_wpcom">Направите налог на WordPress.com</string>
-	<string name="reader_empty_popular_tags">Нема популарних ознака</string>
 	<string name="reader_toast_err_url_intent">Није могуће отворити %s</string>
 	<string name="reader_toast_err_view_image">Није могуће прегледати слику</string>
 	<string name="reader_btn_share">Поделите</string>
@@ -532,6 +579,7 @@
 	<string name="stats_timeframe_weeks">Недељу дана</string>
 	<string name="stats_entry_posts_and_pages">Наслов</string>
 	<string name="theme_auth_error_title">Неуспешно добављање тема</string>
+	<string name="stats_view_tags_and_categories">Ознаке и категорије</string>
 	<string name="upload">Отпремање</string>
 	<string name="sign_in">Пријави се</string>
 	<string name="types">Врсте</string>

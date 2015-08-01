@@ -17,7 +17,6 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.EnumMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
 public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
@@ -525,7 +524,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Media Library");
                 break;
-            case OPENED_SETTINGS:
+            case OPENED_BLOG_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Settings");
                 break;
@@ -563,6 +562,36 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Stats - Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_stats");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_stats");
+                break;
+            case STATS_INSIGHTS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Insights Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_insights_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_insights_screen_stats");
+                break;
+            case STATS_PERIOD_DAYS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Days Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_days_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_days_screen_stats");
+                break;
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Weeks Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_weeks_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_weeks_screen_stats");
+                break;
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Months Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_months_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_months_screen_stats");
+                break;
+            case STATS_PERIOD_YEARS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Period Years Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_years_screen_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_years_screen_stats");
                 break;
             case STATS_VIEW_ALL_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -620,9 +649,51 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
                 break;
+            case PUSH_AUTHENTICATION_APPROVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Authentication - Approved");
+                break;
+            case PUSH_AUTHENTICATION_EXPIRED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Authentication - Expired");
+                break;
+            case PUSH_AUTHENTICATION_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Authentication - Failed");
+                break;
+            case PUSH_AUTHENTICATION_IGNORED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Authentication - Ignored");
+                break;
             case SETTINGS_LANGUAGE_SELECTION_FORCED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Forced Language Selection");
+                break;
+            case NOTIFICATION_SETTINGS_LIST_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification Settings - Accessed List");
+                break;
+            case NOTIFICATION_SETTINGS_STREAMS_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification Settings - Accessed Stream");
+                break;
+            case NOTIFICATION_SETTINGS_DETAILS_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification Settings - Accessed Details");
+                break;
+            case NOTIFICATION_SETTINGS_UPDATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification Settings - Updated");
+                break;
+            case ME_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me Tab - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_me_tab");
+                break;
+            case MY_SITE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("My Site - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_my_site");
                 break;
             default:
                 instructions = null;

@@ -20,6 +20,7 @@
                 android:id="@+id/stats_summary_title"
                 android:background="?android:selectableItemBackground"
                 android:textAppearance="?android:attr/textAppearance"
+                android:textSize="@dimen/text_sz_large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
@@ -35,7 +36,10 @@
                 android:background="@drawable/stats_white_background"
                 android:orientation="vertical"
                 android:padding="@dimen/margin_medium"
-                android:layout_margin="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin">
 
                 <LinearLayout
                     android:id="@+id/stats_bar_chart_fragment_container"
@@ -76,12 +80,16 @@
 
             <!-- Months and Years -->
             <LinearLayout
+                android:id="@+id/stats_months_years_module"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stats_white_background"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/margin_small"
-                android:layout_margin="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
@@ -134,12 +142,16 @@
 
             <!-- Average per Day -->
             <LinearLayout
+                android:id="@+id/stats_averages_module"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stats_white_background"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/margin_small"
-                android:layout_margin="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
@@ -192,12 +204,16 @@
 
             <!-- Recent Weeks -->
             <LinearLayout
+                android:id="@+id/stats_recent_weeks_module"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/stats_white_background"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/margin_small"
-                android:layout_margin="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"

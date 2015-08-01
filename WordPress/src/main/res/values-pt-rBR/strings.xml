@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">Meu site</string>
+	<string name="tabbar_accessibility_label_me">Eu</string>
+	<string name="passcodelock_prompt_message">Digite seu PIN</string>
+	<string name="editor_toast_changes_saved">Modificações salvas</string>
+	<string name="push_auth_expired">A solicitação expirou. Faça login no WordPress.com para tentar novamente.</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% de visualizações</string>
+	<string name="stats_insights_best_ever">Melhores visualizações</string>
+	<string name="ignore">Ignorar</string>
+	<string name="stats_insights_most_popular_hour">Horário com maior número de visitações</string>
+	<string name="stats_insights_most_popular_day">Dia com maior número de visitações</string>
+	<string name="stats_insights_today">Estatísticas de hoje</string>
+	<string name="stats_insights_popular">Dia e horário com maior número de visitantes</string>
+	<string name="stats_insights_all_time">Todos os posts, visualizações e visitantes</string>
+	<string name="stats_insights">Informações</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Para visualizar suas estatísticas, faça login na conta do WordPress.com que você usou para se conectar ao Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Buscando suas outras estatísticas recentes? Nós as movemos para a página Informações.</string>
 	<string name="me_disconnect_from_wordpress_com">Desconectar do WordPress.com</string>
 	<string name="me_btn_login_logout">Entrar/Sair</string>
 	<string name="me_connect_to_wordpress_com">Conectar ao WordPress.com</string>
@@ -101,6 +117,7 @@
 	<string name="stats_overall">Geral</string>
 	<string name="stats_total">Total</string>
 	<string name="reader_page_recommended_blogs">Blogs que você talvez goste</string>
+	<string name="stats_comments_total_comments_followers">Total de posts com comentários de seguidores: %1$s</string>
 	<string name="stats_visitors">Visitantes</string>
 	<string name="stats_comments">Comentários</string>
 	<string name="stats_pagination_label">Página %1$s de %2$s</string>
@@ -139,7 +156,6 @@
 	<string name="stats_comments_by_posts_and_pages">Por posts &amp; páginas</string>
 	<string name="stats_empty_followers_desc">Monitore seu número de seguidores e há quanto tempo cada um deles segue seu site.</string>
 	<string name="stats_comments_by_authors">Por autores</string>
-	<string name="stats_comments_total_comments_followers">Total de seguidores de comentários: %1$s</string>
 	<string name="stats_followers_email_selector">Email</string>
 	<string name="stats_followers_total_wpcom">Total de seguidores do WordPress.com: %1$s</string>
 	<string name="stats_followers_seconds_ago">segundos atrás</string>
@@ -240,7 +256,6 @@
 	<string name="reader_title_tag_preview">Visualizar Tag</string>
 	<string name="reader_title_subs">Tags e Blogs</string>
 	<string name="reader_page_followed_tags">Tags seguidas</string>
-	<string name="reader_page_popular_tags">Tags populares</string>
 	<string name="reader_page_followed_blogs">Blogs seguidos</string>
 	<string name="reader_hint_add_tag_or_url">Digite uma tag ou URL para seguir</string>
 	<string name="reader_label_followed_blog">Seguindo o blog</string>
@@ -414,7 +429,6 @@
 	<string name="file_error_create">Não foi possível criar um arquivo temporário para carregar a mídia. Certifique-se de que há espaço livro suficiente em seu dispositivo.</string>
 	<string name="location_not_found">Localização desconhecida</string>
 	<string name="open_source_licenses">Abrir licenças da origem</string>
-	<string name="stats_view_tags_and_categories">Tags e categorias</string>
 	<string name="http_authorization_required">Autorização obrigatória</string>
 	<string name="post_format">Formato do post</string>
 	<string name="view_site">Exibir site</string>
@@ -499,7 +513,6 @@
 	<string name="username_invalid">Nome de usuário inválido</string>
 	<string name="limit_reached">Limite atingido. Você pode tentar novamente em 1 minuto. Tentando novamente antes só vai aumentar o tempo de espera antes do impedimento ser levantado. Se você acha que isso é um erro, contate o suporte.</string>
 	<string name="empty_list_default">Esta lista está vazia</string>
-	<string name="reader_empty_popular_tags">Nenhuma tag popular</string>
 	<string name="reader_label_added_tag">Adicionado %s</string>
 	<string name="reader_empty_followed_tags">Você não segue nenhuma tag</string>
 	<string name="create_account_wpcom">Crie uma conta no WordPress.com</string>
@@ -518,6 +531,7 @@
 	<string name="media_edit_failure">Falha na atualização</string>
 	<string name="themes_details_label">Detalhes</string>
 	<string name="share_action_title">Adicionar para...</string>
+	<string name="stats_view_tags_and_categories">Tags e Categorias</string>
 	<string name="stats_view_clicks">Cliques</string>
 	<string name="stats_view_comments">Comentários</string>
 	<string name="stats_timeframe_today">Hoje</string>

@@ -4,7 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -29,7 +30,7 @@ import de.greenrobot.event.EventBus;
 /**
  *  Single item details activity.
  */
-public class StatsViewAllActivity extends ActionBarActivity {
+public class StatsViewAllActivity extends AppCompatActivity {
 
     public static final String ARG_STATS_VIEW_ALL_TITLE = "arg_stats_view_all_title";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
@@ -276,6 +277,7 @@ public class StatsViewAllActivity extends ActionBarActivity {
         super.onResume();
         mIsInFront = true;
         NetworkUtils.checkConnection(this); // show the error toast if the network is offline
+        ActivityId.trackLastActivity(ActivityId.STATS_VIEW_ALL);
     }
 
     @Override

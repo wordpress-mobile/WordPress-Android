@@ -18,6 +18,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     private static int mBlavatarSz;
 
-    protected SiteList mSites = new SiteList();
+    private SiteList mSites = new SiteList();
     private final int mCurrentLocalId;
 
     private final Drawable mSelectedItemBackground;
@@ -51,8 +52,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
 
     private boolean mIsMultiSelectEnabled;
+    private final boolean mIsInSearchMode;
     private boolean mShowHiddenSites = false;
     private boolean mShowSelfHostedSites = true;
+    private String mLastSearch;
+    private SiteList mAllSites;
 
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
@@ -76,11 +80,14 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    public SitePickerAdapter(Context context, int currentLocalBlogId) {
+    public SitePickerAdapter(Context context, int currentLocalBlogId, String lastSearch, boolean isInSearchMode) {
         super();
 
         setHasStableIds(true);
 
+        mLastSearch = StringUtils.notNullStr(lastSearch);
+        mAllSites = new SiteList();
+        mIsInSearchMode = isInSearchMode;
         mCurrentLocalId = currentLocalBlogId;
         mInflater = LayoutInflater.from(context);
 
@@ -157,6 +164,25 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         // hide the divider for the last item
         boolean isLastItem = (position == getItemCount() - 1);
         holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
+    }
+
+    public String getLastSearch() {
+        return mLastSearch;
+    }
+
+    public void setLastSearch(String lastSearch) {
+        mLastSearch = lastSearch;
+    }
+
+    public boolean getIsInSearchMode() {
+        return mIsInSearchMode;
+    }
+
+    public void searchSites(String searchText) {
+        mLastSearch = searchText;
+        mSites = filteredSitesByText(mAllSites);
+
+        notifyDataSetChanged();
     }
 
     private boolean isValidPosition(int position) {
@@ -282,20 +308,14 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return hiddenSites;
     }
 
-    private void setVisibilityForSite(SiteRecord site, boolean makeVisible) {
-        boolean newIsHidden = !makeVisible;
-        int index = mSites.indexOfSite(site);
-        if (index > -1 && mSites.get(index).isHidden != newIsHidden) {
-            mSites.get(index).isHidden = newIsHidden;
-            notifyItemChanged(index);
-        }
-    }
-
     void setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
         if (sites != null && sites.size() > 0) {
             for (SiteRecord site: sites) {
-                setVisibilityForSite(site, makeVisible);
+                int index = mSites.indexOfSite(site);
+                if (index > -1) {
+                    mSites.get(index).isHidden = !makeVisible;
+                }
             }
         }
     }
@@ -308,11 +328,35 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
+    private SiteList filteredSitesByTextIfInSearchMode(SiteList sites) {
+        if (!mIsInSearchMode) {
+            return sites;
+        } else {
+            return filteredSitesByText(sites);
+        }
+    }
+
+    private SiteList filteredSitesByText(SiteList sites) {
+        SiteList filteredSiteList = new SiteList();
+
+        for (int i = 0; i < sites.size(); i++) {
+            SiteRecord record = sites.get(i);
+            String siteNameLowerCase = record.blogName.toLowerCase();
+            String hostNameLowerCase = record.hostName.toLowerCase();
+
+            if (siteNameLowerCase.contains(mLastSearch.toLowerCase()) || hostNameLowerCase.contains(mLastSearch.toLowerCase())) {
+                filteredSiteList.add(record);
+            }
+        }
+
+        return filteredSiteList;
+    }
+
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
     private boolean mIsTaskRunning;
-    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList> {
+    private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -326,26 +370,14 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
 
         @Override
-        protected SiteList doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
             String[] extraFields = {"isHidden", "dotcomFlag"};
 
-            if (mShowHiddenSites) {
-                if (mShowSelfHostedSites) {
-                    // all self-hosted blogs and all wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
-                } else {
-                    // only wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
-                }
+            if (mIsInSearchMode) {
+                blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
             } else {
-                if (mShowSelfHostedSites) {
-                    // all self-hosted blogs plus visible wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1) ", extraFields);
-                } else {
-                    // only visible wp.com blogs
-                    blogs = WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
-                }
+                blogs = getBlogsForCurrentView(extraFields);
             }
 
             SiteList sites = new SiteList(blogs);
@@ -357,16 +389,38 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                 }
             });
 
-            return sites;
+            if (mSites == null || !mSites.isSameList(sites)) {
+                mAllSites = (SiteList) sites.clone();
+                mSites = filteredSitesByTextIfInSearchMode(sites);
+            }
+
+            return null;
         }
 
         @Override
-        protected void onPostExecute(SiteList sites) {
-            if (mSites == null || !mSites.isSameList(sites)) {
-                mSites = sites;
-                notifyDataSetChanged();
-            }
+        protected void onPostExecute(Void results) {
+            notifyDataSetChanged();
             mIsTaskRunning = false;
+        }
+
+        private List<Map<String, Object>> getBlogsForCurrentView(String[] extraFields) {
+            if (mShowHiddenSites) {
+                if (mShowSelfHostedSites) {
+                    // all self-hosted blogs and all wp.com blogs
+                    return WordPress.wpDB.getBlogsBy(null, extraFields);
+                } else {
+                    // only wp.com blogs
+                    return WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+                }
+            } else {
+                if (mShowSelfHostedSites) {
+                    // all self-hosted blogs plus visible wp.com blogs
+                    return WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1) ", extraFields);
+                } else {
+                    // only visible wp.com blogs
+                    return WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
+                }
+            }
         }
     }
 

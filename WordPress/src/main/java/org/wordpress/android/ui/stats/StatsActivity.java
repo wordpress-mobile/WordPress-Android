@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -10,7 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +29,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -60,7 +60,7 @@ import de.greenrobot.event.EventBus;
  * By pressing a spinner on the action bar, the user can select which timeframe they wish to see.
  * </p>
  */
-public class StatsActivity extends ActionBarActivity
+public class StatsActivity extends AppCompatActivity
         implements ScrollViewExt.ScrollViewListener,
                 StatsVisitorsAndViewsFragment.OnDateChangeListener,
                 StatsVisitorsAndViewsFragment.OnOverviewItemChangeListener,
@@ -86,7 +86,7 @@ public class StatsActivity extends ActionBarActivity
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
-    private StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
+    private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
 
@@ -98,10 +98,6 @@ public class StatsActivity extends ActionBarActivity
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
             finish();
             return;
-        }
-
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
         }
 
         setContentView(R.layout.stats_activity);
@@ -217,6 +213,8 @@ public class StatsActivity extends ActionBarActivity
                             }
                         }
                     }, StatsConstants.STATS_SCROLL_TO_DELAY);
+
+                    trackStatsAnalytics();
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -248,6 +246,33 @@ public class StatsActivity extends ActionBarActivity
                 }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         });
+
+        // Track usage here
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
+            trackStatsAnalytics();
+        }
+    }
+
+    private void trackStatsAnalytics() {
+        // Track usage here
+        switch (mCurrentTimeframe) {
+            case INSIGHTS:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED);
+                break;
+            case DAY:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED);
+                break;
+            case WEEK:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED);
+                break;
+            case MONTH:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED);
+                break;
+            case YEAR:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED);
+                break;
+        }
     }
 
     @Override
@@ -277,6 +302,7 @@ public class StatsActivity extends ActionBarActivity
         } else {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
+        ActivityId.trackLastActivity(ActivityId.STATS);
     }
 
     @Override
@@ -474,7 +500,7 @@ public class StatsActivity extends ActionBarActivity
                                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
                                 AnalyticsTracker.track(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
-                                if (!isFinishing()) {
+                                if (isFinishing()) {
                                     return;
                                 }
                                 // We have the blogID now, but we need to re-check if the network connection is available

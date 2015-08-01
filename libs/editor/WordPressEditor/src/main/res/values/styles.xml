@@ -19,21 +19,20 @@
         <item name="android:layout_marginLeft">@dimen/format_bar_button_margin_tablet</item>
     </style>
 
-    <style name="FormatBarScrollViewButton" parent="FormatBarButton">
-        <item name="android:layout_marginRight">@dimen/format_bar_button_right_margin</item>
-    </style>
-
     <style name="FormatBarHtmlButton" parent="FormatBarButton">
         <item name="android:layout_marginLeft">@dimen/format_bar_html_button_left_margin</item>
     </style>
 
     <style name="Divider">
-        <item name="android:background">@color/wp_gray</item>
-        <item name="android:alpha">0.5</item>
+        <item name="android:background">@color/format_bar_divider</item>
+    </style>
+
+    <style name="DividerSourceView">
+        <item name="android:background">@color/sourceview_separator</item>
     </style>
 
     <style name="FormatBarTabletGroup">
-        <item name="android:layout_marginLeft">20dp</item>
-        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginLeft">@dimen/format_bar_button_group_tablet</item>
+        <item name="android:layout_marginRight">@dimen/format_bar_button_group_tablet</item>
     </style>
 </resources>

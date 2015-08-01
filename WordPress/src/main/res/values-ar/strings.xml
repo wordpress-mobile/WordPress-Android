@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">موقعي</string>
+	<string name="tabbar_accessibility_label_me">أنا</string>
+	<string name="passcodelock_prompt_message">أدخل مفتاح الـ PIN</string>
+	<string name="editor_toast_changes_saved">تم حفظ التغييرات</string>
+	<string name="push_auth_expired">انتهت فترة صلاحية الطلب. قم بتسجيل الدخول إلى وردبرس.كوم للمحاولة مرة أخرى.</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% من المشاهدات</string>
+	<string name="stats_insights_best_ever">المشاهدات الأفضل على الإطلاق</string>
+	<string name="ignore">تجاهل</string>
+	<string name="stats_insights_most_popular_hour">الساعة الأكثر شيوعًا</string>
+	<string name="stats_insights_most_popular_day">اليوم الأكثر شيوعًا</string>
+	<string name="stats_insights_popular">اليوم والساعة الأكثر شيوعًا</string>
+	<string name="stats_insights_today">إحصاءات اليوم</string>
+	<string name="stats_insights_all_time">مقالات ومشاهدات وزوار كل الأوقات</string>
+	<string name="stats_insights">الرؤى</string>
+	<string name="stats_sign_in_jetpack_different_com_account">لعرض إحصاءاتك، قم بتسجيل الدخول إلى حساب وردبرس.كوم الذي تستخدمه للاتصال بـ Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">هل تبحث عن إحصاءاتك الحديثة الأخرى؟ لقد نقلناها إلى صفحة الرؤى.</string>
 	<string name="me_disconnect_from_wordpress_com">قطع الاتصال بموقع وردبرس.كوم</string>
 	<string name="me_btn_login_logout">تسجيل الدخول/تسجيل الخروج</string>
 	<string name="me_connect_to_wordpress_com">الاتصال بموقع وردبرس.كوم</string>
@@ -101,6 +117,7 @@
 	<string name="post_uploading">جارٍ الرفع</string>
 	<string name="stats_total">الإجمالي</string>
 	<string name="stats_overall">الكلي</string>
+	<string name="stats_comments_total_comments_followers">إجمالي المقالات مع متابعي التعليقات: %1$s</string>
 	<string name="stats_followers_wpcom_selector">ووردبريس.كوم</string>
 	<string name="stats_followers_total_wpcom">إجمالي متابعي ووردبريس.كوم: %1$s</string>
 	<string name="stats_visitors">الزوار</string>
@@ -141,7 +158,6 @@
 	<string name="stats_empty_publicize_desc">تتبع متابعيك من مختلف خدمات شبكات التواصل الاجتماعي باستخدام ميزة الإشهار.</string>
 	<string name="stats_comments_by_posts_and_pages">حسب المقالات والصفحات</string>
 	<string name="stats_comments_by_authors">حسب المؤلفين</string>
-	<string name="stats_comments_total_comments_followers">إجمالي متابعي التعليقات: %1$s</string>
 	<string name="stats_followers_email_selector">البريد الإلكتروني</string>
 	<string name="stats_followers_seconds_ago">منذ ثوانٍ مضت</string>
 	<string name="stats_followers_total_email">إجمالي متابعي البريد الإلكتروني: %1$s</string>
@@ -237,7 +253,6 @@
 	<string name="update_verb">تحديث</string>
 	<string name="schedule_verb">جدولة</string>
 	<string name="reader_title_subs">الوسوم والمدونات</string>
-	<string name="reader_page_popular_tags">الوسوم الأكثر شعبية</string>
 	<string name="reader_label_followed_blog">مدونة تمت متابعتها</string>
 	<string name="reader_toast_err_already_follow_blog">أنت متابع لهذه المدونة بالفعل</string>
 	<string name="reader_title_blog_preview">معاينة المدونة</string>
@@ -375,7 +390,6 @@
 	<string name="view_site">عرض الموقع</string>
 	<string name="location_not_found">الموقع غير معروف</string>
 	<string name="open_source_licenses">رخص البرمجيات الحرة</string>
-	<string name="stats_view_tags_and_categories">الوسوم والتصنيفات</string>
 	<string name="toast_comment_unedited">لم يتم تغيير التعليق</string>
 	<string name="preview_page">معاينة الصفحة</string>
 	<string name="page_deleted">تم حذف الصفحة بنجاح</string>
@@ -494,7 +508,6 @@
 	<string name="reader_toast_err_comment_failed">لايمكن نشر تعليقك</string>
 	<string name="reader_toast_reblog_success">تم إعادة تدوين المقالة</string>
 	<string name="reader_share_subject">تمت المشاركة من %s</string>
-	<string name="reader_empty_popular_tags">لاتوجد وسوم شعبية</string>
 	<string name="reader_toast_err_url_intent">لايمكن فتح %s</string>
 	<string name="reader_toast_err_view_image">لايمكن عرض الصورة</string>
 	<string name="reader_toast_err_share_intent">لايمكن المشاركة</string>
@@ -517,6 +530,7 @@
 	<string name="stats_timeframe_yesterday">الأمس</string>
 	<string name="stats_timeframe_today">اليوم</string>
 	<string name="stats_view_comments">التعليقات</string>
+	<string name="stats_view_tags_and_categories">الوسوم و التصنيفات</string>
 	<string name="stats_entry_posts_and_pages">العنوان</string>
 	<string name="stats_entry_country">الدولة</string>
 	<string name="stats_totals_clicks">النقرات</string>

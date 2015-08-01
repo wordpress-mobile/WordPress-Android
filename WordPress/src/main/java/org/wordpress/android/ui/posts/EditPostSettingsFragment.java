@@ -425,27 +425,27 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
 
-        String password = (mPasswordEditText.getText() != null) ? mPasswordEditText.getText().toString() : "";
-        String pubDate = (mPubDateText.getText() != null) ? mPubDateText.getText().toString() : "";
-        String excerpt = (mExcerptEditText.getText() != null) ? mExcerptEditText.getText().toString() : "";
+        String password = EditTextUtils.getText(mPasswordEditText);
+        String pubDate = EditTextUtils.getText(mPubDateText);
+        String excerpt = EditTextUtils.getText(mExcerptEditText);
 
         long pubDateTimestamp = 0;
-        if (mIsCustomPubDate && pubDate.equals(getResources().getText(R.string.immediately)) && !mPost.isLocalDraft()) {
+        if (mIsCustomPubDate && pubDate.equals(getText(R.string.immediately)) && !mPost.isLocalDraft()) {
             Date d = new Date();
             pubDateTimestamp = d.getTime();
-        } else if (!pubDate.equals(getResources().getText(R.string.immediately))) {
+        } else if (!pubDate.equals(getText(R.string.immediately))) {
             if (mIsCustomPubDate)
                 pubDateTimestamp = mCustomPubDate;
             else if (mPost.getDate_created_gmt() > 0)
                 pubDateTimestamp = mPost.getDate_created_gmt();
-        } else if (pubDate.equals(getResources().getText(R.string.immediately)) && mPost.isLocalDraft()) {
+        } else if (pubDate.equals(getText(R.string.immediately)) && mPost.isLocalDraft()) {
             mPost.setDate_created_gmt(0);
             mPost.setDateCreated(0);
         }
 
         String tags = "", postFormat = "";
         if (!mPost.isPage()) {
-            tags = (mTagsEditText.getText() != null) ? mTagsEditText.getText().toString() : "";
+            tags = EditTextUtils.getText(mTagsEditText);
 
             // post format
             if (mPostFormats != null && mPostFormatSpinner != null &&
@@ -454,11 +454,16 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        String status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
+        String status;
+        if (mStatusSpinner != null) {
+            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
+        } else {
+            status = mPost.getPostStatus();
+        }
 
         // We want to flag this post as having changed statuses from draft to published so that we
         // properly track stats we care about for when users first publish posts.
-        if (mPost.isUploaded() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
+        if (!mPost.isLocalDraft() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
                 && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
             mPost.setChangedFromLocalDraftToPublished(true);
         }

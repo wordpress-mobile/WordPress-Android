@@ -141,7 +141,7 @@ public class ReaderWebView extends WebView {
 
     private static boolean isValidClickedUrl(String url) {
         // only return true for http(s) urls so we avoid file: and data: clicks
-        return (url != null && url.startsWith("http"));
+        return (url != null && (url.startsWith("http") || url.startsWith("wordpress:")));
     }
 
     public boolean isCustomViewShowing() {
@@ -155,21 +155,21 @@ public class ReaderWebView extends WebView {
     }
 
     /*
-     * detect when an image is tapped
+     * detect when a link is tapped
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {
             HitTestResult hr = getHitTestResult();
-            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE
-                            || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                String imageUrl = hr.getExtra();
-                if (isValidClickedUrl(imageUrl) ) {
+            if (hr != null && isValidClickedUrl(hr.getExtra())) {
+                if (UrlUtils.isImageUrl(hr.getExtra())) {
                     return mUrlClickListener.onImageUrlClick(
-                            imageUrl,
+                            hr.getExtra(),
                             this,
                             (int) event.getX(),
                             (int) event.getY());
+                } else {
+                    return mUrlClickListener.onUrlClick(hr.getExtra());
                 }
             }
         }

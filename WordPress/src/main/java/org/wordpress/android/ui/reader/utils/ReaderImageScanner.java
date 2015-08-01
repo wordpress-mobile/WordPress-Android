@@ -97,6 +97,14 @@ public class ReaderImageScanner {
     }
 
     /*
+     * same as above, but doesn't enforce the max width - will return the first image found if
+     * no images have their width set
+     */
+    public String getLargestImage() {
+        return getLargestImage(-1);
+    }
+
+    /*
      * returns the actual image url from a Freshly Pressed featured image url - this is necessary because the
      * featured image returned by the API is often an ImagePress url that formats the actual image url for a
      * specific size, and we want to define the size in the app when the image is requested.

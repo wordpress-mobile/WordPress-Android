@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap.ImageSize;
 import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils;
@@ -227,10 +229,28 @@ class ReaderPostRenderer {
     private String getPostContent() {
         // some content (such as Vimeo embeds) don't have "http:" before links
         String content = mPost.getText().replace("src=\"//", "src=\"http://");
+
+        // add the featured image (if any)
         if (shouldAddFeaturedImage()) {
             AppLog.d(AppLog.T.READER, "reader renderer > added featured image");
             content = getFeaturedImageHtml() + content;
         }
+
+        // if this is a Discover post, add a link which shows the blog preview
+        if (mPost.isDiscoverPost()) {
+            ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
+            if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.hasBlogName()) {
+                String label = String.format(
+                        WordPress.getContext().getString(R.string.reader_discover_visit_blog), discoverData.getBlogName());
+                String url = ReaderUtils.makeBlogPreviewUrl(discoverData.getBlogId());
+
+                String htmlDiscover = "<div id='discover'>"
+                        + "<a href='" + url + "'>" + label + "</a>"
+                        + "</div>";
+                content += htmlDiscover;
+            }
+        }
+
         return content;
     }
 
@@ -299,13 +319,14 @@ class ReaderPostRenderer {
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
-        // use "Open Sans" Google font
-        .append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />")
+        // use Merriweather and OpenSans font assets
+        .append("<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>")
+        .append("<link href='file:///android_asset/opensans.css' rel='stylesheet' type='text/css'>")
 
         .append("<style type='text/css'>")
-        .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
+        .append("  body { font-family: Merriweather, serif; font-weight: 300; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
-        .append("  p, div { line-height: 1.6em; font-size: 1em; }")
+        .append("  p, div, li { line-height: 1.6em; font-size: 0.95em; }")
         .append("  h1, h2 { line-height: 1.2em; }")
 
         // counteract pre-defined height/width styles
@@ -355,6 +376,12 @@ class ReaderPostRenderer {
         .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
         .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
         .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
+
+        // attribution for Discover posts
+        .append("  div#discover { ")
+        .append("       margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
+        .append("       font-family: 'Open Sans', sans-serif;")
+        .append(" }")
 
         // horizontally center iframes
         .append("   iframe { display: block; margin: 0 auto; }")

@@ -22,11 +22,11 @@ android {
     publishNonDefault true
 
     compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.2"
         minSdkVersion 14
         targetSdkVersion 22
     }
@@ -36,6 +36,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // Avoid 'duplicate files during packaging of APK' errors
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 dependencies {
@@ -43,13 +52,15 @@ dependencies {
     compile 'com.android.support:support-v4:22.2.0'
     compile 'org.wordpress:analytics:1.0.0'
     compile 'org.wordpress:utils:1.6.0'
+
     // Test libraries
-    testCompile 'junit:junit:4.10'
+    testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile 'org.robolectric:robolectric:2.4'
+
     // Workaround for IDE bug
     // http://stackoverflow.com/questions/22246183/android-studio-doesnt-recognize-espresso-classes
-    provided 'junit:junit:4.10'
+    provided 'junit:junit:4.11'
     provided 'org.mockito:mockito-core:1.10.19'
     provided 'org.robolectric:robolectric:2.4'
 }

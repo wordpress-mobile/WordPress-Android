@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
@@ -49,7 +50,7 @@ import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
-public class ReaderCommentListActivity extends ActionBarActivity {
+public class ReaderCommentListActivity extends AppCompatActivity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
@@ -108,7 +109,7 @@ public class ReaderCommentListActivity extends ActionBarActivity {
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
         int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
-        mRecyclerView.addItemDecoration(new ReaderRecyclerView.ReaderItemDecoration(spacingHorizontal, spacingVertical));
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);

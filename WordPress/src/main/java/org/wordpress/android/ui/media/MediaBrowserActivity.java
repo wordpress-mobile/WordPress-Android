@@ -12,7 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +34,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -56,7 +57,7 @@ import java.util.Set;
 /**
  * The main activity in which the user can browse their media.
  */
-public class MediaBrowserActivity extends ActionBarActivity implements MediaGridListener,
+public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
         MediaEditFragmentCallback, MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -119,7 +120,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
             ft.hide(mMediaItemFragment);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
 
         setupAddMenuPopup();
 
@@ -257,6 +258,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         super.onResume();
         startMediaDeleteService();
         getFeatureSet();
+        ActivityId.trackLastActivity(ActivityId.MEDIA);
     }
 
     /** Get the feature set for a wordpress.com hosted blog **/
@@ -366,7 +368,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
                 mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
-                ft.commit();
+                ft.commitAllowingStateLoss();
             } else {
                 // tablet layout: update edit fragment
                 mMediaEditFragment.loadMedia(mediaId);

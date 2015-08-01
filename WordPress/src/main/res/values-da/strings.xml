@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="tabbar_accessibility_label_my_site">Mit websted</string>
+	<string name="tabbar_accessibility_label_me">Mig</string>
+	<string name="passcodelock_prompt_message">Indtast din PIN</string>
+	<string name="editor_toast_changes_saved">Ændringer gemt</string>
+	<string name="push_auth_expired">Forspørgslen er udløbet. Log ind på WordPress.com for at prøve igen.</string>
+	<string name="ignore">Ignorer</string>
+	<string name="stats_insights_best_ever">Bedste visninger nogensinde</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% af visninger</string>
+	<string name="stats_insights_most_popular_hour">Mest populære time</string>
+	<string name="stats_insights_most_popular_day">Mest populære dag</string>
+	<string name="stats_insights_popular">Mest populære dag og time</string>
+	<string name="stats_insights_today">Dagens statistikker</string>
+	<string name="stats_insights_all_time">Totale indlæg, visninger og besøgende</string>
+	<string name="stats_insights">Indsigt</string>
+	<string name="me_disconnect_from_wordpress_com">Afbryd forbindelse til WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Forbind til WordPress.com</string>
+	<string name="me_btn_login_logout">Log ind/ud</string>
+	<string name="me_btn_settings">Kontoindstillinger</string>
+	<string name="me_btn_support">Hjælp &amp; Support</string>
+	<string name="site_picker_cant_hide_current_site">"%s" blev ikke skjult, fordi det er det aktuelle websted</string>
+	<string name="site_picker_create_dotcom">Opret websted på WordPress.com</string>
+	<string name="site_picker_add_site">Tilføj websted</string>
+	<string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
+	<string name="site_picker_edit_visibility">Vis/skjul websteder</string>
+	<string name="my_site_btn_view_site">Vis websted</string>
+	<string name="site_picker_title">Vælg websted</string>
+	<string name="my_site_btn_switch_site">Skift websted</string>
+	<string name="my_site_btn_view_admin">Vis administration</string>
+	<string name="my_site_btn_site_settings">Indstillinger</string>
+	<string name="my_site_header_publish">Udgiv</string>
+	<string name="my_site_header_look_and_feel">Udseende</string>
+	<string name="my_site_btn_blog_posts">Blogindlæg</string>
+	<string name="my_site_btn_comments">Kommentarer</string>
+	<string name="my_site_header_admin">Administrator</string>
+	<string name="my_site_header_configuration">Konfiguration</string>
+	<string name="notifications_account_required">Log ind på WordPress.com for notifikationer</string>
+	<string name="stats_unknown_author">Ukendt forfatter</string>
+	<string name="image_added">Billede tilføjet</string>
+	<string name="signout">Afbryd</string>
+	<string name="deselect_all">Fravælg alle</string>
+	<string name="show">Vis</string>
+	<string name="hide">Skjul</string>
+	<string name="select_all">Vælg alle</string>
 	<string name="no_media_sources">Medier kunne ikke hentes</string>
 	<string name="loading_blog_videos">Henter videoer</string>
 	<string name="error_loading_videos">Videoer kunne ikke loades</string>
@@ -37,6 +80,8 @@
 	<string name="take_video">Optag en video</string>
 	<string name="take_photo">Tag et billede</string>
 	<string name="language">Sprog</string>
+	<string name="sign_in_jetpack">Log ind på din WordPress.com-konto og forbind til Jetpack.</string>
+	<string name="error_publish_no_network">Kan ikke udgive uden forbindelse. Gemt som kladde.</string>
 	<string name="stats_followers_total_email_paged">Viser %1$d - %2$d af %3$s følgere på e-mail</string>
 	<string name="stats_followers_total_wpcom_paged">Viser %1$d - %2$d af %3$s følgere på WordPress.com</string>
 	<string name="stats_empty_search_terms">Ingen søgeforespørgsler registreret</string>
@@ -51,6 +96,7 @@
 	<string name="stats_entry_search_terms">Søgeord</string>
 	<string name="reader_empty_posts_request_failed">Kunne ikke hente indlæg</string>
 	<string name="publisher">Udgiver:</string>
+	<string name="toast_err_post_uploading">Kan ikke åbne indlæg, mens det overføres</string>
 	<string name="stats_overall">I alt</string>
 	<string name="error_copy_to_clipboard">Der skete en fejl under kopieringen af teksten til udklipsholderen</string>
 	<string name="logs_copied_to_clipboard">Log-filerne er kopieret til udklipsholderen</string>
@@ -64,7 +110,6 @@
 	<string name="stats_period">Periode</string>
 	<string name="post_uploading">Overfører</string>
 	<string name="stats_followers_total_email">Total antal følgere på email: %1$s</string>
-	<string name="stats_comments_total_comments_followers">Total antal følgere af kommentarer: %1$s</string>
 	<string name="stats_followers_total_wpcom">Totale antal følgere på WordPress.com: %1$s</string>
 	<string name="stats_empty_publicize">Ingen publicize følgere registreret</string>
 	<string name="stats_view_publicize">publicize</string>
@@ -121,7 +166,9 @@
 	<string name="stats_followers_a_minute_ago">et minut siden</string>
 	<string name="stats_followers_seconds_ago">sekunder siden</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
+	<string name="stats_comments_total_comments_followers">Total antal indlæg med kommentarfølgere: %1$s</string>
 	<string name="ssl_certificate_details">Detaljer</string>
+	<string name="sure_to_remove_account">Fjern dette websted?</string>
 	<string name="delete_sure_post">Slet dette indlæg</string>
 	<string name="delete_sure">Slet denne kladde</string>
 	<string name="delete_sure_page">Slet denne side</string>
@@ -196,7 +243,6 @@
 	<string name="reader_hint_reblog_comment">Del dine tanker (frivilligt)</string>
 	<string name="schedule_verb">Planlæg</string>
 	<string name="update_verb">Opdater</string>
-	<string name="reader_page_popular_tags">Populære tags</string>
 	<string name="reader_page_followed_blogs">Blogs du følger</string>
 	<string name="reader_hint_add_tag_or_url">Udfyld et tag eller URL for at følge</string>
 	<string name="reader_label_followed_blog">Blog fulgt</string>
@@ -282,6 +328,8 @@
 	<string name="comments_empty_list">Ingen kommentarer</string>
 	<string name="notifications_empty_list">Ingen notifikationer</string>
 	<string name="gallery_error">Mediet kunne ikke hentes</string>
+	<string name="error_refresh_stats">Statistikker kan ikke genindlæses lige nu</string>
+	<string name="could_not_remove_account">Kunne ikke fjerne websted</string>
 	<string name="http_credentials">HTTP-oplysninger (valgfri)</string>
 	<string name="category_slug">Kategori-korttitel (valgfri)</string>
 	<string name="post_not_published">Indlægsstatus er ikke udgivet</string>
@@ -309,7 +357,6 @@
 	<string name="share_action_post">Nyt indlæg</string>
 	<string name="local_draft">Lokal kladde</string>
 	<string name="media_gallery_edit">Rediger galleri</string>
-	<string name="stats_view_tags_and_categories">Tags &amp; kategorier</string>
 	<string name="toast_comment_unedited">Kommentar er ikke ændret</string>
 	<string name="required_field">Påkrævet felt</string>
 	<string name="content_required">Kommentar er påkrævet</string>
@@ -334,6 +381,7 @@
 	<string name="dlg_unapproving_comments">Fjerner godkendelse</string>
 	<string name="dlg_approving_comments">Godkender</string>
 	<string name="dlg_confirm_trash_comments">Smid i papirkurven?</string>
+	<string name="blog_removed_successfully">Websted blev fjernet</string>
 	<string name="delete_draft">Slet kladde</string>
 	<string name="page_deleted">Side slettet</string>
 	<string name="preview_page">Forhåndsvis side</string>
@@ -372,6 +420,10 @@
 	<string name="account_details">Kontodetaljer</string>
 	<string name="select_categories">Vælg kategorier</string>
 	<string name="create_a_link">Opret et link</string>
+	<string name="site_address">Adresse fra din egen udbyder (URL)</string>
+	<string name="cannot_delete_multi_media_items">Nogle medier kan ikke slettes på nuværende tidspunkt. Prøv igen senere.</string>
+	<string name="media_error_no_permission">Du har ikke tilladelse til at se mediebiblioteket</string>
+	<string name="remove_account">Fjern websted</string>
 	<string name="deleting_page">Sletter side</string>
 	<string name="deleting_post">Sletter indlæg</string>
 	<string name="share_url_post">Del indlæg</string>
@@ -390,6 +442,8 @@
 	<string name="comment_spammed">Kommentar markeret som spam</string>
 	<string name="reader_label_reply">Besvar</string>
 	<string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
+	<string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uden en synlig blog</string>
+	<string name="reset_auto_share_preference">Nulstil indstillinger for automatisk deling</string>
 	<string name="reader_toast_err_get_post">Kunne ikke hente dette indlæg</string>
 	<string name="reader_likes_you_and_one">Du og en anden synes godt om dette</string>
 	<string name="validating_user_data">Validerer brugerdata</string>
@@ -402,6 +456,8 @@
 	<string name="nux_tap_continue">Fortsæt</string>
 	<string name="nux_welcome_create_account">Opret konto</string>
 	<string name="signing_in">Logger ind...</string>
+	<string name="nux_add_selfhosted_blog">Tilføj websted fra egen udbyder</string>
+	<string name="password_invalid">Din adgangskode skal være mere sikker. Sørg for at benytte mindst 7 tegn og blande store og små bogstaver, tal eller specielle tegn.</string>
 	<string name="reader_toast_err_already_reblogged">Du har allerede genblogget dette indlæg</string>
 	<string name="reader_toast_err_tag_exists">Du følger allerede dette tag</string>
 	<string name="username_invalid">Ugyldigt brugernavn</string>
@@ -411,7 +467,6 @@
 	<string name="reader_toast_err_url_intent">Kunne ikke åbne %s</string>
 	<string name="reader_empty_followed_tags">Du følger ikke nogen tags</string>
 	<string name="connecting_wpcom">Forbinder til WordPress.com</string>
-	<string name="reader_empty_popular_tags">Ingen populære tags</string>
 	<string name="create_account_wpcom">Opret en konto på WordPress.com</string>
 	<string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt tag</string>
 	<string name="jetpack_not_found">Jetpack-pluginnet blev ikke fundet</string>
@@ -434,6 +489,8 @@
 	<string name="reader_btn_share">Del</string>
 	<string name="nux_tutorial_get_started_title">Kom i gang!</string>
 	<string name="reader_likes_one">En person synes godt om dette</string>
+	<string name="reader_toast_err_reblog_failed">Kunne ikke genblogge dette indlæg</string>
+	<string name="stats_view_tags_and_categories">Tags &amp; kategorier</string>
 	<string name="media_no_video_title">VideoPress utilgængelig</string>
 	<string name="media_edit_caption_hint">Indtast en tekst her</string>
 	<string name="theme_auth_error_title">Kunne ikke hente temaer</string>
@@ -493,6 +550,7 @@
 	<string name="menu_search">Søg</string>
 	<string name="passcode_change_passcode">Ændr PIN</string>
 	<string name="passcode_set">PIN ændret</string>
+	<string name="media_gallery_type_slideshow">Slideshow</string>
 	<string name="upload">Overfør</string>
 	<string name="sign_in">Log ind</string>
 	<string name="notifications">Meddelelser</string>

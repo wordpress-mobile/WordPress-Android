@@ -71,6 +71,12 @@
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
     <string name="signout">Disconnect</string>
+    <string name="undo">Undo</string>
+
+    <!-- timestamps for posts / pages -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="days_ago">%d days ago</string>
 
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>
@@ -199,6 +205,25 @@
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="empty_list_default">This list is empty</string>
 
+    <!-- buttons on post cards -->
+    <string name="button_edit">Edit</string>
+    <string name="button_publish">Publish</string>
+    <string name="button_view">View</string>
+    <string name="button_preview">Preview</string>
+    <string name="button_stats">Stats</string>
+    <string name="button_trash">Trash</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_more">More</string>
+    <string name="button_back">Back</string>
+
+    <!-- dropdown filter above post cards -->
+    <string-array name="post_filters_array">
+        <item>Published</item>
+        <item>Drafts</item>
+        <item>Scheduled</item>
+        <item>Trashed</item>
+    </string-array>
+
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
@@ -279,13 +304,15 @@
     <!-- page actions -->
     <string name="preview_page">Preview page</string>
     <string name="deleting_page">Deleting page</string>
-    <string name="page_deleted">Page deleted successfully</string>
+    <string name="page_deleted">Page deleted</string>
     <string name="delete_sure_page">Delete this page</string>
+    <string name="page_trashed">Page sent to trash</string>
 
     <!-- post actions -->
     <string name="preview_post">Preview post</string>
     <string name="deleting_post">Deleting post</string>
-    <string name="post_deleted">Post deleted successfully</string>
+    <string name="post_deleted">Post deleted</string>
+    <string name="post_trashed">Post sent to trash</string>
     <string name="comment_added">Comment added successfully</string>
     <string name="delete_sure_post">Delete this post</string>
     <string name="share_url_post">Share post</string>
@@ -393,6 +420,7 @@
     <string name="stats_view_all">View all</string>
     <string name="stats_view">View</string>
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
+    <string name="stats_no_activity_this_period">No activity this period</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -528,6 +556,7 @@
     <string name="draft">Draft</string>
     <string name="post_private">Private</string>
     <string name="scheduled">Scheduled</string>
+    <string name="trashed">Trashed</string>
 
     <!-- QuickPress -->
     <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
@@ -680,7 +709,6 @@
 
     <!-- activity titles -->
     <string name="reader_title_applog">Application log</string>
-    <string name="reader_title_reblog">Reblog Post</string>
     <string name="reader_title_blog_preview">Preview Blog</string>
     <string name="reader_title_tag_preview">Preview Tag</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
@@ -711,16 +739,13 @@
     <string name="reader_hint_comment_on_post">Add your comment</string>
     <string name="reader_hint_comment_on_comment">Reply to comment</string>
     <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
-    <string name="reader_hint_reblog_comment">Add your thoughts (optional)</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
     <string name="reader_label_new_posts_subtitle">Tap to show them</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
-    <string name="reader_label_reblog_to">Reblog to</string>
     <string name="reader_label_reply">Reply</string>
-    <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
     <string name="reader_label_followed_blog">Blog followed</string>
     <string name="reader_label_tag_preview">Posts tagged %s</string>
     <string name="reader_label_comments_on">Comments on</string>
@@ -742,11 +767,7 @@
     <string name="reader_likes_multi_short">%,d people</string>
 
     <!-- toast messages -->
-    <string name="reader_toast_reblog_success">Post has been reblogged</string>
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
-    <string name="reader_toast_err_reblog_failed">Couldn\'t reblog this post</string>
-    <string name="reader_toast_err_already_reblogged">You already reblogged this post</string>
-    <string name="reader_toast_err_reblog_requires_blog">Select a blog</string>
     <string name="reader_toast_err_tag_exists">You already follow this tag</string>
     <string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
     <string name="reader_toast_err_add_tag">Unable to add this tag</string>
@@ -759,6 +780,8 @@
     <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
     <string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
+    <string name="reader_toast_err_follow_blog_not_found">This blog could not be found</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this blog</string>
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
@@ -779,11 +802,21 @@
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
 
+    <!-- attribution line for Discover posts, ex: "Originally posted by [AuthorName] on [BlogName] -->
+    <string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>
+    <string name="reader_discover_attribution_author">Originally posted by %s</string>
+    <string name="reader_discover_attribution_blog">Originally posted on %s</string>
+    <string name="reader_discover_visit_blog">Visit %s</string>
+
+    <!-- connection bar which appears on main activity when there's no connection -->
+    <string name="connectionbar_no_connection">No connection</string>
+
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
     <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
+    <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
@@ -873,6 +906,9 @@
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
+    <string name="my_site_no_sites_view_drake">Illustration</string>
+    <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
+    <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>

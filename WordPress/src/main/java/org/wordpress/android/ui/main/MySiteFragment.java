@@ -2,9 +2,9 @@ package org.wordpress.android.ui.main;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -21,12 +22,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -38,7 +39,6 @@ import de.greenrobot.event.EventBus;
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
 
-    public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
     private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
     private static final long ALERT_ANIM_DURATION_MS = 1000l;
 
@@ -48,6 +48,9 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private View mFabView;
+    private LinearLayout mNoSiteView;
+    private ScrollView mScrollView;
+    private ImageView mNoSiteDrakeImageView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -70,10 +73,28 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        AniUtils.showFab(mFabView, false);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
+        }
+        // redisplay hidden fab after a short delay
+        if (mFabView.getVisibility() != View.VISIBLE) {
+            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAdded()) {
+                        AniUtils.showFab(mFabView, true);
+                    }
+                }
+            }, delayMs);
         }
     }
 
@@ -82,10 +103,7 @@ public class MySiteFragment extends Fragment
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
-
-        int fabHeight = getResources().getDimensionPixelSize(com.getbase.floatingactionbutton.R.dimen.fab_size_normal);
+        int fabHeight = getResources().getDimensionPixelSize(R.dimen.fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
@@ -95,6 +113,9 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+        mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
+        mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +197,13 @@ public class MySiteFragment extends Fragment
             }
         });
 
+        rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.newBlogForResult(getActivity());
+            }
+        });
+
         refreshBlogDetails();
 
         return rootView;
@@ -183,7 +211,6 @@ public class MySiteFragment extends Fragment
 
     private void showSitePicker() {
         if (isAdded()) {
-            AniUtils.showFab(mFabView, false);
             int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
             ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
         }
@@ -194,22 +221,11 @@ public class MySiteFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RequestCodes.PICTURE_LIBRARY:
-                FragmentManager fm = getFragmentManager();
-                Fragment addFragment = fm.findFragmentByTag(ADD_MEDIA_FRAGMENT_TAG);
-                if (addFragment != null) {
-                    addFragment.onActivityResult(requestCode, resultCode, data);
-                }
-                break;
-
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
                     setBlog(WordPress.getCurrentBlog());
                 }
-                // redisplay the hidden fab after a short delay
-                long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-                AniUtils.showFabDelayed(mFabView, true, delayMs);
                 break;
 
             case RequestCodes.EDIT_POST:
@@ -222,6 +238,11 @@ public class MySiteFragment extends Fragment
                         && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
+                break;
+            case RequestCodes.CREATE_BLOG:
+                // if the user created a new blog refresh the blog details
+                mBlog = WordPress.getCurrentBlog();
+                refreshBlogDetails();
                 break;
         }
     }
@@ -251,9 +272,30 @@ public class MySiteFragment extends Fragment
     }
 
     private void refreshBlogDetails() {
-        if (!isAdded() || mBlog == null) {
+        if (!isAdded()) {
             return;
         }
+
+        if (mBlog == null) {
+            mScrollView.setVisibility(View.GONE);
+            mFabView.setVisibility(View.GONE);
+            mNoSiteView.setVisibility(View.VISIBLE);
+
+            // if the screen height is too short, we can just hide the drake illustration
+            Activity activity = getActivity();
+            boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
+            if (drakeVisibility) {
+                mNoSiteDrakeImageView.setVisibility(View.VISIBLE);
+            } else {
+                mNoSiteDrakeImageView.setVisibility(View.GONE);
+            }
+
+            return;
+        }
+
+        mScrollView.setVisibility(View.VISIBLE);
+        mFabView.setVisibility(View.VISIBLE);
+        mNoSiteView.setVisibility(View.GONE);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
@@ -272,8 +314,7 @@ public class MySiteFragment extends Fragment
     @Override
     public void onScrollToTop() {
         if (isAdded()) {
-            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
-            scrollView.smoothScrollTo(0, 0);
+            mScrollView.smoothScrollTo(0, 0);
         }
     }
 

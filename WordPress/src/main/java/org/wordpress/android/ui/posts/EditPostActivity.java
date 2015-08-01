@@ -18,7 +18,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -57,6 +57,7 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
@@ -94,7 +95,7 @@ import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 
-public class EditPostActivity extends ActionBarActivity implements EditorFragmentListener {
+public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -415,7 +416,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         PostStatus status = mPost.getStatusEnum();
         switch (status) {
             case PUBLISHED:
-                if (mPost.isUploaded()) {
+                if (!mPost.isLocalDraft()) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST,
@@ -423,7 +424,7 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
                 }
                 break;
             case SCHEDULED:
-                if (mPost.isUploaded()) {
+                if (!mPost.isLocalDraft()) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
@@ -627,13 +628,11 @@ public class EditPostActivity extends ActionBarActivity implements EditorFragmen
         } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
             // if no changes have been made to the post, set it back to the original don't save it
             WordPress.wpDB.updatePost(mOriginalPost);
-            WordPress.currentPost = mOriginalPost;
         } else {
             // changes have been made, save the post and ask for the post list to refresh.
             // We consider this being "manual save", it will replace some Android "spans" by an html
             // or a shortcode replacement (for instance for images and galleries)
             savePost(false);
-            WordPress.currentPost = mPost;
             Intent i = new Intent();
             i.putExtra(EXTRA_SHOULD_REFRESH, true);
             i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);

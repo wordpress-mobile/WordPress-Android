@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -18,6 +19,8 @@ import org.wordpress.android.util.AppLog;
  */
 public abstract class EditorWebViewAbstract extends WebView {
     public abstract void execJavaScriptFromString(String javaScript);
+
+    private OnImeBackListener mOnImeBackListener;
 
     public EditorWebViewAbstract(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,5 +57,19 @@ public abstract class EditorWebViewAbstract extends WebView {
     @Override
     public boolean onCheckIsTextEditor() {
         return true;
+    }
+
+    public void setOnImeBackListener(OnImeBackListener listener) {
+        mOnImeBackListener = listener;
+    }
+
+    @Override
+    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+            if (mOnImeBackListener != null) {
+                mOnImeBackListener.onImeBack();
+            }
+        }
+        return super.onKeyPreIme(keyCode, event);
     }
 }

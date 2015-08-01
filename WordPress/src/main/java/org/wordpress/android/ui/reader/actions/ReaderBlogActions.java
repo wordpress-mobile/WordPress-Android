@@ -307,9 +307,9 @@ public class ReaderBlogActions {
         };
 
         if (hasBlogId) {
-            WordPress.getRestClientUtilsV1_1().get("sites/" + blogId, listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("read/sites/" + blogId, listener, errorListener);
         } else {
-            WordPress.getRestClientUtilsV1_1().get("sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
         }
     }
     public static void updateFeedInfo(long feedId, String feedUrl, final UpdateBlogInfoListener infoListener) {
@@ -356,27 +356,32 @@ public class ReaderBlogActions {
      * tests whether the passed url can be reached - does NOT use authentication, and does not
      * account for 404 replacement pages used by ISPs such as Charter
      */
-    public static void checkBlogUrlReachable(final String blogUrl, final ActionListener actionListener) {
-        // ActionListener is required
-        if (actionListener == null) {
-            return;
-        }
-        if (TextUtils.isEmpty(blogUrl)) {
-            actionListener.onActionResult(false);
+    public static void checkUrlReachable(final String blogUrl,
+                                         final ReaderActions.OnCheckUrlReachableListener urlListener) {
+        // listener is required
+        if (urlListener == null) {
             return;
         }
 
         Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                actionListener.onActionResult(true);
+                urlListener.onSuccess();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                actionListener.onActionResult(false);
+                int statusCode;
+                // check specifically for auth failure class rather than relying on status code
+                // since a redirect to an unauthorized url may return a 301 rather than a 401
+                if (volleyError instanceof com.android.volley.AuthFailureError) {
+                    statusCode = 401;
+                } else {
+                    statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                }
+                urlListener.onFailed(statusCode);
             }
         };
 

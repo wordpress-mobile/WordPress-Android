@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -22,12 +23,13 @@ import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PagesListActivity;
+import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
-import org.wordpress.android.ui.stats.StatsSinglePostDetailsActivity;
+import org.wordpress.android.ui.stats.StatsConstants;
+import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -54,6 +56,7 @@ public class ActivityLauncher {
     public static void viewCurrentSite(Context context) {
         Intent intent = new Intent(context, ViewSiteActivity.class);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
     }
 
     public static void viewBlogStats(Context context, int blogLocalTableId) {
@@ -67,22 +70,26 @@ public class ActivityLauncher {
     public static void viewCurrentBlogPosts(Context context) {
         Intent intent = new Intent(context, PostsListActivity.class);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_POSTS);
     }
 
     public static void viewCurrentBlogMedia(Context context) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
 
     public static void viewCurrentBlogPages(Context context) {
-        Intent intent = new Intent(context, PagesListActivity.class);
+        Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_PAGES);
     }
 
     public static void viewCurrentBlogComments(Context context) {
         Intent intent = new Intent(context, CommentsActivity.class);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_COMMENTS);
     }
 
     public static void viewCurrentBlogThemes(Context context) {
@@ -98,6 +105,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         slideInFromRightForResult(activity, intent, RequestCodes.BLOG_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS);
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {
@@ -112,6 +120,16 @@ public class ActivityLauncher {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPWebViewActivity.getBlogLoginUrl(blog));
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         slideInFromRight(context, intent);
+    }
+
+    public static void viewPostPreviewForResult(Activity activity, Post post, boolean isPage) {
+        if (post == null) return;
+
+        Intent intent = new Intent(activity, PostPreviewActivity.class);
+        intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
+        intent.putExtra(PostPreviewActivity.ARG_LOCAL_BLOG_ID, post.getLocalTableBlogId());
+        intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
+        slideInFromRightForResult(activity, intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
@@ -133,6 +151,21 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    /*
+     * Load the post preview as an authenticated URL so stats aren't bumped
+     */
+    public static void browsePostOrPage(Context context, Blog blog, Post post) {
+        if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
+
+        String url = post.getPermaLink();
+        if (-1 == url.indexOf('?')) {
+            url = url.concat("?preview=true");
+        } else {
+            url = url.concat("&preview=true");
+        }
+        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, url);
     }
 
     public static void addMedia(Activity activity) {
@@ -181,11 +214,28 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
+    public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
+        if (post == null) return;
+
+        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(post.getLocalTableBlogId());
+        PostModel postModel = new PostModel(
+                Integer.toString(remoteBlogId),
+                post.getRemotePostId(),
+                post.getTitle(),
+                post.getLink(),
+                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
+        viewStatsSinglePostDetails(context, postModel);
+    }
+
     public static void viewStatsSinglePostDetails(Context context, PostModel post) {
         if (post == null) return;
 
-        Intent statsPostViewIntent = new Intent(context, StatsSinglePostDetailsActivity.class);
-        statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_OBJECT, post);
+        Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_BLOG_ID, post.getBlogID());
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_ID, post.getItemID());
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_TYPE, post.getPostType());
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_TITLE, post.getTitle());
+        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_URL, post.getUrl());
         context.startActivity(statsPostViewIntent);
     }
 

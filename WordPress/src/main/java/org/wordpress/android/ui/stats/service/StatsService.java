@@ -252,7 +252,7 @@ public class StatsService extends Service {
         synchronized (mStatsNetworkRequests) {
             switch (sectionToUpdate) {
                 case VISITS:
-                    path = String.format(path + "?unit=%s&quantity=10&date=%s", period, date);
+                    path = String.format(path + "?unit=%s&quantity=15&date=%s", period, date);
                     break;
                 case TOP_POSTS:
                 case REFERRERS:
@@ -403,18 +403,13 @@ public class StatsService extends Service {
 
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
-                    if (volleyError.networkResponse != null) {
-                        NetworkResponse networkResponse = volleyError.networkResponse;
-                        if (networkResponse.statusCode == 403 && networkResponse.data != null) {
-                            if (new String(networkResponse.data).contains("unauthorized")) {
-                                int localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                                        Integer.parseInt(mRequestBlogId)
-                                );
-                                Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
-                                if (blog != null && blog.isJetpackPowered()) {
-                                    EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
-                                }
-                            }
+                    if (volleyError instanceof com.android.volley.AuthFailureError) {
+                        int localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                                Integer.parseInt(mRequestBlogId)
+                        );
+                        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
+                        if (blog != null && blog.isJetpackPowered()) {
+                            EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
                         }
                     }
                     mResponseObjectModel = volleyError;

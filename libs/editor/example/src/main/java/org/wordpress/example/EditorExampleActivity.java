@@ -1,20 +1,21 @@
 package org.wordpress.android.editor.example;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
-public class EditorExampleActivity extends ActionBarActivity implements EditorFragmentListener {
+public class EditorExampleActivity extends AppCompatActivity implements EditorFragmentListener {
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
     public static final String TITLE_PARAM = "TITLE_PARAM";
     public static final String CONTENT_PARAM = "CONTENT_PARAM";
     public static final String DRAFT_PARAM = "DRAFT_PARAM";
+    public static final String TITLE_PLACEHOLDER_PARAM = "TITLE_PLACEHOLDER_PARAM";
+    public static final String CONTENT_PLACEHOLDER_PARAM = "CONTENT_PLACEHOLDER_PARAM";
     public static final int USE_NEW_EDITOR = 1;
     public static final int USE_LEGACY_EDITOR = 2;
 
@@ -62,6 +63,8 @@ public class EditorExampleActivity extends ActionBarActivity implements EditorFr
         boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
         mEditorFragment.setTitle(title);
         mEditorFragment.setContent(content);
+        mEditorFragment.setTitlePlaceholder(getIntent().getStringExtra(TITLE_PLACEHOLDER_PARAM));
+        mEditorFragment.setContentPlaceholder(getIntent().getStringExtra(CONTENT_PLACEHOLDER_PARAM));
         mEditorFragment.setLocalDraft(isLocalDraft);
     }
 

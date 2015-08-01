@@ -41,9 +41,8 @@ public class Post implements Serializable {
     private String password;
     private String postFormat;
     private String slug;
+
     private boolean localDraft;
-    private boolean uploaded;
-    private boolean mIsUploading;
     private boolean mChangedFromLocalDraftToPublished;
     private boolean isPage;
     private String pageParentId;
@@ -52,6 +51,8 @@ public class Post implements Serializable {
     private String mediaPaths;
     private String quickPostType;
     private PostLocation mPostLocation;
+
+    private int featuredImageId;
 
     public Post() {
     }
@@ -368,22 +369,6 @@ public class Post implements Serializable {
         this.pageParentTitle = wp_page_parent_title;
     }
 
-    public boolean isUploading() {
-        return mIsUploading;
-    }
-
-    public void setUploading(boolean uploading) {
-        this.mIsUploading = uploading;
-    }
-
-    public boolean isUploaded() {
-        return uploaded;
-    }
-
-    public void setUploaded(boolean uploaded) {
-        this.uploaded = uploaded;
-    }
-
     public boolean isLocalChange() {
         return isLocalChange;
     }
@@ -489,5 +474,12 @@ public class Post implements Serializable {
 
     public boolean isPublishable() {
         return !(getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
+    }
+
+    public int getFeaturedImageId() {
+        return featuredImageId;
+    }
+    public void setFeaturedImageId(int id) {
+        this.featuredImageId = id;
     }
 }

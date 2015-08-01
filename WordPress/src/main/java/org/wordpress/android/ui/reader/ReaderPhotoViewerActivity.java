@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.widgets.WPViewPager;
 
 import javax.annotation.Nonnull;
 
@@ -25,13 +26,13 @@ import javax.annotation.Nonnull;
  * Full-screen photo viewer - uses a ViewPager to enable scrolling between images in a blog
  * post, but also supports viewing a single image
  */
-public class ReaderPhotoViewerActivity extends ActionBarActivity
+public class ReaderPhotoViewerActivity extends AppCompatActivity
         implements PhotoViewListener {
 
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private String mContent;
-    private ViewPager mViewPager;
+    private WPViewPager mViewPager;
     private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
     private boolean mIsTitleVisible;
@@ -41,7 +42,7 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_photo_viewer);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mTxtTitle = (TextView) findViewById(R.id.text_title);
 
         // title is hidden until we know we can show it
@@ -124,7 +125,8 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
             return;
         }
 
-        final String title = getString(R.string.reader_title_photo_viewer, position + 1, getImageCount());
+        String titlePhotoViewer = getString(R.string.reader_title_photo_viewer);
+        String title = String.format(titlePhotoViewer, position + 1, getImageCount());
         if (title.equals(mTxtTitle.getText())) {
             return;
         }

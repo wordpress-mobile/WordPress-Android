@@ -2,6 +2,7 @@ package org.xmlrpc.android;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Xml;
 
 import com.google.gson.Gson;
@@ -13,8 +14,8 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
-import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -396,177 +397,37 @@ public class ApiHelper {
         return comments;
     }
 
-    public static class FetchPostsTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
-        public interface Callback extends GenericErrorCallback {
-            public void onSuccess(int postCount);
-        }
-
-        private Callback mCallback;
-        private String mErrorMessage;
-        private int mPostCount;
-
-        public FetchPostsTask(Callback callback) {
-            mCallback = callback;
-        }
-
-        @Override
-        protected Boolean doInBackground(List<?>... params) {
-            List<?> arguments = params[0];
-
-            Blog blog = (Blog) arguments.get(0);
-            if (blog == null)
-                return false;
-
-            boolean isPage = (Boolean) arguments.get(1);
-            int recordCount = (Integer) arguments.get(2);
-            boolean loadMore = (Boolean) arguments.get(3);
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-
-            Object[] result;
-            Object[] xmlrpcParams = { blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(), recordCount };
-            try {
-                result = (Object[]) client.call((isPage) ? "wp.getPages"
-                        : "metaWeblog.getRecentPosts", xmlrpcParams);
-                if (result != null && result.length > 0) {
-                    mPostCount = result.length;
-                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
-
-                    if (!loadMore) {
-                        WordPress.wpDB.deleteUploadedPosts(
-                                blog.getLocalTableBlogId(), isPage);
-                    }
-
-                    // If we're loading more posts, only save the posts at the end of the array.
-                    // NOTE: Switching to wp.getPosts wouldn't require janky solutions like this
-                    // since it allows for an offset parameter.
-                    int startPosition = 0;
-                    if (loadMore && result.length > PostsListFragment.POSTS_REQUEST_COUNT) {
-                        startPosition = result.length - PostsListFragment.POSTS_REQUEST_COUNT;
-                    }
-
-                    for (int ctr = startPosition; ctr < result.length; ctr++) {
-                        Map<?, ?> postMap = (Map<?, ?>) result[ctr];
-                        postsList.add(postMap);
-                    }
-
-                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
-                }
-                return true;
-            } catch (XMLRPCFault e) {
-                mErrorType = ErrorType.NETWORK_XMLRPC;
-                if (e.getFaultCode() == 401) {
-                    mErrorType = ErrorType.UNAUTHORIZED;
-                }
-                mErrorMessage = e.getMessage();
-            } catch (XMLRPCException e) {
-                mErrorType = ErrorType.NETWORK_XMLRPC;
-                mErrorMessage = e.getMessage();
-            } catch (IOException e) {
-                mErrorType = ErrorType.INVALID_RESULT;
-                mErrorMessage = e.getMessage();
-            } catch (XmlPullParserException e) {
-                mErrorType = ErrorType.INVALID_RESULT;
-                mErrorMessage = e.getMessage();
-            }
-
-            return false;
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            mCallback.onFailure(ErrorType.TASK_CANCELLED, mErrorMessage, mThrowable);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (mCallback != null) {
-                if (success) {
-                    mCallback.onSuccess(mPostCount);
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
-                }
-            }
-        }
-    }
-
     /**
-     * Fetch a single post or page from the XML-RPC API and save/update it in the DB
+     * Delete a single post or page via XML-RPC API parameters follow those of FetchSinglePostTask
      */
-    public static class FetchSinglePostTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
-        public interface Callback extends GenericErrorCallback {
-            public void onSuccess();
-        }
-
-        private Callback mCallback;
-        private String mErrorMessage;
-
-        public FetchSinglePostTask(Callback callback) {
-            mCallback = callback;
-        }
+    public static class DeleteSinglePostTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
 
         @Override
         protected Boolean doInBackground(List<?>... params) {
             List<?> arguments = params[0];
-
             Blog blog = (Blog) arguments.get(0);
-            if (blog == null)
+            if (blog == null) {
                 return false;
+            }
 
             String postId = (String) arguments.get(1);
             boolean isPage = (Boolean) arguments.get(2);
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
-            Object[] apiParams;
-            if (isPage) {
-                apiParams = new Object[]{
-                        blog.getRemoteBlogId(),
-                        postId,
-                        blog.getUsername(),
-                        blog.getPassword()
-                };
-            } else {
-                apiParams = new Object[]{
-                        postId,
-                        blog.getUsername(),
-                        blog.getPassword()
-                };
-            }
+            Object[] postParams = {"", postId,
+                    blog.getUsername(),
+                    blog.getPassword()};
+            Object[] pageParams = {blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(), postId};
 
             try {
-                Object result = client.call((isPage) ? "wp.getPage" : "metaWeblog.getPost", apiParams);
-                if (result != null && result instanceof Map) {
-                    Map postMap = (HashMap) result;
-                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
-                    postsList.add(postMap);
-
-                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true);
-                }
-
+                client.call(isPage ? "wp.deletePage" : "blogger.deletePost", (isPage) ? pageParams : postParams);
                 return true;
-            } catch (XMLRPCException e) {
+            } catch (XMLRPCException | IOException | XmlPullParserException e) {
                 mErrorMessage = e.getMessage();
-            } catch (IOException e) {
-                mErrorMessage = e.getMessage();
-            } catch (XmlPullParserException e) {
-                mErrorMessage = e.getMessage();
-            }
-
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (mCallback != null) {
-                if (success) {
-                    mCallback.onSuccess();
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
-                }
+                return false;
             }
         }
     }
@@ -1152,5 +1013,55 @@ public class ApiHelper {
             }
         }
         return null; // never found the rsd tag
+    }
+
+    /*
+     * fetches a single post saves it to the db - note that this should NOT be called from main thread
+     */
+    public static boolean updateSinglePost(int localBlogId, String remotePostId, boolean isPage) {
+        Blog blog = WordPress.getBlog(localBlogId);
+        if (blog == null || TextUtils.isEmpty(remotePostId)) {
+            return false;
+        }
+
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(
+                blog.getUri(),
+                blog.getHttpuser(),
+                blog.getHttppassword());
+
+        Object[] apiParams;
+        if (isPage) {
+            apiParams = new Object[]{
+                    blog.getRemoteBlogId(),
+                    remotePostId,
+                    blog.getUsername(),
+                    blog.getPassword()
+            };
+        } else {
+            apiParams = new Object[]{
+                    remotePostId,
+                    blog.getUsername(),
+                    blog.getPassword()
+            };
+        }
+
+        try {
+            Object result = client.call(isPage ? "wp.getPage" : "metaWeblog.getPost", apiParams);
+
+            if (result != null && result instanceof Map) {
+                Map postMap = (HashMap) result;
+                List<Map<?, ?>> postsList = new ArrayList<>();
+                postsList.add(postMap);
+
+                WordPress.wpDB.savePosts(postsList, localBlogId, isPage, true);
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (XMLRPCException | IOException | XmlPullParserException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+            return false;
+        }
     }
 }

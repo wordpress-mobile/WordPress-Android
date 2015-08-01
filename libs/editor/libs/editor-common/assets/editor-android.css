@@ -1,0 +1,13 @@
+@media screen and (min-width: 720px) and (max-width: 1279px) {
+    body {
+        padding-left:90px;
+        padding-right:90px;
+    }
+}
+
+@media screen and (min-width: 1280px){
+    body {
+        padding-left:170px;
+        padding-right:170px;
+    }
+}

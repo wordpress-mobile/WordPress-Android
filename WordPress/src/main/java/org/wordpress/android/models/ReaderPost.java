@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
@@ -47,7 +48,6 @@ public class ReaderPost {
 
     public boolean isLikedByCurrentUser;
     public boolean isFollowedByCurrentUser;
-    public boolean isRebloggedByCurrentUser;
     public boolean isCommentsOpen;
     public boolean isExternal;
     public boolean isPrivate;
@@ -58,6 +58,7 @@ public class ReaderPost {
     public boolean isSharingEnabled;    // currently unused
 
     private String attachmentsJson;
+    private String discoverJson;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -88,7 +89,6 @@ public class ReaderPost {
         post.numLikes = json.optInt("like_count");
         post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
-        post.isRebloggedByCurrentUser = JSONUtils.getBool(json, "is_reblogged");
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
 
@@ -161,6 +161,12 @@ public class ReaderPost {
             post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
+        }
+
+        // "discover" posts
+        JSONObject jsonDiscover = json.optJSONObject("discover_metadata");
+        if (jsonDiscover != null) {
+            post.setDiscoverJson(jsonDiscover.toString());
         }
 
         // if there's no featured image, check if featured media has been set - this is sometimes
@@ -419,6 +425,31 @@ public class ReaderPost {
         return !TextUtils.isEmpty(attachmentsJson);
     }
 
+    /*
+     * "discover" posts also store the actual JSON
+     */
+    public String getDiscoverJson() {
+        return StringUtils.notNullStr(discoverJson);
+    }
+    public void setDiscoverJson(String json) {
+        discoverJson = StringUtils.notNullStr(json);
+    }
+    public boolean isDiscoverPost() {
+        return !TextUtils.isEmpty(discoverJson);
+    }
+
+    private transient ReaderPostDiscoverData discoverData;
+    public ReaderPostDiscoverData getDiscoverData() {
+        if (discoverData == null && !TextUtils.isEmpty(discoverJson)) {
+            try {
+                discoverData = new ReaderPostDiscoverData(new JSONObject(discoverJson));
+            } catch (JSONException e) {
+                return null;
+            }
+        }
+        return discoverData;
+    }
+
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
     }
@@ -460,13 +491,6 @@ public class ReaderPost {
     }
 
     /*
-     * only public wp posts can be reblogged
-     */
-    public boolean canReblog() {
-        return !isExternal && !isPrivate;
-    }
-
-    /*
      * returns true if this post is from a WordPress blog
      */
     public boolean isWP() {
@@ -483,8 +507,7 @@ public class ReaderPost {
                 && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
                 && post.isLikedByCurrentUser == this.isLikedByCurrentUser
                 && post.isCommentsOpen == this.isCommentsOpen
-                && post.isLikesEnabled == this.isLikesEnabled
-                && post.isRebloggedByCurrentUser == this.isRebloggedByCurrentUser;
+                && post.isLikesEnabled == this.isLikesEnabled;
     }
 
     /****

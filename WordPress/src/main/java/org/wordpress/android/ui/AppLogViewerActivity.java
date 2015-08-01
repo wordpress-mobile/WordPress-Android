@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 /**
  * views the activity log (see utils/AppLog.java)
  */
-public class AppLogViewerActivity extends ActionBarActivity {
+public class AppLogViewerActivity extends AppCompatActivity {
     private static final int ID_SHARE = 1;
     private static final int ID_COPY_TO_CLIPBOARD = 2;
 

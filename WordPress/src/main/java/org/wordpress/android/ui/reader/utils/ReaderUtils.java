@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -8,6 +9,7 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 public class ReaderUtils {
@@ -78,17 +80,22 @@ public class ReaderUtils {
                 case 2:
                     return context.getString(R.string.reader_likes_you_and_one);
                 default:
-                    return context.getString(R.string.reader_likes_you_and_multi, numLikes - 1);
+                    String youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi);
+                    return String.format(youAndMultiLikes, numLikes - 1);
             }
         } else {
-            return (numLikes == 1 ?
-                    context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
+            if (numLikes == 1) {
+                return context.getString(R.string.reader_likes_one);
+            } else {
+                String likes = context.getString(R.string.reader_likes_multi);
+                return String.format(likes, numLikes);
+            }
         }
     }
 
     /*
-     * returns true if the reader should provide a "logged out" experience - no likes, comments,
-     * reblogs, or anything else that requires an account
+     * returns true if the reader should provide a "logged out" experience - no likes,
+     * comments, or anything else that requires a wp.com account
      */
     public static boolean isLoggedOutReader() {
         return !AccountHelper.isSignedInWordPressDotCom();
@@ -100,5 +107,26 @@ public class ReaderUtils {
     public static boolean postAndCommentExists(long blogId, long postId, long commentId) {
         return ReaderPostTable.postExists(blogId, postId) &&
                 ReaderCommentTable.commentExists(blogId, postId, commentId);
+    }
+
+    /*
+     * used by Discover site picks to add a "Visit [BlogName]" link which shows the
+     * native blog preview for that blog
+     */
+    public static String makeBlogPreviewUrl(long blogId) {
+        return "wordpress://blogpreview?blogId=" + Long.toString(blogId);
+    }
+
+    public static boolean isBlogPreviewUrl(String url) {
+        return (url != null && url.startsWith("wordpress://blogpreview"));
+    }
+
+    public static long getBlogIdFromBlogPreviewUrl(String url) {
+        if (isBlogPreviewUrl(url)) {
+            String strBlogId = Uri.parse(url).getQueryParameter("blogId");
+            return StringUtils.stringToLong(strBlogId);
+        } else {
+            return 0;
+        }
     }
 }
