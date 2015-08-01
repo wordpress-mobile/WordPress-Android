@@ -1069,4 +1069,7 @@
     <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
 
+    <!-- Static URLs -->
+    <string name="privacy_settings_url">https://en.support.wordpress.com/settings/privacy-settings</string>
+
 </resources>

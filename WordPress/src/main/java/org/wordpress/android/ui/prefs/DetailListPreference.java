@@ -3,8 +3,10 @@ package org.wordpress.android.ui.prefs;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.preference.ListPreference;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.passcodelock.AppLockManager;
 
 /**
  * Custom {@link ListPreference} used to display detail text per item.
@@ -74,7 +77,21 @@ public class DetailListPreference extends ListPreference {
                     }
                 });
         builder.setPositiveButton(null, null);
-        builder.setCustomTitle(View.inflate(getContext(), R.layout.detail_list_preference_title, null));
+
+        View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
+
+        if (titleView != null) {
+            titleView.findViewById(R.id.privacy_info_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uri = Uri.parse(getContext().getString(R.string.privacy_settings_url));
+                    AppLockManager.getInstance().setExtendedTimeout();
+                    getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                }
+            });
+
+            builder.setCustomTitle(titleView);
+        }
     }
 
     @Override
