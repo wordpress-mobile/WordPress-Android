@@ -156,7 +156,7 @@
                 android:paddingRight="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
                 android:textColor="@color/reader_hyperlink"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="@dimen/text_sz_medium"
                 tools:text="#text_tag" />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
