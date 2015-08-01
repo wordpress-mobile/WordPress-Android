@@ -31,12 +31,14 @@
             app:summaryLines="1"
             app:maxSummaryLines="1" />
 
-        <ListPreference
+        <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_site_privacy"
             android:key="@string/pref_key_site_visibility"
             android:title="@string/site_settings_visibility_header"
             android:entries="@array/privacy_entries"
-            android:entryValues="@array/privacy_values" />
+            android:entryValues="@array/privacy_values"
+            android:defaultValue="-2"
+            app:entryDetails="@array/privacy_details" />
 
         <ListPreference
             android:id="@+id/pref_site_language"

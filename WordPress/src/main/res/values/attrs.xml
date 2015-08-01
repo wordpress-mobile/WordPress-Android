@@ -7,6 +7,11 @@
         <attr name="maxSummaryLines" format="integer" />
     </declare-styleable>
 
+    <!-- DetailListPreference attributes -->
+    <declare-styleable name="DetailListPreference">
+        <attr name="entryDetails" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="FlowLayout">
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="verticalSpacing" format="dimension" />

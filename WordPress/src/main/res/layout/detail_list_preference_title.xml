@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingTop="12dp"
+    android:paddingLeft="24dp"
+    android:paddingStart="24dp"
+    android:paddingRight="24dp"
+    android:paddingEnd="24dp"
+    android:layout_gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="@string/privacy"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.DialogWindowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:background="@drawable/stats_icon_info"
+        android:backgroundTint="@color/grey_darken_10"
+        android:layout_width="24dp"
+        android:layout_height="24sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
