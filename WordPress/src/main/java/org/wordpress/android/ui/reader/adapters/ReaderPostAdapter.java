@@ -164,36 +164,29 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         postHolder.txtDate.setText(dateLine);
 
-        // hide the post header (avatar, blog name & follow button) if we're showing posts
-        // in a specific blog
-        if (postListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-            postHolder.layoutPostHeader.setVisibility(View.GONE);
+        if (post.hasBlogUrl()) {
+            String imageUrl = GravatarUtils.blavatarFromUrl(post.getUrl(), mAvatarSzMedium);
+            postHolder.imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
         } else {
-            postHolder.layoutPostHeader.setVisibility(View.VISIBLE);
-            if (post.hasBlogUrl()) {
-                String imageUrl = GravatarUtils.blavatarFromUrl(post.getUrl(), mAvatarSzMedium);
-                postHolder.imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
-            } else {
-                postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
-            }
-            if (post.hasBlogName()) {
-                postHolder.txtBlogName.setText(post.getBlogName());
-            } else if (post.hasAuthorName()) {
-                postHolder.txtBlogName.setText(post.getAuthorName());
-            } else {
-                postHolder.txtBlogName.setText(null);
-            }
-
-            // show blog/feed preview when avatar or blog name is tapped
-            View.OnClickListener blogListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-                }
-            };
-            postHolder.imgAvatar.setOnClickListener(blogListener);
-            postHolder.txtBlogName.setOnClickListener(blogListener);
+            postHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
         }
+        if (post.hasBlogName()) {
+            postHolder.txtBlogName.setText(post.getBlogName());
+        } else if (post.hasAuthorName()) {
+            postHolder.txtBlogName.setText(post.getAuthorName());
+        } else {
+            postHolder.txtBlogName.setText(null);
+        }
+
+        // show blog/feed preview when avatar or blog name is tapped
+        View.OnClickListener blogListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+            }
+        };
+        postHolder.imgAvatar.setOnClickListener(blogListener);
+        postHolder.txtBlogName.setOnClickListener(blogListener);
 
         if (post.hasExcerpt()) {
             postHolder.txtText.setVisibility(View.VISIBLE);

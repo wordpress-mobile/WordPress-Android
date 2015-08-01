@@ -139,6 +139,9 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+     * update the "follow" menu item to reflect the follow status of the current blog/tag
+     */
     private void updateFollowMenu() {
         ReaderPostListFragment fragment = getListFragment();
         if (fragment == null || mFollowMenuItem == null) return;
