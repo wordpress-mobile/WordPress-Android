@@ -16,8 +16,8 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnNavigateTagHistoryListener;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.util.NetworkUtils;
@@ -68,6 +68,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
                 } else {
                     showListFragmentForBlog(blogId);
                 }
+                setTitle(R.string.reader_title_blog_preview);
             } else {
                 // get the tag name from the intent, if not there get it from prefs
                 ReaderTag tag;
@@ -82,18 +83,11 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
                 }
 
                 showListFragmentForTag(tag, mPostListType);
-            }
-        }
 
-        switch (getPostListType()) {
-            case TAG_PREVIEW:
-                setTitle(R.string.reader_title_tag_preview);
-                break;
-            case BLOG_PREVIEW:
-                setTitle(R.string.reader_title_blog_preview);
-                break;
-            default:
-                break;
+                if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+                    setTitle(tag.getCapitalizedTagName());
+                }
+            }
         }
     }
 
@@ -205,6 +199,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
     @Override
     public void onNavigateTagHistory(ReaderTag newTag) {
         updateFollowMenu();
+        setTitle(newTag.getCapitalizedTagName());
     }
 
     @Override

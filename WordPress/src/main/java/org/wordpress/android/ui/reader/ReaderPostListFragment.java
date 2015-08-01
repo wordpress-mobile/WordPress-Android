@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -59,7 +58,6 @@ import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -93,7 +91,6 @@ public class ReaderPostListFragment extends Fragment
     private View mEmptyView;
     private ProgressBar mProgress;
 
-    private ViewGroup mTagInfoView;
     private ReaderBlogInfoView mBlogInfoView;
 
     private ReaderTag mCurrentTag;
@@ -359,20 +356,12 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-        // add the tag/blog header - note that this remains invisible until animated in
-        ViewGroup header = (ViewGroup) rootView.findViewById(R.id.frame_header);
-        switch (getPostListType()) {
-            case TAG_PREVIEW:
-                mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
-                header.addView(mTagInfoView);
-                header.setVisibility(View.INVISIBLE);
-                break;
-
-            case BLOG_PREVIEW:
-                mBlogInfoView = new ReaderBlogInfoView(context);
-                header.addView(mBlogInfoView);
-                header.setVisibility(View.INVISIBLE);
-                break;
+        // add the blog header - note that this remains invisible until animated in
+        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            ViewGroup header = (ViewGroup) rootView.findViewById(R.id.frame_header);
+            mBlogInfoView = new ReaderBlogInfoView(context);
+            header.addView(mBlogInfoView);
+            header.setVisibility(View.INVISIBLE);
         }
 
         // view that appears when current tag/blog has no posts - box images in this view are
@@ -416,7 +405,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * animate in the blog/tag info header after a brief delay
+     * animate in the blog info header after a brief delay
      */
     @SuppressLint("NewApi")
     private void animateHeaderDelayed() {
@@ -563,15 +552,9 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        switch (getPostListType()) {
-            case BLOG_PREVIEW:
-                loadBlogOrFeedInfo();
-                animateHeaderDelayed();
-                break;
-            case TAG_PREVIEW:
-                updateTagPreviewHeader();
-                animateHeaderDelayed();
-                break;
+        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            loadBlogOrFeedInfo();
+            animateHeaderDelayed();
         }
     }
 
@@ -897,10 +880,6 @@ public class ReaderPostListFragment extends Fragment
         hideNewPostsBar();
         showLoadingProgress(false);
 
-        if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-            updateTagPreviewHeader();
-        }
-
         // update posts in this tag if it's time to do so
         if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
             updatePostsWithTag(tag, UpdateAction.REQUEST_NEWER);
@@ -941,22 +920,6 @@ public class ReaderPostListFragment extends Fragment
         }
 
         return true;
-    }
-
-    /*
-     * if we're previewing a tag, show the current tag name in the header and update the
-     * follow button to show the correct follow state for the tag
-     */
-    private void updateTagPreviewHeader() {
-        if (mTagInfoView == null) {
-            return;
-        }
-
-        final TextView txtTagName = (TextView) mTagInfoView.findViewById(R.id.text_tag_name);
-        String color = HtmlUtils.colorResToHtmlColor(getActivity(), R.color.white);
-        String htmlTag = "<font color=" + color + ">" + getCurrentTagName() + "</font>";
-        String htmlLabel = getString(R.string.reader_label_tag_preview, htmlTag);
-        txtTagName.setText(Html.fromHtml(htmlLabel));
     }
 
     /*
