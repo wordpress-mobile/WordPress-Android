@@ -178,15 +178,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.txtBlogName.setText(null);
         }
 
-        // show blog/feed preview when avatar or blog name is tapped
-        View.OnClickListener blogListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-            }
-        };
-        postHolder.imgAvatar.setOnClickListener(blogListener);
-        postHolder.txtBlogName.setOnClickListener(blogListener);
+        // if we're not showing blog preview, show blog/feed preview when avatar or blog name is tapped
+        if (getPostListType() != ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+            View.OnClickListener blogListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                }
+            };
+            postHolder.imgAvatar.setOnClickListener(blogListener);
+            postHolder.txtBlogName.setOnClickListener(blogListener);
+        }
 
         if (post.hasExcerpt()) {
             postHolder.txtText.setVisibility(View.VISIBLE);

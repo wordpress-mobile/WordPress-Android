@@ -478,7 +478,7 @@ public class ReaderPostListFragment extends Fragment
         boolean adapterAlreadyExists = hasPostAdapter();
         mRecyclerView.setAdapter(getPostAdapter());
 
-        // if adapter didn't already exist, populate it now then update the tag - this
+        // if adapter didn't already exist, populate it now then update the tag/blog - this
         // check is important since without it the adapter would be reset and posts would
         // be updated every time the user moves between fragments
         if (!adapterAlreadyExists) {

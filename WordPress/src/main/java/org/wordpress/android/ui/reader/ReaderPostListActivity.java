@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -43,8 +44,12 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         readIntent(getIntent(), savedInstanceState);
     }
@@ -86,10 +91,10 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
                 if (mPostListType == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
                     tag = ReaderTag.getDefaultTag();
                 }
-
+                if (tag != null) {
+                    title = tag.getCapitalizedTagName();
+                }
                 showListFragmentForTag(tag, mPostListType);
-
-                title = tag.getCapitalizedTagName();
             }
 
             setTitle(title);
