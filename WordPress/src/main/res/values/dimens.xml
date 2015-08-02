@@ -62,7 +62,7 @@
     <dimen name="margin_extra_large">16dp</dimen>
 
     <!-- left/right margin for reader detail -->
-    <dimen name="reader_detail_margin_normal">12dp</dimen>
+    <dimen name="reader_detail_margin_normal">24dp</dimen>
     <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
     <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
@@ -81,6 +81,7 @@
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
 
+    <dimen name="avatar_sz_extra_small">20dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>

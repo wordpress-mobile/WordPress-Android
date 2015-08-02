@@ -32,7 +32,6 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
@@ -64,8 +63,8 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private WPScrollView mScrollView;
-    private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
+    private ViewGroup mLayoutHeader;
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
 
@@ -141,7 +140,7 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
 
-        mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
+        mLayoutHeader = (ViewGroup) view.findViewById(R.id.layout_header);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
         mLikingUsersView = (ReaderLikingUsersView) mLayoutLikes.findViewById(R.id.layout_liking_users_view);
 
@@ -151,9 +150,9 @@ public class ReaderPostDetailFragment extends Fragment
         mReaderWebView.setUrlClickListener(this);
         mReaderWebView.setPageFinishedListener(this);
 
-        // hide scrollView and icons until the post is loaded
+        // hide header and scrollView until the post is loaded
+        mLayoutHeader.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
-        mLayoutIcons.setVisibility(View.INVISIBLE);
 
         // spacer that's set to the same height as the toolbar needs to be visible if fragment is
         // in an activity that supports toolbar auto-hiding (e.g. ReaderPostPagerActivity)
@@ -174,23 +173,19 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollUp() {
-        showIconBar(true);
         showToolbar(true);
     }
 
     @Override
     public void onScrollDown() {
         if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
-            showIconBar(false);
             showToolbar(false);
         }
     }
 
     @Override
     public void onScrollCompleted() {
-        if (!mScrollView.canScrollDown()) {
-            showIconBar(true);
-        }
+        // noop
     }
 
     private void showToolbar(boolean show) {
@@ -259,15 +254,6 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean isBlogPreview() {
         return (getPostListType() == ReaderPostListType.BLOG_PREVIEW);
-    }
-
-    /*
-     * animate in/out the layout containing the comment/like icons
-     */
-    private void showIconBar(boolean show) {
-        if (isAdded() && canShowIconBar()) {
-            AniUtils.animateBottomBar(mLayoutIcons, show);
-        }
     }
 
     /*
@@ -352,7 +338,7 @@ public class ReaderPostDetailFragment extends Fragment
         // get the post again since it has changed, then refresh to show changes
         mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         refreshLikes();
-        refreshIconBarCounts(true);
+        refreshIconCounts(true);
 
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
@@ -367,15 +353,12 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
-        final ReaderFollowButton followButton = (ReaderFollowButton) getView().findViewById(R.id.follow_button);
-        followButton.setIsFollowedAnimated(isAskingToFollow);
+        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(mPost);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    followButton.setIsFollowed(!isAskingToFollow);
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                 }
@@ -446,7 +429,7 @@ public class ReaderPostDetailFragment extends Fragment
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged()) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
-                    refreshIconBarCounts(true);
+                    refreshIconCounts(true);
                     refreshComments();
                 }
                 // refresh likes if necessary - done regardless of whether the post has changed
@@ -460,7 +443,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderPostActions.updatePost(mPost, resultListener);
     }
 
-    private void refreshIconBarCounts(boolean animateChanges) {
+    private void refreshIconCounts(boolean animateChanges) {
         if (!isAdded() || !hasPost()) {
             return;
         }
@@ -643,13 +626,10 @@ public class ReaderPostDetailFragment extends Fragment
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
         TextView txtBlogName;
-        TextView txtDateAndAuthor;
-
+        TextView txtAuthorName;
+        TextView txtDate;
         ImageView imgMore;
-
-        ReaderFollowButton followButton;
         WPNetworkImageView imgAvatar;
-        ViewGroup layoutDetailHeader;
 
         @Override
         protected void onPreExecute() {
@@ -693,13 +673,11 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
-            txtDateAndAuthor = (TextView) container.findViewById(R.id.text_date_and_author);
+            txtAuthorName = (TextView) container.findViewById(R.id.text_author);
+            txtDate = (TextView) container.findViewById(R.id.text_date);
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
-
-            layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
-            followButton = (ReaderFollowButton) container.findViewById(R.id.follow_button);
 
             return true;
         }
@@ -732,17 +710,15 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            if (mIsLoggedOutReader) {
-                followButton.setVisibility(View.GONE);
-            } else {
-                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-                followButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        togglePostFollowed();
-                    }
-                });
-            }
+            View.OnClickListener blogPreviewListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
+                }
+            };
+            txtBlogName.setOnClickListener(blogPreviewListener);
+            imgAvatar.setOnClickListener(blogPreviewListener);
+            txtAuthorName.setOnClickListener(blogPreviewListener);
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
@@ -754,35 +730,18 @@ public class ReaderPostDetailFragment extends Fragment
                 txtBlogName.setVisibility(View.GONE);
             }
 
-            // show date and author name if author name exists and is different than the blog name,
-            // otherwise just show the date
-            if (mPost.hasAuthorName() && !mPost.getAuthorName().equals(mPost.getBlogName())) {
-                txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(
-                        mPost.getDatePublished()) + " / " + mPost.getAuthorName());
-            } else {
-                txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
-            }
-
-            if (mPost.hasPostAvatar()) {
+            if (mPost.hasAuthorName()) {
+                txtAuthorName.setText(mPost.getAuthorName());
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(
-                        mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+                        mResourceVars.extraSmallAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+                txtAuthorName.setVisibility(View.VISIBLE);
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
+                txtAuthorName.setVisibility(View.GONE);
                 imgAvatar.setVisibility(View.GONE);
             }
 
-            // hide header if this fragment was shown from blog preview, otherwise tapping
-            // avatar in header shows blog preview unless this post is from an external feed
-            if (isBlogPreview()) {
-                layoutDetailHeader.setVisibility(View.GONE);
-            } else {
-                imgAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
-                    }
-                });
-            }
+            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
             // enable blocking the associated blog
             if (canBlockBlog()) {
@@ -799,8 +758,11 @@ public class ReaderPostDetailFragment extends Fragment
                 imgMore.setVisibility(View.GONE);
             }
 
-            mLayoutIcons.setVisibility(canShowIconBar() ? View.VISIBLE : View.GONE);
-            refreshIconBarCounts(false);
+            if (mLayoutHeader.getVisibility() != View.VISIBLE) {
+                AniUtils.fadeIn(mLayoutHeader, AniUtils.Duration.MEDIUM);
+            }
+
+            refreshIconCounts(false);
         }
     }
 
