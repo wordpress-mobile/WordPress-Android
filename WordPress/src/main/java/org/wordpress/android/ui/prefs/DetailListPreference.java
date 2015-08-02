@@ -76,12 +76,19 @@ public class DetailListPreference extends ListPreference {
                         dialog.dismiss();
                     }
                 });
-        builder.setPositiveButton(null, null);
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO: save new setting
+            }
+        });
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
-
         if (titleView != null) {
-            titleView.findViewById(R.id.privacy_info_button).setOnClickListener(new View.OnClickListener() {
+            final View infoView = titleView.findViewById(R.id.privacy_info_button);
+
+            infoView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Uri uri = Uri.parse(getContext().getString(R.string.privacy_settings_url));
