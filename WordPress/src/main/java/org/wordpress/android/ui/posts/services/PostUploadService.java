@@ -36,6 +36,7 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -409,14 +410,15 @@ public class PostUploadService extends Service {
                     mClient.call("metaWeblog.editPost", params);
                 }
 
+                // Track any Analytics before modifying the post
+                trackUploadAnalytics();
+
                 mPost.setLocalDraft(false);
                 mPost.setLocalChange(false);
                 WordPress.wpDB.updatePost(mPost);
 
                 // request the new/updated post from the server to ensure local copy matches server
                 ApiHelper.updateSinglePost(mBlog.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
-
-                trackUploadAnalytics();
 
                 return true;
             } catch (final XMLRPCException e) {
@@ -434,24 +436,30 @@ public class PostUploadService extends Service {
             mPost.getStatusEnum();
 
             boolean isFirstTimePublishing = false;
-            if (mPost.hasChangedFromLocalDraftToPublished() ||
+            if (mPost.hasChangedFromDraftToPublished() ||
                     (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
                 isFirstTimePublishing = true;
             }
 
             if (isFirstTimePublishing) {
+                // Calculate the words count
+                Map<String, Object> properties = new HashMap<String, Object>();
+                properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+
                 if (mHasImage) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
+                    properties.put("with_photos", true);
                 }
                 if (mHasVideo) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
+                    properties.put("with_videos", true);
                 }
                 if (mHasCategory) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
+                    properties.put("with_categories", true);
                 }
                 if (!TextUtils.isEmpty(mPost.getKeywords())) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
+                    properties.put("with_tags", true);
                 }
+
+                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, properties);
             }
         }
 

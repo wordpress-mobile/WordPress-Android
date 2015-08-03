@@ -61,6 +61,7 @@ import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -405,13 +406,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private Map<String, Object> getWordCountTrackingProperties() {
-        Map<String, Object> properties = new HashMap<String, Object>();
-        String text = Html.fromHtml(mPost.getContent().replaceAll("<img[^>]*>", "")).toString();
-        properties.put("word_count", text.split("\\s+").length);
-        return properties;
-    }
-
     private void trackSavePostAnalytics() {
         PostStatus status = mPost.getStatusEnum();
         switch (status) {
@@ -419,16 +413,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (!mPost.isLocalDraft()) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST,
-                            getWordCountTrackingProperties());
+                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
                 }
                 break;
             case SCHEDULED:
                 if (!mPost.isLocalDraft()) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
-                            getWordCountTrackingProperties());
+                    Map<String, Object> properties = new HashMap<String, Object>();
+                    properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, properties);
                 }
                 break;
             case DRAFT:
