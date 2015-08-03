@@ -324,15 +324,50 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         PopupMenu popup = new PopupMenu(this, view);
-        MenuItem menuItem = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
-        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+        boolean isFollowed = ReaderPostTable.isPostFollowed(post);
+        MenuItem mnuFollow = popup.getMenu().add(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        mnuFollow.setCheckable(true);
+        mnuFollow.setChecked(isFollowed);
+        mnuFollow.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                blockBlogForPost(post.blogId, post.postId);
-                return true;
+                toggleFollowStatusForPost(post);
+                return false;
             }
         });
+
+        if (!mIsSinglePostView) {
+            MenuItem mnuBlock = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
+            mnuBlock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    blockBlogForPost(post.blogId, post.postId);
+                    return true;
+                }
+            });
+        }
+
         popup.show();
+    }
+
+    /*
+     * change the follow state of the blog the current post is in
+     */
+    private void toggleFollowStatusForPost(ReaderPost post) {
+        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(post);
+
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && !isFinishing()) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(ReaderPostPagerActivity.this, resId);
+                }
+            }
+        };
+
+        ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener);
     }
 
     /*

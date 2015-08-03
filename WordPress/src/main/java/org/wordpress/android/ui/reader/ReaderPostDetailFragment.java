@@ -28,7 +28,6 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
@@ -279,33 +278,6 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
-        }
-    }
-
-    /*
-     * change the follow state of the blog the current post is in
-     */
-    private void togglePostFollowed() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(mPost);
-
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!succeeded && isAdded()) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(getActivity(), resId);
-                }
-            }
-        };
-
-
-        // action returns before api call completes, but local post will have been changed
-        if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, actionListener)) {
-            mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         }
     }
 
