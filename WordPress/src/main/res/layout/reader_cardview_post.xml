@@ -149,7 +149,6 @@
                 android:id="@+id/text_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_discover"
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_small"
