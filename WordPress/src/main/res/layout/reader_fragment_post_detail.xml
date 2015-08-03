@@ -12,18 +12,10 @@
         android:background="@color/white"
         android:descendantFocusability="blocksDescendants">
 
-        <View
-            android:id="@+id/spacer_autohide_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
         <RelativeLayout
             android:id="@+id/layout_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spacer_autohide_toolbar"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/reader_detail_margin"
             android:layout_marginRight="@dimen/reader_detail_margin"

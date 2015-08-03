@@ -51,10 +51,8 @@ import de.greenrobot.event.EventBus;
  * post detail
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
-        implements ReaderInterfaces.OnPostPopupListener,
-                   ReaderInterfaces.AutoHideToolbarListener {
+        implements ReaderInterfaces.OnPostPopupListener {
 
-    private Toolbar mToolbar;
     private WPViewPager mViewPager;
     private ProgressBar mProgress;
 
@@ -75,8 +73,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -125,7 +123,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
-                onShowHideToolbar(true);
                 bumpPageViewIfNeeded(position);
             }
 
@@ -227,7 +224,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      * "bumps" the pageview for the post at the passed position if it hasn't already been done
      */
     private void bumpPageViewIfNeeded(int position) {
-        if (!mBumpedPageViewPositions.contains(position)) {
+        if (!mBumpedPageViewPositions.contains(position) && hasPagerAdapter()) {
             ReaderBlogIdPostId idPair = getPagerAdapter().getBlogIdPostIdAtPosition(position);
             if (idPair != null) {
                 AppLog.d(AppLog.T.READER, "reader pager > bumping page view for position " + position);
@@ -296,7 +293,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         return mCurrentTag != null;
     }
 
-    ReaderPostListType getPostListType() {
+    private ReaderPostListType getPostListType() {
         return mPostListType;
     }
 
@@ -318,7 +315,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     /*
-     * user tapped the dropdown arrow to the right of the title on a detail fragment
+     * user tapped the "..." icon in a detail fragment
      */
     @Override
     public void onShowPostPopup(View view, final ReaderPost post) {
@@ -406,16 +403,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         long newBlogId = (newId != null ? newId.getBlogId() : 0);
         long newPostId = (newId != null ? newId.getPostId() : 0);
         loadPosts(newBlogId, newPostId);
-    }
-
-    /*
-     * called by detail fragment to show/hide the toolbar when user scrolls
-     */
-    @Override
-    public void onShowHideToolbar(boolean show) {
-        if (!isFinishing()) {
-            AniUtils.animateTopBar(mToolbar, show);
-        }
     }
 
     /*
@@ -534,11 +521,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 requestMorePosts();
             }
 
-            boolean disableBlockBlog = mIsSinglePostView;
             return ReaderPostDetailFragment.newInstance(
                     mIdList.get(position).getBlogId(),
                     mIdList.get(position).getPostId(),
-                    disableBlockBlog,
                     getPostListType());
         }
 

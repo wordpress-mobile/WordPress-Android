@@ -44,17 +44,13 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 
 public class ReaderPostDetailFragment extends Fragment
-        implements ScrollDirectionListener,
-        ReaderCustomViewListener,
+        implements ReaderCustomViewListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener {
-
-    private static final String ARG_DISABLE_BLOCK_BLOG = "disable_block_blog";
 
     private long mPostId;
     private long mBlogId;
@@ -70,28 +66,23 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
-    private boolean mIsBlockBlogDisabled;
     private boolean mIsLoggedOutReader;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
-    private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
-
     private ReaderResourceVars mResourceVars;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(blogId, postId, true, null);
+        return newInstance(blogId, postId, null);
     }
 
     public static ReaderPostDetailFragment newInstance(long blogId,
                                                        long postId,
-                                                       boolean disableBlockBlog,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
-        args.putBoolean(ARG_DISABLE_BLOCK_BLOG, disableBlockBlog);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -114,7 +105,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (args != null) {
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
-            mIsBlockBlogDisabled = args.getBoolean(ARG_DISABLE_BLOCK_BLOG);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -128,9 +118,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
             mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
-        if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
-            mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
-        }
     }
 
     @Override
@@ -138,7 +125,6 @@ public class ReaderPostDetailFragment extends Fragment
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
-        mScrollView.setScrollDirectionListener(this);
 
         mLayoutHeader = (ViewGroup) view.findViewById(R.id.layout_header);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
@@ -154,11 +140,6 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutHeader.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
 
-        // spacer that's set to the same height as the toolbar needs to be visible if fragment is
-        // in an activity that supports toolbar auto-hiding (e.g. ReaderPostPagerActivity)
-        View spacer = view.findViewById(R.id.spacer_autohide_toolbar);
-        spacer.setVisibility(mAutoHideToolbarListener != null ? View.VISIBLE : View.GONE);
-
         return view;
     }
 
@@ -170,39 +151,12 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-
-    @Override
-    public void onScrollUp() {
-        showToolbar(true);
-    }
-
-    @Override
-    public void onScrollDown() {
-        if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
-            showToolbar(false);
-        }
-    }
-
-    @Override
-    public void onScrollCompleted() {
-        // noop
-    }
-
-    private void showToolbar(boolean show) {
-        if (mAutoHideToolbarListener != null) {
-            mAutoHideToolbarListener.onShowHideToolbar(show);
-        }
-    }
-
     private boolean hasPost() {
         return (mPost != null);
     }
 
-    private boolean canBlockBlog() {
+    private boolean canShowMoreIcon() {
         return mPost != null
-                && !mIsBlockBlogDisabled
-                && !mPost.isPrivate
-                && !mPost.isExternal
                 && !mIsLoggedOutReader
                 && (mOnPopupListener != null)
                 && (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
@@ -252,21 +206,6 @@ public class ReaderPostDetailFragment extends Fragment
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
-    private boolean isBlogPreview() {
-        return (getPostListType() == ReaderPostListType.BLOG_PREVIEW);
-    }
-
-    /*
-     * action icons don't appear for feeds or discover posts or when logged out, otherwise
-     * they appear only if the user can act upon them
-     */
-    private boolean canShowIconBar() {
-        if (mPost == null || mPost.isExternal || mPost.isDiscoverPost() || mIsLoggedOutReader) {
-            return false;
-        }
-        return (mPost.isLikesEnabled || mPost.isCommentsOpen);
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
@@ -274,7 +213,6 @@ public class ReaderPostDetailFragment extends Fragment
 
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
-        outState.putBoolean(ARG_DISABLE_BLOCK_BLOG, mIsBlockBlogDisabled);
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         super.onSaveInstanceState(outState);
@@ -293,7 +231,6 @@ public class ReaderPostDetailFragment extends Fragment
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
-            mIsBlockBlogDisabled = savedInstanceState.getBoolean(ARG_DISABLE_BLOCK_BLOG);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -744,7 +681,7 @@ public class ReaderPostDetailFragment extends Fragment
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
             // enable blocking the associated blog
-            if (canBlockBlog()) {
+            if (canShowMoreIcon()) {
                 imgMore.setVisibility(View.VISIBLE);
                 imgMore.setOnClickListener(new View.OnClickListener() {
                     @Override
