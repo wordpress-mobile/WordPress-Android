@@ -154,13 +154,6 @@ public class ReaderPostDetailFragment extends Fragment
         return (mPost != null);
     }
 
-    private boolean canShowMoreIcon() {
-        return mPost != null
-                && !mIsLoggedOutReader
-                && (mOnPopupListener != null)
-                && (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -652,8 +645,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
-            // enable blocking the associated blog
-            if (canShowMoreIcon()) {
+            if (mOnPopupListener != null) {
                 imgMore.setVisibility(View.VISIBLE);
                 imgMore.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -668,7 +660,7 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             if (mLayoutHeader.getVisibility() != View.VISIBLE) {
-                AniUtils.fadeIn(mLayoutHeader, AniUtils.Duration.MEDIUM);
+                AniUtils.fadeIn(mLayoutHeader, AniUtils.Duration.LONG);
             }
 
             refreshIconCounts(false);
