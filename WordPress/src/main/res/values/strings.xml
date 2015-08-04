@@ -419,18 +419,25 @@
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
 
     <!-- Site Settings -->
-    <string name="site_settings_title_format">Settings - %s</string>
     <string name="site_settings_general_header">General</string>
     <string name="site_settings_title_title">Site Title</string>
     <string name="site_settings_tagline_title">Tagline</string>
     <string name="site_settings_address_title">Address</string>
     <string name="site_settings_visibility_header">Privacy</string>
     <string name="site_settings_language_header">@string/language</string>
-    <string name="site_title_hint">What\'s this site about</string>
-    <string name="site_tagline_hint">Words to live by</string>
+    <string name="site_title_hint">In a few words, explain what this site is about.</string>
+    <string name="site_tagline_hint">A short description or catchy phrase to describe your blog.</string>
+    <string name="site_address_hint">Changing your address is not currently supported.</string>
+    <string name="site_privacy_hint">Controls who can see your site.</string>
+    <string name="site_language_hint">Language this blog is primarily written in.</string>
     <string name="site_settings_related_posts_title">Related Posts</string>
     <string name="site_settings_related_header_title">Related Posts</string>
     <string name="site_settings_related_posts_summary">Show related content after posts</string>
+    <string name="site_settings_title_default_summary">Fetching title</string>
+    <string name="site_settings_tagline_default_summary">Fetching tagline</string>
+    <string name="site_settings_address_default_summary">Fetching address</string>
+    <string name="site_settings_privacy_default_summary">Fetching privacy</string>
+    <string name="site_settings_language_default_summary">Fetching language</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>

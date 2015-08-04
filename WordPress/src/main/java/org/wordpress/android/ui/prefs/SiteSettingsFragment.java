@@ -2,11 +2,16 @@ package org.wordpress.android.ui.prefs;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -21,6 +26,7 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
@@ -33,14 +39,19 @@ import java.util.Map;
  */
 
 public class SiteSettingsFragment extends PreferenceFragment
-        implements Preference.OnPreferenceChangeListener {
+        implements Preference.OnPreferenceChangeListener, AdapterView.OnItemLongClickListener {
+    public interface HasHint {
+        boolean hasHint();
+        String getHintText();
+    }
+
     private HashMap<String, String> mLanguageCodes = new HashMap<>();
     private Blog mBlog;
     private EditTextPreference mTitlePreference;
     private EditTextPreference mTaglinePreference;
     private EditTextPreference mAddressPreference;
-    private ListPreference mLanguagePreference;
-    private ListPreference mPrivacyPreference;
+    private DetailListPreference mLanguagePreference;
+    private DetailListPreference mPrivacyPreference;
 
     // Most recent remote site data. Current local data is used if remote data cannot be fetched.
     private String mRemoteTitle;
@@ -66,12 +77,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // inflate Site Settings preferences from XML
         addPreferencesFromResource(R.xml.site_settings);
-
-        mRemoteTitle = "";
-        mRemoteTagline = "";
-        mRemoteAddress = "";
-        mRemotePrivacy = 1;
-        mRemoteLanguage = "";
 
         // set preference references, add change listeners, and setup various entries and values
         initPreferences();
@@ -100,6 +105,23 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        // Setup the preferences to handled long clicks
+        if (view != null) {
+            ListView prefList = (ListView) view.findViewById(android.R.id.list);
+
+            if (prefList != null) {
+                prefList.setOnItemLongClickListener(this);
+            }
+        }
+
+        return view;
+    }
+
+    @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (newValue == null) return false;
 
@@ -123,28 +145,77 @@ public class SiteSettingsFragment extends PreferenceFragment
         return false;
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        ListView listView = (ListView) parent;
+        ListAdapter listAdapter = listView.getAdapter();
+        Object obj = listAdapter.getItem(position);
+
+        if (obj != null) {
+            if (obj instanceof View.OnLongClickListener) {
+                View.OnLongClickListener longListener = (View.OnLongClickListener) obj;
+                return longListener.onLongClick(view);
+            } else if (obj instanceof HasHint && ((HasHint) obj).hasHint()) {
+                ToastUtils.showToast(getActivity(), ((HasHint)obj).getHintText(), ToastUtils.Duration.SHORT);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
-     * Helper method to perform validation and set multiple properties on an EditTextPreference.
-     * If newValue is equal to the current preference text no action will be taken.
+     * Helper method to retrieve {@link Preference} references and initialize any data.
      */
-    private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
-        if (pref != null && newValue != null && !newValue.equals(pref.getSummary())) {
-            pref.setText(newValue);
-            pref.setSummary(newValue);
+    private void initPreferences() {
+        // Title preference
+        if (null != (mTitlePreference =
+                (EditTextPreference) findPreference(getString(R.string.pref_key_site_title)))) {
+            mTitlePreference.setOnPreferenceChangeListener(this);
         }
-    }
 
-    private void changeLanguageValue(String newValue) {
-        if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
-            mLanguagePreference.setValue(newValue);
-            mLanguagePreference.setSummary(getLanguageString(newValue, Locale.getDefault()));
+        // Tagline preference
+        if (null != (mTaglinePreference =
+                (EditTextPreference) findPreference(getString(R.string.pref_key_site_tagline)))) {
+            mTaglinePreference.setOnPreferenceChangeListener(this);
         }
-    }
 
-    private void changePrivacyValue(int newValue) {
-        if (mPrivacyPreference != null && Integer.valueOf(mPrivacyPreference.getValue()) == newValue) {
-            mPrivacyPreference.setValue(String.valueOf(newValue));
-            mPrivacyPreference.setSummary(privacyStringForValue(newValue));
+        // Address preferences
+        if (null != (mAddressPreference =
+                (EditTextPreference) findPreference(getString(R.string.pref_key_site_address)))) {
+            mAddressPreference.setOnPreferenceChangeListener(this);
+        }
+
+        // Privacy preference, removed for self-hosted sites
+        if (null != (mPrivacyPreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_visibility)))) {
+            if (!mBlog.isDotcomFlag()) {
+                removePreference(R.string.pref_key_site_general, mPrivacyPreference);
+            } else {
+                mPrivacyPreference.setOnPreferenceChangeListener(this);
+            }
+        }
+
+        // Language preference, removed for self-hosted sites
+        if (null != (mLanguagePreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_language)))) {
+            if (!mBlog.isDotcomFlag()) {
+                removePreference(R.string.pref_key_site_general, mLanguagePreference);
+            } else {
+                // Generate map of language codes
+                String[] languageIds = getResources().getStringArray(R.array.lang_ids);
+                String[] languageCodes = getResources().getStringArray(R.array.language_codes);
+                String[] details = new String[languageIds.length];
+                for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
+                    mLanguageCodes.put(languageCodes[i], languageIds[i]);
+                    details[i] = getLanguageString(languageCodes[i], Locale.getDefault());
+                }
+
+                mLanguagePreference.setEntries(
+                        createLanguageDisplayStrings(mLanguagePreference.getEntryValues()));
+                mLanguagePreference.setOnPreferenceChangeListener(this);
+                mLanguagePreference.setDetails(details);
+            }
         }
     }
 
@@ -176,7 +247,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()
             };
 
-            client.callAsync(mXmlRpcFetchCallback, "wp.getOptions", params);
+            client.callAsync(mXmlRpcFetchCallback, XMLRPCClient.METHOD_GET_OPTIONS, params);
         }
     }
 
@@ -189,28 +260,39 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void handleResponseToSelfHostedSettingsRequest(Map result) {
-        mRemoteTitle = getNestedMapValue(result, "blog_title");
-        changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+        if (mTitlePreference != null) {
+            mTitlePreference.setEnabled(true);
+            mRemoteTitle = getNestedMapValue(result, "blog_title");
+            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+        }
 
-        mRemoteTagline = getNestedMapValue(result, "blog_tagline");
-        changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
+        if (mTaglinePreference != null) {
+            mTaglinePreference.setEnabled(true);
+            mRemoteTagline = getNestedMapValue(result, "blog_tagline");
+            changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
+        }
 
-        mRemoteAddress = getNestedMapValue(result, "blog_url");
-        changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
-
-        mRemotePrivacy = 0;
-        mRemoteLanguage = convertLanguageIdToLanguageCode("1");
+        if (mAddressPreference != null) {
+            mRemoteAddress = getNestedMapValue(result, "blog_url");
+            changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
+        }
     }
 
     /**
      * Helper method to parse JSON response to REST request.
      */
     private void handleResponseToWPComSettingsRequest(JSONObject response) {
-        mRemoteTitle = response.optString(RestClientUtils.SITE_TITLE_KEY);
-        changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+        if (mTitlePreference != null) {
+            mTitlePreference.setEnabled(true);
+            mRemoteTitle = response.optString(RestClientUtils.SITE_TITLE_KEY);
+            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+        }
 
-        mRemoteTagline = response.optString(RestClientUtils.SITE_DESC_KEY);
-        changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
+        if (mTaglinePreference != null) {
+            mTaglinePreference.setEnabled(true);
+            mRemoteTagline = response.optString(RestClientUtils.SITE_DESC_KEY);
+            changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
+        }
 
         mRemoteAddress = response.optString(RestClientUtils.SITE_URL_KEY);
         changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
@@ -220,12 +302,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (settingsObject != null) {
             mRemoteLanguage = convertLanguageIdToLanguageCode(settingsObject.optString("lang_id"));
             if (mLanguagePreference != null) {
+                mLanguagePreference.setEnabled(true);
                 changeLanguageValue(mRemoteLanguage);
                 mLanguagePreference.setSummary(getLanguageString(mRemoteLanguage, Locale.getDefault()));
             }
 
             mRemotePrivacy = settingsObject.optInt("blog_public");
             if (mPrivacyPreference != null) {
+                mPrivacyPreference.setEnabled(true);
                 mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
             }
             changePrivacyValue(mRemotePrivacy);
@@ -234,12 +318,13 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     /**
      * Helper method to create the parameters for the site settings POST request
+     *
+     * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
+     * https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
      */
     private HashMap<String, String> generatePostParams() {
         HashMap<String, String> params = new HashMap<>();
 
-        // Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
-        // https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
         if (mTitlePreference != null && !mTitlePreference.getText().equals(mRemoteTitle)) {
             params.put("blogname", mTitlePreference.getText());
         }
@@ -249,7 +334,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         if (mAddressPreference != null && !mAddressPreference.getText().equals(mRemoteAddress)) {
-            // TODO
         }
 
         if (mLanguagePreference != null &&
@@ -258,7 +342,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             params.put("lang_id", String.valueOf(mLanguageCodes.get(mLanguagePreference.getValue())));
         }
 
-        if (mPrivacyPreference != null && Integer.valueOf(mPrivacyPreference.getValue()) != mRemotePrivacy) {
+        if (mPrivacyPreference != null &&
+                Integer.valueOf(mPrivacyPreference.getValue()) != mRemotePrivacy) {
             params.put("blog_public", mPrivacyPreference.getValue());
         }
 
@@ -294,66 +379,33 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     /**
-     * Helper method to setup preferences and set initial values
+     * Helper method to perform validation and set multiple properties on an EditTextPreference.
+     * If newValue is equal to the current preference text no action will be taken.
      */
-    private void initPreferences() {
-        mTitlePreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_title));
-        mTaglinePreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_tagline));
-        mAddressPreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_address));
-        mPrivacyPreference =
-                (ListPreference) findPreference(getString(R.string.pref_key_site_visibility));
-        mLanguagePreference =
-                (ListPreference) findPreference(getString(R.string.pref_key_site_language));
-
-        if (mTitlePreference != null) {
-            mTitlePreference.setOnPreferenceChangeListener(this);
-            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
-        }
-
-        if (mTaglinePreference != null) {
-            mTaglinePreference.setOnPreferenceChangeListener(this);
-            changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
-        }
-
-        if (mAddressPreference != null) {
-            mAddressPreference.setOnPreferenceChangeListener(this);
-            changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
-        }
-
-        if (mPrivacyPreference != null) {
-            if (!mBlog.isDotcomFlag()) {
-                ((PreferenceCategory) findPreference(getString(R.string.pref_key_site_general)))
-                        .removePreference(mPrivacyPreference);
-            } else {
-                mPrivacyPreference.setOnPreferenceChangeListener(this);
-                changePrivacyValue(mRemotePrivacy);
-            }
-        }
-
-        if (mLanguagePreference != null) {
-            if (!mBlog.isDotcomFlag()) {
-                ((PreferenceCategory) findPreference(getString(R.string.pref_key_site_general)))
-                        .removePreference(mLanguagePreference);
-            } else {
-                // Generate map of language codes
-                String[] languageIds = getResources().getStringArray(R.array.lang_ids);
-                String[] languageCodes = getResources().getStringArray(R.array.language_codes);
-                for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
-                    mLanguageCodes.put(languageCodes[i], languageIds[i]);
-                }
-
-                mLanguagePreference.setEntries(
-                        createLanguageDisplayStrings(mLanguagePreference.getEntryValues()));
-                mLanguagePreference.setOnPreferenceChangeListener(this);
-
-                changeLanguageValue(mRemoteLanguage);
-            }
+    private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
+        if (pref != null && newValue != null && !newValue.equals(pref.getSummary())) {
+            pref.setText(newValue);
+            pref.setSummary(newValue);
         }
     }
 
+    private void changeLanguageValue(String newValue) {
+        if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
+            mLanguagePreference.setValue(newValue);
+            mLanguagePreference.setSummary(getLanguageString(newValue, Locale.getDefault()));
+        }
+    }
+
+    private void changePrivacyValue(int newValue) {
+        if (mPrivacyPreference != null && Integer.valueOf(mPrivacyPreference.getValue()) == newValue) {
+            mPrivacyPreference.setValue(String.valueOf(newValue));
+            mPrivacyPreference.setSummary(privacyStringForValue(newValue));
+        }
+    }
+
+    /**
+     * Returns non-null String representation of WordPress.com privacy value.
+     */
     private String privacyStringForValue(int value) {
         switch (value) {
             case -1:
@@ -376,7 +428,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         CharSequence[] displayStrings = new CharSequence[languageCodes.length];
 
         for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = getLanguageString(String.valueOf(languageCodes[i]), Locale.getDefault());
+            displayStrings[i] = getLanguageString(
+                    String.valueOf(languageCodes[i]), new Locale(languageCodes[i].toString()));
         }
 
         return displayStrings;
@@ -394,6 +447,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         return languageLocale.getDisplayLanguage(displayLocale) + languageCode.substring(2);
     }
 
+    /**
+     * Converts a language ID (WordPress defined) to a language code (i.e. en, es, gb, etc...).
+     */
     private String convertLanguageIdToLanguageCode(String id) {
         if (id != null) {
             for (String key : mLanguageCodes.keySet()) {
@@ -406,12 +462,28 @@ public class SiteSettingsFragment extends PreferenceFragment
         return "";
     }
 
+    /**
+     * Helper method to get a value from a nested Map. Used to parse self-hosted response object.
+     */
     private String getNestedMapValue(Map map, String key) {
         if (map != null && key != null) {
             return MapUtils.getMapStr((Map) map.get(key), "value");
         }
 
         return "";
+    }
+
+    /**
+     * Removes a {@link Preference} from the {@link PreferenceCategory} with the given key.
+     */
+    private void removePreference(int categoryKey, Preference preference) {
+        if (preference == null) return;
+
+        PreferenceCategory category = (PreferenceCategory) findPreference(getString(categoryKey));
+
+        if (category != null) {
+            category.removePreference(preference);
+        }
     }
 
     /**
@@ -427,6 +499,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                         handleResponseToSelfHostedSettingsRequest((Map) result);
                     }
                 });
+            } else {
+                // Response is considered an error if we are unable to parse it
+                handleSettingsFetchError("Invalid response object (exprected Map): " + result);
             }
         }
 

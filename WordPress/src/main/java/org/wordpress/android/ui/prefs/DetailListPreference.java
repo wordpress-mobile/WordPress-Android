@@ -9,8 +9,8 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.ListPreference;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -25,17 +25,16 @@ import org.wordpress.passcodelock.AppLockManager;
  * Custom {@link ListPreference} used to display detail text per item.
  */
 
-public class DetailListPreference extends ListPreference {
+public class DetailListPreference extends ListPreference implements SiteSettingsFragment.HasHint {
     private DetailListAdapter mListAdapter;
     private String[] mDetails;
     private int mSelectedIndex;
+    private String mHint;
 
     public DetailListPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.DetailListPreference);
-
-        Log.d("", "index count =" + array.getIndexCount());
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
             int index = array.getIndex(i);
@@ -46,6 +45,8 @@ public class DetailListPreference extends ListPreference {
                 } else {
                     mDetails = null;
                 }
+            } else if (index == R.styleable.DetailListPreference_longClickHint) {
+                mHint = array.getString(index);
             }
         }
 
@@ -58,6 +59,10 @@ public class DetailListPreference extends ListPreference {
         mSelectedIndex = 0;
         mDetails = null;
         setLayoutResource(R.layout.detail_list_preference);
+    }
+
+    public void setDetails(String[] details) {
+        mDetails = details;
     }
 
     @Override
@@ -86,7 +91,7 @@ public class DetailListPreference extends ListPreference {
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
         if (titleView != null) {
-            final View infoView = titleView.findViewById(R.id.privacy_info_button);
+            View infoView = titleView.findViewById(R.id.privacy_info_button);
 
             infoView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -159,5 +164,15 @@ public class DetailListPreference extends ListPreference {
 
             return convertView;
         }
+    }
+
+    @Override
+    public boolean hasHint() {
+        return !TextUtils.isEmpty(mHint);
+    }
+
+    @Override
+    public String getHintText() {
+        return mHint;
     }
 }

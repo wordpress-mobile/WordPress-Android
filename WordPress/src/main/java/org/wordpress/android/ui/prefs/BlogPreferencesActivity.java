@@ -12,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.StringUtils;
 
 /**
  * Activity for configuring blog specific settings.

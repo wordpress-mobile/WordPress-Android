@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="longClickHint" format="string" />
+
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
         <attr name="summaryLines" format="integer" />
         <attr name="maxSummaryLines" format="integer" />
+        <attr name="longClickHint" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
     <declare-styleable name="DetailListPreference">
         <attr name="entryDetails" format="string" />
+        <attr name="longClickHint" />
     </declare-styleable>
 
     <declare-styleable name="FlowLayout">

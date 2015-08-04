@@ -21,11 +21,14 @@ import org.wordpress.android.R;
  *                       (see {@link TextView#setLines(int)} for details)
  *  - app:maxSummaryLines : sets the maximum number of lines the Summary field can display
  *                       (see {@link TextView#setMaxLines(int)} for details)
+ *  - app:longClickHint : sets the string to be shown in a Toast when preference is long clicked
  */
 
-public class SummaryEditTextPreference extends EditTextPreference {
+public class SummaryEditTextPreference extends EditTextPreference
+        implements SiteSettingsFragment.HasHint {
     private int mLines;
     private int mMaxLines;
+    private String mHint;
 
     public SummaryEditTextPreference(Context context) {
         super(context);
@@ -49,6 +52,8 @@ public class SummaryEditTextPreference extends EditTextPreference {
                 mLines = array.getInt(index, -1);
             } else if (index == R.styleable.SummaryEditTextPreference_maxSummaryLines) {
                 mMaxLines = array.getInt(index, -1);
+            } else if (index == R.styleable.SummaryEditTextPreference_longClickHint) {
+                mHint = array.getString(index);
             }
         }
 
@@ -65,5 +70,15 @@ public class SummaryEditTextPreference extends EditTextPreference {
             if (mLines != -1) summary.setLines(mLines);
             if (mMaxLines != -1) summary.setMaxLines(mMaxLines);
         }
+    }
+
+    @Override
+    public boolean hasHint() {
+        return !TextUtils.isEmpty(mHint);
+    }
+
+    @Override
+    public String getHintText() {
+        return mHint;
     }
 }
