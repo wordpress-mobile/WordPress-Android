@@ -11,6 +11,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -111,7 +112,7 @@ public class PostMediaService extends Service {
                 mBlog.getHttppassword());
 
         try {
-            Map<?, ?> results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
+            Map<?, ?> results = (Map<?, ?>) client.call(ApiHelper.Methods.GET_MEDIA_ITEM, apiParams);
             if (results != null) {
                 String strBlogId = Integer.toString(mBlog.getLocalTableBlogId());
                 MediaFile mediaFile = new MediaFile(strBlogId, results, mBlog.isDotcomFlag());
