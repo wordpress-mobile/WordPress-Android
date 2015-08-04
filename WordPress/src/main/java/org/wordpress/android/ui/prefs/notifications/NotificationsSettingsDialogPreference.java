@@ -17,17 +17,18 @@ import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.StringUtils;
 
 import javax.annotation.Nonnull;
 
 // A dialog preference that displays settings for a NotificationSettings Channel and Type
 public class NotificationsSettingsDialogPreference extends DialogPreference {
+    private static final String SETTING_VALUE_FOLLOW = "follow";
+    private static final String SETTING_VALUE_ACHIEVEMENT = "achievement";
+
     private NotificationsSettings.Channel mChannel;
     private NotificationsSettings.Type mType;
     private NotificationsSettings mSettings;
     private JSONObject mUpdatedJson = new JSONObject();
-
     private long mBlogId;
 
     private OnNotificationsSettingsChangedListener mOnNotificationsSettingsChangedListener;
@@ -59,7 +60,6 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         view.setOrientation(LinearLayout.VERTICAL);
 
-
         return configureLayoutForView(view);
     }
 
@@ -90,16 +90,22 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 break;
         }
 
-
-            if (settingsJson != null && settingsArray != null && settingsArray.length == settingsValues.length) {
-            for (int i=0; i < settingsArray.length; i++) {
+        if (settingsJson != null && settingsArray.length == settingsValues.length) {
+            for (int i = 0; i < settingsArray.length; i++) {
                 String settingName = settingsArray[i];
                 String settingValue = settingsValues[i];
+
+                // Skip a few settings for 'Email' section
+                if (mType == Type.EMAIL && settingValue.equals(SETTING_VALUE_FOLLOW) ||
+                        settingValue.equals(SETTING_VALUE_ACHIEVEMENT)) {
+                    continue;
+                }
+
                 View commentsSetting = View.inflate(getContext(), R.layout.notifications_settings_switch, null);
-                TextView title = (TextView)commentsSetting.findViewById(R.id.notifications_switch_title);
+                TextView title = (TextView) commentsSetting.findViewById(R.id.notifications_switch_title);
                 title.setText(settingName);
 
-                Switch toggleSwitch = (Switch)commentsSetting.findViewById(R.id.notifications_switch);
+                Switch toggleSwitch = (Switch) commentsSetting.findViewById(R.id.notifications_switch);
                 toggleSwitch.setChecked(JSONUtils.queryJSON(settingsJson, settingValue, true));
                 toggleSwitch.setTag(settingValue);
                 toggleSwitch.setOnCheckedChangeListener(mOnCheckedChangedListener);
