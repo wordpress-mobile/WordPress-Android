@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
             android:textColor="@color/grey_dark"
+            android:gravity="left"
             style="@style/Calypso.Text.Header"
             tools:text="Main Text" />
 
