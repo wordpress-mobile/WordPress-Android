@@ -201,19 +201,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (!mBlog.isDotcomFlag()) {
                 removePreference(R.string.pref_key_site_general, mLanguagePreference);
             } else {
+                mLanguagePreference.setOnPreferenceChangeListener(this);
+
                 // Generate map of language codes
                 String[] languageIds = getResources().getStringArray(R.array.lang_ids);
                 String[] languageCodes = getResources().getStringArray(R.array.language_codes);
-                String[] details = new String[languageIds.length];
                 for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
                     mLanguageCodes.put(languageCodes[i], languageIds[i]);
-                    details[i] = getLanguageString(languageCodes[i], Locale.getDefault());
                 }
-
-                mLanguagePreference.setEntries(
-                        createLanguageDisplayStrings(mLanguagePreference.getEntryValues()));
-                mLanguagePreference.setOnPreferenceChangeListener(this);
-                mLanguagePreference.setDetails(details);
             }
         }
     }
@@ -301,6 +296,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (settingsObject != null) {
             mRemoteLanguage = convertLanguageIdToLanguageCode(settingsObject.optString("lang_id"));
             if (mLanguagePreference != null) {
+                String[] languageCodes = getResources().getStringArray(R.array.language_codes);
+                mLanguagePreference.setEntries(createLanguageDisplayStrings(languageCodes));
+                mLanguagePreference.setDetails(
+                        createLanguageDetailDisplayStrings(languageCodes, mRemoteLanguage));
                 mLanguagePreference.setEnabled(true);
                 changeLanguageValue(mRemoteLanguage);
                 mLanguagePreference.setSummary(getLanguageString(mRemoteLanguage, Locale.getDefault()));
@@ -391,7 +390,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void changeLanguageValue(String newValue) {
         if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
             mLanguagePreference.setValue(newValue);
+            // TODO: set summary in selected locale
             mLanguagePreference.setSummary(getLanguageString(newValue, Locale.getDefault()));
+
+            // TODO: change detail strings
         }
     }
 
@@ -434,6 +436,23 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return displayStrings;
+    }
+
+    /**
+     * Generates detail display strings in the currently selected locale. Used as detail text
+     * in language preference dialog.
+     */
+    public String[] createLanguageDetailDisplayStrings(String[] languageCodes, String locale) {
+        if (languageCodes == null || languageCodes.length < 1) return null;
+
+        String[] detailStrings = new String[languageCodes.length];
+        for (int i = 0; i < languageCodes.length; ++i) {
+            detailStrings[i] = getLanguageString(languageCodes[i], new Locale(locale));
+
+            detailStrings[i] = detailStrings[i].substring(0, 1).toUpperCase() + detailStrings[i].substring(1);
+        }
+
+        return detailStrings;
     }
 
     /**

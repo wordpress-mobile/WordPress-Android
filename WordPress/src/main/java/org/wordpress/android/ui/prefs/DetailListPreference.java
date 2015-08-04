@@ -89,12 +89,7 @@ public class DetailListPreference extends ListPreference
                     }
                 });
         builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO: save new setting
-            }
-        });
+        builder.setPositiveButton(R.string.ok, null);
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
 
@@ -171,14 +166,15 @@ public class DetailListPreference extends ListPreference
                         TypefaceCache.VARIATION_LIGHT));
             }
 
-            if (radioButton != null && mSelectedIndex == position) {
-                radioButton.setChecked(true);
+            if (radioButton != null) {
+                radioButton.setChecked(mSelectedIndex == position);
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (radioButton != null) {
+                        mSelectedIndex = position;
                         radioButton.setChecked(true);
                     }
                     DetailListPreference.this.callChangeListener(getEntryValues()[position]);
