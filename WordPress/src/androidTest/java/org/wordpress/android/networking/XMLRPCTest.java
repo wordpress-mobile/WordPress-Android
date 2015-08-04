@@ -2,6 +2,7 @@ package org.wordpress.android.networking;
 
 import org.wordpress.android.DefaultMocksInstrumentationTestCase;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
@@ -13,7 +14,7 @@ public class XMLRPCTest extends DefaultMocksInstrumentationTestCase {
         XMLRPCClientInterface xmlrpcClientInterface = XMLRPCFactory.instantiate(URI.create("http://test.com/ast"), "",
                 "");
         try {
-            xmlrpcClientInterface.call("wp.getMediaLibrary", null);
+            xmlrpcClientInterface.call(ApiHelper.Methods.GET_MEDIA_LIBRARY, null);
         } catch (NumberFormatException e) {
             return;
         }
@@ -25,7 +26,7 @@ public class XMLRPCTest extends DefaultMocksInstrumentationTestCase {
         XMLRPCClientInterface xmlrpcClientInterface = XMLRPCFactory.instantiate(URI.create("http://test.com/ast"), "",
                 "");
         try {
-            xmlrpcClientInterface.call("wp.getMediaLibrary", null);
+            xmlrpcClientInterface.call(ApiHelper.Methods.GET_MEDIA_LIBRARY, null);
         } catch (NumberFormatException e) {
             return;
         }

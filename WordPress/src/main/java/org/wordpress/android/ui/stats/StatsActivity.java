@@ -532,7 +532,7 @@ public class StatsActivity extends AppCompatActivity
                                 }
                             });
                         }
-                    }, "wp.getOptions", params);
+                    }, ApiHelper.Methods.GET_OPTIONS, params);
                 } else {
                     mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
                     createFragments(true); // Recreate the fragment and start a refresh of Stats
