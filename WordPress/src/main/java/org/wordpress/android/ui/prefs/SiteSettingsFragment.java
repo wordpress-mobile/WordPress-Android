@@ -422,14 +422,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Generates display strings for given language codes. Used as entries in language preference.
      */
-    private CharSequence[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
+    private String[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
-        CharSequence[] displayStrings = new CharSequence[languageCodes.length];
+        String[] displayStrings = new String[languageCodes.length];
 
         for (int i = 0; i < languageCodes.length; ++i) {
             displayStrings[i] = getLanguageString(
                     String.valueOf(languageCodes[i]), new Locale(languageCodes[i].toString()));
+
+            displayStrings[i] = displayStrings[i].substring(0, 1).toUpperCase() + displayStrings[i].substring(1);
         }
 
         return displayStrings;
