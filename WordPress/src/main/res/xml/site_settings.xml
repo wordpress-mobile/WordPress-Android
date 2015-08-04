@@ -47,6 +47,8 @@
             android:entryValues="@array/privacy_values"
             android:defaultValue="-2"
             android:summary="@string/site_settings_privacy_default_summary"
+            app:dialogTitle="@string/site_settings_visibility_header"
+            app:dialogHelpUrl="@string/privacy_settings_url"
             app:longClickHint="@string/site_privacy_hint"
             app:entryDetails="@array/privacy_details" />
 
@@ -58,6 +60,8 @@
             android:summary="@string/site_settings_language_default_summary"
             android:entries="@array/available_languages"
             android:entryValues="@array/language_codes"
+            app:dialogTitle="@string/site_settings_language_header"
+            app:dialogHelpUrl="@string/language_settings_url"
             app:longClickHint="@string/site_language_hint" />
 
     </PreferenceCategory>

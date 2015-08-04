@@ -25,11 +25,14 @@ import org.wordpress.passcodelock.AppLockManager;
  * Custom {@link ListPreference} used to display detail text per item.
  */
 
-public class DetailListPreference extends ListPreference implements SiteSettingsFragment.HasHint {
+public class DetailListPreference extends ListPreference
+        implements SiteSettingsFragment.HasHint {
     private DetailListAdapter mListAdapter;
     private String[] mDetails;
     private int mSelectedIndex;
+    private String mTitle;
     private String mHint;
+    private String mHelpUrl;
 
     public DetailListPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,6 +50,10 @@ public class DetailListPreference extends ListPreference implements SiteSettings
                 }
             } else if (index == R.styleable.DetailListPreference_longClickHint) {
                 mHint = array.getString(index);
+            } else if (index == R.styleable.DetailListPreference_dialogTitle) {
+                mTitle = array.getString(index);
+            } else if (index == R.styleable.DetailListPreference_dialogHelpUrl) {
+                mHelpUrl = array.getString(index);
             }
         }
 
@@ -90,19 +97,35 @@ public class DetailListPreference extends ListPreference implements SiteSettings
         });
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
-        if (titleView != null) {
-            View infoView = titleView.findViewById(R.id.privacy_info_button);
 
-            infoView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Uri uri = Uri.parse(getContext().getString(R.string.privacy_settings_url));
-                    AppLockManager.getInstance().setExtendedTimeout();
-                    getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        // Don't show the custom title view if there is no title or help URL
+        if (titleView != null && !TextUtils.isEmpty(mTitle) && !TextUtils.isEmpty(mHelpUrl)) {
+            TextView titleText = (TextView) titleView.findViewById(R.id.title);
+            View infoView = titleView.findViewById(R.id.info_button);
+
+            if (infoView != null) {
+                if (TextUtils.isEmpty(mHelpUrl)) {
+                    infoView.setVisibility(View.GONE);
+                } else {
+                    infoView.setVisibility(View.VISIBLE);
+                    infoView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Uri uri = Uri.parse(mHelpUrl);
+                            AppLockManager.getInstance().setExtendedTimeout();
+                            getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        }
+                    });
                 }
-            });
+            }
+
+            if (titleText != null) {
+                titleText.setText(mTitle);
+            }
 
             builder.setCustomTitle(titleView);
+        } else {
+            builder.setTitle(getTitle());
         }
     }
 

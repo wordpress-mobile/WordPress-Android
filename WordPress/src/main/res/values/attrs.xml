@@ -12,6 +12,8 @@
 
     <!-- DetailListPreference attributes -->
     <declare-styleable name="DetailListPreference">
+        <attr name="dialogTitle" format="string" />
+        <attr name="dialogHelpUrl" format="string" />
         <attr name="entryDetails" format="string" />
         <attr name="longClickHint" />
     </declare-styleable>
