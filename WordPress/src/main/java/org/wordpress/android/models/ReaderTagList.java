@@ -37,16 +37,16 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         return -1;
     }
 
-    public boolean isSameList(ReaderTagList tagList) {
-        if (tagList == null || tagList.size() != this.size()) {
+    public boolean isSameList(ReaderTagList otherList) {
+        if (otherList == null || otherList.size() != this.size()) {
             return false;
         }
 
-        for (ReaderTag tag: tagList) {
-            int i = indexOfTag(tag);
+        for (ReaderTag otherTag: otherList) {
+            int i = this.indexOfTag(otherTag);
             if (i == -1) {
                 return false;
-            } else if (!tag.getEndpoint().equals(this.get(i).getEndpoint())) {
+            } else if (!otherTag.getEndpoint().equals(this.get(i).getEndpoint())) {
                 return false;
             }
         }
@@ -57,15 +57,15 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
     /*
      * returns a list of tags that are in this list but not in the passed list
      */
-    public ReaderTagList getDeletions(ReaderTagList tagList) {
+    public ReaderTagList getDeletions(ReaderTagList otherList) {
         ReaderTagList deletions = new ReaderTagList();
-        if (tagList == null) {
+        if (otherList == null) {
             return deletions;
         }
 
-        for (ReaderTag tag: this) {
-            if (indexOfTag(tag) == -1) {
-                deletions.add(tag);
+        for (ReaderTag thisTag: this) {
+            if (otherList.indexOfTag(thisTag) == -1) {
+                deletions.add(thisTag);
             }
         }
 
