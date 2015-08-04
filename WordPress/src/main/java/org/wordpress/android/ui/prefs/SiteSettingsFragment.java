@@ -247,7 +247,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()
             };
 
-            client.callAsync(mXmlRpcFetchCallback, XMLRPCClient.METHOD_GET_OPTIONS, params);
+            client.callAsync(mXmlRpcFetchCallback, "wp.getOptions", params);
         }
     }
 
