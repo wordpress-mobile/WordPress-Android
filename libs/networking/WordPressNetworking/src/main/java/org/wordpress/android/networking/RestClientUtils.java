@@ -206,7 +206,7 @@ public class RestClientUtils {
     public void setTheme(String siteId, String themeId, Listener listener, ErrorListener errorListener) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("theme", themeId);
-        String path = String.format("sites/%s/themes/mine", siteId);
+        String path = String.format("sites/%s/themes/?tier=all?limit=%d&offset=%d", siteId, 1, 0);
         post(path, params, null, listener, errorListener);
     }
 
@@ -214,7 +214,7 @@ public class RestClientUtils {
      * Get a site's current theme
      */
     public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes/mine", siteId);
+        String path = String.format("sites/%s/themes/?tier=all?limit=%d&offset=%d", siteId, 1, 0);
         get(path, listener, errorListener);
     }
 

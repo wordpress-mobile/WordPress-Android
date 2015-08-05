@@ -135,11 +135,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private void fetchCurrentTheme() {
         final String siteId = getBlogId();
 
-        WordPress.getRestClientUtils().getCurrentTheme(siteId, new Listener() {
+        WordPress.getRestClientUtilsV1_2().getCurrentTheme(siteId, new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Theme theme = Theme.fromJSON(response);
+                            JSONArray array = response.getJSONArray("themes");
+
+                            Theme theme = Theme.fromJSON(array.getJSONObject(0));
                             if (theme != null) {
                                 WordPress.wpDB.setCurrentTheme(siteId, theme.getId());
                                 mThemeBrowserFragment.setRefreshing(false);
