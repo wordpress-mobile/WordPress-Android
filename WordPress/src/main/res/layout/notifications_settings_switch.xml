@@ -15,13 +15,28 @@
         android:paddingRight="24dp"
         android:paddingTop="@dimen/margin_medium">
 
-        <TextView
-            android:id="@+id/notifications_switch_title"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            tools:text="Comments" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/notifications_switch_title"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Comments" />
+
+            <TextView
+                android:id="@+id/notifications_switch_summary"
+                style="@android:style/TextAppearance.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Some example sub text."
+                android:visibility="gone"/>
+        </LinearLayout>
 
         <Switch
             android:id="@+id/notifications_switch"
@@ -29,10 +44,11 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <View android:layout_width="match_parent"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginRight="24dp"
         android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:background="@color/notifications_settings_divider_color" />
 
 </LinearLayout>

@@ -259,8 +259,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference timelinePreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.TIMELINE, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
-        timelinePreference.setTitle(R.string.timeline);
-        timelinePreference.setDialogTitle(R.string.timeline);
+        timelinePreference.setTitle(R.string.notifications_tab);
+        timelinePreference.setDialogTitle(R.string.notifications_tab);
         rootCategory.addPreference(timelinePreference);
 
         NotificationsSettingsDialogPreference emailPreference = new NotificationsSettingsDialogPreference(

@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:key="wp_pref_notifications_root">
     <PreferenceCategory
-        android:title="@string/blogs"
+        android:title="@string/your_sites"
         android:key="@string/pref_notification_blogs">
     </PreferenceCategory>
     <PreferenceCategory
@@ -12,7 +12,7 @@
             android:summary="@string/notifications_other_blogs_summary" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/notifications_account_emails"
+        android:title="@string/notifications_wpcom_updates"
         android:key="@string/pref_notification_account_emails" />
     <PreferenceCategory android:title="@string/notifications_sights_and_sounds"
         android:key="@string/pref_notification_sights_sounds">

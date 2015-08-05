@@ -66,7 +66,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     private View configureLayoutForView(LinearLayout view) {
         JSONObject settingsJson = null;
 
-        String[] settingsArray = new String[0], settingsValues = new String[0];
+        String[] settingsArray = new String[0], settingsValues = new String[0], summaryArray = new String[0];
         String typeString = mType.toString();
 
         switch (mChannel) {
@@ -87,6 +87,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                         typeString, new JSONObject());
                 settingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
                 settingsValues = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
+                summaryArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_summaries);
                 break;
         }
 
@@ -96,14 +97,22 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 String settingValue = settingsValues[i];
 
                 // Skip a few settings for 'Email' section
-                if (mType == Type.EMAIL && settingValue.equals(SETTING_VALUE_FOLLOW) ||
-                        settingValue.equals(SETTING_VALUE_ACHIEVEMENT)) {
+                if (mType == Type.EMAIL && (settingValue.equals(SETTING_VALUE_FOLLOW) ||
+                        settingValue.equals(SETTING_VALUE_ACHIEVEMENT))) {
                     continue;
                 }
 
                 View commentsSetting = View.inflate(getContext(), R.layout.notifications_settings_switch, null);
                 TextView title = (TextView) commentsSetting.findViewById(R.id.notifications_switch_title);
                 title.setText(settingName);
+
+                // Add special summary text for the DOTCOM section
+                if (mChannel == Channel.DOTCOM && i < summaryArray.length) {
+                    String summaryText = summaryArray[i];
+                    TextView summary = (TextView)commentsSetting.findViewById(R.id.notifications_switch_summary);
+                    summary.setVisibility(View.VISIBLE);
+                    summary.setText(summaryText);
+                }
 
                 Switch toggleSwitch = (Switch) commentsSetting.findViewById(R.id.notifications_switch);
                 toggleSwitch.setChecked(JSONUtils.queryJSON(settingsJson, settingValue, true));

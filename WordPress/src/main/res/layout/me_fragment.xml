@@ -85,7 +85,7 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_notifications_text_view"
                 style="@style/MeListRowTextView"
-                android:text="@string/notifications" />
+                android:text="@string/notification_settings" />
 
         </LinearLayout>
 

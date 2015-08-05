@@ -31,7 +31,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
         }
         setContentView(R.layout.notifications_settings_activity);
 
-        setTitle(R.string.notifications);
+        setTitle(R.string.notification_settings);
 
         FragmentManager fragmentManager = getFragmentManager();
         if (savedInstanceState == null) {

@@ -598,13 +598,16 @@
     <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string><string name="notifications_updates_from_wordpress">Updates from WordPress.com</string>
 
     <!-- Notifications Settings -->
+    <string name="notification_settings">Notification Settings</string>
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
-    <string name="notifications_account_emails_summary">Decide what emails you get from us regarding your accounts and sites.</string>
-    <string name="notifications_other_blogs_summary">Control your notification settings when you comment on other blogs.</string>
-    <string name="notifications_account_emails">Account Emails</string>
-    <string name="notifications_other_blogs">Other Blogs</string>
-    <string name="notifications_comments_other_blogs">Comments on other blogs</string>
-    <string name="timeline">Timeline</string>
+    <string name="your_sites">Your Sites</string>
+    <string name="notifications_account_emails_summary">We’ll always send important emails regarding your account, security, privacy, and purchase transactions, but you can get some fun extras, too!</string>
+    <string name="notifications_other_blogs_summary">Notification settings for your comments on other sites.</string>
+    <string name="notifications_account_emails">Updates from WordPress.com</string>
+    <string name="notifications_wpcom_updates">WordPress.com Updates</string>
+    <string name="notifications_other_blogs">Other Sites</string>
+    <string name="notifications_comments_other_blogs">Comments on other sites</string>
+    <string name="notifications_tab">Notifications tab</string>
     <string name="email">Email</string>
     <string name="app_notifications">App notifications</string>
     <string name="comment_likes">Comment likes</string>
@@ -613,12 +616,12 @@
     <string name="notification_types">Notification Types</string>
     <string name="notifications_disabled">App notifications have been disabled. Tap here to enable them in Settings.</string>
     <string-array name="notifications_blog_settings">
-        <item>Comments</item>
-        <item>Comment likes</item>
-        <item>Post likes</item>
-        <item>Follows</item>
-        <item>Achievements</item>
-        <item>Mentions</item>
+        <item>Comments on my site</item>
+        <item>Likes on my comments</item>
+        <item>Likes on my posts</item>
+        <item>Site follows</item>
+        <item>Site achievements</item>
+        <item>Username mentions</item>
     </string-array>
     <string-array name="notifications_blog_settings_values" translatable="false">
         <item>new_comment</item>
@@ -629,22 +632,27 @@
         <item>mentions</item>
     </string-array>
     <string-array name="notifications_other_settings">
-        <item>Comment likes</item>
-        <item>Replies to your comments</item>
+        <item>Replies to my comments</item>
+        <item>Likes on my comments</item>
     </string-array>
     <string-array name="notifications_other_settings_values" translatable="false">
-        <item>comment_like</item>
         <item>comment_reply</item>
+        <item>comment_like</item>
     </string-array>
     <string-array name="notifications_wpcom_settings">
-        <item>Tips for getting the most out of WordPress.com</item>
-        <item>Opportunities to participate in WordPress.com research &amp; surveys</item>
-        <item>Information on WordPress.com courses and events (online &amp; in-person)</item>
+        <item>Suggestions</item>
+        <item>Research</item>
+        <item>Community</item>
     </string-array>
     <string-array name="notifications_wpcom_settings_values" translatable="false">
         <item>marketing</item>
         <item>research</item>
         <item>community</item>
+    </string-array>
+    <string-array name="notifications_wpcom_settings_summaries">
+        <item>Tips for getting the most out of WordPress.com.</item>
+        <item>Opportunities to participate in WordPress.com research &amp; surveys.</item>
+        <item>Information on WordPress.com courses and events (online &amp; in-person).</item>
     </string-array>
 
     <!-- reader -->
