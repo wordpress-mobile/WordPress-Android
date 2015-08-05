@@ -29,6 +29,7 @@ public class DetailListPreference extends ListPreference
         implements SiteSettingsFragment.HasHint {
     private DetailListAdapter mListAdapter;
     private String[] mDetails;
+    private int mStartingIndex;
     private int mSelectedIndex;
     private String mTitle;
     private String mHint;
@@ -68,28 +69,29 @@ public class DetailListPreference extends ListPreference
         setLayoutResource(R.layout.detail_list_preference);
     }
 
-    public void setDetails(String[] details) {
-        mDetails = details;
-    }
-
     @Override
     protected void onPrepareDialogBuilder(@NonNull AlertDialog.Builder builder) {
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
-        mSelectedIndex = findIndexOfValue(getValue());
+        mStartingIndex = mSelectedIndex = findIndexOfValue(getValue());
 
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (mSelectedIndex != which) {
                             mSelectedIndex = which;
+                            mListAdapter.notifyDataSetChanged();
+                            setValue(getEntryValues()[mSelectedIndex].toString());
                             notifyChanged();
                         }
-                        DetailListPreference.this.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
-                        dialog.dismiss();
                     }
                 });
         builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(R.string.ok, null);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DetailListPreference.this.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
+            }
+        });
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
 
@@ -126,13 +128,33 @@ public class DetailListPreference extends ListPreference
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        CharSequence[] entryValues = getEntryValues();
-        if (positiveResult && entryValues != null && mSelectedIndex < entryValues.length) {
-            String value = entryValues[mSelectedIndex].toString();
-            if (callChangeListener(value)) {
-                setValue(value);
-            }
+        CharSequence[] values = getEntryValues();
+        if (values != null && mSelectedIndex < values.length && mSelectedIndex != mStartingIndex) {
+            String value = values[positiveResult ? mSelectedIndex : mStartingIndex].toString();
+            setValue(value);
+            callChangeListener(value);
         }
+    }
+
+    @Override
+    public boolean hasHint() {
+        return !TextUtils.isEmpty(mHint);
+    }
+
+    @Override
+    public String getHintText() {
+        return mHint;
+    }
+
+    public void refreshAdapter() {
+        if (mListAdapter != null) {
+            mListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void setDetails(String[] details) {
+        mDetails = details;
+        refreshAdapter();
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {
@@ -168,30 +190,33 @@ public class DetailListPreference extends ListPreference
 
             if (radioButton != null) {
                 radioButton.setChecked(mSelectedIndex == position);
+                radioButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        changeSelection(radioButton, position);
+                    }
+                });
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (radioButton != null) {
-                        mSelectedIndex = position;
-                        radioButton.setChecked(true);
-                    }
-                    DetailListPreference.this.callChangeListener(getEntryValues()[position]);
+                    changeSelection(radioButton, position);
                 }
             });
 
             return convertView;
         }
-    }
 
-    @Override
-    public boolean hasHint() {
-        return !TextUtils.isEmpty(mHint);
-    }
+        private void changeSelection(RadioButton radioButton, int position) {
+            CharSequence[] values = getEntryValues();
 
-    @Override
-    public String getHintText() {
-        return mHint;
+            if (radioButton != null && mSelectedIndex != position &&
+                    values != null && position < values.length) {
+                mSelectedIndex = position;
+                radioButton.setChecked(true);
+                callChangeListener(values[position]);
+            }
+        }
     }
 }

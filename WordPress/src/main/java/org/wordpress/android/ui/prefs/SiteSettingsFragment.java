@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -302,7 +303,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                         createLanguageDetailDisplayStrings(languageCodes, mRemoteLanguage));
                 mLanguagePreference.setEnabled(true);
                 changeLanguageValue(mRemoteLanguage);
-                mLanguagePreference.setSummary(getLanguageString(mRemoteLanguage, Locale.getDefault()));
+                mLanguagePreference.setSummary(
+                        firstLetterCapitalized(
+                                getLanguageString(mRemoteLanguage, new Locale(mRemoteLanguage))));
             }
 
             mRemotePrivacy = settingsObject.optInt("blog_public");
@@ -334,7 +337,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mAddressPreference != null && !mAddressPreference.getText().equals(mRemoteAddress)) {
         }
 
-        if (mLanguagePreference != null &&
+        if (mLanguagePreference != null && mLanguageCodes != null && mRemoteLanguage != null &&
                 mLanguageCodes.containsKey(mLanguagePreference.getValue()) &&
                 !mRemoteLanguage.equals(mLanguageCodes.get(mLanguagePreference.getValue()))) {
             params.put("lang_id", String.valueOf(mLanguageCodes.get(mLanguagePreference.getValue())));
@@ -391,9 +394,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
             mLanguagePreference.setValue(newValue);
             // TODO: set summary in selected locale
-            mLanguagePreference.setSummary(getLanguageString(newValue, Locale.getDefault()));
+            mLanguagePreference.setSummary(getLanguageString(newValue, new Locale(newValue)));
 
-            // TODO: change detail strings
+            String[] languageCodes = getResources().getStringArray(R.array.language_codes);
+            mLanguagePreference.setEntries(createLanguageDisplayStrings(languageCodes));
+            mLanguagePreference.setDetails(createLanguageDetailDisplayStrings(languageCodes, newValue));
+            mLanguagePreference.refreshAdapter();
         }
     }
 
@@ -429,10 +435,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         String[] displayStrings = new String[languageCodes.length];
 
         for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = getLanguageString(
-                    String.valueOf(languageCodes[i]), new Locale(languageCodes[i].toString()));
-
-            displayStrings[i] = displayStrings[i].substring(0, 1).toUpperCase() + displayStrings[i].substring(1);
+            displayStrings[i] = firstLetterCapitalized(getLanguageString(
+                    String.valueOf(languageCodes[i]), new Locale(languageCodes[i].toString())));
         }
 
         return displayStrings;
@@ -447,9 +451,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
-            detailStrings[i] = getLanguageString(languageCodes[i], new Locale(locale));
-
-            detailStrings[i] = detailStrings[i].substring(0, 1).toUpperCase() + detailStrings[i].substring(1);
+            detailStrings[i] = firstLetterCapitalized(
+                    getLanguageString(languageCodes[i], new Locale(locale)));
         }
 
         return detailStrings;
@@ -465,6 +468,19 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         Locale languageLocale = new Locale(languageCode.substring(0, 2));
         return languageLocale.getDisplayLanguage(displayLocale) + languageCode.substring(2);
+    }
+
+    /**
+     * Removes a {@link Preference} from the {@link PreferenceCategory} with the given key.
+     */
+    private void removePreference(int categoryKey, Preference preference) {
+        if (preference == null) return;
+
+        PreferenceCategory category = (PreferenceCategory) findPreference(getString(categoryKey));
+
+        if (category != null) {
+            category.removePreference(preference);
+        }
     }
 
     /**
@@ -493,17 +509,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         return "";
     }
 
-    /**
-     * Removes a {@link Preference} from the {@link PreferenceCategory} with the given key.
-     */
-    private void removePreference(int categoryKey, Preference preference) {
-        if (preference == null) return;
+    private String firstLetterCapitalized(String input) {
+        if (TextUtils.isEmpty(input)) return "";
 
-        PreferenceCategory category = (PreferenceCategory) findPreference(getString(categoryKey));
-
-        if (category != null) {
-            category.removePreference(preference);
-        }
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
     /**
