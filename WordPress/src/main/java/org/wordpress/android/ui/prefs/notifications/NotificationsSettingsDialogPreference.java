@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 
 // A dialog preference that displays settings for a NotificationSettings Channel and Type
 public class NotificationsSettingsDialogPreference extends DialogPreference {
-    private static final String SETTING_VALUE_FOLLOW = "follow";
     private static final String SETTING_VALUE_ACHIEVEMENT = "achievement";
 
     private NotificationsSettings.Channel mChannel;
@@ -97,8 +96,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 String settingValue = settingsValues[i];
 
                 // Skip a few settings for 'Email' section
-                if (mType == Type.EMAIL && (settingValue.equals(SETTING_VALUE_FOLLOW) ||
-                        settingValue.equals(SETTING_VALUE_ACHIEVEMENT))) {
+                if (mType == Type.EMAIL && settingValue.equals(SETTING_VALUE_ACHIEVEMENT)) {
                     continue;
                 }
 
