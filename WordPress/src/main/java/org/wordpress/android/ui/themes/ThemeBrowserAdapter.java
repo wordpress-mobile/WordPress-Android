@@ -56,7 +56,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
 
-        final String screenshotURL =  cursor.getString(cursor.getColumnIndex("screenshotURL"));
+        final String screenshotURL = cursor.getString(cursor.getColumnIndex("screenshot"));
         final String name = cursor.getString(cursor.getColumnIndex("name"));
         final String price = cursor.getString(cursor.getColumnIndex("price"));
 

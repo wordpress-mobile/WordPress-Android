@@ -13,6 +13,7 @@ public class Theme {
     public static final String NAME = "name";
     public static final String STYLESHEET = "stylesheet";
     public static final String PRICE = "price";
+    public static final String BLOG_ID = "blogId";
 
     private String mId;
     private String mAuthor;
@@ -22,6 +23,7 @@ public class Theme {
     private String mName;
     private String mStylesheet;
     private String mPrice;
+    private String mBlogId;
 
     public static Theme fromJSON(JSONObject object) throws JSONException {
         if (object == null) {
@@ -41,11 +43,13 @@ public class Theme {
                 price = "";
             }
 
-            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price);
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId);
         }
     }
 
-    public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name, String stylesheet, String price) {
+    public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name, String stylesheet, String price, String blogId) {
         setId(id);
         setAuthor(author);
         setScreenshot(screenshot);
@@ -54,6 +58,7 @@ public class Theme {
         setName(name);
         setStylesheet(stylesheet);
         setPrice(price);
+        setBlogId(blogId);
     }
 
     public void setId(String id) {
@@ -118,6 +123,14 @@ public class Theme {
 
     public void setPrice(String mPrice) {
         this.mPrice = mPrice;
+    }
+
+    public String getBlogId() {
+        return mBlogId;
+    }
+
+    public void setBlogId(String blogId) {
+        mBlogId = blogId;
     }
 
     public void save() {

@@ -1741,6 +1741,7 @@ public class WordPressDB {
         values.put(Theme.NAME, theme.getName());
         values.put(Theme.STYLESHEET, theme.getStylesheet());
         values.put(Theme.PRICE, theme.getPrice());
+        values.put(Theme.BLOG_ID, theme.getBlogId());
 
         synchronized (this) {
             int result = db.update(
@@ -1802,7 +1803,7 @@ public class WordPressDB {
             String stylesheet = cursor.getString(6);
             String price = cursor.getString(7);
 
-            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price);
+            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId);
             cursor.close();
 
             return theme;
