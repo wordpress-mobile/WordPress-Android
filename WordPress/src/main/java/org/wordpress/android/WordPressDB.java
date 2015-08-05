@@ -122,7 +122,7 @@ public class WordPressDB {
 
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
-            + "themeId text, name text, description text, screenshotURL text, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrent boolean default false, isPremium boolean default false, features text, price text);";
+            + "id text, author text, screenshot text, author_uri text, demo_uri text, name text, price text, blogId text, isCurrent boolean default false);";
 
     // categories
     private static final String CREATE_TABLE_CATEGORIES = "create table if not exists cats (id integer primary key autoincrement, "
@@ -1735,19 +1735,19 @@ public class WordPressDB {
         ContentValues values = new ContentValues();
         values.put(Theme.ID, theme.getId());
         values.put(Theme.AUTHOR, theme.getAuthor());
+        values.put(Theme.SCREENSHOT, theme.getScreenshot());
         values.put(Theme.AUTHOR_URI, theme.getAuthorURI());
         values.put(Theme.DEMO_URI, theme.getDemoURI());
         values.put(Theme.NAME, theme.getName());
-        values.put(Theme.PRICE, theme.getPrice());
-        values.put(Theme.SCREENSHOT, theme.getScreenshot());
         values.put(Theme.STYLESHEET, theme.getStylesheet());
+        values.put(Theme.PRICE, theme.getPrice());
 
         synchronized (this) {
             int result = db.update(
                     THEMES_TABLE,
                     values,
                     "themeId=?",
-                    new String[]{ theme.getThemeId() });
+                    new String[]{ theme.getId() });
             if (result == 0)
                 returnValue = db.insert(THEMES_TABLE, null, values) > 0;
         }
@@ -1755,67 +1755,54 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public Cursor getThemesAtoZ(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY name COLLATE NOCASE ASC", new String[] { blogId });
+    public Cursor getThemesAll(String blogId) {
+        return db.rawQuery("SELECT _id, id, name, screenshot, price FROM " + THEMES_TABLE + " WHERE blogId=?", new String[] { blogId });
     }
 
-    public Cursor getThemesTrending(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY trendingRank ASC", new String[] { blogId });
+    public Cursor getThemesFree(String blogId) {
+        return db.rawQuery("SELECT _id, id, name, screenshot, price FROM " + THEMES_TABLE + " WHERE blogId=? AND price=?", new String[] { blogId, "free" });
     }
 
-    public Cursor getThemesPopularity(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY popularityRank ASC", new String[] { blogId });
-    }
-
-    public Cursor getThemesNewest(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium, price FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[] { blogId });
+    public Cursor getThemesPremium(String blogId) {
+        return db.rawQuery("SELECT _id, id, name, screenshot, price FROM " + THEMES_TABLE + " WHERE blogId=? AND price!=?", new String[] { blogId, "free" });
     }
 
     public String getCurrentThemeId(String blogId) {
-        return DatabaseUtils.stringForQuery(db, "SELECT themeId FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrent='1'", new String[] { blogId });
+        return DatabaseUtils.stringForQuery(db, "SELECT id FROM " + THEMES_TABLE + " WHERE blogId=?", new String[] { blogId });
     }
 
-    public void setCurrentTheme(String blogId, String themeId) {
+    public void setCurrentTheme(String blogId, String id) {
         // update any old themes that are set to true to false
         ContentValues values = new ContentValues();
         values.put("isCurrent", false);
-        db.update(THEMES_TABLE, values, "blogID=? AND isCurrent='1'", new String[] { blogId });
+        db.update(THEMES_TABLE, values, "blogId=?", new String[] { blogId });
 
         values = new ContentValues();
         values.put("isCurrent", true);
-        db.update(THEMES_TABLE, values, "blogId=? AND themeId=?", new String[] { blogId, themeId });
+        db.update(THEMES_TABLE, values, "blogId=? AND theme_id=?", new String[] { blogId, id });
     }
 
     public int getThemeCount(String blogId) {
-        return getThemesAtoZ(blogId).getCount();
+        return getThemesAll(blogId).getCount();
     }
 
     public Cursor getThemes(String blogId, String searchTerm) {
-        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"});
-
+        return db.rawQuery("SELECT _id,  id, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"});
     }
 
     public Theme getTheme(String blogId, String themeId) {
-        Cursor cursor = db.rawQuery("SELECT name, description, screenshotURL, previewURL, isCurrent, isPremium, features FROM " + THEMES_TABLE + " WHERE blogId=? AND themeId=?", new String[]{blogId, themeId});
+        Cursor cursor = db.rawQuery("SELECT id, author, screenshot, authorURI, demoURI, name, stylesheet, price FROM " + THEMES_TABLE + " WHERE blogId=? AND id=?", new String[]{blogId, themeId});
         if (cursor.moveToFirst()) {
-            String name = cursor.getString(0);
-            String description = cursor.getString(1);
-            String screenshotURL = cursor.getString(2);
-            String previewURL = cursor.getString(3);
-            boolean isCurrent = cursor.getInt(4) == 1;
-            boolean isPremium = cursor.getInt(5) == 1;
-            String features = cursor.getString(6);
+            String id = cursor.getString(0);
+            String author = cursor.getString(1);
+            String screenshot = cursor.getString(2);
+            String authorURI = cursor.getString(3);
+            String demoURI = cursor.getString(4);
+            String name = cursor.getString(5);
+            String stylesheet = cursor.getString(6);
+            String price = cursor.getString(7);
 
-            Theme theme = new Theme();
-            theme.setThemeId(themeId);
-            theme.setName(name);
-            theme.setDescription(description);
-            theme.setScreenshotURL(screenshotURL);
-            theme.setPreviewURL(previewURL);
-            theme.setCurrent(isCurrent);
-            theme.setPremium(isPremium);
-            theme.setFeatures(features);
-
+            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price);
             cursor.close();
 
             return theme;

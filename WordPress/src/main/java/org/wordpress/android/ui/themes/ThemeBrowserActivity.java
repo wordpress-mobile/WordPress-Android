@@ -141,7 +141,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         try {
                             Theme theme = Theme.fromJSON(response);
                             if (theme != null) {
-                                WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
+                                WordPress.wpDB.setCurrentTheme(siteId, theme.getId());
                                 mThemeBrowserFragment.setRefreshing(false);
                             }
                         } catch (JSONException e) {

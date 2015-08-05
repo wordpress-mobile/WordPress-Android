@@ -222,7 +222,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             case FREE:
             case ALL:
             default:
-                return WordPress.wpDB.getThemesNewest(blogId);
+                return WordPress.wpDB.getThemesAll(blogId);
         }
     }
 

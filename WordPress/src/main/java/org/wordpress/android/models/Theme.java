@@ -9,7 +9,7 @@ public class Theme {
     public static final String SCREENSHOT = "screenshot";
     public static final String AUTHOR_URI = "author_uri";
     public static final String DEMO_URI = "demo_uri";
-    public static final String NAME = "demo";
+    public static final String NAME = "name";
     public static final String STYLESHEET = "stylesheet";
     public static final String PRICE = "price";
 
