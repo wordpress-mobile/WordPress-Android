@@ -393,9 +393,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void changeLanguageValue(String newValue) {
         if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
             mLanguagePreference.setValue(newValue);
-            // TODO: set summary in selected locale
             mLanguagePreference.setSummary(getLanguageString(newValue, new Locale(newValue)));
 
+            // update details to display in selected locale
             String[] languageCodes = getResources().getStringArray(R.array.language_codes);
             mLanguagePreference.setEntries(createLanguageDisplayStrings(languageCodes));
             mLanguagePreference.setDetails(createLanguageDetailDisplayStrings(languageCodes, newValue));

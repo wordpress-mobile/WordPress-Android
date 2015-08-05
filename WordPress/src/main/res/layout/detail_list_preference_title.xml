@@ -15,6 +15,7 @@
     <TextView
         android:id="@+id/title"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.DialogWindowTitle"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -23,7 +24,7 @@
 
     <ImageButton
         android:id="@+id/info_button"
-        android:background="@drawable/ripple_oval"
+        android:background="@drawable/dialog_info_button_background"
         android:src="@drawable/stats_icon_info"
         android:tint="@color/grey"
         android:padding="8dp"
