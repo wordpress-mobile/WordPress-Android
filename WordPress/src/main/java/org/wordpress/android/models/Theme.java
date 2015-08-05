@@ -34,7 +34,12 @@ public class Theme {
             String demoURI = object.getString(DEMO_URI);
             String name = object.getString(NAME);
             String stylesheet = object.getString(STYLESHEET);
-            String price = object.getString(PRICE);
+            String price;
+            try {
+                price = object.getString(PRICE);
+            } catch (JSONException e) {
+                price = "";
+            }
 
             return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price);
         }
