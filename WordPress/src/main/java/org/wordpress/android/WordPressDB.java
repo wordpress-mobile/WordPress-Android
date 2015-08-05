@@ -122,7 +122,7 @@ public class WordPressDB {
 
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
-            + "id text, author text, screenshot text, author_uri text, demo_uri text, name text, price text, blogId text, isCurrent boolean default false);";
+            + "id text, author text, screenshot text, author_uri text, demo_uri text, name text, stylesheet text, price text, blogId text, isCurrent boolean default false);";
 
     // categories
     private static final String CREATE_TABLE_CATEGORIES = "create table if not exists cats (id integer primary key autoincrement, "
@@ -1746,7 +1746,7 @@ public class WordPressDB {
             int result = db.update(
                     THEMES_TABLE,
                     values,
-                    "themeId=?",
+                    "id=?",
                     new String[]{ theme.getId() });
             if (result == 0)
                 returnValue = db.insert(THEMES_TABLE, null, values) > 0;
@@ -1779,7 +1779,7 @@ public class WordPressDB {
 
         values = new ContentValues();
         values.put("isCurrent", true);
-        db.update(THEMES_TABLE, values, "blogId=? AND theme_id=?", new String[] { blogId, id });
+        db.update(THEMES_TABLE, values, "blogId=? AND id=?", new String[] { blogId, id });
     }
 
     public int getThemeCount(String blogId) {
