@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
+public class AnalyticsTrackerNosara extends Tracker {
 
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
@@ -23,18 +23,19 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
     private static final String EVENTS_PREFIX = "wpandroid_";
 
     private String mWpcomUserName = null;
-    private String mAnonID = null; // do not access this variable directly. Use methods.
-
     private TracksClient mNosaraClient;
-    private Context mContext;
 
     public AnalyticsTrackerNosara(Context context) {
+        super(context);
         if (null == context) {
             mNosaraClient = null;
             return;
         }
-        mContext = context;
         mNosaraClient = TracksClient.getClient(context);
+    }
+
+    String getAnonIdPrefKey() {
+        return TRACKS_ANON_ID;
     }
 
     @Override
@@ -391,41 +392,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         }
     }
 
-    private void clearAnonID() {
-        mAnonID = null;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (preferences.contains(TRACKS_ANON_ID)) {
-            final SharedPreferences.Editor editor = preferences.edit();
-            editor.remove(TRACKS_ANON_ID);
-            editor.commit();
-        }
-    }
 
-    private String getAnonID() {
-        if (mAnonID == null) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            mAnonID = preferences.getString(TRACKS_ANON_ID, null);
-        }
-        return mAnonID;
-    }
-
-    private String generateNewAnonID() {
-        String uuid = UUID.randomUUID().toString();
-        String[] uuidSplitted = uuid.split("-");
-        StringBuilder builder = new StringBuilder();
-        for (String currentPart : uuidSplitted) {
-            builder.append(currentPart);
-        }
-        uuid = builder.toString();
-        AppLog.d(AppLog.T.STATS, "New anon ID generated: " + uuid);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(TRACKS_ANON_ID, uuid);
-        editor.commit();
-
-        mAnonID = uuid;
-        return uuid;
-    }
 
     @Override
     public void endSession() {

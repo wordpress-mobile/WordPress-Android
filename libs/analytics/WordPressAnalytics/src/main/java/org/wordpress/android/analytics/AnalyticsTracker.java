@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.wordpress.android.util.AppLog;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
@@ -104,16 +107,6 @@ public final class AnalyticsTracker {
         NOTIFICATION_SETTINGS_STREAMS_OPENED,
         NOTIFICATION_SETTINGS_DETAILS_OPENED,
         NOTIFICATION_SETTINGS_UPDATED,
-    }
-
-    public interface Tracker {
-        void track(Stat stat);
-        void track(Stat stat, Map<String, ?> properties);
-        void endSession();
-        void refreshMetadata(boolean isUserConnected,boolean isWordPressComUser, boolean isJetpackUser,
-                             int sessionCount, int numBlogs, int versionCode, String username, String email);
-        void clearAllData();
-        void registerPushNotificationToken(String regId);
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<Tracker>();
