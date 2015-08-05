@@ -404,6 +404,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
 
+        // index of days that should be XXX on the graph
+        final boolean[] weekendDays;
+        if (getTimeframe() == StatsTimeframe.DAY) {
+            weekendDays = new boolean[dataToShowOnGraph.length];
+        } else {
+            weekendDays = null;
+        }
+
         // Check we have at least one result in the current section.
         boolean atLeastOneResultIsAvailable = false;
 
@@ -437,6 +445,20 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
             horLabels[i] = getDateLabelForBarInGraph(currentItemStatsDate);
             mStatsDate[i] = currentItemStatsDate;
+
+            if (weekendDays != null) {
+                SimpleDateFormat from = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+                try {
+                    Date date = from.parse(currentItemStatsDate);
+                    Calendar c = Calendar.getInstance();
+                    c.setFirstDayOfWeek(Calendar.MONDAY);
+                    c.setTimeInMillis(date.getTime());
+                    weekendDays[i] = c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY;
+                } catch (ParseException e) {
+                    weekendDays[i] = false;
+                    AppLog.e(AppLog.T.STATS, e);
+                }
+            }
         }
 
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
@@ -451,6 +473,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
         mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
+        mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.translucent_grey_lighten_30);
         mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
         mainSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
@@ -490,6 +513,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // If zero results in the current section disable clicks on the graph and show the dialog.
         mNoActivtyThisPeriodContainer.setVisibility(atLeastOneResultIsAvailable ? View.GONE : View.VISIBLE);
         mGraphView.setClickable(atLeastOneResultIsAvailable);
+
+        // Draw the background on weekend days
+        mGraphView.setWeekendDays(weekendDays);
 
         // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
         // Only happens on 720DP tablets

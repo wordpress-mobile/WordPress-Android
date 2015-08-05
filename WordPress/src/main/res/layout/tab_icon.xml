@@ -3,27 +3,30 @@
 <!--
     Custom view used when showing icons in main activity's tab layout
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/toolbar_height">
+    android:layout_height="@dimen/toolbar_height"
+    android:paddingLeft="@dimen/tabstrip_icon_spacing"
+    android:paddingRight="@dimen/tabstrip_icon_spacing"
+    tools:background="@color/color_primary">
 
     <ImageView
         android:id="@+id/tab_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:paddingLeft="@dimen/tabstrip_icon_spacing"
-        android:paddingRight="@dimen/tabstrip_icon_spacing"
+        android:layout_gravity="center"
         tools:src="@drawable/main_tab_notifications" />
 
     <View
         android:id="@+id/tab_badge"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_toRightOf="@+id/tab_icon"
+        android:layout_gravity="center"
+        android:layout_marginLeft="-8dp"
+        android:layout_marginTop="-8dp"
         android:background="@drawable/badge"
         android:visibility="gone"
         tools:visibility="visible" />
 
-</RelativeLayout>
+</FrameLayout>
