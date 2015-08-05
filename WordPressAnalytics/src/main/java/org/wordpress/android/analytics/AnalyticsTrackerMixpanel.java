@@ -19,10 +19,9 @@ import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
+public class AnalyticsTrackerMixpanel extends Tracker {
     public static final String SESSION_COUNT = "sessionCount";
 
-    private Context mContext;
     private MixpanelAPI mMixpanel;
     private EnumMap<AnalyticsTracker.Stat, JSONObject> mAggregatedProperties;
     private static final String MIXPANEL_PLATFORM = "platform";
@@ -32,11 +31,12 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String VERSION_CODE = "version_code";
     private static final String APP_LOCALE = "app_locale";
+    private static final String MIXPANEL_ANON_ID = "mixpanel_user_anon_id";
 
     public AnalyticsTrackerMixpanel(Context context, String token) {
+        super(context);
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
         mMixpanel = MixpanelAPI.getInstance(context, token);
-        mContext = context;
     }
 
     @SuppressWarnings("deprecation")
@@ -55,6 +55,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         }
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         nm.notify(0, notification);
+    }
+
+    String getAnonIdPrefKey() {
+        return MIXPANEL_ANON_ID;
     }
 
     @Override
