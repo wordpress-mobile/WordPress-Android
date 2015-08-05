@@ -7,6 +7,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,17 +92,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // Assume user wanted changes propagated when they leave
         applyChanges();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putString("remote-title", mRemoteTitle);
-        outState.putString("remote-tagline", mRemoteTagline);
-        outState.putString("remote-address", mRemoteAddress);
-        outState.putInt("remote-privacy", mRemotePrivacy);
-        outState.putString("remote-language", mRemoteLanguage);
     }
 
     @Override
@@ -235,15 +225,16 @@ public class SiteSettingsFragment extends PreferenceFragment
                     });
         } else {
             // self-hosted settings
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(),
-                    mBlog.getHttpuser(),
-                    mBlog.getHttppassword());
             Object[] params = {
                     mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()
             };
 
-            client.callAsync(mXmlRpcFetchCallback, "wp.getOptions", params);
+            instantiateInterface().callAsync(mXmlRpcFetchCallback, "wp.getOptions", params);
         }
+    }
+
+    private XMLRPCClientInterface instantiateInterface() {
+        return XMLRPCFactory.instantiate(mBlog.getUri(),  mBlog.getHttpuser(),  mBlog.getHttppassword());
     }
 
     private void handleSettingsFetchError(String error) {
@@ -323,7 +314,7 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
      * https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
      */
-    private HashMap<String, String> generatePostParams() {
+    private HashMap<String, String> generateDotComPostParams() {
         HashMap<String, String> params = new HashMap<>();
 
         if (mTitlePreference != null && !mTitlePreference.getText().equals(mRemoteTitle)) {
@@ -351,32 +342,62 @@ public class SiteSettingsFragment extends PreferenceFragment
         return params;
     }
 
+    private HashMap<String, String> generateSelfHostedParams() {
+        HashMap<String, String> params = new HashMap<>();
+
+        if (mTitlePreference != null && !mTitlePreference.getText().equals(mRemoteTitle)) {
+            params.put("blog_title", mTitlePreference.getText());
+        }
+
+        if (mTaglinePreference != null && !mTaglinePreference.getText().equals(mRemoteTagline)) {
+            params.put("blog_tagline", mTaglinePreference.getText());
+        }
+
+        return params;
+    }
+
     /**
      * Persists changed settings remotely
      */
     private void applyChanges() {
-        final HashMap<String, String> params = generatePostParams();
-
-        if (params.size() > 0) {
-            WordPress.getRestClientUtils().setGeneralSiteSettings(
-                    String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // Update local Blog name
-                            if (params.containsKey("blogname")) {
-                                mBlog.setBlogName(params.get("blogname"));
-                            }
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
-                            if (isAdded()) {
-                                ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
-                            }
-                        }
-                    }, params);
+        if (mBlog.isDotcomFlag()) {
+            postDotComChanges(generateDotComPostParams());
+        } else {
+            postSelfHostedChanges(generateSelfHostedParams());
         }
+    }
+
+    private void postSelfHostedChanges(final HashMap<String, String> params) {
+        if (params == null || params.size() == 0) return;
+
+        Object[] callParams = {
+                mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(), params
+        };
+
+        instantiateInterface().callAsync(mXmlRpcSetCallback, "wp.setOptions", callParams);
+    }
+
+    private void postDotComChanges(final HashMap<String, String> params) {
+        if (params == null || params.size() == 0) return;
+
+        WordPress.getRestClientUtils().setGeneralSiteSettings(
+                String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Update local Blog name
+                        if (params.containsKey("blogname")) {
+                            mBlog.setBlogName(params.get("blogname"));
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
+                        if (isAdded()) {
+                            ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
+                        }
+                    }
+                }, params);
     }
 
     /**
@@ -542,12 +563,53 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         @Override
         public void onFailure(long id, final Exception error) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    handleSettingsFetchError(error.toString());
-                }
-            });
+            if (isAdded()) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        handleSettingsFetchError(error.toString());
+                    }
+                });
+            }
         }
     };
+
+    private final XMLRPCCallback mXmlRpcSetCallback = new XMLRPCCallback() {
+        @Override
+        public void onSuccess(long id, final Object result) {
+            if (result instanceof Map) {
+                handleResponseToSelfHostedSettingsSetRequest((Map) result);
+            } else {
+                // Response is considered an error if we are unable to parse it
+                handleSettingsSetError("Invalid response object (expected Map): " + result);
+            }
+        }
+
+        @Override
+        public void onFailure(long id, final Exception error) {
+            if (isAdded()) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        handleSettingsSetError(error.toString());
+                    }
+                });
+            }
+        }
+    };
+
+    private void handleResponseToSelfHostedSettingsSetRequest(Map result) {
+        AppLog.w(AppLog.T.API, "Site settings saved");
+        for (Object key : result.keySet()) {
+            Log.d("", "key=" + key + "; value=" + result.get(key));
+        }
+    }
+
+    private void handleSettingsSetError(String error) {
+        AppLog.w(AppLog.T.API, "Error setting site settings: " + error);
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
+            getActivity().finish();
+        }
+    }
 }
