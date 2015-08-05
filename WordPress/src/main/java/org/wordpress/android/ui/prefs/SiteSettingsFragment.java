@@ -305,7 +305,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 changeLanguageValue(mRemoteLanguage);
                 mLanguagePreference.setSummary(
                         firstLetterCapitalized(
-                                getLanguageString(mRemoteLanguage, new Locale(mRemoteLanguage))));
+                                getLanguageString(mRemoteLanguage, new Locale(localeInput(mRemoteLanguage)))));
             }
 
             mRemotePrivacy = settingsObject.optInt("blog_public");
@@ -393,7 +393,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void changeLanguageValue(String newValue) {
         if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
             mLanguagePreference.setValue(newValue);
-            mLanguagePreference.setSummary(getLanguageString(newValue, new Locale(newValue)));
+            mLanguagePreference.setSummary(getLanguageString(newValue, new Locale(localeInput(newValue))));
 
             // update details to display in selected locale
             String[] languageCodes = getResources().getStringArray(R.array.language_codes);
@@ -436,7 +436,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         for (int i = 0; i < languageCodes.length; ++i) {
             displayStrings[i] = firstLetterCapitalized(getLanguageString(
-                    String.valueOf(languageCodes[i]), new Locale(languageCodes[i].toString())));
+                    String.valueOf(languageCodes[i]), new Locale(localeInput(languageCodes[i].toString()))));
         }
 
         return displayStrings;
@@ -452,7 +452,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
             detailStrings[i] = firstLetterCapitalized(
-                    getLanguageString(languageCodes[i], new Locale(locale)));
+                    getLanguageString(languageCodes[i], new Locale(localeInput(locale))));
         }
 
         return detailStrings;
@@ -466,7 +466,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return "";
         }
 
-        Locale languageLocale = new Locale(languageCode.substring(0, 2));
+        Locale languageLocale = new Locale(localeInput(languageCode));
         return languageLocale.getDisplayLanguage(displayLocale) + languageCode.substring(2);
     }
 
@@ -496,6 +496,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return "";
+    }
+
+    private String localeInput(String languageCode) {
+        if (TextUtils.isEmpty(languageCode)) return "";
+
+        return languageCode.substring(0, 2);
     }
 
     /**
