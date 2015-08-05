@@ -67,6 +67,8 @@ public class ApiHelper {
         public static final String EDIT_POST          = "wp.editPost";
         public static final String EDIT_COMMENT       = "wp.editComment";
 
+        public static final String SET_OPTIONS        = "wp.setOptions";
+
         public static final String UPLOAD_FILE        = "wp.uploadFile";
 
         public static final String WPCOM_GET_FEATURES = "wpcom.getFeatures";

@@ -27,6 +27,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -229,7 +230,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()
             };
 
-            instantiateInterface().callAsync(mXmlRpcFetchCallback, "wp.getOptions", params);
+            instantiateInterface().callAsync(mXmlRpcFetchCallback, ApiHelper.Methods.GET_OPTIONS, params);
         }
     }
 
@@ -374,7 +375,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(), params
         };
 
-        instantiateInterface().callAsync(mXmlRpcSetCallback, "wp.setOptions", callParams);
+        instantiateInterface().callAsync(mXmlRpcSetCallback, ApiHelper.Methods.SET_OPTIONS, callParams);
     }
 
     private void postDotComChanges(final HashMap<String, String> params) {
