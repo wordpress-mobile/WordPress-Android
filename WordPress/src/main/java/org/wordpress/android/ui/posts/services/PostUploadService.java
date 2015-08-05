@@ -846,7 +846,7 @@ public class PostUploadService extends Service {
             }
 
             try {
-                return mClient.call("wp.uploadFile", params, tempFile);
+                return mClient.call(ApiHelper.Methods.UPLOAD_FILE, params, tempFile);
             } catch (XMLRPCException e) {
                 AppLog.e(T.API, e);
                 mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
