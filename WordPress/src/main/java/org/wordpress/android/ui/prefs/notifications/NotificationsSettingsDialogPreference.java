@@ -82,8 +82,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 settingsValues = getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
                 break;
             case DOTCOM:
-                settingsJson = JSONUtils.queryJSON(mSettings.getDotcomSettings(),
-                        typeString, new JSONObject());
+                settingsJson = mSettings.getDotcomSettings();
                 settingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
                 settingsValues = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
                 summaryArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_summaries);
