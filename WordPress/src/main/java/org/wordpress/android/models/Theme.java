@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.WordPress;
 
 public class Theme {
     public static final String ID = "id";
@@ -112,5 +113,9 @@ public class Theme {
 
     public void setPrice(String mPrice) {
         this.mPrice = mPrice;
+    }
+
+    public void save() {
+        WordPress.wpDB.saveTheme(this);
     }
 }
