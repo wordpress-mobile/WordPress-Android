@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
             android:textColor="@color/grey_dark"
-            android:gravity="left"
+            android:gravity="start"
             style="@style/Calypso.Text.Header"
             tools:text="Main Text" />
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_small"
             android:textColor="@color/grey_darken_10"
-            android:gravity="left"
+            android:gravity="start"
             style="@style/Calypso.TextAppearance"
             tools:text="Detail Text" />
 
