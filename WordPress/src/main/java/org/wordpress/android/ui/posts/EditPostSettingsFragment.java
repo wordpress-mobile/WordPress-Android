@@ -465,7 +465,7 @@ public class EditPostSettingsFragment extends Fragment
         // properly track stats we care about for when users first publish posts.
         if (!mPost.isLocalDraft() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
                 && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
-            mPost.setChangedFromLocalDraftToPublished(true);
+            mPost.setChangedFromDraftToPublished(true);
         }
 
         if (mPost.supportsLocation()) {

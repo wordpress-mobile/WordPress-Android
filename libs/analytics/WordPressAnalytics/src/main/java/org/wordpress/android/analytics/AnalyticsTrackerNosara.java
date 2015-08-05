@@ -52,9 +52,6 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         String eventName;
 
         switch (stat) {
-            case APPLICATION_STARTED:
-                eventName = "application_started";
-                break;
             case APPLICATION_OPENED:
                 eventName = "application_opened";
                 break;
@@ -141,22 +138,6 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case EDITOR_SCHEDULED_POST:
                 eventName = "editor_post_scheduled";
                 break;
-            case EDITOR_PUBLISHED_POST_WITH_PHOTO:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_photos", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_VIDEO:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_videos", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_categories", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_TAGS:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_tags", true);
-                break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 eventName = "editor_button_tapped";
                 predefinedEventProperties.put("button", "blockquote");
@@ -240,7 +221,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "media_library");
                 break;
-            case OPENED_SETTINGS:
+            case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "settings");
                 break;
@@ -346,6 +327,12 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
             case NOTIFICATION_SETTINGS_UPDATED:
                 eventName = "notification_settings_updated";
+                break;
+            case ME_ACCESSED:
+                eventName = "me_tab_accessed";
+                break;
+            case MY_SITE_ACCESSED:
+                eventName = "my_site_tab_accessed";
                 break;
             default:
                 eventName = null;

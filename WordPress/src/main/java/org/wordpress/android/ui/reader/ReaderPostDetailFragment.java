@@ -24,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -270,11 +271,11 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * action icons don't appear for feeds or when logged out, otherwise they appear
-     * only if the user can act upon them
+     * action icons don't appear for feeds or discover posts or when logged out, otherwise
+     * they appear only if the user can act upon them
      */
     private boolean canShowIconBar() {
-        if (mPost == null || mPost.isExternal || mIsLoggedOutReader) {
+        if (mPost == null || mPost.isExternal || mPost.isDiscoverPost() || mIsLoggedOutReader) {
             return false;
         }
         return (mPost.isLikesEnabled || mPost.isCommentsOpen);
@@ -672,6 +673,22 @@ public class ReaderPostDetailFragment extends Fragment
                 return false;
             }
 
+            // "discover" Editor Pick posts should open the original (source) post
+            if (mPost.isDiscoverPost()) {
+                ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
+                if (discoverData != null
+                        && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
+                        && discoverData.getBlogId() != 0
+                        && discoverData.getPostId() != 0) {
+                    mBlogId = discoverData.getBlogId();
+                    mPostId = discoverData.getPostId();
+                    mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
+                    if (mPost == null) {
+                        return false;
+                    }
+                }
+            }
+
             mReaderWebView.setIsPrivatePost(mPost.isPrivate);
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
@@ -872,6 +889,16 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public boolean onUrlClick(String url) {
+        // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
+        // used for Discover posts that highlight a blog
+        if (ReaderUtils.isBlogPreviewUrl(url)) {
+            long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
+            if (blogId != 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            }
+            return true;
+        }
+
         // open YouTube videos in external app so they launch the YouTube player, open all other
         // urls using an AuthenticatedWebViewActivity
         final OpenUrlType openUrlType;

@@ -17,7 +17,6 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.EnumMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 
 public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
@@ -216,11 +215,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             AnalyticsTracker.Stat stat) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
-            case APPLICATION_STARTED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Application Started");
-                instructions.setSuperPropertyToIncrement("Application Started");
-                break;
             case APPLICATION_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Opened");
@@ -381,30 +375,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_scheduled_post");
                 instructions.setCurrentDateForPeopleProperty("last_time_scheduled_post");
                 break;
-            case EDITOR_PUBLISHED_POST_WITH_PHOTO:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_photos");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_photo");
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_VIDEO:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_videos");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_video");
-              break;
-            case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_categories");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_categories");
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_TAGS:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                      mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                              "number_of_posts_published_with_tags");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_tags");
-                break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Tapped Blockquote Button");
@@ -525,7 +495,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Media Library");
                 break;
-            case OPENED_SETTINGS:
+            case OPENED_BLOG_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Settings");
                 break;
@@ -685,6 +655,16 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case NOTIFICATION_SETTINGS_UPDATED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notification Settings - Updated");
+                break;
+            case ME_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me Tab - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_me_tab");
+                break;
+            case MY_SITE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("My Site - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_my_site");
                 break;
             default:
                 instructions = null;

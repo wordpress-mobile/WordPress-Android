@@ -28,6 +28,27 @@ public class MainExampleActivity extends AppCompatActivity {
                 bundle.putString(EditorExampleActivity.TITLE_PARAM, getString(R.string.example_post_visual_title));
                 bundle.putString(EditorExampleActivity.CONTENT_PARAM, Utils.getHtmlFromFile(mActivity,
                         "example-content.html"));
+                bundle.putString(EditorExampleActivity.TITLE_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_title_placeholder));
+                bundle.putString(EditorExampleActivity.CONTENT_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_content_placeholder));
+                bundle.putInt(EditorExampleActivity.EDITOR_PARAM, EditorExampleActivity.USE_NEW_EDITOR);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        Button newEditorPostEmpty = (Button) findViewById(R.id.new_editor_post_empty);
+        newEditorPostEmpty.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                Intent intent = new Intent(MainExampleActivity.this, EditorExampleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(EditorExampleActivity.TITLE_PARAM, "");
+                bundle.putString(EditorExampleActivity.CONTENT_PARAM, "");
+                bundle.putString(EditorExampleActivity.TITLE_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_title_placeholder));
+                bundle.putString(EditorExampleActivity.CONTENT_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_content_placeholder));
                 bundle.putInt(EditorExampleActivity.EDITOR_PARAM, EditorExampleActivity.USE_NEW_EDITOR);
                 intent.putExtras(bundle);
                 startActivity(intent);

@@ -40,6 +40,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.RequestCodes;
@@ -57,7 +58,6 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -69,6 +69,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -92,7 +93,6 @@ public class ReaderPostListFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private CustomSwipeRefreshLayout mSwipeToRefreshLayout;
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -119,7 +119,7 @@ public class ReaderPostListFragment extends Fragment
 
     private static class HistoryStack extends Stack<String> {
         private final String keyName;
-        HistoryStack(String keyName) {
+        HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
             this.keyName = keyName;
         }
         void restoreInstance(Bundle bundle) {
@@ -389,9 +389,8 @@ public class ReaderPostListFragment extends Fragment
         mProgress.setVisibility(View.GONE);
 
         // swipe to refresh setup
-        mSwipeToRefreshLayout = (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout);
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                mSwipeToRefreshLayout,
+                (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -485,7 +484,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * position the tag toolbar based on the recycler's scroll position - this will make it
+     * position the tag toolbar based on the recycler scroll position - this will make it
      * appear to scroll along with the recycler
      */
     private void positionTagToolbar() {
@@ -999,16 +998,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * tell the adapter to reload a single post - called when user returns from detail, where the
-     * post may have been changed (either by the user, or because it updated)
-     */
-    private void reloadPost(ReaderPost post) {
-        if (post != null && hasPostAdapter()) {
-            getPostAdapter().reloadPost(post);
-        }
-    }
-
-    /*
      * get posts for the current blog from the server
      */
     private void updatePostsInCurrentBlogOrFeed(final UpdateAction updateAction) {
@@ -1337,8 +1326,29 @@ public class ReaderPostListFragment extends Fragment
      * called from adapter when user taps a post
      */
     @Override
-    public void onPostSelected(long blogId, long postId) {
-        if (!isAdded()) return;
+    public void onPostSelected(ReaderPost post) {
+        if (!isAdded() || post == null) return;
+
+        // "discover" posts that highlight another post should open the original (source) post when tapped
+        if (post.isDiscoverPost()) {
+            ReaderPostDiscoverData discoverData = post.getDiscoverData();
+            if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
+                if (discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
+                    String title = getCurrentTagName();
+                    ReaderActivityLauncher.showReaderPostDetail(
+                            getActivity(),
+                            discoverData.getBlogId(),
+                            discoverData.getPostId(),
+                            title);
+                    return;
+                } else if (discoverData.hasPermalink()) {
+                    // if we don't have a blogId/postId, we sadly resort to showing the post
+                    // in a WebView activity - this will happen for non-JP self-hosted
+                    ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
+                    return;
+                }
+            }
+        }
 
         ReaderPostListType type = getPostListType();
         Map<String, Object> analyticsProperties = new HashMap<>();
@@ -1354,16 +1364,16 @@ public class ReaderPostListFragment extends Fragment
                         getActivity(),
                         getCurrentTag(),
                         getPostListType(),
-                        blogId,
-                        postId);
+                        post.blogId,
+                        post.postId);
                 break;
             case BLOG_PREVIEW:
                 analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
                         AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
-                        blogId,
-                        postId);
+                        post.blogId,
+                        post.postId);
                 break;
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE, analyticsProperties);
