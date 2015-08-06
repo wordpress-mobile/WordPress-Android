@@ -125,7 +125,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
 
-        mLayoutHeader = (ViewGroup) view.findViewById(R.id.layout_header);
+        mLayoutHeader = (ViewGroup) view.findViewById(R.id.layout_post_detail_header);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
         mLikingUsersView = (ReaderLikingUsersView) mLayoutLikes.findViewById(R.id.layout_liking_users_view);
 
