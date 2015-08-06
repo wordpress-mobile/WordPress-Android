@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -122,6 +124,17 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        if (getActivity() instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            activity.setSupportActionBar(toolbar);
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+        }
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
 
@@ -780,10 +793,10 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private ActionBar getActionBar() {
-        if (isAdded()) {
-            return getActivity().getActionBar();
+        if (isAdded() && getActivity() instanceof AppCompatActivity) {
+            return ((AppCompatActivity) getActivity()).getSupportActionBar();
         } else {
-            AppLog.w(T.READER, "reader post detail > getActionBar called with no activity");
+            AppLog.w(T.READER, "reader post detail > getActionBar returned null");
             return null;
         }
     }

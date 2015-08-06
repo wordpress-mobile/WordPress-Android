@@ -9,8 +9,6 @@
     android:id="@+id/layout_post_detail_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_medium"
-    android:layout_marginTop="@dimen/margin_medium"
     android:background="@color/white">
 
     <org.wordpress.android.widgets.WPTextView
