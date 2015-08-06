@@ -33,7 +33,7 @@
             android:id="@+id/pref_site_address"
             android:key="@string/pref_key_site_address"
             android:title="@string/site_settings_address_title"
-            android:summary="Fetching URL"
+            android:summary="@string/site_settings_address_default_summary"
             app:summaryLines="1"
             app:maxSummaryLines="1"
             app:longClickHint="@string/site_address_hint" />

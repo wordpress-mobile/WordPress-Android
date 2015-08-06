@@ -558,7 +558,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 });
             } else {
                 // Response is considered an error if we are unable to parse it
-                handleSettingsFetchError("Invalid response object (exprected Map): " + result);
+                handleSettingsFetchError("Invalid response object (expected Map): " + result);
             }
         }
 
