@@ -437,13 +437,11 @@ public class AnalyticsTrackerNosara extends Tracker {
 
     @Override
     public void clearAllData() {
+        super.clearAllData();
         if (mNosaraClient == null) {
             return;
         }
         mNosaraClient.clearUserProperties();
-        // Reset the anon ID here
-        clearAnonID();
-        setWordPressComUserName(null);
     }
 
     @Override
