@@ -62,7 +62,7 @@ public abstract class Tracker {
             builder.append(currentPart);
         }
         uuid = builder.toString();
-        AppLog.d(AppLog.T.STATS, "New anon ID generated: " + uuid);
+        AppLog.d(AppLog.T.STATS, "New anonID generated in " + this.getClass().getSimpleName() + ": " + uuid);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         final SharedPreferences.Editor editor = preferences.edit();
