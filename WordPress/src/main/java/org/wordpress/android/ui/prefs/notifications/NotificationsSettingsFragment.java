@@ -45,8 +45,6 @@ import javax.annotation.Nonnull;
 import de.greenrobot.event.EventBus;
 
 public class NotificationsSettingsFragment extends PreferenceFragment {
-    public static final String TAG = "NotificationSettingsFragment";
-
     // The number of notification types we support (e.g. timeline, email, mobile)
     private static final int TYPE_COUNT = 3;
 
