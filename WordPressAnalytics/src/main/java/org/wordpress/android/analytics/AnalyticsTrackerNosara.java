@@ -22,7 +22,6 @@ public class AnalyticsTrackerNosara extends Tracker {
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
-    private String mWpcomUserName = null;
     private TracksClient mNosaraClient;
 
     public AnalyticsTrackerNosara(Context context) {
@@ -347,8 +346,8 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         final String user;
         final TracksClient.NosaraUserType userType;
-        if (mWpcomUserName != null) {
-            user = mWpcomUserName;
+        if (getWordPressComUserName() != null) {
+            user = getWordPressComUserName();
             userType = TracksClient.NosaraUserType.WPCOM;
         } else {
             // This is just a security checks since the anonID is already available here.
@@ -402,6 +401,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         mNosaraClient.flush();
     }
 
+
     @Override
     public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
                                 int sessionCount, int numBlogs, int versionCode, String username, String email) {
@@ -410,15 +410,15 @@ public class AnalyticsTrackerNosara extends Tracker {
         }
 
         if (isUserConnected && isWordPressComUser) {
-            mWpcomUserName = username;
+            setWordPressComUserName(username);
             // Re-unify the user
             if (getAnonID() != null) {
-                mNosaraClient.trackAliasUser(mWpcomUserName, getAnonID());
+                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID());
                 clearAnonID();
             }
         } else {
             // Not wpcom connected. Check if anonID is already present
-            mWpcomUserName = null;
+            setWordPressComUserName(null);
             if (getAnonID() == null) {
                 generateNewAnonID();
             }
@@ -443,7 +443,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         mNosaraClient.clearUserProperties();
         // Reset the anon ID here
         clearAnonID();
-        mWpcomUserName = null;
+        setWordPressComUserName(null);
     }
 
     @Override

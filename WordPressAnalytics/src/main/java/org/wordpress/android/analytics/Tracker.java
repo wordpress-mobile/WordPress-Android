@@ -21,6 +21,7 @@ public abstract class Tracker {
     abstract String getAnonIdPrefKey();
 
     private String mAnonID = null; // do not access this variable directly. Use methods.
+    private String mWpcomUserName = null;
     Context mContext;
 
     public Tracker(Context context) {
@@ -65,5 +66,13 @@ public abstract class Tracker {
 
         mAnonID = uuid;
         return uuid;
+    }
+
+    String getWordPressComUserName() {
+        return mWpcomUserName;
+    }
+
+    void setWordPressComUserName(String userName) {
+        mWpcomUserName = userName;
     }
 }
