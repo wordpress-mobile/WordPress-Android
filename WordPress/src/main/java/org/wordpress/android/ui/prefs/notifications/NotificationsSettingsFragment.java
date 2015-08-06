@@ -262,6 +262,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         );
         timelinePreference.setTitle(R.string.notifications_tab);
         timelinePreference.setDialogTitle(R.string.notifications_tab);
+        timelinePreference.setSummary(R.string.notifications_tab_summary);
         rootCategory.addPreference(timelinePreference);
 
         NotificationsSettingsDialogPreference emailPreference = new NotificationsSettingsDialogPreference(
@@ -269,6 +270,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         );
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
+        emailPreference.setSummary(R.string.notifications_email_summary);
         rootCategory.addPreference(emailPreference);
 
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
@@ -276,6 +278,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         );
         devicePreference.setTitle(R.string.app_notifications);
         devicePreference.setDialogTitle(R.string.app_notifications);
+        devicePreference.setSummary(R.string.notifications_push_summary);
         devicePreference.setEnabled(mNotificationsEnabled);
         rootCategory.addPreference(devicePreference);
 

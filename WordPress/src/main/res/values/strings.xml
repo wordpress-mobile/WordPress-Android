@@ -597,7 +597,7 @@
     <string name="ignore">Ignore</string>
     <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string><string name="notifications_updates_from_wordpress">Updates from WordPress.com</string>
 
-    <!-- Notifications Settings -->
+    <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
     <string name="your_sites">Your Sites</string>
@@ -615,6 +615,9 @@
     <string name="error_loading_notifications">Couldn\'t load notification settings</string>
     <string name="notification_types">Notification Types</string>
     <string name="notifications_disabled">App notifications have been disabled. Tap here to enable them in Settings.</string>
+    <string name="notifications_tab_summary">Settings for notifications that appear in the Notifications tab.</string>
+    <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
+    <string name="notifications_push_summary">Settings for app notifications that appear on your device.</string>
     <string-array name="notifications_blog_settings">
         <item>Comments on my site</item>
         <item>Likes on my comments</item>
