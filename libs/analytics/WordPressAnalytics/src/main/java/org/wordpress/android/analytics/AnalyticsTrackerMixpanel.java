@@ -215,11 +215,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             AnalyticsTracker.Stat stat) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
-            case APPLICATION_STARTED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Application Started");
-                instructions.setSuperPropertyToIncrement("Application Started");
-                break;
             case APPLICATION_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Opened");
@@ -379,30 +374,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Editor - Scheduled Post");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_scheduled_post");
                 instructions.setCurrentDateForPeopleProperty("last_time_scheduled_post");
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_PHOTO:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_photos");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_photo");
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_VIDEO:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_videos");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_video");
-              break;
-            case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_categories");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_categories");
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_TAGS:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                      mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                              "number_of_posts_published_with_tags");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_tags");
                 break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

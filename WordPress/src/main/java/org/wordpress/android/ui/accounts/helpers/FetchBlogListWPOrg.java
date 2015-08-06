@@ -96,7 +96,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         URI uri = URI.create(baseUrl);
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         try {
-            client.call("system.listMethods");
+            client.call(ApiHelper.Methods.LIST_METHODS);
             xmlRpcUrl = baseUrl;
             return xmlRpcUrl;
         } catch (XMLRPCException e) {
@@ -143,7 +143,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         uri = URI.create(guessURL);
         client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         try {
-            client.call("system.listMethods");
+            client.call(ApiHelper.Methods.LIST_METHODS);
             xmlRpcUrl = guessURL;
             return xmlRpcUrl;
         } catch (XMLRPCException e) {
@@ -251,7 +251,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, mHttpUsername, mHttpPassword);
             Object[] params = {mUsername, mPassword};
             try {
-                Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
+                Object[] userBlogs = (Object[]) client.call(ApiHelper.Methods.GET_BLOGS, params);
                 if (userBlogs == null) {
                     // Could happen if the returned server response is truncated
                     mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;

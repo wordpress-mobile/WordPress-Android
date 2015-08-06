@@ -111,7 +111,7 @@ public class PostUpdateService extends Service {
         try {
             boolean canLoadMore;
 
-            result = (Object[]) client.call(isPage ? "wp.getPages" : "metaWeblog.getRecentPosts", xmlrpcParams);
+            result = (Object[]) client.call(isPage ? ApiHelper.Methods.GET_PAGES : "metaWeblog.getRecentPosts", xmlrpcParams);
             if (result != null && result.length > 0) {
                 canLoadMore = true;
 

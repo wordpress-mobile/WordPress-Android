@@ -43,7 +43,7 @@ public class Post implements Serializable {
     private String slug;
 
     private boolean localDraft;
-    private boolean mChangedFromLocalDraftToPublished;
+    private boolean mChangedFromLocalToPublished;
     private boolean isPage;
     private String pageParentId;
     private String pageParentTitle;
@@ -395,12 +395,12 @@ public class Post implements Serializable {
      * the user first publishes a post
      * @return
      */
-    public boolean hasChangedFromLocalDraftToPublished() {
-        return mChangedFromLocalDraftToPublished;
+    public boolean hasChangedFromDraftToPublished() {
+        return mChangedFromLocalToPublished;
     }
 
-    public void setChangedFromLocalDraftToPublished(boolean changedFromLocalDraftToPublished) {
-        this.mChangedFromLocalDraftToPublished = changedFromLocalDraftToPublished;
+    public void setChangedFromDraftToPublished(boolean changedFromDraftToPublished) {
+        this.mChangedFromLocalToPublished = changedFromDraftToPublished;
     }
 
     /**
