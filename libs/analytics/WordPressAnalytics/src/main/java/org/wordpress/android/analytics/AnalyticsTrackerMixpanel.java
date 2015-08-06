@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
+import com.automattic.android.tracks.TracksClient;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONException;
@@ -81,6 +82,13 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                                                   Map<String, ?> properties) {
         if (instructions.getDisableForSelfHosted()) {
             return;
+        }
+
+        // Just a security check we're tracking the correct user
+        if (getWordPressComUserName() == null && getAnonID() == null) {
+            this.clearAllData();
+            generateNewAnonID();
+            mMixpanel.identify(getAnonID());
         }
 
         trackMixpanelEventForInstructions(instructions, properties);
@@ -185,17 +193,41 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
+
+        if (isUserConnected && isWordPressComUser) {
+            setWordPressComUserName(username);
+            // Re-unify the user
+            if (getAnonID() != null) {
+                mMixpanel.alias(getWordPressComUserName(), getAnonID());
+                clearAnonID();
+            } else {
+                mMixpanel.identify(username);
+            }
+        } else {
+            // Not wpcom connected. Check if anonID is already present
+            setWordPressComUserName(null);
+            if (getAnonID() == null) {
+                generateNewAnonID();
+            }
+            mMixpanel.identify(getAnonID());
+        }
+
         // Application opened and start.
         if (isUserConnected) {
-            mMixpanel.identify(username);
             try {
-                mMixpanel.getPeople().identify(username);
+                String userID = getWordPressComUserName() != null ? getWordPressComUserName() : getAnonID();
+                if (userID == null) {
+                    // This should not be an option here
+                    return;
+                }
+
+                mMixpanel.getPeople().identify(userID);
                 JSONObject jsonObj = new JSONObject();
-                jsonObj.put("$username", username);
+                jsonObj.put("$username", userID);
                 if (email != null) {
                     jsonObj.put("$email", email);
                 }
-                jsonObj.put("$first_name", username);
+                jsonObj.put("$first_name", userID);
                 mMixpanel.getPeople().set(jsonObj);
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.UTILS, e);
@@ -207,6 +239,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
     @Override
     public void clearAllData() {
+        super.clearAllData();
         mMixpanel.clearSuperProperties();
         try {
             mMixpanel.getPeople().clearPushRegistrationId();

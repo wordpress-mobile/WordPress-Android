@@ -16,7 +16,6 @@ public abstract class Tracker {
     abstract void endSession();
     abstract void refreshMetadata(boolean isUserConnected,boolean isWordPressComUser, boolean isJetpackUser,
                          int sessionCount, int numBlogs, int versionCode, String username, String email);
-    abstract void clearAllData();
     abstract void registerPushNotificationToken(String regId);
     abstract String getAnonIdPrefKey();
 
@@ -29,6 +28,12 @@ public abstract class Tracker {
             return;
         }
         mContext = context;
+    }
+
+    void clearAllData() {
+        // Reset the anon ID here
+        clearAnonID();
+        setWordPressComUserName(null);
     }
 
     void clearAnonID() {
