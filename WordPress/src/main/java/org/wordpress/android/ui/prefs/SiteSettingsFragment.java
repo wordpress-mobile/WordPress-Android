@@ -129,7 +129,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             changeLanguageValue(newValue.toString());
             return true;
         } else if (preference == mPrivacyPreference) {
-            mPrivacyPreference.setSummary(privacyStringForValue(Integer.valueOf(newValue.toString())));
+            changePrivacyValue(Integer.valueOf(newValue.toString()));
             return true;
         }
 
@@ -304,8 +304,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (mPrivacyPreference != null) {
                 mPrivacyPreference.setEnabled(true);
                 mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
+                mPrivacyPreference.setSummary(privacyStringForValue(mRemotePrivacy));
             }
-            changePrivacyValue(mRemotePrivacy);
         }
     }
 
@@ -426,9 +426,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void changePrivacyValue(int newValue) {
-        if (mPrivacyPreference != null && Integer.valueOf(mPrivacyPreference.getValue()) == newValue) {
+        if (mPrivacyPreference != null && Integer.valueOf(mPrivacyPreference.getValue()) != newValue) {
             mPrivacyPreference.setValue(String.valueOf(newValue));
             mPrivacyPreference.setSummary(privacyStringForValue(newValue));
+            mPrivacyPreference.refreshAdapter();
         }
     }
 
