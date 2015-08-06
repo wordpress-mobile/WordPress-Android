@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -42,7 +43,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         setTitle(R.string.settings);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setElevation(0.0f);
+            actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
