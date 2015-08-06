@@ -54,6 +54,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
+    public static final String COLUMN_NAME_ID                    = "_id";
     public static final String COLUMN_NAME_POST_ID               = "postID";
     public static final String COLUMN_NAME_FILE_PATH             = "filePath";
     public static final String COLUMN_NAME_FILE_NAME             = "fileName";
@@ -1757,15 +1758,24 @@ public class WordPressDB {
     }
 
     public Cursor getThemesAll(String blogId) {
-        return db.rawQuery("SELECT _id, id, name, screenshot, price FROM " + THEMES_TABLE + " WHERE blogId=?", new String[] { blogId });
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE};
+        String[] selection = {blogId};
+
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=?", selection, null, null, null);
     }
 
     public Cursor getThemesFree(String blogId) {
-        return db.rawQuery("SELECT _id, id, name, screenshot, price FROM " + THEMES_TABLE + " WHERE blogId=? AND price=?", new String[] { blogId, "free" });
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE};
+        String[] selection = {blogId, ""};
+
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "=?", selection, null, null, null);
     }
 
     public Cursor getThemesPremium(String blogId) {
-        return db.rawQuery("SELECT _id, id, name, screenshot, price FROM " + THEMES_TABLE + " WHERE blogId=? AND price!=?", new String[] { blogId, "free" });
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE};
+        String[] selection = {blogId, ""};
+
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "!=?", selection, null, null, null);
     }
 
     public String getCurrentThemeId(String blogId) {
