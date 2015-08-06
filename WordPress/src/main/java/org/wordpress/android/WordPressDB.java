@@ -441,7 +441,8 @@ public class WordPressDB {
 
         if (shouldHideJetpack) {
             // Hide Jetpack blogs that were added in FetchBlogListWPCom
-            String hideJetpackArgs = "NOT(dotcomFlag=0 AND wpVersion='' AND blogId!=1)";
+            // They will have a false dotcomFlag and an empty (but encrypted) password
+            String hideJetpackArgs = String.format("NOT(dotcomFlag=0 AND password='%s')", encryptPassword(""));
             if (TextUtils.isEmpty(byString)) {
                 byString = hideJetpackArgs;
             } else {

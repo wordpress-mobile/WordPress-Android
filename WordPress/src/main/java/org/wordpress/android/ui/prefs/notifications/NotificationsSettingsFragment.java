@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
@@ -196,8 +197,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             return;
         }
 
-        // Retrieve blogs that are .com or Jetpack powered
-        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("NOT(dotcomFlag=0 AND wpVersion!='')", null, 0, false);
+        // Retrieve blogs (including jetpack sites) originally retrieved through FetchBlogListWPCom
+        // They will have an empty (but encrypted) password
+        String args = String.format("password='%s'", WordPressDB.encryptPassword(""));
+        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy(args, null, 0, false);
 
         Context context = getActivity();
 
