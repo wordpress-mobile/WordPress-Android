@@ -63,6 +63,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mLayoutLikes;
     private ViewGroup mLayoutHeader;
     private ReaderWebView mReaderWebView;
+    private Toolbar mToolbar;
     private ReaderLikingUsersView mLikingUsersView;
 
     private boolean mHasAlreadyUpdatedPost;
@@ -125,17 +126,7 @@ public class ReaderPostDetailFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        if (getActivity() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
-            activity.setSupportActionBar(toolbar);
-            ActionBar actionBar = getActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-        }
-
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
 
         mLayoutHeader = (ViewGroup) view.findViewById(R.id.layout_post_detail_header);
@@ -154,6 +145,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         return view;
     }
+
+
 
     @Override
     public void onDestroy() {
@@ -226,6 +219,16 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (getActivity() instanceof AppCompatActivity && mToolbar != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+        }
+
         setHasOptionsMenu(true);
         restoreState(savedInstanceState);
     }
