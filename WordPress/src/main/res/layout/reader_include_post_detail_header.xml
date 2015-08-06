@@ -23,7 +23,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/reader_hyperlink"
-        android:textSize="@dimen/text_sz_medium"
+        android:textSize="@dimen/text_sz_large"
         tools:text="text_blog_name" />
 
     <LinearLayout

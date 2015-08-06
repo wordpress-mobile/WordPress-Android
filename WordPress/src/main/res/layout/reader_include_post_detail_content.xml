@@ -45,7 +45,7 @@
                 android:layout_marginRight="@dimen/margin_medium"
                 android:background="?android:selectableItemBackground"
                 android:textColor="@color/reader_hyperlink"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="@dimen/text_sz_medium"
                 tools:text="text_date" />
 
             <org.wordpress.android.widgets.WPTextView
