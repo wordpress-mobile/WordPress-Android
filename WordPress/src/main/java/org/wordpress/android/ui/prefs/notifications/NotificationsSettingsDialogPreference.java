@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -59,6 +61,11 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         view.setOrientation(LinearLayout.VERTICAL);
 
+        View spacerView = new View(getContext());
+        int spacerHeight = getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
+        spacerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, spacerHeight));
+        view.addView(spacerView);
+
         return configureLayoutForView(view);
     }
 
@@ -106,7 +113,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 // Add special summary text for the DOTCOM section
                 if (mChannel == Channel.DOTCOM && i < summaryArray.length) {
                     String summaryText = summaryArray[i];
-                    TextView summary = (TextView)commentsSetting.findViewById(R.id.notifications_switch_summary);
+                    TextView summary = (TextView) commentsSetting.findViewById(R.id.notifications_switch_summary);
                     summary.setVisibility(View.VISIBLE);
                     summary.setText(summaryText);
                 }
