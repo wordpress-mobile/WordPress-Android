@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,11 +44,13 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 
 public class ReaderPostDetailFragment extends Fragment
-        implements ReaderCustomViewListener,
+        implements ScrollDirectionListener,
+        ReaderCustomViewListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener {
 
@@ -63,7 +64,6 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mLayoutLikes;
     private ViewGroup mLayoutHeader;
     private ReaderWebView mReaderWebView;
-    private Toolbar mToolbar;
     private ReaderLikingUsersView mLikingUsersView;
 
     private boolean mHasAlreadyUpdatedPost;
@@ -71,6 +71,8 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsLoggedOutReader;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
+    private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
+
     private ReaderResourceVars mResourceVars;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
@@ -120,14 +122,17 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
             mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
+        if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
+            mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
+        mScrollView.setScrollDirectionListener(this);
 
         mLayoutHeader = (ViewGroup) view.findViewById(R.id.layout_post_detail_header);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
@@ -142,6 +147,11 @@ public class ReaderPostDetailFragment extends Fragment
         // hide header and scrollView until the post is loaded
         mLayoutHeader.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
+
+        // spacer that's set to the same height as the toolbar needs to be visible if fragment is
+        // in an activity that supports toolbar auto-hiding (e.g. ReaderPostPagerActivity)
+        View spacer = view.findViewById(R.id.toolbar_spacer);
+        spacer.setVisibility(mAutoHideToolbarListener != null ? View.VISIBLE : View.GONE);
 
         return view;
     }
@@ -219,16 +229,6 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (getActivity() instanceof AppCompatActivity && mToolbar != null) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-            ActionBar actionBar = getActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-        }
-
         setHasOptionsMenu(true);
         restoreState(savedInstanceState);
     }
@@ -540,6 +540,29 @@ public class ReaderPostDetailFragment extends Fragment
      * AsyncTask to retrieve this post from SQLite and display it
      */
     private boolean mIsPostTaskRunning = false;
+
+    @Override
+    public void onScrollUp() {
+        showToolbar(true);
+    }
+
+    @Override
+    public void onScrollDown() {
+        if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
+            showToolbar(false);
+        }
+    }
+
+    @Override
+    public void onScrollCompleted() {
+        // noop
+    }
+
+    private void showToolbar(boolean show) {
+        if (mAutoHideToolbarListener != null) {
+            mAutoHideToolbarListener.onShowHideToolbar(show);
+        }
+    }
 
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;

@@ -22,9 +22,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include
-                    android:id="@+id/toolbar"
-                    layout="@layout/toolbar" />
+                <View
+                    android:id="@+id/toolbar_spacer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toolbar_height" />
 
                 <include
                     android:id="@+id/layout_post_detail_header"

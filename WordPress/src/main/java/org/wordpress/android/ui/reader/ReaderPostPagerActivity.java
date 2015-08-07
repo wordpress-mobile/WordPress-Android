@@ -7,7 +7,9 @@ import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.MenuItem;
@@ -49,10 +51,12 @@ import de.greenrobot.event.EventBus;
  * post detail
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
-        implements ReaderInterfaces.OnPostPopupListener {
+        implements ReaderInterfaces.OnPostPopupListener,
+                   ReaderInterfaces.AutoHideToolbarListener {
 
     private WPViewPager mViewPager;
     private ProgressBar mProgress;
+    private Toolbar mToolbar;
 
     private ReaderTag mCurrentTag;
     private long mBlogId;
@@ -70,6 +74,16 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
@@ -112,6 +126,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+                onShowHideToolbar(true);
                 bumpPageViewIfNeeded(position);
             }
 
@@ -482,6 +497,16 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         } else {
             AppLog.d(AppLog.T.READER, "reader pager > all posts loaded");
             getPagerAdapter().mAllPostsLoaded = true;
+        }
+    }
+
+    /*
+     * called by detail fragment to show/hide the toolbar when user scrolls
+     */
+    @Override
+    public void onShowHideToolbar(boolean show) {
+        if (!isFinishing()) {
+            AniUtils.animateTopBar(mToolbar, show);
         }
     }
 
