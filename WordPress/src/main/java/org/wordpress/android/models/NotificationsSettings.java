@@ -114,9 +114,7 @@ public class NotificationsSettings {
             AppLog.e(AppLog.T.NOTIFS, "Could not update notifications settings JSON");
         }
     }
-
-
-
+    
     public JSONObject getOtherSettings() {
         return mOtherSettings;
     }
