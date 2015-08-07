@@ -20,6 +20,8 @@ import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
+import java.util.Iterator;
+
 import javax.annotation.Nonnull;
 
 // A dialog preference that displays settings for a NotificationSettings Channel and Type
@@ -135,11 +137,6 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
             try {
                 mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
-
-                mSettings.updateSettingForChannelAndType(
-                        mChannel, mType, compoundButton.getTag().toString(),
-                        isChecked, mBlogId
-                );
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
             }
@@ -150,6 +147,17 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult && mUpdatedJson.length() > 0 && mOnNotificationsSettingsChangedListener != null) {
             mOnNotificationsSettingsChangedListener.onSettingsChanged(mChannel, mType, mBlogId, mUpdatedJson);
+
+            // Update the settings json
+            Iterator<?> keys = mUpdatedJson.keys();
+            while( keys.hasNext() ) {
+                String settingName = (String)keys.next();
+                mSettings.updateSettingForChannelAndType(
+                        mChannel, mType, settingName,
+                        mUpdatedJson.optBoolean(settingName), mBlogId
+                );
+            }
+
         }
     }
 }
