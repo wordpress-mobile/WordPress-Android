@@ -99,20 +99,6 @@
 
     </RelativeLayout>
 
-    <org.wordpress.android.widgets.OpenSansButton
-        android:id="@+id/button_comment_count"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/reader_detail_margin"
-        android:layout_marginRight="@dimen/reader_detail_margin"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:gravity="center"
-        android:padding="@dimen/margin_medium"
-        android:textSize="@dimen/text_sz_medium"
-        android:visibility="gone"
-        tools:text="3 comments"
-        tools:visibility="visible" />
-
     <!-- extra space so action icons on fragment don't overlap content -->
     <View
         android:id="@+id/spacer_actions"

@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -348,7 +347,6 @@ public class ReaderPostDetailFragment extends Fragment
                 if (result.isNewOrChanged()) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
                     refreshIconCounts(true);
-                    refreshComments();
                 }
                 // refresh likes if necessary - done regardless of whether the post has changed
                 // since it's possible likes weren't stored until the post was updated
@@ -442,33 +440,6 @@ public class ReaderPostDetailFragment extends Fragment
         mLikingUsersView.showLikingUsers(mPost);
     }
 
-    /*
-     * update the comment count shown below the post's content
-     */
-    private void refreshComments() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        final Button btnCommentCount = (Button) getView().findViewById(R.id.button_comment_count);
-        if (mPost.numReplies == 0) {
-            btnCommentCount.setVisibility(View.GONE);
-        } else {
-            btnCommentCount.setVisibility(View.VISIBLE);
-            if (mPost.numReplies == 1) {
-                btnCommentCount.setText(getString(R.string.reader_label_comment_count_single));
-            } else {
-                btnCommentCount.setText(getString(R.string.reader_label_comment_count_multi, mPost.numReplies));
-            }
-            btnCommentCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId);
-                }
-            });
-        }
-    }
-
     private boolean showPhotoViewer(String imageUrl, View sourceView, int startX, int startY) {
         if (!isAdded() || TextUtils.isEmpty(imageUrl)) {
             return false;
@@ -540,30 +511,6 @@ public class ReaderPostDetailFragment extends Fragment
      * AsyncTask to retrieve this post from SQLite and display it
      */
     private boolean mIsPostTaskRunning = false;
-
-    @Override
-    public void onScrollUp() {
-        showToolbar(true);
-    }
-
-    @Override
-    public void onScrollDown() {
-        if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
-            showToolbar(false);
-        }
-    }
-
-    @Override
-    public void onScrollCompleted() {
-        // noop
-    }
-
-    private void showToolbar(boolean show) {
-        if (mAutoHideToolbarListener != null) {
-            mAutoHideToolbarListener.onShowHideToolbar(show);
-        }
-    }
-
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
         TextView txtBlogName;
@@ -725,7 +672,6 @@ public class ReaderPostDetailFragment extends Fragment
                         return;
                     }
                     refreshLikes();
-                    refreshComments();
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();
@@ -833,6 +779,29 @@ public class ReaderPostDetailFragment extends Fragment
             mReaderWebView.onPause();
         } else {
             AppLog.i(T.READER, "reader post detail > attempt to pause webView when null");
+        }
+    }
+
+    @Override
+    public void onScrollUp() {
+        showToolbar(true);
+    }
+
+    @Override
+    public void onScrollDown() {
+        if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
+            showToolbar(false);
+        }
+    }
+
+    @Override
+    public void onScrollCompleted() {
+        // noop
+    }
+
+    private void showToolbar(boolean show) {
+        if (mAutoHideToolbarListener != null) {
+            mAutoHideToolbarListener.onShowHideToolbar(show);
         }
     }
 
