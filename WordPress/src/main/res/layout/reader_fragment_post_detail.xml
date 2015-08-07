@@ -52,7 +52,6 @@
 
         </org.wordpress.android.widgets.WPScrollView>
 
-
         <ProgressBar
             android:id="@+id/progress_loading"
             style="@style/ReaderProgressBar"

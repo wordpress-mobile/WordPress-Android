@@ -60,7 +60,6 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private WPScrollView mScrollView;
-    private ViewGroup mLayoutLikes;
     private ViewGroup mLayoutHeader;
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
@@ -134,8 +133,7 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView.setScrollDirectionListener(this);
 
         mLayoutHeader = (ViewGroup) view.findViewById(R.id.layout_post_detail_header);
-        mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
-        mLikingUsersView = (ReaderLikingUsersView) mLayoutLikes.findViewById(R.id.layout_liking_users_view);
+        mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -397,8 +395,8 @@ public class ReaderPostDetailFragment extends Fragment
             }
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now
-            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
-                mLayoutLikes.setVisibility(View.INVISIBLE);
+            if (mPost.numLikes > 0 && mLikingUsersView.getVisibility() == View.GONE) {
+                mLikingUsersView.setVisibility(View.INVISIBLE);
             }
         } else {
             countLikes.setVisibility(View.INVISIBLE);
@@ -414,27 +412,24 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
-        txtLikeCount.setText(ReaderUtils.getLongLikeLabelText(getActivity(), mPost.numLikes, mPost.isLikedByCurrentUser));
-
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
-            if (mLayoutLikes.getVisibility() != View.GONE) {
-                AniUtils.fadeOut(mLayoutLikes, AniUtils.Duration.SHORT);
+            if (mLikingUsersView.getVisibility() != View.GONE) {
+                AniUtils.fadeOut(mLikingUsersView, AniUtils.Duration.SHORT);
             }
             return;
         }
 
         // clicking likes view shows activity displaying all liking users
-        mLayoutLikes.setOnClickListener(new View.OnClickListener() {
+        mLikingUsersView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost.blogId, mPost.postId);
             }
         });
 
-        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mLayoutLikes, AniUtils.Duration.SHORT);
+        if (mLikingUsersView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mLikingUsersView, AniUtils.Duration.SHORT);
         }
 
         mLikingUsersView.showLikingUsers(mPost);

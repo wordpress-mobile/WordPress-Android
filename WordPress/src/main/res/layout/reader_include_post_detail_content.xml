@@ -69,35 +69,18 @@
         android:layout_marginTop="@dimen/margin_large"
         android:scrollbars="none" />
 
-    <RelativeLayout
-        android:id="@+id/layout_likes"
+    <!-- liking avatars are inserted into this view at runtime -->
+    <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
+        android:id="@+id/layout_liking_users_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/avatar_sz_small"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
         android:visibility="gone"
-        tools:visibility="visible">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_like_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="text_like_count" />
-
-        <!-- liking avatars are inserted into this LinearLayout at runtime -->
-        <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
-            android:id="@+id/layout_liking_users_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/avatar_sz_small"
-            android:layout_below="@+id/text_like_count"
-            android:layout_marginTop="@dimen/margin_medium" />
-
-    </RelativeLayout>
+        tools:visibility="visible" />
 
     <!-- extra space so action icons on fragment don't overlap content -->
     <View
