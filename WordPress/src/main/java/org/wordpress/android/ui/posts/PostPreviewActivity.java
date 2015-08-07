@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.services.PostEvents;
@@ -233,6 +234,9 @@ public class PostPreviewActivity extends AppCompatActivity {
 
     private void publishPost() {
         if (!isFinishing() && NetworkUtils.checkConnection(this)) {
+            if (!mPost.isLocalDraft()) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+            }
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
         }
