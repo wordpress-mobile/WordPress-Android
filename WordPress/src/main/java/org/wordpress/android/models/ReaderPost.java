@@ -78,7 +78,7 @@ public class ReaderPost {
         }
 
         // remove HTML from the excerpt
-        post.excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt"));
+        post.excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
 
         post.text = JSONUtils.getString(json, "content");
         post.title = JSONUtils.getStringDecoded(json, "title");
