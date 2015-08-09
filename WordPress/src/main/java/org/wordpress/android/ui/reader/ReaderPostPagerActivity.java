@@ -345,7 +345,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         } else {
             menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
         }
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+        if (!mIsSinglePostView) {
             menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
         }
         listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
