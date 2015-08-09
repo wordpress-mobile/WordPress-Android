@@ -69,7 +69,7 @@
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
     <!-- height of divider between cards -->
-    <dimen name="reader_card_gutters">8dp</dimen>
+    <dimen name="reader_card_gutters">10dp</dimen>
 
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
@@ -88,7 +88,7 @@
     <dimen name="blavatar_sz">40dp</dimen>
 
     <!-- like/comment icons in reader -->
-    <dimen name="reader_button_icon">40dp</dimen>
+    <dimen name="reader_button_icon">24dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
@@ -172,6 +172,7 @@
     <dimen name="site_picker_container_padding_top">10dp</dimen>
 
     <dimen name="menu_item_height">48dp</dimen>
+    <dimen name="menu_item_width">168dp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>

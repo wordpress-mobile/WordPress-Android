@@ -14,6 +14,7 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
@@ -98,13 +99,19 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog
      */
-    public static void showReaderBlogPreview(Context context, long blogId) {
+    public static void showReaderBlogPreview(Context context, long blogId, String title) {
         if (blogId == 0) {
             return;
         }
+
+        if (TextUtils.isEmpty(title)) {
+            title = ReaderBlogTable.getBlogNameFromBlogId(blogId);
+        }
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_TITLE, title);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
@@ -114,19 +121,25 @@ public class ReaderActivityLauncher {
             return;
         }
         if (post.isExternal) {
-            showReaderFeedPreview(context, post.feedId);
+            showReaderFeedPreview(context, post.feedId, post.getBlogName());
         } else {
-            showReaderBlogPreview(context, post.blogId);
+            showReaderBlogPreview(context, post.blogId, post.getBlogName());
         }
     }
 
-    public static void showReaderFeedPreview(Context context, long feedId) {
+    public static void showReaderFeedPreview(Context context, long feedId, String title) {
         if (feedId == 0) {
             return;
         }
+
+        if (TextUtils.isEmpty(title)) {
+            title = ReaderBlogTable.getBlogNameFromFeedId(feedId);
+        }
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
+        intent.putExtra(ReaderConstants.ARG_TITLE, title);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }

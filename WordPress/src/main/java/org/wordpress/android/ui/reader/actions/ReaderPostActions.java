@@ -54,7 +54,11 @@ public class ReaderPostActions {
         }
 
         // update like status and like count in local db
-        int newNumLikes = (isAskingToLike ? post.numLikes + 1 : post.numLikes - 1);
+        int numCurrentLikes = ReaderPostTable.getNumLikesForPost(post.blogId, post.postId);
+        int newNumLikes = (isAskingToLike ? numCurrentLikes + 1 : numCurrentLikes - 1);
+        if (newNumLikes < 0) {
+            newNumLikes = 0;
+        }
         ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
         ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
 

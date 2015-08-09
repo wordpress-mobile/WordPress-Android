@@ -20,6 +20,7 @@ public class ReaderIconCountView extends LinearLayout {
     private ImageView mImageView;
     private TextView mTextCount;
     private int mCurrentCount;
+    private boolean mHideCountWhenZero;
 
     // these must match the same values in attrs.xml
     private static final int ICON_LIKE = 0;
@@ -56,9 +57,11 @@ public class ReaderIconCountView extends LinearLayout {
                 switch (icon) {
                     case ICON_LIKE :
                         mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_like));
+                        mHideCountWhenZero = true;
                         break;
                     case ICON_COMMENT :
                         mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_comment));
+                        mHideCountWhenZero = false;
                         break;
                 }
 
@@ -78,6 +81,7 @@ public class ReaderIconCountView extends LinearLayout {
 
     public void setSelected(boolean selected) {
         mImageView.setSelected(selected);
+        mTextCount.setSelected(selected);
     }
 
     @Override
@@ -88,11 +92,13 @@ public class ReaderIconCountView extends LinearLayout {
     }
 
     public void setCount(int count, boolean animateChanges) {
-        if (count != 0) {
+        if (count == 0 && mHideCountWhenZero) {
+            mTextCount.setText(null);
+        } else {
             mTextCount.setText(FormatUtils.formatInt(count));
         }
 
-        if (animateChanges && count != mCurrentCount) {
+        if (mHideCountWhenZero && animateChanges && count != mCurrentCount) {
             if (count == 0 && mTextCount.getVisibility() == View.VISIBLE) {
                 AniUtils.scaleOut(mTextCount, View.GONE, AniUtils.Duration.LONG, null);
             } else if (mCurrentCount == 0 && mTextCount.getVisibility() != View.VISIBLE) {
@@ -101,7 +107,7 @@ public class ReaderIconCountView extends LinearLayout {
                 mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
             }
         } else {
-            mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+            mTextCount.setVisibility(!mHideCountWhenZero || count > 0 ? View.VISIBLE : View.GONE);
         }
 
         mCurrentCount = count;

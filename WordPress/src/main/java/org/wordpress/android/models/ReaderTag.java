@@ -69,6 +69,16 @@ public class ReaderTag implements Serializable {
         return StringUtils.capitalize(tagName);
     }
 
+    public String getHashTagName() {
+        if (tagName == null) {
+            return "#";
+        } else if (tagName.startsWith("#")) {
+            return tagName;
+        } else {
+            return "#" + tagName;
+        }
+    }
+
     /*
      * returns the tag name for use in the application log - if this is a default tag it returns
      * the full tag name, otherwise it abbreviates the tag name since exposing followed tags
