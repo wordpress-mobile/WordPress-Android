@@ -82,10 +82,4 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <!-- extra space so action icons on fragment don't overlap content -->
-    <View
-        android:id="@+id/spacer_actions"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_button_icon" />
-
 </LinearLayout>
