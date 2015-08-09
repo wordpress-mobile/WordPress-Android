@@ -173,6 +173,7 @@
     <dimen name="site_picker_container_padding_top">10dp</dimen>
 
     <dimen name="menu_item_height">48dp</dimen>
+    <dimen name="menu_item_width">168dp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>

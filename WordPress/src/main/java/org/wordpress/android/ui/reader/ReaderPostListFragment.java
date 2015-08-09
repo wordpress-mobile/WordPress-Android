@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -18,7 +19,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.OnNavigateTagHistoryList
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
@@ -61,6 +62,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -1199,33 +1201,41 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        PopupMenu popup = new PopupMenu(getActivity(), view);
+        Context context = view.getContext();
+        final ListPopupWindow listPopup = new ListPopupWindow(context);
+        listPopup.setAnchorView(view);
+        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
+        listPopup.setModal(true);
 
+        List<Integer> menuItems = new ArrayList<>();
         boolean isFollowed = ReaderPostTable.isPostFollowed(post);
-        MenuItem mnuFollow = popup.getMenu().add(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-        mnuFollow.setCheckable(true);
-        mnuFollow.setChecked(isFollowed);
-        mnuFollow.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        if (isFollowed) {
+            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
+        } else {
+            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
+        }
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
+        }
+        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
+        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                toggleFollowStatusForPost(post);
-                return false;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (!isAdded()) return;
+
+                listPopup.dismiss();
+                switch((int) id) {
+                    case ReaderMenuAdapter.ITEM_FOLLOW:
+                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
+                        toggleFollowStatusForPost(post);
+                        break;
+                    case ReaderMenuAdapter.ITEM_BLOCK:
+                        blockBlogForPost(post);
+                        break;
+                }
             }
         });
-
-        // enable blocking a blog when viewing a followed tag
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            MenuItem mnuBlock = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
-            mnuBlock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    blockBlogForPost(post);
-                    return true;
-                }
-            });
-        }
-
-        popup.show();
+        listPopup.show();
     }
 
     /*
