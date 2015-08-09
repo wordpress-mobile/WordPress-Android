@@ -299,8 +299,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         final ListPopupWindow listPopup = new ListPopupWindow(context);
         listPopup.setAnchorView(view);
 
-        // width is a multiple of 56dp - https://www.google.com/design/spec/components/menus.html#menus-simple-menus
-        listPopup.setWidth(DisplayUtils.dpToPx(context, 168));
+        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
         listPopup.setModal(true);
         listPopup.setAdapter(new PageMenuAdapter(context, page));
         listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
