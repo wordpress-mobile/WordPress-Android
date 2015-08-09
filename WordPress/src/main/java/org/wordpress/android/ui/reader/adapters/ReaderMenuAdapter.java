@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader.ReaderTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,19 +26,10 @@ public class ReaderMenuAdapter extends BaseAdapter {
     public static final int ITEM_UNFOLLOW = 1;
     public static final int ITEM_BLOCK = 2;
 
-    public ReaderMenuAdapter(Context context, ReaderPost post, ReaderTypes.ReaderPostListType listType) {
+    public ReaderMenuAdapter(Context context, @NonNull List<Integer> menuItems) {
         super();
-
         mInflater = LayoutInflater.from(context);
-        boolean isFollowed = ReaderPostTable.isPostFollowed(post);
-        if (isFollowed) {
-            mMenuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
-        } else {
-            mMenuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
-        }
-        if (listType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-            mMenuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
-        }
+        mMenuItems.addAll(menuItems);
     }
 
     @Override

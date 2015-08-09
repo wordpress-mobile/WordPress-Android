@@ -62,6 +62,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -1205,7 +1206,18 @@ public class ReaderPostListFragment extends Fragment
         listPopup.setAnchorView(view);
         listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
         listPopup.setModal(true);
-        listPopup.setAdapter(new ReaderMenuAdapter(context, post, getPostListType()));
+
+        List<Integer> menuItems = new ArrayList<>();
+        boolean isFollowed = ReaderPostTable.isPostFollowed(post);
+        if (isFollowed) {
+            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
+        } else {
+            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
+        }
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
+        }
+        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
         listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
