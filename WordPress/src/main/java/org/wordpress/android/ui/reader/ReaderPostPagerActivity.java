@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
@@ -9,13 +10,14 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
@@ -29,6 +31,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
@@ -39,7 +42,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -327,32 +332,39 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             return;
         }
 
-        PopupMenu popup = new PopupMenu(this, view);
+        Context context = view.getContext();
+        final ListPopupWindow listPopup = new ListPopupWindow(context);
+        listPopup.setAnchorView(view);
+        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
+        listPopup.setModal(true);
 
+        List<Integer> menuItems = new ArrayList<>();
         boolean isFollowed = ReaderPostTable.isPostFollowed(post);
-        MenuItem mnuFollow = popup.getMenu().add(isFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-        mnuFollow.setCheckable(true);
-        mnuFollow.setChecked(isFollowed);
-        mnuFollow.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        if (isFollowed) {
+            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
+        } else {
+            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
+        }
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
+        }
+        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
+        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                toggleFollowStatusForPost(post);
-                return false;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listPopup.dismiss();
+                switch ((int) id) {
+                    case ReaderMenuAdapter.ITEM_FOLLOW:
+                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
+                        toggleFollowStatusForPost(post);
+                        break;
+                    case ReaderMenuAdapter.ITEM_BLOCK:
+                        blockBlogForPost(post.blogId, post.postId);
+                        break;
+                }
             }
         });
-
-        if (!mIsSinglePostView) {
-            MenuItem mnuBlock = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
-            mnuBlock.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    blockBlogForPost(post.blogId, post.postId);
-                    return true;
-                }
-            });
-        }
-
-        popup.show();
+        listPopup.show();
     }
 
     /*
