@@ -24,7 +24,7 @@
   font-family: 'Merriweather';
   font-style: italic;
   font-weight: 300;
-  src: local('Merriweather Light Italic'), local('Merriweather-LightItalic'), url(file:///android_asset/fonts/Merriweather-LightItalic.otf);
+  src: local('Merriweather Light Italic'), local('Merriweather-LightItalic'), url(file:///android_asset/fonts/Merriweather-LightItalic.ttf);
 }
 
 /* bold italic */
@@ -32,4 +32,5 @@
   font-family: 'Merriweather';
   font-style: italic;
   font-weight: 700;
-  src: local('Merriweather Bold Italic'), local('Merriweather-BoldItalic'), url(file:///android_asset/fonts/Merriweather-BoldItalic.otf);
+  src: local('Merriweather Bold Italic'), local('Merriweather-BoldItalic'), url(file:///android_asset/fonts/Merriweather-BoldItalic.ttf);
+}

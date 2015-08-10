@@ -102,7 +102,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
-    public static final String EXTRA_SHOULD_REFRESH = "shouldRefresh";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -454,9 +453,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
-            Intent i = new Intent();
-            i.putExtra(EXTRA_SHOULD_REFRESH, true);
-            setResult(RESULT_OK, i);
+            setResult(RESULT_OK);
             finish();
             return true;
         } else if (itemId == R.id.menu_preview_post) {
@@ -627,7 +624,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // or a shortcode replacement (for instance for images and galleries)
             savePost(false);
             Intent i = new Intent();
-            i.putExtra(EXTRA_SHOULD_REFRESH, true);
             i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
             i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);

@@ -31,6 +31,7 @@ import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.PostListButton;
@@ -64,6 +65,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final boolean mIsPrivateBlog;
     private final boolean mIsStatsSupported;
     private final boolean mAlwaysShowAllButtons;
+
+    private boolean mIsLoadingPosts;
 
     private final PostsListPostList mPosts = new PostsListPostList();
     private final LayoutInflater mLayoutInflater;
@@ -469,7 +472,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void loadPosts() {
-        new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (mIsLoadingPosts) {
+            AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts");
+        } else {
+            new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     /*
@@ -584,6 +591,18 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final ArrayList<Long> mediaIdsToUpdate = new ArrayList<>();
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mIsLoadingPosts = true;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mIsLoadingPosts = false;
+        }
+
+        @Override
         protected Boolean doInBackground(Void... nada) {
             tmpPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
 
@@ -640,6 +659,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     PostMediaService.startService(WordPress.getContext(), mLocalTableBlogId, mediaIdsToUpdate);
                 }
             }
+
+            mIsLoadingPosts = false;
 
             if (mOnPostsLoadedListener != null) {
                 mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
