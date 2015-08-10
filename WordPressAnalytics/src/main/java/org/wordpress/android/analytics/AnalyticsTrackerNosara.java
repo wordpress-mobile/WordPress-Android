@@ -1,8 +1,6 @@
 package org.wordpress.android.analytics;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -12,7 +10,6 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class AnalyticsTrackerNosara extends Tracker {
 
@@ -24,12 +21,8 @@ public class AnalyticsTrackerNosara extends Tracker {
 
     private TracksClient mNosaraClient;
 
-    public AnalyticsTrackerNosara(Context context) {
+    public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
         super(context);
-        if (null == context) {
-            mNosaraClient = null;
-            return;
-        }
         mNosaraClient = TracksClient.getClient(context);
     }
 
