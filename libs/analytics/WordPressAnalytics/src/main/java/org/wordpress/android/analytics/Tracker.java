@@ -23,9 +23,9 @@ public abstract class Tracker {
     private String mWpcomUserName = null;
     Context mContext;
 
-    public Tracker(Context context) {
+    public Tracker(Context context) throws IllegalArgumentException {
         if (null == context) {
-            return;
+            throw new IllegalArgumentException("Tracker requires a not-null context");
         }
         mContext = context;
     }

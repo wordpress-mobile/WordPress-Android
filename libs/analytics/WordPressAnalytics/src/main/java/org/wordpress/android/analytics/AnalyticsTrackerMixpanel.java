@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
-import com.automattic.android.tracks.TracksClient;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONException;
@@ -34,7 +33,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
     private static final String APP_LOCALE = "app_locale";
     private static final String MIXPANEL_ANON_ID = "mixpanel_user_anon_id";
 
-    public AnalyticsTrackerMixpanel(Context context, String token) {
+    public AnalyticsTrackerMixpanel(Context context, String token) throws IllegalArgumentException {
         super(context);
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
         mMixpanel = MixpanelAPI.getInstance(context, token);

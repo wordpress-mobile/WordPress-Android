@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import org.wordpress.android.util.AppLog;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
