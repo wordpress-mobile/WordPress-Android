@@ -21,15 +21,12 @@ public class PostPreviewFragment extends Fragment {
 
     private int mLocalBlogId;
     private long mLocalPostId;
-    private boolean mIsPage;
-
     private WebView mWebView;
 
-    public static PostPreviewFragment newInstance(int localBlogId, long localPostId, boolean isPage) {
+    public static PostPreviewFragment newInstance(int localBlogId, long localPostId) {
         Bundle args = new Bundle();
         args.putInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID, localBlogId);
         args.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, localPostId);
-        args.putBoolean(PostPreviewActivity.ARG_IS_PAGE, isPage);
         PostPreviewFragment fragment = new PostPreviewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -40,50 +37,49 @@ public class PostPreviewFragment extends Fragment {
         super.setArguments(args);
         mLocalBlogId = args.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
         mLocalPostId = args.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
-        mIsPage = args.getBoolean(PostPreviewActivity.ARG_IS_PAGE);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            mLocalPostId = savedInstanceState.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
             mLocalBlogId = savedInstanceState.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
-            mIsPage = savedInstanceState.getBoolean(PostPreviewActivity.ARG_IS_PAGE);
+            mLocalPostId = savedInstanceState.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, mLocalPostId);
         outState.putInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID, mLocalBlogId);
-        outState.putBoolean(PostPreviewActivity.ARG_IS_PAGE, mIsPage);
+        outState.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, mLocalPostId);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_preview_fragment, container, false);
+
         mWebView = (WebView) view.findViewById(R.id.webView);
-        mWebView.setWebViewClient(new WPWebViewClient(WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId)));
+        WPWebViewClient client = new WPWebViewClient(WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId));
+        mWebView.setWebViewClient(client);
+
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadPreview();
+        refreshPreview();
     }
 
-    void loadPreview() {
+    void refreshPreview() {
         if (!isAdded()) return;
 
         new Thread() {
             @Override
             public void run() {
-                final String htmlContent = formatPostContentForWebView(
-                        getActivity(),
-                        WordPress.wpDB.getPostForLocalTablePostId(mLocalPostId));
+                Post post = WordPress.wpDB.getPostForLocalTablePostId(mLocalPostId);
+                final String htmlContent = formatPostContentForWebView(getActivity(), post);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -148,4 +144,5 @@ public class PostPreviewFragment extends Fragment {
                 + StringUtils.addPTags(postContent)
                 + "</body></html>";
     }
+
 }
