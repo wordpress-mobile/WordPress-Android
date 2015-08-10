@@ -106,9 +106,7 @@ public class NotificationsSettings {
                     getOtherSettings().put(typeName, otherSetting);
                     break;
                 case DOTCOM:
-                    JSONObject dotcomSetting = JSONUtils.queryJSON(getDotcomSettings(), typeName, new JSONObject());
-                    dotcomSetting.put(settingName, newValue);
-                    getDotcomSettings().put(typeName, dotcomSetting);
+                    getDotcomSettings().put(settingName, newValue);
             }
         } catch (JSONException e) {
             AppLog.e(AppLog.T.NOTIFS, "Could not update notifications settings JSON");
