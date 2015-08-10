@@ -28,29 +28,26 @@
                     android:layout_height="@dimen/toolbar_height" />
 
                 <include
-                    android:id="@+id/layout_post_detail_header"
-                    layout="@layout/reader_include_post_detail_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:layout_marginLeft="@dimen/reader_detail_margin"
-                    android:layout_marginRight="@dimen/reader_detail_margin"
-                    android:layout_marginTop="@dimen/margin_medium" />
-
-                <View
-                    android:id="@+id/divider_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/reader_divider_grey" />
-
-                <include
                     layout="@layout/reader_include_post_detail_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <View
+                    android:id="@+id/footer_spacer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toolbar_height" />
+
             </LinearLayout>
 
         </org.wordpress.android.widgets.WPScrollView>
+
+        <include
+            android:id="@+id/layout_post_detail_footer"
+            layout="@layout/reader_include_post_detail_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/margin_medium" />
 
         <ProgressBar
             android:id="@+id/progress_loading"

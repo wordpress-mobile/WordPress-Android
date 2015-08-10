@@ -60,7 +60,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private WPScrollView mScrollView;
-    private ViewGroup mLayoutHeader;
+    private ViewGroup mLayoutFooter;
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
 
@@ -132,7 +132,7 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
 
-        mLayoutHeader = (ViewGroup) view.findViewById(R.id.layout_post_detail_header);
+        mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
         mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
 
         // setup the ReaderWebView
@@ -141,8 +141,8 @@ public class ReaderPostDetailFragment extends Fragment
         mReaderWebView.setUrlClickListener(this);
         mReaderWebView.setPageFinishedListener(this);
 
-        // hide header and scrollView until the post is loaded
-        mLayoutHeader.setVisibility(View.INVISIBLE);
+        // hide footer and scrollView until the post is loaded
+        mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
 
         // spacer that's set to the same height as the toolbar needs to be visible if fragment is
@@ -640,8 +640,9 @@ public class ReaderPostDetailFragment extends Fragment
                 imgMore.setVisibility(View.GONE);
             }
 
-            if (mLayoutHeader.getVisibility() != View.VISIBLE) {
-                AniUtils.fadeIn(mLayoutHeader, AniUtils.Duration.LONG);
+            // show the footer if it's not already showing
+            if (mLayoutFooter.getVisibility() != View.VISIBLE) {
+                AniUtils.fadeIn(mLayoutFooter, AniUtils.Duration.LONG);
             }
 
             refreshIconCounts(false);
@@ -780,24 +781,45 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onScrollUp() {
         showToolbar(true);
+        showFooter(true);
     }
 
     @Override
     public void onScrollDown() {
         if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
             showToolbar(false);
+            showFooter(false);
         }
     }
 
     @Override
     public void onScrollCompleted() {
-        // noop
+        if (!mScrollView.canScrollDown()) {
+            showToolbar(true);
+            showFooter(true);
+        }
     }
 
     private void showToolbar(boolean show) {
         if (mAutoHideToolbarListener != null) {
             mAutoHideToolbarListener.onShowHideToolbar(show);
         }
+    }
+
+    private void showFooter(boolean show) {
+        if (isAdded() && canShowFooter()) {
+            AniUtils.animateBottomBar(mLayoutFooter, show);
+        }
+    }
+
+    /*
+     * footer icons don't appear for feeds or discover posts or when logged out
+     */
+    private boolean canShowFooter() {
+        if (mPost == null || mPost.isExternal || mPost.isDiscoverPost() || mIsLoggedOutReader) {
+            return false;
+        }
+        return true;
     }
 
 }
