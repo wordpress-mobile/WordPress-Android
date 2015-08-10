@@ -6,25 +6,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_post_detail_header"
+    android:id="@+id/layout_post_detail_footer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:paddingBottom="@dimen/margin_medium">
 
     <View
-        android:id="@+id/divider_header"
+        android:id="@+id/divider_footer"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/margin_large"
         android:background="@color/reader_divider_grey" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_blog_name"
+        android:id="@+id/text_tag"
         style="@style/ReaderTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/divider_footer"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/reader_detail_margin"
-        android:layout_marginTop="@dimen/margin_large"
         android:layout_toLeftOf="@+id/layout_icons"
         android:background="?android:selectableItemBackground"
         android:ellipsize="end"
@@ -32,16 +34,16 @@
         android:maxLines="1"
         android:textColor="@color/reader_hyperlink"
         android:textSize="@dimen/text_sz_large"
-        tools:text="text_blog_name" />
+        tools:text="#text_tag" />
 
     <LinearLayout
         android:id="@+id/layout_icons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/divider_footer"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/reader_detail_margin"
-        android:layout_marginTop="@dimen/margin_large"
         android:orientation="horizontal">
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -58,18 +60,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/margin_large"
             wp:readerIcon="like" />
-
-        <ImageView
-            android:id="@+id/image_more"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:background="?android:selectableItemBackground"
-            android:paddingBottom="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_small"
-            android:src="@drawable/ic_action_more"
-            android:tint="@color/grey_lighten_10" />
 
     </LinearLayout>
 

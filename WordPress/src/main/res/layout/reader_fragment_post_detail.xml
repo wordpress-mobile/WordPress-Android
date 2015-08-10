@@ -28,6 +28,20 @@
                     android:layout_height="@dimen/toolbar_height" />
 
                 <include
+                    layout="@layout/reader_include_post_detail_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginTop="@dimen/margin_medium" />
+
+                <View
+                    android:id="@+id/divider_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:background="@color/reader_divider_grey" />
+
+                <include
                     layout="@layout/reader_include_post_detail_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -46,8 +60,7 @@
             layout="@layout/reader_include_post_detail_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="@dimen/margin_medium" />
+            android:layout_alignParentBottom="true" />
 
         <ProgressBar
             android:id="@+id/progress_loading"

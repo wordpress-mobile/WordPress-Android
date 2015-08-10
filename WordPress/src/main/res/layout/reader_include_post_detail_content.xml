@@ -11,54 +11,12 @@
     android:paddingBottom="@dimen/margin_large"
     android:paddingTop="@dimen/margin_large">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
+        style="@style/ReaderTextView.Post.Title.Detail"
         android:layout_marginLeft="@dimen/reader_detail_margin"
-        android:layout_marginRight="@dimen/reader_detail_margin">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_title"
-            style="@style/ReaderTextView.Post.Title.Detail"
-            tools:text="text_title" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_title"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:orientation="horizontal">
-
-            <org.wordpress.android.widgets.WPNetworkImageView
-                android:id="@+id/image_avatar"
-                style="@style/ReaderImageView.Avatar.ExtraSmall"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:background="?android:selectableItemBackground"
-                tools:src="@drawable/gravatar_placeholder" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:background="?android:selectableItemBackground"
-                android:textColor="@color/reader_hyperlink"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="text_date" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_small"
-                tools:text="text_date" />
-        </LinearLayout>
-
-    </RelativeLayout>
+        android:layout_marginRight="@dimen/reader_detail_margin"
+        tools:text="text_title" />
 
     <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"

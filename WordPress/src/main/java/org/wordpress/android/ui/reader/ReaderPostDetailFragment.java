@@ -25,6 +25,8 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -41,6 +43,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.ScrollDirectionListener;
@@ -509,8 +512,8 @@ public class ReaderPostDetailFragment extends Fragment
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
         TextView txtBlogName;
-        TextView txtAuthorName;
-        TextView txtDate;
+        TextView txtDateLine;
+        TextView txtTag;
         ImageView imgMore;
         WPNetworkImageView imgAvatar;
 
@@ -556,8 +559,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
-            txtAuthorName = (TextView) container.findViewById(R.id.text_author);
-            txtDate = (TextView) container.findViewById(R.id.text_date);
+            txtDateLine = (TextView) container.findViewById(R.id.text_dateline);
+            txtTag = (TextView) container.findViewById(R.id.text_tag);
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
@@ -601,7 +604,6 @@ public class ReaderPostDetailFragment extends Fragment
             };
             txtBlogName.setOnClickListener(blogPreviewListener);
             imgAvatar.setOnClickListener(blogPreviewListener);
-            txtAuthorName.setOnClickListener(blogPreviewListener);
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
@@ -613,18 +615,38 @@ public class ReaderPostDetailFragment extends Fragment
                 txtBlogName.setVisibility(View.GONE);
             }
 
-            if (mPost.hasAuthorName()) {
-                txtAuthorName.setText(mPost.getAuthorName());
-                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(
-                        mResourceVars.extraSmallAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
-                txtAuthorName.setVisibility(View.VISIBLE);
-                imgAvatar.setVisibility(View.VISIBLE);
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+            if (mPost.hasBlogUrl()) {
+                String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), avatarSz);
+                imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
             } else {
-                txtAuthorName.setVisibility(View.GONE);
-                imgAvatar.setVisibility(View.GONE);
+                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
             }
 
-            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
+            String dateLine;
+            if (mPost.hasAuthorName() && !mPost.getAuthorName().equalsIgnoreCase(mPost.getBlogName())) {
+                dateLine = mPost.getAuthorName() + ", " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
+            } else {
+                dateLine = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
+            }
+            txtDateLine.setText(dateLine);
+
+            final String tagToDisplay = mPost.getTagForDisplay(null);
+            if (!TextUtils.isEmpty(tagToDisplay)) {
+                if (tagToDisplay.startsWith("#")) {
+                    txtTag.setText(tagToDisplay);
+                } else {
+                    txtTag.setText("#" + tagToDisplay);
+                }
+                txtTag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderTag tag = new ReaderTag(tagToDisplay, ReaderTagType.FOLLOWED);
+                        ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
+                    }
+                });
+            }
+
 
             if (mOnPopupListener != null) {
                 imgMore.setVisibility(View.VISIBLE);
