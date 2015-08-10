@@ -55,13 +55,7 @@ public abstract class Tracker {
     }
 
     String generateNewAnonID() {
-        String uuid = UUID.randomUUID().toString();
-        String[] uuidSplitted = uuid.split("-");
-        StringBuilder builder = new StringBuilder();
-        for (String currentPart : uuidSplitted) {
-            builder.append(currentPart);
-        }
-        uuid = builder.toString();
+        String uuid = UUID.randomUUID().toString().replace("-", "");
         AppLog.d(AppLog.T.STATS, "New anonID generated in " + this.getClass().getSimpleName() + ": " + uuid);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
