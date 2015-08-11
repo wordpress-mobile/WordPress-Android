@@ -121,12 +121,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
             txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
-
-            // blog name isn't tappable when showing blog preview, so change to disabled color
-            if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-                int color = itemView.getContext().getResources().getColor(R.color.grey_lighten_10);
-                txtBlogName.setTextColor(color);
-            }
         }
     }
 
