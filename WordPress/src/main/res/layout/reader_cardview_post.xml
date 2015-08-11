@@ -13,11 +13,11 @@
     card_view:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
-        android:orientation="vertical"
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground">
+        android:background="?android:selectableItemBackground"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/layout_post_header"
@@ -102,11 +102,11 @@
             android:id="@+id/text_word_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_sz_medium"
-            android:textColor="@color/grey"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_large"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
             tools:text="text_word_count" />
 
         <!-- attribution section for discover posts -->
