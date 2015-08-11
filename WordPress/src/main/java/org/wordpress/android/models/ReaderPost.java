@@ -91,6 +91,7 @@ public class ReaderPost {
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
+        post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
 
         post.isLikesEnabled = JSONUtils.getBool(json, "likes_enabled");
         post.isSharingEnabled = JSONUtils.getBool(json, "sharing_enabled");

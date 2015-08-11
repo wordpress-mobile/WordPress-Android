@@ -365,7 +365,7 @@ public class ReaderPostDetailFragment extends Fragment
         final ReaderIconCountView countLikes = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
         final ReaderIconCountView countComments = (ReaderIconCountView) getView().findViewById(R.id.count_comments);
 
-        if (mPost.isWP() && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
+        if (mPost.isWP() && !mPost.isJetpack && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
             countComments.setCount(mPost.numReplies);
             countComments.setVisibility(View.VISIBLE);
             countComments.setOnClickListener(new View.OnClickListener() {
