@@ -64,7 +64,9 @@ public class StatsService extends Service {
         SEARCH_TERMS,
         INSIGHTS_POPULAR,
         INSIGHTS_ALL_TIME,
-        INSIGHTS_TODAY;
+        INSIGHTS_TODAY,
+        INSIGHTS_LATEST_POST_SUMMARY,
+        POST;
 
         public String getRestEndpointPath() {
             switch (this) {
@@ -102,6 +104,8 @@ public class StatsService extends Service {
                     return "";
                 case INSIGHTS_TODAY:
                     return "summary";
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    return "posts";
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + this.name());
                     return "";
@@ -299,6 +303,10 @@ public class StatsService extends Service {
                     break;
                 case INSIGHTS_TODAY:
                     path = String.format(path + "?period=day&date=%s", date);
+                    break;
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    // This is an edge cases since  we're not loading stats but posts
+                    path = String.format("/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath() + "?order_by=date&number=1&type=post");
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());

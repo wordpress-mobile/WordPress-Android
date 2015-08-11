@@ -56,6 +56,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_large" />
 
+                    <!-- LATEST POST SUMMARY SECTION -->
+                    <FrameLayout
+                        android:id="@+id/stats_insights_latest_post_summary_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_large" />
+
                     <org.wordpress.android.widgets.WPTextView
                         android:textAppearance="?android:attr/textAppearance"
                         android:textSize="@dimen/text_sz_large"

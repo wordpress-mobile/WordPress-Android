@@ -398,6 +398,11 @@ public class StatsActivity extends AppCompatActivity
                 ft.replace(R.id.stats_insights_today_container, fragment, StatsInsightsTodayFragment.TAG);
             }
 
+            if (fm.findFragmentByTag(StatsInsightsLatestPostSummaryFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_LATEST_POST_SUMMARY, mLocalBlogID, StatsTimeframe.DAY, mRequestedDate);
+                ft.replace(R.id.stats_insights_latest_post_summary_container, fragment, StatsInsightsTodayFragment.TAG);
+            }
+
             if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
                 fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
@@ -443,6 +448,7 @@ public class StatsActivity extends AppCompatActivity
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsTodayFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsAllTimeFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsMostPopularFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsLatestPostSummaryFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsCommentsFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTagsAndCategoriesFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsPublicizeFragment.TAG);
@@ -643,7 +649,7 @@ public class StatsActivity extends AppCompatActivity
 
     // StatsInsightsTodayFragment calls this when the user taps on a item in Today's Stats
     @Override
-    public void onInsightsClicked(final StatsVisitorsAndViewsFragment.OverviewLabel item) {
+    public void onInsightsTodayClicked(final StatsVisitorsAndViewsFragment.OverviewLabel item) {
         mTabToSelectOnGraph = item;
         for (int i = 0; i < timeframes.length; i++) {
             if (timeframes[i] ==  StatsTimeframe.DAY) {
