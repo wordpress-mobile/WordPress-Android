@@ -6,14 +6,11 @@
         android:key="@string/pref_notification_blogs">
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/notifications_other_blogs">
+        android:title="@string/notifications_other"
+        android:key="@string/pref_notification_other_category">
         <PreferenceScreen android:key="@string/pref_notification_other_blogs"
-            android:title="@string/notifications_comments_other_blogs"
-            android:summary="@string/notifications_other_blogs_summary" />
+            android:title="@string/notifications_comments_other_blogs" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/notifications_wpcom_updates"
-        android:key="@string/pref_notification_account_emails" />
     <PreferenceCategory android:title="@string/notifications_sights_and_sounds"
         android:key="@string/pref_notification_sights_sounds">
         <SwitchPreference

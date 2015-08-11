@@ -238,15 +238,15 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             return;
         }
 
-        PreferenceGroup dotcomPreferenceGroup = (PreferenceGroup) findPreference(
-                getString(R.string.pref_notification_account_emails));
+        PreferenceCategory otherPreferenceCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_other_category));
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                 getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.DEVICE, 0, mNotificationsSettings, mOnSettingsChangedListener
         );
         devicePreference.setTitle(R.string.notifications_updates_from_wordpress);
         devicePreference.setDialogTitle(R.string.notifications_updates_from_wordpress);
         devicePreference.setSummary(R.string.notifications_account_emails_summary);
-        dotcomPreferenceGroup.addPreference(devicePreference);
+        otherPreferenceCategory.addPreference(devicePreference);
     }
 
     private void addPreferencesForPreferenceScreen(PreferenceScreen preferenceScreen, Channel channel, long blogId) {
