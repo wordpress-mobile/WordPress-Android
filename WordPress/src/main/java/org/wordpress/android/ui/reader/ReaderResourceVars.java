@@ -11,8 +11,6 @@ import org.wordpress.android.util.HtmlUtils;
  * class which holds all resource-based variables used when rendering post detail
  */
 class ReaderResourceVars {
-    final int extraSmallAvatarSizePx;
-
     final int marginSmallPx;
     final int marginExtraSmallPx;
 
@@ -34,9 +32,7 @@ class ReaderResourceVars {
         int marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large);
         int detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin);
 
-        extraSmallAvatarSizePx = resources.getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
         featuredImageHeightPx = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);
-
         marginSmallPx = resources.getDimensionPixelSize(R.dimen.margin_small);
         marginExtraSmallPx = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
 

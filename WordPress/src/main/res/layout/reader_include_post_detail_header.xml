@@ -13,10 +13,9 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_avatar"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        style="@style/ReaderImageView.Avatar.Small"
+        style="@style/ReaderImageView.Avatar"
         android:layout_marginLeft="@dimen/reader_detail_margin"
-        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_large"
         tools:src="@drawable/gravatar_placeholder" />
 
     <LinearLayout
@@ -34,7 +33,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="@color/grey"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_blog_name" />
 

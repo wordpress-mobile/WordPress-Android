@@ -170,7 +170,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // dateline includes author name if different than blog name
         String dateLine;
         if (post.hasAuthorName() && !post.getAuthorName().equalsIgnoreCase(post.getBlogName())) {
-            dateLine = post.getAuthorName() + ", " + DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
+            dateLine = post.getAuthorName() + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
         } else {
             dateLine = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
         }

@@ -508,6 +508,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsPostTaskRunning = false;
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
+        TextView txtAuthor;
         TextView txtBlogName;
         TextView txtDateLine;
         TextView txtTag;
@@ -557,6 +558,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
+            txtAuthor = (TextView) container.findViewById(R.id.text_author);
             txtDateLine = (TextView) container.findViewById(R.id.text_dateline);
             txtTag = (TextView) container.findViewById(R.id.text_tag);
 
@@ -626,9 +628,16 @@ public class ReaderPostDetailFragment extends Fragment
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
             }
 
+            if (mPost.hasAuthorName()) {
+                txtAuthor.setText(mPost.getAuthorName());
+                txtAuthor.setVisibility(View.VISIBLE);
+            } else {
+                txtAuthor.setVisibility(View.GONE);
+            }
+
             String dateLine;
-            if (mPost.hasAuthorName() && !mPost.getAuthorName().equalsIgnoreCase(mPost.getBlogName())) {
-                dateLine = mPost.getAuthorName() + ", " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
+            if (mPost.hasBlogUrl()) {
+                dateLine = UrlUtils.getDomainFromUrl(mPost.getBlogUrl()) + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             } else {
                 dateLine = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             }
