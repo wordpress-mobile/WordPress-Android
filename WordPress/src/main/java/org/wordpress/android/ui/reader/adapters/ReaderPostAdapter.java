@@ -422,8 +422,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mWordCountFmtStr = context.getString(R.string.reader_label_word_count);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
-        mPhotonWidth = displayWidth - (cardSpacing * 2);
+        int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
+        mPhotonWidth = displayWidth - (cardMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         setHasStableIds(true);

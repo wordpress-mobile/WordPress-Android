@@ -333,7 +333,7 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
 
         Context context = container.getContext();
-        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
+        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
