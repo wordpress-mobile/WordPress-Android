@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -45,6 +45,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mAvatarSzSmall;
     private final int mMarginLarge;
 
+    private final String mWordCountFmtStr;
+
     private boolean mCanRequestMorePosts;
     private boolean mShowToolbarSpacer;
     private final boolean mIsLoggedOutReader;
@@ -74,6 +76,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtBlogName;
         private final TextView txtDate;
         private final TextView txtTag;
+        private final TextView txtWordCount;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
@@ -99,6 +102,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtBlogName = (TextView) itemView.findViewById(R.id.text_blog_name);
             txtDate = (TextView) itemView.findViewById(R.id.text_date);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
+            txtWordCount = (TextView) itemView.findViewById(R.id.text_word_count);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -221,8 +225,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         // set the top margin of the title based on whether there's a featured image and post header
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) postHolder.txtTitle.getLayoutParams();
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) postHolder.txtTitle.getLayoutParams();
         params.topMargin = titleMargin;
+
+        // show word count when appropriate
+        if (post.wordCount > 0 && !post.isDiscoverPost()) {
+            postHolder.txtWordCount.setText(String.format(mWordCountFmtStr, post.wordCount));
+            postHolder.txtWordCount.setVisibility(View.VISIBLE);
+        } else {
+            postHolder.txtWordCount.setVisibility(View.GONE);
+        }
 
         // show the best tag for this post
         final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagName()) : null);
@@ -407,6 +419,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
+        mWordCountFmtStr = context.getString(R.string.reader_label_word_count);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);

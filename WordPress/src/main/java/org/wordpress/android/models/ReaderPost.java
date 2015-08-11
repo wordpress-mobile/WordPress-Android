@@ -45,6 +45,7 @@ public class ReaderPost {
 
     public int numReplies;        // includes comments, trackbacks & pingbacks
     public int numLikes;
+    public int wordCount;
 
     public boolean isLikedByCurrentUser;
     public boolean isFollowedByCurrentUser;
@@ -87,6 +88,7 @@ public class ReaderPost {
         post.setBlogUrl(JSONUtils.getString(json, "site_URL"));
 
         post.numLikes = json.optInt("like_count");
+        post.wordCount = json.optInt("word_count");
         post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
         post.isExternal = JSONUtils.getBool(json, "is_external");
