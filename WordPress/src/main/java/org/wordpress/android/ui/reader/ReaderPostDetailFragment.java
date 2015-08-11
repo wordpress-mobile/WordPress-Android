@@ -74,8 +74,6 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
     private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
 
-    private ReaderResourceVars mResourceVars;
-
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, null);
     }
@@ -119,7 +117,6 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mResourceVars = new ReaderResourceVars(activity);
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
             mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
@@ -515,6 +512,7 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtDateLine;
         TextView txtTag;
         ImageView imgMore;
+        ViewGroup layoutHeader;
         WPNetworkImageView imgAvatar;
 
         @Override
@@ -562,6 +560,8 @@ public class ReaderPostDetailFragment extends Fragment
             txtDateLine = (TextView) container.findViewById(R.id.text_dateline);
             txtTag = (TextView) container.findViewById(R.id.text_tag);
 
+            layoutHeader = (ViewGroup) container.findViewById(R.id.layout_post_detail_header);
+
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgMore = (ImageView) container.findViewById(R.id.image_more);
 
@@ -596,14 +596,13 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            View.OnClickListener blogPreviewListener = new View.OnClickListener() {
+            // clicking the header shows blog preview
+            layoutHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
                 }
-            };
-            txtBlogName.setOnClickListener(blogPreviewListener);
-            imgAvatar.setOnClickListener(blogPreviewListener);
+            });
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
@@ -838,10 +837,7 @@ public class ReaderPostDetailFragment extends Fragment
      * footer icons don't appear for feeds or discover posts or when logged out
      */
     private boolean canShowFooter() {
-        if (mPost == null || mPost.isExternal || mPost.isDiscoverPost() || mIsLoggedOutReader) {
-            return false;
-        }
-        return true;
+        return !(mPost == null || mPost.isExternal || mPost.isDiscoverPost() || mIsLoggedOutReader);
     }
 
 }
