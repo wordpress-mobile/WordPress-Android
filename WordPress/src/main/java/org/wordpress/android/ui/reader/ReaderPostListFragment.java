@@ -1127,12 +1127,10 @@ public class ReaderPostListFragment extends Fragment
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
             if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
                 if (discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
-                    String title = getCurrentTagName();
                     ReaderActivityLauncher.showReaderPostDetail(
                             getActivity(),
                             discoverData.getBlogId(),
-                            discoverData.getPostId(),
-                            title);
+                            discoverData.getPostId());
                     return;
                 } else if (discoverData.hasPermalink()) {
                     // if we don't have a blogId/postId, we sadly resort to showing the post

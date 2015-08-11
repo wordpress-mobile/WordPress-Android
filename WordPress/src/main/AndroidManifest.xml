@@ -220,6 +220,7 @@
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/reader"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"

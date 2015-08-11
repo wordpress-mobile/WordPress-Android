@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -31,30 +30,10 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        showReaderPostDetail(context, blogId, postId, null);
-    }
-    public static void showReaderPostDetail(Context context, long blogId, long postId, CharSequence title) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
-
-        if (title == null && context instanceof Activity) {
-            // For AppCompatActivity subclasses, we need to pull the title from the Toolbar
-            if (context instanceof AppCompatActivity && ((AppCompatActivity) context).getSupportActionBar() != null) {
-                title = ((AppCompatActivity) context).getSupportActionBar().getTitle();
-            }
-            if (title == null) {
-                // Not an AppCompatActivity, or getSupportActionBar().getTitle() returned null.
-                // Try to read the title from the Activity
-                title = ((Activity)context).getTitle();
-            }
-        }
-
-        if (!TextUtils.isEmpty(title)) {
-            intent.putExtra(ReaderConstants.ARG_TITLE, title);
-        }
-
         ActivityLauncher.slideInFromRight(context, intent);
     }
 
@@ -74,7 +53,6 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getCapitalizedTagName());
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
