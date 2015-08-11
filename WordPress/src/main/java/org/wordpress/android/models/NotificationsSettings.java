@@ -22,8 +22,8 @@ public class NotificationsSettings {
     public static final String KEY_BLOG_ID = "blog_id";
 
     private JSONObject mOtherSettings;
-    private Map<Long, JSONObject> mBlogSettings;
     private JSONObject mDotcomSettings;
+    private Map<Long, JSONObject> mBlogSettings;
 
     public enum Type {
         TIMELINE,
@@ -57,31 +57,16 @@ public class NotificationsSettings {
     public void updateJson(JSONObject json) {
         mBlogSettings = new HashMap<>();
 
-        Iterator<?> keys = json.keys();
-        while(keys.hasNext()) {
-            String key = (String)keys.next();
+        mOtherSettings = JSONUtils.queryJSON(json, KEY_OTHER, new JSONObject());
+        mDotcomSettings = JSONUtils.queryJSON(json, KEY_DOTCOM, new JSONObject());
+
+        JSONArray siteSettingsArray = JSONUtils.queryJSON(json, KEY_BLOGS, new JSONArray());
+        for (int i=0; i < siteSettingsArray.length(); i++) {
             try {
-                if (json.get(key) instanceof JSONObject) {
-                    JSONObject settingsObject = (JSONObject)json.get(key);
-                    switch(key) {
-                        case KEY_OTHER:
-                            mOtherSettings = settingsObject;
-                            break;
-                        case KEY_DOTCOM:
-                            mDotcomSettings = settingsObject;
-                            break;
-                        default:
-                            AppLog.i(AppLog.T.NOTIFS, "Unknown notification channel found");
-                    }
-                } else if (json.get(key) instanceof JSONArray && key.equals(KEY_BLOGS)) {
-                    JSONArray siteSettingsArray = (JSONArray)json.get(key);
-                    for (int i=0; i < siteSettingsArray.length(); i++) {
-                        JSONObject siteSetting = siteSettingsArray.getJSONObject(i);
-                        mBlogSettings.put(siteSetting.optLong(KEY_BLOG_ID), siteSetting);
-                    }
-                }
+                JSONObject siteSetting = siteSettingsArray.getJSONObject(i);
+                mBlogSettings.put(siteSetting.optLong(KEY_BLOG_ID), siteSetting);
             } catch (JSONException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.NOTIFS, "Could not parse blog JSON in notification settings");
             }
         }
     }

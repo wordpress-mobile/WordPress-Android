@@ -193,10 +193,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     }
 
     private void configureBlogsSettings() {
-        if (mNotificationsSettings == null || mNotificationsSettings.getBlogSettings() == null) {
-            return;
-        }
-
         // Retrieve blogs (including jetpack sites) originally retrieved through FetchBlogListWPCom
         // They will have an empty (but encrypted) password
         String args = String.format("password='%s'", WordPressDB.encryptPassword(""));
@@ -224,20 +220,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     }
 
     private void configureOtherSettings() {
-        if (mNotificationsSettings == null || mNotificationsSettings.getOtherSettings() == null) {
-            return;
-        }
-
         PreferenceScreen otherBlogsScreen = (PreferenceScreen) findPreference(
                 getString(R.string.pref_notification_other_blogs));
         addPreferencesForPreferenceScreen(otherBlogsScreen, Channel.OTHER, 0);
     }
 
     private void configureDotcomSettings() {
-        if (mNotificationsSettings == null || mNotificationsSettings.getDotcomSettings() == null) {
-            return;
-        }
-
         PreferenceCategory otherPreferenceCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_other_category));
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
