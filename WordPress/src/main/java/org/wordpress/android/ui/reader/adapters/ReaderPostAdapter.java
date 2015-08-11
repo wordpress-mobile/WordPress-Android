@@ -46,6 +46,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mMarginLarge;
 
     private final String mWordCountFmtStr;
+    private final String mReadingTimeFmtStr;
 
     private boolean mCanRequestMorePosts;
     private boolean mShowToolbarSpacer;
@@ -63,6 +64,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
+
+    // Longreads says that people can read 250 words per minute
+    private static final int READING_WORDS_PER_MINUTE = 250;
+    private static final int MIN_READING_TIME_MINUTES = 2;
 
     private static final int VIEW_TYPE_SPACER = 1;
     private static final int VIEW_TYPE_POST = 2;
@@ -228,9 +233,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) postHolder.txtTitle.getLayoutParams();
         params.topMargin = titleMargin;
 
-        // show word count when appropriate
+        // show word count when appropriate, include reading time if at least two minutes
         if (post.wordCount > 0 && !post.isDiscoverPost()) {
-            postHolder.txtWordCount.setText(String.format(mWordCountFmtStr, post.wordCount));
+            String wordCountStr = String.format(mWordCountFmtStr, post.wordCount);
+            int readingTimeInMinutes = post.wordCount / READING_WORDS_PER_MINUTE;
+            if (readingTimeInMinutes >= MIN_READING_TIME_MINUTES) {
+                wordCountStr += " (~" + String.format(mReadingTimeFmtStr, readingTimeInMinutes) + ")";
+            }
+            postHolder.txtWordCount.setText(wordCountStr);
             postHolder.txtWordCount.setVisibility(View.VISIBLE);
         } else {
             postHolder.txtWordCount.setVisibility(View.GONE);
@@ -419,7 +429,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
+
         mWordCountFmtStr = context.getString(R.string.reader_label_word_count);
+        mReadingTimeFmtStr = context.getString(R.string.reader_label_reading_time_in_minutes);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);

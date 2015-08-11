@@ -757,6 +757,7 @@
     <string name="reader_label_comment_count_multi">%,d comments</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_word_count">%,d words</string>
+    <string name="reader_label_reading_time_in_minutes">%,d min</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
