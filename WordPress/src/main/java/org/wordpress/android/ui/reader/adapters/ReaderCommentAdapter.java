@@ -49,12 +49,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
     private final int mLinkColor;
     private final int mNoLinkColor;
 
-    private final String mLike;
-    private final String mLikedBy;
-    private final String mLikesSingle;
-    private final String mLikedByYou;
-    private final String mLikesMulti;
-
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
     }
@@ -121,12 +115,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_darken_10);
-
-        mLike = context.getString(R.string.reader_label_like);
-        mLikedBy = context.getString(R.string.reader_label_liked_by);
-        mLikedByYou = context.getString(R.string.reader_label_liked_by_you);
-        mLikesSingle = context.getString(R.string.reader_likes_one_short);
-        mLikesMulti = context.getString(R.string.reader_likes_multi_short);
 
         setHasStableIds(true);
     }
@@ -261,22 +249,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         if (mPost.isLikesEnabled) {
             holder.layoutLikes.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
-
+            holder.txtLike.setText(ReaderUtils.getShortLikeLabelText(holder.txtLike.getContext(), comment.numLikes));
             if (comment.numLikes == 0) {
-                // no likes, so show "Like" as the caption with no count
-                holder.txtLike.setText(mLike);
-                holder.txtLike.setTextColor(mLinkColor);
-                holder.txtLikeCount.setVisibility(View.GONE);
-            } else if (comment.numLikes == 1 && comment.isLikedByCurrentUser) {
-                // comment is liked only by the current user, so show "Liked by you" with no count
-                holder.txtLike.setText(mLikedByYou);
                 holder.txtLike.setTextColor(mLinkColor);
                 holder.txtLikeCount.setVisibility(View.GONE);
             } else {
-                // otherwise show "Liked by" followed by the like count
-                holder.txtLike.setText(mLikedBy);
                 holder.txtLike.setTextColor(mNoLinkColor);
-                holder.txtLikeCount.setText(comment.numLikes == 1 ? mLikesSingle : String.format(mLikesMulti, comment.numLikes));
                 holder.txtLikeCount.setSelected(comment.isLikedByCurrentUser);
                 holder.txtLikeCount.setVisibility(View.VISIBLE);
             }

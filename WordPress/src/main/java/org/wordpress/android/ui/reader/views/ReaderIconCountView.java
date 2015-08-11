@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.FormatUtils;
 
 /*
@@ -19,8 +18,7 @@ import org.wordpress.android.util.FormatUtils;
 public class ReaderIconCountView extends LinearLayout {
     private ImageView mImageView;
     private TextView mTextCount;
-    private int mCurrentCount;
-    private boolean mHideCountWhenZero;
+    private int mIconType;
 
     // these must match the same values in attrs.xml
     private static final int ICON_LIKE = 0;
@@ -53,15 +51,13 @@ public class ReaderIconCountView extends LinearLayout {
                     R.styleable.ReaderIconCountView,
                     0, 0);
             try {
-                int icon = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
-                switch (icon) {
+                mIconType = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
+                switch (mIconType) {
                     case ICON_LIKE :
                         mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_like));
-                        mHideCountWhenZero = true;
                         break;
                     case ICON_COMMENT :
                         mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_comment));
-                        mHideCountWhenZero = false;
                         break;
                 }
 
@@ -91,25 +87,11 @@ public class ReaderIconCountView extends LinearLayout {
         mTextCount.setEnabled(enabled);
     }
 
-    public void setCount(int count, boolean animateChanges) {
-        if (count == 0 && mHideCountWhenZero) {
-            mTextCount.setText(null);
+    public void setCount(int count) {
+        if (mIconType == ICON_LIKE) {
+            mTextCount.setText(ReaderUtils.getShortLikeLabelText(getContext(), count));
         } else {
             mTextCount.setText(FormatUtils.formatInt(count));
         }
-
-        if (mHideCountWhenZero && animateChanges && count != mCurrentCount) {
-            if (count == 0 && mTextCount.getVisibility() == View.VISIBLE) {
-                AniUtils.scaleOut(mTextCount, View.GONE, AniUtils.Duration.LONG, null);
-            } else if (mCurrentCount == 0 && mTextCount.getVisibility() != View.VISIBLE) {
-                AniUtils.scaleIn(mTextCount, AniUtils.Duration.LONG);
-            } else {
-                mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-            }
-        } else {
-            mTextCount.setVisibility(!mHideCountWhenZero || count > 0 ? View.VISIBLE : View.GONE);
-        }
-
-        mCurrentCount = count;
     }
 }

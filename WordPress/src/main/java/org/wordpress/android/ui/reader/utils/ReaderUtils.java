@@ -8,6 +8,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -90,6 +91,21 @@ public class ReaderUtils {
                 String likes = context.getString(R.string.reader_likes_multi);
                 return String.format(likes, numLikes);
             }
+        }
+    }
+
+    /*
+     * short like text ("1 like," "5 likes," etc.)
+     */
+    public static String getShortLikeLabelText(Context context, int numLikes) {
+        switch (numLikes) {
+            case 0:
+                return context.getString(R.string.reader_short_like_count_none);
+            case 1:
+                return context.getString(R.string.reader_short_like_count_one);
+            default:
+                String count = FormatUtils.formatInt(numLikes);
+                return String.format(context.getString(R.string.reader_short_like_count_multi), count);
         }
     }
 

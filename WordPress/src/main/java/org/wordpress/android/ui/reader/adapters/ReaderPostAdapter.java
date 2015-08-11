@@ -260,7 +260,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (showLikes || showComments) {
-            showCounts(postHolder, post, false);
+            showCounts(postHolder, post);
         }
 
         if (showLikes) {
@@ -540,11 +540,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * shows like & comment count
      */
-    private void showCounts(ReaderPostViewHolder holder, ReaderPost post, boolean animateChanges) {
-        holder.likeCount.setCount(post.numLikes, animateChanges);
+    private void showCounts(ReaderPostViewHolder holder, ReaderPost post) {
+        holder.likeCount.setCount(post.numLikes);
 
         if (post.numReplies > 0 || post.isCommentsOpen) {
-            holder.commentCount.setCount(post.numReplies, animateChanges);
+            holder.commentCount.setCount(post.numReplies);
             holder.commentCount.setVisibility(View.VISIBLE);
         } else {
             holder.commentCount.setVisibility(View.GONE);
@@ -578,7 +578,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (updatedPost != null && position > -1) {
             mPosts.set(position, updatedPost);
             holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
-            showCounts(holder, updatedPost, true);
+            showCounts(holder, updatedPost);
         }
     }
 

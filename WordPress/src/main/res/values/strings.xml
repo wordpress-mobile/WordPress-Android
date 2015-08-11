@@ -757,17 +757,17 @@
     <string name="reader_label_comment_count_multi">%,d comments</string>
     <string name="reader_label_view_original">View original article</string>
 
-    <!-- like counts liking users activity-->
+    <!-- like counts -->
     <string name="reader_label_like">Like</string>
-    <string name="reader_label_liked_by">Liked by</string>
-    <string name="reader_label_liked_by_you">Liked by you</string>
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%,d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
-    <string name="reader_likes_one_short">1 person</string>
-    <string name="reader_likes_multi_short">%,d people</string>
+
+    <string name="reader_short_like_count_none">Like</string>
+    <string name="reader_short_like_count_one">1 Like</string>
+    <string name="reader_short_like_count_multi">%s Likes</string>
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>

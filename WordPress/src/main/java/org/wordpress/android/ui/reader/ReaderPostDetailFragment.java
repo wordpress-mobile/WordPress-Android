@@ -280,7 +280,7 @@ public class ReaderPostDetailFragment extends Fragment
         // get the post again since it has changed, then refresh to show changes
         mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         refreshLikes();
-        refreshIconCounts(true);
+        refreshIconCounts();
 
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
@@ -344,7 +344,7 @@ public class ReaderPostDetailFragment extends Fragment
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged()) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
-                    refreshIconCounts(true);
+                    refreshIconCounts();
                 }
                 // refresh likes if necessary - done regardless of whether the post has changed
                 // since it's possible likes weren't stored until the post was updated
@@ -357,7 +357,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderPostActions.updatePost(mPost, resultListener);
     }
 
-    private void refreshIconCounts(boolean animateChanges) {
+    private void refreshIconCounts() {
         if (!isAdded() || !hasPost()) {
             return;
         }
@@ -366,7 +366,7 @@ public class ReaderPostDetailFragment extends Fragment
         final ReaderIconCountView countComments = (ReaderIconCountView) getView().findViewById(R.id.count_comments);
 
         if (mPost.isWP() && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
-            countComments.setCount(mPost.numReplies, animateChanges);
+            countComments.setCount(mPost.numReplies);
             countComments.setVisibility(View.VISIBLE);
             countComments.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -380,7 +380,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         if (mPost.isLikesEnabled) {
-            countLikes.setCount(mPost.numLikes, animateChanges);
+            countLikes.setCount(mPost.numLikes);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
             if (mIsLoggedOutReader) {
@@ -587,6 +587,10 @@ public class ReaderPostDetailFragment extends Fragment
                 return;
             }
 
+            if (!canShowFooter()) {
+                mLayoutFooter.setVisibility(View.GONE);
+            }
+
             // scrollView was hidden in onCreateView, show it now that we have the post
             mScrollView.setVisibility(View.VISIBLE);
 
@@ -661,12 +665,11 @@ public class ReaderPostDetailFragment extends Fragment
                 imgMore.setVisibility(View.GONE);
             }
 
-            // show the footer if it's not already showing
-            if (mLayoutFooter.getVisibility() != View.VISIBLE) {
+            if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
                 AniUtils.fadeIn(mLayoutFooter, AniUtils.Duration.LONG);
             }
 
-            refreshIconCounts(false);
+            refreshIconCounts();
         }
     }
 
