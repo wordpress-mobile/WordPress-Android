@@ -82,6 +82,7 @@
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_featured"
+            android:layout_marginBottom="@dimen/margin_small"
             style="@style/ReaderImageView.Featured" />
 
         <org.wordpress.android.widgets.WPTextView
