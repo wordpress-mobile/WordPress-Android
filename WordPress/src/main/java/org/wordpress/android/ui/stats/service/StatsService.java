@@ -66,7 +66,7 @@ public class StatsService extends Service {
         INSIGHTS_ALL_TIME,
         INSIGHTS_TODAY,
         INSIGHTS_LATEST_POST_SUMMARY,
-        POST;
+        INSIGHTS_LATEST_POST_VIEWS;
 
         public String getRestEndpointPath() {
             switch (this) {
@@ -106,6 +106,8 @@ public class StatsService extends Service {
                     return "summary";
                 case INSIGHTS_LATEST_POST_SUMMARY:
                     return "posts";
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    return "post";
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + this.name());
                     return "";
@@ -307,6 +309,10 @@ public class StatsService extends Service {
                 case INSIGHTS_LATEST_POST_SUMMARY:
                     // This is an edge cases since  we're not loading stats but posts
                     path = String.format("/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath() + "?order_by=date&number=1&type=post");
+                    break;
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    // This is a kind of edge case, since we used the pageRequested parameter to request a single postID
+                    path = String.format(path + "/%s?fields=views", pageRequested);
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());

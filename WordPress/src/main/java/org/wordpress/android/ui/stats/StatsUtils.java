@@ -410,7 +410,10 @@ public class StatsUtils {
                 break;
             case INSIGHTS_LATEST_POST_SUMMARY:
                 model = new InsightsLatestPostModel(blogID, response);
-            break;
+                break;
+            case INSIGHTS_LATEST_POST_VIEWS:
+                model = response.getInt("views");
+                break;
         }
         return model;
     }

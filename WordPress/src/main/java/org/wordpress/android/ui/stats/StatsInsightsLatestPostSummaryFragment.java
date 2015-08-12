@@ -1,14 +1,9 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,33 +11,55 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
-
-import java.lang.ref.WeakReference;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsightsFragment {
     public static final String TAG = StatsInsightsLatestPostSummaryFragment.class.getSimpleName();
 
-    private Handler mHandler = new Handler();
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        return view;
+    public void onEventMainThread(StatsEvents.SectionUpdated event) {
+        if (!isAdded()) {
+            return;
+        }
+
+        // This is just an optimization
+        if (event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS &&
+                event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY) {
+            return;
+        }
+
+        if (event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS) {
+            super.onEventMainThread(event);
+        } else {
+            // Another check that the main data is available. It should be at this point!!
+            if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
+                showErrorUI(null);
+                return;
+            }
+
+            // The response should be not null or error, and should be of Integer type
+            if (event.mResponseObjectModel instanceof VolleyError ||
+                    event.mResponseObjectModel instanceof StatsError) {
+                showErrorUI(mDatamodels[0]);
+                return;
+            }
+
+            if (event.mResponseObjectModel == null ||
+                    !(event.mResponseObjectModel instanceof Integer)) {
+                showErrorUI(null);
+                return;
+            }
+            final InsightsLatestPostModel latestPostModel = (InsightsLatestPostModel) mDatamodels[0];
+            latestPostModel.setPostViewsCount((int) event.mResponseObjectModel);
+            updateUI();
+        }
     }
 
     void customizeUIWithResults() {
@@ -51,7 +68,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
         mResultContainer.removeAllViews();
 
-        // Another check that the data is available
+        // Another check that the data is available. Doesn't hurt.
         if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
             showErrorUI(null);
             return;
@@ -65,20 +82,15 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             mainView.setVisibility(latestPostModel.isLatestPostAvailable() ? View.VISIBLE : View.GONE);
         }
         if (!latestPostModel.isLatestPostAvailable()) {
-            // No need to go further into UI updating
+            // No need to go further into UI updating. There are no posts on this blog!?!
             return;
         }
 
-        // Check if the we already have the number of views for this post
+        // Check if the we already have the number of views for the latest post
         if (latestPostModel.getPostViewsCount() == Integer.MIN_VALUE) {
-            // we don't have the views count. Need to call the server again.
-            final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
-
-            final String singlePostRestPath = String.format(
-                    "/sites/%s/stats/post/%s?fields=views", latestPostModel.getBlogID(), latestPostModel.getPostID());
-            //AppLog.d(AppLog.T.STATS, "Enqueuing the following  request " + singlePostRestPath);
-            RestCallListener vListener = new RestCallListener(getActivity());
-            restClientUtils.get(singlePostRestPath, vListener, vListener);
+            // we don't have the views count. Need to call the service again here
+            refreshStats(latestPostModel.getPostID(),
+                    new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS});
             showPlaceholderUI();
             return;
         }
@@ -87,7 +99,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         moduleTitle.setOnClickListener(ButtonsOnClickListener);
         moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
-        // update the tabs now and the text now
+        // update the tabs and the text now
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
                 .inflate(R.layout.stats_insights_latest_post_item, (ViewGroup) mResultContainer.getRootView(), false);
 
@@ -139,67 +151,6 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
 
         mResultContainer.addView(ll);
     }
-
-
-    private class RestCallListener implements RestRequest.Listener, RestRequest.ErrorListener {
-
-        private final WeakReference<Activity> mActivityRef;
-
-        public RestCallListener(Activity activity) {
-            mActivityRef = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void onResponse(final JSONObject response) {
-            if (mActivityRef.get() == null || mActivityRef.get().isFinishing() || !isAdded()) {
-                return;
-            }
-
-            final InsightsLatestPostModel latestPostModel = (InsightsLatestPostModel) mDatamodels[0];
-
-            // single background thread used to parse the response in BG.
-            ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-            parseResponseExecutor.submit(new Thread() {
-                @Override
-                public void run() {
-                    AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
-                    try {
-
-                        int view = response.getInt("views");
-                        latestPostModel.setPostViewsCount(view);
-                    } catch (JSONException e) {
-                        AppLog.e(AppLog.T.STATS, "Cannot parse the JSON response", e);
-                    }
-
-                    // Update the UI
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateUI();
-                        }
-                    });
-                }
-            });
-        }
-
-        @Override
-        public void onErrorResponse(final VolleyError volleyError) {
-            StatsUtils.logVolleyErrorDetails(volleyError);
-            if (mActivityRef.get() == null || mActivityRef.get().isFinishing() || !isAdded()) {
-                return;
-            }
-            InsightsLatestPostModel latestPostModel = (InsightsLatestPostModel) mDatamodels[0];
-            latestPostModel.setPostViewsCount(0);
-            // Update the UI
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    updateUI();
-                }
-            });
-        }
-    }
-
 
     private void setupTab(LinearLayout currentTab, String total, final StatsVisitorsAndViewsFragment.OverviewLabel itemType) {
         final TextView label;
@@ -266,7 +217,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     @Override
     protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
-                StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY
+                StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY,
         };
     }
 

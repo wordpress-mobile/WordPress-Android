@@ -399,7 +399,7 @@ public class StatsActivity extends AppCompatActivity
             }
 
             if (fm.findFragmentByTag(StatsInsightsLatestPostSummaryFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_LATEST_POST_SUMMARY, mLocalBlogID, StatsTimeframe.DAY, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_LATEST_POST_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_insights_latest_post_summary_container, fragment, StatsInsightsTodayFragment.TAG);
             }
 
