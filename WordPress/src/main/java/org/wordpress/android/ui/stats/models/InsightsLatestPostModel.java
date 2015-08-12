@@ -75,8 +75,8 @@ public class InsightsLatestPostModel implements Serializable {
         return mPostViewsCount;
     }
 
-    public void setPostViewsCount(int mPostViewsCount) {
-        this.mPostViewsCount = mPostViewsCount;
+    public void setPostViewsCount(int postViewsCount) {
+        this.mPostViewsCount = postViewsCount;
     }
 
     public int getPostCommentCount() {

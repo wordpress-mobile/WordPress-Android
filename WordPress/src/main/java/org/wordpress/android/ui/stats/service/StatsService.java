@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;

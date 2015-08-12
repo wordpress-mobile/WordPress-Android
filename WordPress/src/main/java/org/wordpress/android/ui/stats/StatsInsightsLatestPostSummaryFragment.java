@@ -38,16 +38,15 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         if (event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS) {
             super.onEventMainThread(event);
         } else {
-            // Another check that the main data is available. It should be at this point!!
+            // Another additional check. It ensures that the main data is available, and it should be at this point!!
             if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
                 showErrorUI(null);
                 return;
             }
 
-            // The response should be not null or error, and should be of Integer type
             if (event.mResponseObjectModel instanceof VolleyError ||
                     event.mResponseObjectModel instanceof StatsError) {
-                showErrorUI(mDatamodels[0]);
+                showErrorUI(event.mResponseObjectModel);
                 return;
             }
 
@@ -68,7 +67,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
         mResultContainer.removeAllViews();
 
-        // Another check that the data is available. Doesn't hurt.
+        // Another additional check. It ensures that the data is available.
         if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
             showErrorUI(null);
             return;
@@ -76,17 +75,18 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
 
         final InsightsLatestPostModel latestPostModel = (InsightsLatestPostModel) mDatamodels[0];
 
-        // check if the latest post is available on the blog
+        // check if there are posts "published" on the blog
         View mainView = getView();
         if (mainView != null) {
             mainView.setVisibility(latestPostModel.isLatestPostAvailable() ? View.VISIBLE : View.GONE);
         }
         if (!latestPostModel.isLatestPostAvailable()) {
-            // No need to go further into UI updating. There are no posts on this blog!?!
+            // No need to go further into UI updating. There are no posts on this blog and the
+            // entire fragment is hidden.
             return;
         }
 
-        // Check if the we already have the number of views for the latest post
+        // Check if we already have the number of "views" for the latest post
         if (latestPostModel.getPostViewsCount() == Integer.MIN_VALUE) {
             // we don't have the views count. Need to call the service again here
             refreshStats(latestPostModel.getPostID(),
@@ -116,11 +116,11 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         startIndex = trendLabelFormatted.indexOf(latestPostModel.getPostTitle());
         endIndex = startIndex + latestPostModel.getPostTitle().length() +1;
 
-        Spannable wordtoSpan = new SpannableString(trendLabelFormatted);
-        wordtoSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.stats_link_text_color)),
+        Spannable descriptionTextToSpan = new SpannableString(trendLabelFormatted);
+        descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.stats_link_text_color)),
                 startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView trendLabelTextField = (TextView) ll.findViewById(R.id.stats_post_trend_label);
-        trendLabelTextField.setText(wordtoSpan);
+        trendLabelTextField.setText(descriptionTextToSpan);
         trendLabelTextField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
