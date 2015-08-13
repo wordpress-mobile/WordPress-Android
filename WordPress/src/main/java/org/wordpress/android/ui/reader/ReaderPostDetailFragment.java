@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,9 +29,11 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
@@ -72,7 +73,6 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsLoggedOutReader;
     private int mToolbarHeight;
 
-    private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
     private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
@@ -118,9 +118,6 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
-            mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
-        }
         if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
             mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
         }
@@ -286,6 +283,33 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+        }
+    }
+
+    /*
+     * user tapped follow button to follow/unfollow the blog this post is from
+     */
+    private void togglePostFollowed() {
+        if (!isAdded() || !hasPost()) {
+            return;
+        }
+
+        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(mPost);
+        final ReaderFollowButton followButton = (ReaderFollowButton) getView().findViewById(R.id.follow_button);
+
+        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (isAdded() && !succeeded) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(getActivity(), resId);
+                    followButton.setIsFollowedAnimated(!isAskingToFollow);
+                }
+            }
+        };
+
+        if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, listener)) {
+            followButton.setIsFollowedAnimated(isAskingToFollow);
         }
     }
 
@@ -514,7 +538,7 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtBlogName;
         TextView txtDateLine;
         TextView txtTag;
-        ImageView imgMore;
+        ReaderFollowButton followButton;
         ViewGroup layoutHeader;
         WPNetworkImageView imgAvatar;
 
@@ -565,9 +589,8 @@ public class ReaderPostDetailFragment extends Fragment
             txtTag = (TextView) container.findViewById(R.id.text_tag);
 
             layoutHeader = (ViewGroup) container.findViewById(R.id.layout_post_detail_header);
-
+            followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
-            imgMore = (ImageView) container.findViewById(R.id.image_more);
 
             return true;
         }
@@ -603,6 +626,14 @@ public class ReaderPostDetailFragment extends Fragment
             mRenderer.beginRender();
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
+
+            followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
+            followButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    togglePostFollowed();
+                }
+            });
 
             // clicking the header shows blog preview
             layoutHeader.setOnClickListener(new View.OnClickListener() {
@@ -659,21 +690,6 @@ public class ReaderPostDetailFragment extends Fragment
                         ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
                     }
                 });
-            }
-
-
-            if (mOnPopupListener != null) {
-                imgMore.setVisibility(View.VISIBLE);
-                imgMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mOnPopupListener != null) {
-                            mOnPopupListener.onShowPostPopup(view, mPost);
-                        }
-                    }
-                });
-            } else {
-                imgMore.setVisibility(View.GONE);
             }
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {

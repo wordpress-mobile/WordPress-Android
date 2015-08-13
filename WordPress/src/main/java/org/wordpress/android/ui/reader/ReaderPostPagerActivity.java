@@ -2,49 +2,37 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AniUtils.AnimationEndListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -56,8 +44,7 @@ import de.greenrobot.event.EventBus;
  * post detail
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
-        implements ReaderInterfaces.OnPostPopupListener,
-                   ReaderInterfaces.AutoHideToolbarListener {
+        implements ReaderInterfaces.AutoHideToolbarListener {
 
     private WPViewPager mViewPager;
     private ProgressBar mProgress;
@@ -230,7 +217,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     /*
-     * "bumps" the pageview for the post at the passed position if it hasn't already been done
+     * "bumps" the page view for the post at the passed position if it hasn't already been done
      */
     private void bumpPageViewIfNeeded(int position) {
         if (!mBumpedPageViewPositions.contains(position) && hasPagerAdapter()) {
@@ -321,139 +308,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         } else {
             return null;
         }
-    }
-
-    /*
-     * user tapped the "..." icon in a detail fragment
-     */
-    @Override
-    public void onShowPostPopup(View view, final ReaderPost post) {
-        if (view == null || post == null) {
-            return;
-        }
-
-        Context context = view.getContext();
-        final ListPopupWindow listPopup = new ListPopupWindow(context);
-        listPopup.setAnchorView(view);
-        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-        listPopup.setModal(true);
-
-        List<Integer> menuItems = new ArrayList<>();
-        boolean isFollowed = ReaderPostTable.isPostFollowed(post);
-        if (isFollowed) {
-            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
-        } else {
-            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
-        }
-        if (!mIsSinglePostView) {
-            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
-        }
-        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
-        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listPopup.dismiss();
-                switch ((int) id) {
-                    case ReaderMenuAdapter.ITEM_FOLLOW:
-                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
-                        toggleFollowStatusForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_BLOCK:
-                        blockBlogForPost(post.blogId, post.postId);
-                        break;
-                }
-            }
-        });
-        listPopup.show();
-    }
-
-    /*
-     * change the follow state of the blog the current post is in
-     */
-    private void toggleFollowStatusForPost(ReaderPost post) {
-        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(post);
-
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!succeeded && !isFinishing()) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(ReaderPostPagerActivity.this, resId);
-                }
-            }
-        };
-
-        ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener);
-    }
-
-    /*
-     * blocks the blog associated with the passed post and removes all posts in that blog
-     */
-    private void blockBlogForPost(final long blogId, final long postId) {
-        if (!NetworkUtils.checkConnection(this)) {
-            return;
-        }
-
-        Fragment fragment = getActivePagerFragment();
-        if (fragment == null) {
-            return;
-        }
-
-        // perform call to block this blog - returns list of posts deleted by blocking so
-        // they can be restored if the user undoes the block
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!succeeded && !isFinishing()) {
-                    ToastUtils.showToast(
-                            ReaderPostPagerActivity.this,
-                            R.string.reader_toast_err_block_blog,
-                            ToastUtils.Duration.LONG);
-                }
-            }
-        };
-        final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
-
-        // animate out the active fragment
-        AnimationEndListener animEndListener = new AnimationEndListener() {
-            @Override
-            public void onAnimationEnd() {
-                blockBlogForPostCompleted(blogId, postId, blockResult);
-            }
-        };
-        AniUtils.scaleOut(fragment.getView(), View.INVISIBLE, AniUtils.Duration.SHORT, animEndListener);
-    }
-
-    /*
-     * called after successfully blocking a blog and animating out the active fragment
-     */
-    private void blockBlogForPostCompleted(final long blogId,
-                                           final long postId,
-                                           final BlockedBlogResult blockResult) {
-        if (isFinishing()) {
-            return;
-        }
-
-        // show the undo snackbar - on undo we restore the deleted posts, and reselect the
-        // one the blog was blocked from
-        View.OnClickListener undoListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReaderBlogActions.undoBlockBlogFromReader(blockResult);
-                loadPosts(blogId, postId);
-            }
-        };
-        Snackbar.make(findViewById(R.id.root_view), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, undoListener)
-                .show();
-
-        // reload the adapter and move to the best post not in the blocked blog
-        int position = mViewPager.getCurrentItem();
-        ReaderBlogIdPostId newId = (hasPagerAdapter() ? getPagerAdapter().getBestIdNotInBlog(position, blogId) : null);
-        long newBlogId = (newId != null ? newId.getBlogId() : 0);
-        long newPostId = (newId != null ? newId.getPostId() : 0);
-        loadPosts(newBlogId, newPostId);
     }
 
     /*
@@ -626,36 +480,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             } else {
                 return null;
             }
-        }
-
-        /*
-         * returns the id pair of the previous/next post that isn't in the same blog
-         * as the one at the passed position
-         */
-        private ReaderBlogIdPostId getBestIdNotInBlog(int position, long blogId) {
-            if (!isValidPosition(position)) {
-                return null;
-            }
-
-            // search backwards
-            if (position > 0) {
-                for (int index = position - 1; index >= 0; index--) {
-                    if (mIdList.get(index).getBlogId() != blogId) {
-                        return mIdList.get(index);
-                    }
-                }
-            }
-
-            // search forwards
-            if (position < getCount() - 1) {
-                for (int index = position + 1; index < getCount(); index++) {
-                    if (mIdList.get(index).getBlogId() != blogId) {
-                        return mIdList.get(index);
-                    }
-                }
-            }
-
-            return null;
         }
     }
 }

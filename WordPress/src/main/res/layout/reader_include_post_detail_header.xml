@@ -14,6 +14,7 @@
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_avatar"
         style="@style/ReaderImageView.Avatar"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/margin_large"
         tools:src="@drawable/gravatar_placeholder" />
@@ -21,7 +22,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/image_more"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/follow_button"
         android:layout_toRightOf="@+id/image_avatar"
         android:orientation="vertical">
 
@@ -50,11 +52,12 @@
             tools:text="text_dateline" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/image_more"
-        style="@style/ReaderImageView.More"
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/follow_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginRight="@dimen/reader_detail_margin" />
 
