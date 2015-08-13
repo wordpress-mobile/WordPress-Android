@@ -52,16 +52,10 @@
 
     <ImageView
         android:id="@+id/image_more"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        style="@style/ReaderImageView.More"
         android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/reader_detail_margin"
-        android:background="?android:selectableItemBackground"
-        android:paddingBottom="@dimen/margin_small"
-        android:paddingTop="@dimen/margin_small"
-        android:src="@drawable/ic_action_more"
-        android:tint="@color/grey_lighten_10" />
+        android:layout_marginRight="@dimen/reader_detail_margin" />
 
 </RelativeLayout>

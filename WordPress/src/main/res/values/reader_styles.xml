@@ -131,6 +131,17 @@
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
     </style>
+    <style name="ReaderImageView.More" parent="ReaderImageView">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:paddingLeft">@dimen/margin_medium</item>
+        <item name="android:paddingRight">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:src">@drawable/ic_action_more</item>
+        <item name="android:tint">@color/grey_lighten_10</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+    </style>
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
