@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -8,6 +9,7 @@ import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,7 +100,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+        View view = super.onCreateView(localInflater, container, savedInstanceState);
 
         // Setup the preferences to handled long clicks
         if (view != null) {

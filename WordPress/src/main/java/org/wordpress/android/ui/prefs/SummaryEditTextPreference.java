@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.widgets.TypefaceCache;
 
 /**
  * Standard EditTextPreference that has attributes to limit summary length.
@@ -64,11 +67,35 @@ public class SummaryEditTextPreference extends EditTextPreference
     public void onBindView(@NonNull View view) {
         super.onBindView(view);
 
-        TextView summary = (TextView) view.findViewById(android.R.id.summary);
-        if (summary != null) {
-            summary.setEllipsize(TextUtils.TruncateAt.END);
-            if (mLines != -1) summary.setLines(mLines);
-            if (mMaxLines != -1) summary.setMaxLines(mMaxLines);
+        Resources res = getContext().getResources();
+        TextView titleView = (TextView) view.findViewById(android.R.id.title);
+        TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
+        Typeface font = TypefaceCache.getTypeface(getContext(),
+                TypefaceCache.FAMILY_OPEN_SANS,
+                Typeface.NORMAL,
+                TypefaceCache.VARIATION_NORMAL);
+
+        if (titleView != null) {
+            if (isEnabled()) {
+                titleView.setTextColor(res.getColor(R.color.grey_dark));
+            } else {
+                titleView.setTextColor(res.getColor(R.color.grey_lighten_10));
+            }
+            titleView.setTextSize(16);
+            titleView.setTypeface(font);
+        }
+
+        if (summaryView != null) {
+            if (isEnabled()) {
+                summaryView.setTextColor(res.getColor(R.color.grey_darken_10));
+            } else {
+                summaryView.setTextColor(res.getColor(R.color.grey_lighten_10));
+            }
+            summaryView.setTextSize(14);
+            summaryView.setTypeface(font);
+            summaryView.setEllipsize(TextUtils.TruncateAt.END);
+            if (mLines != -1) summaryView.setLines(mLines);
+            if (mMaxLines != -1) summaryView.setMaxLines(mMaxLines);
         }
     }
 

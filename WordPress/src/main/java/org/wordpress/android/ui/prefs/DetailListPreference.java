@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -62,6 +63,39 @@ public class DetailListPreference extends ListPreference
         mSelectedIndex = 0;
         mDetails = null;
         setLayoutResource(R.layout.detail_list_preference);
+    }
+
+    @Override
+    protected void onBindView(@NonNull View view) {
+        super.onBindView(view);
+
+        Resources res = getContext().getResources();
+        TextView titleView = (TextView) view.findViewById(android.R.id.title);
+        TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
+        Typeface font = TypefaceCache.getTypeface(getContext(),
+                TypefaceCache.FAMILY_OPEN_SANS,
+                Typeface.NORMAL,
+                TypefaceCache.VARIATION_NORMAL);
+
+        if (titleView != null) {
+            if (isEnabled()) {
+                titleView.setTextColor(res.getColor(R.color.grey_dark));
+            } else {
+                titleView.setTextColor(res.getColor(R.color.grey_lighten_10));
+            }
+            titleView.setTextSize(16);
+            titleView.setTypeface(font);
+        }
+
+        if (summaryView != null) {
+            if (isEnabled()) {
+                summaryView.setTextColor(res.getColor(R.color.grey_darken_10));
+            } else {
+                summaryView.setTextColor(res.getColor(R.color.grey_lighten_10));
+            }
+            summaryView.setTextSize(14);
+            summaryView.setTypeface(font);
+        }
     }
 
     @Override
