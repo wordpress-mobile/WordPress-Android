@@ -360,14 +360,14 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void refreshIconCounts() {
-        if (!isAdded() || !hasPost()) {
+        if (!isAdded() || !hasPost() || !canShowFooter()) {
             return;
         }
 
         final ReaderIconCountView countLikes = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
         final ReaderIconCountView countComments = (ReaderIconCountView) getView().findViewById(R.id.count_comments);
 
-        if (mPost.isWP() && !mPost.isJetpack && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
+        if (canShowCommentCount()) {
             countComments.setCount(mPost.numReplies);
             countComments.setVisibility(View.VISIBLE);
             countComments.setOnClickListener(new View.OnClickListener() {
@@ -381,13 +381,13 @@ public class ReaderPostDetailFragment extends Fragment
             countComments.setOnClickListener(null);
         }
 
-        if (mPost.isLikesEnabled) {
+        if (canShowLikeCount()) {
             countLikes.setCount(mPost.numLikes);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
             if (mIsLoggedOutReader) {
                 countLikes.setEnabled(false);
-            } else {
+            } else if (mPost.isLikesEnabled) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -850,10 +850,24 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * footer icons don't appear for feeds or discover posts or when logged out
+     * can we show the footer bar which contains the like & comment counts?
      */
     private boolean canShowFooter() {
-        return !(mPost == null || mPost.isExternal || mPost.isDiscoverPost() || mIsLoggedOutReader);
+        return canShowLikeCount() || canShowCommentCount();
+    }
+
+    private boolean canShowCommentCount() {
+        return mPost != null
+                && mPost.isWP()
+                && !mPost.isJetpack
+                && !mPost.isDiscoverPost()
+                && (mPost.isCommentsOpen || mPost.numReplies > 0);
+    }
+
+    private boolean canShowLikeCount() {
+        return mPost != null
+                && !mPost.isDiscoverPost()
+                && mPost.isLikesEnabled;
     }
 
 }
