@@ -8,7 +8,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_small"
         android:paddingBottom="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/content_margin"
         android:layout_marginRight="@dimen/content_margin"
@@ -22,7 +22,7 @@
             android:textSize="@dimen/text_sz_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"/>
+            android:gravity="start"/>
 
     </LinearLayout>
 

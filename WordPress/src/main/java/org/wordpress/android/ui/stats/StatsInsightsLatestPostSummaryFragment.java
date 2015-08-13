@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
@@ -96,7 +97,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
 
         TextView moduleTitle = (TextView) mainView.findViewById(R.id.stats_module_title);
-        moduleTitle.setOnClickListener(ButtonsOnClickListener);
+        moduleTitle.setOnClickListener(ViewsTabOnClickListener);
         moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
         // update the tabs and the text now
@@ -107,14 +108,15 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         String sinceLabel = StatsUtils.getSinceLabel(
                 getActivity(),
                 latestPostModel.getPostDate()
-        );
+        ).toLowerCase();
 
+        String postTitle = StringEscapeUtils.unescapeHtml(latestPostModel.getPostTitle());
         final String trendLabelFormatted = String.format(
-                trendLabel, sinceLabel, latestPostModel.getPostTitle());
+                trendLabel, sinceLabel, postTitle);
 
         int startIndex, endIndex;
-        startIndex = trendLabelFormatted.indexOf(latestPostModel.getPostTitle());
-        endIndex = startIndex + latestPostModel.getPostTitle().length() +1;
+        startIndex = trendLabelFormatted.indexOf(postTitle);
+        endIndex = startIndex + postTitle.length() +1;
 
         Spannable descriptionTextToSpan = new SpannableString(trendLabelFormatted);
         descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.stats_link_text_color)),
@@ -158,14 +160,30 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         final ImageView icon;
 
         currentTab.setTag(itemType);
-        currentTab.setOnClickListener(ButtonsOnClickListener);
+        // Only Views is clickable here
+        if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS) {
+            currentTab.setOnClickListener(ViewsTabOnClickListener);
+        } else {
+            currentTab.setClickable(false);
+        }
 
         label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
         label.setText(itemType.getLabel());
+        label.setTextColor(getResources().getColor(R.color.grey_darken_20));
         value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
-        label.setTextColor(getResources().getColor(R.color.grey_darken_20));
-        value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+        if (total.equals("0")) {
+            value.setTextColor(getResources().getColor(R.color.grey));
+        } else {
+            // Only Views is clickable here.
+            // Likes and Comments shouldn't link anywhere because they don't have summaries
+            // so their color should be Gray Darken 30 or #3d596d
+            if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS) {
+                value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+            } else {
+                value.setTextColor(getResources().getColor(R.color.grey_darken_30));
+            }
+        }
         icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
         icon.setImageDrawable(getTabIcon(itemType));
 
@@ -176,7 +194,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
     }
 
-    private final View.OnClickListener ButtonsOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener ViewsTabOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {

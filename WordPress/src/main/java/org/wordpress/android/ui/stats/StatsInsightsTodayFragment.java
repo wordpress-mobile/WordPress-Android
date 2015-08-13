@@ -103,10 +103,14 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
 
         label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
         label.setText(itemType.getLabel());
+        label.setTextColor(getResources().getColor(R.color.grey_darken_20));
         value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
-        label.setTextColor(getResources().getColor(R.color.grey_darken_20));
-        value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+        if (total.equals("0")) {
+            value.setTextColor(getResources().getColor(R.color.grey));
+        } else {
+            value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+        }
         icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
         icon.setImageDrawable(getTabIcon(itemType));
 
