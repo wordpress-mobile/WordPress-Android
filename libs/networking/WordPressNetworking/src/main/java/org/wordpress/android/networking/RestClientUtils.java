@@ -9,6 +9,7 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.RequestFuture;
+import com.wordpress.rest.JsonRestRequest;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 import com.wordpress.rest.RestRequest.ErrorListener;
@@ -281,7 +282,8 @@ public class RestClientUtils {
      * Make POST request
      */
     public void post(String path, Listener listener, ErrorListener errorListener) {
-        post(path, null, null, listener, errorListener);
+        Map<String, String> params = null;
+        post(path, params, null, listener, errorListener);
     }
 
     /**
@@ -290,10 +292,26 @@ public class RestClientUtils {
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
         final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params,
-                                                            listener, errorListener);
+                listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
-                                                 REST_BACKOFF_MULT); //Do not retry on failure
+                    REST_BACKOFF_MULT); //Do not retry on failure
+        }
+        request.setRetryPolicy(retryPolicy);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        authCheck.send();
+    }
+
+    /**
+     * Make a JSON POST request
+     */
+    public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
+                     ErrorListener errorListener) {
+        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path), params,
+                listener, errorListener);
+        if (retryPolicy == null) {
+            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
+                    REST_BACKOFF_MULT); //Do not retry on failure
         }
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
