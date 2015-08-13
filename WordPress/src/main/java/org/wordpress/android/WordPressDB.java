@@ -430,13 +430,26 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields) {
-        return getBlogsBy(byString, extraFields, 0);
+        return getBlogsBy(byString, extraFields, 0, true);
     }
 
-    public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields, int limit) {
+    public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields,
+                                                int limit, boolean shouldHideJetpack) {
         if (db == null) {
-            return new Vector<Map<String, Object>>();
+            return new Vector<>();
         }
+
+        if (shouldHideJetpack) {
+            // Hide Jetpack blogs that were added in FetchBlogListWPCom
+            // They will have a false dotcomFlag and an empty (but encrypted) password
+            String hideJetpackArgs = String.format("NOT(dotcomFlag=0 AND password='%s')", encryptPassword(""));
+            if (TextUtils.isEmpty(byString)) {
+                byString = hideJetpackArgs;
+            } else {
+                byString = hideJetpackArgs + " AND " + byString;
+            }
+        }
+
         String limitStr = null;
         if (limit != 0) {
             limitStr = String.valueOf(limit);
@@ -449,7 +462,7 @@ public class WordPressDB {
         Cursor c = db.query(BLOGS_TABLE, allFields, byString, null, null, null, null, limitStr);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<Map<String, Object>>();
+        List<Map<String, Object>> blogs = new Vector<>();
         for (int i = 0; i < numRows; i++) {
             int id = c.getInt(0);
             String blogName = c.getString(1);
@@ -457,19 +470,19 @@ public class WordPressDB {
             int blogId = c.getInt(3);
             String url = c.getString(4);
             if (id > 0) {
-                Map<String, Object> thisHash = new HashMap<String, Object>();
-                thisHash.put("id", id);
-                thisHash.put("blogName", blogName);
-                thisHash.put("username", username);
-                thisHash.put("blogId", blogId);
-                thisHash.put("url", url);
+                Map<String, Object> blogMap = new HashMap<>();
+                blogMap.put("id", id);
+                blogMap.put("blogName", blogName);
+                blogMap.put("username", username);
+                blogMap.put("blogId", blogId);
+                blogMap.put("url", url);
                 int extraFieldsIndex = baseFields.length;
                 if (extraFields != null) {
                     for (int j = 0; j < extraFields.length; ++j) {
-                        thisHash.put(extraFields[j], c.getString(extraFieldsIndex + j));
+                        blogMap.put(extraFields[j], c.getString(extraFieldsIndex + j));
                     }
                 }
-                blogs.add(thisHash);
+                blogs.add(blogMap);
             }
             c.moveToNext();
         }

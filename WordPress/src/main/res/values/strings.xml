@@ -403,8 +403,12 @@
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
+    <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
+    <string name="pref_notification_other_blogs" translatable="false">wp_pref_notification_other_blogs</string>
     <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
-    <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
+    <string name="pref_notification_account_emails" translatable="false">wp_pref_notification_account_emails</string>
+    <string name="pref_notification_sights_sounds" translatable="false">wp_pref_notification_sights_sounds</string>
+    <string name="pref_key_notification_site_settings" translatable="false">wp_pref_notification_site_settings</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
@@ -582,13 +586,6 @@
 
     <!-- notifications -->
     <string name="notifications">Notifications</string>
-    <string name="manage_notifications">Manage notifications</string>
-    <string name="enable_notifications">Enable notifications</string>
-    <string name="types">Types</string>
-    <string name="options">Options</string>
-    <string name="notifications_turn_off">Turn off</string>
-    <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
-    <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
     <string name="note_reply_successful">Reply published</string>
     <string name="new_notifications">%d new notifications</string>
     <string name="more_notifications">and %d more.</string>
@@ -600,7 +597,67 @@
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
-    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
+    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string><string name="notifications_updates_from_wordpress">Updates from WordPress.com</string>
+
+    <!-- Notification Settings -->
+    <string name="notification_settings">Notification Settings</string>
+    <string name="notifications_sights_and_sounds">Sights and Sounds</string>
+    <string name="your_sites">Your Sites</string>
+    <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
+    <string name="notifications_account_emails">Updates from WordPress.com</string>
+    <string name="notifications_wpcom_updates">WordPress.com Updates</string>
+    <string name="notifications_other">Other</string>
+    <string name="notifications_comments_other_blogs">Comments on other sites</string>
+    <string name="notifications_tab">Notifications tab</string>
+    <string name="email">Email</string>
+    <string name="app_notifications">App notifications</string>
+    <string name="comment_likes">Comment likes</string>
+    <string name="replies_to_your_comments">Replies to your comments</string>
+    <string name="error_loading_notifications">Couldn\'t load notification settings</string>
+    <string name="notification_types">Notification Types</string>
+    <string name="notifications_disabled">App notifications have been disabled. Tap here to enable them in Settings.</string>
+    <string name="notifications_tab_summary">Settings for notifications that appear in the Notifications tab.</string>
+    <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
+    <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
+    <string-array name="notifications_blog_settings">
+        <item>Comments on my site</item>
+        <item>Likes on my comments</item>
+        <item>Likes on my posts</item>
+        <item>Site follows</item>
+        <item>Site achievements</item>
+        <item>Username mentions</item>
+    </string-array>
+    <string-array name="notifications_blog_settings_values" translatable="false">
+        <item>new_comment</item>
+        <item>comment_like</item>
+        <item>post_like</item>
+        <item>follow</item>
+        <item>achievement</item>
+        <item>mentions</item>
+    </string-array>
+    <string-array name="notifications_other_settings">
+        <item>Replies to my comments</item>
+        <item>Likes on my comments</item>
+    </string-array>
+    <string-array name="notifications_other_settings_values" translatable="false">
+        <item>comment_reply</item>
+        <item>comment_like</item>
+    </string-array>
+    <string-array name="notifications_wpcom_settings">
+        <item>Suggestions</item>
+        <item>Research</item>
+        <item>Community</item>
+    </string-array>
+    <string-array name="notifications_wpcom_settings_values" translatable="false">
+        <item>marketing</item>
+        <item>research</item>
+        <item>community</item>
+    </string-array>
+    <string-array name="notifications_wpcom_settings_summaries">
+        <item>Tips for getting the most out of WordPress.com.</item>
+        <item>Opportunities to participate in WordPress.com research &amp; surveys.</item>
+        <item>Information on WordPress.com courses and events (online &amp; in-person).</item>
+    </string-array>
 
     <!-- reader -->
     <string name="reader">Reader</string>
