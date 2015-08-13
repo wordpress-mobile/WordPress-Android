@@ -25,6 +25,14 @@ public class NotificationsSettings {
     private JSONObject mDotcomSettings;
     private Map<Long, JSONObject> mBlogSettings;
 
+    // The main notification settings channels (displayed at root of NoticationsSettingsFragment)
+    public enum Channel {
+        OTHER,
+        BLOGS,
+        DOTCOM
+    }
+
+    // The notification setting type, used in BLOGS and OTHER channels
     public enum Type {
         TIMELINE,
         EMAIL,
@@ -44,16 +52,11 @@ public class NotificationsSettings {
         }
     }
 
-    public enum Channel {
-        OTHER,
-        BLOGS,
-        DOTCOM
-    }
-
     public NotificationsSettings(JSONObject json) {
         updateJson(json);
     }
 
+    // Parses the json response from /me/notifications/settings endpoint and updates the instance variables
     public void updateJson(JSONObject json) {
         mBlogSettings = new HashMap<>();
 
@@ -71,6 +74,7 @@ public class NotificationsSettings {
         }
     }
 
+    // Updates a specific notification setting after a user makes a change
     public void updateSettingForChannelAndType(Channel channel, Type type, String settingName, boolean newValue, long blogId) {
         String typeName = type.toString();
         try {
