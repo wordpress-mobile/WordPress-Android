@@ -41,7 +41,7 @@ public class InsightsLatestPostModel implements Serializable {
         this.mPostURL = firstPostObject.getString("URL");
         this.mPostLikeCount = firstPostObject.getInt("like_count");
 
-        JSONObject discussionObject = response.optJSONObject("discussion");
+        JSONObject discussionObject = firstPostObject.optJSONObject("discussion");
         if (discussionObject != null) {
             this.mPostCommentCount = discussionObject.optInt("comment_count", 0);
         }
