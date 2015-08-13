@@ -1,25 +1,24 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.AlertDialog;
+import android.content.res.Resources;
+import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.net.Uri;
+import android.os.Bundle;
 import android.preference.ListPreference;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
-import org.wordpress.passcodelock.AppLockManager;
 
 /**
  * Custom {@link ListPreference} used to display detail text per item.
@@ -31,9 +30,9 @@ public class DetailListPreference extends ListPreference
     private String[] mDetails;
     private int mStartingIndex;
     private int mSelectedIndex;
-    private String mTitle;
     private String mHint;
-    private String mHelpUrl;
+    private AlertDialog mDialog;
+    private int mWhichButtonClicked;
 
     public DetailListPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -51,10 +50,6 @@ public class DetailListPreference extends ListPreference
                 }
             } else if (index == R.styleable.DetailListPreference_longClickHint) {
                 mHint = array.getString(index);
-            } else if (index == R.styleable.DetailListPreference_dialogTitle) {
-                mTitle = array.getString(index);
-            } else if (index == R.styleable.DetailListPreference_dialogHelpUrl) {
-                mHelpUrl = array.getString(index);
             }
         }
 
@@ -70,7 +65,20 @@ public class DetailListPreference extends ListPreference
     }
 
     @Override
-    protected void onPrepareDialogBuilder(@NonNull AlertDialog.Builder builder) {
+    protected void showDialog(Bundle state) {
+        Context context = getContext();
+        Resources res = context.getResources();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
+
+        mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mWhichButtonClicked = which;
+            }
+        });
+        builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
+
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
         mStartingIndex = mSelectedIndex = findIndexOfValue(getValue());
 
@@ -85,45 +93,57 @@ public class DetailListPreference extends ListPreference
                         }
                     }
                 });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                DetailListPreference.this.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
-            }
-        });
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
 
-        // Don't show the custom title view if there is no title or help URL
-        if (titleView != null && !TextUtils.isEmpty(mTitle) && !TextUtils.isEmpty(mHelpUrl)) {
+        if (titleView != null) {
             TextView titleText = (TextView) titleView.findViewById(R.id.title);
-            View infoView = titleView.findViewById(R.id.info_button);
-
-            if (infoView != null) {
-                if (TextUtils.isEmpty(mHelpUrl)) {
-                    infoView.setVisibility(View.GONE);
-                } else {
-                    infoView.setVisibility(View.VISIBLE);
-                    infoView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Uri uri = Uri.parse(mHelpUrl);
-                            AppLockManager.getInstance().setExtendedTimeout();
-                            getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                        }
-                    });
-                }
-            }
-
             if (titleText != null) {
-                titleText.setText(mTitle);
+                titleText.setText(getTitle());
             }
 
             builder.setCustomTitle(titleView);
         } else {
             builder.setTitle(getTitle());
         }
+
+        mDialog = builder.create();
+
+        if (mDialog != null) {
+            Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            Typeface typeface = TypefaceCache.getTypeface(getContext(),
+                    TypefaceCache.FAMILY_OPEN_SANS,
+                    Typeface.BOLD,
+                    TypefaceCache.VARIATION_NORMAL);
+
+            if (positive != null) {
+                positive.setTextColor(res.getColor(R.color.blue_medium));
+                positive.setTypeface(typeface);
+            }
+
+            if (negative != null) {
+                negative.setTextColor(res.getColor(R.color.blue_medium));
+                negative.setTypeface(typeface);
+            }
+
+            if (state != null) {
+                mDialog.onRestoreInstanceState(state);
+            }
+            mDialog.setOnDismissListener(this);
+            mDialog.show();
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        mWhichButtonClicked = which;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        mDialog = null;
+        onDialogClosed(mWhichButtonClicked == DialogInterface.BUTTON_POSITIVE);
     }
 
     @Override

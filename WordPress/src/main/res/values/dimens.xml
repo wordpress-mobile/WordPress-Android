@@ -125,8 +125,8 @@
     <dimen name="progress_bar_height">3dp</dimen>
 
     <!-- DetailListPreference -->
-    <dimen name="dlp_padding_start">16dp</dimen>
-    <dimen name="dlp_padding_end">4dp</dimen>
+    <dimen name="dlp_padding_start">18dp</dimen>
+    <dimen name="dlp_padding_end">24dp</dimen>
     <dimen name="dlp_padding_top">6dp</dimen>
     <dimen name="dlp_padding_bottom">6dp</dimen>
     <dimen name="dlp_radio_margin_top">4dp</dimen>

@@ -14,6 +14,7 @@
     android:paddingBottom="@dimen/dlp_padding_bottom">
 
     <RadioButton
+        android:buttonTint="@color/dialog_compound_button"
         android:id="@+id/radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,8 +35,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
             android:textColor="@color/grey_dark"
-            android:gravity="start"
-            style="@style/Calypso.Text.Header"
+            android:gravity="left"
             tools:text="Main Text" />
 
         <TextView
@@ -44,8 +44,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_small"
             android:textColor="@color/grey_darken_10"
-            android:gravity="start"
-            style="@style/Calypso.TextAppearance"
+            android:gravity="left"
             tools:text="Detail Text" />
 
     </LinearLayout>

@@ -91,7 +91,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/Calypso.SiteSettingsTheme"
             android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".ui.prefs.LicensesActivity"

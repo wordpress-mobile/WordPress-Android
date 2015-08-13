@@ -2,38 +2,20 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
     android:paddingTop="@dimen/dlp_title_padding_top"
     android:paddingBottom="@dimen/dlp_title_padding_bottom"
-    android:paddingLeft="@dimen/dlp_title_padding_start"
-    android:paddingStart="@dimen/dlp_title_padding_start"
-    android:paddingRight="@dimen/dlp_title_padding_end"
-    android:paddingEnd="@dimen/dlp_title_padding_end"
     android:gravity="center_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
+        style="@style/Calypso.TextAppearance.AlertDialog"
         android:id="@+id/title"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.DialogWindowTitle"
-        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
-
-    <ImageButton
-        android:id="@+id/info_button"
-        android:background="@drawable/dialog_info_button_background"
-        android:src="@drawable/stats_icon_info"
-        android:tint="@color/grey"
-        android:padding="@dimen/dlp_title_logo_padding"
-        android:visibility="gone"
-        android:layout_width="@dimen/dlp_title_logo_width"
-        android:layout_height="@dimen/dlp_title_logo_height"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:scaleType="centerInside" />
 
 </RelativeLayout>
