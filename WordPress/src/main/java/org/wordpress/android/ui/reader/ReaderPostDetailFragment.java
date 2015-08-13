@@ -70,6 +70,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
+    private int mToolbarHeight;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
     private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
@@ -123,6 +124,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
             mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
         }
+        mToolbarHeight = activity.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
     }
 
     @Override
@@ -819,7 +821,9 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollDown() {
-        if (mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
+        if (mScrollView.canScrollDown()
+                && mScrollView.canScrollUp()
+                && mScrollView.getScrollY() > mToolbarHeight) {
             showToolbar(false);
             showFooter(false);
         }
