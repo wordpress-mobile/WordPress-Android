@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
+        android:clipChildren="false"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -76,8 +77,8 @@
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_featured"
-            android:layout_marginBottom="@dimen/margin_small"
-            style="@style/ReaderImageView.Featured" />
+            style="@style/ReaderImageView.Featured"
+            android:layout_marginBottom="@dimen/margin_small" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
@@ -148,7 +149,8 @@
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
-            android:layout_marginTop="@dimen/margin_medium">
+            android:layout_marginTop="@dimen/margin_medium"
+            android:clipChildren="false">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_tag"
@@ -180,6 +182,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_small"
+                android:clipChildren="false"
                 wp:readerIcon="like" />
 
         </RelativeLayout>

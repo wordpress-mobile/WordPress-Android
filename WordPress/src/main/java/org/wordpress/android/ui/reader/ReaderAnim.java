@@ -22,11 +22,11 @@ public class ReaderAnim {
             return;
         }
 
-        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1.5f);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 2.5f);
         animX.setRepeatMode(ValueAnimator.REVERSE);
         animX.setRepeatCount(1);
 
-        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1.5f);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 2.5f);
         animY.setRepeatMode(ValueAnimator.REVERSE);
         animY.setRepeatCount(1);
 
@@ -49,7 +49,7 @@ public class ReaderAnim {
                 break;
         }
 
-        long durationMillis = AniUtils.Duration.SHORT.toMillis(target.getContext());
+        long durationMillis = AniUtils.Duration.LONG.toMillis(target.getContext());
         set.setDuration(durationMillis);
         set.setInterpolator(new AccelerateDecelerateInterpolator());
 
