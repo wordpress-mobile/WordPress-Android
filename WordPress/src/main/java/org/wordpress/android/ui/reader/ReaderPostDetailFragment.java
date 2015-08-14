@@ -45,6 +45,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.ScrollDirectionListener;
@@ -262,7 +263,7 @@ public class ReaderPostDetailFragment extends Fragment
      * changes the like on the passed post
      */
     private void togglePostLike() {
-        if (!isAdded() || !hasPost()) {
+        if (!isAdded() || !hasPost() || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
@@ -678,11 +679,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             final String tagToDisplay = mPost.getTagForDisplay(null);
             if (!TextUtils.isEmpty(tagToDisplay)) {
-                if (tagToDisplay.startsWith("#")) {
-                    txtTag.setText(tagToDisplay);
-                } else {
-                    txtTag.setText("#" + tagToDisplay);
-                }
+                txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
                 txtTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

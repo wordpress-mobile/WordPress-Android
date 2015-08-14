@@ -32,6 +32,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -243,11 +244,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // show the best tag for this post
         final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagName()) : null);
         if (!TextUtils.isEmpty(tagToDisplay)) {
-            if (tagToDisplay.startsWith("#")) {
-                postHolder.txtTag.setText(tagToDisplay);
-            } else {
-                postHolder.txtTag.setText("#" + tagToDisplay);
-            }
+            postHolder.txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
             postHolder.txtTag.setVisibility(View.VISIBLE);
             postHolder.txtTag.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -574,7 +571,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * triggered when user taps the like button (textView)
      */
     private void toggleLike(Context context, ReaderPostViewHolder holder, ReaderPost post) {
-        if (post == null) {
+        if (post == null || !NetworkUtils.checkConnection(context)) {
             return;
         }
 

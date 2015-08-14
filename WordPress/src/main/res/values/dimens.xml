@@ -94,8 +94,9 @@
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
-    <!-- like/comment icons in reader -->
+    <!-- like/comment/follow icons in reader -->
     <dimen name="reader_button_icon">24dp</dimen>
+    <dimen name="reader_follow_icon">16dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
