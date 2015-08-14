@@ -145,4 +145,18 @@ public class ReaderUtils {
             return 0;
         }
     }
+
+    /*
+     * returns the passed string prefixed with a "#" if it's non-empty and isn't already
+     * prefixed with a "#"
+     */
+    public static String makeHashTag(String tagName) {
+        if (TextUtils.isEmpty(tagName)) {
+            return "";
+        } else if (tagName.startsWith("#")) {
+            return tagName;
+        } else {
+            return "#" + tagName;
+        }
+    }
 }

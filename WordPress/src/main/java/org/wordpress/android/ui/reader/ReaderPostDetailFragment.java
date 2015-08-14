@@ -678,11 +678,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             final String tagToDisplay = mPost.getTagForDisplay(null);
             if (!TextUtils.isEmpty(tagToDisplay)) {
-                if (tagToDisplay.startsWith("#")) {
-                    txtTag.setText(tagToDisplay);
-                } else {
-                    txtTag.setText("#" + tagToDisplay);
-                }
+                txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
                 txtTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -22,6 +22,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.OnNavigateTagHistoryList
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.NetworkUtils;
 
 import javax.annotation.Nonnull;
@@ -92,7 +93,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
                     tag = ReaderTag.getDefaultTag();
                 }
                 if (tag != null) {
-                    title = tag.getHashTagName();
+                    title = ReaderUtils.makeHashTag(tag.getTagName());
                 }
                 showListFragmentForTag(tag, mPostListType);
             }
@@ -209,7 +210,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
     @Override
     public void onNavigateTagHistory(ReaderTag newTag) {
         updateFollowMenu();
-        setTitle(newTag.getHashTagName());
+        setTitle(ReaderUtils.makeHashTag(newTag.getTagName()));
     }
 
     @Override
