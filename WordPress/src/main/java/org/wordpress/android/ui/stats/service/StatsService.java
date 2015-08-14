@@ -307,7 +307,8 @@ public class StatsService extends Service {
                     break;
                 case INSIGHTS_LATEST_POST_SUMMARY:
                     // This is an edge cases since  we're not loading stats but posts
-                    path = String.format("/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath() + "?order_by=date&number=1&type=post");
+                    path = String.format("/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath()
+                            + "?order_by=date&number=1&type=post&fields=ID,title,URL,discussion,like_count,date");
                     break;
                 case INSIGHTS_LATEST_POST_VIEWS:
                     // This is a kind of edge case, since we used the pageRequested parameter to request a single postID
