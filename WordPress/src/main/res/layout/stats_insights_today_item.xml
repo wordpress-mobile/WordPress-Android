@@ -6,7 +6,7 @@
 
     <include layout="@layout/stats_insights_header_line" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/stats_post_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
