@@ -133,7 +133,7 @@ public class PostPreviewFragment extends Fragment {
                 + "<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>"
                 + "<style type='text/css'>"
                 + "  html { margin-left: " + marginStr + "; margin-right: " + marginStr + "; }"
-                + "  body { font-family: Merriweather, serif; font-weight: 300; padding: 0px; margin: 0px; width: 100%; color: " + textColorStr + "; }"
+                + "  body { font-family: Merriweather, serif; font-weight: 400; padding: 0px; margin: 0px; width: 100%; color: " + textColorStr + "; }"
                 + "  body, p, div { max-width: 100% !important; word-wrap: break-word; }"
                 + "  p, div { line-height: 1.6em; font-size: 0.95em; }"
                 + "  h1 { font-size: 1.2em; font-family: Merriweather, serif; font-weight: 700; }"

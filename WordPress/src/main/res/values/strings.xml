@@ -773,7 +773,6 @@
     <!-- activity titles -->
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Preview Blog</string>
-    <string name="reader_title_tag_preview">Preview Tag</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments">Comments</string>
@@ -790,7 +789,7 @@
     <string name="reader_share_subject">Shared from %s</string>
 
     <!-- menu text -->
-    <string name="reader_menu_tags">Tags</string>
+    <string name="reader_menu_tags">Edit tags and blogs</string>
     <string name="reader_menu_block_blog">Block this blog</string>
 
     <!-- button text -->
@@ -816,18 +815,20 @@
     <string name="reader_label_comment_count_single">One comment</string>
     <string name="reader_label_comment_count_multi">%,d comments</string>
     <string name="reader_label_view_original">View original article</string>
+    <string name="reader_label_word_count">%,d words</string>
+    <string name="reader_label_reading_time_in_minutes">%,d min</string>
 
-    <!-- like counts liking users activity-->
+    <!-- like counts -->
     <string name="reader_label_like">Like</string>
-    <string name="reader_label_liked_by">Liked by</string>
-    <string name="reader_label_liked_by_you">Liked by you</string>
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%,d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
-    <string name="reader_likes_one_short">1 person</string>
-    <string name="reader_likes_multi_short">%,d people</string>
+
+    <string name="reader_short_like_count_none">Like</string>
+    <string name="reader_short_like_count_one">1 Like</string>
+    <string name="reader_short_like_count_multi">%s Likes</string>
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>

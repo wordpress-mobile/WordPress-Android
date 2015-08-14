@@ -309,7 +309,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 public void onClick(View view) {
                                     ReaderActivityLauncher.showReaderBlogPreview(
                                             context,
-                                            blogID
+                                            blogID,
+                                            null
                                     );
                                 }
                             });

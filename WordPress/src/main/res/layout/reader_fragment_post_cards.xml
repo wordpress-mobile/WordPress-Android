@@ -5,17 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/frame_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/frame_header">
+        android:layout_height="match_parent">
 
         <org.wordpress.android.ui.reader.views.ReaderRecyclerView
             android:id="@+id/recycler_view"

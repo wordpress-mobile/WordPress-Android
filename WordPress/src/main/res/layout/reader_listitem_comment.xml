@@ -103,7 +103,7 @@
             style="@style/ReaderTextView.Comment.Action"
             android:textColor="@color/reader_like_text"
             android:visibility="gone"
-            tools:text="@string/reader_likes_one_short"
+            tools:text="@string/reader_short_like_count_one"
             tools:visibility="visible" />
     </LinearLayout>
 

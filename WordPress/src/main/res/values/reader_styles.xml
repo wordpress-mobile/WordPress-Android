@@ -43,22 +43,9 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
         <item name="fontFamily">merriweather</item>
-        <item name="fontVariation">light</item>
-    </style>
-    <style name="ReaderTextView.Post.Tag" parent="ReaderTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">@color/reader_hyperlink</item>
-        <item name="android:background">?android:selectableItemBackground</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:drawableLeft">@drawable/stats_icon_tags</item>
-        <item name="android:drawablePadding">@dimen/margin_small</item>
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
@@ -85,7 +72,6 @@
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="fontFamily">merriweather</item>
-        <item name="fontVariation">light</item>
     </style>
     <style name="ReaderTextView.Comment.Action" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
@@ -144,6 +130,17 @@
     <style name="ReaderImageView.Avatar.Like" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
+    </style>
+    <style name="ReaderImageView.More" parent="ReaderImageView">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:paddingLeft">@dimen/margin_medium</item>
+        <item name="android:paddingRight">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:src">@drawable/ic_action_more</item>
+        <item name="android:tint">@color/grey_lighten_10</item>
+        <item name="android:background">?android:selectableItemBackground</item>
     </style>
 
     <!-- progress bars -->

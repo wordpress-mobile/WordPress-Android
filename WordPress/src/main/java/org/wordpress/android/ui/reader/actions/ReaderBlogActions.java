@@ -406,22 +406,14 @@ public class ReaderBlogActions {
         blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
 
         ReaderPostTable.deletePostsInBlog(blogId);
+        ReaderBlogTable.setIsFollowedBlogId(blogId, false);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
-                if (success) {
-                    // blocking endpoint unfollows the blog, so do the same here
-                    ReaderBlogTable.setIsFollowedBlogId(blogId, false);
-                } else {
-                    AppLog.w(T.READER, "failed to block blog " + blogId);
-                    ReaderPostTable.addOrUpdatePosts(null, blockResult.deletedPosts);
+               if (actionListener != null) {
+                    actionListener.onActionResult(true);
                 }
-                if (actionListener != null) {
-                    actionListener.onActionResult(success);
-                }
-
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -429,6 +421,9 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.addOrUpdatePosts(null, blockResult.deletedPosts);
+                if (blockResult.wasFollowing) {
+                    ReaderBlogTable.setIsFollowedBlogId(blogId, true);
+                }
                 if (actionListener != null) {
                     actionListener.onActionResult(false);
                 }

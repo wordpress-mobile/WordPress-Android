@@ -8,12 +8,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
@@ -30,30 +30,10 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        showReaderPostDetail(context, blogId, postId, null);
-    }
-    public static void showReaderPostDetail(Context context, long blogId, long postId, CharSequence title) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
-
-        if (title == null && context instanceof Activity) {
-            // For AppCompatActivity subclasses, we need to pull the title from the Toolbar
-            if (context instanceof AppCompatActivity && ((AppCompatActivity) context).getSupportActionBar() != null) {
-                title = ((AppCompatActivity) context).getSupportActionBar().getTitle();
-            }
-            if (title == null) {
-                // Not an AppCompatActivity, or getSupportActionBar().getTitle() returned null.
-                // Try to read the title from the Activity
-                title = ((Activity)context).getTitle();
-            }
-        }
-
-        if (!TextUtils.isEmpty(title)) {
-            intent.putExtra(ReaderConstants.ARG_TITLE, title);
-        }
-
         ActivityLauncher.slideInFromRight(context, intent);
     }
 
@@ -73,7 +53,6 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getCapitalizedTagName());
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
@@ -98,13 +77,19 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog
      */
-    public static void showReaderBlogPreview(Context context, long blogId) {
+    public static void showReaderBlogPreview(Context context, long blogId, String title) {
         if (blogId == 0) {
             return;
         }
+
+        if (TextUtils.isEmpty(title)) {
+            title = ReaderBlogTable.getBlogNameFromBlogId(blogId);
+        }
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_TITLE, title);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
@@ -114,19 +99,25 @@ public class ReaderActivityLauncher {
             return;
         }
         if (post.isExternal) {
-            showReaderFeedPreview(context, post.feedId);
+            showReaderFeedPreview(context, post.feedId, post.getBlogName());
         } else {
-            showReaderBlogPreview(context, post.blogId);
+            showReaderBlogPreview(context, post.blogId, post.getBlogName());
         }
     }
 
-    public static void showReaderFeedPreview(Context context, long feedId) {
+    public static void showReaderFeedPreview(Context context, long feedId, String title) {
         if (feedId == 0) {
             return;
         }
+
+        if (TextUtils.isEmpty(title)) {
+            title = ReaderBlogTable.getBlogNameFromFeedId(feedId);
+        }
+
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
+        intent.putExtra(ReaderConstants.ARG_TITLE, title);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
