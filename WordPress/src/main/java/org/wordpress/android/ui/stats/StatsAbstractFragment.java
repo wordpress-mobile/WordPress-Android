@@ -192,6 +192,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case INSIGHTS_TODAY:
                 fragment = new StatsInsightsTodayFragment();
                 break;
+            case INSIGHTS_LATEST_POST_SUMMARY:
+                fragment = new StatsInsightsLatestPostSummaryFragment();
+                break;
         }
 
         fragment.setTimeframe(timeframe);
