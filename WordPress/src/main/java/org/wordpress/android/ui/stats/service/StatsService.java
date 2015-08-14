@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -64,7 +63,9 @@ public class StatsService extends Service {
         SEARCH_TERMS,
         INSIGHTS_POPULAR,
         INSIGHTS_ALL_TIME,
-        INSIGHTS_TODAY;
+        INSIGHTS_TODAY,
+        INSIGHTS_LATEST_POST_SUMMARY,
+        INSIGHTS_LATEST_POST_VIEWS;
 
         public String getRestEndpointPath() {
             switch (this) {
@@ -102,6 +103,10 @@ public class StatsService extends Service {
                     return "";
                 case INSIGHTS_TODAY:
                     return "summary";
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    return "posts";
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    return "post";
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + this.name());
                     return "";
@@ -299,6 +304,15 @@ public class StatsService extends Service {
                     break;
                 case INSIGHTS_TODAY:
                     path = String.format(path + "?period=day&date=%s", date);
+                    break;
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    // This is an edge cases since  we're not loading stats but posts
+                    path = String.format("/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath()
+                            + "?order_by=date&number=1&type=post&fields=ID,title,URL,discussion,like_count,date");
+                    break;
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    // This is a kind of edge case, since we used the pageRequested parameter to request a single postID
+                    path = String.format(path + "/%s?fields=views", pageRequested);
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());

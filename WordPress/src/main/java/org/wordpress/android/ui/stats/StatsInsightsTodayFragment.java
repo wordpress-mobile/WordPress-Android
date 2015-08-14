@@ -24,7 +24,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
 
     // Container Activity must implement this interface
     public interface OnInsightsTodayClickListener {
-        void onInsightsClicked(StatsVisitorsAndViewsFragment.OverviewLabel item);
+        void onInsightsTodayClicked(StatsVisitorsAndViewsFragment.OverviewLabel item);
     }
 
     private OnInsightsTodayClickListener mListener;
@@ -65,13 +65,15 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         }
 
         List<VisitModel> visits = visitsModel.getVisits();
-        VisitModel data = visits.get(visits.size()-1);
+        VisitModel data = visits.get(visits.size() - 1);
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
                 .inflate(R.layout.stats_insights_today_item, (ViewGroup) mResultContainer.getRootView(), false);
 
-        for (int i = 0; i < ll.getChildCount(); i++) {
-            LinearLayout currentTab = (LinearLayout) ll.getChildAt(i);
+        LinearLayout tabs = (LinearLayout) ll.findViewById(R.id.stats_post_tabs);
+
+        for (int i = 0; i < tabs.getChildCount(); i++) {
+            LinearLayout currentTab = (LinearLayout) tabs.getChildAt(i);
             switch (i) {
                 case 0:
                     setupTab(currentTab, FormatUtils.formatDecimal(data.getViews()), StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
@@ -101,10 +103,14 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
 
         label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
         label.setText(itemType.getLabel());
+        label.setTextColor(getResources().getColor(R.color.grey_darken_20));
         value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
-        label.setTextColor(getResources().getColor(R.color.grey_darken_20));
-        value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+        if (total.equals("0")) {
+            value.setTextColor(getResources().getColor(R.color.grey));
+        } else {
+            value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+        }
         icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
         icon.setImageDrawable(getTabIcon(itemType));
 
@@ -125,7 +131,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
                 return;
             }
             StatsVisitorsAndViewsFragment.OverviewLabel tag = (StatsVisitorsAndViewsFragment.OverviewLabel) v.getTag();
-            mListener.onInsightsClicked(tag);
+            mListener.onInsightsTodayClicked(tag);
         }
     };
 

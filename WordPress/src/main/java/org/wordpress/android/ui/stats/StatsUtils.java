@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
 import org.wordpress.android.ui.stats.models.PostModel;
@@ -407,6 +408,12 @@ public class StatsUtils {
             case INSIGHTS_TODAY:
                 model = new InsightsTodayModel(blogID, response);
                 break;
+            case INSIGHTS_LATEST_POST_SUMMARY:
+                model = new InsightsLatestPostModel(blogID, response);
+                break;
+            case INSIGHTS_LATEST_POST_VIEWS:
+                model = response.getInt("views");
+                break;
         }
         return model;
     }
@@ -472,5 +479,96 @@ public class StatsUtils {
 
         // Error string should be localized here, but don't want to pass a context
         return new StatsError("Stats couldn't be refreshed at this time");
+    }
+
+
+    private static int roundUp(double num, double divisor) {
+        double unrounded = num / divisor;
+        //return (int) Math.ceil(unrounded);
+        return (int) (unrounded + 0.5);
+    }
+
+    public static String getSinceLabel(Context ctx, String dataSubscribed) {
+
+        Date currentDateTime = new Date();
+
+        try {
+            SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            Date date = from.parse(dataSubscribed);
+
+            // See http://momentjs.com/docs/#/displaying/fromnow/
+            long currentDifference = Math.abs(
+                    StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS)
+            );
+
+            if (currentDifference <= 45 ) {
+                return ctx.getString(R.string.stats_followers_seconds_ago);
+            }
+            if (currentDifference < 90 ) {
+                return ctx.getString(R.string.stats_followers_a_minute_ago);
+            }
+
+            // 90 seconds to 45 minutes
+            if (currentDifference <= 2700 ) {
+                long minutes = StatsUtils.roundUp(currentDifference, 60);
+                String followersMinutes = ctx.getString(R.string.stats_followers_minutes);
+                return String.format(followersMinutes, minutes);
+            }
+
+            // 45 to 90 minutes
+            if (currentDifference <= 5400 ) {
+                return ctx.getString(R.string.stats_followers_an_hour_ago);
+            }
+
+            // 90 minutes to 22 hours
+            if (currentDifference <= 79200 ) {
+                long hours = StatsUtils.roundUp(currentDifference, 60 * 60);
+                String followersHours = ctx.getString(R.string.stats_followers_hours);
+                return String.format(followersHours, hours);
+            }
+
+            // 22 to 36 hours
+            if (currentDifference <= 129600 ) {
+                return ctx.getString(R.string.stats_followers_a_day);
+            }
+
+            // 36 hours to 25 days
+            // 86400 secs in a day -  2160000 secs in 25 days
+            if (currentDifference <= 2160000 ) {
+                long days = StatsUtils.roundUp(currentDifference, 86400);
+                String followersDays = ctx.getString(R.string.stats_followers_days);
+                return String.format(followersDays, days);
+            }
+
+            // 25 to 45 days
+            // 3888000 secs in 45 days
+            if (currentDifference <= 3888000 ) {
+                return ctx.getString(R.string.stats_followers_a_month);
+            }
+
+            // 45 to 345 days
+            // 2678400 secs in a month - 29808000 secs in 345 days
+            if (currentDifference <= 29808000 ) {
+                long months = StatsUtils.roundUp(currentDifference, 2678400);
+                String followersMonths = ctx.getString(R.string.stats_followers_months);
+                return String.format(followersMonths, months);
+            }
+
+            // 345 to 547 days (1.5 years)
+            if (currentDifference <= 47260800 ) {
+                return ctx.getString(R.string.stats_followers_a_year);
+            }
+
+            // 548 days+
+            // 31536000 secs in a year
+            long years = StatsUtils.roundUp(currentDifference, 31536000);
+            String followersYears = ctx.getString(R.string.stats_followers_years);
+            return String.format(followersYears, years);
+
+        } catch (ParseException e) {
+            AppLog.e(AppLog.T.STATS, e);
+        }
+
+        return "";
     }
 }
