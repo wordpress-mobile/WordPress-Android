@@ -145,10 +145,11 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
 
-        // spacer that's set to the same height as the toolbar needs to be visible if fragment is
-        // in an activity that supports toolbar auto-hiding (e.g. ReaderPostPagerActivity)
-        View spacer = view.findViewById(R.id.toolbar_spacer);
-        spacer.setVisibility(mAutoHideToolbarListener != null ? View.VISIBLE : View.GONE);
+        // if the activity supports toolbar auto-hiding, set the top padding of the scrollView
+        // to the toolbar height so the toolbar doesn't overlap the content
+        if (mAutoHideToolbarListener != null) {
+            mScrollView.setPadding(0, mToolbarHeight, 0, 0);
+        }
 
         return view;
     }
