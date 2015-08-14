@@ -137,7 +137,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (mFollowMenuItem != null && item.equals(mFollowMenuItem)) {
+        } else if (item.equals(mFollowMenuItem)) {
             toggleFollowStatus();
         }
         return super.onOptionsItemSelected(item);
