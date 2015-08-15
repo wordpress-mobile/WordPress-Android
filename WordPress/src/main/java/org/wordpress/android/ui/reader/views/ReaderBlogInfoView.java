@@ -12,32 +12,35 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 
 public class ReaderBlogInfoView extends LinearLayout {
 
     public interface OnBlogInfoLoadedListener {
-        public void onBlogInfoLoaded(ReaderBlog blogInfo);
+        void onBlogInfoLoaded(ReaderBlog blogInfo);
     }
 
+    private long mBlogId;
+    private long mFeedId;
     private OnBlogInfoLoadedListener mBlogInfoListener;
 
     public ReaderBlogInfoView(Context context) {
         super(context);
-        initView(context, null);
+        initView(context);
     }
 
     public ReaderBlogInfoView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView(context, attrs);
+        initView(context);
     }
 
     public ReaderBlogInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context, attrs);
+        initView(context);
     }
 
-    private void initView(Context context, AttributeSet attrs) {
+    private void initView(Context context) {
         inflate(context, R.layout.reader_blog_info_view, this);
     }
 
@@ -46,28 +49,37 @@ public class ReaderBlogInfoView extends LinearLayout {
     }
 
     public void loadBlogInfo(long blogId, long feedId) {
-        // get info from local db first
-        ReaderBlog blogInfo;
-        if (feedId != 0) {
-            blogInfo = ReaderBlogTable.getFeedInfo(feedId);
+        mBlogId = blogId;
+        mFeedId = feedId;
+
+        // first get info from local db
+        final ReaderBlog localBlogInfo;
+        if (mBlogId != 0) {
+            localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
+        } else if (mFeedId != 0) {
+            localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
         } else {
-            blogInfo = ReaderBlogTable.getBlogInfo(blogId);
+            ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog_info);
+            return;
         }
-        if (blogInfo != null) {
-            showBlogInfo(blogInfo);
+        if (localBlogInfo != null) {
+            showBlogInfo(localBlogInfo);
         }
 
-        // now get from server
+        // then get from server
         ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
-            public void onResult(ReaderBlog blogInfo) {
-                showBlogInfo(blogInfo);
+            public void onResult(ReaderBlog serverBlogInfo) {
+                // only redisplay if different than local
+                if (serverBlogInfo != null && !serverBlogInfo.isSameAs(localBlogInfo)) {
+                    showBlogInfo(serverBlogInfo);
+                }
             }
         };
-        if (feedId != 0) {
-            ReaderBlogActions.updateFeedInfo(feedId, null, listener);
+        if (mBlogId != 0) {
+            ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
         } else {
-            ReaderBlogActions.updateBlogInfo(blogId, null, listener);
+            ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
         }
     }
 
@@ -75,14 +87,16 @@ public class ReaderBlogInfoView extends LinearLayout {
         if (blogInfo == null) return;
 
         ViewGroup layoutInfo = (ViewGroup) findViewById(R.id.layout_blog_info);
+        ViewGroup layoutDescription = (ViewGroup) findViewById(R.id.layout_blog_description);
         TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
         TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
+        ReaderFollowButton followButton = (ReaderFollowButton) layoutInfo.findViewById(R.id.follow_button);
 
         if (blogInfo.hasDescription()) {
-            txtDescription.setVisibility(View.VISIBLE);
             txtDescription.setText(blogInfo.getDescription());
+            layoutDescription.setVisibility(View.VISIBLE);
         } else {
-            txtDescription.setVisibility(View.GONE);
+            layoutDescription.setVisibility(View.GONE);
         }
 
         if (blogInfo.numSubscribers > 0) {
@@ -93,12 +107,55 @@ public class ReaderBlogInfoView extends LinearLayout {
             txtFollowCount.setVisibility(View.GONE);
         }
 
+        followButton.setIsFollowed(blogInfo.isFollowing);
+        followButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFollowStatus((ReaderFollowButton) v);
+            }
+        });
+
         if (layoutInfo.getVisibility() != View.VISIBLE) {
-            AniUtils.scaleIn(layoutInfo, AniUtils.Duration.MEDIUM);
+            layoutInfo.setVisibility(View.VISIBLE);
         }
 
         if (mBlogInfoListener != null) {
             mBlogInfoListener.onBlogInfoLoaded(blogInfo);
+        }
+    }
+
+    private void toggleFollowStatus(final ReaderFollowButton followButton) {
+        if (!NetworkUtils.checkConnection(getContext())) {
+            return;
+        }
+
+        final boolean isAskingToFollow;
+        if (mFeedId != 0) {
+            isAskingToFollow = !ReaderBlogTable.isFollowedFeed(mFeedId);
+        } else {
+            isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mBlogId);
+        }
+
+        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && getContext() != null) {
+                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    ToastUtils.showToast(getContext(), errResId);
+                    followButton.setIsFollowed(!isAskingToFollow);
+                }
+            }
+        };
+
+        boolean result;
+        if (mFeedId != 0) {
+            result = ReaderBlogActions.followFeedById(mFeedId, isAskingToFollow, listener);
+        } else {
+            result = ReaderBlogActions.followBlogById(mBlogId, isAskingToFollow, listener);
+        }
+
+        if (result) {
+            followButton.setIsFollowedAnimated(isAskingToFollow);
         }
     }
 }
