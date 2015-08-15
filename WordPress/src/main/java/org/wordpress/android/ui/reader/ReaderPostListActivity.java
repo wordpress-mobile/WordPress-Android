@@ -53,7 +53,7 @@ public class ReaderPostListActivity extends AppCompatActivity
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -73,6 +73,8 @@ public class ReaderPostListActivity extends AppCompatActivity
 
         switch (getPostListType()) {
             case BLOG_PREVIEW:
+                setTitle(getString(R.string.loading));
+
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 long feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
 
@@ -95,10 +97,6 @@ public class ReaderPostListActivity extends AppCompatActivity
                     tag = (ReaderTag) intent.getSerializableExtra(ReaderConstants.ARG_TAG);
                 } else  {
                     tag = AppPrefs.getReaderTag();
-                }
-                // if this is a followed tag and it doesn't exist, revert to default tag
-                if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
-                    tag = ReaderTag.getDefaultTag();
                 }
                 if (tag != null) {
                     setTitle(ReaderUtils.makeHashTag(tag.getTagName()));
@@ -310,9 +308,13 @@ public class ReaderPostListActivity extends AppCompatActivity
      */
     @Override
     public void onBlogInfoLoaded(ReaderBlog blogInfo) {
+        // add view containing blog name & domain name to toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView txtBlogName = (TextView) toolbar.findViewById(R.id.text_blog_name);
-        TextView txtDomain = (TextView) toolbar.findViewById(R.id.text_blog_domain);
+        View infoView = getLayoutInflater().inflate(R.layout.reader_blog_info_for_toolbar, toolbar, false);
+        toolbar.addView(infoView);
+
+        TextView txtBlogName = (TextView) infoView.findViewById(R.id.text_blog_name);
+        TextView txtDomain = (TextView) infoView.findViewById(R.id.text_blog_domain);
         txtBlogName.setText(blogInfo.getName());
 
         if (blogInfo.hasUrl()) {

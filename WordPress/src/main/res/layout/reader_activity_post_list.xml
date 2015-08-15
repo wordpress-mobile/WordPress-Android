@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/reader_toolbar_blog" />
+    <include layout="@layout/toolbar" />
 
     <org.wordpress.android.ui.reader.views.ReaderBlogInfoView
         android:id="@+id/layout_blog_info"
