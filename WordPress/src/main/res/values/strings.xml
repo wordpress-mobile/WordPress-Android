@@ -817,6 +817,7 @@
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_word_count">%,d words</string>
     <string name="reader_label_reading_time_in_minutes">%,d min</string>
+    <string name="reader_label_follow_count">%,d followers</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>

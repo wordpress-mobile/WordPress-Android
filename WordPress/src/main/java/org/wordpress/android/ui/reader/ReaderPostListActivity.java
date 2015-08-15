@@ -7,36 +7,44 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnNavigateTagHistoryListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
 /*
- * serves as the host for ReaderPostListFragment
+ * serves as the host for ReaderPostListFragment when blog preview & tag preview
  */
 
 public class ReaderPostListActivity extends AppCompatActivity implements OnNavigateTagHistoryListener {
 
     private ReaderPostListType mPostListType;
     private MenuItem mFollowMenuItem;
+    private ReaderFollowButton mFollowButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -66,22 +74,21 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
-        String title = intent.getStringExtra(ReaderConstants.ARG_TITLE);
-
-        if (savedInstanceState == null) {
-            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+        switch (getPostListType()) {
+            case BLOG_PREVIEW:
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 long feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
-                if (feedId != 0) {
-                    showListFragmentForFeed(feedId);
-                } else {
-                    showListFragmentForBlog(blogId);
+                loadBlogInfo(blogId, feedId);
+                if (savedInstanceState == null) {
+                    if (feedId != 0) {
+                        showListFragmentForFeed(feedId);
+                    } else {
+                        showListFragmentForBlog(blogId);
+                    }
                 }
-                if (TextUtils.isEmpty(title)) {
-                    title = getString(R.string.reader_title_blog_preview);
-                }
-            } else {
-                // get the tag name from the intent, if not there get it from prefs
+                break;
+
+            default:
                 ReaderTag tag;
                 if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
                     tag = (ReaderTag) intent.getSerializableExtra(ReaderConstants.ARG_TAG);
@@ -89,16 +96,16 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
                     tag = AppPrefs.getReaderTag();
                 }
                 // if this is a followed tag and it doesn't exist, revert to default tag
-                if (mPostListType == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
+                if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
                     tag = ReaderTag.getDefaultTag();
                 }
                 if (tag != null) {
-                    title = ReaderUtils.makeHashTag(tag.getTagName());
+                    setTitle(ReaderUtils.makeHashTag(tag.getTagName()));
                 }
-                showListFragmentForTag(tag, mPostListType);
-            }
-
-            setTitle(title);
+                if (savedInstanceState == null) {
+                    showListFragmentForTag(tag, mPostListType);
+                }
+                break;
         }
     }
 
@@ -128,7 +135,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
         if (getPostListType().isPreviewType()) {
             mFollowMenuItem = menu.add(R.string.reader_btn_follow);
             mFollowMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            updateFollowMenu();
+            updateFollowState();
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -145,11 +152,11 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
     }
 
     /*
-     * update the "follow" menu item to reflect the follow status of the current blog/tag
+     * update the "follow" menu item/button to reflect the follow status of the current blog/tag
      */
-    private void updateFollowMenu() {
+    private void updateFollowState() {
         ReaderPostListFragment fragment = getListFragment();
-        if (fragment == null || mFollowMenuItem == null) return;
+        if (fragment == null ) return;
 
         boolean isFollowing;
         switch (getPostListType()) {
@@ -165,7 +172,12 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
                 break;
         }
 
-        mFollowMenuItem.setTitle(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        if (mFollowMenuItem != null) {
+            mFollowMenuItem.setTitle(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        }
+        if (mFollowButton != null) {
+            mFollowButton.setIsFollowed(isFollowing);
+        }
     }
 
     /*
@@ -200,7 +212,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
         }
 
         if (result) {
-            updateFollowMenu();
+            updateFollowState();
         }
     }
 
@@ -209,7 +221,7 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
      */
     @Override
     public void onNavigateTagHistory(ReaderTag newTag) {
-        updateFollowMenu();
+        updateFollowState();
         setTitle(ReaderUtils.makeHashTag(newTag.getTagName()));
     }
 
@@ -292,5 +304,82 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
             return null;
         }
         return ((ReaderPostListFragment) fragment);
+    }
+
+    /*
+     * loads info detail for the current blog when showing blog preview
+     */
+    private void loadBlogInfo(long blogId, long feedId) {
+        // get info from local db first
+        ReaderBlog blogInfo;
+        if (feedId != 0) {
+            blogInfo = ReaderBlogTable.getFeedInfo(feedId);
+        } else {
+            blogInfo = ReaderBlogTable.getBlogInfo(blogId);
+        }
+        if (blogInfo != null) {
+            showBlogInfo(blogInfo);
+        }
+
+        // now get from server
+        ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
+            @Override
+            public void onResult(ReaderBlog blogInfo) {
+                showBlogInfo(blogInfo);
+            }
+        };
+        if (feedId != 0) {
+            ReaderBlogActions.updateFeedInfo(feedId, null, listener);
+        } else {
+            ReaderBlogActions.updateBlogInfo(blogId, null, listener);
+        }
+    }
+
+    private void showBlogInfo(ReaderBlog blogInfo) {
+        if (blogInfo == null || isFinishing()) return;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView txtBlogName = (TextView) toolbar.findViewById(R.id.text_blog_name);
+        TextView txtDomain = (TextView) toolbar.findViewById(R.id.text_blog_domain);
+
+        ViewGroup layoutInfo = (ViewGroup) findViewById(R.id.layout_blog_info);
+        TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
+        TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
+        mFollowButton = (ReaderFollowButton) layoutInfo.findViewById(R.id.follow_button);
+
+        txtBlogName.setText(blogInfo.getName());
+
+        if (blogInfo.hasUrl()) {
+            txtDomain.setVisibility(View.VISIBLE);
+            txtDomain.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
+        } else {
+            txtDomain.setVisibility(View.GONE);
+        }
+
+        if (blogInfo.hasDescription()) {
+            txtDescription.setVisibility(View.VISIBLE);
+            txtDescription.setText(blogInfo.getDescription());
+        } else {
+            txtDescription.setVisibility(View.GONE);
+        }
+
+        if (blogInfo.numSubscribers > 0) {
+            txtFollowCount.setText(String.format(getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
+            txtFollowCount.setVisibility(View.VISIBLE);
+        } else {
+            txtFollowCount.setVisibility(View.GONE);
+        }
+
+        mFollowButton.setIsFollowed(blogInfo.isFollowing);
+        mFollowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFollowStatus();
+            }
+        });
+
+        if (layoutInfo.getVisibility() != View.VISIBLE) {
+            AniUtils.scaleIn(layoutInfo, AniUtils.Duration.MEDIUM);
+        }
     }
 }

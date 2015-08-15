@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_blog_info"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey_lighten_30"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_blog_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_card_margin"
+        android:layout_marginRight="@dimen/reader_card_margin"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="3"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_medium"
+        app:fontFamily="merriweather"
+        tools:text="text_description" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginLeft="@dimen/reader_card_margin"
+        android:layout_marginRight="@dimen/reader_card_margin"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@color/grey_lighten_20" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_card_margin"
+        android:layout_marginRight="@dimen/reader_card_margin">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_blog_follow_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="text_blog_follow_count" />
+
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/follow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+</LinearLayout>
