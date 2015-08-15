@@ -37,11 +37,6 @@ public class ReaderBlogInfoView extends LinearLayout {
         initView(context, attrs);
     }
 
-    public ReaderBlogInfoView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initView(context, attrs);
-    }
-
     private void initView(Context context, AttributeSet attrs) {
         inflate(context, R.layout.reader_blog_info_view, this);
     }
