@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -23,12 +22,10 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnNavigateTagHistoryListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
-import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -40,11 +37,11 @@ import de.greenrobot.event.EventBus;
  * serves as the host for ReaderPostListFragment when blog preview & tag preview
  */
 
-public class ReaderPostListActivity extends AppCompatActivity implements OnNavigateTagHistoryListener {
+public class ReaderPostListActivity extends AppCompatActivity
+        implements OnNavigateTagHistoryListener, ReaderBlogInfoView.OnBlogInfoLoadedListener {
 
     private ReaderPostListType mPostListType;
     private MenuItem mFollowMenuItem;
-    private ReaderFollowButton mFollowButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +75,11 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
             case BLOG_PREVIEW:
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 long feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
-                loadBlogInfo(blogId, feedId);
+
+                ReaderBlogInfoView infoView = (ReaderBlogInfoView) findViewById(R.id.layout_blog_info);
+                infoView.setOnBlogInfoLoadedListener(this);
+                infoView.loadBlogInfo(blogId, feedId);
+
                 if (savedInstanceState == null) {
                     if (feedId != 0) {
                         showListFragmentForFeed(feedId);
@@ -174,9 +175,6 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
 
         if (mFollowMenuItem != null) {
             mFollowMenuItem.setTitle(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-        }
-        if (mFollowButton != null) {
-            mFollowButton.setIsFollowed(isFollowing);
         }
     }
 
@@ -307,46 +305,14 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
     }
 
     /*
-     * loads info detail for the current blog when showing blog preview
+     * called by blog preview when information about this blog has been loaded - use this to
+     * show the blog name & domain in the toolbar
      */
-    private void loadBlogInfo(long blogId, long feedId) {
-        // get info from local db first
-        ReaderBlog blogInfo;
-        if (feedId != 0) {
-            blogInfo = ReaderBlogTable.getFeedInfo(feedId);
-        } else {
-            blogInfo = ReaderBlogTable.getBlogInfo(blogId);
-        }
-        if (blogInfo != null) {
-            showBlogInfo(blogInfo);
-        }
-
-        // now get from server
-        ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlog blogInfo) {
-                showBlogInfo(blogInfo);
-            }
-        };
-        if (feedId != 0) {
-            ReaderBlogActions.updateFeedInfo(feedId, null, listener);
-        } else {
-            ReaderBlogActions.updateBlogInfo(blogId, null, listener);
-        }
-    }
-
-    private void showBlogInfo(ReaderBlog blogInfo) {
-        if (blogInfo == null || isFinishing()) return;
-
+    @Override
+    public void onBlogInfoLoaded(ReaderBlog blogInfo) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView txtBlogName = (TextView) toolbar.findViewById(R.id.text_blog_name);
         TextView txtDomain = (TextView) toolbar.findViewById(R.id.text_blog_domain);
-
-        ViewGroup layoutInfo = (ViewGroup) findViewById(R.id.layout_blog_info);
-        TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
-        TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
-        mFollowButton = (ReaderFollowButton) layoutInfo.findViewById(R.id.follow_button);
-
         txtBlogName.setText(blogInfo.getName());
 
         if (blogInfo.hasUrl()) {
@@ -356,30 +322,8 @@ public class ReaderPostListActivity extends AppCompatActivity implements OnNavig
             txtDomain.setVisibility(View.GONE);
         }
 
-        if (blogInfo.hasDescription()) {
-            txtDescription.setVisibility(View.VISIBLE);
-            txtDescription.setText(blogInfo.getDescription());
-        } else {
-            txtDescription.setVisibility(View.GONE);
-        }
+        updateFollowState();
 
-        if (blogInfo.numSubscribers > 0) {
-            txtFollowCount.setText(String.format(getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
-            txtFollowCount.setVisibility(View.VISIBLE);
-        } else {
-            txtFollowCount.setVisibility(View.GONE);
-        }
 
-        mFollowButton.setIsFollowed(blogInfo.isFollowing);
-        mFollowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFollowStatus();
-            }
-        });
-
-        if (layoutInfo.getVisibility() != View.VISIBLE) {
-            AniUtils.scaleIn(layoutInfo, AniUtils.Duration.MEDIUM);
-        }
     }
 }
