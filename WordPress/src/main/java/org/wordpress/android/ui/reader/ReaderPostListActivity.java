@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -40,60 +39,44 @@ public class ReaderPostListActivity extends AppCompatActivity
 
     private ReaderPostListType mPostListType;
     private MenuItem mFollowMenuItem;
+    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        if (getIntent() != null) {
+            if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+            } else {
+                mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
+            }
 
-        readIntent(getIntent(), savedInstanceState);
-    }
-
-    private void readIntent(Intent intent, Bundle savedInstanceState) {
-        if (intent == null) {
-            return;
-        }
-
-        if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            mPostListType = (ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
-        } else {
-            mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
-        }
-
-        switch (getPostListType()) {
-            case BLOG_PREVIEW:
-                setTitle(getString(R.string.loading));
-
-                long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                long feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
-
-                ReaderBlogInfoView infoView = (ReaderBlogInfoView) findViewById(R.id.layout_blog_info);
-                infoView.setOnBlogInfoLoadedListener(this);
-                infoView.loadBlogInfo(blogId, feedId);
+            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                // add view containing blog name & domain name to toolbar
+                View infoView = getLayoutInflater().inflate(R.layout.reader_blog_info_for_toolbar, mToolbar, false);
+                mToolbar.addView(infoView);
 
                 if (savedInstanceState == null) {
+                    long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                    long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
                     if (blogId != 0) {
                         showListFragmentForBlog(blogId);
                     } else {
                         showListFragmentForFeed(feedId);
                     }
                 }
-                break;
-
-            default:
+            } else {
                 ReaderTag tag;
-                if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
-                    tag = (ReaderTag) intent.getSerializableExtra(ReaderConstants.ARG_TAG);
-                } else  {
+                if (getIntent().hasExtra(ReaderConstants.ARG_TAG)) {
+                    tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
+                } else {
                     tag = AppPrefs.getReaderTag();
                 }
                 if (tag != null) {
@@ -102,7 +85,7 @@ public class ReaderPostListActivity extends AppCompatActivity
                 if (savedInstanceState == null) {
                     showListFragmentForTag(tag, mPostListType);
                 }
-                break;
+            }
         }
     }
 
@@ -266,18 +249,13 @@ public class ReaderPostListActivity extends AppCompatActivity
     }
 
     /*
-     * called by blog preview when information about this blog has been loaded - use this to
-     * show the blog name & domain in the toolbar
+     * called by adapter when showing blog preview after info about this blog has been loaded - use
+     * this to show the blog name & domain in the toolbar
      */
     @Override
     public void onBlogInfoLoaded(ReaderBlog blogInfo) {
-        // add view containing blog name & domain name to toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        View infoView = getLayoutInflater().inflate(R.layout.reader_blog_info_for_toolbar, toolbar, false);
-        toolbar.addView(infoView);
-
-        TextView txtBlogName = (TextView) infoView.findViewById(R.id.text_blog_name);
-        TextView txtDomain = (TextView) infoView.findViewById(R.id.text_blog_domain);
+        TextView txtBlogName = (TextView) mToolbar.findViewById(R.id.text_blog_name);
+        TextView txtDomain = (TextView) mToolbar.findViewById(R.id.text_blog_domain);
 
         if (blogInfo.hasName()) {
             txtBlogName.setText(blogInfo.getName());

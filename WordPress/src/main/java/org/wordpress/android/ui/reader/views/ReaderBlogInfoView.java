@@ -23,6 +23,7 @@ public class ReaderBlogInfoView extends LinearLayout {
 
     private long mBlogId;
     private long mFeedId;
+    private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
 
     public ReaderBlogInfoView(Context context) {
@@ -70,10 +71,7 @@ public class ReaderBlogInfoView extends LinearLayout {
         ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlog serverBlogInfo) {
-                // only redisplay if different than local
-                if (serverBlogInfo != null && !serverBlogInfo.isSameAs(localBlogInfo)) {
-                    showBlogInfo(serverBlogInfo);
-                }
+                showBlogInfo(serverBlogInfo);
             }
         };
         if (mBlogId != 0) {
@@ -84,7 +82,12 @@ public class ReaderBlogInfoView extends LinearLayout {
     }
 
     private void showBlogInfo(ReaderBlog blogInfo) {
-        if (blogInfo == null) return;
+        // do nothing if unchanged
+        if (blogInfo == null || blogInfo.isSameAs(mBlogInfo)) {
+            return;
+        }
+
+        mBlogInfo = blogInfo;
 
         ViewGroup layoutInfo = (ViewGroup) findViewById(R.id.layout_blog_info);
         ViewGroup layoutDescription = (ViewGroup) findViewById(R.id.layout_blog_description);

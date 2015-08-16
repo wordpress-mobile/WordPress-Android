@@ -47,6 +47,7 @@ import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -758,6 +759,9 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
+            if (getActivity() instanceof ReaderBlogInfoView.OnBlogInfoLoadedListener) {
+                mPostAdapter.setOnBlogInfoLoadedListener((ReaderBlogInfoView.OnBlogInfoLoadedListener) getActivity());
+            }
             // show spacer above the first post to accommodate toolbar
             mPostAdapter.setShowToolbarSpacer(shouldShowTagToolbar());
         }
@@ -825,14 +829,6 @@ public class ReaderPostListFragment extends Fragment
         if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
             updatePostsWithTag(tag, UpdateAction.REQUEST_NEWER);
         }
-    }
-
-    long getCurrentFeedId() {
-        return mCurrentFeedId;
-    }
-
-    long getCurrentBlogId() {
-        return mCurrentBlogId;
     }
 
     /*
