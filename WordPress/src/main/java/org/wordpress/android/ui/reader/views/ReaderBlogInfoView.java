@@ -99,13 +99,7 @@ public class ReaderBlogInfoView extends LinearLayout {
             layoutDescription.setVisibility(View.GONE);
         }
 
-        if (blogInfo.numSubscribers > 0) {
-            txtFollowCount.setText(
-                    String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
-            txtFollowCount.setVisibility(View.VISIBLE);
-        } else {
-            txtFollowCount.setVisibility(View.GONE);
-        }
+        txtFollowCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
 
         followButton.setIsFollowed(blogInfo.isFollowing);
         followButton.setOnClickListener(new OnClickListener() {

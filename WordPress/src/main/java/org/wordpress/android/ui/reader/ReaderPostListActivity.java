@@ -278,7 +278,12 @@ public class ReaderPostListActivity extends AppCompatActivity
 
         TextView txtBlogName = (TextView) infoView.findViewById(R.id.text_blog_name);
         TextView txtDomain = (TextView) infoView.findViewById(R.id.text_blog_domain);
-        txtBlogName.setText(blogInfo.getName());
+
+        if (blogInfo.hasName()) {
+            txtBlogName.setText(blogInfo.getName());
+        } else {
+            txtBlogName.setText(R.string.reader_untitled_post);
+        }
 
         if (blogInfo.hasUrl()) {
             txtDomain.setVisibility(View.VISIBLE);
