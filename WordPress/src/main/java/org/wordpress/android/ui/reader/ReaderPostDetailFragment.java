@@ -637,12 +637,14 @@ public class ReaderPostDetailFragment extends Fragment
             });
 
             // clicking the header shows blog preview
-            layoutHeader.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
-                }
-            });
+            if (getPostListType() != ReaderPostListType.BLOG_PREVIEW) {
+                layoutHeader.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
+                    }
+                });
+            }
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());

@@ -66,10 +66,10 @@ public class ReaderPostListActivity extends AppCompatActivity
                 if (savedInstanceState == null) {
                     long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
-                    if (blogId != 0) {
-                        showListFragmentForBlog(blogId);
-                    } else {
+                    if (feedId != 0) {
                         showListFragmentForFeed(feedId);
+                    } else {
+                        showListFragmentForBlog(blogId);
                     }
                 }
             } else {

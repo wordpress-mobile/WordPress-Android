@@ -47,7 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grey_lighten_30"
-        android:paddingBottom="@dimen/margin_extra_large"
         android:paddingLeft="@dimen/reader_card_margin"
         android:paddingRight="@dimen/reader_card_margin"
         android:paddingTop="@dimen/margin_extra_large">

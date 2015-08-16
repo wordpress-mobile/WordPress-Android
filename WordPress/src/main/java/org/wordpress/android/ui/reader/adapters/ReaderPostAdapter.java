@@ -40,6 +40,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
+    private long mCurrentFeedId;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
@@ -171,7 +172,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (mBlogInfoLoadedListener != null) {
                     infoView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
                 }
-                infoView.loadBlogInfo(mCurrentBlogId, 0);
+                infoView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
                 return new BlogInfoViewHolder(infoView);
 
             default:
@@ -512,9 +513,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     // used when the list type is ReaderPostListType.BLOG_PREVIEW
-    public void setCurrentBlog(long blogId) {
-        if (blogId != mCurrentBlogId) {
+    public void setCurrentBlogAndFeed(long blogId, long feedId) {
+        if (blogId != mCurrentBlogId || feedId != mCurrentFeedId) {
             mCurrentBlogId = blogId;
+            mCurrentFeedId = feedId;
             reload();
         }
     }

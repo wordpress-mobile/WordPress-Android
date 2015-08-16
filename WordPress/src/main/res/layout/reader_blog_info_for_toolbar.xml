@@ -32,6 +32,8 @@
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_small"
-        tools:text="text_domain" />
+        android:visibility="gone"
+        tools:text="text_domain"
+        tools:visibility="visible" />
 
 </LinearLayout>

@@ -75,10 +75,10 @@ public class ReaderBlogInfoView extends LinearLayout {
                     showBlogInfo(serverBlogInfo);
                 }
             };
-            if (mBlogId != 0) {
-                ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
-            } else {
+            if (mFeedId != 0) {
                 ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
+            } else {
+                ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
             }
         }
     }

@@ -492,7 +492,7 @@ public class ReaderPostListFragment extends Fragment
                     updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
                 }
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                getPostAdapter().setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
                 if (!isRecreated) {
                     updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
                 }
