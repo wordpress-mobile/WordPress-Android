@@ -216,16 +216,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.txtBlogName.setText(null);
         }
 
-        // if we're not showing blog preview, show blog/feed preview when avatar or blog name is tapped
+        // show blog preview when post header is tapped unless this already is blog preview
         if (!isBlogPreview()) {
-            View.OnClickListener blogListener = new View.OnClickListener() {
+            postHolder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
                 }
-            };
-            postHolder.imgAvatar.setOnClickListener(blogListener);
-            postHolder.txtBlogName.setOnClickListener(blogListener);
+            });
         }
 
         if (post.hasExcerpt()) {

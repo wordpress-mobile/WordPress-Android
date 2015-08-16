@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import de.greenrobot.event.EventBus;
 
 /*
- * serves as the host for ReaderPostListFragment when blog preview & tag preview
+ * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
 
 public class ReaderPostListActivity extends AppCompatActivity
@@ -127,6 +127,7 @@ public class ReaderPostListActivity extends AppCompatActivity
             return true;
         } else if (item.equals(mFollowMenuItem)) {
             toggleTagFollowStatus();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
