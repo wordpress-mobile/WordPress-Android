@@ -81,10 +81,10 @@ public class ReaderPostListActivity extends AppCompatActivity
                 infoView.loadBlogInfo(blogId, feedId);
 
                 if (savedInstanceState == null) {
-                    if (feedId != 0) {
-                        showListFragmentForFeed(feedId);
-                    } else {
+                    if (blogId != 0) {
                         showListFragmentForBlog(blogId);
+                    } else {
+                        showListFragmentForFeed(feedId);
                     }
                 }
                 break;

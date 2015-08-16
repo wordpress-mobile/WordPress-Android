@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:elevation="@dimen/card_elevation"
         android:paddingBottom="@dimen/margin_extra_large"
         android:paddingLeft="@dimen/reader_card_margin"
         android:paddingRight="@dimen/reader_card_margin"
@@ -37,6 +36,11 @@
             tools:text="12 followers" />
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_lighten_20" />
 
     <FrameLayout
         android:id="@+id/layout_blog_description"
