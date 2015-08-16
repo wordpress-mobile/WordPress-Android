@@ -67,17 +67,19 @@ public class ReaderBlogInfoView extends LinearLayout {
             showBlogInfo(localBlogInfo);
         }
 
-        // then get from server
-        ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlog serverBlogInfo) {
-                showBlogInfo(serverBlogInfo);
+        // then get from server if doesn't exist locally or is time to update it
+        if (localBlogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(localBlogInfo)) {
+            ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
+                @Override
+                public void onResult(ReaderBlog serverBlogInfo) {
+                    showBlogInfo(serverBlogInfo);
+                }
+            };
+            if (mBlogId != 0) {
+                ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
+            } else {
+                ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
             }
-        };
-        if (mBlogId != 0) {
-            ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
-        } else {
-            ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
         }
     }
 
