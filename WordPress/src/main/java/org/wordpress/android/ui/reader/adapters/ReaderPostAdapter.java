@@ -29,6 +29,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
+import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -76,9 +77,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_POST = 0;
     private static final int VIEW_TYPE_SPACER = 1;
     private static final int VIEW_TYPE_BLOG_INFO = 2;
+    private static final int VIEW_TYPE_TAG_INFO = 3;
 
-    private static final long ITEM_ID_SPACER = -1L;
-    private static final long ITEM_ID_BLOG_INFO = -2L;
+    private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
@@ -138,8 +139,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     class BlogInfoViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderBlogInfoView mBlogInfoView;
         public BlogInfoViewHolder(View itemView) {
             super(itemView);
+            mBlogInfoView = (ReaderBlogInfoView) itemView;
+        }
+    }
+
+    class TagInfoViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderTagInfoView mTagInfoView;
+        public TagInfoViewHolder(View itemView) {
+            super(itemView);
+            mTagInfoView = (ReaderTagInfoView) itemView;
         }
     }
 
@@ -151,6 +162,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (position == 0 && isBlogPreview()) {
             // first item is a ReaderBlogInfoView
             return VIEW_TYPE_BLOG_INFO;
+        } else if (position == 0 && isTagPreview()) {
+            // first item is a ReaderTagInfoView
+            return VIEW_TYPE_TAG_INFO;
         }
         return VIEW_TYPE_POST;
     }
@@ -168,12 +182,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new SpacerViewHolder(spacerView);
 
             case VIEW_TYPE_BLOG_INFO:
-                ReaderBlogInfoView infoView = new ReaderBlogInfoView(context);
-                if (mBlogInfoLoadedListener != null) {
-                    infoView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
-                }
-                infoView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
-                return new BlogInfoViewHolder(infoView);
+                return new BlogInfoViewHolder(new ReaderBlogInfoView(context));
+
+            case VIEW_TYPE_TAG_INFO:
+                return new TagInfoViewHolder(new ReaderTagInfoView(context));
 
             default:
                 View postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
@@ -184,6 +196,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (!(holder instanceof ReaderPostViewHolder)) {
+            if (holder instanceof BlogInfoViewHolder) {
+                BlogInfoViewHolder blogHolder = (BlogInfoViewHolder) holder;
+                blogHolder.mBlogInfoView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
+                blogHolder.mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
+            } else if (holder instanceof TagInfoViewHolder) {
+                TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
+                tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
+            }
             return;
         }
 
@@ -463,11 +483,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasCustomFirstItem() {
-        return mShowToolbarSpacer || isBlogPreview();
+        return mShowToolbarSpacer || isBlogPreview() || isTagPreview();
     }
 
     private boolean isBlogPreview() {
         return getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
+    }
+
+    private boolean isTagPreview() {
+        return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -582,13 +606,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public long getItemId(int position) {
-        switch (getItemViewType(position)) {
-            case VIEW_TYPE_SPACER:
-                return ITEM_ID_SPACER;
-            case VIEW_TYPE_BLOG_INFO:
-                return ITEM_ID_BLOG_INFO;
-            default:
-                return getItem(position).getStableId();
+        if (getItemViewType(position) == VIEW_TYPE_POST) {
+            return getItem(position).getStableId();
+        } else {
+            return ITEM_ID_CUSTOM_VIEW;
         }
     }
 

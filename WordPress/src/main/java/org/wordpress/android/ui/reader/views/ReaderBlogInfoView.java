@@ -15,6 +15,10 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
+/**
+ * topmost view in post adapter when showing blog preview - displays description, follower
+ * count, and follow button
+ */
 public class ReaderBlogInfoView extends LinearLayout {
 
     public interface OnBlogInfoLoadedListener {
@@ -23,6 +27,7 @@ public class ReaderBlogInfoView extends LinearLayout {
 
     private long mBlogId;
     private long mFeedId;
+    private ReaderFollowButton mFollowButton;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
 
@@ -42,7 +47,8 @@ public class ReaderBlogInfoView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        inflate(context, R.layout.reader_blog_info_view, this);
+        View view = inflate(context, R.layout.reader_blog_info_view, this);
+        mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
     }
 
     public void setOnBlogInfoLoadedListener(OnBlogInfoLoadedListener listener) {
@@ -95,7 +101,6 @@ public class ReaderBlogInfoView extends LinearLayout {
         ViewGroup layoutDescription = (ViewGroup) findViewById(R.id.layout_blog_description);
         TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
         TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
-        ReaderFollowButton followButton = (ReaderFollowButton) layoutInfo.findViewById(R.id.follow_button);
 
         if (blogInfo.hasDescription()) {
             txtDescription.setText(blogInfo.getDescription());
@@ -106,11 +111,11 @@ public class ReaderBlogInfoView extends LinearLayout {
 
         txtFollowCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
 
-        followButton.setIsFollowed(blogInfo.isFollowing);
-        followButton.setOnClickListener(new OnClickListener() {
+        mFollowButton.setIsFollowed(blogInfo.isFollowing);
+        mFollowButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleFollowStatus((ReaderFollowButton) v);
+                toggleFollowStatus();
             }
         });
 
@@ -123,7 +128,7 @@ public class ReaderBlogInfoView extends LinearLayout {
         }
     }
 
-    private void toggleFollowStatus(final ReaderFollowButton followButton) {
+    private void toggleFollowStatus() {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
@@ -141,7 +146,7 @@ public class ReaderBlogInfoView extends LinearLayout {
                 if (!succeeded && getContext() != null) {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
-                    followButton.setIsFollowed(!isAskingToFollow);
+                    mFollowButton.setIsFollowed(!isAskingToFollow);
                 }
             }
         };
@@ -154,7 +159,7 @@ public class ReaderBlogInfoView extends LinearLayout {
         }
 
         if (result) {
-            followButton.setIsFollowedAnimated(isAskingToFollow);
+            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
         }
     }
 }

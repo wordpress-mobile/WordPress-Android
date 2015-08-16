@@ -36,7 +36,6 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnNavigateTagHistoryListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -98,8 +97,6 @@ public class ReaderPostListFragment extends Fragment
     private boolean mWasPaused;
     private boolean mIsAnimatingOutNewPostsBar;
     private boolean mIsLoggedOutReader;
-
-    private OnNavigateTagHistoryListener mNavigateTagHistoryListener;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -431,10 +428,6 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (getActivity() instanceof OnNavigateTagHistoryListener) {
-            mNavigateTagHistoryListener = (OnNavigateTagHistoryListener) getActivity();
-        }
 
         // configure the toolbar for posts in followed tags (shown in main viewpager activity)
         if (shouldShowTagToolbar()) {
@@ -852,10 +845,6 @@ public class ReaderPostListFragment extends Fragment
         ReaderTag newTag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         setCurrentTag(newTag, false);
 
-        if (mNavigateTagHistoryListener != null) {
-            mNavigateTagHistoryListener.onNavigateTagHistory(newTag);
-        }
-
         return true;
     }
 
@@ -1177,9 +1166,6 @@ public class ReaderPostListFragment extends Fragment
         if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
             setCurrentTag(tag, true);
-            if (mNavigateTagHistoryListener != null) {
-                mNavigateTagHistoryListener.onNavigateTagHistory(tag);
-            }
         } else {
             // user isn't previewing a tag, so open in tag preview
             ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
