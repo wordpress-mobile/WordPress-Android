@@ -594,7 +594,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        if (hasCustomFirstItem() && mPosts.size() > 0) {
+        if (hasCustomFirstItem()) {
             return mPosts.size() + 1;
         }
         return mPosts.size();

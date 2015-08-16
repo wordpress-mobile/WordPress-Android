@@ -8,8 +8,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderBlog;
@@ -55,9 +53,7 @@ public class ReaderPostListActivity extends AppCompatActivity
             }
 
             if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                // add view containing blog name & domain name to toolbar
-                View blogInfoView = getLayoutInflater().inflate(R.layout.reader_blog_info_for_toolbar, mToolbar, false);
-                mToolbar.addView(blogInfoView);
+                mToolbar.setTitle(R.string.loading);
 
                 if (savedInstanceState == null) {
                     long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -193,20 +189,16 @@ public class ReaderPostListActivity extends AppCompatActivity
      */
     @Override
     public void onBlogInfoLoaded(ReaderBlog blogInfo) {
-        TextView txtBlogName = (TextView) mToolbar.findViewById(R.id.text_blog_name);
-        TextView txtDomain = (TextView) mToolbar.findViewById(R.id.text_blog_domain);
-
         if (blogInfo.hasName()) {
-            txtBlogName.setText(blogInfo.getName());
+            mToolbar.setTitle(blogInfo.getName());
         } else {
-            txtBlogName.setText(R.string.reader_untitled_post);
+            mToolbar.setTitle(R.string.reader_untitled_post);
         }
 
         if (blogInfo.hasUrl()) {
-            txtDomain.setVisibility(View.VISIBLE);
-            txtDomain.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
+            mToolbar.setSubtitle(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
         } else {
-            txtDomain.setVisibility(View.GONE);
+            mToolbar.setSubtitle(null);
         }
     }
 }
