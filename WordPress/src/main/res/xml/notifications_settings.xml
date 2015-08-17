@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:key="wp_pref_notifications_root">
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/pref_notifications_enabled"
-        android:title="@string/enable_notifications"/>
     <PreferenceCategory
-        android:title="@string/types"
-        android:key="@string/pref_notification_types">
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/blogs"
+        android:title="@string/your_sites"
         android:key="@string/pref_notification_blogs">
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/options">
-        <CheckBoxPreference
+    <PreferenceCategory
+        android:title="@string/notifications_other"
+        android:key="@string/pref_notification_other_category">
+        <PreferenceScreen android:key="@string/pref_notification_other_blogs"
+            android:title="@string/notifications_comments_other_blogs" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/notifications_sights_and_sounds"
+        android:key="@string/pref_notification_sights_sounds">
+        <SwitchPreference
             android:defaultValue="false"
             android:key="wp_pref_notification_sound"
             android:title="@string/notification_sound"/>
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="wp_pref_notification_vibrate"
             android:title="@string/notification_vibrate"/>
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="wp_pref_notification_light"
             android:title="@string/notification_blink"/>

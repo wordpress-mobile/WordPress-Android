@@ -44,7 +44,7 @@ public class TypefaceCache {
                 switch (fontStyle) {
                     case Typeface.ITALIC:
                     case Typeface.BOLD_ITALIC:
-                        typefaceName = "Merriweather-LightItalic.otf";
+                        typefaceName = "Merriweather-LightItalic.ttf";
                         break;
                     default:
                         typefaceName = "Merriweather-Light.ttf";
@@ -56,10 +56,10 @@ public class TypefaceCache {
                         typefaceName = "Merriweather-Bold.ttf";
                         break;
                     case Typeface.ITALIC:
-                        typefaceName = "Merriweather-Italic.otf";
+                        typefaceName = "Merriweather-Italic.ttf";
                         break;
                     case Typeface.BOLD_ITALIC:
-                        typefaceName = "Merriweather-BoldItalic.otf";
+                        typefaceName = "Merriweather-BoldItalic.ttf";
                         break;
                     default:
                         typefaceName = "Merriweather-Regular.ttf";

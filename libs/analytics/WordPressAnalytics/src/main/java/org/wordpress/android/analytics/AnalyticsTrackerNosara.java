@@ -1,8 +1,6 @@
 package org.wordpress.android.analytics;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -12,9 +10,8 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
-public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
+public class AnalyticsTrackerNosara extends Tracker {
 
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
@@ -22,19 +19,15 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
-    private String mWpcomUserName = null;
-    private String mAnonID = null; // do not access this variable directly. Use methods.
-
     private TracksClient mNosaraClient;
-    private Context mContext;
 
-    public AnalyticsTrackerNosara(Context context) {
-        if (null == context) {
-            mNosaraClient = null;
-            return;
-        }
-        mContext = context;
+    public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
+        super(context);
         mNosaraClient = TracksClient.getClient(context);
+    }
+
+    String getAnonIdPrefKey() {
+        return TRACKS_ANON_ID;
     }
 
     @Override
@@ -52,9 +45,6 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         String eventName;
 
         switch (stat) {
-            case APPLICATION_STARTED:
-                eventName = "application_started";
-                break;
             case APPLICATION_OPENED:
                 eventName = "application_opened";
                 break;
@@ -140,22 +130,6 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
             case EDITOR_SCHEDULED_POST:
                 eventName = "editor_post_scheduled";
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_PHOTO:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_photos", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_VIDEO:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_videos", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_categories", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_TAGS:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_tags", true);
                 break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 eventName = "editor_button_tapped";
@@ -365,8 +339,8 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
 
         final String user;
         final TracksClient.NosaraUserType userType;
-        if (mWpcomUserName != null) {
-            user = mWpcomUserName;
+        if (getWordPressComUserName() != null) {
+            user = getWordPressComUserName();
             userType = TracksClient.NosaraUserType.WPCOM;
         } else {
             // This is just a security checks since the anonID is already available here.
@@ -410,41 +384,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         }
     }
 
-    private void clearAnonID() {
-        mAnonID = null;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (preferences.contains(TRACKS_ANON_ID)) {
-            final SharedPreferences.Editor editor = preferences.edit();
-            editor.remove(TRACKS_ANON_ID);
-            editor.commit();
-        }
-    }
 
-    private String getAnonID() {
-        if (mAnonID == null) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            mAnonID = preferences.getString(TRACKS_ANON_ID, null);
-        }
-        return mAnonID;
-    }
-
-    private String generateNewAnonID() {
-        String uuid = UUID.randomUUID().toString();
-        String[] uuidSplitted = uuid.split("-");
-        StringBuilder builder = new StringBuilder();
-        for (String currentPart : uuidSplitted) {
-            builder.append(currentPart);
-        }
-        uuid = builder.toString();
-        AppLog.d(AppLog.T.STATS, "New anon ID generated: " + uuid);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(TRACKS_ANON_ID, uuid);
-        editor.commit();
-
-        mAnonID = uuid;
-        return uuid;
-    }
 
     @Override
     public void endSession() {
@@ -454,6 +394,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         mNosaraClient.flush();
     }
 
+
     @Override
     public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
                                 int sessionCount, int numBlogs, int versionCode, String username, String email) {
@@ -462,15 +403,15 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         }
 
         if (isUserConnected && isWordPressComUser) {
-            mWpcomUserName = username;
+            setWordPressComUserName(username);
             // Re-unify the user
             if (getAnonID() != null) {
-                mNosaraClient.trackAliasUser(mWpcomUserName, getAnonID());
+                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID());
                 clearAnonID();
             }
         } else {
             // Not wpcom connected. Check if anonID is already present
-            mWpcomUserName = null;
+            setWordPressComUserName(null);
             if (getAnonID() == null) {
                 generateNewAnonID();
             }
@@ -489,13 +430,11 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
 
     @Override
     public void clearAllData() {
+        super.clearAllData();
         if (mNosaraClient == null) {
             return;
         }
         mNosaraClient.clearUserProperties();
-        // Reset the anon ID here
-        clearAnonID();
-        mWpcomUserName = null;
     }
 
     @Override
