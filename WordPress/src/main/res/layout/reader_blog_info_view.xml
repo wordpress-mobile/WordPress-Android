@@ -12,43 +12,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:paddingBottom="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/reader_card_margin"
-        android:paddingRight="@dimen/reader_card_margin"
-        android:paddingTop="@dimen/margin_medium">
+        android:elevation="@dimen/card_elevation"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding"
+        android:paddingTop="@dimen/margin_large">
 
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/follow_button"
-            android:layout_width="wrap_content"
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_blog_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/reader_card_content_padding" />
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="Loading..." />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_domain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_blog_name"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="text_domain" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_follow_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_below="@+id/text_domain"
             android:textColor="@color/grey_darken_10"
-            android:textSize="@dimen/text_sz_medium"
+            android:textSize="@dimen/text_sz_small"
             tools:text="12 followers" />
 
-    </RelativeLayout>
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/follow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey_lighten_20" />
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/layout_blog_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grey_lighten_30"
-        android:paddingLeft="@dimen/reader_card_margin"
-        android:paddingRight="@dimen/reader_card_margin"
         android:paddingTop="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
@@ -64,6 +74,7 @@
             android:textSize="@dimen/text_sz_medium"
             app:fontFamily="merriweather"
             tools:text="text_description" />
+
     </FrameLayout>
 
 </LinearLayout>

@@ -10,13 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
-import org.wordpress.android.util.UrlUtils;
 
 import javax.annotation.Nonnull;
 
@@ -26,8 +23,7 @@ import de.greenrobot.event.EventBus;
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
 
-public class ReaderPostListActivity extends AppCompatActivity
-        implements ReaderBlogInfoView.OnBlogInfoLoadedListener {
+public class ReaderPostListActivity extends AppCompatActivity {
 
     private ReaderPostListType mPostListType;
     private Toolbar mToolbar;
@@ -53,9 +49,7 @@ public class ReaderPostListActivity extends AppCompatActivity
         }
 
         if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            // set title to "Loading..." until blog info is loaded
-            setTitle(R.string.loading);
-
+            setTitle(R.string.reader_title_blog_preview);
             if (savedInstanceState == null) {
                 long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
@@ -65,10 +59,10 @@ public class ReaderPostListActivity extends AppCompatActivity
                     showListFragmentForBlog(blogId);
                 }
             }
-        } else if (savedInstanceState == null && getIntent().hasExtra(ReaderConstants.ARG_TAG)) {
+        } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             setTitle(R.string.reader_title_tag_preview);
             ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
-            if (tag != null) {
+            if (tag != null && savedInstanceState == null) {
                 showListFragmentForTag(tag, mPostListType);
             }
         }
@@ -182,28 +176,5 @@ public class ReaderPostListActivity extends AppCompatActivity
             return null;
         }
         return ((ReaderPostListFragment) fragment);
-    }
-
-    /*
-     * called by adapter when showing blog preview after info about this blog has been loaded - use
-     * this to show the blog name & domain in the toolbar
-     */
-    @Override
-    public void onBlogInfoLoaded(ReaderBlog blogInfo) {
-        if (isFinishing() || mToolbar == null) {
-            return;
-        }
-
-        if (blogInfo.hasName()) {
-            mToolbar.setTitle(blogInfo.getName());
-        } else {
-            mToolbar.setTitle(R.string.reader_untitled_post);
-        }
-
-        if (blogInfo.hasUrl()) {
-            mToolbar.setSubtitle(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
-        } else {
-            mToolbar.setSubtitle(null);
-        }
     }
 }

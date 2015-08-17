@@ -14,6 +14,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * topmost view in post adapter when showing blog preview - displays description, follower
@@ -98,9 +99,24 @@ public class ReaderBlogInfoView extends LinearLayout {
         mBlogInfo = blogInfo;
 
         ViewGroup layoutInfo = (ViewGroup) findViewById(R.id.layout_blog_info);
-        ViewGroup layoutDescription = (ViewGroup) findViewById(R.id.layout_blog_description);
+        ViewGroup layoutDescription = (ViewGroup) layoutInfo.findViewById(R.id.layout_blog_description);
+        TextView txtBlogName = (TextView) layoutInfo.findViewById(R.id.text_blog_name);
+        TextView txtDomain = (TextView) layoutInfo.findViewById(R.id.text_domain);
         TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
         TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
+
+        if (blogInfo.hasName()) {
+            txtBlogName.setText(blogInfo.getName());
+        } else {
+            txtBlogName.setText(R.string.reader_untitled_post);
+        }
+
+        if (blogInfo.hasUrl()) {
+            txtDomain.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
+            txtDomain.setVisibility(View.VISIBLE);
+        } else {
+            txtDomain.setVisibility(View.GONE);
+        }
 
         if (blogInfo.hasDescription()) {
             txtDescription.setText(blogInfo.getDescription());
