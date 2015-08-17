@@ -39,36 +39,37 @@ public class ReaderPostListActivity extends AppCompatActivity
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        if (getIntent() != null) {
-            if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-                mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
-            } else {
-                mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
+        if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
+            mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+        } else {
+            mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
+        }
+
+        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            // set title to "Loading..." until blog info is loaded
+            setTitle(R.string.loading);
+
+            if (savedInstanceState == null) {
+                long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
+                if (feedId != 0) {
+                    showListFragmentForFeed(feedId);
+                } else {
+                    showListFragmentForBlog(blogId);
+                }
             }
-
-            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                mToolbar.setTitle(R.string.loading);
-
-                if (savedInstanceState == null) {
-                    long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                    long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
-                    if (feedId != 0) {
-                        showListFragmentForFeed(feedId);
-                    } else {
-                        showListFragmentForBlog(blogId);
-                    }
-                }
-            } else if (savedInstanceState == null && getIntent().hasExtra(ReaderConstants.ARG_TAG)) {
-                ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
-                if (tag != null) {
-                    showListFragmentForTag(tag, mPostListType);
-                }
+        } else if (savedInstanceState == null && getIntent().hasExtra(ReaderConstants.ARG_TAG)) {
+            setTitle(R.string.reader_title_tag_preview);
+            ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
+            if (tag != null) {
+                showListFragmentForTag(tag, mPostListType);
             }
         }
     }
@@ -189,6 +190,10 @@ public class ReaderPostListActivity extends AppCompatActivity
      */
     @Override
     public void onBlogInfoLoaded(ReaderBlog blogInfo) {
+        if (isFinishing() || mToolbar == null) {
+            return;
+        }
+
         if (blogInfo.hasName()) {
             mToolbar.setTitle(blogInfo.getName());
         } else {
