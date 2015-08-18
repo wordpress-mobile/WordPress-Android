@@ -21,7 +21,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     public static final int RESULT_BLOG_REMOVED = RESULT_FIRST_USER;
 
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
-    private static final String KEY_PASSCODE_FRAGMENT = "passcode-fragment";
 
     // The blog this activity is managing settings for.
     private Blog mBlog;

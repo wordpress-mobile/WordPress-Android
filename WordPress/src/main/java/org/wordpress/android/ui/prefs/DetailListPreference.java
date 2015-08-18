@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -144,6 +145,12 @@ public class DetailListPreference extends ListPreference
         mDialog = builder.create();
 
         if (mDialog != null) {
+            ListView listView = mDialog.getListView();
+
+            if (listView != null) {
+                listView.setFooterDividersEnabled(true);
+            }
+
             Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
             Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
             Typeface typeface = TypefaceCache.getTypeface(getContext(),

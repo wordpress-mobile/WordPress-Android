@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -29,6 +32,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.TypefaceCache;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -107,9 +111,23 @@ public class SiteSettingsFragment extends PreferenceFragment
         // Setup the preferences to handled long clicks
         if (view != null) {
             ListView prefList = (ListView) view.findViewById(android.R.id.list);
+            Resources res = getResources();
 
-            if (prefList != null) {
+            if (prefList != null && res != null) {
                 prefList.setOnItemLongClickListener(this);
+                prefList.setFooterDividersEnabled(false);
+                prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
+
+                TextView generalTitle = (TextView) view.findViewById(R.id.pref_site_general);
+                if (generalTitle != null) {
+                    Typeface font = TypefaceCache.getTypeface(getActivity(),
+                            TypefaceCache.FAMILY_OPEN_SANS,
+                            Typeface.BOLD,
+                            TypefaceCache.VARIATION_NORMAL);
+                    generalTitle.setTypeface(font);
+                    generalTitle.setTextSize(res.getDimensionPixelSize(R.dimen.text_sz_medium));
+                    generalTitle.setTextColor(res.getColor(R.color.orange_jazzy));
+                }
             }
         }
 
