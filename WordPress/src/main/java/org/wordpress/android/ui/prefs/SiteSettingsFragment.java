@@ -125,7 +125,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     TypefaceCache.FAMILY_OPEN_SANS,
                                     Typeface.BOLD,
                                     TypefaceCache.VARIATION_LIGHT));
-                            title.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                            title.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                                     res.getDimensionPixelSize(R.dimen.text_sz_medium));
                             title.setTextColor(res.getColor(R.color.orange_jazzy));
                         }
