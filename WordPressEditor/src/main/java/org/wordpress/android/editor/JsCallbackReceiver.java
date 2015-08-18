@@ -4,7 +4,10 @@ import android.webkit.JavascriptInterface;
 
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class JsCallbackReceiver {
@@ -44,9 +47,19 @@ public class JsCallbackReceiver {
                 break;
             case CALLBACK_SELECTION_STYLE:
                 // Compare the new styles to the previous ones, and notify the JsCallbackListener of the changeset
-                Set<String> newStyleSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
-                mListener.onSelectionStyleChanged(Utils.getChangeMapFromSets(mPreviousStyleSet,
-                        newStyleSet));
+                Set<String> rawStyleSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
+
+                // Strip link details from active style set
+                Set<String> newStyleSet = new HashSet<>();
+                for (String element : rawStyleSet) {
+                    if (element.matches("link:(.*)")) {
+                        newStyleSet.add("link");
+                    } else if (!element.matches("link-title:(.*)")) {
+                        newStyleSet.add(element);
+                    }
+                }
+
+                mListener.onSelectionStyleChanged(Utils.getChangeMapFromSets(mPreviousStyleSet, newStyleSet));
                 mPreviousStyleSet = newStyleSet;
                 break;
             case CALLBACK_SELECTION_CHANGED:
@@ -81,8 +94,27 @@ public class JsCallbackReceiver {
                 AppLog.d(AppLog.T.EDITOR, "Image tapped, " + params);
                 break;
             case CALLBACK_LINK_TAP:
-                // TODO: Notifies that a link was tapped
+                // Extract and HTML-decode the link data from the callback params
                 AppLog.d(AppLog.T.EDITOR, "Link tapped, " + params);
+
+                List<String> linkIds = new ArrayList<>();
+                linkIds.add("url");
+                linkIds.add("title");
+
+                Set<String> linkDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, linkIds);
+                Map<String, String> linkDataMap = Utils.buildMapFromKeyValuePairs(linkDataSet);
+
+                String url = linkDataMap.get("url");
+                if (url != null) {
+                    url = Utils.decodeHtml(url);
+                }
+
+                String title = linkDataMap.get("title");
+                if (title != null) {
+                    title = Utils.decodeHtml(title);
+                }
+
+                mListener.onLinkTapped(url, title);
                 break;
             case CALLBACK_LOG:
                 // Strip 'msg=' from beginning of string
@@ -90,8 +122,26 @@ public class JsCallbackReceiver {
                 break;
             case CALLBACK_RESPONSE_STRING:
                 AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
-                Set<String> responseKeyValueSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
-                mListener.onGetHtmlResponse(Utils.buildMapFromKeyValuePairs(responseKeyValueSet));
+                Set<String> responseDataSet;
+                if (params.startsWith("function=")) {
+                    String functionName = params.substring("function=".length(), params.indexOf(JS_CALLBACK_DELIMITER));
+
+                    List<String> responseIds = new ArrayList<>();
+                    switch (functionName) {
+                        case "getHTMLForCallback":
+                            responseIds.add("id");
+                            responseIds.add("contents");
+                            break;
+                        case "getSelectedText":
+                            responseIds.add("result");
+                            break;
+                    }
+
+                    responseDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, responseIds);
+                } else {
+                    responseDataSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
+                }
+                mListener.onGetHtmlResponse(Utils.buildMapFromKeyValuePairs(responseDataSet));
                 break;
             default:
                 AppLog.d(AppLog.T.EDITOR, "Unhandled callback: " + callbackId + ":" + params);
