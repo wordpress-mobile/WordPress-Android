@@ -22,6 +22,8 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorAccent">@color/blue_medium</item>
         <item name="android:background">@color/white</item>
+        <item name="android:listDivider">@drawable/preferences_divider</item>
+        <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
     </style>
 
     <style name="Calypso.TextAppearance.AlertDialog">

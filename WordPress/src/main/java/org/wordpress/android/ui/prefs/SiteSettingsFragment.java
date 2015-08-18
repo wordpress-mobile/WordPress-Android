@@ -114,20 +114,28 @@ public class SiteSettingsFragment extends PreferenceFragment
             Resources res = getResources();
 
             if (prefList != null && res != null) {
+                prefList.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+                    @Override
+                    public void onChildViewAdded(View parent, View child) {
+                        if (child.getId() == android.R.id.title && child instanceof TextView) {
+                            Resources res = getResources();
+                            TextView title = (TextView) child;
+                            title.setTypeface(TypefaceCache.getTypeface(getActivity(),
+                                    TypefaceCache.FAMILY_OPEN_SANS,
+                                    Typeface.BOLD,
+                                    TypefaceCache.VARIATION_LIGHT));
+                            title.setTextSize(res.getDimensionPixelSize(R.dimen.text_sz_medium));
+                            title.setTextColor(res.getColor(R.color.orange_jazzy));
+                        }
+                    }
+
+                    @Override
+                    public void onChildViewRemoved(View parent, View child) {
+                    }
+                });
                 prefList.setOnItemLongClickListener(this);
                 prefList.setFooterDividersEnabled(false);
                 prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
-
-                TextView generalTitle = (TextView) view.findViewById(R.id.pref_site_general);
-                if (generalTitle != null) {
-                    Typeface font = TypefaceCache.getTypeface(getActivity(),
-                            TypefaceCache.FAMILY_OPEN_SANS,
-                            Typeface.BOLD,
-                            TypefaceCache.VARIATION_NORMAL);
-                    generalTitle.setTypeface(font);
-                    generalTitle.setTextSize(res.getDimensionPixelSize(R.dimen.text_sz_medium));
-                    generalTitle.setTextColor(res.getColor(R.color.orange_jazzy));
-                }
             }
         }
 
