@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -70,33 +71,10 @@ public class DetailListPreference extends ListPreference
     protected void onBindView(@NonNull View view) {
         super.onBindView(view);
 
-        Resources res = getContext().getResources();
-        TextView titleView = (TextView) view.findViewById(android.R.id.title);
-        TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
-        Typeface font = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_OPEN_SANS,
-                Typeface.NORMAL,
-                TypefaceCache.VARIATION_NORMAL);
-
-        if (titleView != null) {
-            if (isEnabled()) {
-                titleView.setTextColor(res.getColor(R.color.grey_dark));
-            } else {
-                titleView.setTextColor(res.getColor(R.color.grey_lighten_10));
-            }
-            titleView.setTextSize(16);
-            titleView.setTypeface(font);
-        }
-
-        if (summaryView != null) {
-            if (isEnabled()) {
-                summaryView.setTextColor(res.getColor(R.color.grey_darken_10));
-            } else {
-                summaryView.setTextColor(res.getColor(R.color.grey_lighten_10));
-            }
-            summaryView.setTextSize(14);
-            summaryView.setTypeface(font);
-        }
+        setupView((TextView) view.findViewById(android.R.id.title),
+                R.dimen.text_sz_large, R.color.grey_dark, R.color.grey_lighten_10);
+        setupView((TextView) view.findViewById(android.R.id.summary),
+                R.dimen.text_sz_medium, R.color.grey_darken_10, R.color.grey_lighten_10);
     }
 
     @Override
@@ -149,6 +127,9 @@ public class DetailListPreference extends ListPreference
 
             if (listView != null) {
                 listView.setFooterDividersEnabled(true);
+                listView.setOverscrollFooter(res.getDrawable(R.color.grey_lighten_30));
+                listView.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
+                listView.setVerticalFadingEdgeEnabled(true);
             }
 
             Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
@@ -216,6 +197,23 @@ public class DetailListPreference extends ListPreference
     public void setDetails(String[] details) {
         mDetails = details;
         refreshAdapter();
+    }
+
+    /**
+     * Helper method to style the Preference screen view
+     */
+    private void setupView(TextView view, int sizeRes, int enabledColorRes, int disabledColorRes) {
+        if (view != null) {
+            Resources res = getContext().getResources();
+            Typeface typeface = TypefaceCache.getTypeface(getContext(),
+                    TypefaceCache.FAMILY_OPEN_SANS,
+                    Typeface.NORMAL,
+                    TypefaceCache.VARIATION_NORMAL);
+
+            view.setTypeface(typeface);
+            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
+            view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
+        }
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {

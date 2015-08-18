@@ -11,6 +11,7 @@ import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,7 +125,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     TypefaceCache.FAMILY_OPEN_SANS,
                                     Typeface.BOLD,
                                     TypefaceCache.VARIATION_LIGHT));
-                            title.setTextSize(res.getDimensionPixelSize(R.dimen.text_sz_medium));
+                            title.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                                    res.getDimensionPixelSize(R.dimen.text_sz_medium));
                             title.setTextColor(res.getColor(R.color.orange_jazzy));
                         }
                     }
