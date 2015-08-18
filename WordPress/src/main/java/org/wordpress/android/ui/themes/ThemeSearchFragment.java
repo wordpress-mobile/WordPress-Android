@@ -26,7 +26,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         ThemeSearchFragment fragment = new ThemeSearchFragment();
 
         Bundle args = new Bundle();
-        args.putInt(ARGS_SORT, ThemeFilterType.POPULAR.ordinal());
+        args.putInt(ARGS_SORT, ThemeFilterType.PREMIUM.ordinal());
         fragment.setArguments(args);
 
         return fragment;

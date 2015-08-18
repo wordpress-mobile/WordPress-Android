@@ -31,15 +31,27 @@ import org.wordpress.android.widgets.HeaderGridView;
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener {
+public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener {
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (mSpinner != null) {
+            refreshView();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
     public enum ThemeFilterType {
         ALL("All"),
         FREE("Free"),
-        POPULAR("Premium");
+        PREMIUM("Premium");
 
         private String mTitle;
 
-        private ThemeFilterType(String title) {
+        ThemeFilterType(String title) {
             mTitle = title;
         }
 
@@ -47,7 +59,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return mTitle;
         }
 
-        public static ThemeFilterType getTheme(int position) {
+        public static ThemeFilterType getFilterType(int position) {
             if (position < ThemeFilterType.values().length)
                 return ThemeFilterType.values()[position];
             else
@@ -66,18 +78,11 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     protected TextView mEmptyView;
     protected TextView mNoResultText;
     protected ThemeBrowserAdapter mAdapter;
+    protected Spinner mSpinner;
     protected ThemeBrowserFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
     private boolean mShouldRefreshOnStart;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-
-    public static ThemeBrowserFragment newInstance(ThemeFilterType sort) {
-        ThemeBrowserFragment fragment = new ThemeBrowserFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARGS_SORT, sort.ordinal());
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -128,7 +133,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Cursor cursor = fetchThemes(getThemeSortType());
+        Cursor cursor = fetchThemes(getThemeFilterType());
         if (cursor == null) {
             return;
         }
@@ -159,11 +164,12 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
     private void configureAndAddSearchHeader(LayoutInflater inflater) {
         View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
-        Spinner filterSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
+        mSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.themes_filter_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        filterSpinner.setAdapter(adapter);
+        mSpinner.setAdapter(adapter);
         mGridView.addHeaderView(headerSearch);
+        mSpinner.setOnItemSelectedListener(this);
     }
 
     private void addMainHeader(LayoutInflater inflater) {
@@ -198,13 +204,21 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         }
     }
 
-    private ThemeFilterType getThemeSortType() {
+    private ThemeFilterType getThemeFilterType() {
+        int filterType = ThemeFilterType.ALL.ordinal();
+
+        if (mSpinner != null) {
+            if (mSpinner  != null && mSpinner.getPrompt() != null) {
+                String prompt = mSpinner.getPrompt().toString();
+            }
+
+        }
         int sortType = ThemeFilterType.ALL.ordinal();
         if (getArguments() != null && getArguments().containsKey(ARGS_SORT))  {
             sortType = getArguments().getInt(ARGS_SORT);
         }
 
-        return ThemeFilterType.getTheme(sortType);
+        return ThemeFilterType.getFilterType(sortType);
     }
 
     /**
@@ -218,8 +232,10 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         }
         String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         switch (themeFilterType) {
-            case POPULAR:
+            case PREMIUM:
+                return WordPress.wpDB.getThemesPremium(blogId);
             case FREE:
+                return WordPress.wpDB.getThemesFree(blogId);
             case ALL:
             default:
                 return WordPress.wpDB.getThemesAll(blogId);
@@ -227,7 +243,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     }
 
     private void refreshView() {
-        Cursor cursor = fetchThemes(getThemeSortType());
+        Cursor cursor = fetchThemes(getThemeFilterType());
         if (cursor == null) {
             return;
         }
