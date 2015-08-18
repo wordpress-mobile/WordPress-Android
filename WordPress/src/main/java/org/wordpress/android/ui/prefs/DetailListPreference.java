@@ -74,7 +74,7 @@ public class DetailListPreference extends ListPreference
         setupView((TextView) view.findViewById(android.R.id.title),
                 R.dimen.text_sz_large, R.color.grey_dark, R.color.grey_lighten_10);
         setupView((TextView) view.findViewById(android.R.id.summary),
-                R.dimen.text_sz_medium, R.color.grey_darken_10, R.color.grey_lighten_10);
+                R.dimen.text_sz_small, R.color.grey_darken_10, R.color.grey_lighten_10);
     }
 
     @Override
@@ -84,12 +84,7 @@ public class DetailListPreference extends ListPreference
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mWhichButtonClicked = which;
-            }
-        });
+        builder.setPositiveButton(R.string.ok, this);
         builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
 
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
@@ -120,40 +115,37 @@ public class DetailListPreference extends ListPreference
             builder.setTitle(getTitle());
         }
 
-        mDialog = builder.create();
+        if ((mDialog = builder.create()) == null) return;
 
-        if (mDialog != null) {
-            ListView listView = mDialog.getListView();
+        if (state != null) {
+            mDialog.onRestoreInstanceState(state);
+        }
+        mDialog.setOnDismissListener(this);
+        mDialog.show();
 
-            if (listView != null) {
-                listView.setFooterDividersEnabled(true);
-                listView.setOverscrollFooter(res.getDrawable(R.color.grey_lighten_30));
-                listView.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
-                listView.setVerticalFadingEdgeEnabled(true);
-            }
+        ListView listView = mDialog.getListView();
+        Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        Typeface typeface = TypefaceCache.getTypeface(getContext(),
+                TypefaceCache.FAMILY_OPEN_SANS,
+                Typeface.BOLD,
+                TypefaceCache.VARIATION_LIGHT);
 
-            Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-            Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-            Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_OPEN_SANS,
-                    Typeface.BOLD,
-                    TypefaceCache.VARIATION_NORMAL);
+        if (listView != null) {
+            listView.setDividerHeight(0);
+            listView.setClipToPadding(true);
+            listView.setBackgroundColor(res.getColor(R.color.grey_lighten_30));
+            listView.setPadding(0, 0, 0, res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
+        }
 
-            if (positive != null) {
-                positive.setTextColor(res.getColor(R.color.blue_medium));
-                positive.setTypeface(typeface);
-            }
+        if (positive != null) {
+            positive.setTextColor(res.getColor(R.color.blue_medium));
+            positive.setTypeface(typeface);
+        }
 
-            if (negative != null) {
-                negative.setTextColor(res.getColor(R.color.blue_medium));
-                negative.setTypeface(typeface);
-            }
-
-            if (state != null) {
-                mDialog.onRestoreInstanceState(state);
-            }
-            mDialog.setOnDismissListener(this);
-            mDialog.show();
+        if (negative != null) {
+            negative.setTextColor(res.getColor(R.color.blue_medium));
+            negative.setTypeface(typeface);
         }
     }
 

@@ -133,7 +133,7 @@
     <dimen name="progress_bar_height">3dp</dimen>
 
     <!-- DetailListPreference -->
-    <dimen name="dlp_padding_start">18dp</dimen>
+    <dimen name="dlp_padding_start">20dp</dimen>
     <dimen name="dlp_padding_end">24dp</dimen>
     <dimen name="dlp_padding_top">6dp</dimen>
     <dimen name="dlp_padding_bottom">6dp</dimen>
@@ -142,8 +142,8 @@
     <dimen name="dlp_text_margin_end">4dp</dimen>
     <dimen name="dlp_title_padding_start">24dp</dimen>
     <dimen name="dlp_title_padding_end">24dp</dimen>
-    <dimen name="dlp_title_padding_top">12dp</dimen>
-    <dimen name="dlp_title_padding_bottom">12dp</dimen>
+    <dimen name="dlp_title_padding_top">24dp</dimen>
+    <dimen name="dlp_title_padding_bottom">16dp</dimen>
     <dimen name="dlp_title_logo_padding">8dp</dimen>
     <dimen name="dlp_title_logo_width">36dp</dimen>
     <dimen name="dlp_title_logo_height">36dp</dimen>
