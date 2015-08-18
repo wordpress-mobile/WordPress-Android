@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -117,11 +118,23 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
 
-            layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
-
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
             txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
+
+            layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
+
+            // adjust the right padding of the post header to allow right padding of the  "..." icon
+            // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
+            layoutPostHeader.setPadding(
+                    layoutPostHeader.getPaddingLeft(),
+                    layoutPostHeader.getPaddingTop(),
+                    layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
+                    layoutPostHeader.getPaddingBottom());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                imgMore.setBackgroundResource(R.drawable.ripple_oval);
+            }
         }
     }
 

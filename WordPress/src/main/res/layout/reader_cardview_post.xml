@@ -68,13 +68,14 @@
 
             <ImageView
                 android:id="@+id/image_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/reader_more_icon"
+                android:layout_height="@dimen/reader_more_icon"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_large"
                 android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_large"
                 android:src="@drawable/ic_action_more"
                 android:tint="@color/grey_lighten_10" />
