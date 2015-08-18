@@ -58,30 +58,6 @@
         <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
-    <style name="ReaderTextView.Comment.Author" parent="ReaderTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/reader_hyperlink</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-    <style name="ReaderTextView.Comment.Text" parent="ReaderTextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:lineSpacingMultiplier">1.1</item>
-        <item name="fontFamily">merriweather</item>
-    </style>
-    <style name="ReaderTextView.Comment.Action" parent="ReaderTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:paddingLeft">@dimen/margin_extra_small</item>
-        <item name="android:paddingRight">@dimen/margin_extra_small</item>
-        <item name="android:paddingTop">@dimen/margin_medium</item>
-        <item name="android:paddingBottom">@dimen/margin_medium</item>
-    </style>
     <style name="ReaderTextView.Action" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

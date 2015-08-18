@@ -25,6 +25,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -45,9 +46,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private final boolean mIsLoggedOutReader;
-
-    private final int mLinkColor;
-    private final int mNoLinkColor;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -71,10 +69,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
         private final TextView txtReply;
         private final ImageView imgReply;
 
-        private final ViewGroup layoutLikes;
-        private final ImageView imgLike;
-        private final TextView txtLike;
-        private final TextView txtLikeCount;
+        private final ReaderIconCountView countLikes;
 
         public CommentHolder(View view) {
             super(view);
@@ -92,29 +87,20 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
 
-            layoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
-            imgLike = (ImageView) layoutLikes.findViewById(R.id.image_comment_like);
-            txtLike = (TextView) layoutLikes.findViewById(R.id.text_comment_like);
-            txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
+            countLikes = (ReaderIconCountView) view.findViewById(R.id.count_likes);
 
             txtText.setLinksClickable(true);
             txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mIsPrivatePost));
         }
     }
 
-    /**
-     *
-     */
     public ReaderCommentAdapter(Context context, ReaderPost post) {
         mPost = post;
         mIsPrivatePost = (post != null && post.isPrivate);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
-        mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-
-        mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
-        mNoLinkColor = context.getResources().getColor(R.color.grey_darken_10);
+        mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
 
         setHasStableIds(true);
     }
@@ -177,9 +163,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             };
             holder.imgAvatar.setOnClickListener(authorListener);
             holder.txtAuthor.setOnClickListener(authorListener);
-            holder.txtAuthor.setTextColor(mLinkColor);
         } else {
-            holder.txtAuthor.setTextColor(mNoLinkColor);
+            holder.imgAvatar.setOnClickListener(null);
+            holder.txtAuthor.setOnClickListener(null);
         }
 
         // show indentation spacer for comments with parents and indent it based on comment level
@@ -246,42 +232,23 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
         final ReaderComment comment = mComments.get(position);
         if (mPost.isLikesEnabled) {
-            holder.layoutLikes.setVisibility(View.VISIBLE);
-            holder.imgLike.setSelected(comment.isLikedByCurrentUser);
-            holder.txtLike.setText(ReaderUtils.getShortLikeLabelText(holder.txtLike.getContext(), comment.numLikes));
-            if (comment.numLikes == 0) {
-                holder.txtLike.setTextColor(mLinkColor);
-                holder.txtLikeCount.setVisibility(View.GONE);
-            } else {
-                holder.txtLike.setTextColor(mNoLinkColor);
-                holder.txtLikeCount.setSelected(comment.isLikedByCurrentUser);
-                holder.txtLikeCount.setVisibility(View.VISIBLE);
-            }
+            holder.countLikes.setVisibility(View.VISIBLE);
+            holder.countLikes.setSelected(comment.isLikedByCurrentUser);
+            holder.countLikes.setCount(comment.numLikes);
 
             if (mIsLoggedOutReader) {
-                holder.imgLike.setEnabled(false);
-                holder.txtLike.setEnabled(false);
-                holder.txtLikeCount.setEnabled(false);
+                holder.countLikes.setEnabled(false);
             } else {
-                // toggle like when layout containing like image and caption is tapped
-                holder.layoutLikes.setOnClickListener(new View.OnClickListener() {
+                holder.countLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         toggleLike(v.getContext(), holder, position);
                     }
                 });
             }
-
-            // show liking users when like count is tapped
-            holder.txtLikeCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderLikingUsers(v.getContext(), comment);
-                }
-            });
         } else {
-            holder.layoutLikes.setVisibility(View.GONE);
-            holder.layoutLikes.setOnClickListener(null);
+            holder.countLikes.setVisibility(View.GONE);
+            holder.countLikes.setOnClickListener(null);
         }
     }
 
@@ -297,7 +264,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
         ReaderComment comment = mComments.get(position);
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
-        ReaderAnim.animateLikeButton(holder.imgLike, isAskingToLike);
+        ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), isAskingToLike);
 
         if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);

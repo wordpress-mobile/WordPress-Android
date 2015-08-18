@@ -107,7 +107,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
 
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
-        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
