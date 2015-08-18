@@ -3,11 +3,12 @@ package org.wordpress.android.ui.reader;
 import android.view.View;
 
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderTag;
 
 public class ReaderInterfaces {
 
     public static interface OnPostSelectedListener {
-        public void onPostSelected(long blogId, long postId);
+        public void onPostSelected(ReaderPost post);
     }
 
     public static interface OnTagSelectedListener {
@@ -33,6 +34,13 @@ public class ReaderInterfaces {
      */
     public interface DataLoadedListener {
         public void onDataLoaded(boolean isEmpty);
+    }
+
+    /*
+     * used by list fragment when user navigates between tags
+     */
+    public interface OnNavigateTagHistoryListener {
+        void onNavigateTagHistory(ReaderTag newTag);
     }
 
 }

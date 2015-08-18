@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
@@ -44,6 +45,7 @@ public class ReaderPost {
 
     public int numReplies;        // includes comments, trackbacks & pingbacks
     public int numLikes;
+    public int wordCount;
 
     public boolean isLikedByCurrentUser;
     public boolean isFollowedByCurrentUser;
@@ -57,6 +59,7 @@ public class ReaderPost {
     public boolean isSharingEnabled;    // currently unused
 
     private String attachmentsJson;
+    private String discoverJson;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -76,7 +79,7 @@ public class ReaderPost {
         }
 
         // remove HTML from the excerpt
-        post.excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt"));
+        post.excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
 
         post.text = JSONUtils.getString(json, "content");
         post.title = JSONUtils.getStringDecoded(json, "title");
@@ -85,10 +88,12 @@ public class ReaderPost {
         post.setBlogUrl(JSONUtils.getString(json, "site_URL"));
 
         post.numLikes = json.optInt("like_count");
+        post.wordCount = json.optInt("word_count");
         post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
+        post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
 
         post.isLikesEnabled = JSONUtils.getBool(json, "likes_enabled");
         post.isSharingEnabled = JSONUtils.getBool(json, "sharing_enabled");
@@ -159,6 +164,12 @@ public class ReaderPost {
             post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
+        }
+
+        // "discover" posts
+        JSONObject jsonDiscover = json.optJSONObject("discover_metadata");
+        if (jsonDiscover != null) {
+            post.setDiscoverJson(jsonDiscover.toString());
         }
 
         // if there's no featured image, check if featured media has been set - this is sometimes
@@ -415,6 +426,31 @@ public class ReaderPost {
     }
     boolean hasAttachments() {
         return !TextUtils.isEmpty(attachmentsJson);
+    }
+
+    /*
+     * "discover" posts also store the actual JSON
+     */
+    public String getDiscoverJson() {
+        return StringUtils.notNullStr(discoverJson);
+    }
+    public void setDiscoverJson(String json) {
+        discoverJson = StringUtils.notNullStr(json);
+    }
+    public boolean isDiscoverPost() {
+        return !TextUtils.isEmpty(discoverJson);
+    }
+
+    private transient ReaderPostDiscoverData discoverData;
+    public ReaderPostDiscoverData getDiscoverData() {
+        if (discoverData == null && !TextUtils.isEmpty(discoverJson)) {
+            try {
+                discoverData = new ReaderPostDiscoverData(new JSONObject(discoverJson));
+            } catch (JSONException e) {
+                return null;
+            }
+        }
+        return discoverData;
     }
 
     public boolean hasText() {

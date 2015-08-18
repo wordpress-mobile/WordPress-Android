@@ -27,6 +27,7 @@ import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
+import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -56,6 +57,7 @@ public class ActivityLauncher {
     public static void viewCurrentSite(Context context) {
         Intent intent = new Intent(context, ViewSiteActivity.class);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
     }
 
     public static void viewBlogStats(Context context, int blogLocalTableId) {
@@ -69,22 +71,26 @@ public class ActivityLauncher {
     public static void viewCurrentBlogPosts(Context context) {
         Intent intent = new Intent(context, PostsListActivity.class);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_POSTS);
     }
 
     public static void viewCurrentBlogMedia(Context context) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
 
     public static void viewCurrentBlogPages(Context context) {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_PAGES);
     }
 
     public static void viewCurrentBlogComments(Context context) {
         Intent intent = new Intent(context, CommentsActivity.class);
         slideInFromRight(context, intent);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_COMMENTS);
     }
 
     public static void viewCurrentBlogThemes(Context context) {
@@ -100,6 +106,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         slideInFromRightForResult(activity, intent, RequestCodes.BLOG_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS);
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {
@@ -169,6 +176,11 @@ public class ActivityLauncher {
     public static void viewAccountSettings(Activity activity) {
         Intent intent = new Intent(activity, SettingsActivity.class);
         slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
+    }
+
+    public static void viewNotificationsSettings(Activity activity) {
+        Intent intent = new Intent(activity, NotificationsSettingsActivity.class);
+        slideInFromRight(activity, intent);
     }
 
     public static void viewHelpAndSupport(Context context, Tag origin) {

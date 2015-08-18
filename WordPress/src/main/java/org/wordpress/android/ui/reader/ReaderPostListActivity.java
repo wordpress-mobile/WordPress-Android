@@ -4,17 +4,26 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnNavigateTagHistoryListener;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.NetworkUtils;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +33,10 @@ import de.greenrobot.event.EventBus;
  * serves as the host for ReaderPostListFragment
  */
 
-public class ReaderPostListActivity extends AppCompatActivity {
+public class ReaderPostListActivity extends AppCompatActivity implements OnNavigateTagHistoryListener {
+
+    private ReaderPostListType mPostListType;
+    private MenuItem mFollowMenuItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,8 +45,12 @@ public class ReaderPostListActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         readIntent(getIntent(), savedInstanceState);
     }
@@ -44,23 +60,25 @@ public class ReaderPostListActivity extends AppCompatActivity {
             return;
         }
 
-        ReaderTypes.ReaderPostListType postListType;
         if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            postListType = (ReaderTypes.ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+            mPostListType = (ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
-            postListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
+            mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+        String title = intent.getStringExtra(ReaderConstants.ARG_TITLE);
 
-            if (postListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+        if (savedInstanceState == null) {
+            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 long feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
                 if (feedId != 0) {
                     showListFragmentForFeed(feedId);
                 } else {
                     showListFragmentForBlog(blogId);
+                }
+                if (TextUtils.isEmpty(title)) {
+                    title = getString(R.string.reader_title_blog_preview);
                 }
             } else {
                 // get the tag name from the intent, if not there get it from prefs
@@ -71,24 +89,21 @@ public class ReaderPostListActivity extends AppCompatActivity {
                     tag = AppPrefs.getReaderTag();
                 }
                 // if this is a followed tag and it doesn't exist, revert to default tag
-                if (postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
+                if (mPostListType == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
                     tag = ReaderTag.getDefaultTag();
                 }
-
-                showListFragmentForTag(tag, postListType);
+                if (tag != null) {
+                    title = ReaderUtils.makeHashTag(tag.getTagName());
+                }
+                showListFragmentForTag(tag, mPostListType);
             }
-        }
 
-        switch (postListType) {
-            case TAG_PREVIEW:
-                setTitle(R.string.reader_title_tag_preview);
-                break;
-            case BLOG_PREVIEW:
-                setTitle(R.string.reader_title_blog_preview);
-                break;
-            default:
-                break;
+            setTitle(title);
         }
+    }
+
+    private ReaderPostListType getPostListType() {
+        return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
     @Override
@@ -108,12 +123,94 @@ public class ReaderPostListActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // add a follow menu item to the toolbar for tag/blog preview
+        if (getPostListType().isPreviewType()) {
+            mFollowMenuItem = menu.add(R.string.reader_btn_follow);
+            mFollowMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            updateFollowMenu();
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
+        } else if (item.equals(mFollowMenuItem)) {
+            toggleFollowStatus();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * update the "follow" menu item to reflect the follow status of the current blog/tag
+     */
+    private void updateFollowMenu() {
+        ReaderPostListFragment fragment = getListFragment();
+        if (fragment == null || mFollowMenuItem == null) return;
+
+        boolean isFollowing;
+        switch (getPostListType()) {
+            case BLOG_PREVIEW:
+                if (fragment.getCurrentFeedId() != 0) {
+                    isFollowing = ReaderBlogTable.isFollowedFeed(fragment.getCurrentFeedId());
+                } else {
+                    isFollowing = ReaderBlogTable.isFollowedBlog(fragment.getCurrentBlogId());
+                }
+                break;
+            default:
+                isFollowing = ReaderTagTable.isFollowedTagName(fragment.getCurrentTagName());
+                break;
+        }
+
+        mFollowMenuItem.setTitle(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+    }
+
+    /*
+    * user tapped follow item in toolbar to follow/unfollow the current blog/tag
+    */
+    private void toggleFollowStatus() {
+        ReaderPostListFragment fragment = getListFragment();
+        if (fragment == null) return;
+
+        if (!NetworkUtils.checkConnection(this)) return;
+
+        boolean isAskingToFollow;
+        boolean result;
+
+        switch (getPostListType()) {
+            case BLOG_PREVIEW:
+                if (fragment.getCurrentFeedId() != 0) {
+                    isAskingToFollow = !ReaderBlogTable.isFollowedFeed(fragment.getCurrentFeedId());
+                    result = ReaderBlogActions.followFeedById(fragment.getCurrentFeedId(), isAskingToFollow, null);
+                } else {
+                    isAskingToFollow = !ReaderBlogTable.isFollowedBlog(fragment.getCurrentBlogId());
+                    result = ReaderBlogActions.followBlogById(fragment.getCurrentBlogId(), isAskingToFollow, null);
+                }
+                break;
+            case TAG_PREVIEW:
+                isAskingToFollow = !ReaderTagTable.isFollowedTagName(fragment.getCurrentTagName());
+                ReaderTagActions.TagAction action = (isAskingToFollow ? ReaderTagActions.TagAction.ADD : ReaderTagActions.TagAction.DELETE);
+                result = ReaderTagActions.performTagAction(fragment.getCurrentTag(), action, null);
+                break;
+            default:
+                return;
+        }
+
+        if (result) {
+            updateFollowMenu();
+        }
+    }
+
+    /*
+     * user navigated to a different tag in the fragment
+     */
+    @Override
+    public void onNavigateTagHistory(ReaderTag newTag) {
+        updateFollowMenu();
+        setTitle(ReaderUtils.makeHashTag(newTag.getTagName()));
     }
 
     @Override
@@ -153,7 +250,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(final ReaderTag tag, ReaderTypes.ReaderPostListType listType) {
+    private void showListFragmentForTag(final ReaderTag tag, ReaderPostListType listType) {
         if (isFinishing()) {
             return;
         }

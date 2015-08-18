@@ -2,6 +2,7 @@ package org.wordpress.android.editor;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.style.CharacterStyle;
@@ -77,6 +78,12 @@ public class HtmlStyleUtils {
      * @param end the index in {@code content} to style until
      */
     public static void styleHtmlForDisplay(@NonNull Spannable content, int start, int end) {
+        if (Build.VERSION.RELEASE.equals("4.1") || Build.VERSION.RELEASE.equals("4.1.1")) {
+            // Avoids crashing bug in Android 4.1 and 4.1.1 triggered when spanned text is line-wrapped
+            // AOSP issue: https://code.google.com/p/android/issues/detail?id=35466
+            return;
+        }
+
         applySpansByRegex(content, start, end, REGEX_HTML_TAGS);
         applySpansByRegex(content, start, end, REGEX_HTML_ATTRIBUTES);
         applySpansByRegex(content, start, end, REGEX_HTML_COMMENTS);

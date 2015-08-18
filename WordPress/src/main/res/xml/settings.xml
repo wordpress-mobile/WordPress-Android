@@ -5,16 +5,6 @@
     android:key="@string/pref_key_settings_root">
 
     <PreferenceCategory
-        android:title="@string/notifications"
-        android:key="@string/pref_key_notifications_section">
-
-        <Preference
-            android:key="@string/pref_key_notifications"
-            android:title="@string/manage_notifications" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:key="@string/pref_key_editor"
         android:title="@string/preference_editor">
 

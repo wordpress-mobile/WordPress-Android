@@ -25,6 +25,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin"
                 android:textColor="@color/grey_darken_20"
                 android:gravity="center"
                 android:text="Title"/>

@@ -17,6 +17,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -107,7 +108,7 @@ public class CommentActions {
 
                 int newCommentID;
                 try {
-                    newCommentID = (Integer) client.call("wp.newComment", params);
+                    newCommentID = (Integer) client.call(ApiHelper.Methods.NEW_COMMENT, params);
                 } catch (XMLRPCException e) {
                     AppLog.e(T.COMMENTS, "Error while sending new comment", e);
                     newCommentID = -1;
@@ -172,7 +173,7 @@ public class CommentActions {
 
                 long newCommentID;
                 try {
-                    Object newCommentIDObject = client.call("wp.newComment", params);
+                    Object newCommentIDObject = client.call(ApiHelper.Methods.NEW_COMMENT, params);
                     if (newCommentIDObject instanceof Integer) {
                         newCommentID = ((Integer) newCommentIDObject).longValue();
                     } else if (newCommentIDObject instanceof Long) {
@@ -374,7 +375,7 @@ public class CommentActions {
 
                 Object result;
                 try {
-                    result = client.call("wp.editComment", params);
+                    result = client.call(ApiHelper.Methods.EDIT_COMMENT, params);
                 } catch (XMLRPCException e) {
                     AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     result = null;
@@ -452,7 +453,7 @@ public class CommentActions {
 
                     Object result;
                     try {
-                        result = client.call("wp.editComment", params);
+                        result = client.call(ApiHelper.Methods.EDIT_COMMENT, params);
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success) {
                             comment.setStatus(newStatusStr);
@@ -511,7 +512,7 @@ public class CommentActions {
 
                 Object result;
                 try {
-                    result = client.call("wp.deleteComment", params);
+                    result = client.call(ApiHelper.Methods.DELETE_COMMENT, params);
                 } catch (final XMLRPCException e) {
                     AppLog.e(T.COMMENTS, "Error while deleting comment", e);
                     result = null;
@@ -573,7 +574,7 @@ public class CommentActions {
 
                     Object result;
                     try {
-                        result = client.call("wp.deleteComment", params);
+                        result = client.call(ApiHelper.Methods.DELETE_COMMENT, params);
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success)
                             deletedComments.add(comment);

@@ -54,7 +54,11 @@ public class ReaderPostActions {
         }
 
         // update like status and like count in local db
-        int newNumLikes = (isAskingToLike ? post.numLikes + 1 : post.numLikes - 1);
+        int numCurrentLikes = ReaderPostTable.getNumLikesForPost(post.blogId, post.postId);
+        int newNumLikes = (isAskingToLike ? numCurrentLikes + 1 : numCurrentLikes - 1);
+        if (newNumLikes < 0) {
+            newNumLikes = 0;
+        }
         ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
         ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
 
@@ -116,7 +120,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating post");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdatePostResponse(final ReaderPost originalPost,
@@ -233,7 +237,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "requesting post");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     private static String getTrackingPixelForPost(@NonNull ReaderPost post) {

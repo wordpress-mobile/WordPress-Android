@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EditorExampleActivity" >
+            android:name=".EditorExampleActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
     </application>
 

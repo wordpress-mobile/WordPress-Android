@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -89,5 +90,10 @@ public class AnalyticsUtils {
 
     private static boolean hasDotComTokenAndNoMixpanelUserEmail() {
         return (AccountHelper.isSignedInWordPressDotCom() && AppPrefs.getMixpanelUserEmail() == null);
+    }
+
+    public static int getWordCount(String content) {
+        String text = Html.fromHtml(content.replaceAll("<img[^>]*>", "")).toString();
+        return text.split("\\s+").length;
     }
 }

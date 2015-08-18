@@ -14,7 +14,6 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -44,6 +43,37 @@ import java.util.regex.Pattern;
 import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
+
+    public static final class Methods {
+        public static final String GET_MEDIA_LIBRARY  = "wp.getMediaLibrary";
+        public static final String GET_POST_FORMATS   = "wp.getPostFormats";
+        public static final String GET_CATEGORIES     = "wp.getCategories";
+        public static final String GET_MEDIA_ITEM     = "wp.getMediaItem";
+        public static final String GET_COMMENTS       = "wp.getComments";
+        public static final String GET_BLOGS          = "wp.getUsersBlogs";
+        public static final String GET_OPTIONS        = "wp.getOptions";
+        public static final String GET_PROFILE        = "wp.getProfile";
+        public static final String GET_PAGES          = "wp.getPages";
+        public static final String GET_TERM           = "wp.getTerm";
+        public static final String GET_PAGE           = "wp.getPage";
+
+        public static final String DELETE_COMMENT     = "wp.deleteComment";
+        public static final String DELETE_PAGE        = "wp.deletePage";
+        public static final String DELETE_POST        = "wp.deletePost";
+
+        public static final String NEW_CATEGORY       = "wp.newCategory";
+        public static final String NEW_COMMENT        = "wp.newComment";
+
+        public static final String EDIT_POST          = "wp.editPost";
+        public static final String EDIT_COMMENT       = "wp.editComment";
+
+        public static final String UPLOAD_FILE        = "wp.uploadFile";
+
+        public static final String WPCOM_GET_FEATURES = "wpcom.getFeatures";
+
+        public static final String LIST_METHODS       = "system.listMethods";
+    }
+
     public enum ErrorType {
         NO_ERROR, UNKNOWN_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED, UNAUTHORIZED
@@ -102,7 +132,7 @@ public class ApiHelper {
             Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), "show-supported" };
             try {
-                result = client.call("wp.getPostFormats", params);
+                result = client.call(ApiHelper.Methods.GET_POST_FORMATS, params);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
@@ -231,7 +261,7 @@ public class ApiHelper {
                                     hPost};
                 Object versionResult = null;
                 try {
-                    versionResult = client.call("wp.getOptions", vParams);
+                    versionResult = client.call(Methods.GET_OPTIONS, vParams);
                 } catch (ClassCastException cce) {
                     setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                     return false;
@@ -252,7 +282,7 @@ public class ApiHelper {
             // Check if user is an admin
             Object[] userParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
             try {
-                Map<String, Object> userInfos = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
+                Map<String, Object> userInfos = (HashMap<String, Object>) client.call(ApiHelper.Methods.GET_PROFILE, userParams);
                 updateBlogAdmin(userInfos);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
@@ -318,7 +348,7 @@ public class ApiHelper {
 
         int numDeleted = 0;
         try {
-            Object[] result = (Object[]) client.call("wp.getComments", params);
+            Object[] result = (Object[]) client.call(ApiHelper.Methods.GET_COMMENTS, params);
             if (result == null || result.length == 0) {
                 return 0;
             }
@@ -351,7 +381,7 @@ public class ApiHelper {
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         Object[] result;
-        result = (Object[]) client.call("wp.getComments", commentParams);
+        result = (Object[]) client.call(ApiHelper.Methods.GET_COMMENTS, commentParams);
 
         if (result.length == 0) {
             return null;
@@ -423,7 +453,7 @@ public class ApiHelper {
                     blog.getPassword(), postId};
 
             try {
-                client.call(isPage ? "wp.deletePage" : "blogger.deletePost", (isPage) ? pageParams : postParams);
+                client.call(isPage ? ApiHelper.Methods.DELETE_PAGE : "blogger.deletePost", (isPage) ? pageParams : postParams);
                 return true;
             } catch (XMLRPCException | IOException | XmlPullParserException e) {
                 mErrorMessage = e.getMessage();
@@ -475,7 +505,7 @@ public class ApiHelper {
 
             Object[] results = null;
             try {
-                results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
+                results = (Object[]) client.call(ApiHelper.Methods.GET_MEDIA_LIBRARY, apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return 0;
@@ -579,7 +609,7 @@ public class ApiHelper {
 
             Boolean result = null;
             try {
-                result = (Boolean) client.call("wp.editPost", apiParams);
+                result = (Boolean) client.call(ApiHelper.Methods.EDIT_POST, apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
@@ -639,7 +669,7 @@ public class ApiHelper {
             };
             Map<?, ?> results = null;
             try {
-                results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
+                results = (Map<?, ?>) client.call(ApiHelper.Methods.GET_MEDIA_ITEM, apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
@@ -720,7 +750,7 @@ public class ApiHelper {
 
             Map<?, ?> resultMap;
             try {
-                resultMap = (HashMap<?, ?>) client.call("wp.uploadFile", apiParams, getTempFile(mContext));
+                resultMap = (HashMap<?, ?>) client.call(Methods.UPLOAD_FILE, apiParams, getTempFile(mContext));
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return null;
@@ -793,7 +823,7 @@ public class ApiHelper {
 
             try {
                 if (client != null) {
-                    Boolean result = (Boolean) client.call("wp.deletePost", apiParams);
+                    Boolean result = (Boolean) client.call(ApiHelper.Methods.DELETE_POST, apiParams);
                     if (!result) {
                         setError(ErrorType.INVALID_RESULT, "wp.deletePost returned false");
                     }
@@ -859,7 +889,7 @@ public class ApiHelper {
 
             Map<?, ?> resultMap = null;
             try {
-                resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
+                resultMap = (HashMap<?, ?>) client.call(ApiHelper.Methods.WPCOM_GET_FEATURES, apiParams);
             } catch (ClassCastException cce) {
                 AppLog.e(T.API, "wpcom.getFeatures error", cce);
             } catch (XMLRPCException e) {
@@ -1046,7 +1076,7 @@ public class ApiHelper {
         }
 
         try {
-            Object result = client.call(isPage ? "wp.getPage" : "metaWeblog.getPost", apiParams);
+            Object result = client.call(isPage ? ApiHelper.Methods.GET_PAGE : "metaWeblog.getPost", apiParams);
 
             if (result != null && result instanceof Map) {
                 Map postMap = (HashMap) result;

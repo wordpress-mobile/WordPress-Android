@@ -141,4 +141,7 @@
     <color name="passcodelock_prompt_text_color">@color/white</color>
     <color name="passcodelock_button_text_color">@color/white</color>
 
+    <!-- Notifications -->
+    <color name="notifications_settings_divider_color">#d0d5d9</color>
+
 </resources>

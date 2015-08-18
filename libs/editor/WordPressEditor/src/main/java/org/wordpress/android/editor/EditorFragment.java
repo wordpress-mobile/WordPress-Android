@@ -2,6 +2,7 @@ package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -53,13 +55,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private SourceViewEditText mSourceViewTitle;
     private SourceViewEditText mSourceViewContent;
 
+    private int mSelectionStart;
+    private int mSelectionEnd;
+
     private String mTitlePlaceholder = "";
     private String mContentPlaceholder = "";
 
     private boolean mHideActionBarOnSoftKeyboardUp;
 
+    private String mJavaScriptResult = "";
+
     private CountDownLatch mGetTitleCountDownLatch;
     private CountDownLatch mGetContentCountDownLatch;
+    private CountDownLatch mGetSelectedTextCountDownLatch;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
@@ -138,9 +146,98 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mSourceViewContent.addTextChangedListener(new HtmlStyleTextWatcher());
 
         mSourceViewTitle.setHint(mTitlePlaceholder);
+        mSourceViewContent.setHint("<p>" + mContentPlaceholder + "</p>");
 
         // -- Format bar configuration
 
+        setupFormatBarButtonMap(view);
+
+        return view;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    private ActionBar getActionBar() {
+        if (!isAdded()) {
+            return null;
+        }
+
+        if (getActivity() instanceof AppCompatActivity) {
+            return ((AppCompatActivity) getActivity()).getSupportActionBar();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (getView() != null) {
+            // Reload the format bar to make sure the correct one for the new screen width is being used
+            View formatBar = getView().findViewById(R.id.format_bar);
+
+            if (formatBar != null) {
+                // Remember the currently active format bar buttons so they can be re-activated after the reload
+                ArrayList<String> activeTags = new ArrayList<>();
+                for (Map.Entry<String, ToggleButton> entry : mTagToggleButtonMap.entrySet()) {
+                    if (entry.getValue().isChecked()) {
+                        activeTags.add(entry.getKey());
+                    }
+                }
+
+                ViewGroup parent = (ViewGroup) formatBar.getParent();
+                parent.removeView(formatBar);
+
+                formatBar = getActivity().getLayoutInflater().inflate(R.layout.format_bar, parent, false);
+                formatBar.setId(R.id.format_bar);
+                parent.addView(formatBar);
+
+                setupFormatBarButtonMap(formatBar);
+
+                // Restore the active format bar buttons
+                for (String tag : activeTags) {
+                    mTagToggleButtonMap.get(tag).setChecked(true);
+                }
+
+                if (mSourceView.getVisibility() == View.VISIBLE) {
+                    ToggleButton htmlButton = (ToggleButton) formatBar.findViewById(R.id.format_bar_button_html);
+                    htmlButton.setChecked(true);
+                }
+            }
+
+            // Reload HTML mode margins
+            View sourceViewTitle = getView().findViewById(R.id.sourceview_title);
+            View sourceViewContent = getView().findViewById(R.id.sourceview_content);
+
+            if (sourceViewTitle != null && sourceViewContent != null) {
+                int sideMargin = (int) getActivity().getResources().getDimension(R.dimen.sourceview_side_margin);
+
+                ViewGroup.MarginLayoutParams titleParams =
+                        (ViewGroup.MarginLayoutParams) sourceViewTitle.getLayoutParams();
+                ViewGroup.MarginLayoutParams contentParams =
+                        (ViewGroup.MarginLayoutParams) sourceViewContent.getLayoutParams();
+
+                titleParams.setMargins(sideMargin, titleParams.topMargin, sideMargin, titleParams.bottomMargin);
+                contentParams.setMargins(sideMargin, contentParams.topMargin, sideMargin, contentParams.bottomMargin);
+            }
+        }
+
+        // Toggle action bar auto-hiding for the new orientation
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
+            mHideActionBarOnSoftKeyboardUp = true;
+            hideActionBarIfNeeded();
+        } else {
+            mHideActionBarOnSoftKeyboardUp = false;
+            showActionBarIfNeeded();
+        }
+    }
+
+    private void setupFormatBarButtonMap(View view) {
         ToggleButton boldButton = (ToggleButton) view.findViewById(R.id.format_bar_button_bold);
         mTagToggleButtonMap.put(getString(R.string.format_bar_tag_bold), boldButton);
 
@@ -173,40 +270,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         for (ToggleButton button : mTagToggleButtonMap.values()) {
             button.setOnClickListener(this);
-        }
-
-        return view;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    private ActionBar getActionBar() {
-        if (!isAdded()) {
-            return null;
-        }
-
-        if (getActivity() instanceof AppCompatActivity) {
-            return ((AppCompatActivity) getActivity()).getSupportActionBar();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Toggle action bar auto-hiding for the new orientation
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
-                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
-        } else {
-            mHideActionBarOnSoftKeyboardUp = false;
-            showActionBarIfNeeded();
         }
     }
 
@@ -261,8 +324,42 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             // TODO: Handle inserting media
             ((ToggleButton) v).setChecked(false);
         } else if (id == R.id.format_bar_button_link) {
-            // TODO: Handle inserting a link
+            if (!((ToggleButton) v).isChecked()) {
+                // The link button was checked when it was pressed; remove the current link
+                mWebView.execJavaScriptFromString("ZSSEditor.unlink();");
+                return;
+            }
+
             ((ToggleButton) v).setChecked(false);
+
+            LinkDialogFragment linkDialogFragment = new LinkDialogFragment();
+            linkDialogFragment.setTargetFragment(this, LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_ADD);
+
+            Bundle dialogBundle = new Bundle();
+
+            // Pass selected text to dialog
+            if (mSourceView.getVisibility() == View.VISIBLE) {
+                // HTML mode
+                mSelectionStart = mSourceViewContent.getSelectionStart();
+                mSelectionEnd = mSourceViewContent.getSelectionEnd();
+
+                String selectedText = mSourceViewContent.getText().toString().substring(mSelectionStart, mSelectionEnd);
+                dialogBundle.putString("linkText", selectedText);
+            } else {
+                // Visual mode
+                mGetSelectedTextCountDownLatch = new CountDownLatch(1);
+                mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedText');");
+                try {
+                    if (mGetSelectedTextCountDownLatch.await(1, TimeUnit.SECONDS)) {
+                        dialogBundle.putString("linkText", mJavaScriptResult);
+                    }
+                } catch (InterruptedException e) {
+                    AppLog.d(T.EDITOR, "Failed to obtain selected text from JS editor.");
+                }
+            }
+
+            linkDialogFragment.setArguments(dialogBundle);
+            linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
         } else {
             if (v instanceof ToggleButton) {
                 onFormattingButtonClicked((ToggleButton) v);
@@ -286,6 +383,61 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onImeBack() {
         showActionBarIfNeeded();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if ((requestCode == LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_ADD ||
+                requestCode == LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_UPDATE)) {
+
+            if (resultCode == LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_DELETE) {
+                mWebView.execJavaScriptFromString("ZSSEditor.unlink();");
+                return;
+            }
+
+            if (data == null) {
+                return;
+            }
+
+            Bundle extras = data.getExtras();
+            if (extras == null) {
+                return;
+            }
+
+            String linkUrl = extras.getString("linkURL");
+            String linkText = extras.getString("linkText");
+
+            if (linkText == null || linkText.equals("")) {
+                linkText = linkUrl;
+            }
+
+            if (mSourceView.getVisibility() == View.VISIBLE) {
+                Editable content = mSourceViewContent.getText();
+                if (content == null) {
+                    return;
+                }
+
+                if (mSelectionStart < mSelectionEnd) {
+                    content.delete(mSelectionStart, mSelectionEnd);
+                }
+
+                String urlHtml = "<a href=\"" + linkUrl + "\">" + linkText + "</a>";
+
+                content.insert(mSelectionStart, urlHtml);
+                mSourceViewContent.setSelection(mSelectionStart + urlHtml.length());
+            } else {
+                String jsMethod;
+                if (requestCode == LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_ADD) {
+                    jsMethod = "ZSSEditor.insertLink";
+                } else {
+                    jsMethod = "ZSSEditor.updateLink";
+                }
+                mWebView.execJavaScriptFromString(jsMethod + "('" + Utils.escapeHtml(linkUrl) + "', '" +
+                        Utils.escapeHtml(linkText) + "');");
+            }
+        }
     }
 
     @SuppressLint("NewApi")
@@ -467,20 +619,47 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
+    public void onLinkTapped(String url, String title) {
+        LinkDialogFragment linkDialogFragment = new LinkDialogFragment();
+        linkDialogFragment.setTargetFragment(this, LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_UPDATE);
+
+        Bundle dialogBundle = new Bundle();
+
+        dialogBundle.putString("linkURL", url);
+        dialogBundle.putString("linkText", title);
+
+        linkDialogFragment.setArguments(dialogBundle);
+        linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
+    }
+
     public void onGetHtmlResponse(Map<String, String> inputArgs) {
-        String fieldId = inputArgs.get("id");
-        String fieldContents = inputArgs.get("contents");
-        if (!fieldId.isEmpty()) {
-            switch (fieldId) {
-                case "zss_field_title":
-                    mTitle = fieldContents;
-                    mGetTitleCountDownLatch.countDown();
-                    break;
-                case "zss_field_content":
-                    mContentHtml = fieldContents;
-                    mGetContentCountDownLatch.countDown();
-                    break;
-            }
+        String functionId = inputArgs.get("function");
+
+        if (functionId.isEmpty()) {
+            return;
+        }
+
+        switch (functionId) {
+            case "getHTMLForCallback":
+                String fieldId = inputArgs.get("id");
+                String fieldContents = inputArgs.get("contents");
+                if (!fieldId.isEmpty()) {
+                    switch (fieldId) {
+                        case "zss_field_title":
+                            mTitle = fieldContents;
+                            mGetTitleCountDownLatch.countDown();
+                            break;
+                        case "zss_field_content":
+                            mContentHtml = fieldContents;
+                            mGetContentCountDownLatch.countDown();
+                            break;
+                    }
+                }
+                break;
+            case "getSelectedText":
+                mJavaScriptResult = inputArgs.get("result");
+                mGetSelectedTextCountDownLatch.countDown();
+                break;
         }
     }
 

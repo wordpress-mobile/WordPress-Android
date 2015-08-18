@@ -19,7 +19,6 @@ public final class AnalyticsTracker {
     public enum Stat {
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
-        APPLICATION_STARTED,
         APPLICATION_UPGRADED,
         THEMES_ACCESSED_THEMES_BROWSER,
         THEMES_CHANGED_THEME,
@@ -57,10 +56,6 @@ public final class AnalyticsTracker {
         EDITOR_CLOSED_POST,
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
-        EDITOR_PUBLISHED_POST_WITH_PHOTO,
-        EDITOR_PUBLISHED_POST_WITH_VIDEO,
-        EDITOR_PUBLISHED_POST_WITH_CATEGORIES,
-        EDITOR_PUBLISHED_POST_WITH_TAGS,
         EDITOR_TAPPED_BLOCKQUOTE,
         EDITOR_TAPPED_BOLD,
         EDITOR_TAPPED_IMAGE,
@@ -69,6 +64,8 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_MORE,
         EDITOR_TAPPED_STRIKETHROUGH,
         EDITOR_TAPPED_UNDERLINE,
+        ME_ACCESSED,
+        MY_SITE_ACCESSED,
         NOTIFICATIONS_ACCESSED,
         NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS,
         NOTIFICATION_REPLIED_TO,
@@ -84,7 +81,7 @@ public final class AnalyticsTracker {
         OPENED_VIEW_SITE,
         OPENED_VIEW_ADMIN,
         OPENED_MEDIA_LIBRARY,
-        OPENED_SETTINGS,
+        OPENED_BLOG_SETTINGS,
         CREATED_ACCOUNT,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
@@ -107,16 +104,6 @@ public final class AnalyticsTracker {
         NOTIFICATION_SETTINGS_STREAMS_OPENED,
         NOTIFICATION_SETTINGS_DETAILS_OPENED,
         NOTIFICATION_SETTINGS_UPDATED,
-    }
-
-    public interface Tracker {
-        void track(Stat stat);
-        void track(Stat stat, Map<String, ?> properties);
-        void endSession();
-        void refreshMetadata(boolean isUserConnected,boolean isWordPressComUser, boolean isJetpackUser,
-                             int sessionCount, int numBlogs, int versionCode, String username, String email);
-        void clearAllData();
-        void registerPushNotificationToken(String regId);
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<Tracker>();
