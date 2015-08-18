@@ -35,7 +35,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (mSpinner != null) {
-            refreshView();
+            refreshView(position);
         }
     }
 
@@ -133,7 +133,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Cursor cursor = fetchThemes(getThemeFilterType());
+        Cursor cursor = fetchThemes(0);
         if (cursor == null) {
             return;
         }
@@ -182,7 +182,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         if (mSwipeToRefreshHelper != null) {
             mSwipeToRefreshHelper.setRefreshing(refreshing);
             if (!refreshing) {
-                refreshView();
+                refreshView(0);
             }
         }
     }
@@ -208,11 +208,12 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         int filterType = ThemeFilterType.ALL.ordinal();
 
         if (mSpinner != null) {
-            if (mSpinner  != null && mSpinner.getPrompt() != null) {
+            if (mSpinner.getPrompt() != null) {
                 String prompt = mSpinner.getPrompt().toString();
             }
 
         }
+//        int filterType = mSpinner.
         int sortType = ThemeFilterType.ALL.ordinal();
         if (getArguments() != null && getArguments().containsKey(ARGS_SORT))  {
             sortType = getArguments().getInt(ARGS_SORT);
@@ -226,24 +227,24 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
      *
      * @return a db Cursor or null if current blog is null
      */
-    private Cursor fetchThemes(ThemeFilterType themeFilterType) {
+    private Cursor fetchThemes(int position) {
         if (WordPress.getCurrentBlog() == null) {
             return null;
         }
         String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-        switch (themeFilterType) {
-            case PREMIUM:
+        switch (position) {
+            case 2:
                 return WordPress.wpDB.getThemesPremium(blogId);
-            case FREE:
+            case 1:
                 return WordPress.wpDB.getThemesFree(blogId);
-            case ALL:
+            case 0:
             default:
                 return WordPress.wpDB.getThemesAll(blogId);
         }
     }
 
-    private void refreshView() {
-        Cursor cursor = fetchThemes(getThemeFilterType());
+    private void refreshView(int position) {
+        Cursor cursor = fetchThemes(position);
         if (cursor == null) {
             return;
         }
