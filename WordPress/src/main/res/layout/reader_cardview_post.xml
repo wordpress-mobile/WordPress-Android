@@ -77,8 +77,7 @@
                 android:paddingLeft="@dimen/margin_large"
                 android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_large"
-                android:src="@drawable/ic_action_more"
-                android:tint="@color/grey_lighten_10" />
+                android:src="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>
 
