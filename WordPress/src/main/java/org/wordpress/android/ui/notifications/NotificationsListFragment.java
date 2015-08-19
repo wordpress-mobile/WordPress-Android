@@ -66,7 +66,7 @@ public class NotificationsListFragment extends Fragment
      * For responding to tapping of notes
      */
     public interface OnNoteClickListener {
-        public void onClickNote(String noteId);
+        void onClickNote(String noteId);
     }
 
     @Override
