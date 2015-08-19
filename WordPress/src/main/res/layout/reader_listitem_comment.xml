@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/reader_card_margin"
     android:layout_marginRight="@dimen/reader_card_margin"
-    android:background="@drawable/reader_comment_selector">
+    android:background="@color/white">
 
     <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
     <View
@@ -60,7 +60,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:lineSpacingMultiplier="1.1"
-            android:textColor="@color/grey_dark"
+            android:textColor="@color/grey_darken_20"
             android:textSize="@dimen/text_sz_medium"
             app:fontFamily="merriweather"
             tools:text="text_comment_text" />

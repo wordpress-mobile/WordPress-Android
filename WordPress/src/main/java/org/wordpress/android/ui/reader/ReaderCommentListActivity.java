@@ -28,7 +28,6 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
@@ -36,11 +35,14 @@ import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManag
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -204,14 +206,31 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return false;
         }
 
-        final TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
-        final WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
-        final TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
+        TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
+        TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
+        TextView txtDate = (TextView) findViewById(R.id.text_post_date);
+        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
+        WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
 
         txtTitle.setText(mPost.getTitle());
+        if (mPost.hasBlogName()) {
+            txtBlogName.setText(mPost.getBlogName());
+        } else {
+            txtBlogName.setText(R.string.reader_untitled_post);
+        }
 
-        String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium));
-        imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
+        java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(mPost.getPublished());
+        txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
+
+        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
+        String avatarUrl;
+        if (mPost.hasBlogUrl()) {
+            avatarUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), avatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        } else {
+            avatarUrl = mPost.getPostAvatarForDisplay(avatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+        }
 
         if (ReaderUtils.isLoggedOutReader()) {
             mCommentBox.setVisibility(View.GONE);

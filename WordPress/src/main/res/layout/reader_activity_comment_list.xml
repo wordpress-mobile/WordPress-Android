@@ -11,7 +11,7 @@
 
     <include
         android:id="@+id/layout_post_header"
-        layout="@layout/reader_include_post_header"
+        layout="@layout/reader_include_comments_post_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar" />

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    post header on reader comment activity
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_post_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey_lighten_30"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/reader_card_margin"
+    android:paddingRight="@dimen/reader_card_margin"
+    android:paddingTop="@dimen/margin_large">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_card_content_padding"
+        android:layout_marginRight="@dimen/reader_card_content_padding"
+        android:orientation="horizontal">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_post_avatar"
+            android:layout_width="@dimen/avatar_sz_extra_small"
+            android:layout_height="@dimen/avatar_sz_extra_small"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/margin_small"
+            tools:src="@drawable/gravatar_placeholder" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_blog_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_blog_name" />
+
+    </LinearLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_post_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/reader_card_content_padding"
+        android:layout_marginRight="@dimen/reader_card_content_padding"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        app:fontFamily="merriweather"
+        tools:text="text_post_title" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_post_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_card_content_padding"
+        android:layout_marginRight="@dimen/reader_card_content_padding"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="text_post_date" />
+
+    <View
+        android:id="@+id/divider_header"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@color/grey_lighten_20" />
+
+</LinearLayout>

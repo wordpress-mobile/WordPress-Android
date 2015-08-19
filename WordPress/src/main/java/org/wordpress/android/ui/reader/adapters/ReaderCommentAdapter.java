@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,6 +47,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private final boolean mIsLoggedOutReader;
+
+    private final int mColorAuthor;
+    private final int mColorNotAuthor;
+    private final int mColorHighlight;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -101,6 +106,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
 
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
+
+        mColorAuthor = context.getResources().getColor(R.color.blue_medium);
+        mColorNotAuthor = context.getResources().getColor(R.color.grey_dark);
+        mColorHighlight = context.getResources().getColor(R.color.grey_lighten_30);
 
         setHasStableIds(true);
     }
@@ -168,6 +177,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             holder.txtAuthor.setOnClickListener(null);
         }
 
+        // author name uses different color for comments from the post's author
+        if (comment.authorId == mPost.authorId) {
+            holder.txtAuthor.setTextColor(mColorAuthor);
+        } else {
+            holder.txtAuthor.setTextColor(mColorNotAuthor);
+        }
+
         // show indentation spacer for comments with parents and indent it based on comment level
         if (comment.parentId != 0 && comment.level > 0) {
             int indent = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
@@ -178,13 +194,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
             holder.spacerIndent.setVisibility(View.GONE);
         }
 
+        // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
-            // different background for highlighted comment, with optional progress bar
-            holder.container.setSelected(true);
+            holder.container.setBackgroundColor(mColorHighlight);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else {
-            // different background for comments from the post's author
-            holder.container.setSelected(comment.authorId == mPost.authorId);
+            holder.container.setBackgroundColor(Color.WHITE);
             holder.progress.setVisibility(View.GONE);
         }
 
