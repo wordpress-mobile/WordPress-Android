@@ -2,7 +2,8 @@
 
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="@string/pref_key_site_screen">
 
     <PreferenceCategory
         android:id="@+id/pref_site_general"
@@ -43,12 +44,12 @@
             android:enabled="false"
             android:id="@+id/pref_site_privacy"
             android:key="@string/pref_key_site_visibility"
-            android:title="@string/site_settings_visibility_header"
+            android:title="@string/site_settings_visibility_title"
             android:entries="@array/privacy_entries"
             android:entryValues="@array/privacy_values"
             android:defaultValue="-2"
             android:summary="@string/site_settings_privacy_default_summary"
-            app:dialogTitle="@string/site_settings_visibility_header"
+            app:dialogTitle="@string/site_settings_visibility_title"
             app:dialogHelpUrl="@string/privacy_settings_url"
             app:longClickHint="@string/site_privacy_hint"
             app:entryDetails="@array/privacy_details" />
@@ -67,30 +68,60 @@
 
     </PreferenceCategory>
 
-    <!--<PreferenceCategory-->
-        <!--android:title="Writing">-->
+    <PreferenceCategory
+        android:id="@+id/pref_site_account"
+        android:key="@string/pref_key_site_account"
+        android:title="@string/site_settings_account_header">
 
-        <!--<SwitchPreference-->
-            <!--android:id="@+id/pref_enable_location"-->
-            <!--android:key="@string/pref_key_site_location"-->
-            <!--android:title="Enable Location" />-->
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+            android:enabled="false"
+            android:id="@+id/pref_site_username"
+            android:key="@string/pref_key_site_username"
+            android:title="@string/site_settings_username_title"
+            android:summary="@string/site_settings_username_default_summary"
+            app:summaryLines="1"
+            app:maxSummaryLines="2"
+            app:longClickHint="@string/site_username_hint" />
 
-        <!--<MultiSelectListPreference-->
-            <!--android:id="@+id/pref_default_category"-->
-            <!--android:key="@string/pref_key_site_category"-->
-            <!--android:title="Default Category" />-->
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+            android:enabled="false"
+            android:id="@+id/pref_site_password"
+            android:key="@string/pref_key_site_password"
+            android:title="@string/site_settings_password_title"
+            android:summary="@string/site_settings_password_default_summary"
+            android:inputType="textPassword"
+            app:summaryLines="1"
+            app:maxSummaryLines="2"
+            app:longClickHint="@string/site_password_hint" />
 
-        <!--<ListPreference-->
-            <!--android:id="@+id/pref_default_format"-->
-            <!--android:key="@string/pref_key_site_format"-->
-            <!--android:title="Default Format" />-->
+    </PreferenceCategory>
 
-        <!--<MultiSelectListPreference-->
-            <!--android:id="@+id/pref_related_posts"-->
-            <!--android:key="@string/pref_key_site_related_posts"-->
-            <!--android:title="Related Posts" />-->
+    <PreferenceCategory
+        android:id="@+id/pref_site_writing"
+        android:key="@string/pref_key_site_writing"
+        android:title="@string/site_settings_writing_header">
 
-    <!--</PreferenceCategory>-->
+        <SwitchPreference
+            android:id="@+id/pref_enable_location"
+            android:key="@string/pref_key_site_location"
+            android:title="Enable Location" />
+
+        <MultiSelectListPreference
+            android:id="@+id/pref_default_category"
+            android:key="@string/pref_key_site_category"
+            android:title="Default Category" />
+
+        <ListPreference
+            android:id="@+id/pref_default_format"
+            android:key="@string/pref_key_site_format"
+            android:title="Default Format" />
+
+        <MultiSelectListPreference
+            android:id="@+id/pref_related_posts"
+            android:key="@string/pref_key_site_related_posts"
+            android:title="Related Posts" />
+
+    </PreferenceCategory>
 
     <!--<PreferenceCategory>-->
 

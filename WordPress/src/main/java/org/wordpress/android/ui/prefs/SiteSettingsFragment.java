@@ -8,6 +8,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -61,6 +62,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mAddressPreference;
     private DetailListPreference mLanguagePreference;
     private DetailListPreference mPrivacyPreference;
+    private EditTextPreference mUsernamePreference;
+    private EditTextPreference mPasswordPreference;
 
     // Most recent remote site data. Current local data is used if remote data cannot be fetched.
     private String mRemoteTitle;
@@ -68,6 +71,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private String mRemoteAddress;
     private int mRemotePrivacy;
     private String mRemoteLanguage;
+    private String mRemoteUsername;
+    private String mRemotePassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -235,6 +240,33 @@ public class SiteSettingsFragment extends PreferenceFragment
                 }
             }
         }
+
+        // Remove account settings from .com sites
+        if (mBlog.isDotcomFlag()) {
+            PreferenceScreen screen = (PreferenceScreen) findPreference(getString(R.string.pref_key_site_screen));
+            if (screen != null) {
+                screen.removePreference(findPreference(getString(R.string.pref_key_site_account)));
+            }
+        } else {
+            // Username preference, removed for self-hosted sites
+            if (null != (mUsernamePreference =
+                (EditTextPreference) findPreference(getString(R.string.pref_key_site_username)))) {
+                mUsernamePreference.setOnPreferenceChangeListener(this);
+                if (!TextUtils.isEmpty(mBlog.getUsername())) {
+                    mUsernamePreference.setText(mBlog.getUsername());
+                    mUsernamePreference.setSummary(mBlog.getUsername());
+                }
+            }
+
+            if (null != (mPasswordPreference =
+                (EditTextPreference) findPreference(getString(R.string.pref_key_site_password)))) {
+                mPasswordPreference.setOnPreferenceChangeListener(this);
+                if (!TextUtils.isEmpty(mBlog.getPassword())) {
+                    mPasswordPreference.setText(mBlog.getPassword());
+                    mPasswordPreference.setSummary(mBlog.getPassword());
+                }
+            }
+        }
     }
 
     /**
@@ -294,6 +326,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mAddressPreference != null) {
             mRemoteAddress = getNestedMapValue(result, "blog_url");
             changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
+        }
+
+        if (mPasswordPreference != null) {
+            mPasswordPreference.setEnabled(true);
         }
     }
 
