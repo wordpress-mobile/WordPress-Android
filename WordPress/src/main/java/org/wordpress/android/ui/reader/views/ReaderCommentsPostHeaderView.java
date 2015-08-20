@@ -74,7 +74,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         }
 
-        this.setOnClickListener(new OnClickListener() {
+        txtTitle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 ReaderActivityLauncher.showReaderPostDetail(getContext(), post.blogId, post.postId);
