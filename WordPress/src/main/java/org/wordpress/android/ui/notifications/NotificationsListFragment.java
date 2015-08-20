@@ -364,6 +364,10 @@ public class NotificationsListFragment extends Fragment
 
     // Removes app notifications from the system bar
     private void cancelNotifications() {
+        if (GCMIntentService.getNotificationsMap().size() == 0) {
+            return;
+        }
+
         new Thread(new Runnable() {
             public void run() {
                 NotificationManager notificationManager = (NotificationManager) getActivity()
