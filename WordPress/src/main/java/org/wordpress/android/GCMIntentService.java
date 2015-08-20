@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -44,10 +45,12 @@ import java.util.concurrent.TimeUnit;
 import de.greenrobot.event.EventBus;
 
 public class GCMIntentService extends GCMBaseIntentService {
-    public static final int PUSH_NOTIFICATION_ID = 1337;
-    private static final int AUTH_PUSH_NOTIFICATION_ID = 1338;
+    private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
+    private static final int PUSH_NOTIFICATION_ID = 10000;
+    private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
+    public static final int GROUP_NOTIFICATION_ID = 30000;
 
-    private static final Map<String, Bundle> mActiveNotificationsMap = new HashMap<>();
+    private static final ArrayMap<Integer, Bundle> mActiveNotificationsMap = new ArrayMap<>();
     private static String mPreviousNoteId = null;
     private static long mPreviousNoteTime = 0L;
     private static final int mMaxInboxItems = 5;
@@ -96,7 +99,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             title = getString(R.string.app_name);
         }
         String message = StringEscapeUtils.unescapeHtml(extras.getString("msg"));
-        String note_id = extras.getString("note_id");
+        String noteId = extras.getString("note_id");
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -112,7 +115,7 @@ public class GCMIntentService extends GCMBaseIntentService {
          * on the same post will have the same note_id, so don't assume that the note_id is unique
          */
         long thisTime = System.currentTimeMillis();
-        if (mPreviousNoteId != null && mPreviousNoteId.equals(note_id)) {
+        if (mPreviousNoteId != null && mPreviousNoteId.equals(noteId)) {
             long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - mPreviousNoteTime);
             if (seconds <= 1) {
                 AppLog.w(T.NOTIFS, "skipped potential duplicate notification");
@@ -120,11 +123,14 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
         }
 
-        mPreviousNoteId = note_id;
+        mPreviousNoteId = noteId;
         mPreviousNoteTime = thisTime;
 
-        if (note_id != null && !mActiveNotificationsMap.containsKey(note_id)) {
-            mActiveNotificationsMap.put(note_id, extras);
+        // Get a unique Id per notification
+        int pushId = PUSH_NOTIFICATION_ID + mActiveNotificationsMap.size();
+
+        if (noteId != null && !mActiveNotificationsMap.containsKey(noteId)) {
+            mActiveNotificationsMap.put(pushId, extras);
         }
 
         String iconUrl = extras.getString("icon");
@@ -156,74 +162,65 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
         AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
 
+        NotificationCompat.Builder builder;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean sound, vibrate, light;
+        // Build the new notification, add group to support wearable stacking
+        builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
+                .setContentTitle(title)
+                .setContentText(message)
+                .setTicker(message)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setGroup(NOTIFICATION_GROUP_KEY);
 
-        sound = prefs.getBoolean("wp_pref_notification_sound", false);
-        vibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
-        light = prefs.getBoolean("wp_pref_notification_light", false);
-
-        NotificationCompat.Builder mBuilder;
-
-        Intent resultIntent = new Intent(this, WPMainActivity.class);
-        resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        resultIntent.setAction("android.intent.action.MAIN");
-        resultIntent.addCategory("android.intent.category.LAUNCHER");
-
-        if (mActiveNotificationsMap.size() <= 1) {
-            mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setTicker(message)
-                    .setAutoCancel(true)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-
-            if (note_id != null) {
-                resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, note_id);
+        // Add some actions if this is a comment notification
+        if (noteType.equals(PUSH_TYPE_COMMENT)) {
+            Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
+            commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+            commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            commentReplyIntent.setAction("android.intent.action.MAIN");
+            commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
+            commentReplyIntent.addCategory("comment-reply");
+            commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
+            if (noteId != null) {
+                commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
             }
+            PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.addAction(R.drawable.ic_reply_white_24dp, context.getText(R.string.reply),
+                    commentReplyPendingIntent);
+        }
 
-            // Add some actions if this is a comment notification
-            if (noteType.equals(PUSH_TYPE_COMMENT)) {
-                Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
-                commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-                commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                commentReplyIntent.setAction("android.intent.action.MAIN");
-                commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
-                commentReplyIntent.addCategory("comment-reply");
-                commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
-                if (note_id != null) {
-                    commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, note_id);
-                }
-                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder.addAction(R.drawable.ic_reply_white_24dp, context.getText(R.string.reply),
-                        commentReplyPendingIntent);
-            }
+        if (largeIconBitmap != null) {
+            builder.setLargeIcon(largeIconBitmap);
+        }
 
-            if (largeIconBitmap != null) {
-                mBuilder.setLargeIcon(largeIconBitmap);
-            }
-        } else {
+        // Increment Id by the note count as it must be unique for stacked notifications on wearables
+        showNotificationForBuilder(builder, context, pushId);
+
+        // When we have multiple notifications, add an inbox style notification for non-wearable devices
+        if (mActiveNotificationsMap.size() > 1) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
             int noteCtr = 1;
-            for (Bundle wpPN : mActiveNotificationsMap.values()) {
-                if (noteCtr > mMaxInboxItems) // InboxStyle notification is limited to 5 lines
+            for (Bundle pushBundle : mActiveNotificationsMap.values()) {
+                // InboxStyle notification is limited to 5 lines
+                if (noteCtr > mMaxInboxItems) {
                     break;
-                if (wpPN.getString("msg") == null)
+                }
+                if (pushBundle.getString("msg") == null) {
                     continue;
-                if (wpPN.getString("type") != null && wpPN.getString("type").equals(PUSH_TYPE_COMMENT)) {
-                    String pnTitle = StringEscapeUtils.unescapeHtml((wpPN.getString("title")));
-                    String pnMessage = StringEscapeUtils.unescapeHtml((wpPN.getString("msg")));
+                }
+
+                if (pushBundle.getString("type", "").equals(PUSH_TYPE_COMMENT)) {
+                    String pnTitle = StringEscapeUtils.unescapeHtml((pushBundle.getString("title")));
+                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString("msg")));
                     inboxStyle.addLine(pnTitle + ": " + pnMessage);
                 } else {
-                    String pnMessage = StringEscapeUtils.unescapeHtml((wpPN.getString("msg")));
+                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString("msg")));
                     inboxStyle.addLine(pnMessage);
                 }
 
@@ -237,41 +234,67 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
-            mBuilder = new NotificationCompat.Builder(this)
+            NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.notification_icon)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setContentTitle("WordPress")
+                    .setContentTitle(getString(R.string.app_name))
                     .setContentText(subject)
+                    .setGroup(NOTIFICATION_GROUP_KEY)
+                    .setGroupSummary(true)
                     .setTicker(message)
                     .setAutoCancel(true)
                     .setStyle(inboxStyle);
+
+            showNotificationForBuilder(groupBuilder, context, GROUP_NOTIFICATION_ID);
+        }
+
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+    }
+
+    // Displays a notification to the user
+    private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context, int notificationId) {
+        if (builder == null || context == null) return;
+
+        Intent resultIntent = new Intent(this, WPMainActivity.class);
+        resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        resultIntent.setAction("android.intent.action.MAIN");
+        resultIntent.addCategory("android.intent.category.LAUNCHER");
+        if (mPreviousNoteId != null) {
+            resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mPreviousNoteId);
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        boolean shouldPlaySound = prefs.getBoolean("wp_pref_notification_sound", false);
+        boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
+        boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", false);
+        if (shouldPlaySound) {
+            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification));
+        }
+        if (shouldVibrate) {
+            builder.setVibrate(new long[]{500, 500, 500});
+        }
+        if (shouldBlinkLight) {
+            builder.setLights(0xff0000ff, 1000, 5000);
         }
 
         // Call broadcast receiver when notification is dismissed
         Intent notificationDeletedIntent = new Intent(this, NotificationDismissBroadcastReceiver.class);
-        PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(context, 0, notificationDeletedIntent, 0);
-        mBuilder.setDeleteIntent(pendingDeleteIntent);
+        notificationDeletedIntent.putExtra("notificationId", notificationId);
+        notificationDeletedIntent.setAction(String.valueOf(notificationId));
+        PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(context, notificationId, notificationDeletedIntent, 0);
+        builder.setDeleteIntent(pendingDeleteIntent);
 
-        if (sound) {
-            mBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification));
-        }
-        if (vibrate) {
-            mBuilder.setVibrate(new long[]{500, 500, 500});
-        }
-        if (light) {
-            mBuilder.setLights(0xff0000ff, 1000, 5000);
-        }
+        builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
 
-        mBuilder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, notificationId, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(pendingIntent);
+        builder.setContentIntent(pendingIntent);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
-
-        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+        notificationManager.notify(notificationId, builder.build());
     }
 
     // Show a notification for two-step auth users who sign in from a web browser
@@ -401,5 +424,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     public static void clearNotificationsMap() {
         mActiveNotificationsMap.clear();
+    }
+
+    public static ArrayMap<Integer, Bundle> getNotificationsMap() {
+        return mActiveNotificationsMap;
     }
 }
