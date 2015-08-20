@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.util.ArrayMap;
@@ -138,7 +137,7 @@ public class NotificationsListFragment extends Fragment
         }
 
         // Remove app notification if it is showing when we resume
-        new CancelNotificationsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        cancelNotifications();
 
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
@@ -364,20 +363,18 @@ public class NotificationsListFragment extends Fragment
     }
 
     // Removes app notifications from the system bar
-    class CancelNotificationsTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... nada) {
-            NotificationManager notificationManager = (NotificationManager) getActivity()
-                    .getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
-            ArrayMap<Integer, Bundle> notificationsMap = GCMIntentService.getNotificationsMap();
-            for (Integer pushId : notificationsMap.keySet()) {
-                notificationManager.cancel(pushId);
+    private void cancelNotifications() {
+        new Thread(new Runnable() {
+            public void run() {
+                NotificationManager notificationManager = (NotificationManager) getActivity()
+                        .getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+                ArrayMap<Integer, Bundle> notificationsMap = GCMIntentService.getNotificationsMap();
+                for (Integer pushId : notificationsMap.keySet()) {
+                    notificationManager.cancel(pushId);
+                }
+                notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
             }
-            notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
-
-            return null;
-        }
+        }).start();
     }
 
     @SuppressWarnings("unused")
