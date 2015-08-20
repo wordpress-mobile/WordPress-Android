@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
@@ -35,16 +36,13 @@ import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManag
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
@@ -206,39 +204,10 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return false;
         }
 
-        TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
-        TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
-        TextView txtDateline = (TextView) findViewById(R.id.text_post_dateline);
+        ReaderCommentsPostHeaderView postHeaderView = (ReaderCommentsPostHeaderView) findViewById(R.id.layout_post_header);
+        postHeaderView.setPost(mPost);
+
         TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
-        WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
-
-        txtTitle.setText(mPost.getTitle());
-        if (mPost.hasBlogName()) {
-            txtBlogName.setText(mPost.getBlogName());
-        } else {
-            txtBlogName.setText(R.string.reader_untitled_post);
-        }
-
-        java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(mPost.getPublished());
-        String dateLine = DateTimeUtils.javaDateToTimeSpan(dtPublished);
-        if (mPost.isCommentsOpen || mPost.numReplies > 0) {
-            dateLine += "  \u2022  " + ReaderUtils.getShortCommentLabelText(this, mPost.numReplies);
-        }
-        if (mPost.isLikesEnabled) {
-            dateLine += "  \u2022  " + ReaderUtils.getShortLikeLabelText(this, mPost.numLikes);
-        }
-        txtDateline.setText(dateLine);
-
-        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
-        String avatarUrl;
-        if (mPost.hasBlogUrl()) {
-            avatarUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), avatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-        } else {
-            avatarUrl = mPost.getPostAvatarForDisplay(avatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-        }
-
         if (ReaderUtils.isLoggedOutReader()) {
             mCommentBox.setVisibility(View.GONE);
             txtCommentsClosed.setVisibility(View.GONE);
@@ -266,18 +235,6 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mCommentBox.setVisibility(View.GONE);
             mEditComment.setEnabled(false);
             txtCommentsClosed.setVisibility(View.VISIBLE);
-        }
-
-        if (mCommentId > 0) {
-            txtTitle.setBackgroundResource(R.drawable.selectable_background_wordpress);
-            txtTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isFinishing()) return;
-
-                    ReaderActivityLauncher.showReaderPostDetail(ReaderCommentListActivity.this, mBlogId, mPostId);
-                }
-            });
         }
 
         return true;

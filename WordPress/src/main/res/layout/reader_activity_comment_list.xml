@@ -9,9 +9,8 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <include
+    <org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView
         android:id="@+id/layout_post_header"
-        layout="@layout/reader_include_comments_post_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar" />
