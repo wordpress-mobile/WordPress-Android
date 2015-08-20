@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,7 +63,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private ReaderRecyclerView mRecyclerView;
     private SuggestionAutoCompleteText mEditComment;
-    private ImageView mImgSubmitComment;
+    private View mSubmitReplyBtn;
     private ViewGroup mCommentBox;
 
     private boolean mIsUpdatingComments;
@@ -119,7 +118,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", AccountHelper
                         .getCurrentUsernameForBlog(null), mPostId, mBlogId));
-        mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
+        mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -226,7 +225,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
             });
 
-            mImgSubmitComment.setOnClickListener(new View.OnClickListener() {
+            mSubmitReplyBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     submitComment();
@@ -413,7 +412,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
 
-        mImgSubmitComment.setEnabled(false);
+        mSubmitReplyBtn.setEnabled(false);
         mEditComment.setEnabled(false);
         mIsSubmittingComment = true;
 
@@ -428,7 +427,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     return;
                 }
                 mIsSubmittingComment = false;
-                mImgSubmitComment.setEnabled(true);
+                mSubmitReplyBtn.setEnabled(true);
                 mEditComment.setEnabled(true);
                 if (succeeded) {
                     // stop highlighting the fake comment and replace it with the real one

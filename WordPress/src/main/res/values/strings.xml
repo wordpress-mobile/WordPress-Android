@@ -800,8 +800,8 @@
     <string name="reader_btn_unfollow">Following</string>
 
     <!-- EditText hints -->
-    <string name="reader_hint_comment_on_post">Add your comment</string>
-    <string name="reader_hint_comment_on_comment">Reply to comment</string>
+    <string name="reader_hint_comment_on_post">Reply to post...</string>
+    <string name="reader_hint_comment_on_comment">Reply to comment...</string>
     <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
 
     <!-- TextView labels -->
@@ -820,6 +820,7 @@
     <string name="reader_label_word_count">%,d words</string>
     <string name="reader_label_reading_time_in_minutes">%,d min</string>
     <string name="reader_label_follow_count">%,d followers</string>
+    <string name="reader_label_submit_comment">SEND</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
