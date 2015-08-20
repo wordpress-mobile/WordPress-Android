@@ -21,12 +21,13 @@
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/avatar"
-                style="@style/ReaderImageView.Avatar" />
+                android:layout_width="@dimen/notifications_avatar_sz"
+                android:layout_height="@dimen/notifications_avatar_sz"/>
 
             <ImageView
                 android:id="@+id/image_checkmark"
-                android:layout_width="@dimen/avatar_sz_medium"
-                android:layout_height="@dimen/avatar_sz_medium"
+                android:layout_width="@dimen/notifications_avatar_sz"
+                android:layout_height="@dimen/notifications_avatar_sz"
                 android:background="@drawable/shape_oval_blue"
                 android:padding="@dimen/margin_medium"
                 android:src="@drawable/ic_check_white_24dp"
@@ -34,8 +35,8 @@
 
             <LinearLayout
                 android:id="@+id/moderate_progress"
-                android:layout_width="@dimen/avatar_sz_medium"
-                android:layout_height="@dimen/avatar_sz_medium"
+                android:layout_width="@dimen/notifications_avatar_sz"
+                android:layout_height="@dimen/notifications_avatar_sz"
                 android:padding="@dimen/margin_large"
                 android:background="@drawable/shape_oval_translucent"
                 android:gravity="center"

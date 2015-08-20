@@ -33,7 +33,7 @@ public class UserNoteBlock extends NoteBlock {
             OnGravatarClickedListener onGravatarClickedListener) {
         super(noteObject, onNoteBlockTextClickListener);
         if (context != null) {
-            setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium));
+            setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.notifications_avatar_sz));
         }
         mGravatarClickedListener = onGravatarClickedListener;
     }

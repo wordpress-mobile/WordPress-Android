@@ -13,8 +13,8 @@
 
     <ImageView
         android:id="@+id/image_follow_button"
-        android:layout_width="@dimen/reader_follow_button_icon"
-        android:layout_height="@dimen/reader_follow_button_icon"
+        android:layout_width="@dimen/reader_follow_icon"
+        android:layout_height="@dimen/reader_follow_icon"
         android:layout_gravity="center_vertical"
         android:src="@drawable/reader_follow" />
 
