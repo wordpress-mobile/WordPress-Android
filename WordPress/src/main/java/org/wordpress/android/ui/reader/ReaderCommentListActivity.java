@@ -208,7 +208,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
         TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
-        TextView txtDate = (TextView) findViewById(R.id.text_post_date);
+        TextView txtDateline = (TextView) findViewById(R.id.text_post_dateline);
         TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
 
@@ -220,7 +220,14 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(mPost.getPublished());
-        txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
+        String dateLine = DateTimeUtils.javaDateToTimeSpan(dtPublished);
+        if (mPost.isCommentsOpen || mPost.numReplies > 0) {
+            dateLine += "  \u2022  " + ReaderUtils.getShortCommentLabelText(this, mPost.numReplies);
+        }
+        if (mPost.isLikesEnabled) {
+            dateLine += "  \u2022  " + ReaderUtils.getShortLikeLabelText(this, mPost.numLikes);
+        }
+        txtDateline.setText(dateLine);
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
         String avatarUrl;

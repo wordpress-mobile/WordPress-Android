@@ -833,6 +833,9 @@
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_multi">%s Likes</string>
 
+    <string name="reader_short_comment_count_one">1 Comment</string>
+    <string name="reader_short_comment_count_multi">%s Comments</string>
+
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
     <string name="reader_toast_err_tag_exists">You already follow this tag</string>

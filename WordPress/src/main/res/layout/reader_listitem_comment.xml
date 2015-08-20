@@ -5,6 +5,8 @@
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_medium"
     android:layout_marginLeft="@dimen/reader_card_margin"
     android:layout_marginRight="@dimen/reader_card_margin"
     android:background="@color/white">
@@ -48,6 +50,7 @@
                 android:background="?android:selectableItemBackground"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_medium"
+                android:textStyle="bold"
                 tools:text="text_comment_author" />
         </LinearLayout>
 
@@ -60,7 +63,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:lineSpacingMultiplier="1.1"
-            android:textColor="@color/grey_darken_20"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
             app:fontFamily="merriweather"
             tools:text="text_comment_text" />
@@ -75,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="date" />
 
