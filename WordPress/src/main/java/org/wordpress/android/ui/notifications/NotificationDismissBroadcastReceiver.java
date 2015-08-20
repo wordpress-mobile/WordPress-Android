@@ -20,7 +20,7 @@ public class NotificationDismissBroadcastReceiver extends BroadcastReceiver {
             GCMIntentService.getNotificationsMap().remove(notificationId);
 
             // Dismiss the grouped notification if a user dismisses all notifications from a wear device
-            if (GCMIntentService.getNotificationsMap().size() == 0) {
+            if (GCMIntentService.getNotificationsMap().isEmpty()) {
                 NotificationManager notificationManager = (NotificationManager) context
                         .getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
                 notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
