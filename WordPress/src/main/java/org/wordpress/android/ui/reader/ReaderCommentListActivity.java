@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,6 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
@@ -87,8 +87,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
@@ -203,9 +207,6 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (mPost == null) {
             return false;
         }
-
-        ReaderCommentsPostHeaderView postHeaderView = (ReaderCommentsPostHeaderView) findViewById(R.id.layout_post_header);
-        postHeaderView.setPost(mPost);
 
         TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
         if (ReaderUtils.isLoggedOutReader()) {
