@@ -68,16 +68,23 @@
 
             <ImageView
                 android:id="@+id/image_more"
-                style="@style/ReaderImageView.More"
+                android:layout_width="@dimen/reader_more_icon"
+                android:layout_height="@dimen/reader_more_icon"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:background="?android:selectableItemBackground"
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_large"
+                android:src="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_featured"
-            android:layout_marginBottom="@dimen/margin_small"
-            style="@style/ReaderImageView.Featured" />
+            style="@style/ReaderImageView.Featured"
+            android:layout_marginBottom="@dimen/margin_small" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
