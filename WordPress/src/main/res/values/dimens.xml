@@ -4,9 +4,7 @@
     <dimen name="format_bar_height">40dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
-
     <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="toolbar_content_offset">72dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
@@ -96,9 +94,9 @@
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
-    <!-- like/comment/follow icons in reader -->
     <dimen name="reader_button_icon">24dp</dimen>
-    <dimen name="reader_follow_button_icon">16dp</dimen>
+    <dimen name="reader_follow_icon">16dp</dimen>
+    <dimen name="reader_more_icon">48dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
@@ -131,6 +129,7 @@
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
     <dimen name="notifications_content_margin">0dp</dimen>
+    <dimen name="notifications_avatar_sz">48dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
 
