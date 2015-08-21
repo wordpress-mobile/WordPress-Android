@@ -73,6 +73,26 @@
         <View style="@style/MeListSectionDividerView" />
 
         <LinearLayout
+            android:id="@+id/row_notifications"
+            style="@style/MeListRowLayout">
+
+            <ImageView
+                android:id="@+id/me_notifications_icon"
+                style="@style/MeListRowIcon"
+                android:contentDescription="@string/me_btn_settings"
+                android:src="@drawable/me_icon_notifications" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/me_notifications_text_view"
+                style="@style/MeListRowTextView"
+                android:text="@string/notification_settings" />
+
+        </LinearLayout>
+
+        <View android:id="@+id/me_notifications_divider"
+            style="@style/MeListSectionDividerView" />
+
+        <LinearLayout
             android:id="@+id/row_support"
             style="@style/MeListRowLayout">
 

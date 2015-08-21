@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,7 +65,7 @@ public class NotificationsListFragment extends Fragment
      * For responding to tapping of notes
      */
     public interface OnNoteClickListener {
-        public void onClickNote(String noteId);
+        void onClickNote(String noteId);
     }
 
     @Override
@@ -135,9 +136,8 @@ public class NotificationsListFragment extends Fragment
             mBucket.addListener(this);
         }
 
-        // Remove notification if it is showing when we resume this activity.
-        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
-        notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
+        // Remove app notification if it is showing when we resume
+        cancelNotifications();
 
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
@@ -360,6 +360,25 @@ public class NotificationsListFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().registerSticky(this);
+    }
+
+    // Removes app notifications from the system bar
+    private void cancelNotifications() {
+        if (GCMIntentService.getNotificationsMap().isEmpty()) {
+            return;
+        }
+
+        new Thread(new Runnable() {
+            public void run() {
+                NotificationManager notificationManager = (NotificationManager) getActivity()
+                        .getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+                ArrayMap<Integer, Bundle> notificationsMap = GCMIntentService.getNotificationsMap();
+                for (Integer pushId : notificationsMap.keySet()) {
+                    notificationManager.cancel(pushId);
+                }
+                notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
+            }
+        }).start();
     }
 
     @SuppressWarnings("unused")

@@ -106,16 +106,6 @@ public final class AnalyticsTracker {
         NOTIFICATION_SETTINGS_UPDATED,
     }
 
-    public interface Tracker {
-        void track(Stat stat);
-        void track(Stat stat, Map<String, ?> properties);
-        void endSession();
-        void refreshMetadata(boolean isUserConnected,boolean isWordPressComUser, boolean isJetpackUser,
-                             int sessionCount, int numBlogs, int versionCode, String username, String email);
-        void clearAllData();
-        void registerPushNotificationToken(String regId);
-    }
-
     private static final List<Tracker> TRACKERS = new ArrayList<Tracker>();
 
     private AnalyticsTracker() {

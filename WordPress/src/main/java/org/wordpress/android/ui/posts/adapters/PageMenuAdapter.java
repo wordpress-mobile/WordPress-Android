@@ -71,7 +71,7 @@ public class PageMenuAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         PageMenuHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.page_menu_item, parent, false);
+            convertView = mInflater.inflate(R.layout.popup_menu_item, parent, false);
             holder = new PageMenuHolder(convertView);
             convertView.setTag(holder);
         } else {

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -383,8 +384,16 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             SiteList sites = new SiteList(blogs);
 
             // sort by blog/host
+            final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
+                    if (primaryBlogId > 0) {
+                        if (site1.blogId == primaryBlogId) {
+                            return -1;
+                        } else if (site2.blogId == primaryBlogId) {
+                            return 1;
+                        }
+                    }
                     return site1.getBlogNameOrHostName().compareToIgnoreCase(site2.getBlogNameOrHostName());
                 }
             });
@@ -429,7 +438,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
      */
     static class SiteRecord {
         final int localId;
-        final String blogId;
+        final int blogId;
         final String blogName;
         final String hostName;
         final String url;
@@ -439,7 +448,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
-            blogId = MapUtils.getMapStr(account, "blogId");
+            blogId = MapUtils.getMapInt(account, "blogId");
             blogName = BlogUtils.getBlogNameFromAccountMap(account);
             hostName = BlogUtils.getHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
@@ -481,9 +490,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
 
         int indexOfSite(SiteRecord site) {
-            if (site != null && site.blogId != null) {
+            if (site != null && site.blogId > 0) {
                 for (int i = 0; i < size(); i++) {
-                    if (site.blogId.equals(this.get(i).blogId)) {
+                    if (site.blogId == this.get(i).blogId) {
                         return i;
                     }
                 }

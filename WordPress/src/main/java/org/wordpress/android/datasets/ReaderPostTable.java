@@ -59,7 +59,8 @@ public class ReaderPostTable {
           + "is_likes_enabled,"     // 30
           + "is_sharing_enabled,"   // 31
           + "attachments_json,"     // 32
-          + "discover_json";        // 33
+          + "discover_json,"        // 33
+          + "word_count";           // 34
 
     // used when querying multiple rows and skipping tbl_posts.text
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -94,7 +95,8 @@ public class ReaderPostTable {
           + "tbl_posts.is_likes_enabled,"     // 29
           + "tbl_posts.is_sharing_enabled,"   // 30
           + "tbl_posts.attachments_json,"     // 31
-          + "tbl_posts.discover_json";        // 32
+          + "tbl_posts.discover_json,"        // 32
+          + "tbl_posts.word_count";           // 33
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -118,6 +120,7 @@ public class ReaderPostTable {
                 + " published           TEXT,"
                 + " num_replies         INTEGER DEFAULT 0,"
                 + " num_likes           INTEGER DEFAULT 0,"
+                + " word_count          INTEGER DEFAULT 0,"
                 + " is_liked            INTEGER DEFAULT 0,"
                 + " is_followed         INTEGER DEFAULT 0,"
                 + " is_comments_open    INTEGER DEFAULT 0,"
@@ -507,7 +510,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, feed_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5,?6)");
 
@@ -518,10 +521,10 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (1,  post.postId);
                 stmtPosts.bindLong  (2,  post.blogId);
                 stmtPosts.bindLong  (3,  post.feedId);
-                stmtPosts.bindString(4,  post.getPseudoId());
+                stmtPosts.bindString(4, post.getPseudoId());
                 stmtPosts.bindString(5,  post.getAuthorName());
-                stmtPosts.bindLong  (6,  post.authorId);
-                stmtPosts.bindString(7,  post.getTitle());
+                stmtPosts.bindLong(6, post.authorId);
+                stmtPosts.bindString(7, post.getTitle());
                 stmtPosts.bindString(8,  maxText(post));
                 stmtPosts.bindString(9,  post.getExcerpt());
                 stmtPosts.bindString(10, post.getUrl());
@@ -531,9 +534,9 @@ public class ReaderPostTable {
                 stmtPosts.bindString(14, post.getFeaturedImage());
                 stmtPosts.bindString(15, post.getFeaturedVideo());
                 stmtPosts.bindString(16, post.getPostAvatar());
-                stmtPosts.bindLong  (17, post.timestamp);
+                stmtPosts.bindLong(17, post.timestamp);
                 stmtPosts.bindString(18, post.getPublished());
-                stmtPosts.bindLong  (19, post.numReplies);
+                stmtPosts.bindLong(19, post.numReplies);
                 stmtPosts.bindLong  (20, post.numLikes);
                 stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isLikedByCurrentUser));
                 stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
@@ -544,10 +547,11 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isJetpack));
                 stmtPosts.bindString(28, post.getPrimaryTag());
                 stmtPosts.bindString(29, post.getSecondaryTag());
-                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isLikesEnabled));
+                stmtPosts.bindLong(30, SqlUtils.boolToSql(post.isLikesEnabled));
                 stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isSharingEnabled));
                 stmtPosts.bindString(32, post.getAttachmentsJson());
                 stmtPosts.bindString(33, post.getDiscoverJson());
+                stmtPosts.bindLong  (34, post.wordCount);
                 stmtPosts.execute();
             }
 
@@ -732,6 +736,7 @@ public class ReaderPostTable {
 
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
         post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
+        post.wordCount = c.getInt(c.getColumnIndex("word_count"));
 
         post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
         post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt( c.getColumnIndex("is_followed")));

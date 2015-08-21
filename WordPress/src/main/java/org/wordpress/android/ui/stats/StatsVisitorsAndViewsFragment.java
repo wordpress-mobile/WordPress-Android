@@ -167,7 +167,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             this.labelItem = labelItem;
             this.isChecked = checked;
             this.isLastItem = isLastItem;
-            updateBackGroundAndIcon();
+            updateBackGroundAndIcon(0);
         }
 
         private Drawable getTabIcon() {
@@ -188,13 +188,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
         }
 
-        public void updateBackGroundAndIcon() {
+        public void updateBackGroundAndIcon(int currentValue) {
             if (isChecked) {
                 label.setTextColor(getResources().getColor(R.color.grey_dark));
                 value.setTextColor(getResources().getColor(R.color.orange_jazzy));
             } else {
                 label.setTextColor(getResources().getColor(R.color.grey_darken_20));
-                value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                if (currentValue == 0) {
+                    value.setTextColor(getResources().getColor(R.color.grey));
+                } else {
+                    value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                }
             }
 
             icon.setImageDrawable(getTabIcon());
@@ -603,21 +607,23 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             View o = mModuleButtonsContainer.getChildAt(i);
             if (o instanceof LinearLayout && o.getTag() instanceof  TabViewHolder) {
                 TabViewHolder tabViewHolder = (TabViewHolder)o.getTag();
-                tabViewHolder.updateBackGroundAndIcon();
+                int currentValue = 0;
                 switch (tabViewHolder.labelItem) {
                     case VIEWS:
-                        tabViewHolder.value.setText(FormatUtils.formatDecimal(modelTapped.getViews()));
+                        currentValue = modelTapped.getViews();
                         break;
                     case VISITORS:
-                        tabViewHolder.value.setText(FormatUtils.formatDecimal(modelTapped.getVisitors()));
+                        currentValue = modelTapped.getVisitors();
                         break;
                     case LIKES:
-                        tabViewHolder.value.setText(FormatUtils.formatDecimal(modelTapped.getLikes()));
+                        currentValue = modelTapped.getLikes();
                         break;
                     case COMMENTS:
-                        tabViewHolder.value.setText(FormatUtils.formatDecimal(modelTapped.getComments()));
+                        currentValue = modelTapped.getComments();
                         break;
                 }
+                tabViewHolder.value.setText(FormatUtils.formatDecimal(currentValue));
+                tabViewHolder.updateBackGroundAndIcon(currentValue);
             }
         }
     }

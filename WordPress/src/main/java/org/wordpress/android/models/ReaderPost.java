@@ -45,6 +45,7 @@ public class ReaderPost {
 
     public int numReplies;        // includes comments, trackbacks & pingbacks
     public int numLikes;
+    public int wordCount;
 
     public boolean isLikedByCurrentUser;
     public boolean isFollowedByCurrentUser;
@@ -78,7 +79,7 @@ public class ReaderPost {
         }
 
         // remove HTML from the excerpt
-        post.excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt"));
+        post.excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
 
         post.text = JSONUtils.getString(json, "content");
         post.title = JSONUtils.getStringDecoded(json, "title");
@@ -87,10 +88,12 @@ public class ReaderPost {
         post.setBlogUrl(JSONUtils.getString(json, "site_URL"));
 
         post.numLikes = json.optInt("like_count");
+        post.wordCount = json.optInt("word_count");
         post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
+        post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
 
         post.isLikesEnabled = JSONUtils.getBool(json, "likes_enabled");
         post.isSharingEnabled = JSONUtils.getBool(json, "sharing_enabled");

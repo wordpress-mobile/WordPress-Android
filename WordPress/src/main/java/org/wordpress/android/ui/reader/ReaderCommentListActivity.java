@@ -210,7 +210,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         txtTitle.setText(mPost.getTitle());
 
-        String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
+        String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium));
         imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
 
         if (ReaderUtils.isLoggedOutReader()) {
