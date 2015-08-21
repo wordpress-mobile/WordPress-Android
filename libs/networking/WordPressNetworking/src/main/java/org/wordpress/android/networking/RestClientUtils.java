@@ -215,7 +215,7 @@ public class RestClientUtils {
      * Get a site's current theme
      */
     public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes/?tier=all?limit=%d&offset=%d", siteId, 1, 0);
+        String path = String.format("sites/%s/themes/mine", siteId, 1, 0);
         get(path, listener, errorListener);
     }
 

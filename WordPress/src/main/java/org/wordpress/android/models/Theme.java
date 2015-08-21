@@ -25,7 +25,32 @@ public class Theme {
     private String mPrice;
     private String mBlogId;
 
-    public static Theme fromJSON(JSONObject object) throws JSONException {
+    public static Theme fromJSONV1_1(JSONObject object) throws JSONException {
+        if (object == null) {
+            return null;
+        } else {
+            String id = object.getString(ID);
+            String author = "";
+            String screenshot = object.getString(SCREENSHOT);
+            String authorURI = "";
+            String demoURI = object.getString("preview_url");
+            String name = object.getString(NAME);
+            String stylesheet = "";
+            String price;
+            try {
+                JSONObject cost = object.getJSONObject("cost");
+                price = object.getString("display");
+            } catch (JSONException e) {
+                price = "";
+            }
+
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId);
+        }
+    }
+
+    public static Theme fromJSONV1_2(JSONObject object) throws JSONException {
         if (object == null) {
             return null;
         } else {

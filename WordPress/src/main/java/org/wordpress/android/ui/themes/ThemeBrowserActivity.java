@@ -132,16 +132,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         );
     }
 
-    private void fetchCurrentTheme() {
+    public String fetchCurrentTheme() {
         final String siteId = getBlogId();
 
-        WordPress.getRestClientUtilsV1_2().getCurrentTheme(siteId, new Listener() {
+        WordPress.getRestClientUtilsV1_1().getCurrentTheme(siteId, new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONArray array = response.getJSONArray("themes");
-
-                            Theme theme = Theme.fromJSON(array.getJSONObject(0));
+                            Theme theme = Theme.fromJSONV1_1(response);
                             if (theme != null) {
                                 WordPress.wpDB.setCurrentTheme(siteId, theme.getId());
                                 mThemeBrowserFragment.setRefreshing(false);
@@ -156,6 +154,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     }
                 }
         );
+
+        return WordPress.wpDB.getCurrentThemeId(siteId);
     }
 
     @Override
