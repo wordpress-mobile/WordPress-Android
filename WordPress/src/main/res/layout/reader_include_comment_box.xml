@@ -28,8 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/content_margin"
-            android:src="@drawable/note_icon_reply"
-            android:tint="@color/grey_lighten_10" />
+            android:src="@drawable/ic_action_reply" />
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
             android:id="@+id/edit_comment"
