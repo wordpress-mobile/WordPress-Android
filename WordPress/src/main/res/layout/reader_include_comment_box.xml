@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/margin_extra_small"
+            android:layout_marginLeft="@dimen/content_margin"
             android:src="@drawable/note_icon_reply"
             android:tint="@color/grey_lighten_10" />
 
@@ -46,7 +46,7 @@
             android:paddingBottom="@dimen/margin_extra_small"
             android:paddingLeft="@dimen/margin_small"
             android:paddingTop="@dimen/margin_extra_small"
-            android:textColorHint="@color/grey_darken_10"
+            android:textColorHint="@color/grey_lighten_10"
             android:textSize="@dimen/text_sz_large" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/margin_extra_small"
+            android:layout_marginRight="@dimen/content_margin"
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:text="@string/reader_label_submit_comment"

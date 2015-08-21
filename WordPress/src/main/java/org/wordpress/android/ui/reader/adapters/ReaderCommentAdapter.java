@@ -166,6 +166,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         switch (viewType) {
             case VIEW_TYPE_HEADER:
                 View headerView = new ReaderCommentsPostHeaderView(parent.getContext());
+                headerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 return new PostHeaderHolder(headerView);
             default:
                 View commentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_comment, parent, false);
