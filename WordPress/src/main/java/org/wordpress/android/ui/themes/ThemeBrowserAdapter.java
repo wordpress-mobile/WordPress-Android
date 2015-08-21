@@ -22,12 +22,17 @@ import org.wordpress.android.util.DisplayUtils;
  * Adapter for the {@link ThemeBrowserFragment}'s listview
  *
  */
-public class ThemeBrowserAdapter extends CursorAdapter {
+public class ThemeBrowserAdapter extends CursorAdapter implements ThemeBrowserFragment.ThemeBrowserFragmentCallback {
     private final LayoutInflater mInflater;
 
     public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery) {
         super(context, c, autoRequery);
         mInflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public void onThemeSelected(String themeId) {
+
     }
 
     private static class ThemeViewHolder {
