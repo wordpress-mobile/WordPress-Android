@@ -2,6 +2,8 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -162,6 +165,43 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         configureAndAddSearchHeader(inflater);
     }
 
+    private void addMainHeader(LayoutInflater inflater) {
+        View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
+
+        LinearLayout customize = (LinearLayout) header.findViewById(R.id.customize);
+        customize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // not working right now
+            }
+        });
+
+        LinearLayout details = (LinearLayout) header.findViewById(R.id.details);
+        details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+
+                ThemeDetailsFragment themeDetailsFragment = ThemeDetailsFragment.newInstance("Exhibit");
+                ft.add(R.id.theme_browser_container, themeDetailsFragment, ThemeDetailsFragment.TAG);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
+        LinearLayout support = (LinearLayout) header.findViewById(R.id.support);
+        support.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        mGridView.addHeaderView(header);
+    }
+
     private void configureAndAddSearchHeader(LayoutInflater inflater) {
         View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
         mSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
@@ -170,11 +210,6 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mSpinner.setAdapter(adapter);
         mGridView.addHeaderView(headerSearch);
         mSpinner.setOnItemSelectedListener(this);
-    }
-
-    private void addMainHeader(LayoutInflater inflater) {
-        View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
-        mGridView.addHeaderView(header);
     }
 
     public void setRefreshing(boolean refreshing) {
