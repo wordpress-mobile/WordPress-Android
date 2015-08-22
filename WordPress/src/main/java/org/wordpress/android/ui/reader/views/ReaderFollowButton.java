@@ -9,16 +9,18 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 
 /**
- * Follow button used throughout the reader
+ * Follow button used in reader detail
  */
 public class ReaderFollowButton extends LinearLayout {
     private TextView mTextFollow;
+    private ImageView mImageFollow;
     private boolean mIsFollowed;
 
     public ReaderFollowButton(Context context){
@@ -39,17 +41,20 @@ public class ReaderFollowButton extends LinearLayout {
     private void initView(Context context) {
         inflate(context, R.layout.reader_follow_button, this);
         mTextFollow = (TextView) findViewById(R.id.text_follow_button);
+        mImageFollow = (ImageView) findViewById(R.id.image_follow_button);
     }
 
     private void updateFollowText() {
         mTextFollow.setSelected(mIsFollowed);
         mTextFollow.setText(mIsFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        mImageFollow.setImageResource(mIsFollowed ? R.drawable.reader_following : R.drawable.reader_follow);
     }
 
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         mTextFollow.setEnabled(enabled);
+        mImageFollow.setEnabled(enabled);
     }
 
     public void setIsFollowed(boolean isFollowed) {
@@ -66,7 +71,7 @@ public class ReaderFollowButton extends LinearLayout {
         mIsFollowed = isFollowed;
 
         if (animateChanges) {
-            ObjectAnimator anim = ObjectAnimator.ofFloat(mTextFollow, View.SCALE_Y, 1f, 0f);
+            ObjectAnimator anim = ObjectAnimator.ofFloat(this, View.SCALE_Y, 1f, 0f);
             anim.setRepeatMode(ValueAnimator.REVERSE);
             anim.setRepeatCount(1);
 

@@ -141,7 +141,7 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         customizeUIWithResults(); // call the subclass and draw the real UI here
     }
 
-    private void showPlaceholderUI() {
+    void showPlaceholderUI() {
         mErrorLabel.setVisibility(View.GONE);
         mResultContainer.setVisibility(View.GONE);
         mEmptyModulePlaceholder.setVisibility(View.VISIBLE);
@@ -158,6 +158,14 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
             label += "<br/>" + getString(R.string.no_network_message);
         }
 
+        showErrorUI(label);
+    }
+
+    protected final void showErrorUI(String label) {
+        if (!isAdded()) {
+            return;
+        }
+
         if (label.contains("<")) {
             mErrorLabel.setText(Html.fromHtml(label));
         } else {
@@ -167,6 +175,7 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         mResultContainer.setVisibility(View.GONE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
     }
+
 
     boolean isDataEmpty(int index) {
         return mDatamodels == null

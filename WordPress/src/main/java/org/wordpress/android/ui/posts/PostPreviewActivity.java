@@ -4,16 +4,31 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.posts.services.PostEvents;
+import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
+import org.xmlrpc.android.ApiHelper;
+
+import de.greenrobot.event.EventBus;
 
 public class PostPreviewActivity extends AppCompatActivity {
 
@@ -24,6 +39,9 @@ public class PostPreviewActivity extends AppCompatActivity {
     private long mLocalPostId;
     private int mLocalBlogId;
     private boolean mIsPage;
+    private boolean mIsUpdatingPost;
+
+    private Post mPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,11 +66,27 @@ public class PostPreviewActivity extends AppCompatActivity {
             mIsPage = getIntent().getBooleanExtra(ARG_IS_PAGE, false);
         }
 
-        setTitle(mIsPage? getString(R.string.preview_page) : getString(R.string.preview_post));
+        setTitle(mIsPage ? getString(R.string.preview_page) : getString(R.string.preview_post));
+    }
 
-        if (!hasPreviewFragment()) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+
+        mPost = WordPress.wpDB.getPostForLocalTablePostId(mLocalPostId);
+        if (hasPreviewFragment()) {
+            refreshPreview();
+        } else {
             showPreviewFragment();
         }
+        showMessageViewIfNecessary();
+    }
+
+    @Override
+    protected void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
     @Override
@@ -66,12 +100,12 @@ public class PostPreviewActivity extends AppCompatActivity {
         fm.executePendingTransactions();
 
         String tagForFragment = getString(R.string.fragment_tag_post_preview);
-        Fragment fragment = PostPreviewFragment.newInstance(mLocalBlogId, mLocalPostId, mIsPage);
+        Fragment fragment = PostPreviewFragment.newInstance(mLocalBlogId, mLocalPostId);
 
         fm.beginTransaction()
-          .replace(R.id.fragment_container, fragment, tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-          .commitAllowingStateLoss();
+                .replace(R.id.fragment_container, fragment, tagForFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commitAllowingStateLoss();
     }
 
     private boolean hasPreviewFragment() {
@@ -85,6 +119,15 @@ public class PostPreviewActivity extends AppCompatActivity {
             return (PostPreviewFragment) fragment;
         } else {
             return null;
+        }
+    }
+
+    private void refreshPreview() {
+        if (!isFinishing()) {
+            PostPreviewFragment fragment = getPreviewFragment();
+            if (fragment != null) {
+                fragment.refreshPreview();
+            }
         }
     }
 
@@ -116,17 +159,145 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // reload preview if used returned from editor
-        if (requestCode == RequestCodes.EDIT_POST && resultCode == RESULT_OK) {
-            PostPreviewFragment fragment = getPreviewFragment();
-            if (fragment != null) {
-                fragment.loadPreview();
+    /*
+     * if this is a local draft or has local changes, show the message explaining what these
+     * states mean, and hook up the publish and revert buttons
+     */
+    private void showMessageViewIfNecessary() {
+        final ViewGroup messageView = (ViewGroup) findViewById(R.id.message_container);
+
+        if (mPost == null
+                || mIsUpdatingPost
+                || PostUploadService.isPostUploading(mPost.getLocalTablePostId())
+                || (!mPost.isLocalChange() && !mPost.isLocalDraft())) {
+            messageView.setVisibility(View.GONE);
+            return;
+        }
+
+        TextView messageText = (TextView) messageView.findViewById(R.id.message_text);
+        if (mPost.isLocalChange()) {
+            messageText.setText(R.string.local_changes_explainer);
+        } else if (mPost.isLocalDraft()) {
+            messageText.setText(R.string.local_draft_explainer);
+        }
+
+        // publish applies to both local draft and local changes
+        View btnPublish = messageView.findViewById(R.id.btn_publish);
+        btnPublish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AniUtils.animateBottomBar(messageView, false);
+                publishPost();
             }
-            // this will tell PostListActivity is needs to refresh
-            setResult(RESULT_OK, data);
+        });
+
+        // revert applies to only local changes
+        View btnRevert = messageView.findViewById(R.id.btn_revert);
+        btnRevert.setVisibility(mPost.isLocalDraft() ? View.GONE : View.VISIBLE);
+        if (!mPost.isLocalDraft()) {
+            btnRevert.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AniUtils.animateBottomBar(messageView, false);
+                    revertPost();
+                }
+            });
+        }
+
+        // first set message bar to invisible so it takes up space, then animate it in
+        // after a brief delay to give time for preview to render first
+        messageView.setVisibility(View.INVISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing() && messageView.getVisibility() != View.VISIBLE) {
+                    AniUtils.animateBottomBar(messageView, true);
+                }
+            }
+        }, 1000);
+    }
+
+    /*
+     * reverts local changes for this post, replacing it with the latest version from the server
+     */
+    private void revertPost() {
+        if (isFinishing() || !NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        if (mIsUpdatingPost) {
+            AppLog.d(AppLog.T.POSTS, "post preview > already updating post");
+        } else {
+            new UpdatePostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private void publishPost() {
+        if (!isFinishing() && NetworkUtils.checkConnection(this)) {
+            if (!mPost.isLocalDraft()) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+            }
+            PostUploadService.addPostToUpload(mPost);
+            startService(new Intent(this, PostUploadService.class));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostUploadStarted event) {
+        if (event.mLocalBlogId == mLocalBlogId) {
+            showProgress();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostUploadEnded event) {
+        if (event.mLocalBlogId == mLocalBlogId) {
+            hideProgress();
+            refreshPreview();
+        }
+    }
+
+    private void showProgress() {
+        if (!isFinishing()) {
+            findViewById(R.id.progress).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideProgress() {
+        if (!isFinishing()) {
+            findViewById(R.id.progress).setVisibility(View.GONE);
+        }
+    }
+
+    private class UpdatePostTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mIsUpdatingPost = true;
+            showProgress();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mIsUpdatingPost = false;
+            hideProgress();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... nada) {
+            return ApiHelper.updateSinglePost(mLocalBlogId, mPost.getRemotePostId(), mIsPage);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!isFinishing()) {
+                hideProgress();
+                if (result) {
+                    refreshPreview();
+                }
+            }
+            mIsUpdatingPost = false;
         }
     }
 }
