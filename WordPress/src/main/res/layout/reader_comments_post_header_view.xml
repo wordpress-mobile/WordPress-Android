@@ -9,7 +9,6 @@
     android:id="@+id/layout_post_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey_lighten_30"
     android:paddingLeft="@dimen/reader_card_margin"
     android:paddingRight="@dimen/reader_card_margin"
     android:paddingTop="@dimen/margin_large">
@@ -19,13 +18,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
             android:orientation="horizontal">
 
             <org.wordpress.android.widgets.WPNetworkImageView
@@ -57,8 +56,6 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingBottom="@dimen/margin_small"
-            android:paddingLeft="@dimen/reader_card_content_padding"
-            android:paddingRight="@dimen/reader_card_content_padding"
             android:paddingTop="@dimen/margin_medium"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
@@ -69,20 +66,12 @@
             android:id="@+id/text_post_dateline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_marginBottom="@dimen/margin_large"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_small"
             tools:text="text_post_date" />
-
-        <View
-            android:id="@+id/divider_header"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/margin_large"
-            android:background="@color/grey_lighten_20" />
 
     </LinearLayout>
 </FrameLayout>
