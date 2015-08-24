@@ -248,9 +248,11 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Cursor cursor = ((ThemeBrowserAdapter) parent.getAdapter()).getCursor();
-        String themeId = cursor.getString(cursor.getColumnIndex("themeId"));
-        mCallback.onThemeSelected(themeId);
+        if (position > 1) {
+            Cursor cursor = ((ThemeBrowserAdapter) parent.getAdapter()).getCursor();
+            String themeId = cursor.getString(cursor.getColumnIndex("themeId"));
+            mCallback.onThemeSelected(themeId);
+        }
     }
 
     @Override
