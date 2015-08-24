@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -9,9 +10,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 /**
@@ -64,7 +67,7 @@ public class SummaryEditTextPreference extends EditTextPreference
     }
 
     @Override
-    public void onBindView(@NonNull View view) {
+    protected void onBindView(@NonNull View view) {
         super.onBindView(view);
 
         Resources res = getContext().getResources();
@@ -97,6 +100,24 @@ public class SummaryEditTextPreference extends EditTextPreference
             if (mLines != -1) summaryView.setLines(mLines);
             if (mMaxLines != -1) summaryView.setMaxLines(mMaxLines);
         }
+    }
+
+    @Override
+    protected void onBindDialogView(View view) {
+        super.onBindDialogView(view);
+
+        if (view != null) {
+            EditText text = (EditText) view.findViewById(android.R.id.edit);
+            if (text != null) {
+                text.setSelection(text.getText().length());
+            }
+        }
+    }
+
+    @Override
+    protected void onDialogClosed(boolean positiveResult) {
+        super.onDialogClosed(positiveResult);
+        ActivityUtils.hideKeyboard((Activity) getContext());
     }
 
     @Override
