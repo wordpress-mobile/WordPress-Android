@@ -34,6 +34,12 @@ public abstract class EditorWebViewAbstract extends WebView {
         webSettings.setDefaultTextEncodingName("utf-8");
 
         this.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return true;
+            }
+
+            @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 AppLog.e(AppLog.T.EDITOR, description);
             }

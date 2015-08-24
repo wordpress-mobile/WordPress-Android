@@ -5,17 +5,21 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.wordpress.android.editor.Utils.buildMapFromKeyValuePairs;
+import static org.wordpress.android.editor.Utils.decodeHtml;
 import static org.wordpress.android.editor.Utils.escapeHtml;
 import static org.wordpress.android.editor.Utils.getChangeMapFromSets;
 import static org.wordpress.android.editor.Utils.splitDelimitedString;
+import static org.wordpress.android.editor.Utils.splitValuePairDelimitedString;
 
 @Config(emulateSdk = 18)
 @RunWith(RobolectricTestRunner.class)
@@ -25,6 +29,15 @@ public class UtilsTest {
     public void testEscapeHtml() {
         // Test null
         assertEquals(null, escapeHtml(null));
+    }
+
+    @Test
+    public void testDecodeHtml() {
+        // Test null
+        assertEquals(null, decodeHtml(null));
+
+        // Test normal usage
+        assertEquals("http://www.wordpress.com/", decodeHtml("http%3A%2F%2Fwww.wordpress.com%2F"));
     }
 
     @Test
@@ -40,6 +53,33 @@ public class UtilsTest {
 
         // Test empty string
         assertEquals(Collections.emptySet(), splitDelimitedString("", "~"));
+    }
+
+    @Test
+    public void testSplitValuePairDelimitedString() {
+        // Test usage with a URL containing the delimiter
+        Set<String> keyValueSet = new HashSet<>();
+        keyValueSet.add("url=http://www.wordpress.com/~user");
+        keyValueSet.add("title=I'm a link!");
+
+        List<String> identifiers = new ArrayList<>();
+        identifiers.add("url");
+        identifiers.add("title");
+
+        assertEquals(keyValueSet, splitValuePairDelimitedString(
+                "url=http://www.wordpress.com/~user~title=I'm a link!", "~", identifiers));
+
+        // Test usage with a matching identifier but no delimiters
+        keyValueSet.clear();
+        keyValueSet.add("url=http://www.wordpress.com/");
+
+        assertEquals(keyValueSet, splitValuePairDelimitedString("url=http://www.wordpress.com/", "~", identifiers));
+
+        // Test usage with no matching identifier and no delimiters
+        keyValueSet.clear();
+        keyValueSet.add("something=something else");
+
+        assertEquals(keyValueSet, splitValuePairDelimitedString("something=something else", "~", identifiers));
     }
 
     @Test

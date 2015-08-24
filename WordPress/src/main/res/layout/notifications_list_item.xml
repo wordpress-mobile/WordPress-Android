@@ -78,16 +78,16 @@
 
                 <org.wordpress.android.widgets.WPNetworkImageView
                     android:id="@+id/note_avatar"
-                    android:layout_width="@dimen/avatar_sz_medium"
-                    android:layout_height="@dimen/avatar_sz_medium"
+                    android:layout_width="@dimen/notifications_avatar_sz"
+                    android:layout_height="@dimen/notifications_avatar_sz"
                     android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginTop="@dimen/margin_small" />
 
                 <LinearLayout
                     android:id="@+id/moderate_progress"
-                    android:layout_width="@dimen/avatar_sz_medium"
-                    android:layout_height="@dimen/avatar_sz_medium"
+                    android:layout_width="@dimen/notifications_avatar_sz"
+                    android:layout_height="@dimen/notifications_avatar_sz"
                     android:layout_marginTop="@dimen/margin_small"
                     android:background="@drawable/shape_oval_translucent"
                     android:gravity="center"

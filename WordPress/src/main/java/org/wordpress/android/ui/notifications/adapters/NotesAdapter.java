@@ -64,7 +64,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
                         Note.Schema.LOCAL_STATUS)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
-        mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_medium);
+        mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
         mColorRead = context.getResources().getColor(R.color.white);
         mColorUnread = context.getResources().getColor(R.color.grey_light);
     }
