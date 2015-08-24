@@ -205,7 +205,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         int count = array.length();
                         for (int i = 0; i < count; i++) {
                             JSONObject object = array.getJSONObject(i);
-                            Theme theme = Theme.fromJSON(object);
+                            Theme theme = Theme.fromJSONV1_2(object);
                             if (theme != null) {
                                 theme.save();
                                 themes.add(theme);
