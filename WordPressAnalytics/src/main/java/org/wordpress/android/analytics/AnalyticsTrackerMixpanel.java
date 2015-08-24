@@ -19,10 +19,9 @@ import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
+public class AnalyticsTrackerMixpanel extends Tracker {
     public static final String SESSION_COUNT = "sessionCount";
 
-    private Context mContext;
     private MixpanelAPI mMixpanel;
     private EnumMap<AnalyticsTracker.Stat, JSONObject> mAggregatedProperties;
     private static final String MIXPANEL_PLATFORM = "platform";
@@ -32,11 +31,12 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String VERSION_CODE = "version_code";
     private static final String APP_LOCALE = "app_locale";
+    private static final String MIXPANEL_ANON_ID = "mixpanel_user_anon_id";
 
-    public AnalyticsTrackerMixpanel(Context context, String token) {
+    public AnalyticsTrackerMixpanel(Context context, String token) throws IllegalArgumentException {
+        super(context);
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
         mMixpanel = MixpanelAPI.getInstance(context, token);
-        mContext = context;
     }
 
     @SuppressWarnings("deprecation")
@@ -55,6 +55,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         }
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         nm.notify(0, notification);
+    }
+
+    String getAnonIdPrefKey() {
+        return MIXPANEL_ANON_ID;
     }
 
     @Override
@@ -77,6 +81,13 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                                                   Map<String, ?> properties) {
         if (instructions.getDisableForSelfHosted()) {
             return;
+        }
+
+        // Just a security check we're tracking the correct user
+        if (getWordPressComUserName() == null && getAnonID() == null) {
+            this.clearAllData();
+            generateNewAnonID();
+            mMixpanel.identify(getAnonID());
         }
 
         trackMixpanelEventForInstructions(instructions, properties);
@@ -181,17 +192,41 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
+
+        if (isUserConnected && isWordPressComUser) {
+            setWordPressComUserName(username);
+            // Re-unify the user
+            if (getAnonID() != null) {
+                mMixpanel.alias(getWordPressComUserName(), getAnonID());
+                clearAnonID();
+            } else {
+                mMixpanel.identify(username);
+            }
+        } else {
+            // Not wpcom connected. Check if anonID is already present
+            setWordPressComUserName(null);
+            if (getAnonID() == null) {
+                generateNewAnonID();
+            }
+            mMixpanel.identify(getAnonID());
+        }
+
         // Application opened and start.
         if (isUserConnected) {
-            mMixpanel.identify(username);
             try {
-                mMixpanel.getPeople().identify(username);
+                String userID = getWordPressComUserName() != null ? getWordPressComUserName() : getAnonID();
+                if (userID == null) {
+                    // This should not be an option here
+                    return;
+                }
+
+                mMixpanel.getPeople().identify(userID);
                 JSONObject jsonObj = new JSONObject();
-                jsonObj.put("$username", username);
+                jsonObj.put("$username", userID);
                 if (email != null) {
                     jsonObj.put("$email", email);
                 }
-                jsonObj.put("$first_name", username);
+                jsonObj.put("$first_name", userID);
                 mMixpanel.getPeople().set(jsonObj);
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.UTILS, e);
@@ -203,6 +238,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void clearAllData() {
+        super.clearAllData();
         mMixpanel.clearSuperProperties();
         try {
             mMixpanel.getPeople().clearPushRegistrationId();
@@ -215,11 +251,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             AnalyticsTracker.Stat stat) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
-            case APPLICATION_STARTED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Application Started");
-                instructions.setSuperPropertyToIncrement("Application Started");
-                break;
             case APPLICATION_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Opened");
@@ -379,30 +410,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Editor - Scheduled Post");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_scheduled_post");
                 instructions.setCurrentDateForPeopleProperty("last_time_scheduled_post");
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_PHOTO:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_photos");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_photo");
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_VIDEO:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_videos");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_video");
-              break;
-            case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_posts_published_with_categories");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_categories");
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_TAGS:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                      mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                              "number_of_posts_published_with_tags");
-                instructions.setCurrentDateForPeopleProperty("last_time_published_post_with_tags");
                 break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
