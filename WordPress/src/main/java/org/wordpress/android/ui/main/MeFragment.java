@@ -30,6 +30,8 @@ public class MeFragment extends Fragment {
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
     private TextView mLoginLogoutTextView;
+    private View mNotificationsView;
+    private View mNotificationsDividerView;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -45,6 +47,8 @@ public class MeFragment extends Fragment {
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
         mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mNotificationsView = rootView.findViewById(R.id.row_notifications);
+        mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
 
         addDropShadowToAvatar();
         refreshAccountDetails();
@@ -53,6 +57,13 @@ public class MeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewAccountSettings(getActivity());
+            }
+        });
+
+        mNotificationsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewNotificationsSettings(getActivity());
             }
         });
 
@@ -101,6 +112,8 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
             mAvatarFrame.setVisibility(View.VISIBLE);
+            mNotificationsView.setVisibility(View.VISIBLE);
+            mNotificationsDividerView.setVisibility(View.VISIBLE);
 
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
@@ -119,6 +132,8 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
             mAvatarFrame.setVisibility(View.GONE);
+            mNotificationsView.setVisibility(View.GONE);
+            mNotificationsDividerView.setVisibility(View.GONE);
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
         }
     }

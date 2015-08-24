@@ -25,7 +25,8 @@ const NodeName = {
     UL: "UL",
     LI: "LI",
     CODE: "CODE",
-    SPAN: "SPAN"
+    SPAN: "SPAN",
+    BR: "BR"
 };
 
 // The editor object
@@ -180,6 +181,12 @@ ZSSEditor.getFocusedField = function() {
 
     return this.editableFields[currentFieldId];
 };
+
+ZSSEditor.execFunctionForResult = function(methodName) {
+    var functionArgument = "function=" + methodName;
+    var resultArgument = "result=" + window["ZSSEditor"][methodName].apply();
+    ZSSEditor.callback('callback-response-string', functionArgument +  defaultCallbackSeparator + resultArgument);
+}
 
 // MARK: - Logging
 
@@ -554,11 +561,23 @@ ZSSEditor.redo = function() {
 
 ZSSEditor.setOrderedList = function() {
     document.execCommand('insertOrderedList', false, null);
+
+    // If the insertOrderedList is no longer enabled after running execCommand,
+    // we can assume the user is turning it off.
+    if (!ZSSEditor.isCommandEnabled('insertOrderedList')) {
+        ZSSEditor.completeListEditing();
+    }
     ZSSEditor.sendEnabledStyles();
 };
 
 ZSSEditor.setUnorderedList = function() {
 	document.execCommand('insertUnorderedList', false, null);
+
+    // If the insertUnorderedList is no longer enabled after running execCommand,
+    // we can assume the user is turning it off.
+    if (!ZSSEditor.isCommandEnabled('insertUnorderedList')) {
+        ZSSEditor.completeListEditing();
+    }
 	ZSSEditor.sendEnabledStyles();
 };
 
@@ -612,23 +631,7 @@ ZSSEditor.setBackgroundColor = function(color) {
 // Needs addClass method
 
 ZSSEditor.insertLink = function(url, title) {
-
-    ZSSEditor.restoreRange();
-
-    var sel = document.getSelection();
-	if (sel.rangeCount) {
-
-		var el = document.createElement("a");
-		el.setAttribute("href", url);
-
-		var range = sel.getRangeAt(0).cloneRange();
-		range.surroundContents(el);
-		el.innerHTML = title;
-		sel.removeAllRanges();
-		sel.addRange(range);
-	}
-
-	ZSSEditor.sendEnabledStyles();
+    this.insertHTML('<a href="' + url + '">' + title + "</a>");
 };
 
 ZSSEditor.updateLink = function(url, title) {
@@ -852,7 +855,6 @@ ZSSEditor.getImageContainerIdentifier = function(imageNodeIdentifier) {
 ZSSEditor.getImageContainerNodeWithIdentifier = function(imageNodeIdentifier) {
     return $('#'+this.getImageContainerIdentifier(imageNodeIdentifier));
 };
-
 
 /**
  *  @brief      Replaces a local image URL with a remote image URL.  Useful for images that have
@@ -1676,6 +1678,76 @@ ZSSEditor.insertBreakTagAtCaretPosition = function() {
 // MARK: - Advanced Node Manipulation
 
 /**
+ *  @brief      Given the specified node, find the previous node in the DOM.
+ *
+ *  @param      node       The node used as a starting point for the "previous" search.
+ *
+ *  @returns    If a previous node is found, it will be returned otherwise null;
+ */
+ZSSEditor.previousNode = function(node) {
+    if (!node) {
+        return null;
+    }
+    var previous = node.previousSibling;
+    if (previous) {
+        node = previous;
+        while (node.hasChildNodes()) {
+            node = node.lastChild;
+        }
+        return node;
+    }
+    var parent = node.parentNode;
+    if (parent && parent.nodeType.hasChildNodes()) {
+        return parent;
+    }
+    return null;
+};
+
+/**
+ *  @brief      Ends the editing of a list (either UL or OL).
+ *
+ *  @details    This function finds the list node, inserts a new paragraph as a sibling to the list node
+ *              then scrubs any <br> tags created as part of the insertParagraph command.
+ */
+ZSSEditor.completeListEditing = function() {
+    // Get the current selection
+    var sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+        var range = sel.getRangeAt(0);
+        var node = range.startContainer;
+        if (node.hasChildNodes() && range.startOffset > 0) {
+            node = node.childNodes[range.startOffset - 1];
+        }
+
+        // Walk backwards through the DOM until we find an ul or ol
+        while (node) {
+            if (node.nodeType == 1 &&
+                    (node.tagName.toUpperCase() == NodeName.UL
+                        || node.tagName.toUpperCase() == NodeName.OL)) {
+                // Make a new P node as a sibling to the parent node
+                document.execCommand('insertParagraph', false);
+                // Remove any superfluous <br> tags that are created
+                ZSSEditor.scrubBRFromNode(node.parentNode);
+                break;
+            }
+            node = ZSSEditor.previousNode(node);
+        }
+    }
+}
+
+/**
+ *  @brief      Given the specified node, remove all instances of <br> from it and it's children.
+ *
+ *  @param      node       The node to scrub
+ */
+ZSSEditor.scrubBRFromNode = function(node) {
+    if (!node) {
+        return;
+    }
+    $(node).contents().filter(NodeName.BR).remove();
+};
+
+/**
  *  @brief      Extracts a node from a parent node, and from all nodes in between the two.
  */
 ZSSEditor.extractNodeFromAncestorNode = function(descendant, ancestor) {
@@ -1757,7 +1829,7 @@ ZSSEditor.getChildNodesIntersectingRange = function(parentNode, range) {
  *  @param      range       The range we want to set the blockquote ON or OFF for.
  *
  *  @returns    If a parent BLOCKQUOTE element is found, it will be return.  Otherwise the closest
- *              parent non-paragraph element will be returned.
+ *              parent element will be returned.
  */
 ZSSEditor.getAncestorElementForSettingBlockquote = function(range) {
 
@@ -2092,6 +2164,24 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
         e.preventDefault();
     } else if (this.isMultiline()) {
         this.wrapCaretInParagraphIfNecessary();
+
+        // If enter was pressed to end a UL or OL, let's double check and handle it accordingly if so
+        if (wasEnterPressed) {
+            sel = window.getSelection();
+            node = $(sel.anchorNode);
+            children = $(sel.anchorNode.childNodes);
+
+            if (sel.isCollapsed && node.is(NodeName.LI) && (!children.length ||
+                    (children.length == 1 && children.first().is(NodeName.BR)))) {
+                e.preventDefault();
+                var parentNode = rangy.getSelection().anchorNode.parentNode;
+                if (parentNode && parentNode.nodeName === NodeName.OL) {
+                    ZSSEditor.setOrderedList();
+                } else if (parentNode && parentNode.nodeName === NodeName.UL) {
+                    ZSSEditor.setUnorderedList();
+                }
+            }
+        }
     }
 };
 
@@ -2348,9 +2438,11 @@ ZSSField.prototype.getHTML = function() {
 };
 
 ZSSField.prototype.getHTMLForCallback = function() {
+    var functionArgument = "function=getHTMLForCallback";
     var idArgument = "id=" + this.getNodeId();
     var contentsArgument = "contents=" + this.getHTML();
-    var joinedArguments = idArgument + defaultCallbackSeparator + contentsArgument;
+    var joinedArguments = functionArgument + defaultCallbackSeparator + idArgument + defaultCallbackSeparator +
+        contentsArgument;
     ZSSEditor.callback('callback-response-string', joinedArguments);
 };
 

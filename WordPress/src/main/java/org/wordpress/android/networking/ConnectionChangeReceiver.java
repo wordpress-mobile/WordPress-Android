@@ -14,6 +14,7 @@ import de.greenrobot.event.EventBus;
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
 
+    private static boolean mIsFirstReceive = true;
     private static boolean mWasConnected = true;
 
     public static class ConnectionChangeEvent {
@@ -27,14 +28,17 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
     }
 
     /*
-     * note that onReceive() may occur quite often if the user is on the move, but we only
-     * fire the event when the connection availability changes
+     * note that onReceive occurs when anything about the connection has changed, not just
+     * when the connection has been lost or restated, so it can happen quite often when the
+     * user is on the move. for this reason we only fire the event the first time onReceive
+     * is called, and afterwards only when we know connection availability has changed
      */
     @Override
     public void onReceive(Context context, Intent intent) {
         boolean isConnected = NetworkUtils.isNetworkAvailable(context);
-        if (isConnected != mWasConnected) {
+        if (mIsFirstReceive || isConnected != mWasConnected) {
             mWasConnected = isConnected;
+            mIsFirstReceive = false;
             EventBus.getDefault().post(new ConnectionChangeEvent(isConnected));
         }
     }

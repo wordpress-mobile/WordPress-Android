@@ -25,8 +25,6 @@
                 android:paddingBottom="@dimen/margin_small"
                 style="@style/StatsModuleTitle" />
 
-            <include layout="@layout/stats_insights_header_line" />
-
             <include
                 android:id="@+id/stats_empty_module_placeholder"
                 layout="@layout/stats_empty_module_placeholder"

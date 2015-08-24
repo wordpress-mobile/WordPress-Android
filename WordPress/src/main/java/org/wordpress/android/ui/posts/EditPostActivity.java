@@ -19,7 +19,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -61,6 +60,7 @@ import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -102,7 +102,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
-    public static final String EXTRA_SHOULD_REFRESH = "shouldRefresh";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -405,13 +404,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private Map<String, Object> getWordCountTrackingProperties() {
-        Map<String, Object> properties = new HashMap<String, Object>();
-        String text = Html.fromHtml(mPost.getContent().replaceAll("<img[^>]*>", "")).toString();
-        properties.put("word_count", text.split("\\s+").length);
-        return properties;
-    }
-
     private void trackSavePostAnalytics() {
         PostStatus status = mPost.getStatusEnum();
         switch (status) {
@@ -419,16 +411,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (!mPost.isLocalDraft()) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST,
-                            getWordCountTrackingProperties());
+                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
                 }
                 break;
             case SCHEDULED:
                 if (!mPost.isLocalDraft()) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
-                            getWordCountTrackingProperties());
+                    Map<String, Object> properties = new HashMap<String, Object>();
+                    properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, properties);
                 }
                 break;
             case DRAFT:
@@ -461,9 +453,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
-            Intent i = new Intent();
-            i.putExtra(EXTRA_SHOULD_REFRESH, true);
-            setResult(RESULT_OK, i);
+            setResult(RESULT_OK);
             finish();
             return true;
         } else if (itemId == R.id.menu_preview_post) {
@@ -634,7 +624,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // or a shortcode replacement (for instance for images and galleries)
             savePost(false);
             Intent i = new Intent();
-            i.putExtra(EXTRA_SHOULD_REFRESH, true);
             i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
             i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);

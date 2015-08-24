@@ -122,6 +122,26 @@ public class ReaderBlogTable {
                 args);
     }
 
+    public static String getBlogNameFromBlogId(long blogId) {
+        if (blogId == 0) {
+            return null;
+        }
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT name FROM tbl_blog_info WHERE blog_id=?",
+                args);
+    }
+
+    public static String getBlogNameFromFeedId(long feedId) {
+        if (feedId == 0) {
+            return null;
+        }
+        String[] args = {Long.toString(feedId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT name FROM tbl_blog_info WHERE feed_id=?",
+                args);
+    }
+
     private static ReaderBlog getBlogInfoFromCursor(Cursor c) {
         if (c == null) {
             return null;

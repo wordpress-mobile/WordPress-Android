@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    included by ReaderPostDetailFragment
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:wp="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_post_detail_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground">
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_avatar"
+        style="@style/ReaderImageView.Avatar"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/margin_large"
+        tools:src="@drawable/gravatar_placeholder" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/follow_button"
+        android:layout_toRightOf="@+id/image_avatar"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_blog_name"
+            style="@style/ReaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_blog_name" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_dateline"
+            style="@style/ReaderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_blog_name"
+            android:layout_alignRight="@+id/text_blog_name"
+            android:layout_below="@+id/text_blog_name"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="text_dateline" />
+    </LinearLayout>
+
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/follow_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/reader_detail_margin" />
+
+</RelativeLayout>
