@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.themes;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
@@ -36,8 +37,7 @@ import java.util.ArrayList;
 /**
  * The theme browser.
  */
-public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
-
+public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback, ThemeDetailsFragment.ThemeDetailsFragmentCallback {
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
 
@@ -190,8 +190,43 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     @Override
-    public void onThemeSelected(String themeId) {
-        String yes = "yes";
+    public void onActivateSelected(String themeId) {
+
+    }
+
+    @Override
+    public void onPreviewSelected(String themeId) {
+
+    }
+
+    @Override
+    public void onDemoSelected(String themeId) {
+        
+    }
+
+    @Override
+    public void onDetailsSelected(String themeId) {
+
+    }
+
+    @Override
+    public void onSupportSelected(String themeId) {
+
+    }
+
+    @Override
+    public void onCustomizeSelected(String themeId) {
+
+    }
+
+    @Override
+    public void onResume(Fragment fragment) {
+
+    }
+
+    @Override
+    public void onPause(Fragment fragment) {
+
     }
 
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {

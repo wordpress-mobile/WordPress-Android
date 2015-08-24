@@ -36,7 +36,12 @@ import org.wordpress.android.widgets.HeaderGridView;
  */
 public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener {
     public interface ThemeBrowserFragmentCallback {
-        void onThemeSelected(String themeId);
+        void onActivateSelected(String themeId);
+        void onPreviewSelected(String themeId);
+        void onDemoSelected(String themeId);
+        void onDetailsSelected(String themeId);
+        void onSupportSelected(String themeId);
+        void onCustomizeSelected(String themeId);
     }
 
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
@@ -85,6 +90,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         if (cursor == null) {
             return;
         }
+
         mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
@@ -143,7 +149,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // not working right now
+
             }
         });
 
@@ -151,14 +157,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
 
-                ThemeDetailsFragment themeDetailsFragment = ThemeDetailsFragment.newInstance("Exhibit");
-                ft.add(R.id.theme_browser_container, themeDetailsFragment, ThemeDetailsFragment.TAG);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(null);
-                ft.commit();
             }
         });
 
@@ -251,7 +250,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         if (position > 1) {
             Cursor cursor = ((ThemeBrowserAdapter) parent.getAdapter()).getCursor();
             String themeId = cursor.getString(cursor.getColumnIndex("themeId"));
-            mCallback.onThemeSelected(themeId);
+            mCallback.onDemoSelected(themeId);
         }
     }
 
