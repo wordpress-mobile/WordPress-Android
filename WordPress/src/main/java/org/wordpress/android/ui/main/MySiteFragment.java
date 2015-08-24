@@ -337,4 +337,14 @@ public class MySiteFragment extends Fragment
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
         mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
     }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+        if (!isAdded() || (mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId())) == null) return;
+
+        // Update view if blog has a new name
+        if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
+            mBlogTitleTextView.setText(mBlog.getBlogName());
+        }
+    }
 }

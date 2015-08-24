@@ -83,12 +83,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         WordPress.wpDB.saveBlog(mBlog);
-
-        if (WordPress.getCurrentBlog().getLocalTableBlogId() == mBlog.getLocalTableBlogId()) {
-            WordPress.currentBlog = mBlog;
-        }
     }
 
     @Override

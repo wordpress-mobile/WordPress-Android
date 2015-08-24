@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -42,6 +43,8 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Handles changes to WordPress site settings. Syncs with host automatically when user leaves.
@@ -429,6 +432,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                         // Update local Blog name
                         if (params.containsKey("blogname")) {
                             mBlog.setBlogName(params.get("blogname"));
+                            WordPress.wpDB.saveBlog(mBlog);
+                            EventBus.getDefault().post(new CoreEvents.BlogListChanged());
                         }
                     }
                 }, new RestRequest.ErrorListener() {
