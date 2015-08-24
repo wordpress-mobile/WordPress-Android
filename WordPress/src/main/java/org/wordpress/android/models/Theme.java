@@ -14,6 +14,7 @@ public class Theme {
     public static final String STYLESHEET = "stylesheet";
     public static final String PRICE = "price";
     public static final String BLOG_ID = "blogId";
+    public static final String IS_CURRENT = "isCurrent";
 
     private String mId;
     private String mAuthor;
@@ -24,6 +25,7 @@ public class Theme {
     private String mStylesheet;
     private String mPrice;
     private String mBlogId;
+    private boolean mIsCurrent;
 
     public static Theme fromJSONV1_1(JSONObject object) throws JSONException {
         if (object == null) {
@@ -45,8 +47,9 @@ public class Theme {
             }
 
             String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+            boolean isCurrent = false;
 
-            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId);
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
         }
     }
 
@@ -69,12 +72,13 @@ public class Theme {
             }
 
             String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+            boolean isCurrent = false;
 
-            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId);
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
         }
     }
 
-    public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name, String stylesheet, String price, String blogId) {
+    public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name, String stylesheet, String price, String blogId, boolean isCurrent) {
         setId(id);
         setAuthor(author);
         setScreenshot(screenshot);
@@ -84,6 +88,7 @@ public class Theme {
         setStylesheet(stylesheet);
         setPrice(price);
         setBlogId(blogId);
+        setIsCurrent(isCurrent);
     }
 
     public void setId(String id) {
@@ -156,6 +161,14 @@ public class Theme {
 
     public void setBlogId(String blogId) {
         mBlogId = blogId;
+    }
+
+    public boolean getIsCurrent() {
+        return mIsCurrent;
+    }
+
+    public void setIsCurrent(boolean isCurrent) {
+        mIsCurrent = isCurrent;
     }
 
     public void save() {

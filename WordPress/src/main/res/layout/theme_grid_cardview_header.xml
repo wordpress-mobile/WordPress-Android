@@ -50,6 +50,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/customize"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"
@@ -77,6 +78,7 @@
                     android:background="@color/reader_divider_grey" />
 
                 <LinearLayout
+                    android:id="@+id/details"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"
@@ -105,6 +107,7 @@
                     android:background="@color/reader_divider_grey" />
 
                 <LinearLayout
+                    android:id="@+id/support"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"

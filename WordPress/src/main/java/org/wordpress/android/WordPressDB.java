@@ -1763,6 +1763,7 @@ public class WordPressDB {
         values.put(Theme.STYLESHEET, theme.getStylesheet());
         values.put(Theme.PRICE, theme.getPrice());
         values.put(Theme.BLOG_ID, theme.getBlogId());
+        values.put(Theme.IS_CURRENT, theme.getIsCurrent());
 
         synchronized (this) {
             int result = db.update(
@@ -1799,17 +1800,19 @@ public class WordPressDB {
     }
 
     public String getCurrentThemeId(String blogId) {
-        return DatabaseUtils.stringForQuery(db, "SELECT id FROM " + THEMES_TABLE + " WHERE blogId=?", new String[] { blogId });
+        String[] selection = {blogId, String.valueOf(1)};
+
+        return DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=?", selection);
     }
 
     public void setCurrentTheme(String blogId, String id) {
         // update any old themes that are set to true to false
         ContentValues values = new ContentValues();
-        values.put("isCurrent", false);
+        values.put(Theme.IS_CURRENT, false);
         db.update(THEMES_TABLE, values, "blogId=?", new String[] { blogId });
 
         values = new ContentValues();
-        values.put("isCurrent", true);
+        values.put(Theme.IS_CURRENT, true);
         db.update(THEMES_TABLE, values, "blogId=? AND id=?", new String[] { blogId, id });
     }
 
@@ -1818,7 +1821,10 @@ public class WordPressDB {
     }
 
     public Cursor getThemes(String blogId, String searchTerm) {
-        return db.rawQuery("SELECT _id,  id, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"});
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE};
+        String[] selection = {blogId, searchTerm};
+
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.NAME + " LIKE ?", selection, null, null, null);
     }
 
     public Theme getTheme(String blogId, String themeId) {
@@ -1832,8 +1838,9 @@ public class WordPressDB {
             String name = cursor.getString(5);
             String stylesheet = cursor.getString(6);
             String price = cursor.getString(7);
+            boolean isCurrent = cursor.getInt(8) > 0;
 
-            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId);
+            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
             cursor.close();
 
             return theme;

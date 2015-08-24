@@ -35,6 +35,8 @@ import org.wordpress.android.widgets.HeaderGridView;
  * A fragment display the themes on a grid view.
  */
 public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener {
+    public TextView mCurrentThemeTextView;
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (mSpinner != null) {
@@ -167,7 +169,8 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
     private void addMainHeader(LayoutInflater inflater) {
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
-
+        mCurrentThemeTextView = (TextView) header.findViewById(R.id.header_theme_text);
+        ((ThemeBrowserActivity) getActivity()).fetchCurrentTheme();
         LinearLayout customize = (LinearLayout) header.findViewById(R.id.customize);
         customize.setOnClickListener(new View.OnClickListener() {
             @Override

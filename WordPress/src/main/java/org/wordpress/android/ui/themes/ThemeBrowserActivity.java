@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -132,7 +130,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         );
     }
 
-    public String fetchCurrentTheme() {
+    public void fetchCurrentTheme() {
         final String siteId = getBlogId();
 
         WordPress.getRestClientUtilsV1_1().getCurrentTheme(siteId, new Listener() {
@@ -143,6 +141,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                             if (theme != null) {
                                 WordPress.wpDB.setCurrentTheme(siteId, theme.getId());
                                 mThemeBrowserFragment.setRefreshing(false);
+                                if (mThemeBrowserFragment.mCurrentThemeTextView != null) {
+                                    mThemeBrowserFragment.mCurrentThemeTextView.setText(theme.getName());
+                                }
                             }
                         } catch (JSONException e) {
                             AppLog.e(T.THEMES, e);
@@ -151,11 +152,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 }, new ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError response) {
+                        String themeId = WordPress.wpDB.getCurrentThemeId(siteId);
+                        Theme currentThemeFromDB = WordPress.wpDB.getTheme(siteId, themeId);
+                        if (currentThemeFromDB != null) {
+                            mThemeBrowserFragment.mCurrentThemeTextView.setText(currentThemeFromDB.getName());
+                        }
                     }
                 }
         );
-
-        return WordPress.wpDB.getCurrentThemeId(siteId);
     }
 
     @Override
