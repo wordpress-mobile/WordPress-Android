@@ -72,7 +72,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mEmptyView = (TextView) view.findViewById(R.id.text_empty);
 
         configureGridView(inflater, view);
-        configureSwipeToRefresh(savedInstanceState, view);
+        configureSwipeToRefresh(view);
         restoreState(savedInstanceState);
 
         return view;
