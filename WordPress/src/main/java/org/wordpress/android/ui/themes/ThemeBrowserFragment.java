@@ -35,53 +35,16 @@ import org.wordpress.android.widgets.HeaderGridView;
  * A fragment display the themes on a grid view.
  */
 public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener {
-    public TextView mCurrentThemeTextView;
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (mSpinner != null) {
-            refreshView(position);
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    public enum ThemeFilterType {
-        ALL("All"),
-        FREE("Free"),
-        PREMIUM("Premium");
-
-        private String mTitle;
-
-        ThemeFilterType(String title) {
-            mTitle = title;
-        }
-
-        public String getTitle() {
-            return mTitle;
-        }
-
-        public static ThemeFilterType getFilterType(int position) {
-            if (position < ThemeFilterType.values().length)
-                return ThemeFilterType.values()[position];
-            else
-                return ALL;
-        }
-    }
-
     public interface ThemeBrowserFragmentCallback {
         void onThemeSelected(String themeId);
     }
 
-    protected static final String ARGS_SORT = "ARGS_SORT";
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
     protected HeaderGridView mGridView;
     protected TextView mEmptyView;
     protected TextView mNoResultText;
+    protected TextView mCurrentThemeTextView;
     protected ThemeBrowserAdapter mAdapter;
     protected Spinner mSpinner;
     protected ThemeBrowserFragmentCallback mCallback;
@@ -105,11 +68,39 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
         setRetainInstance(true);
-
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         mEmptyView = (TextView) view.findViewById(R.id.text_empty);
-        configureGridView(inflater, view);
 
+        configureGridView(inflater, view);
+        configureSwipeToRefresh(savedInstanceState, view);
+        restoreState(savedInstanceState);
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Cursor cursor = fetchThemes(0);
+        if (cursor == null) {
+            return;
+        }
+        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
+        setEmptyViewVisible(mAdapter.getCount() == 0);
+        mGridView.setAdapter(mAdapter);
+        mGridView.setOnItemClickListener(this);
+        mGridView.setSelection(mSavedScrollPosition);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mGridView != null) {
+            outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
+        }
+    }
+
+    private void configureSwipeToRefresh(View view) {
         // swipe to refresh setup but not for the search view
         if (!(this instanceof ThemeSearchFragment)) {
             mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), (CustomSwipeRefreshLayout) view.findViewById(
@@ -131,29 +122,6 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             });
             mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
         }
-        restoreState(savedInstanceState);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Cursor cursor = fetchThemes(0);
-        if (cursor == null) {
-            return;
-        }
-        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
-        setEmptyViewVisible(mAdapter.getCount() == 0);
-        mGridView.setAdapter(mAdapter);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setSelection(mSavedScrollPosition);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mGridView != null)
-            outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
     }
 
     private void configureGridView(LayoutInflater inflater, View view) {
@@ -242,24 +210,6 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         }
     }
 
-    private ThemeFilterType getThemeFilterType() {
-        int filterType = ThemeFilterType.ALL.ordinal();
-
-        if (mSpinner != null) {
-            if (mSpinner.getPrompt() != null) {
-                String prompt = mSpinner.getPrompt().toString();
-            }
-
-        }
-//        int filterType = mSpinner.
-        int sortType = ThemeFilterType.ALL.ordinal();
-        if (getArguments() != null && getArguments().containsKey(ARGS_SORT))  {
-            sortType = getArguments().getInt(ARGS_SORT);
-        }
-
-        return ThemeFilterType.getFilterType(sortType);
-    }
-
     /**
      * Fetch themes for a given ThemeFilterType.
      *
@@ -310,19 +260,33 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeBrowserAdapter class
-            ScreenshotHolder tag =  (ScreenshotHolder) niv.getTag();
+            ScreenshotHolder tag = (ScreenshotHolder) niv.getTag();
             if (tag != null && tag.requestURL != null) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag.requestURL, new ImageListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) { }
+                    public void onErrorResponse(VolleyError error) {
+                    }
 
                     @Override
-                    public void onResponse(ImageContainer response, boolean isImmediate) { }
+                    public void onResponse(ImageContainer response, boolean isImmediate) {
+                    }
 
                 });
                 container.cancelRequest();
             }
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (mSpinner != null) {
+            refreshView(position);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
