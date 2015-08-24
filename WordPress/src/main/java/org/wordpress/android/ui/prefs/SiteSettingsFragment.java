@@ -33,6 +33,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 import org.xmlrpc.android.ApiHelper;
@@ -86,6 +87,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlog = WordPress.getBlog(
                 getArguments().getInt(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, -1));
         if (mBlog == null) return;
+
+        mRemoteTitle = mBlog.getBlogName();
 
         // inflate Site Settings preferences from XML
         addPreferencesFromResource(R.xml.site_settings);
@@ -207,6 +210,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (null != (mTitlePreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_title)))) {
             mTitlePreference.setOnPreferenceChangeListener(this);
+            mTitlePreference.setSummary(mRemoteTitle);
         }
 
         // Tagline preference
@@ -293,8 +297,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void handleResponseToSelfHostedSettingsRequest(Map result) {
         if (mTitlePreference != null) {
             mTitlePreference.setEnabled(true);
-            mRemoteTitle = getNestedMapValue(result, "blog_title");
-            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+            String title = getNestedMapValue(result, "blog_title");
+            changeEditTextPreferenceValue(mTitlePreference, title);
         }
 
         if (mTaglinePreference != null) {
@@ -315,8 +319,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void handleResponseToWPComSettingsRequest(JSONObject response) {
         if (mTitlePreference != null) {
             mTitlePreference.setEnabled(true);
-            mRemoteTitle = response.optString(RestClientUtils.SITE_TITLE_KEY);
-            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+            String title = response.optString(RestClientUtils.SITE_TITLE_KEY);
+            changeEditTextPreferenceValue(mTitlePreference, title);
         }
 
         if (mTaglinePreference != null) {
@@ -453,8 +457,8 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
         if (pref != null && newValue != null && !newValue.equals(pref.getSummary())) {
-            pref.setText(newValue);
-            pref.setSummary(newValue);
+            pref.setText(StringUtils.unescapeHTML(newValue));
+            pref.setSummary(StringUtils.unescapeHTML(newValue));
         }
     }
 
@@ -647,10 +651,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     };
 
     private void handleResponseToSelfHostedSettingsSetRequest(Map result) {
-        AppLog.w(AppLog.T.API, "Site settings saved");
-        for (Object key : result.keySet()) {
-            Log.d("", "key=" + key + "; value=" + result.get(key));
-        }
+        AppLog.d(AppLog.T.API, "Site settings saved");
+        mBlog.setBlogName(getNestedMapValue(result, "blog_title"));
+        WordPress.wpDB.saveBlog(mBlog);
+        EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
 
     private void handleSettingsSetError(String error) {
