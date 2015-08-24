@@ -187,6 +187,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         return false;
     }
 
+    public void allowEditing(boolean allow) {
+        if (mTitlePreference != null) mTitlePreference.setEnabled(allow);
+        if (mTaglinePreference != null) mTaglinePreference.setEnabled(allow);
+        if (mAddressPreference != null) mAddressPreference.setEnabled(false);
+        if (mPrivacyPreference != null) mPrivacyPreference.setEnabled(allow);
+        if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
+        if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
+    }
+
     /**
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */

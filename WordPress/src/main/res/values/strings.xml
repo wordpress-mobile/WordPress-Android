@@ -444,6 +444,7 @@
     <string name="site_settings_address_default_summary">Fetching address</string>
     <string name="site_settings_privacy_default_summary">Fetching privacy</string>
     <string name="site_settings_language_default_summary">Fetching language</string>
+    <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
