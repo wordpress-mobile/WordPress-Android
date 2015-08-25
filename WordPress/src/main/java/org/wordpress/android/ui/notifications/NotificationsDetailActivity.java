@@ -113,7 +113,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            finish();
             return true;
         }
 
