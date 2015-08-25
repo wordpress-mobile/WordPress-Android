@@ -14,7 +14,7 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginRight="@dimen/margin_extra_small"
-        tools:src="@drawable/noticon_trash" />
+        tools:src="@drawable/noticon_more" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="none"
         android:maxLines="1"
-        android:textColor="@color/reader_hyperlink"
+        android:textColor="@color/blue_wordpress"
         android:textSize="@dimen/text_sz_small"
         tools:text="text" />
 
