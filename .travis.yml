@@ -14,8 +14,9 @@ android:
   components:
     - extra-android-m2repository
     - extra-android-support
-    - build-tools-22.0.1
+    - build-tools-23.0.0
     - android-22
+    - android-23
 
 env:
   global:
