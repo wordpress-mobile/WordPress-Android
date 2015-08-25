@@ -9,13 +9,16 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -28,17 +31,20 @@ import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Adapter for Posts/Pages list
  */
-public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
+public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OnPostButtonClickListener {
         void onPostButtonClicked(int buttonId, PostsListPost post);
@@ -52,6 +58,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     private final int mLocalTableBlogId;
     private final int mPhotonWidth;
     private final int mPhotonHeight;
+    private final int mEndlistIndicatorHeight;
 
     private final boolean mIsPage;
     private final boolean mIsPrivateBlog;
@@ -65,6 +72,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
 
     private static final long ROW_ANIM_DURATION = 150;
 
+    private static final int VIEW_TYPE_POST_OR_PAGE = 0;
+    private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
+
     public PostsListAdapter(Context context, @NonNull Blog blog, boolean isPage) {
         mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
@@ -74,9 +84,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int cardSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
-        mPhotonWidth = displayWidth - (cardSpacing * 2);
+        int contentSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
+        mPhotonWidth = displayWidth - (contentSpacing * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+
+        // endlist indicator height is hard-coded here so that its horz line is in the middle of the fab
+        mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
 
         // on larger displays we can always show all buttons
         mAlwaysShowAllButtons = (displayWidth >= 1080);
@@ -99,20 +112,46 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     private PostsListPost getItem(int position) {
-        if (isValidPosition(position)) {
+        if (isValidPostPosition(position)) {
             return mPosts.get(position);
         }
         return null;
     }
 
-    private boolean isValidPosition(int position) {
+    private boolean isValidPostPosition(int position) {
         return (position >= 0 && position < mPosts.size());
     }
 
     @Override
-    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
-        return new PostViewHolder(view);
+    public int getItemViewType(int position) {
+        if (position == mPosts.size()) {
+            return VIEW_TYPE_ENDLIST_INDICATOR;
+        }
+        return VIEW_TYPE_POST_OR_PAGE;
+    }
+
+    @Override
+    public int getItemCount() {
+        if (mPosts.size() == 0) {
+            return 0;
+        } else {
+            return mPosts.size() + 1; // +1 for the endlist indicator
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ENDLIST_INDICATOR) {
+            View view = mLayoutInflater.inflate(R.layout.endlist_indicator, parent, false);
+            view.getLayoutParams().height = mEndlistIndicatorHeight;
+            return new EndListViewHolder(view);
+        } else if (mIsPage) {
+            View view = mLayoutInflater.inflate(R.layout.page_item, parent, false);
+            return new PageViewHolder(view);
+        } else {
+            View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
+            return new PostViewHolder(view);
+        }
     }
 
     private boolean canShowStatsForPost(PostsListPost post) {
@@ -122,45 +161,88 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        // nothing to do if this is the static endlist indicator
+        if (getItemViewType(position) == VIEW_TYPE_ENDLIST_INDICATOR) {
+            return;
+        }
+
         final PostsListPost post = mPosts.get(position);
         Context context = holder.itemView.getContext();
 
-        if (post.hasTitle()) {
-            holder.txtTitle.setText(post.getTitle());
-        } else {
-            holder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
-        }
+        if (holder instanceof PostViewHolder) {
+            PostViewHolder postHolder = (PostViewHolder) holder;
 
-        if (post.hasExcerpt()) {
-            holder.txtExcerpt.setVisibility(View.VISIBLE);
-            holder.txtExcerpt.setText(post.getExcerpt());
-        } else {
-            holder.txtExcerpt.setVisibility(View.GONE);
-        }
+            if (post.hasTitle()) {
+                postHolder.txtTitle.setText(post.getTitle());
+            } else {
+                postHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+            }
 
-        if (post.hasFeaturedImageId() || post.hasFeaturedImageUrl()) {
-            holder.imgFeatured.setVisibility(View.VISIBLE);
-            holder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
-        } else {
-            holder.imgFeatured.setVisibility(View.GONE);
-        }
+            if (post.hasExcerpt()) {
+                postHolder.txtExcerpt.setVisibility(View.VISIBLE);
+                postHolder.txtExcerpt.setText(post.getExcerpt());
+            } else {
+                postHolder.txtExcerpt.setVisibility(View.GONE);
+            }
 
-        // local drafts say "delete" instead of "trash"
-        if (post.isLocalDraft()) {
-            holder.txtDate.setVisibility(View.GONE);
-            holder.btnTrash.setButtonType(PostListButton.BUTTON_DELETE);
-        } else {
-            holder.txtDate.setText(post.getFormattedDate());
-            holder.txtDate.setVisibility(View.VISIBLE);
-            holder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
-        }
+            if (post.hasFeaturedImageId() || post.hasFeaturedImageUrl()) {
+                postHolder.imgFeatured.setVisibility(View.VISIBLE);
+                postHolder.imgFeatured.setImageUrl(post.getFeaturedImageUrl(), WPNetworkImageView.ImageType.PHOTO);
+            } else {
+                postHolder.imgFeatured.setVisibility(View.GONE);
+            }
 
-        updateStatusText(holder.txtStatus, post);
-        configurePostButtons(holder, post);
+            // local drafts say "delete" instead of "trash"
+            if (post.isLocalDraft()) {
+                postHolder.txtDate.setVisibility(View.GONE);
+                postHolder.btnTrash.setButtonType(PostListButton.BUTTON_DELETE);
+            } else {
+                postHolder.txtDate.setText(post.getFormattedDate());
+                postHolder.txtDate.setVisibility(View.VISIBLE);
+                postHolder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
+            }
+
+            updateStatusText(postHolder.txtStatus, post);
+            configurePostButtons(postHolder, post);
+        } else if (holder instanceof PageViewHolder) {
+            PageViewHolder pageHolder = (PageViewHolder) holder;
+            if (post.hasTitle()) {
+                pageHolder.txtTitle.setText(post.getTitle());
+            } else {
+                pageHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+            }
+
+            String dateStr = getPageDateHeaderText(context, post);
+            pageHolder.txtDate.setText(dateStr);
+
+            updateStatusText(pageHolder.txtStatus, post);
+
+            // don't show date header if same as previous
+            boolean showDate;
+            if (position > 0) {
+                String prevDateStr = getPageDateHeaderText(context, mPosts.get(position - 1));
+                showDate = !prevDateStr.equals(dateStr);
+            } else {
+                showDate = true;
+            }
+            pageHolder.dateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
+
+            // no "..." more button when uploading
+            pageHolder.btnMore.setVisibility(post.isUploading() ? View.GONE : View.VISIBLE);
+            pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPagePopupMenu(v, post);
+                }
+            });
+
+            // only show the top divider for the first item
+            pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+        }
 
         // load more posts when we near the end
-        if (mOnLoadMoreListener != null && position >= getItemCount() - 1
+        if (mOnLoadMoreListener != null && position >= mPosts.size() - 1
                 && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
@@ -168,11 +250,70 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnPostSelectedListener != null) {
-                    mOnPostSelectedListener.onPostSelected(post);
+                PostsListPost selectedPost = getItem(position);
+                if (mOnPostSelectedListener != null && selectedPost != null) {
+                    mOnPostSelectedListener.onPostSelected(selectedPost);
                 }
             }
         });
+    }
+
+    /*
+     * returns the caption to show in the date header for the passed page - pages with the same
+     * caption will be grouped together
+     *  - if page is local draft, returns "Local draft"
+     *  - if page is scheduled, returns formatted date w/o time
+     *  - if created today or yesterday, returns "Today" or "Yesterday"
+     *  - if created this month, returns the number of days ago
+     *  - if created this year, returns the month name
+     *  - if created before this year, returns the month name with year
+     */
+    private static String getPageDateHeaderText(Context context, PostsListPost page) {
+        if (page.isLocalDraft()) {
+            return context.getString(R.string.local_draft);
+        } else if (page.getStatusEnum() == PostStatus.SCHEDULED) {
+            return DateUtils.formatDateTime(context, page.getDateCreatedGmt(), DateUtils.FORMAT_ABBREV_ALL);
+        } else {
+            Date dtCreated = new Date(page.getDateCreatedGmt());
+            Date dtNow = DateTimeUtils.nowUTC();
+            int daysBetween = DateTimeUtils.daysBetween(dtCreated, dtNow);
+            if (daysBetween == 0) {
+                return context.getString(R.string.today);
+            } else if (daysBetween == 1) {
+                return context.getString(R.string.yesterday);
+            } else if (DateTimeUtils.isSameMonthAndYear(dtCreated, dtNow)) {
+                return String.format(context.getString(R.string.days_ago), daysBetween);
+            } else if (DateTimeUtils.isSameYear(dtCreated, dtNow)) {
+                return new SimpleDateFormat("MMMM").format(dtCreated);
+            } else {
+                return new SimpleDateFormat("MMMM yyyy").format(dtCreated);
+            }
+        }
+    }
+
+    /*
+     * user tapped "..." next to a page, show a popup menu of choices
+     */
+    private void showPagePopupMenu(View view, final PostsListPost page) {
+        Context context = view.getContext();
+        final ListPopupWindow listPopup = new ListPopupWindow(context);
+        listPopup.setAnchorView(view);
+
+        // width is a multiple of 56dp - https://www.google.com/design/spec/components/menus.html#menus-simple-menus
+        listPopup.setWidth(DisplayUtils.dpToPx(context, 168));
+        listPopup.setModal(true);
+        listPopup.setAdapter(new PageMenuAdapter(context, page));
+        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listPopup.dismiss();
+                if (mOnPostButtonClickListener != null) {
+                    int buttonId = (int) id;
+                    mOnPostButtonClickListener.onPostButtonClicked(buttonId, page);
+                }
+            }
+        });
+        listPopup.show();
     }
 
     private void updateStatusText(TextView txtStatus, PostsListPost post) {
@@ -328,16 +469,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         animOut.start();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return mPosts.get(position).getPostId();
-    }
-
-    @Override
-    public int getItemCount() {
-        return mPosts.size();
-    }
-
     public void loadPosts() {
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -426,13 +557,38 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         }
     }
 
+    class PageViewHolder extends RecyclerView.ViewHolder {
+        private final TextView txtTitle;
+        private final TextView txtDate;
+        private final TextView txtStatus;
+        private final ViewGroup dateHeader;
+        private final View btnMore;
+        private final View dividerTop;
+
+        public PageViewHolder(View view) {
+            super(view);
+            txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtStatus = (TextView) view.findViewById(R.id.text_status);
+            btnMore = view.findViewById(R.id.btn_more);
+            dividerTop = view.findViewById(R.id.divider_top);
+            dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
+            txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
+        }
+    }
+
+    class EndListViewHolder extends RecyclerView.ViewHolder {
+        public EndListViewHolder(View view) {
+            super(view);
+        }
+    }
+
     /*
      * called after the media (featured image) for a post has been downloaded - locate the post
      * and set its featured image url to the passed url
      */
     public void mediaUpdated(long mediaId, String mediaUrl) {
         int position = mPosts.indexOfFeaturedMediaId(mediaId);
-        if (isValidPosition(position)) {
+        if (isValidPostPosition(position)) {
             mPosts.get(position).setFeaturedImageUrl(mediaUrl);
             notifyItemChanged(position);
         }

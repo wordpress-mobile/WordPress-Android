@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    background for items in the pages list - provides left and right borders without top or bottom
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/grey_lighten_20" />
+        </shape>
+    </item>
+    <item>
+        <inset
+            android:insetLeft="1dp"
+            android:insetRight="1dp">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/white" />
+            </shape>
+        </inset>
+    </item>
+
+</layer-list>

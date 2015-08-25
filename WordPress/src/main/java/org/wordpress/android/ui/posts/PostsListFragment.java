@@ -110,8 +110,9 @@ public class PostsListFragment extends Fragment
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
-        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mFabView.setOnClickListener(new View.OnClickListener() {
@@ -139,37 +140,18 @@ public class PostsListFragment extends Fragment
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                             return;
                         }
-                        refreshPosts();
+                        if (hasLocalChanges()) {
+                            confirmRequestPosts();
+                        } else {
+                            requestPosts(false);
+                        }
                     }
                 });
     }
 
-    private void refreshPosts() {
-        if (!isAdded()) return;
-
-        if (hasLocalChanges()) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
-            dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
-            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            setRefreshing(true);
-                            requestPosts(false);
-                        }
-                    }
-            );
-            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    setRefreshing(false);
-                }
-            });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-            setRefreshing(true);
-            requestPosts(false);
-        }
+    private boolean hasLocalChanges() {
+        Blog blog = WordPress.getCurrentBlog();
+        return blog != null && WordPress.wpDB.blogHasLocalChanges(blog.getLocalTableBlogId(), mIsPage);
     }
 
     public PostsListAdapter getPostListAdapter() {
@@ -206,7 +188,7 @@ public class PostsListFragment extends Fragment
         // posts the first time this is called (ie: not after device rotation)
         if (bundle == null) {
             loadPosts();
-            if (!hasLocalChanges() && NetworkUtils.checkConnection(getActivity())) {
+            if (NetworkUtils.checkConnection(getActivity()) && !hasLocalChanges()) {
                 requestPosts(false);
             }
         }
@@ -247,8 +229,28 @@ public class PostsListFragment extends Fragment
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    private boolean hasLocalChanges() {
-        return WordPress.wpDB.findLocalChanges(WordPress.getCurrentLocalTableBlogId(), mIsPage);
+    /*
+     * called when the user performs a ptr and there are local changes which would be overwritten
+     * by the refresh
+     */
+    private void confirmRequestPosts() {
+        if (!isAdded()) return;
+
+        setRefreshing(false);
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
+        dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        requestPosts(false);
+                    }
+                }
+        );
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.create().show();
     }
 
     private void requestPosts(boolean loadMore) {
@@ -257,7 +259,6 @@ public class PostsListFragment extends Fragment
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            setRefreshing(false);
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
@@ -496,8 +497,9 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onLoadMore() {
-        if (mCanLoadMorePosts && !mIsFetchingPosts)
+        if (mCanLoadMorePosts && !mIsFetchingPosts) {
             requestPosts(true);
+        }
     }
 
     /*
@@ -540,7 +542,10 @@ public class PostsListFragment extends Fragment
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
-                trashPost(post);
+                // prevent deleting post while it's being uploaded
+                if (!post.isUploading()) {
+                    trashPost(post);
+                }
                 break;
         }
     }
