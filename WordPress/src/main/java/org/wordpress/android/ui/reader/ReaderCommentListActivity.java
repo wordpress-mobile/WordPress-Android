@@ -381,7 +381,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
      * scrolls the passed comment to the top of the listView
      */
     private void scrollToCommentId(long commentId) {
-        int position = getCommentAdapter().indexOfCommentId(commentId);
+        int position = getCommentAdapter().positionOfCommentId(commentId);
         if (position > -1) {
             mRecyclerView.scrollToPosition(position);
         }
@@ -391,7 +391,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
      * Smoothly scrolls the passed comment to the top of the listView
      */
     private void smoothScrollToCommentId(long commentId) {
-        int position = getCommentAdapter().indexOfCommentId(commentId);
+        int position = getCommentAdapter().positionOfCommentId(commentId);
         if (position > -1) {
             mRecyclerView.smoothScrollToPosition(position);
         }

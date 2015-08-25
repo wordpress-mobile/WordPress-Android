@@ -58,6 +58,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private static final long ID_HEADER = -1L;
 
+    private static final int NUM_HEADERS = 1;
+
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
     }
@@ -154,7 +156,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return mComments.size() + 1; // +1 for header
+        return mComments.size() + NUM_HEADERS;
     }
 
     public boolean isEmpty() {
@@ -255,7 +257,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
-        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getItemCount() - 1)) {
+        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getItemCount() - NUM_HEADERS)) {
             mDataRequestedListener.onRequestData();
         }
     }
@@ -272,7 +274,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private ReaderComment getItem(int position) {
-        return position == 0 ? null : mComments.get(position - 1);
+        return position == 0 ? null : mComments.get(position - NUM_HEADERS);
     }
 
     private void showLikeStatus(final CommentHolder holder, final int position) {
@@ -322,8 +324,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
-        mComments.set(position, updatedComment);
-        showLikeStatus(holder, position);
+        if (updatedComment != null) {
+            mComments.set(position - NUM_HEADERS, updatedComment);
+            showLikeStatus(holder, position);
+        }
     }
 
     /*
@@ -354,22 +358,19 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             setHighlightCommentId(0, false);
         }
 
-        int position = indexOfCommentId(commentId);
-        if (position == -1) {
-            return;
+        int index = mComments.indexOfCommentId(commentId);
+        if (index > -1) {
+            mComments.remove(index);
+            notifyDataSetChanged();
         }
-
-        mComments.remove(position);
-        notifyDataSetChanged();
     }
 
     /*
-     * replace the comment that has the passed commentId with another comment - used
-     * after a comment is submitted to replace the "fake" comment with the real one
+     * replace the comment that has the passed commentId with another comment
      */
     public void replaceComment(long commentId, ReaderComment comment) {
-        int position = mComments.replaceComment(commentId, comment);
-        if (position > -1) {
+        int position = positionOfCommentId(commentId);
+        if (position > -1 && mComments.replaceComment(commentId, comment)) {
             notifyItemChanged(position);
         }
     }
@@ -384,8 +385,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mShowProgressForHighlightedComment = showProgress;
     }
 
-    public int indexOfCommentId(long commentId) {
-        return mComments.indexOfCommentId(commentId);
+    /*
+     * returns the position of the passed comment in the adapter, taking the header into account
+     */
+    public int positionOfCommentId(long commentId) {
+        int index = mComments.indexOfCommentId(commentId);
+        return index == -1 ? -1 : index + NUM_HEADERS;
     }
 
     /*
