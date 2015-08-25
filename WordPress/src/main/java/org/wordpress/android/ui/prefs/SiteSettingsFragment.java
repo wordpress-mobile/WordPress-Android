@@ -210,7 +210,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (null != (mTitlePreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_title)))) {
             mTitlePreference.setOnPreferenceChangeListener(this);
-            mTitlePreference.setSummary(mRemoteTitle);
+            changeEditTextPreferenceValue(mTitlePreference, StringUtils.unescapeHTML(mRemoteTitle));
         }
 
         // Tagline preference
@@ -394,11 +394,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private HashMap<String, String> generateSelfHostedParams() {
         HashMap<String, String> params = new HashMap<>();
 
-        if (mTitlePreference != null && !mTitlePreference.getText().equals(mRemoteTitle)) {
+        if (mTitlePreference != null && !mTitlePreference.getText().equals(StringUtils.unescapeHTML(mRemoteTitle))) {
             params.put("blog_title", mTitlePreference.getText());
         }
 
-        if (mTaglinePreference != null && !mTaglinePreference.getText().equals(mRemoteTagline)) {
+        if (mTaglinePreference != null && !mTaglinePreference.getText().equals(StringUtils.unescapeHTML(mRemoteTagline))) {
             params.put("blog_tagline", mTaglinePreference.getText());
         }
 
@@ -652,7 +652,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void handleResponseToSelfHostedSettingsSetRequest(Map result) {
         AppLog.d(AppLog.T.API, "Site settings saved");
-        mBlog.setBlogName(getNestedMapValue(result, "blog_title"));
+        mBlog.setBlogName(StringUtils.unescapeHTML(getNestedMapValue(result, "blog_title")));
         WordPress.wpDB.saveBlog(mBlog);
         EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
