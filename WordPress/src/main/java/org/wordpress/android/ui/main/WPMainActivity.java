@@ -220,13 +220,15 @@ public class WPMainActivity extends Activity
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
-        String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-
-        if (!TextUtils.isEmpty(noteId)) {
-            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
-            GCMIntentService.clearNotificationsMap();
+        if (GCMIntentService.getNotificationsMap().size() == 1) {
+            String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            if (!TextUtils.isEmpty(noteId)) {
+                NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
+            }
         }
+
+        GCMIntentService.clearNotificationsMap();
     }
 
     @Override
