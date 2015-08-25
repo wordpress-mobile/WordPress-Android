@@ -195,15 +195,7 @@ public class ReaderPostService extends Service {
             }
         };
 
-        // TODO: as of 09-July-2015 there is no v1.2 endpoint for Freshly Pressed, so we have to
-        // request FP posts using the v1.1 endpoint - this hack checks the stored endpoint to see
-        // if it's v1.1 and if so uses that REST client rather than v1.2
-        String endpoint = ReaderTagTable.getEndpointForTag(tag);
-        if (!TextUtils.isEmpty(endpoint) && endpoint.contains("rest/v1.1/")) {
-            WordPress.getRestClientUtilsV1_1().get(sb.toString(), null, null, listener, errorListener);
-        } else {
-            WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
-        }
+        WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
     }
 
     private static void requestPostsForBlog(final long blogId,
