@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -133,10 +134,7 @@ public class WPMainActivity extends Activity
 
                 switch (position) {
                     case WPMainTabAdapter.TAB_NOTIFS:
-                        if (getNotificationListFragment() != null) {
-                            getNotificationListFragment().updateLastSeenTime();
-                            mTabLayout.showNoteBadge(false);
-                        }
+                        new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         break;
                 }
                 trackLastVisibleTab(position);
@@ -432,6 +430,23 @@ public class WPMainActivity extends Activity
         return null;
     }
 
+    // Updates `last_seen` notifications flag in Simperium and removes tab indicator
+    private class UpdateLastSeenTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            SimperiumUtils.updateLastSeenTime();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void nada) {
+            if (isFinishing()) return;
+
+            mTabLayout.showNoteBadge(false);
+        }
+    }
+
     // Events
 
     @SuppressWarnings("unused")
@@ -500,12 +515,20 @@ public class WPMainActivity extends Activity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!isFinishing()) {
+                    if (isFinishing()) return;
+
+                    if (isViewingNotificationsTab()) {
+                        new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    } else {
                         mTabLayout.checkNoteBadge();
                     }
                 }
             });
         }
+    }
+
+    private boolean isViewingNotificationsTab() {
+        return mViewPager.getCurrentItem() == WPMainTabAdapter.TAB_NOTIFS;
     }
 
     @Override

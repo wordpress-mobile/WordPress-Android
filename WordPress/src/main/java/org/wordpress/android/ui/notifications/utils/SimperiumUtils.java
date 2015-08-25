@@ -23,10 +23,14 @@ import org.wordpress.android.util.StringUtils;
 import de.greenrobot.event.EventBus;
 
 public class SimperiumUtils {
+    private static final String NOTE_TIMESTAMP = "timestamp";
+    private static final String META_BUCKET_NAME = "meta";
+    private static final String META_LAST_SEEN = "last_seen";
+
     private static Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
     private static Bucket<BucketObject> mMetaBucket;
-
+    
     public static Bucket<Note> getNotesBucket() {
         return mNotesBucket;
     }
@@ -44,7 +48,7 @@ public class SimperiumUtils {
 
             try {
                 mNotesBucket = mSimperium.bucket(new Note.Schema());
-                mMetaBucket = mSimperium.bucket("meta");
+                mMetaBucket = mSimperium.bucket(META_BUCKET_NAME);
 
                 mSimperium.setUserStatusChangeListener(new User.StatusChangeListener() {
 
@@ -130,9 +134,9 @@ public class SimperiumUtils {
         if (getNotesBucket() == null || getMetaBucket() == null) return false;
 
         try {
-            BucketObject meta = getMetaBucket().get("meta");
-            if (meta != null && meta.getProperty("last_seen") instanceof Integer) {
-                Integer lastSeenTimestamp = (Integer)meta.getProperty("last_seen");
+            BucketObject meta = getMetaBucket().get(META_BUCKET_NAME);
+            if (meta != null && meta.getProperty(META_LAST_SEEN) instanceof Integer) {
+                Integer lastSeenTimestamp = (Integer)meta.getProperty(META_LAST_SEEN);
 
                 Query<Note> query = new Query<>(getNotesBucket());
                 query.where(Note.Schema.UNREAD_INDEX, Query.ComparisonType.EQUAL_TO, true);
@@ -144,5 +148,28 @@ public class SimperiumUtils {
         }
 
         return false;
+    }
+
+    // Updates the 'last_seen' field in the meta bucket with the latest note's timestamp
+    public static void updateLastSeenTime() {
+        if (getNotesBucket() == null || getMetaBucket() == null) return;
+
+        Query<Note> query = new Query<>(getNotesBucket());
+        query.order(NOTE_TIMESTAMP, Query.SortType.DESCENDING);
+        query.limit(1);
+
+        Bucket.ObjectCursor<Note> cursor = query.execute();
+        if (cursor.moveToFirst()) {
+            long latestNoteTimestamp = cursor.getObject().getTimestamp();
+            try {
+                BucketObject meta = getMetaBucket().get(META_BUCKET_NAME);
+                if (meta != null) {
+                    meta.setProperty(META_LAST_SEEN, latestNoteTimestamp);
+                    meta.save();
+                }
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
