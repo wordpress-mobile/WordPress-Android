@@ -388,6 +388,7 @@
     <string name="stats">Stats</string>
     <string name="stats_for">Stats for %s</string>
     <string name="stats_other_recent_stats_label">Other Recent Stats</string>
+    <string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="stats_view_all">View all</string>
     <string name="stats_view">View</string>
@@ -416,7 +417,7 @@
     <string name="stats_view_countries">Countries</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_view_clicks">Clicks</string>
-    <string name="stats_view_tags_and_categories">Tags &amp; categories</string>
+    <string name="stats_view_tags_and_categories">Tags &amp; Categories</string>
     <string name="stats_view_authors">Authors</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
@@ -508,6 +509,16 @@
     <string name="stats_average_per_day">Average per Day</string>
     <string name="stats_recent_weeks">Recent Weeks</string>
 
+    <!-- Stats insights -->
+    <string name="stats_insights">Insights</string>
+    <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
+    <string name="stats_insights_today">Today\'s Stats</string>
+    <string name="stats_insights_popular">Most popular day and hour</string>
+    <string name="stats_insights_most_popular_day">Most popular day</string>
+    <string name="stats_insights_most_popular_hour">Most popular hour</string>
+    <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
+    <string name="stats_insights_best_ever">Best Views Ever</string>
+
     <!-- invalid_url -->
     <string name="invalid_url_message">Check that the blog URL entered is valid</string>
 
@@ -558,6 +569,8 @@
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
+    <string name="ignore">Ignore</string>
+    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
@@ -650,6 +663,8 @@
     <string name="passcode_preference_title">PIN lock</string>
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
+    <string name="passcodelock_prompt_message">Enter your PIN</string>
+    <string name="passcodelock_hint"></string>
     <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
     <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
@@ -674,7 +689,6 @@
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_page_popular_tags">Popular tags</string>
     <string name="reader_page_followed_blogs">Followed blogs</string>
     <string name="reader_page_recommended_blogs">Blogs you may like</string>
 
@@ -758,7 +772,6 @@
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
-    <string name="reader_empty_popular_tags">No popular tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>

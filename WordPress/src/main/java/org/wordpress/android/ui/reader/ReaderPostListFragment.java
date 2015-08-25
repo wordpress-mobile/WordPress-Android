@@ -56,6 +56,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -114,6 +115,7 @@ public class ReaderPostListFragment extends Fragment
     private boolean mIsUpdating;
     private boolean mWasPaused;
     private boolean mIsAnimatingOutNewPostsBar;
+    private boolean mIsLoggedOutReader;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -218,6 +220,8 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
@@ -336,7 +340,7 @@ public class ReaderPostListFragment extends Fragment
         if (mRecyclerView != null && hasPostAdapter()) {
             return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
-            return 0;
+            return -1;
         }
     }
 
@@ -513,19 +517,22 @@ public class ReaderPostListFragment extends Fragment
             // the toolbar is hidden by the layout, so we need to show it here unless we know we're
             // going to restore the list position once the adapter is loaded (which will take care
             // of showing/hiding the toolbar)
-            mTagToolbar.setVisibility(mRestorePosition == 0 ? View.VISIBLE : View.GONE);
+            mTagToolbar.setVisibility(mRestorePosition > 0 ? View.GONE : View.VISIBLE);
 
-            mTagToolbar.inflateMenu(R.menu.reader_list);
-            mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    if (menuItem.getItemId() == R.id.menu_tags) {
-                        ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                        return true;
+            // enable customizing followed tags/blogs if user is logged in
+            if (!mIsLoggedOutReader) {
+                mTagToolbar.inflateMenu(R.menu.reader_list);
+                mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.menu_tags) {
+                            ReaderActivityLauncher.showReaderSubsForResult(getActivity());
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
-                }
-            });
+                });
+            }
 
             // scroll the tag toolbar with the recycler
             int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_height);
@@ -559,7 +566,7 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        if (getPostListType().isPreviewType()) {
+        if (getPostListType().isPreviewType() && !mIsLoggedOutReader) {
             createFollowButton();
         }
 

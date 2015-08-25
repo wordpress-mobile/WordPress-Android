@@ -62,6 +62,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private boolean mIsCheckboxChecked;
 
     private OnDateChangeListener mListener;
+    private OnOverviewItemChangeListener mOverviewItemChangeListener;
 
     private final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
             OverviewLabel.COMMENTS};
@@ -76,6 +77,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
     }
 
+    // Container Activity must implement this interface
+    public interface OnOverviewItemChangeListener {
+        void onOverviewItemChanged(OverviewLabel newItem);
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -83,6 +89,20 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mListener = (OnDateChangeListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnDateChangeListener");
+        }
+        try {
+            mOverviewItemChangeListener = (OnOverviewItemChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnOverviewItemChangeListener");
+        }
+    }
+
+    void setSelectedOverviewItem(OverviewLabel itemToSelect) {
+        for (int i = 0; i < overviewItems.length; i++) {
+            if (overviewItems[i] == itemToSelect) {
+                mSelectedOverviewItemIndex = i;
+                return;
+            }
         }
     }
 
@@ -119,6 +139,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
             mModuleButtonsContainer.setVisibility(View.VISIBLE);
         }
+
         return view;
     }
 
@@ -226,6 +247,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 return;
 
             mSelectedOverviewItemIndex = checkedId;
+            if (mOverviewItemChangeListener != null) {
+                mOverviewItemChangeListener.onOverviewItemChanged(
+                        overviewItems[mSelectedOverviewItemIndex]
+                );
+            }
             updateUI();
         }
     };
@@ -296,8 +322,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mVisitsData != null) {
             updateUI();
         } else {
-            setupNoResultsUI(true);
-            refreshStats();
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                setupNoResultsUI(true);
+                refreshStats();
+            } else {
+                setupNoResultsUI(false);
+            }
         }
     }
 
@@ -674,7 +704,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
         mSelectedBarGraphBarIndex = -1;
-        mSelectedOverviewItemIndex = 0;
 
         // Reset the bar to highlight
         if (mGraphView != null) {
@@ -766,7 +795,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART);
     }
 
-    private enum OverviewLabel {
+    public enum OverviewLabel {
         VIEWS(R.string.stats_views),
         VISITORS(R.string.stats_visitors),
         LIKES(R.string.stats_likes),

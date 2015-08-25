@@ -25,7 +25,6 @@ android {
         exclude "META-INF/LICENSE.txt"
         exclude "META-INF/NOTICE.txt"
     }
-
     dexOptions {
         jumboMode = true
     }
@@ -35,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.1-rc-3"
-        versionCode 184
+        versionName "4.2-rc-1"
+        versionCode 188
         minSdkVersion 14
         targetSdkVersion 22
 
@@ -102,7 +101,7 @@ dependencies {
     compile 'org.wordpress:gcm:1.0.0' // not found in maven central
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:android-passcodelock:0.0.6'
+    compile 'org.wordpress:passcodelock:1.0.0'
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium

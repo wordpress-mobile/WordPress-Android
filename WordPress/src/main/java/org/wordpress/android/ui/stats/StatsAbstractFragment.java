@@ -131,6 +131,14 @@ public abstract class StatsAbstractFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    public static StatsAbstractFragment newVisitorsAndViewsInstance(StatsViewType viewType, int localTableBlogID,
+                                                    StatsTimeframe timeframe, String date,  StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
+
+        StatsVisitorsAndViewsFragment fragment = (StatsVisitorsAndViewsFragment) newInstance(viewType, localTableBlogID, timeframe, date);
+        fragment.setSelectedOverviewItem(itemToSelect);
+        return fragment;
+    }
+
     public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID,
                                                     StatsTimeframe timeframe, String date ) {
         StatsAbstractFragment fragment = null;
@@ -174,6 +182,15 @@ public abstract class StatsAbstractFragment extends Fragment {
                 break;
             case SEARCH_TERMS:
                 fragment = new StatsSearchTermsFragment();
+                break;
+            case INSIGHTS_MOST_POPULAR:
+                fragment = new StatsInsightsMostPopularFragment();
+                break;
+            case INSIGHTS_ALL_TIME:
+                fragment = new StatsInsightsAllTimeFragment();
+                break;
+            case INSIGHTS_TODAY:
+                fragment = new StatsInsightsTodayFragment();
                 break;
         }
 

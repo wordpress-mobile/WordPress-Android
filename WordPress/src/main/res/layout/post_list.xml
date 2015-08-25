@@ -55,12 +55,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ListView
-                android:id="@id/android:list"
+            <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawSelectorOnTop="false"
-                tools:listitem="@layout/post_list_row" />
+                android:scrollbars="vertical" />
+
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -75,6 +75,17 @@
             fab:fab_icon="@drawable/ic_create_white_24dp" />
 
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </RelativeLayout>
 

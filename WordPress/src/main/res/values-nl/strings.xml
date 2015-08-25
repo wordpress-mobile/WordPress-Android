@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">Loskoppelen van WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Verbinden met WordPress.com</string>
+	<string name="me_btn_login_logout">Inloggen/uitloggen</string>
+	<string name="site_picker_cant_hide_current_site">"%s" was niet verborgen omdat het de huidige site is</string>
+	<string name="me_btn_support">Help &amp; Support</string>
+	<string name="me_btn_settings">Accountinstellingen</string>
+	<string name="site_picker_create_dotcom">WordPress.com site maken</string>
+	<string name="site_picker_edit_visibility">Sites tonen/verbergen</string>
+	<string name="site_picker_add_self_hosted">Een zelf-gehoste site toevoegen</string>
+	<string name="site_picker_add_site">Site toevoegen</string>
+	<string name="my_site_btn_switch_site">Site wisselen</string>
+	<string name="site_picker_title">Site kiezen</string>
+	<string name="my_site_btn_view_admin">Beheer bekijken</string>
+	<string name="my_site_btn_view_site">Bekijk site</string>
+	<string name="my_site_header_publish">Publiceren</string>
+	<string name="my_site_header_look_and_feel">Look and feel</string>
+	<string name="my_site_btn_comments">Reacties</string>
+	<string name="my_site_btn_blog_posts">Blogberichten</string>
+	<string name="my_site_btn_site_settings">Instellingen</string>
+	<string name="reader_label_new_posts_subtitle">Tik om ze te tonen</string>
+	<string name="my_site_header_admin">Beheer</string>
+	<string name="my_site_header_configuration">Configuratie</string>
+	<string name="notifications_account_required">Meld je aan bij WordPress.com voor meldingen</string>
+	<string name="stats_unknown_author">Onbekende auteur</string>
+	<string name="signout">Verbinding verbreken</string>
+	<string name="image_added">Afbeelding toegevoegd</string>
+	<string name="sign_out_wpcom_confirm">Als je je account loskoppelt, worden alle WordPress.com gegevens van @%s verwijderd van dit apparaat, inclusief lokale concepten en lokale wijzigingen.</string>
+	<string name="select_all">Alles selecteren</string>
+	<string name="hide">Verbergen</string>
+	<string name="show">Tonen</string>
+	<string name="deselect_all">Alles deselecteren</string>
 	<string name="select_from_new_picker">Meerdere selecteren met de nieuwe picker </string>
 	<string name="stats_generic_error">Benodigde statistieken konden niet geladen worden</string>
 	<string name="no_media_sources">Media ophalen mislukt</string>
@@ -130,6 +161,7 @@
 	<string name="themes_fetching">Thema\'s ophalen …</string>
 	<string name="stats_for">Statistieken voor %s</string>
 	<string name="ssl_certificate_details">Details</string>
+	<string name="sure_to_remove_account">Deze site verwijderen?</string>
 	<string name="delete_sure_post">Dit bericht verwijderen</string>
 	<string name="delete_sure">Dit concept verwijderen</string>
 	<string name="delete_sure_page">Deze pagina verwijderen</string>
@@ -228,6 +260,7 @@
 	<string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>
 	<string name="reader_label_reblog_empty">Je hebt geen zichtbare WordPress.com-blogs waarnaar dit bericht opnieuw geblogd kan worden</string>
 	<string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
+	<string name="could_not_remove_account">Kon site niet verwijderen</string>
 	<string name="out_of_memory">Apparaatgeheugen vol</string>
 	<string name="no_network_message">Er is geen netwerk beschikbaar</string>
 	<string name="no_site_error">Kan niet verbinden met de WordPress-site</string>
@@ -293,6 +326,8 @@
 	<string name="blog_name_reserved_but_may_be_available">Die site is momenteel gereserveerd, maar is mogelijk binnen een paar dagen beschikbaar</string>
 	<string name="username_or_password_incorrect">De gebruikersnaam of het wachtwoord is niet correct</string>
 	<string name="nux_cannot_log_in">We kunnen je niet aanmelden</string>
+	<string name="blog_removed_successfully">Site is verwijderd</string>
+	<string name="remove_account">Site verwijderen</string>
 	<string name="xmlrpc_error">Verbinding mislukt. Voer het volledig pad in naar xmlrpc.php op je site en probeer het opnieuw.</string>
 	<string name="select_categories">Categorieën selecteren</string>
 	<string name="account_details">Accountgegevens</string>

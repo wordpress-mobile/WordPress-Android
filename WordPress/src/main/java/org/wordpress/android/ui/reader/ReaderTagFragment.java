@@ -10,56 +10,21 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPActivityUtils;
 
 /*
- * fragment hosted by ReaderSubsActivity which shows either followed or popular tags
+ * fragment hosted by ReaderSubsActivity which shows followed tags
  */
-public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagActionListener {
+public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagDeletedListener {
     private ReaderRecyclerView mRecyclerView;
     private ReaderTagAdapter mTagAdapter;
-    private ReaderTagType mTagType;
-    private static final String ARG_TAG_TYPE = "tag_type";
 
-    static ReaderTagFragment newInstance(ReaderTagType tagType) {
+    static ReaderTagFragment newInstance() {
         AppLog.d(AppLog.T.READER, "reader tag list > newInstance");
-
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_TAG_TYPE, tagType);
-        ReaderTagFragment fragment = new ReaderTagFragment();
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        restoreState(args);
-    }
-
-    private void restoreState(Bundle args) {
-        if (args == null) {
-            return;
-        }
-        if (args.containsKey(ARG_TAG_TYPE)) {
-            mTagType = (ReaderTagType) args.getSerializable(ARG_TAG_TYPE);
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            AppLog.d(AppLog.T.READER, "reader tag fragment > restoring instance state");
-            restoreState(savedInstanceState);
-        }
+        return new ReaderTagFragment();
     }
 
     @Override
@@ -69,23 +34,16 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
         return view;
     }
 
-    void checkEmptyView() {
+    private void checkEmptyView() {
         if (!isAdded()) {
             return;
         }
         boolean isEmpty = hasTagAdapter() && getTagAdapter().isEmpty();
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
-        if (isEmpty) {
-            switch (getTagType()) {
-                case FOLLOWED:
-                    emptyView.setText(R.string.reader_empty_followed_tags);
-                    break;
-                case RECOMMENDED:
-                    emptyView.setText(R.string.reader_empty_popular_tags);
-                    break;
-            }
-        }
         emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        if (isEmpty) {
+            emptyView.setText(R.string.reader_empty_followed_tags);
+        }
     }
 
     @Override
@@ -95,27 +53,17 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
         getTagAdapter().refresh();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ARG_TAG_TYPE, getTagType());
-        super.onSaveInstanceState(outState);
-    }
-
     void refresh() {
         if (hasTagAdapter()) {
             getTagAdapter().refresh();
         }
     }
 
-    ReaderTagType getTagType() {
-        return mTagType;
-    }
-
     private ReaderTagAdapter getTagAdapter() {
         if (mTagAdapter == null) {
             Context context = WPActivityUtils.getThemedContext(getActivity());
-            mTagAdapter = new ReaderTagAdapter(context, getTagType());
-            mTagAdapter.setTagActionListener(this);
+            mTagAdapter = new ReaderTagAdapter(context);
+            mTagAdapter.setTagDeletedListener(this);
             mTagAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
@@ -131,15 +79,15 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     }
 
     /*
-     * called from adapter when user adds/removes a tag - note that the network request
+     * called from adapter when user removes a tag - note that the network request
      * has been made by the time this is called
      */
     @Override
-    public void onTagAction(ReaderTag tag, TagAction action) {
+    public void onTagDeleted(ReaderTag tag) {
         checkEmptyView();
         // let the host activity know about the change
-        if (getActivity() instanceof TagActionListener) {
-            ((TagActionListener) getActivity()).onTagAction(tag, action);
+        if (getActivity() instanceof ReaderTagAdapter.TagDeletedListener) {
+            ((ReaderTagAdapter.TagDeletedListener) getActivity()).onTagDeleted(tag);
         }
     }
 }

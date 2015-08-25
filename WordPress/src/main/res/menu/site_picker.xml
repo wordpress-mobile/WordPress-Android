@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_search"
+        android:title="@string/menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="org.wordpress.android.ui.main.SitePickerSearchView" />
+
+    <item
         android:id="@+id/menu_edit"
         android:title="@string/site_picker_edit_visibility"
         app:showAsAction="never" />

@@ -39,6 +39,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -265,7 +266,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void showIconBar(boolean show) {
         if (isAdded() && canShowIconBar()) {
-            ReaderAnim.animateBottomBar(mLayoutIcons, show);
+            AniUtils.animateBottomBar(mLayoutIcons, show);
         }
     }
 
@@ -555,7 +556,7 @@ public class ReaderPostDetailFragment extends Fragment
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
             if (mLayoutLikes.getVisibility() != View.GONE) {
-                ReaderAnim.fadeOut(mLayoutLikes, ReaderAnim.Duration.SHORT);
+                AniUtils.fadeOut(mLayoutLikes, AniUtils.Duration.SHORT);
             }
             return;
         }
@@ -569,7 +570,7 @@ public class ReaderPostDetailFragment extends Fragment
         });
 
         if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
+            AniUtils.fadeIn(mLayoutLikes, AniUtils.Duration.SHORT);
         }
 
         mLikingUsersView.showLikingUsers(mPost);

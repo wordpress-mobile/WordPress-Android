@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="me_disconnect_from_wordpress_com">ตัดการติดต่อกับ WordPress.com</string>
+	<string name="me_btn_login_logout">เข้าสู่ระบบ/ออกจากระบบ</string>
+	<string name="me_connect_to_wordpress_com">เชื่อมต่อกับ WordPress.com</string>
+	<string name="site_picker_cant_hide_current_site">ไม่ได้ซ่อน "%s" เพราะว่ามันเป็นเว็บปัจจุบัน</string>
+	<string name="me_btn_support">ช่วยเหลือและสนับสนุน</string>
+	<string name="me_btn_settings">ตั้งค่าบัญชี</string>
+	<string name="site_picker_create_dotcom">สร้างเว็บ WordPress.com</string>
+	<string name="site_picker_edit_visibility">แสดง/ซ่อน เว็บไซต์</string>
+	<string name="site_picker_add_self_hosted">เพิ่มเว็บไซต์บนโฮสท์ติดตั้งเอง</string>
+	<string name="site_picker_add_site">เพิ่มเว็บไซต์</string>
+	<string name="my_site_btn_switch_site">สลับเว็บไซต์</string>
+	<string name="site_picker_title">เลือกเว็บไซต์</string>
+	<string name="my_site_btn_view_site">ดูเว็บไซต์</string>
+	<string name="my_site_btn_view_admin">ดูผู้ควบคุม</string>
+	<string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
 	<string name="select_from_new_picker">การเลือกหลายสิ่งด้วยตัวเลือกแบบใหม่</string>
 	<string name="no_blog_videos">ไม่มีวีดีโอ</string>
 	<string name="no_media_sources">ไม่สามารถดึงข้อมูลไฟล์สื่อ</string>

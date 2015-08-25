@@ -2,10 +2,10 @@ package org.wordpress.android.ui.posts.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -21,49 +21,158 @@ import java.util.Locale;
 /**
  * Adapter for Posts/Pages list
  */
-public class PostsListAdapter extends BaseAdapter {
-    public static interface OnLoadMoreListener {
-        public void onLoadMore();
-    }
+public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
 
-    public static interface OnPostsLoadedListener {
-        public void onPostsLoaded(int postCount);
-    }
+    private final boolean mIsPage;
+    private final LayoutInflater mLayoutInflater;
+    private OnLoadMoreListener mOnLoadMoreListener;
+    private OnPostsLoadedListener mOnPostsLoadedListener;
+    private OnPostSelectedListener mOnPostSelectedListener;
+    private int mSelectedPosition = -1;
+    private boolean mShowSelection;
+    private List<PostsListPost> mPosts = new ArrayList<>();
 
-    private final OnLoadMoreListener mOnLoadMoreListener;
-    private final OnPostsLoadedListener mOnPostsLoadedListener;
-    private Context mContext;
-    private boolean mIsPage;
-    private LayoutInflater mLayoutInflater;
-
-    private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
-
-
-    public PostsListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener, OnPostsLoadedListener onPostsLoadedListener) {
-        mContext = context;
+    public PostsListAdapter(Context context, boolean isPage) {
         mIsPage = isPage;
-        mOnLoadMoreListener = onLoadMoreListener;
-        mOnPostsLoadedListener = onPostsLoadedListener;
-        mLayoutInflater = LayoutInflater.from(mContext);
+        mLayoutInflater = LayoutInflater.from(context);
     }
 
-    public List<PostsListPost> getPosts() {
-        return mPosts;
+    public void setOnLoadMoreListener(OnLoadMoreListener listener) {
+        mOnLoadMoreListener = listener;
     }
 
-    public void setPosts(List<PostsListPost> postsList) {
-        if (postsList != null)
+    public void setOnPostsLoadedListener(OnPostsLoadedListener listener) {
+        mOnPostsLoadedListener = listener;
+    }
+
+    public void setOnPostSelectedListener(OnPostSelectedListener listener) {
+        mOnPostSelectedListener = listener;
+    }
+
+    private void setPosts(List<PostsListPost> postsList) {
+        if (postsList != null) {
             this.mPosts = postsList;
+        }
+    }
+
+    public PostsListPost getItem(int position) {
+        if (isValidPosition(position)) {
+            return mPosts.get(position);
+        }
+        return null;
+    }
+
+    private boolean isValidPosition(int position) {
+        return (position >= 0 && position < mPosts.size());
     }
 
     @Override
-    public int getCount() {
-        return mPosts.size();
+    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mLayoutInflater.inflate(R.layout.post_list_item, parent, false);
+        return new PostViewHolder(view);
     }
 
     @Override
-    public Object getItem(int position) {
-        return mPosts.get(position);
+    public void onBindViewHolder(PostViewHolder holder, final int position) {
+        PostsListPost post = mPosts.get(position);
+        Context context = holder.itemView.getContext();
+
+        String date = post.getFormattedDate();
+        String titleText = post.getTitle();
+        if (titleText.equals("")) {
+            titleText = "(" + context.getResources().getText(R.string.untitled) + ")";
+        }
+        holder.txtTitle.setText(titleText);
+
+        if (post.isLocalDraft()) {
+            holder.txtDate.setVisibility(View.GONE);
+        } else {
+            holder.txtDate.setText(date);
+            holder.txtDate.setVisibility(View.VISIBLE);
+        }
+
+        if ((post.getStatusEnum() == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.hasLocalChanges()) {
+            holder.txtStatus.setVisibility(View.GONE);
+        } else {
+            final String status;
+            holder.txtStatus.setVisibility(View.VISIBLE);
+            if (post.isUploading()) {
+                status = context.getResources().getString(R.string.post_uploading);
+            } else if (post.isLocalDraft()) {
+                status = context.getResources().getString(R.string.local_draft);
+            } else if (post.hasLocalChanges()) {
+                status = context.getResources().getString(R.string.local_changes);
+            } else {
+                switch (post.getStatusEnum()) {
+                    case DRAFT:
+                        status = context.getResources().getString(R.string.draft);
+                        break;
+                    case PRIVATE:
+                        status = context.getResources().getString(R.string.post_private);
+                        break;
+                    case PENDING:
+                        status = context.getResources().getString(R.string.pending_review);
+                        break;
+                    case SCHEDULED:
+                        status = context.getResources().getString(R.string.scheduled);
+                        break;
+                    default:
+                        status = "";
+                        break;
+                }
+            }
+
+            if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges() ||
+                    post.isUploading()) {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.orange_fire));
+            } else {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.grey_darken_10));
+            }
+            // Make status upper-case and add line break to stack vertically
+            holder.txtStatus.setText(status.toUpperCase(Locale.getDefault()).replace(" ", "\n"));
+        }
+
+        // load more posts when we near the end
+        if (mOnLoadMoreListener != null && position >= getItemCount() - 1
+                && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
+            mOnLoadMoreListener.onLoadMore();
+        }
+
+        if (mShowSelection) {
+            holder.itemView.setSelected(position == mSelectedPosition);
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mShowSelection) {
+                    setSelectedPosition(position);
+                }
+                if (mOnPostSelectedListener != null) {
+                    PostsListPost selectedPost = getItem(position);
+                    if (selectedPost != null) {
+                        mOnPostSelectedListener.onPostSelected(selectedPost);
+                    }
+                }
+            }
+        });
+    }
+
+    public void setShowSelection(boolean showSelection) {
+        mShowSelection = showSelection;
+    }
+
+    public void setSelectedPosition(int position) {
+        if (position == mSelectedPosition) {
+            return;
+        }
+        if (isValidPosition(mSelectedPosition)) {
+            notifyItemChanged(mSelectedPosition);
+        }
+        mSelectedPosition = position;
+        if (isValidPosition(mSelectedPosition)) {
+            notifyItemChanged(mSelectedPosition);
+        }
     }
 
     @Override
@@ -72,81 +181,8 @@ public class PostsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        PostsListPost post = mPosts.get(position);
-        PostViewWrapper wrapper;
-        if (view == null) {
-            view = mLayoutInflater.inflate(R.layout.post_list_row, parent, false);
-            wrapper = new PostViewWrapper(view);
-            view.setTag(wrapper);
-        } else {
-            wrapper = (PostViewWrapper) view.getTag();
-        }
-
-        String date = post.getFormattedDate();
-
-        String titleText = post.getTitle();
-        if (titleText.equals(""))
-            titleText = "(" + mContext.getResources().getText(R.string.untitled) + ")";
-        wrapper.getTitle().setText(titleText);
-
-        if (post.isLocalDraft()) {
-            wrapper.getDate().setVisibility(View.GONE);
-        } else {
-            wrapper.getDate().setText(date);
-            wrapper.getDate().setVisibility(View.VISIBLE);
-        }
-
-        String formattedStatus = "";
-        if ((post.getStatusEnum() == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.hasLocalChanges()) {
-            wrapper.getStatus().setVisibility(View.GONE);
-        } else {
-            wrapper.getStatus().setVisibility(View.VISIBLE);
-            if (post.isUploading()) {
-                formattedStatus = mContext.getResources().getString(R.string.post_uploading);
-            } else if (post.isLocalDraft()) {
-                formattedStatus = mContext.getResources().getString(R.string.local_draft);
-            } else if (post.hasLocalChanges()) {
-                formattedStatus = mContext.getResources().getString(R.string.local_changes);
-            } else {
-                switch (post.getStatusEnum()) {
-                    case DRAFT:
-                        formattedStatus = mContext.getResources().getString(R.string.draft);
-                        break;
-                    case PRIVATE:
-                        formattedStatus = mContext.getResources().getString(R.string.post_private);
-                        break;
-                    case PENDING:
-                        formattedStatus = mContext.getResources().getString(R.string.pending_review);
-                        break;
-                    case SCHEDULED:
-                        formattedStatus = mContext.getResources().getString(R.string.scheduled);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            // Set post status TextView color
-            if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges() ||
-                    post.isUploading()) {
-                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.orange_fire));
-            } else {
-                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.grey_darken_10));
-            }
-
-            // Make status upper-case and add line break to stack vertically
-            formattedStatus = formattedStatus.toUpperCase(Locale.getDefault()).replace(" ", "\n");
-            wrapper.getStatus().setText(formattedStatus);
-        }
-
-        // load more posts when we near the end
-        if (mOnLoadMoreListener != null && position >= getCount() - 1
-                && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
-            mOnLoadMoreListener.onLoadMore();
-        }
-
-        return view;
+    public int getItemCount() {
+        return mPosts.size();
     }
 
     public void loadPosts() {
@@ -165,67 +201,10 @@ public class PostsListAdapter extends BaseAdapter {
         }
     }
 
-    class PostViewWrapper {
-        View base;
-        TextView title = null;
-        TextView date = null;
-        TextView status = null;
-
-        PostViewWrapper(View base) {
-            this.base = base;
-        }
-
-        TextView getTitle() {
-            if (title == null) {
-                title = (TextView) base.findViewById(R.id.post_list_title);
-            }
-            return (title);
-        }
-
-        TextView getDate() {
-            if (date == null) {
-                date = (TextView) base.findViewById(R.id.post_list_date);
-            }
-            return (date);
-        }
-
-        TextView getStatus() {
-            if (status == null) {
-                status = (TextView) base.findViewById(R.id.post_list_status);
-            }
-            return (status);
-        }
-    }
-
-    private class LoadPostsTask extends AsyncTask <Void, Void, Boolean> {
-        List<PostsListPost> loadedPosts;
-
-        @Override
-        protected Boolean doInBackground(Void... nada) {
-            loadedPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
-            if (postsListMatch(loadedPosts)) {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                setPosts(loadedPosts);
-                notifyDataSetChanged();
-
-                if (mOnPostsLoadedListener != null && mPosts != null) {
-                    mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
-                }
-            }
-        }
-    }
-
-    public boolean postsListMatch(List<PostsListPost> newPostsList) {
-        if (newPostsList == null || newPostsList.size() == 0 || mPosts == null || mPosts.size() != newPostsList.size())
+    private boolean postsListMatch(List<PostsListPost> newPostsList) {
+        if (newPostsList == null || newPostsList.size() == 0 || mPosts == null || mPosts.size() != newPostsList.size()) {
             return false;
+        }
 
         for (int i = 0; i < newPostsList.size(); i++) {
             PostsListPost newPost = newPostsList.get(i);
@@ -261,5 +240,53 @@ public class PostsListAdapter extends BaseAdapter {
         }
 
         return remotePostCount;
+    }
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
+    public interface OnPostSelectedListener {
+        void onPostSelected(PostsListPost post);
+    }
+
+    public interface OnPostsLoadedListener {
+        void onPostsLoaded(int postCount);
+    }
+
+    class PostViewHolder extends RecyclerView.ViewHolder {
+        private final TextView txtTitle;
+        private final TextView txtDate;
+        private final TextView txtStatus;
+
+        public PostViewHolder(View view) {
+            super(view);
+            txtTitle = (TextView) view.findViewById(R.id.post_list_title);
+            txtDate = (TextView) view.findViewById(R.id.post_list_date);
+            txtStatus = (TextView) view.findViewById(R.id.post_list_status);
+        }
+    }
+
+    private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
+        List<PostsListPost> loadedPosts;
+
+        @Override
+        protected Boolean doInBackground(Void... nada) {
+            loadedPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
+            return !postsListMatch(loadedPosts);
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                setPosts(loadedPosts);
+                notifyDataSetChanged();
+
+                if (mOnPostsLoadedListener != null && mPosts != null) {
+                    mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
+                }
+            }
+        }
     }
 }

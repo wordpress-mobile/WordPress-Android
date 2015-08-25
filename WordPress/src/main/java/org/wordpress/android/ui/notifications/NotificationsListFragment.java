@@ -351,17 +351,21 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().registerSticky(this);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NoteModerationStatusChanged event) {
         setNoteIsModerating(event.mNoteId, event.mIsModerating);
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
         setNoteIsHidden(event.mNoteId, event.mIsHidden);
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
     }
 
     @SuppressWarnings("unused")
@@ -369,5 +373,7 @@ public class NotificationsListFragment extends Fragment
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, Duration.LONG);
         }
+
+        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
     }
 }

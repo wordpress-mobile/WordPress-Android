@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="media_details_file_type">Τύπος αρχείου:</string>
+	<string name="media_details_file_name">Όνομα αρχείου:</string>
+	<string name="media_details_file_url">URL αρχείου:</string>
+	<string name="media_details_dimensions">Διαστάσεις:</string>
+	<string name="device">Συσκευή</string>
+	<string name="language">Γλώσσα</string>
+	<string name="pages_fetching">Ανάκτηση σελίδων...</string>
 	<string name="comments_fetching">Ανάκτηση σχολίων...</string>
-	<string name="pages_fetching">Ανάκτηση σελίλδων...</string>
 	<string name="toast_err_post_uploading">Αδύνατο το άνοιγμα το άρθρου όσο αυτό φορτώνει</string>
 	<string name="stats_view_search_terms">Όροι αναζήτησης</string>
 	<string name="stats_empty_search_terms">Δεν καταχωρήθηκαν όροι αναζήτησης</string>
@@ -14,12 +20,24 @@
 	<string name="stats_empty_search_terms_desc">Μάθετε περισσότερα για την κίνηση στην αναζήτηση σας εξετάζοντας τους όρους αναζήτησης που χρησιμοποίησαν οι χρήστες για να βρούν το site σας.</string>
 	<string name="reader_empty_posts_request_failed">Αδυναμία φόρτωσης των άρθρων</string>
 	<string name="publisher">Εκδότης:</string>
+	<string name="delete_sure_page">Διαγραφή της σελίδας</string>
+	<string name="confirm_delete_multi_media">Διαγραφή επιλεγμένων αντικειμένων;</string>
+	<string name="confirm_delete_media">Διαγραφή επιλεγμένου αντικειμένου;</string>
+	<string name="cab_selected">%d επιλεγμένα</string>
+	<string name="reader_label_comment_count_multi">%,d σχόλια</string>
+	<string name="reader_title_photo_viewer">%1$d από %2$d</string>
+	<string name="older_two_days">Παλιότερο από 2 μέρες</string>
+	<string name="older_last_week">Παλιότερο από 1 βδομάδα</string>
+	<string name="comment">Σχόλιο</string>
+	<string name="reader_likes_multi_short">%,d άτομα</string>
+	<string name="reader_title_comments">Σχόλια</string>
 	<string name="contact_us">Επικοινωνήστε μαζί μας</string>
 	<string name="hs__username_blank_error">Συμπληρώστε ένα έγκυρο όνομα</string>
 	<string name="hs__invalid_email_error">Εισάγετε μία έγκυρη διεύθυνση email</string>
 	<string name="hs__conversation_detail_error">Περιγράψτε το πρόβλημα που βλέπετε</string>
 	<string name="add_location">Προσθέστε περιοχή</string>
 	<string name="current_location">Τωρινή τοποθεσία</string>
+	<string name="your_signature">Η υπογραφή σας:</string>
 	<string name="search_location">Αναζήτηση</string>
 	<string name="edit_location">Επεξεργασία</string>
 	<string name="preference_privacy">Ιδιωτικότητα </string>
@@ -27,6 +45,7 @@
 	<string name="preference_send_usage_stats_summary">Αυτόματη αποστολή στατιστικών στοιχείων χρήσης ώστε να μας βοηθήσετε να βελτιώσουμε το WordPress για το Android</string>
 	<string name="reader_hint_reblog_comment">Προσθέστε τις σκέψεις σας (προαιρετικό)</string>
 	<string name="reader_title_blog_preview">Προεπισκόπηση Ιστολογίου</string>
+	<string name="saving">Αποθήκευση...</string>
 	<string name="help_center">Κέντρο βοήθειας</string>
 	<string name="help">Βοήθεια</string>
 	<string name="forgot_password">Έχασες τον κωδικό σου;</string>
@@ -34,6 +53,9 @@
 	<string name="forums">Συζητήσεις</string>
 	<string name="out_of_memory">Η μνήμη της συσκευής εξαντλήθηκε</string>
 	<string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
+	<string name="comments_empty_list">Δεν υπάρχουν σχόλια</string>
+	<string name="stats_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
+	<string name="theme_no_search_result_found">Δεν βρέθηκαν αποτελέσματα</string>
 	<string name="learn_more">Μάθετε περισσότερα</string>
 	<string name="category_name">Όνομα κατηγορίας</string>
 	<string name="preview_page">Προεπισκόπιση σελίδας</string>
