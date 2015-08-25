@@ -448,5 +448,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             notificationManager.cancel(pushId);
         }
         notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
+
+        clearNotifications();
     }
 }
