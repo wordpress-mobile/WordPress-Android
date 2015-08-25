@@ -409,13 +409,6 @@ public class WPMainActivity extends Activity
     }
 
     /*
-     * returns the notification list fragment from the notification tab
-     */
-    private NotificationsListFragment getNotificationListFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_NOTIFS, NotificationsListFragment.class);
-    }
-
-    /*
      * returns the my site fragment from the sites tab
      */
     public MySiteFragment getMySiteFragment() {
