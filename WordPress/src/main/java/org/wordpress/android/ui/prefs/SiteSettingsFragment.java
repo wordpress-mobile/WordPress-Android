@@ -313,6 +313,29 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
+    private void handleResponseToSelfHostedSettingsSetRequest(Map result) {
+        AppLog.d(AppLog.T.API, "Site settings saved");
+
+        if (result.containsKey("blog_title")) {
+            String titleResult = getNestedMapValue(result, "blog_title");
+            if (TextUtils.isEmpty(titleResult)) {
+                titleResult = mBlog.getUrl();
+            }
+
+            mBlog.setBlogName(StringUtils.unescapeHTML(titleResult));
+            WordPress.wpDB.saveBlog(mBlog);
+            EventBus.getDefault().post(new CoreEvents.BlogListChanged());
+        }
+    }
+
+    private void handleSettingsSetError(String error) {
+        AppLog.w(AppLog.T.API, "Error setting site settings: " + error);
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
+            getActivity().finish();
+        }
+    }
+
     /**
      * Helper method to parse JSON response to REST request.
      */
@@ -649,19 +672,4 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
         }
     };
-
-    private void handleResponseToSelfHostedSettingsSetRequest(Map result) {
-        AppLog.d(AppLog.T.API, "Site settings saved");
-        mBlog.setBlogName(StringUtils.unescapeHTML(getNestedMapValue(result, "blog_title")));
-        WordPress.wpDB.saveBlog(mBlog);
-        EventBus.getDefault().post(new CoreEvents.BlogListChanged());
-    }
-
-    private void handleSettingsSetError(String error) {
-        AppLog.w(AppLog.T.API, "Error setting site settings: " + error);
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
-            getActivity().finish();
-        }
-    }
 }
