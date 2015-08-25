@@ -30,7 +30,7 @@ public class SimperiumUtils {
     private static Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
     private static Bucket<BucketObject> mMetaBucket;
-    
+
     public static Bucket<Note> getNotesBucket() {
         return mNotesBucket;
     }
@@ -168,7 +168,7 @@ public class SimperiumUtils {
                     meta.save();
                 }
             } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.NOTIFS, "Meta bucket not found.");
             }
         }
     }
