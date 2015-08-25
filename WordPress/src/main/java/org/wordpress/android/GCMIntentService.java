@@ -422,11 +422,31 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
     }
 
-    public static void clearNotificationsMap() {
+    public static void clearNotifications() {
         mActiveNotificationsMap.clear();
     }
 
-    public static ArrayMap<Integer, Bundle> getNotificationsMap() {
-        return mActiveNotificationsMap;
+    public static int getNotificationsCount() {
+        return mActiveNotificationsMap.size();
+    }
+
+    public static boolean hasNotifications() {
+        return !mActiveNotificationsMap.isEmpty();
+    }
+
+    public static void removeNotification(int notificationId) {
+        mActiveNotificationsMap.remove(notificationId);
+    }
+
+    // Removes all app notifications from the system bar
+    public static void removeAllNotifications(Context context) {
+        if (context == null || !hasNotifications()) return;
+
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+        for (Integer pushId : mActiveNotificationsMap.keySet()) {
+            notificationManager.cancel(pushId);
+        }
+        notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
     }
 }

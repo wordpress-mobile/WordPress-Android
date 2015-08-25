@@ -19,7 +19,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
-import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -101,7 +100,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
-        GCMIntentService.clearNotificationsMap();
+        GCMIntentService.clearNotifications();
     }
 
     @Override
