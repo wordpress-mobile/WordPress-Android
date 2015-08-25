@@ -426,19 +426,19 @@ public class WPMainActivity extends Activity
     }
 
     // Updates `last_seen` notifications flag in Simperium and removes tab indicator
-    private class UpdateLastSeenTask extends AsyncTask<Void, Void, Void> {
+    private class UpdateLastSeenTask extends AsyncTask<Void, Void, Boolean> {
         @Override
-        protected Void doInBackground(Void... voids) {
-            SimperiumUtils.updateLastSeenTime();
-
-            return null;
+        protected Boolean doInBackground(Void... voids) {
+            return SimperiumUtils.updateLastSeenTime();
         }
 
         @Override
-        protected void onPostExecute(Void nada) {
+        protected void onPostExecute(Boolean lastSeenTimeUpdated) {
             if (isFinishing()) return;
 
-            mTabLayout.showNoteBadge(false);
+            if (lastSeenTimeUpdated) {
+                mTabLayout.showNoteBadge(false);
+            }
         }
     }
 

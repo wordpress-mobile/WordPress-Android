@@ -151,8 +151,8 @@ public class SimperiumUtils {
     }
 
     // Updates the 'last_seen' field in the meta bucket with the latest note's timestamp
-    public static void updateLastSeenTime() {
-        if (getNotesBucket() == null || getMetaBucket() == null) return;
+    public static boolean updateLastSeenTime() {
+        if (getNotesBucket() == null || getMetaBucket() == null) return false;
 
         Query<Note> query = new Query<>(getNotesBucket());
         query.order(NOTE_TIMESTAMP, Query.SortType.DESCENDING);
@@ -163,13 +163,19 @@ public class SimperiumUtils {
             long latestNoteTimestamp = cursor.getObject().getTimestamp();
             try {
                 BucketObject meta = getMetaBucket().get(META_BUCKET_NAME);
-                if (meta != null) {
-                    meta.setProperty(META_LAST_SEEN, latestNoteTimestamp);
-                    meta.save();
+                if (meta.getProperty(META_LAST_SEEN) instanceof Integer) {
+                    int lastSeen = (int)meta.getProperty(META_LAST_SEEN);
+                    if (lastSeen != latestNoteTimestamp) {
+                        meta.setProperty(META_LAST_SEEN, latestNoteTimestamp);
+                        meta.save();
+                        return true;
+                    }
                 }
             } catch (BucketObjectMissingException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Meta bucket not found.");
             }
         }
+
+        return false;
     }
 }
