@@ -37,7 +37,7 @@ import java.util.ArrayList;
 /**
  * The theme browser.
  */
-public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback, ThemeDetailsFragment.ThemeDetailsFragmentCallback {
+public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
 
@@ -216,16 +216,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onCustomizeSelected(String themeId) {
-
-    }
-
-    @Override
-    public void onResume(Fragment fragment) {
-
-    }
-
-    @Override
-    public void onPause(Fragment fragment) {
 
     }
 
