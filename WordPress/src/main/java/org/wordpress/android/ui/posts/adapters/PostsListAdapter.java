@@ -161,7 +161,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         // nothing to do if this is the static endlist indicator
         if (getItemViewType(position) == VIEW_TYPE_ENDLIST_INDICATOR) {
             return;
@@ -250,9 +250,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostsListPost selectedPost = getItem(position);
-                if (mOnPostSelectedListener != null && selectedPost != null) {
-                    mOnPostSelectedListener.onPostSelected(selectedPost);
+                if (mOnPostSelectedListener != null) {
+                    mOnPostSelectedListener.onPostSelected(post);
                 }
             }
         });
