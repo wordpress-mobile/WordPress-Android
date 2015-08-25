@@ -19,7 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/snackbar_background_color"
         android:paddingLeft="@dimen/content_margin"
         android:paddingRight="@dimen/content_margin"
         android:visibility="gone"
