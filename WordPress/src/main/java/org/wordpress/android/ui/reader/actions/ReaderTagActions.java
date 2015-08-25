@@ -48,9 +48,7 @@ public class ReaderTagActions {
 
         switch (action) {
             case DELETE:
-                // delete tag & all related posts
                 ReaderTagTable.deleteTag(tag);
-                ReaderPostTable.deletePostsWithTag(tag);
                 path = "read/tags/" + tagNameForApi + "/mine/delete";
                 break;
 
