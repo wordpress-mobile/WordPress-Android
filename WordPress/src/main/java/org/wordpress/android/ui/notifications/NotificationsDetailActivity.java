@@ -100,7 +100,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
-        GCMIntentService.clearNotificationsMap();
+        GCMIntentService.clearNotifications();
     }
 
     @Override

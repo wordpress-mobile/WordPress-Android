@@ -294,13 +294,19 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (isAdded() && !succeeded) {
+                if (!isAdded()) {
+                    return;
+                }
+                followButton.setEnabled(true);
+                if (!succeeded) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                     followButton.setIsFollowedAnimated(!isAskingToFollow);
                 }
             }
         };
+
+        followButton.setEnabled(false);
 
         if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, listener)) {
             followButton.setIsFollowedAnimated(isAskingToFollow);

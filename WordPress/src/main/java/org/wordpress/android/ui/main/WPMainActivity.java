@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -133,10 +134,7 @@ public class WPMainActivity extends Activity
 
                 switch (position) {
                     case WPMainTabAdapter.TAB_NOTIFS:
-                        if (getNotificationListFragment() != null) {
-                            getNotificationListFragment().updateLastSeenTime();
-                            mTabLayout.showNoteBadge(false);
-                        }
+                        new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         break;
                 }
                 trackLastVisibleTab(position);
@@ -222,13 +220,15 @@ public class WPMainActivity extends Activity
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
-        String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-
-        if (!TextUtils.isEmpty(noteId)) {
-            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
-            GCMIntentService.clearNotificationsMap();
+        if (GCMIntentService.getNotificationsCount() == 1) {
+            String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            if (!TextUtils.isEmpty(noteId)) {
+                NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
+            }
         }
+
+        GCMIntentService.clearNotifications();
     }
 
     @Override
@@ -409,13 +409,6 @@ public class WPMainActivity extends Activity
     }
 
     /*
-     * returns the notification list fragment from the notification tab
-     */
-    private NotificationsListFragment getNotificationListFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_NOTIFS, NotificationsListFragment.class);
-    }
-
-    /*
      * returns the my site fragment from the sites tab
      */
     public MySiteFragment getMySiteFragment() {
@@ -430,6 +423,23 @@ public class WPMainActivity extends Activity
         }
 
         return null;
+    }
+
+    // Updates `last_seen` notifications flag in Simperium and removes tab indicator
+    private class UpdateLastSeenTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            return SimperiumUtils.updateLastSeenTime();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean lastSeenTimeUpdated) {
+            if (isFinishing()) return;
+
+            if (lastSeenTimeUpdated) {
+                mTabLayout.showNoteBadge(false);
+            }
+        }
     }
 
     // Events
@@ -500,12 +510,20 @@ public class WPMainActivity extends Activity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!isFinishing()) {
+                    if (isFinishing()) return;
+
+                    if (isViewingNotificationsTab()) {
+                        new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    } else {
                         mTabLayout.checkNoteBadge();
                     }
                 }
             });
         }
+    }
+
+    private boolean isViewingNotificationsTab() {
+        return mViewPager.getCurrentItem() == WPMainTabAdapter.TAB_NOTIFS;
     }
 
     @Override
