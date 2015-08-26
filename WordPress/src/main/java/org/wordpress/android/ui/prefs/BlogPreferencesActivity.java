@@ -11,7 +11,11 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.ToastUtils;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Activity for configuring blog specific settings.
@@ -65,14 +69,21 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-
         WordPress.wpDB.saveBlog(mBlog);
-
-        if (WordPress.getCurrentBlog().getLocalTableBlogId() == mBlog.getLocalTableBlogId()) {
-            WordPress.currentBlog = mBlog;
-        }
     }
 
     @Override
@@ -84,5 +95,20 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+        FragmentManager fragmentManager = getFragmentManager();
+        SiteSettingsFragment siteSettingsFragment =
+                (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
+
+        if (siteSettingsFragment != null) {
+            siteSettingsFragment.allowEditing(event.isConnected());
+
+            if (!event.isConnected()) {
+                ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast));
+            }
+        }
     }
 }

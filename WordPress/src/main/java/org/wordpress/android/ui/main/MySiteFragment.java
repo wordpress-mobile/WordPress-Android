@@ -84,18 +84,17 @@ public class MySiteFragment extends Fragment
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
+
         // redisplay hidden fab after a short delay
-        if (mFabView.getVisibility() != View.VISIBLE) {
-            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAdded()) {
-                        AniUtils.showFab(mFabView, true);
-                    }
+        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded() && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                    AniUtils.showFab(mFabView, true);
                 }
-            }, delayMs);
-        }
+            }
+        }, delayMs);
     }
 
     @Override
@@ -336,5 +335,15 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
         mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+        if (!isAdded() || (mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId())) == null) return;
+
+        // Update view if blog has a new name
+        if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
+            mBlogTitleTextView.setText(mBlog.getBlogName());
+        }
     }
 }

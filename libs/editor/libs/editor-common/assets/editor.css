@@ -36,7 +36,7 @@
 @font-face {
     font-family: 'Merriweather';
     src: local("Merriweather-Italic"),
-         url('fonts/Merriweather-Italic.otf');
+         url('fonts/Merriweather-Italic.ttf');
     font-weight: normal;
     font-style: italic;
 }
@@ -50,7 +50,7 @@
 @font-face {
     font-family: 'Merriweather';
     src: local("Merriweather-BoldItalic"),
-         url('fonts/Merriweather-BoldItalic.otf');
+         url('fonts/Merriweather-BoldItalic.ttf');
     font-weight: bold;
     font-style: italic;
 }

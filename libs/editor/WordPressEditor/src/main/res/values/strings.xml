@@ -4,12 +4,17 @@
     <string name="post_content">Content</string>
     <string name="post_title">Title</string>
 
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+
     <string name="format_bar_tag_bold" translatable="false">bold</string>
     <string name="format_bar_tag_italic" translatable="false">italic</string>
     <string name="format_bar_tag_blockquote" translatable="false">blockquote</string>
     <string name="format_bar_tag_unorderedList" translatable="false">unorderedList</string>
     <string name="format_bar_tag_orderedList" translatable="false">orderedList</string>
     <string name="format_bar_tag_strikethrough" translatable="false">strikeThrough</string>
+    <string name="format_bar_tag_link" translatable="false">link</string>
 
     <!-- link view -->
     <string name="link_enter_url">URL</string>

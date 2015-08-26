@@ -74,7 +74,7 @@ public class DetailListPreference extends ListPreference
         setupView((TextView) view.findViewById(android.R.id.title),
                 R.dimen.text_sz_large, R.color.grey_dark, R.color.grey_lighten_10);
         setupView((TextView) view.findViewById(android.R.id.summary),
-                R.dimen.text_sz_small, R.color.grey_darken_10, R.color.grey_lighten_10);
+                R.dimen.text_sz_medium, R.color.grey_darken_10, R.color.grey_lighten_10);
     }
 
     @Override
@@ -163,9 +163,8 @@ public class DetailListPreference extends ListPreference
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         CharSequence[] values = getEntryValues();
-        if (values != null && mSelectedIndex < values.length && mSelectedIndex != mStartingIndex) {
+        if (values != null && mSelectedIndex < values.length) {
             String value = values[positiveResult ? mSelectedIndex : mStartingIndex].toString();
-            setValue(value);
             callChangeListener(value);
         }
     }
@@ -236,7 +235,7 @@ public class DetailListPreference extends ListPreference
                 detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
                         TypefaceCache.FAMILY_OPEN_SANS,
                         Typeface.NORMAL,
-                        TypefaceCache.VARIATION_LIGHT));
+                        TypefaceCache.VARIATION_NORMAL));
             }
 
             if (radioButton != null) {
@@ -262,8 +261,7 @@ public class DetailListPreference extends ListPreference
         private void changeSelection(RadioButton radioButton, int position) {
             CharSequence[] values = getEntryValues();
 
-            if (radioButton != null && mSelectedIndex != position &&
-                    values != null && position < values.length) {
+            if (radioButton != null && values != null && position < values.length) {
                 mSelectedIndex = position;
                 radioButton.setChecked(true);
                 callChangeListener(values[position]);

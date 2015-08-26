@@ -31,8 +31,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 import org.xmlrpc.android.ApiHelper;
@@ -43,6 +45,8 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Handles changes to WordPress site settings. Syncs with host automatically when user leaves.
@@ -88,6 +92,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlog = WordPress.getBlog(
                 getArguments().getInt(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, -1));
         if (mBlog == null) return;
+
+        mRemoteTitle = mBlog.getBlogName();
 
         // inflate Site Settings preferences from XML
         addPreferencesFromResource(R.xml.site_settings);
@@ -192,6 +198,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         return false;
     }
 
+    public void allowEditing(boolean allow) {
+        if (mTitlePreference != null) mTitlePreference.setEnabled(allow);
+        if (mTaglinePreference != null) mTaglinePreference.setEnabled(allow);
+        if (mAddressPreference != null) mAddressPreference.setEnabled(false);
+        if (mPrivacyPreference != null) mPrivacyPreference.setEnabled(allow);
+        if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
+        if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
+    }
+
     /**
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
@@ -200,6 +215,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (null != (mTitlePreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_title)))) {
             mTitlePreference.setOnPreferenceChangeListener(this);
+            changeEditTextPreferenceValue(mTitlePreference, StringUtils.unescapeHTML(mRemoteTitle));
         }
 
         // Tagline preference
@@ -313,8 +329,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void handleResponseToSelfHostedSettingsRequest(Map result) {
         if (mTitlePreference != null) {
             mTitlePreference.setEnabled(true);
-            mRemoteTitle = getNestedMapValue(result, "blog_title");
-            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+            String title = getNestedMapValue(result, "blog_title");
+            changeEditTextPreferenceValue(mTitlePreference, title);
         }
 
         if (mTaglinePreference != null) {
@@ -333,14 +349,37 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
+    private void handleResponseToSelfHostedSettingsSetRequest(Map result) {
+        AppLog.d(AppLog.T.API, "Site settings saved");
+
+        if (result.containsKey("blog_title")) {
+            String titleResult = getNestedMapValue(result, "blog_title");
+            if (TextUtils.isEmpty(titleResult)) {
+                titleResult = mBlog.getUrl();
+            }
+
+            mBlog.setBlogName(StringUtils.unescapeHTML(titleResult));
+            WordPress.wpDB.saveBlog(mBlog);
+            EventBus.getDefault().post(new CoreEvents.BlogListChanged());
+        }
+    }
+
+    private void handleSettingsSetError(String error) {
+        AppLog.w(AppLog.T.API, "Error setting site settings: " + error);
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
+            getActivity().finish();
+        }
+    }
+
     /**
      * Helper method to parse JSON response to REST request.
      */
     private void handleResponseToWPComSettingsRequest(JSONObject response) {
         if (mTitlePreference != null) {
             mTitlePreference.setEnabled(true);
-            mRemoteTitle = response.optString(RestClientUtils.SITE_TITLE_KEY);
-            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
+            String title = response.optString(RestClientUtils.SITE_TITLE_KEY);
+            changeEditTextPreferenceValue(mTitlePreference, title);
         }
 
         if (mTaglinePreference != null) {
@@ -414,11 +453,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private HashMap<String, String> generateSelfHostedParams() {
         HashMap<String, String> params = new HashMap<>();
 
-        if (mTitlePreference != null && !mTitlePreference.getText().equals(mRemoteTitle)) {
+        if (mTitlePreference != null && !mTitlePreference.getText().equals(StringUtils.unescapeHTML(mRemoteTitle))) {
             params.put("blog_title", mTitlePreference.getText());
         }
 
-        if (mTaglinePreference != null && !mTaglinePreference.getText().equals(mRemoteTagline)) {
+        if (mTaglinePreference != null && !mTaglinePreference.getText().equals(StringUtils.unescapeHTML(mRemoteTagline))) {
             params.put("blog_tagline", mTaglinePreference.getText());
         }
 
@@ -456,6 +495,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                         // Update local Blog name
                         if (params.containsKey("blogname")) {
                             mBlog.setBlogName(params.get("blogname"));
+                            WordPress.wpDB.saveBlog(mBlog);
+                            EventBus.getDefault().post(new CoreEvents.BlogListChanged());
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -475,8 +516,8 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
         if (pref != null && newValue != null && !newValue.equals(pref.getSummary())) {
-            pref.setText(newValue);
-            pref.setSummary(newValue);
+            pref.setText(StringUtils.unescapeHTML(newValue));
+            pref.setSummary(StringUtils.unescapeHTML(newValue));
         }
     }
 
@@ -667,19 +708,4 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
         }
     };
-
-    private void handleResponseToSelfHostedSettingsSetRequest(Map result) {
-        AppLog.w(AppLog.T.API, "Site settings saved");
-        for (Object key : result.keySet()) {
-            Log.d("", "key=" + key + "; value=" + result.get(key));
-        }
-    }
-
-    private void handleSettingsSetError(String error) {
-        AppLog.w(AppLog.T.API, "Error setting site settings: " + error);
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
-            getActivity().finish();
-        }
-    }
 }

@@ -457,6 +457,7 @@
     <string name="site_settings_language_default_summary">Fetching language</string>
     <string name="site_settings_username_default_summary">Fetching username</string>
     <string name="site_settings_password_default_summary">Fetching password</string>
+    <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
