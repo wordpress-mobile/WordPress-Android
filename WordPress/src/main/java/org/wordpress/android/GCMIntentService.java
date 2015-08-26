@@ -55,6 +55,12 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static long mPreviousNoteTime = 0L;
     private static final int mMaxInboxItems = 5;
 
+    private static final String PUSH_ARG_USER = "user";
+    private static final String PUSH_ARG_TYPE = "type";
+    private static final String PUSH_ARG_TITLE = "title";
+    private static final String PUSH_ARG_MSG = "msg";
+    private static final String PUSH_ARG_NOTE_ID = "note_id";
+
     private static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
     private static final String PUSH_TYPE_COMMENT_LIKE = "comment_like";
@@ -76,17 +82,17 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     private void handleDefaultPush(Context context, Bundle extras) {
-        long wpcomUserID = AccountHelper.getDefaultAccount().getUserId();
-        String userIDFromPN = extras.getString("user");
-        // userIDFromPN is always set server side, but better to double check it here.
-        if (userIDFromPN != null) {
-            if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
+        long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
+        String pushUserId = extras.getString(PUSH_ARG_USER);
+        // pushUserId is always set server side, but better to double check it here.
+        if (pushUserId != null) {
+            if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
                 AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
                 return;
             }
         }
 
-        String noteType = StringUtils.notNullStr(extras.getString("type"));
+        String noteType = StringUtils.notNullStr(extras.getString(PUSH_ARG_TYPE));
 
         // Check for wpcom auth push, if so we will process this push differently
         if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
@@ -94,12 +100,12 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        String title = StringEscapeUtils.unescapeHtml(extras.getString("title"));
+        String title = StringEscapeUtils.unescapeHtml(extras.getString(PUSH_ARG_TITLE));
         if (title == null) {
             title = getString(R.string.app_name);
         }
-        String message = StringEscapeUtils.unescapeHtml(extras.getString("msg"));
-        String noteId = extras.getString("note_id");
+        String message = StringEscapeUtils.unescapeHtml(extras.getString(PUSH_ARG_MSG));
+        String noteId = extras.getString(PUSH_ARG_NOTE_ID, "");
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -126,10 +132,22 @@ public class GCMIntentService extends GCMBaseIntentService {
         mPreviousNoteId = noteId;
         mPreviousNoteTime = thisTime;
 
-        // Get a unique Id per notification
-        int pushId = PUSH_NOTIFICATION_ID + mActiveNotificationsMap.size();
+        int pushId = 0;
 
-        if (noteId != null && !mActiveNotificationsMap.containsKey(noteId)) {
+        // Update notification content for the same noteId if it is already showing
+        boolean matchedNoteId = false;
+        for (int id : mActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = mActiveNotificationsMap.get(id);
+            if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
+                pushId = id;
+                mActiveNotificationsMap.put(pushId, extras);
+                matchedNoteId = true;
+                break;
+            }
+        }
+
+        if (!matchedNoteId) {
+            pushId = PUSH_NOTIFICATION_ID + mActiveNotificationsMap.size();
             mActiveNotificationsMap.put(pushId, extras);
         }
 
@@ -198,7 +216,6 @@ public class GCMIntentService extends GCMBaseIntentService {
             builder.setLargeIcon(largeIconBitmap);
         }
 
-        // Increment Id by the note count as it must be unique for stacked notifications on wearables
         showNotificationForBuilder(builder, context, pushId);
 
         // When we have multiple notifications, add an inbox style notification for non-wearable devices
@@ -211,16 +228,16 @@ public class GCMIntentService extends GCMBaseIntentService {
                 if (noteCtr > mMaxInboxItems) {
                     break;
                 }
-                if (pushBundle.getString("msg") == null) {
+                if (pushBundle.getString(PUSH_ARG_MSG) == null) {
                     continue;
                 }
 
-                if (pushBundle.getString("type", "").equals(PUSH_TYPE_COMMENT)) {
-                    String pnTitle = StringEscapeUtils.unescapeHtml((pushBundle.getString("title")));
-                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString("msg")));
+                if (pushBundle.getString(PUSH_ARG_TYPE, "").equals(PUSH_TYPE_COMMENT)) {
+                    String pnTitle = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_TITLE)));
+                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
                     inboxStyle.addLine(pnTitle + ": " + pnMessage);
                 } else {
-                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString("msg")));
+                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
                     inboxStyle.addLine(pnMessage);
                 }
 
