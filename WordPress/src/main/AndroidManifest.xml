@@ -346,5 +346,13 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".ui.themes.ThemeSupportActivity"
+            android:label="@string/title_activity_theme_support"
+            android:parentActivityName=".ui.themes.ThemeBrowserActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.wordpress.android.ui.themes.ThemeBrowserActivity" />
+        </activity>
     </application>
 </manifest>
