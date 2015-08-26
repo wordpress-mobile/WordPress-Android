@@ -46,6 +46,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
+    protected String mCurrentThemeId;
     protected HeaderGridView mGridView;
     protected TextView mEmptyView;
     protected TextView mNoResultText;
@@ -165,7 +166,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         support.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mCallback.onSupportSelected(mCurrentThemeId);
             }
         });
 

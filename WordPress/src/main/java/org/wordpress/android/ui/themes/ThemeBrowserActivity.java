@@ -3,12 +3,14 @@ package org.wordpress.android.ui.themes;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.webkit.WebViewFragment;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -143,6 +145,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                 mThemeBrowserFragment.setRefreshing(false);
                                 if (mThemeBrowserFragment.mCurrentThemeTextView != null) {
                                     mThemeBrowserFragment.mCurrentThemeTextView.setText(theme.getName());
+                                    mThemeBrowserFragment.mCurrentThemeId = theme.getId();
                                 }
                             }
                         } catch (JSONException e) {
@@ -156,6 +159,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         Theme currentThemeFromDB = WordPress.wpDB.getTheme(siteId, themeId);
                         if (currentThemeFromDB != null) {
                             mThemeBrowserFragment.mCurrentThemeTextView.setText(currentThemeFromDB.getName());
+                            mThemeBrowserFragment.mCurrentThemeId = currentThemeFromDB.getId();
                         }
                     }
                 }
@@ -211,7 +215,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onSupportSelected(String themeId) {
-
+        Intent intent = new Intent(this, ThemeSupportActivity.class);
+        intent.putExtra("themeId", themeId);
+        startActivity(intent);
     }
 
     @Override
