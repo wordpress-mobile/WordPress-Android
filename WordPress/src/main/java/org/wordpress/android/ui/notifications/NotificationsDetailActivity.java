@@ -165,7 +165,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     public void showBlogPreviewActivity(long siteId) {
         if (isFinishing()) return;
 
-        ReaderActivityLauncher.showReaderBlogPreview(this, siteId, null);
+        ReaderActivityLauncher.showReaderBlogPreview(this, siteId);
     }
 
     public void showPostActivity(long siteId, long postId) {

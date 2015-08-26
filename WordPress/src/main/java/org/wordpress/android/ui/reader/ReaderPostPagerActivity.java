@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,13 +75,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
 
-        final String title;
         if (savedInstanceState != null) {
-            title = savedInstanceState.getString(ReaderConstants.ARG_TITLE);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
@@ -93,7 +89,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
         } else {
-            title = getIntent().getStringExtra(ReaderConstants.ARG_TITLE);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mIsSinglePostView = getIntent().getBooleanExtra(ARG_IS_SINGLE_POST, false);
@@ -107,10 +102,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         if (mPostListType == null) {
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
-        }
-
-        if (!TextUtils.isEmpty(title)) {
-            this.setTitle(title);
         }
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -184,7 +175,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
-        outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
         outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
 
         if (hasCurrentTag()) {
