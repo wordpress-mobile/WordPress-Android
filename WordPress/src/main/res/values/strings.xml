@@ -1009,5 +1009,6 @@
         <item>Free</item>
         <item>Premium</item>
     </string-array>
+    <string name="title_activity_theme_support">Themes</string>
 
 </resources>
