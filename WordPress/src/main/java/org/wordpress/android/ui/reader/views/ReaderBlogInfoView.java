@@ -159,13 +159,20 @@ public class ReaderBlogInfoView extends LinearLayout {
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded && getContext() != null) {
+                if (getContext() == null) {
+                    return;
+                }
+                mFollowButton.setEnabled(true);
+                if (!succeeded) {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
                 }
             }
         };
+
+        // disable follow button until API call returns
+        mFollowButton.setEnabled(false);
 
         boolean result;
         if (mFeedId != 0) {

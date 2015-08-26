@@ -71,13 +71,19 @@ public class ReaderTagInfoView extends LinearLayout {
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded && getContext() != null) {
+                if (getContext() == null) {
+                    return;
+                }
+                mFollowButton.setEnabled(true);
+                if (!succeeded) {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag : R.string.reader_toast_err_remove_tag;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
                 }
             }
         };
+
+        mFollowButton.setEnabled(false);
 
         if (ReaderTagActions.performTagAction(mCurrentTag, action, listener)) {
             mFollowButton.setIsFollowedAnimated(isAskingToFollow);
