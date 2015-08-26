@@ -175,7 +175,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin_medium"
                 android:layout_toLeftOf="@+id/count_likes"
                 android:padding="@dimen/margin_medium"
                 wp:readerIcon="comment" />
