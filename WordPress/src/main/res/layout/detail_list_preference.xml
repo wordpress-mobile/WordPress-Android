@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/dlp_padding_start"
+    android:paddingStart="@dimen/dlp_padding_start"
+    android:paddingRight="@dimen/dlp_padding_end"
+    android:paddingEnd="@dimen/dlp_padding_end"
+    android:paddingTop="@dimen/dlp_padding_top"
+    android:paddingBottom="@dimen/dlp_padding_bottom">
+
+    <RadioButton
+        android:buttonTint="@color/dialog_compound_button"
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dlp_radio_margin_top" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/dlp_text_margin_start"
+        android:layout_marginStart="@dimen/dlp_text_margin_start"
+        android:layout_marginRight="@dimen/dlp_text_margin_end"
+        android:layout_marginEnd="@dimen/dlp_text_margin_end">
+
+        <TextView
+            android:id="@+id/main_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
+            android:textColor="@color/grey_dark"
+            android:gravity="left"
+            tools:text="Main Text" />
+
+        <TextView
+            android:id="@+id/detail_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_small"
+            android:textColor="@color/grey_darken_10"
+            android:gravity="left"
+            tools:text="Detail Text" />
+
+    </LinearLayout>
+
+</LinearLayout>

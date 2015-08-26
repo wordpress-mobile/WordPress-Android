@@ -148,4 +148,7 @@
     <!-- Notifications -->
     <color name="notifications_settings_divider_color">#d0d5d9</color>
 
+    <!-- Site Settings -->
+    <color name="site_settings_pref_divider_color">#dce1e6</color>
+
 </resources>

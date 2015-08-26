@@ -133,6 +133,22 @@
 
     <dimen name="progress_bar_height">3dp</dimen>
 
+    <!-- DetailListPreference -->
+    <dimen name="dlp_padding_start">20dp</dimen>
+    <dimen name="dlp_padding_end">24dp</dimen>
+    <dimen name="dlp_padding_top">6dp</dimen>
+    <dimen name="dlp_padding_bottom">6dp</dimen>
+    <dimen name="dlp_radio_margin_top">4dp</dimen>
+    <dimen name="dlp_text_margin_start">4dp</dimen>
+    <dimen name="dlp_text_margin_end">4dp</dimen>
+    <dimen name="dlp_title_padding_start">24dp</dimen>
+    <dimen name="dlp_title_padding_end">24dp</dimen>
+    <dimen name="dlp_title_padding_top">24dp</dimen>
+    <dimen name="dlp_title_padding_bottom">16dp</dimen>
+    <dimen name="dlp_title_logo_padding">8dp</dimen>
+    <dimen name="dlp_title_logo_width">36dp</dimen>
+    <dimen name="dlp_title_logo_height">36dp</dimen>
+
     <!-- stats -->
     <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
@@ -185,5 +201,8 @@
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <!-- Site Settings -->
+    <dimen name="site_settings_divider_height">1dp</dimen>
 
 </resources>
