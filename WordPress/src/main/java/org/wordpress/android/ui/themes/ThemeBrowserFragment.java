@@ -150,7 +150,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mCallback.onCustomizeSelected(mCurrentThemeId);
             }
         });
 
@@ -158,7 +158,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mCallback.onDetailsSelected(mCurrentThemeId);
             }
         });
 

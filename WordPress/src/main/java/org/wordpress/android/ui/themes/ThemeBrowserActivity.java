@@ -210,13 +210,17 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onDetailsSelected(String themeId) {
-
+        Intent intent = new Intent(this, ThemeSupportActivity.class);
+        intent.putExtra("themeId", themeId);
+        intent.putExtra("type", 1);
+        startActivity(intent);
     }
 
     @Override
     public void onSupportSelected(String themeId) {
         Intent intent = new Intent(this, ThemeSupportActivity.class);
         intent.putExtra("themeId", themeId);
+        intent.putExtra("type", 0);
         startActivity(intent);
     }
 

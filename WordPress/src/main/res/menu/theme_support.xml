@@ -2,6 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.wordpress.android.ui.themes.ThemeSupportActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_activate"
+        android:title="@string/theme_activate_button"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
 </menu>

@@ -6,10 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -34,11 +36,13 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         private final NetworkImageView imageView;
         private final TextView nameView;
         private final TextView priceView;
+        private final Spinner spinner;
 
         ThemeViewHolder(View view) {
             imageView = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
             nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
             priceView = (TextView) view.findViewById(R.id.theme_grid_item_price);
+            spinner = (Spinner) view.findViewById(R.id.theme_grid_item_spinner);
         }
     }
 
@@ -76,6 +80,10 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
 
         themeViewHolder.imageView.setImageUrl(screenshotURL + "?w=" + 500, WordPress.imageLoader);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.themes_more_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        themeViewHolder.spinner.setAdapter(adapter);
     }
 
     static class ScreenshotHolder {

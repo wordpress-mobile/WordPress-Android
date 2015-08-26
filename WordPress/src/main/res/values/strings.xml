@@ -1009,6 +1009,18 @@
         <item>Free</item>
         <item>Premium</item>
     </string-array>
+
+    <string-array name="themes_more_array">
+        <item>Activate</item>
+        <item>Preview</item>
+        <item>Demo</item>
+        <item>Details</item>
+        <item>Support</item>
+    </string-array>
+
     <string name="title_activity_theme_support">Themes</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

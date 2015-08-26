@@ -15,32 +15,38 @@ public class ThemeSupportActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.theme_support_activity);
-        WebView webView = (WebView) findViewById(R.id.webView);
-        Intent intent = getIntent();
-        String themeId = intent.getStringExtra("themeId");
-        String supportUrl = "https://theme.wordpress.com/themes/" + themeId + "/support/";
-        webView.loadUrl(supportUrl);
+        loadThemeUrlInWebView();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_theme_support, menu);
+        getMenuInflater().inflate(R.menu.theme_support, menu);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_activate) {
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadThemeUrlInWebView() {
+        WebView webView = (WebView) findViewById(R.id.webView);
+        Intent intent = getIntent();
+        String themeId = intent.getStringExtra("themeId");
+        int type = intent.getIntExtra("type", 0);
+        String url = "https://theme.wordpress.com/themes/" + themeId + "/";
+        if (type == 0) {
+            url = url + "support/";
+        }
+            webView.loadUrl(url);
     }
 }
