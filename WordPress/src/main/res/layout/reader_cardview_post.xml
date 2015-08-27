@@ -151,7 +151,7 @@
             android:id="@+id/layout_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_medium">
@@ -175,8 +175,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin_medium"
                 android:layout_toLeftOf="@+id/count_likes"
+                android:padding="@dimen/margin_medium"
                 wp:readerIcon="comment" />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -185,7 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_small"
+                android:padding="@dimen/margin_medium"
                 wp:readerIcon="like" />
 
         </RelativeLayout>
