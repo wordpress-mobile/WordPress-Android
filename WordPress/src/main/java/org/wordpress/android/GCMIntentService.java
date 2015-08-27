@@ -85,11 +85,9 @@ public class GCMIntentService extends GCMBaseIntentService {
         long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
         String pushUserId = extras.getString(PUSH_ARG_USER);
         // pushUserId is always set server side, but better to double check it here.
-        if (pushUserId != null) {
-            if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
-                AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
-                return;
-            }
+        if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
+            AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+            return;
         }
 
         String noteType = StringUtils.notNullStr(extras.getString(PUSH_ARG_TYPE));
@@ -131,22 +129,19 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         mPreviousNoteId = noteId;
         mPreviousNoteTime = thisTime;
-
-        int pushId = 0;
-
+        
         // Update notification content for the same noteId if it is already showing
-        boolean matchedNoteId = false;
+        int pushId = 0;
         for (int id : mActiveNotificationsMap.keySet()) {
             Bundle noteBundle = mActiveNotificationsMap.get(id);
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                 pushId = id;
                 mActiveNotificationsMap.put(pushId, extras);
-                matchedNoteId = true;
                 break;
             }
         }
 
-        if (!matchedNoteId) {
+        if (pushId == 0) {
             pushId = PUSH_NOTIFICATION_ID + mActiveNotificationsMap.size();
             mActiveNotificationsMap.put(pushId, extras);
         }
