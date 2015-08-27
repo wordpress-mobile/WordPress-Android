@@ -488,7 +488,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         int position = mPosts.indexOfPost(post);
         if (position > -1) {
             mPosts.remove(position);
-            notifyItemRemoved(position);
+            if (mPosts.size() > 0) {
+                notifyItemRemoved(position);
+            } else {
+                // we must call notifyDataSetChanged when the only post has been deleted - if we
+                // call notifyItemRemoved the recycler will throw an IndexOutOfBoundsException
+                // because removing the last post also removes the end list indicator
+                notifyDataSetChanged();
+            }
         }
     }
 
