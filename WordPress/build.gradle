@@ -27,10 +27,6 @@ android {
         jumboMode = true
     }
 
-    packagingOptions {
-        exclude '.readme'
-    }
-
     compileSdkVersion 23
     buildToolsVersion "23.0.0"
 
