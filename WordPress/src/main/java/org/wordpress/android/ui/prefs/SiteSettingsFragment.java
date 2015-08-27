@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -53,6 +55,9 @@ import de.greenrobot.event.EventBus;
 
 public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener, AdapterView.OnItemLongClickListener {
+    public static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
+    public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
+
     public interface HasHint {
         boolean hasHint();
         String getHintText();
@@ -67,6 +72,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mPrivacyPreference;
     private EditTextPreference mUsernamePreference;
     private EditTextPreference mPasswordPreference;
+    private SwitchPreference mLocationPreference;
 
     // Most recent remote site data. Current local data is used if remote data cannot be fetched.
     private String mRemoteTitle;
@@ -157,6 +163,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
+    private SharedPreferences siteSettingsPreferences() {
+        return getActivity().getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
+    }
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (newValue == null) return false;
@@ -181,6 +191,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mPasswordPreference) {
             changeEditTextPreferenceValue(mPasswordPreference, newValue.toString());
+            return true;
+        } else if (preference == mLocationPreference) {
+            SharedPreferences prefs = siteSettingsPreferences();
+            prefs.edit().putBoolean(LOCATION_PREF_KEY, (Boolean) newValue).apply();
             return true;
         }
 
@@ -288,6 +302,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mPasswordPreference.setOnPreferenceChangeListener(this);
                 changeEditTextPreferenceValue(mPasswordPreference, mRemotePassword);
             }
+        }
+
+        // Geotagging preference
+        mLocationPreference = (SwitchPreference) findPreference(getString(R.string.pref_key_site_location));
+        if (mLocationPreference != null) {
+            mLocationPreference.setOnPreferenceChangeListener(this);
+            mLocationPreference.setChecked(siteSettingsPreferences().getBoolean(LOCATION_PREF_KEY, false));
         }
     }
 
@@ -431,9 +452,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         if (mTaglinePreference != null && !mTaglinePreference.getText().equals(mRemoteTagline)) {
             params.put("blogdescription", mTaglinePreference.getText());
-        }
-
-        if (mAddressPreference != null && !mAddressPreference.getText().equals(mRemoteAddress)) {
         }
 
         if (mLanguagePreference != null && mLanguageCodes != null && mRemoteLanguage != null &&

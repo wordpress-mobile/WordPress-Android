@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -47,6 +48,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -607,8 +609,12 @@ public class EditPostSettingsFragment extends Fragment
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
+        boolean settingsSupportLocation = getActivity()
+                .getSharedPreferences(SiteSettingsFragment.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE)
+                .getBoolean(SiteSettingsFragment.LOCATION_PREF_KEY, false);
+
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider() && mPost.supportsLocation()) {
+        if (settingsSupportLocation && hasLocationProvider() && mPost.supportsLocation()) {
             View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
             TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
