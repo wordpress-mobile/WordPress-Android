@@ -11,7 +11,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -94,6 +93,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mBlog == null) return;
 
         mRemoteTitle = mBlog.getBlogName();
+        mRemoteAddress = mBlog.getUrl();
+        mRemoteUsername = mBlog.getUsername();
+        mRemotePassword = mBlog.getPassword();
 
         // inflate Site Settings preferences from XML
         addPreferencesFromResource(R.xml.site_settings);
@@ -174,6 +176,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPrivacyPreference) {
             changePrivacyValue(Integer.valueOf(newValue.toString()));
             return true;
+        } else if (preference == mUsernamePreference) {
+            changeEditTextPreferenceValue(mUsernamePreference, newValue.toString());
+            return true;
+        } else if (preference == mPasswordPreference) {
+            changeEditTextPreferenceValue(mPasswordPreference, newValue.toString());
+            return true;
         }
 
         return false;
@@ -201,6 +209,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void allowEditing(boolean allow) {
         if (mTitlePreference != null) mTitlePreference.setEnabled(allow);
         if (mTaglinePreference != null) mTaglinePreference.setEnabled(allow);
+        // Address won't be editable until the app supports domain name changes
         if (mAddressPreference != null) mAddressPreference.setEnabled(false);
         if (mPrivacyPreference != null) mPrivacyPreference.setEnabled(allow);
         if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
@@ -228,6 +237,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (null != (mAddressPreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_address)))) {
             mAddressPreference.setOnPreferenceChangeListener(this);
+            changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
         }
 
         // Privacy preference, removed for self-hosted sites
@@ -246,14 +256,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (!mBlog.isDotcomFlag()) {
                 removePreference(R.string.pref_key_site_general, mLanguagePreference);
             } else {
-                mLanguagePreference.setOnPreferenceChangeListener(this);
-
                 // Generate map of language codes
                 String[] languageIds = getResources().getStringArray(R.array.lang_ids);
                 String[] languageCodes = getResources().getStringArray(R.array.language_codes);
                 for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
                     mLanguageCodes.put(languageCodes[i], languageIds[i]);
                 }
+
+                changeLanguageValue(Locale.getDefault().getISO3Language());
+                mLanguagePreference.setValue(Locale.getDefault().getCountry());
+                mLanguagePreference.setOnPreferenceChangeListener(this);
             }
         }
 
@@ -268,19 +280,13 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (null != (mUsernamePreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_username)))) {
                 mUsernamePreference.setOnPreferenceChangeListener(this);
-                if (!TextUtils.isEmpty(mBlog.getUsername())) {
-                    mUsernamePreference.setText(mBlog.getUsername());
-                    mUsernamePreference.setSummary(mBlog.getUsername());
-                }
+                changeEditTextPreferenceValue(mUsernamePreference, mRemoteUsername);
             }
 
             if (null != (mPasswordPreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_password)))) {
                 mPasswordPreference.setOnPreferenceChangeListener(this);
-                if (!TextUtils.isEmpty(mBlog.getPassword())) {
-                    mPasswordPreference.setText(mBlog.getPassword());
-                    mPasswordPreference.setSummary(mBlog.getPassword());
-                }
+                changeEditTextPreferenceValue(mPasswordPreference, mRemotePassword);
             }
         }
     }
@@ -328,13 +334,11 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void handleResponseToSelfHostedSettingsRequest(Map result) {
         if (mTitlePreference != null) {
-            mTitlePreference.setEnabled(true);
-            String title = getNestedMapValue(result, "blog_title");
-            changeEditTextPreferenceValue(mTitlePreference, title);
+            mRemoteTitle = getNestedMapValue(result, "blog_title");
+            changeEditTextPreferenceValue(mTitlePreference, mRemoteTitle);
         }
 
         if (mTaglinePreference != null) {
-            mTaglinePreference.setEnabled(true);
             mRemoteTagline = getNestedMapValue(result, "blog_tagline");
             changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
         }
@@ -342,10 +346,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mAddressPreference != null) {
             mRemoteAddress = getNestedMapValue(result, "blog_url");
             changeEditTextPreferenceValue(mAddressPreference, mRemoteAddress);
-        }
-
-        if (mPasswordPreference != null) {
-            mPasswordPreference.setEnabled(true);
         }
     }
 
@@ -359,14 +359,18 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
 
             mBlog.setBlogName(StringUtils.unescapeHTML(titleResult));
-            WordPress.wpDB.saveBlog(mBlog);
-            EventBus.getDefault().post(new CoreEvents.BlogListChanged());
         }
+
+        WordPress.wpDB.saveBlog(mBlog);
+        EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
 
-    private void handleSettingsSetError(String error) {
+    private void handleSettingsSetError(String error, boolean newCreds) {
         AppLog.w(AppLog.T.API, "Error setting site settings: " + error);
         if (isAdded()) {
+            if (newCreds) {
+                ToastUtils.showToast(getActivity(), getString(R.string.username_or_password_incorrect));
+            }
             ToastUtils.showToast(getActivity(), getString(R.string.error_post_remote_site_settings));
             getActivity().finish();
         }
@@ -377,13 +381,11 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private void handleResponseToWPComSettingsRequest(JSONObject response) {
         if (mTitlePreference != null) {
-            mTitlePreference.setEnabled(true);
             String title = response.optString(RestClientUtils.SITE_TITLE_KEY);
             changeEditTextPreferenceValue(mTitlePreference, title);
         }
 
         if (mTaglinePreference != null) {
-            mTaglinePreference.setEnabled(true);
             mRemoteTagline = response.optString(RestClientUtils.SITE_DESC_KEY);
             changeEditTextPreferenceValue(mTaglinePreference, mRemoteTagline);
         }
@@ -400,7 +402,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mLanguagePreference.setEntries(createLanguageDisplayStrings(languageCodes));
                 mLanguagePreference.setDetails(
                         createLanguageDetailDisplayStrings(languageCodes, mRemoteLanguage));
-                mLanguagePreference.setEnabled(true);
                 changeLanguageValue(mRemoteLanguage);
                 mLanguagePreference.setSummary(
                         firstLetterCapitalized(
@@ -409,7 +410,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             mRemotePrivacy = settingsObject.optInt("blog_public");
             if (mPrivacyPreference != null) {
-                mPrivacyPreference.setEnabled(true);
                 mPrivacyPreference.setValue(String.valueOf(mRemotePrivacy));
                 mPrivacyPreference.setSummary(privacyStringForValue(mRemotePrivacy));
             }
@@ -476,13 +476,45 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void postSelfHostedChanges(final HashMap<String, String> params) {
-        if (params == null || params.size() == 0) return;
+        final Object[] callParams = {
+                mBlog.getRemoteBlogId(), mUsernamePreference.getText(), mPasswordPreference.getText(), params
+        };
+        final boolean newCreds = !callParams[1].equals(mRemoteUsername) ||
+                                 !callParams[2].equals(mRemotePassword);
 
-        Object[] callParams = {
-                mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(), params
+        if (!newCreds && (params == null || params.size() == 0)) return;
+
+        final XMLRPCCallback callback = new XMLRPCCallback() {
+            @Override
+            public void onSuccess(long id, final Object result) {
+                // Save new login information
+                if (newCreds) {
+                    mBlog.setUsername(callParams[1].toString());
+                    mBlog.setPassword(callParams[2].toString());
+                }
+
+                if (result instanceof Map) {
+                    handleResponseToSelfHostedSettingsSetRequest((Map) result);
+                } else if (!newCreds) {
+                    // Response is considered an error if we are unable to parse it
+                    handleSettingsSetError("Invalid response object (expected Map): " + result, false);
+                }
+            }
+
+            @Override
+            public void onFailure(long id, final Exception error) {
+                if (isAdded()) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            handleSettingsSetError(error.toString(), newCreds);
+                        }
+                    });
+                }
+            }
         };
 
-        instantiateInterface().callAsync(mXmlRpcSetCallback, ApiHelper.Methods.SET_OPTIONS, callParams);
+        instantiateInterface().callAsync(callback, ApiHelper.Methods.SET_OPTIONS, callParams);
     }
 
     private void postDotComChanges(final HashMap<String, String> params) {
@@ -515,7 +547,9 @@ public class SiteSettingsFragment extends PreferenceFragment
      * If newValue is equal to the current preference text no action will be taken.
      */
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
-        if (pref != null && newValue != null && !newValue.equals(pref.getSummary())) {
+        if (pref == null || pref.getEditText().isInEditMode()) return;
+
+        if (newValue != null && !newValue.equals(pref.getSummary())) {
             pref.setText(StringUtils.unescapeHTML(newValue));
             pref.setSummary(StringUtils.unescapeHTML(newValue));
         }
@@ -679,30 +713,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                     @Override
                     public void run() {
                         handleSettingsFetchError(error.toString());
-                    }
-                });
-            }
-        }
-    };
-
-    private final XMLRPCCallback mXmlRpcSetCallback = new XMLRPCCallback() {
-        @Override
-        public void onSuccess(long id, final Object result) {
-            if (result instanceof Map) {
-                handleResponseToSelfHostedSettingsSetRequest((Map) result);
-            } else {
-                // Response is considered an error if we are unable to parse it
-                handleSettingsSetError("Invalid response object (expected Map): " + result);
-            }
-        }
-
-        @Override
-        public void onFailure(long id, final Exception error) {
-            if (isAdded()) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        handleSettingsSetError(error.toString());
                     }
                 });
             }
