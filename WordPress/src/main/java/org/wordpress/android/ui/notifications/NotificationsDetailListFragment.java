@@ -426,7 +426,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
 
         // Request reader comments until we retrieve the comment for this note
-        if (mNote.isCommentLikeType() || mNote.isCommentReplyType() &&
+        if ((mNote.isCommentLikeType() || mNote.isCommentReplyType() || mNote.isCommentWithUserReply()) &&
                 !ReaderCommentTable.commentExists(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId())) {
             ReaderCommentService.startServiceForComment(getActivity(), mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
         }
