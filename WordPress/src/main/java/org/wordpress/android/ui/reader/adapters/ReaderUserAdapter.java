@@ -65,8 +65,7 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
                     if (user.hasBlogId()) {
                         ReaderActivityLauncher.showReaderBlogPreview(
                                 v.getContext(),
-                                user.blogId,
-                                null);
+                                user.blogId);
                     }
                 }
             });

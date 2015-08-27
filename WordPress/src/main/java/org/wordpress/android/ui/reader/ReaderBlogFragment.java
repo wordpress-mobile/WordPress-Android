@@ -152,25 +152,22 @@ public class ReaderBlogFragment extends Fragment
     public void onBlogClicked(Object item) {
         long blogId;
         long feedId;
-        String title;
         if (item instanceof ReaderRecommendedBlog) {
             ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
             blogId = blog.blogId;
             feedId = 0;
-            title = blog.getTitle();
         } else if (item instanceof ReaderBlog) {
             ReaderBlog blog = (ReaderBlog) item;
             blogId = blog.blogId;
             feedId = blog.feedId;
-            title = blog.getName();
         } else {
             return;
         }
 
         if (feedId != 0) {
-            ReaderActivityLauncher.showReaderFeedPreview(getActivity(), feedId, title);
+            ReaderActivityLauncher.showReaderFeedPreview(getActivity(), feedId);
         } else if (blogId != 0) {
-            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, title);
+            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
         }
     }
 }

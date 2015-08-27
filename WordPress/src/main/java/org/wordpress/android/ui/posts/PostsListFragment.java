@@ -322,6 +322,12 @@ public class PostsListFragment extends Fragment
         mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
     }
 
+    private void hideEmptyView() {
+        if (isAdded() && mEmptyView != null) {
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -350,7 +356,7 @@ public class PostsListFragment extends Fragment
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             }
         } else if (postCount > 0) {
-            mEmptyView.setVisibility(View.GONE);
+            hideEmptyView();
         }
     }
 
@@ -430,12 +436,18 @@ public class PostsListFragment extends Fragment
         getPostListAdapter().hidePost(post);
         mTrashedPosts.add(post);
 
+        // make sure empty view shows if user deleted the only post
+        if (getPostListAdapter().getItemCount() == 0) {
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
+
         View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // user undid the trash, so unhide the post and remove it from the list of trashed posts
                 mTrashedPosts.remove(post);
                 getPostListAdapter().unhidePost(post);
+                hideEmptyView();
             }
         };
 

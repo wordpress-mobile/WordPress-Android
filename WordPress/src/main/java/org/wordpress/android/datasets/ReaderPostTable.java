@@ -632,6 +632,22 @@ public class ReaderPostTable {
         }
     }
 
+    public static ReaderPostList getPostsInFeed(long feedId, int maxPosts, boolean excludeTextColumn) {
+        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id = ? ORDER BY tbl_posts.timestamp DESC";
+
+        if (maxPosts > 0) {
+            sql += " LIMIT " + Integer.toString(maxPosts);
+        }
+
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(feedId)});
+        try {
+            return getPostListFromCursor(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
     /*
      * same as getPostsWithTag() but only returns the blogId/postId pairs
      */

@@ -19,7 +19,6 @@ public class ReaderConstants {
     static final String ARG_IMAGE_URL         = "image_url";
     static final String ARG_IS_PRIVATE        = "is_private";
     static final String ARG_POST_LIST_TYPE    = "post_list_type";
-    static final String ARG_TITLE             = "title";
     static final String ARG_CONTENT           = "content";
     static final String ARG_IS_SINGLE_POST    = "is_single_post";
 

@@ -20,7 +20,7 @@ import org.wordpress.android.util.AppLog.T;
  * populates spinner with reader tags
  */
 public class ReaderTagSpinnerAdapter extends BaseAdapter {
-    private ReaderTagList mTags = new ReaderTagList();
+    private final ReaderTagList mTags = new ReaderTagList();
     private final LayoutInflater mInflater;
     private final ReaderInterfaces.DataLoadedListener mDataListener;
 
@@ -120,8 +120,7 @@ public class ReaderTagSpinnerAdapter extends BaseAdapter {
     }
 
     private boolean mIsTaskRunning = false;
-    private class LoadTagsTask extends AsyncTask<Void, Void, Boolean> {
-        private final ReaderTagList tmpTags = new ReaderTagList();
+    private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -131,15 +130,16 @@ public class ReaderTagSpinnerAdapter extends BaseAdapter {
             mIsTaskRunning = false;
         }
         @Override
-        protected Boolean doInBackground(Void... voids) {
-            tmpTags.addAll(ReaderTagTable.getDefaultTags());
-            tmpTags.addAll(ReaderTagTable.getFollowedTags());
-            return !mTags.isSameList(tmpTags);
+        protected ReaderTagList doInBackground(Void... voids) {
+            ReaderTagList tagList = ReaderTagTable.getDefaultTags();
+            tagList.addAll(ReaderTagTable.getFollowedTags());
+            return tagList;
         }
         @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                mTags = (ReaderTagList) tmpTags.clone();
+        protected void onPostExecute(ReaderTagList tagList) {
+            if (tagList != null && !tagList.isSameList(mTags)) {
+                mTags.clear();
+                mTags.addAll(tagList);
                 notifyDataSetChanged();
                 if (mDataListener != null) {
                     mDataListener.onDataLoaded(mTags.isEmpty());

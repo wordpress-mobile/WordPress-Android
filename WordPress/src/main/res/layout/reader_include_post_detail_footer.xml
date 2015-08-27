@@ -24,10 +24,9 @@
         style="@style/ReaderTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider_footer"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/reader_detail_margin"
-        android:layout_toLeftOf="@+id/layout_icons"
+        android:layout_marginTop="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
         android:ellipsize="end"
         android:gravity="center_vertical"
@@ -41,9 +40,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/divider_footer"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginTop="@dimen/margin_medium"
         android:orientation="horizontal">
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -51,6 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:padding="@dimen/margin_medium"
             wp:readerIcon="comment" />
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/margin_large"
+            android:padding="@dimen/margin_medium"
             wp:readerIcon="like" />
 
     </LinearLayout>
