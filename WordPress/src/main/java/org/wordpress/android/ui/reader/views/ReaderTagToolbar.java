@@ -15,7 +15,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 
 /**
- * pseudo-toolbar at top of ReaderPostAdapter
+ * pseudo-toolbar at top of ReaderPostAdapter - contains spinner enabling user to change tags
  */
 public class ReaderTagToolbar extends LinearLayout {
 
@@ -113,6 +113,7 @@ public class ReaderTagToolbar extends LinearLayout {
         if (tag == null || isCurrentTag(tag)) return;
 
         mCurrentTag = tag;
+        selectCurrentTag();
     }
 
     public boolean hasCurrentTag() {
