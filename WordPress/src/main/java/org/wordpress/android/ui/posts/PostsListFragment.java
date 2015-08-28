@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -100,6 +101,14 @@ public class PostsListFragment extends Fragment
         int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+
+        // hide the fab so we can animate it in - note that we only do this on Lollipop and higher
+        // due to a bug in the current implementation which prevents it from being hidden
+        // correctly on pre-L devices (which makes animating it in/out ugly)
+        // https://code.google.com/p/android/issues/detail?id=175331
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mFabView.setVisibility(View.GONE);
+        }
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,6 +331,12 @@ public class PostsListFragment extends Fragment
         mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
     }
 
+    private void hideEmptyView() {
+        if (isAdded() && mEmptyView != null) {
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -350,7 +365,7 @@ public class PostsListFragment extends Fragment
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             }
         } else if (postCount > 0) {
-            mEmptyView.setVisibility(View.GONE);
+            hideEmptyView();
         }
     }
 
@@ -430,12 +445,18 @@ public class PostsListFragment extends Fragment
         getPostListAdapter().hidePost(post);
         mTrashedPosts.add(post);
 
+        // make sure empty view shows if user deleted the only post
+        if (getPostListAdapter().getItemCount() == 0) {
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
+
         View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // user undid the trash, so unhide the post and remove it from the list of trashed posts
                 mTrashedPosts.remove(post);
                 getPostListAdapter().unhidePost(post);
+                hideEmptyView();
             }
         };
 
