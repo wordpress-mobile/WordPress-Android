@@ -35,7 +35,7 @@ android {
         versionName "4.4-rc1"
         versionCode 197
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
     }
@@ -80,13 +80,10 @@ dependencies {
     compile 'com.android.support:design:23.0.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-aar:3.8.0'
-    compile 'commons-lang:commons-lang:2.6'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.2'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
-
-    compile 'com.mcxiaoke.volley:library:1.0.16'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
