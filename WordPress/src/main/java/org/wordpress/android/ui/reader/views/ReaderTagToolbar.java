@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +12,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
+import org.wordpress.android.util.AppLog;
 
 /**
  * pseudo-toolbar at top of ReaderPostAdapter - contains spinner enabling user to change tags
@@ -110,8 +110,6 @@ public class ReaderTagToolbar extends LinearLayout {
     }
 
     public void setCurrentTag(ReaderTag tag) {
-        if (tag == null || isCurrentTag(tag)) return;
-
         mCurrentTag = tag;
         selectCurrentTag();
     }
@@ -135,7 +133,9 @@ public class ReaderTagToolbar extends LinearLayout {
         }
 
         int position = getSpinnerAdapter().getIndexOfTag(getCurrentTag());
-        if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
+        if (position == -1) {
+            AppLog.w(AppLog.T.READER, "reader tag toolbar > unable to select current tag");
+        } else if (position != mSpinner.getSelectedItemPosition()) {
             mSpinner.setSelection(position);
         }
     }

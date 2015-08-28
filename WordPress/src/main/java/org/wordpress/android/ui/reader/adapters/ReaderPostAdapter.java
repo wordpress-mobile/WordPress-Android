@@ -565,10 +565,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void clear() {
-        if (!mPosts.isEmpty()) {
-            mPosts.clear();
-            notifyDataSetChanged();
-        }
+        mPosts.clear();
+        notifyDataSetChanged();
     }
 
     public void refresh() {

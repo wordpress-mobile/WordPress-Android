@@ -224,14 +224,11 @@ public class ReaderPostListFragment extends Fragment
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
 
-            // refresh the posts in case the user returned from an activity that
-            // changed one (or more) of the posts
-            refreshPosts();
+            // default to refreshing posts in case the user returned from an activity that
+            // changed one (or more) of them
+            boolean shouldRefreshPosts = true;
 
             if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
-                // reload the tags shown in the spinner in case they've changed
-                getPostAdapter().reloadTagSpinner();
-
                 // check if the user added a tag in ReaderSubsActivity
                 Object event = EventBus.getDefault().getStickyEvent(ReaderEvents.TagAdded.class);
                 if (event != null) {
@@ -239,15 +236,25 @@ public class ReaderPostListFragment extends Fragment
                     EventBus.getDefault().removeStickyEvent(event);
                     ReaderTag newTag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
                     setCurrentTag(newTag, true);
+                    shouldRefreshPosts = false;
                 // make sure the current tag is still valid
                 } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
                     AppLog.d(T.READER, "reader post list > current tag no longer valid");
                     setCurrentTag(ReaderTag.getDefaultTag(), true);
+                    shouldRefreshPosts = false;
                 // auto-update the current tag if it's time
                 } else if (!isUpdating() && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
                     AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
                     updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+                    shouldRefreshPosts = false;
                 }
+
+                // reload the tags shown in the spinner in case they've changed
+                getPostAdapter().reloadTagSpinner();
+            }
+
+            if (shouldRefreshPosts) {
+                refreshPosts();
             }
         }
     }
