@@ -33,7 +33,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     }
 
     private final WeakReference<Context> mWeakContext;
-    private ReaderTagList mTags = new ReaderTagList();
+    private final ReaderTagList mTags = new ReaderTagList();
     private TagDeletedListener mTagDeletedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
 
@@ -148,8 +148,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
      * AsyncTask to load tags
      */
     private boolean mIsTaskRunning = false;
-    private class LoadTagsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderTagList tmpTags;
+    private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -159,14 +158,14 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             mIsTaskRunning = false;
         }
         @Override
-        protected Boolean doInBackground(Void... params) {
-            tmpTags = ReaderTagTable.getFollowedTags();
-            return !mTags.isSameList(tmpTags);
+        protected ReaderTagList doInBackground(Void... params) {
+            return ReaderTagTable.getFollowedTags();
         }
         @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                mTags = (ReaderTagList)(tmpTags.clone());
+        protected void onPostExecute(ReaderTagList tagList) {
+            if (tagList != null && !tagList.isSameList(mTags)) {
+                mTags.clear();
+                mTags.addAll(tagList);
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;

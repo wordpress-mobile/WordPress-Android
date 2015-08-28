@@ -171,8 +171,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<ReaderCommentAdap
                 public void onClick(View view) {
                     ReaderActivityLauncher.showReaderBlogPreview(
                             view.getContext(),
-                            comment.authorBlogId,
-                            null
+                            comment.authorBlogId
                     );
                 }
             };

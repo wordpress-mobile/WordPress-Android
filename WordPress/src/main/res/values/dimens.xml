@@ -4,7 +4,9 @@
     <dimen name="format_bar_height">40dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
+
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_content_offset">72dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>

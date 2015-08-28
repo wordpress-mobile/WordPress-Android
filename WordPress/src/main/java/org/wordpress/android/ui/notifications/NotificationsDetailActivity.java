@@ -19,7 +19,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
-import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -101,7 +100,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
-        GCMIntentService.clearNotificationsMap();
+        GCMIntentService.clearNotifications();
     }
 
     @Override
@@ -113,7 +112,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            finish();
             return true;
         }
 
@@ -166,7 +165,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     public void showBlogPreviewActivity(long siteId) {
         if (isFinishing()) return;
 
-        ReaderActivityLauncher.showReaderBlogPreview(this, siteId, null);
+        ReaderActivityLauncher.showReaderBlogPreview(this, siteId);
     }
 
     public void showPostActivity(long siteId, long postId) {
