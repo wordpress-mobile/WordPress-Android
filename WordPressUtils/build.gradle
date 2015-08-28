@@ -16,8 +16,10 @@ repositories {
 }
 
 dependencies {
-    compile 'commons-lang:commons-lang:2.6'
-    compile 'com.mcxiaoke.volley:library:1.0.10'
+    compile('commons-lang:commons-lang:2.6') {
+        exclude group: 'commons-logging'
+    }
+    compile 'com.mcxiaoke.volley:library:1.0.18'
     compile 'com.android.support:support-v13:23.0.0'
 }
 
@@ -32,7 +34,7 @@ android {
     defaultConfig {
         versionName "1.5.0"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
     }
 }
 
