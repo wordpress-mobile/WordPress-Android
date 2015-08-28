@@ -69,7 +69,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderBlogInfoView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
-
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;

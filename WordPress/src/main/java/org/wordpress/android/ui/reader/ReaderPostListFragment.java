@@ -223,18 +223,31 @@ public class ReaderPostListFragment extends Fragment
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
+
             // refresh the posts in case the user returned from an activity that
             // changed one (or more) of the posts
             refreshPosts();
-            // likewise for tags
-            refreshTags();
 
-            // auto-update the current tag if it's time
-            if (!isUpdating()
-                    && getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                    && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
-                updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+            if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
+                // reload the tags shown in the spinner in case they've changed
+                getPostAdapter().reloadTagSpinner();
+
+                // check if the user added a tag in ReaderSubsActivity
+                Object event = EventBus.getDefault().getStickyEvent(ReaderEvents.TagAdded.class);
+                if (event != null) {
+                    String tagName = ((ReaderEvents.TagAdded) event).getTagName();
+                    EventBus.getDefault().removeStickyEvent(event);
+                    ReaderTag newTag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+                    setCurrentTag(newTag, true);
+                // make sure the current tag is still valid
+                } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
+                    AppLog.d(T.READER, "reader post list > current tag no longer valid");
+                    setCurrentTag(ReaderTag.getDefaultTag(), true);
+                // auto-update the current tag if it's time
+                } else if (!isUpdating() && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
+                    AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
+                    updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+                }
             }
         }
     }
@@ -261,8 +274,8 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-            // list fragment is viewing followed tags, tell it to refresh the list of tags
-            refreshTags();
+            // refresh the list of tags
+            getPostAdapter().reloadTagSpinner();
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
             if (isPostAdapterEmpty()) {
@@ -874,32 +887,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * make sure current tag still exists, reset to default if it doesn't
-     */
-    private void checkCurrentTag() {
-        if (hasCurrentTag()
-                && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                && !ReaderTagTable.tagExists(getCurrentTag())) {
-            mCurrentTag = ReaderTag.getDefaultTag();
-        }
-    }
-
-    /*
-     * refresh the list of tags shown in the toolbar spinner
-     */
-    private void refreshTags() {
-        if (!isAdded()) {
-            return;
-        }
-        checkCurrentTag();
-        reloadTagSpinner();
-    }
-
-    private void reloadTagSpinner() {
-        getPostAdapter().reloadTagSpinner();
-    }
-
-    /*
      * are we showing all posts with a specific tag (followed or previewed), or all
      * posts in a specific blog?
      */
@@ -984,16 +971,16 @@ public class ReaderPostListFragment extends Fragment
      */
     @Override
     public void onTagChanged(ReaderTag tag) {
-        if (!isCurrentTag(tag)) {
-            Map<String, String> properties = new HashMap<>();
-            properties.put("tag", tag.getTagName());
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-            if (tag.isFreshlyPressed()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
-            }
-            AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
-            setCurrentTag(tag, true);
+        if (!isAdded() || isCurrentTag(tag)) return;
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("tag", tag.getTagName());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
+        if (tag.isFreshlyPressed()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
         }
+        AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
+        setCurrentTag(tag, true);
     }
 
     /*
