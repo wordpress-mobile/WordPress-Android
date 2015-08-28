@@ -1,21 +1,20 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
+import android.support.v7.widget.ListPopupWindow;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderInterfaces;
-import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
-import org.wordpress.android.util.AppLog;
+import org.wordpress.android.ui.reader.adapters.ReaderTagMenuAdapter;
 
 /**
- * pseudo-toolbar at top of ReaderPostAdapter - contains spinner enabling user to change tags
+ * pseudo-toolbar at top of ReaderPostAdapter which enables user to change tags
  */
 public class ReaderTagToolbar extends LinearLayout {
 
@@ -23,11 +22,7 @@ public class ReaderTagToolbar extends LinearLayout {
         void onTagChanged(ReaderTag tag);
     }
 
-    private Spinner mSpinner;
-    private ReaderTagSpinnerAdapter mSpinnerAdapter;
-    private View mBtnEditTags;
-
-    private ReaderTag mCurrentTag;
+    private TextView mTextTagName;
     private OnTagChangedListener mOnTagChangedListener;
 
     public ReaderTagToolbar(Context context) {
@@ -47,28 +42,18 @@ public class ReaderTagToolbar extends LinearLayout {
 
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_tag_toolbar, this);
-        mSpinner = (Spinner) view.findViewById(R.id.spinner);
-        mBtnEditTags = view.findViewById(R.id.btn_edit_tags);
+        mTextTagName = (TextView) view.findViewById(R.id.text_tag);
+        View btnEditTags = view.findViewById(R.id.btn_edit_tags);
 
         if (!isInEditMode()) {
-            mSpinner.setAdapter(getSpinnerAdapter());
-            mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            mTextTagName.setOnClickListener(new OnClickListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
-                    setCurrentTag(tag);
-                    if (mOnTagChangedListener != null) {
-                        mOnTagChangedListener.onTagChanged(tag);
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    // nop
+                public void onClick(View v) {
+                    showTagPopupMenu(v);
                 }
             });
 
-            mBtnEditTags.setOnClickListener(new OnClickListener() {
+            btnEditTags.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderActivityLauncher.showReaderSubs(v.getContext());
@@ -81,62 +66,34 @@ public class ReaderTagToolbar extends LinearLayout {
         mOnTagChangedListener = listener;
     }
 
-    private ReaderTagSpinnerAdapter getSpinnerAdapter() {
-        if (mSpinnerAdapter == null) {
-            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (isValid()) {
-                        selectCurrentTag();
-                    }
-                }
-            };
-            mSpinnerAdapter = new ReaderTagSpinnerAdapter(getContext(), dataListener);
-        }
-
-        return mSpinnerAdapter;
-    }
-
-    private boolean hasSpinnerAdapter() {
-        return (mSpinnerAdapter != null);
-    }
-
-    private boolean isValid() {
-        return getContext() != null;
-    }
-
-    public ReaderTag getCurrentTag() {
-        return mCurrentTag;
-    }
-
     public void setCurrentTag(ReaderTag tag) {
-        mCurrentTag = tag;
-        selectCurrentTag();
-    }
-
-    public boolean hasCurrentTag() {
-        return mCurrentTag != null;
-    }
-
-    public boolean isCurrentTag(ReaderTag tag) {
-        return ReaderTag.isSameTag(tag, mCurrentTag);
+        mTextTagName.setText(tag != null ? tag.getCapitalizedTagName() : "");
     }
 
     /*
-     * make sure the current tag is the one selected in the spinner
+     * user tapped the tag name, show a popup menu of tags to choose from
      */
-    private void selectCurrentTag() {
-        if (mSpinner == null
-                || !hasSpinnerAdapter()
-                || !hasCurrentTag()) {
-            return;
-        }
+    private void showTagPopupMenu(View view) {
+        Context context = view.getContext();
+        final ListPopupWindow listPopup = new ListPopupWindow(context);
+        listPopup.setAnchorView(view);
 
-        int position = getSpinnerAdapter().getIndexOfTag(getCurrentTag());
-        if (position == -1) {
-            AppLog.w(AppLog.T.READER, "reader tag toolbar > unable to select current tag");
-        } else if (position != mSpinner.getSelectedItemPosition()) {
-            mSpinner.setSelection(position);
-        }
+        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
+        listPopup.setModal(true);
+        listPopup.setAdapter(new ReaderTagMenuAdapter(context));
+        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listPopup.dismiss();
+                Object object = parent.getItemAtPosition(position);
+                if (object instanceof ReaderTag) {
+                    ReaderTag tag = (ReaderTag) object;
+                    if (mOnTagChangedListener != null) {
+                        mOnTagChangedListener.onTagChanged(tag);
+                    }
+                }
+            }
+        });
+        listPopup.show();
     }
 }

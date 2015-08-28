@@ -55,7 +55,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final String mReadingTimeFmtStr;
 
     private boolean mCanRequestMorePosts;
-    private boolean mShowTagToolbar;
+    private final boolean mShowTagToolbar;
     private final boolean mIsLoggedOutReader;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
@@ -174,7 +174,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemViewType(int position) {
         if (position == 0 && mShowTagToolbar) {
-            // first item is a spinner enabling changing the current tag
+            // first item is a pseudo-toolbar enabling changing the current tag
             return VIEW_TYPE_TAG_TOOLBAR;
         } else if (position == 0 && isBlogPreview()) {
             // first item is a ReaderBlogInfoView
@@ -579,15 +579,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void reload() {
         clear();
         loadPosts();
-    }
-
-    /*
-     * reload the list of tags show in the tag toolbar
-     */
-    public void reloadTagSpinner() {
-        if (mShowTagToolbar && getItemCount() > 0) {
-            notifyItemChanged(0);
-        }
     }
 
     public void removePostsInBlog(long blogId) {

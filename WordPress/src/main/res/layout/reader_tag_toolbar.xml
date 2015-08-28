@@ -5,19 +5,26 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/reader_card_gutters"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-    <Spinner
-        android:id="@+id/spinner"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/reader_card_content_padding"
-        android:background="@color/transparent"
-        android:spinnerMode="dropdown" />
+        android:background="?android:selectableItemBackground"
+        android:drawablePadding="@dimen/margin_medium"
+        android:drawableRight="@drawable/reader_dropdown_arrow"
+        android:ellipsize="end"
+        android:padding="@dimen/margin_medium"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="current tag" />
 
     <ImageView
         android:id="@+id/btn_edit_tags"

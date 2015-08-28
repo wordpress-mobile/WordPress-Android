@@ -248,9 +248,6 @@ public class ReaderPostListFragment extends Fragment
                     updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
                     shouldRefreshPosts = false;
                 }
-
-                // reload the tags shown in the spinner in case they've changed
-                getPostAdapter().reloadTagSpinner();
             }
 
             if (shouldRefreshPosts) {
@@ -281,8 +278,6 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-            // refresh the list of tags
-            getPostAdapter().reloadTagSpinner();
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
             if (isPostAdapterEmpty()) {
