@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven { url 'https://maven.fabric.io/repo' }
     }
     dependencies {
@@ -11,7 +11,7 @@ buildscript {
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/repo' }
 }
