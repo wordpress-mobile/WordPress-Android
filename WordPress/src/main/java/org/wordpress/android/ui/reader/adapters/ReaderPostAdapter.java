@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
+import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -54,7 +55,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final String mReadingTimeFmtStr;
 
     private boolean mCanRequestMorePosts;
-    private boolean mShowToolbarSpacer;
+    private boolean mShowTagToolbar;
     private final boolean mIsLoggedOutReader;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
@@ -62,10 +63,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
+    private ReaderTagToolbar.OnTagChangedListener mOnTagChangedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderBlogInfoView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
+
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -75,10 +78,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int READING_WORDS_PER_MINUTE = 250;
     private static final int MIN_READING_TIME_MINUTES = 2;
 
-    private static final int VIEW_TYPE_POST = 0;
-    private static final int VIEW_TYPE_SPACER = 1;
-    private static final int VIEW_TYPE_BLOG_INFO = 2;
-    private static final int VIEW_TYPE_TAG_INFO = 3;
+    private static final int VIEW_TYPE_POST        = 0;
+    private static final int VIEW_TYPE_BLOG_INFO   = 1;
+    private static final int VIEW_TYPE_TAG_INFO    = 2;
+    private static final int VIEW_TYPE_TAG_TOOLBAR = 3;
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
@@ -145,9 +148,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class SpacerViewHolder extends RecyclerView.ViewHolder {
-        public SpacerViewHolder(View itemView) {
+    class TagToolbarViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderTagToolbar mTagToolbar;
+        public TagToolbarViewHolder(View itemView) {
             super(itemView);
+            mTagToolbar = (ReaderTagToolbar) itemView;
         }
     }
 
@@ -169,9 +174,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && mShowToolbarSpacer) {
-            // first item is a transparent view matching the toolbar height
-            return VIEW_TYPE_SPACER;
+        if (position == 0 && mShowTagToolbar) {
+            // first item is a spinner enabling changing the current tag
+            return VIEW_TYPE_TAG_TOOLBAR;
         } else if (position == 0 && isBlogPreview()) {
             // first item is a ReaderBlogInfoView
             return VIEW_TYPE_BLOG_INFO;
@@ -186,13 +191,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         switch (viewType) {
-            case VIEW_TYPE_SPACER:
-                View spacerView = new View(context);
-                int toolbarHeight = context.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-                int dividerHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-                int spacerHeight = toolbarHeight - dividerHeight;
-                spacerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, spacerHeight));
-                return new SpacerViewHolder(spacerView);
+            case VIEW_TYPE_TAG_TOOLBAR:
+                return new TagToolbarViewHolder(new ReaderTagToolbar(context));
 
             case VIEW_TYPE_BLOG_INFO:
                 return new BlogInfoViewHolder(new ReaderBlogInfoView(context));
@@ -216,6 +216,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else if (holder instanceof TagInfoViewHolder) {
                 TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
                 tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
+            } else if (holder instanceof TagToolbarViewHolder) {
+                TagToolbarViewHolder toolbarHolder = (TagToolbarViewHolder) holder;
+                toolbarHolder.mTagToolbar.setCurrentTag(mCurrentTag);
+                toolbarHolder.mTagToolbar.setOnTagChangedListener(mOnTagChangedListener);
             }
             return;
         }
@@ -485,18 +489,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPhotonWidth = displayWidth - (cardMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
+        mShowTagToolbar = (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
+
         setHasStableIds(true);
     }
 
-    /*
-     * show spacer view above the first post to accommodate tag toolbar on ReaderPostListFragment
-     */
-    public void setShowToolbarSpacer(boolean show) {
-        mShowToolbarSpacer = show;
-    }
-
     private boolean hasCustomFirstItem() {
-        return mShowToolbarSpacer || isBlogPreview() || isTagPreview();
+        return mShowTagToolbar || isBlogPreview() || isTagPreview();
     }
 
     private boolean isBlogPreview() {
@@ -509,10 +508,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
         mPostSelectedListener = listener;
-    }
-
-    public void setOnTagSelectedListener(ReaderInterfaces.OnTagSelectedListener listener) {
-        mOnTagSelectedListener = listener;
     }
 
     public void setOnDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
@@ -529,6 +524,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnBlogInfoLoadedListener(ReaderBlogInfoView.OnBlogInfoLoadedListener listener) {
         mBlogInfoLoadedListener = listener;
+    }
+
+    /*
+     * called when user clicks a tag
+     */
+    public void setOnTagSelectedListener(ReaderInterfaces.OnTagSelectedListener listener) {
+        mOnTagSelectedListener = listener;
+    }
+
+    /*
+     * called when user selects a tag from the toolbar
+     */
+    public void setOnTagChangedListener(ReaderTagToolbar.OnTagChangedListener listener) {
+        mOnTagChangedListener = listener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {

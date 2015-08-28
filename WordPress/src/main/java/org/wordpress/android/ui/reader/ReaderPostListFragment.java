@@ -4,15 +4,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -20,10 +16,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -41,13 +35,12 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
+import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -72,11 +65,9 @@ public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
                    ReaderInterfaces.OnTagSelectedListener,
                    ReaderInterfaces.OnPostPopupListener,
+                   ReaderTagToolbar.OnTagChangedListener,
                    WPMainActivity.OnScrollToTopListener {
 
-    private Toolbar mTagToolbar;
-    private Spinner mTagSpinner;
-    private ReaderTagSpinnerAdapter mSpinnerAdapter;
     private ReaderPostAdapter mPostAdapter;
     private ReaderRecyclerView mRecyclerView;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -91,12 +82,10 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
-    private int mTagToolbarOffset;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
     private boolean mIsAnimatingOutNewPostsBar;
-    private boolean mIsLoggedOutReader;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -201,8 +190,6 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
@@ -390,86 +377,11 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded() || mRecyclerView == null) return;
 
         mRecyclerView.scrollToPosition(position);
-
-        // we need to reposition the tag toolbar here, but we need to wait for the
-        // recycler to settle before doing so - note that RecyclerView doesn't
-        // fire it's scroll listener when scrollToPosition() is called, so we
-        // can't rely on that to position the toolbar in this situation
-        if (shouldShowTagToolbar()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    positionTagToolbar();
-                }
-            }, 250);
-        }
-    }
-
-    /*
-     * position the tag toolbar based on the recycler scroll position - this will make it
-     * appear to scroll along with the recycler
-     */
-    private void positionTagToolbar() {
-        if (!isAdded() || mTagToolbar == null) return;
-
-        int distance = mRecyclerView.getVerticalScrollOffset();
-        int newVisibility;
-        if (distance <= mTagToolbarOffset) {
-            newVisibility = View.VISIBLE;
-            mTagToolbar.setTranslationY(-distance);
-        } else {
-            newVisibility = View.GONE;
-        }
-        if (mTagToolbar.getVisibility() != newVisibility) {
-            mTagToolbar.setVisibility(newVisibility);
-        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        // configure the toolbar for posts in followed tags (shown in main viewpager activity)
-        if (shouldShowTagToolbar()) {
-            mTagToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-
-            // the toolbar is hidden by the layout, so we need to show it here unless we know we're
-            // going to restore the list position once the adapter is loaded (which will take care
-            // of showing/hiding the toolbar)
-            mTagToolbar.setVisibility(mRestorePosition > 0 ? View.GONE : View.VISIBLE);
-
-            // enable customizing followed tags/blogs if user is logged in
-            if (!mIsLoggedOutReader) {
-                mTagToolbar.inflateMenu(R.menu.reader_list);
-                mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        if (menuItem.getItemId() == R.id.menu_tags) {
-                            ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-            }
-
-            // scroll the tag toolbar with the recycler
-            int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-            mTagToolbarOffset = (int) (toolbarHeight + (toolbarHeight * 0.25));
-            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    positionTagToolbar();
-                }
-            });
-
-            // create the tag spinner in the toolbar
-            if (mTagSpinner == null) {
-                enableTagSpinner();
-            }
-            selectTagInSpinner(getCurrentTag());
-        }
 
         boolean adapterAlreadyExists = hasPostAdapter();
         mRecyclerView.setAdapter(getPostAdapter());
@@ -563,58 +475,6 @@ public class ReaderPostListFragment extends Fragment
         Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener)
                 .show();
-
-        // make sure the tag toolbar is correctly positioned once the snackbar goes away
-        if (shouldShowTagToolbar()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    positionTagToolbar();
-                }
-            }, Constants.SNACKBAR_LONG_DURATION_MS);
-        }
-    }
-
-    /*
-     * enables the tag spinner in the toolbar, used only for posts in followed tags
-     */
-    private void enableTagSpinner() {
-        if (!isAdded()) return;
-
-        mTagSpinner = (Spinner) mTagToolbar.findViewById(R.id.reader_spinner);
-        mTagSpinner.setAdapter(getSpinnerAdapter());
-        mTagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
-                if (tag == null) {
-                    return;
-                }
-                if (!isCurrentTag(tag)) {
-                    Map<String, String> properties = new HashMap<>();
-                    properties.put("tag", tag.getTagName());
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-                    if (tag.isFreshlyPressed()) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
-                    }
-                }
-                setCurrentTag(tag, true);
-                AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // nop
-            }
-        });
-    }
-
-    /*
-     * returns true if the fragment should have it's own toolbar - used when showing posts in
-     * followed tags so user can select a different tag from the toolbar spinner
-     */
-    private boolean shouldShowTagToolbar() {
-        return (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
     }
 
     /*
@@ -749,14 +609,13 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnTagSelectedListener(this);
+            mPostAdapter.setOnTagChangedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             if (getActivity() instanceof ReaderBlogInfoView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderBlogInfoView.OnBlogInfoLoadedListener) getActivity());
             }
-            // show spacer above the first post to accommodate toolbar
-            mPostAdapter.setShowToolbarSpacer(shouldShowTagToolbar());
         }
         return mPostAdapter;
     }
@@ -776,11 +635,11 @@ public class ReaderPostListFragment extends Fragment
         return (tagName != null && tagName.equalsIgnoreCase(getCurrentTagName()));
     }
 
-    ReaderTag getCurrentTag() {
+    private ReaderTag getCurrentTag() {
         return mCurrentTag;
     }
 
-    String getCurrentTagName() {
+    private String getCurrentTagName() {
         return (mCurrentTag != null ? mCurrentTag.getTagName() : "");
     }
 
@@ -1038,9 +897,11 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
         checkCurrentTag();
-        if (hasSpinnerAdapter()) {
-            getSpinnerAdapter().refreshTags();
-        }
+        reloadTagSpinner();
+    }
+
+    private void reloadTagSpinner() {
+        // TODO
     }
 
     /*
@@ -1048,7 +909,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void doTagsChanged(final String newCurrentTag) {
         checkCurrentTag();
-        getSpinnerAdapter().reloadTags();
+        reloadTagSpinner();
         if (!TextUtils.isEmpty(newCurrentTag)) {
             setCurrentTag(new ReaderTag(newCurrentTag, ReaderTagType.FOLLOWED), true);
         }
@@ -1060,44 +921,6 @@ public class ReaderPostListFragment extends Fragment
      */
     private ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
-    }
-
-    /*
-     * toolbar spinner adapter which shows list of tags
-     */
-    private ReaderTagSpinnerAdapter getSpinnerAdapter() {
-        if (mSpinnerAdapter == null) {
-            AppLog.d(T.READER, "reader post list > creating spinner adapter");
-            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (isAdded()) {
-                        AppLog.d(T.READER, "reader post list > spinner adapter loaded");
-                        selectTagInSpinner(getCurrentTag());
-                    }
-                }
-            };
-            mSpinnerAdapter = new ReaderTagSpinnerAdapter(getActivity(), dataListener);
-        }
-
-        return mSpinnerAdapter;
-    }
-
-    private boolean hasSpinnerAdapter() {
-        return (mSpinnerAdapter != null);
-    }
-
-    /*
-     * make sure the passed tag is the one selected in the spinner
-     */
-    private void selectTagInSpinner(final ReaderTag tag) {
-        if (mTagSpinner == null || !hasSpinnerAdapter()) {
-            return;
-        }
-        int position = getSpinnerAdapter().getIndexOfTag(tag);
-        if (position > -1 && position != mTagSpinner.getSelectedItemPosition()) {
-            mTagSpinner.setSelection(position);
-        }
     }
 
     /*
@@ -1156,7 +979,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called from adapter when user taps a tag on a post
+     * called from adapter when user taps a tag on a post to display tag preview
      */
     @Override
     public void onTagSelected(String tagName) {
@@ -1169,6 +992,23 @@ public class ReaderPostListFragment extends Fragment
         } else {
             // user isn't previewing a tag, so open in tag preview
             ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
+        }
+    }
+
+    /*
+     * called from adapter when user selects a tag from the tag toolbar
+     */
+    @Override
+    public void onTagChanged(ReaderTag tag) {
+        if (!isCurrentTag(tag)) {
+            Map<String, String> properties = new HashMap<>();
+            properties.put("tag", tag.getTagName());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
+            if (tag.isFreshlyPressed()) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
+            }
+            AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
+            setCurrentTag(tag, true);
         }
     }
 
