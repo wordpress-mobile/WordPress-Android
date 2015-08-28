@@ -584,6 +584,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         loadPosts();
     }
 
+    /*
+     * reload the list of tags show in the tag toolbar
+     */
+    public void reloadTagSpinner() {
+        if (mShowTagToolbar && getItemCount() > 0) {
+            notifyItemChanged(0);
+        }
+    }
+
     public void removePostsInBlog(long blogId) {
         int numRemoved = 0;
         ReaderPostList postsInBlog = mPosts.getPostsInBlog(blogId);

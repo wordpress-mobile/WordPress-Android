@@ -17,7 +17,6 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
@@ -168,9 +167,9 @@ public class ReaderActivityLauncher {
     /*
      * show followed tags & blogs
      */
-    public static void showReaderSubsForResult(Activity activity) {
-        Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        ActivityLauncher.slideInFromRightForResult(activity, intent, RequestCodes.READER_SUBS);
+    public static void showReaderSubs(Context context) {
+        Intent intent = new Intent(context, ReaderSubsActivity.class);
+        context.startActivity(intent);
     }
 
     /*

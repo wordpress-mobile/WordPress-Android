@@ -2,12 +2,10 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +25,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -652,9 +649,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // skip if this is already the current tag and the post adapter is already showing it - this
-        // will happen when the list fragment is restored and the current tag is re-selected in the
-        // toolbar dropdown
+        // skip if this is already the current tag and the post adapter is already showing it
         if (isCurrentTag(tag)
                 && hasPostAdapter()
                 && getPostAdapter().isCurrentTag(tag)) {
@@ -901,18 +896,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void reloadTagSpinner() {
-        // TODO
-    }
-
-    /*
-     * called from host activity after user adds/removes tags
-     */
-    private void doTagsChanged(final String newCurrentTag) {
-        checkCurrentTag();
-        reloadTagSpinner();
-        if (!TextUtils.isEmpty(newCurrentTag)) {
-            setCurrentTag(new ReaderTag(newCurrentTag, ReaderTagType.FOLLOWED), true);
-        }
+        getPostAdapter().reloadTagSpinner();
     }
 
     /*
@@ -1056,34 +1040,6 @@ public class ReaderPostListFragment extends Fragment
             }
         });
         listPopup.show();
-    }
-
-    /*
-     * called from activity to handle reader-related onActivityResult
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            // user just returned from the tags/subs activity
-            case RequestCodes.READER_SUBS:
-                if (data != null) {
-                    boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
-                    boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
-                    // reload tags if they were changed, and set the last tag added as the current one
-                    if (tagsChanged) {
-                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                        doTagsChanged(lastAddedTag);
-                    }
-                    // refresh posts if blogs changed and user is viewing "Blogs I Follow"
-                    if (blogsChanged
-                            && getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                            && hasCurrentTag()
-                            && getCurrentTag().isBlogsIFollow()) {
-                        refreshPosts();
-                    }
-                }
-                break;
-        }
     }
 
     /*

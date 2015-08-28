@@ -10,11 +10,12 @@ import android.widget.Spinner;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 
 /**
- * toolbar at top of ReaderPostAdapter
+ * pseudo-toolbar at top of ReaderPostAdapter
  */
 public class ReaderTagToolbar extends LinearLayout {
 
@@ -24,6 +25,7 @@ public class ReaderTagToolbar extends LinearLayout {
 
     private Spinner mSpinner;
     private ReaderTagSpinnerAdapter mSpinnerAdapter;
+    private View mBtnEditTags;
 
     private ReaderTag mCurrentTag;
     private OnTagChangedListener mOnTagChangedListener;
@@ -46,6 +48,8 @@ public class ReaderTagToolbar extends LinearLayout {
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_tag_toolbar, this);
         mSpinner = (Spinner) view.findViewById(R.id.spinner);
+        mBtnEditTags = view.findViewById(R.id.btn_edit_tags);
+
         if (!isInEditMode()) {
             mSpinner.setAdapter(getSpinnerAdapter());
             mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -57,9 +61,17 @@ public class ReaderTagToolbar extends LinearLayout {
                         mOnTagChangedListener.onTagChanged(tag);
                     }
                 }
+
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                     // nop
+                }
+            });
+
+            mBtnEditTags.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderSubs(v.getContext());
                 }
             });
         }
