@@ -48,8 +48,6 @@ public class DetailListPreference extends ListPreference
                 int id = array.getResourceId(index, -1);
                 if (id != -1) {
                     mDetails = array.getResources().getStringArray(id);
-                } else {
-                    mDetails = null;
                 }
             } else if (index == R.styleable.DetailListPreference_longClickHint) {
                 mHint = array.getString(index);
@@ -57,14 +55,8 @@ public class DetailListPreference extends ListPreference
         }
 
         array.recycle();
-    }
 
-    public DetailListPreference(Context context) {
-        super(context);
-
-        mSelectedIndex = 0;
-        mDetails = null;
-        setLayoutResource(R.layout.detail_list_preference);
+        mStartingIndex = mSelectedIndex = 0;
     }
 
     @Override
@@ -86,6 +78,10 @@ public class DetailListPreference extends ListPreference
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
         builder.setPositiveButton(R.string.ok, this);
         builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
+
+        if (mDetails == null) {
+            mDetails = new String[getEntries().length];
+        }
 
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
         mStartingIndex = mSelectedIndex = findIndexOfValue(getValue());
@@ -163,7 +159,7 @@ public class DetailListPreference extends ListPreference
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         CharSequence[] values = getEntryValues();
-        if (values != null && mSelectedIndex < values.length) {
+        if (values != null && mSelectedIndex < values.length && mSelectedIndex >= 0) {
             String value = values[positiveResult ? mSelectedIndex : mStartingIndex].toString();
             callChangeListener(value);
         }
@@ -222,7 +218,7 @@ public class DetailListPreference extends ListPreference
             TextView mainText = (TextView) convertView.findViewById(R.id.main_text);
             TextView detailText = (TextView) convertView.findViewById(R.id.detail_text);
 
-            if (mainText != null && position < getEntries().length) {
+            if (mainText != null && getEntries() != null && position < getEntries().length) {
                 mainText.setText(getEntries()[position]);
                 mainText.setTypeface(TypefaceCache.getTypeface(getContext(),
                         TypefaceCache.FAMILY_OPEN_SANS,
@@ -230,12 +226,16 @@ public class DetailListPreference extends ListPreference
                         TypefaceCache.VARIATION_NORMAL));
             }
 
-            if (detailText != null && position < mDetails.length) {
-                detailText.setText(mDetails[position]);
-                detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                        TypefaceCache.FAMILY_OPEN_SANS,
-                        Typeface.NORMAL,
-                        TypefaceCache.VARIATION_NORMAL));
+            if (detailText != null) {
+                if (position < mDetails.length && !TextUtils.isEmpty(mDetails[position])) {
+                    detailText.setText(mDetails[position]);
+                    detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
+                            TypefaceCache.FAMILY_OPEN_SANS,
+                            Typeface.NORMAL,
+                            TypefaceCache.VARIATION_NORMAL));
+                } else {
+                    // TODO: center with radio button
+                }
             }
 
             if (radioButton != null) {

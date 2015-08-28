@@ -65,14 +65,22 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private HashMap<String, String> mLanguageCodes = new HashMap<>();
     private Blog mBlog;
+
+    // General settings
     private EditTextPreference mTitlePreference;
     private EditTextPreference mTaglinePreference;
     private EditTextPreference mAddressPreference;
     private DetailListPreference mLanguagePreference;
     private DetailListPreference mPrivacyPreference;
+
+    // Account settings
     private EditTextPreference mUsernamePreference;
     private EditTextPreference mPasswordPreference;
+
+    // Writing settings
     private SwitchPreference mLocationPreference;
+    private DetailListPreference mCategoryPreference;
+    private DetailListPreference mFormatPreference;
 
     // Most recent remote site data. Current local data is used if remote data cannot be fetched.
     private String mRemoteTitle;
@@ -305,10 +313,27 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // Geotagging preference
-        mLocationPreference = (SwitchPreference) findPreference(getString(R.string.pref_key_site_location));
-        if (mLocationPreference != null) {
+        if (null != (mLocationPreference =
+                (SwitchPreference) findPreference(getString(R.string.pref_key_site_location)))) {
             mLocationPreference.setOnPreferenceChangeListener(this);
-            mLocationPreference.setChecked(siteSettingsPreferences().getBoolean(LOCATION_PREF_KEY, false));
+            mLocationPreference.setChecked(siteSettingsPreferences().getBoolean(SiteSettings.LOCATION_PREF_KEY, false));
+        }
+
+
+        // Category preference
+        if (null != (mCategoryPreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_category)))) {
+            mCategoryPreference.setOnPreferenceChangeListener(this);
+            String[] details = new String[Math.max(mCategoryPreference.getEntries().length, 1)];
+            mCategoryPreference.setDetails(details);
+        }
+
+        // Format preference
+        if (null != (mFormatPreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_format)))) {
+            mFormatPreference.setOnPreferenceChangeListener(this);
+            String[] details = new String[Math.max(mFormatPreference.getEntries().length, 1)];
+            mFormatPreference.setDetails(details);
         }
     }
 
