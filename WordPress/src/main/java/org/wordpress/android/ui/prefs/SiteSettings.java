@@ -55,6 +55,7 @@ public class SiteSettings {
         public String language;
         public int languageId;
         public int privacy;
+        public boolean location;
 
         boolean isInLocalTable;
 
@@ -63,12 +64,42 @@ public class SiteSettings {
             else return serializeSelfHostedParams(remote);
         }
 
+        /**
+         * Helper method to create the parameters for the site settings POST request
+         *
+         * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
+         * https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
+         */
         private Map<String, String> serializeDotComParams(SettingsContainer remoteSettings) {
-            return null;
+            Map<String, String> params = new HashMap<>();
+
+            if (!title.equals(remoteSettings.title)) {
+                params.put("blogname", title);
+            }
+            if (!tagline.equals(remoteSettings.tagline)) {
+                params.put("blogdescription", tagline);
+            }
+            if (languageId != remoteSettings.languageId) {
+                params.put("lang_id", Integer.toString(languageId));
+            }
+            if (privacy != remoteSettings.privacy) {
+                params.put("blog_public", Integer.toString(privacy));
+            }
+
+            return params;
         }
 
         private Map<String, String> serializeSelfHostedParams(SettingsContainer remoteSettings) {
-            return null;
+            Map<String, String> params = new HashMap<>();
+
+            if (!title.equals(remoteSettings.title)) {
+                params.put("blog_title", title);
+            }
+            if (!tagline.equals(remoteSettings.tagline)) {
+                params.put("blog_tagline", tagline);
+            }
+
+            return params;
         }
 
         /**
@@ -84,6 +115,7 @@ public class SiteSettings {
             language = other.language;
             languageId = other.languageId;
             privacy = other.privacy;
+            location = other.location;
         }
 
         /**
@@ -146,9 +178,16 @@ public class SiteSettings {
          *  null if successful
          */
         void onSettingsSaved(Exception error, SettingsContainer container);
+
+        /**
+         * Called when a request to validate current credentials has completed.
+         *
+         * @param valid
+         *  true if the current credentials are valid
+         */
+        void onCredentialsValidated(boolean valid);
     }
 
-    private Activity mActivity;
     private Blog mBlog;
     private SettingsContainer mSettings;
     private SettingsContainer mRemoteSettings;
@@ -156,7 +195,6 @@ public class SiteSettings {
     private HashMap<String, String> mLanguageCodes = new HashMap<>();
 
     public SiteSettings(Activity host, Blog blog, SiteSettingsListener listener) {
-        mActivity = host;
         mBlog = blog;
         mListener = listener;
 
@@ -220,6 +258,10 @@ public class SiteSettings {
         return "";
     }
 
+    public boolean getLocation() {
+        return mSettings.location;
+    }
+
     public void setAddress(String address) {
         mSettings.address = address;
     }
@@ -246,6 +288,10 @@ public class SiteSettings {
 
     public void setLanguageId(int languageId) {
         mSettings.languageId = languageId;
+    }
+
+    public void setLocation(boolean location) {
+        mSettings.location = location;
     }
 
     /**

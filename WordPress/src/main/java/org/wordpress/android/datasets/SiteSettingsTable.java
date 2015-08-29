@@ -18,6 +18,7 @@ public final class SiteSettingsTable {
     public static final String TAGLINE_COLUMN_NAME = "tagline";
     public static final String LANGUAGE_COLUMN_NAME = "language";
     public static final String PRIVACY_COLUMN_NAME = "privacy";
+    public static final String LOCATION_COLUMN_NAME = "location";
 
     private static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
@@ -31,6 +32,7 @@ public final class SiteSettingsTable {
             TAGLINE_COLUMN_NAME + " TEXT, " +
             LANGUAGE_COLUMN_NAME + " INTEGER, " +
             PRIVACY_COLUMN_NAME + " INTEGER" +
+            LOCATION_COLUMN_NAME + " BOOLEAN" +
             ");";
 
     public static void createTable(SQLiteDatabase db) {

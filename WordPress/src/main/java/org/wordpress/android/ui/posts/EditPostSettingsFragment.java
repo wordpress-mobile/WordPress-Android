@@ -48,6 +48,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.prefs.SiteSettings;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -610,8 +611,8 @@ public class EditPostSettingsFragment extends Fragment
      */
     private void initLocation(ViewGroup rootView) {
         boolean settingsSupportLocation = getActivity()
-                .getSharedPreferences(SiteSettingsFragment.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE)
-                .getBoolean(SiteSettingsFragment.LOCATION_PREF_KEY, false);
+                .getSharedPreferences(SiteSettings.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE)
+                .getBoolean(SiteSettings.LOCATION_PREF_KEY, false);
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         if (settingsSupportLocation && hasLocationProvider() && mPost.supportsLocation()) {

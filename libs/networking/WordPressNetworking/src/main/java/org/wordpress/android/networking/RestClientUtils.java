@@ -26,6 +26,8 @@ public class RestClientUtils {
     public static final String SITE_TITLE_KEY = "name";
     public static final String SITE_DESC_KEY = "description";
     public static final String SITE_LANGUAGE_KEY = "lang";
+    public static final String SITE_LANGUAGE_ID_KEY = "lang_id";
+    public static final String SITE_PRIVACY_KEY = "blog_public";
     public static final String SITE_URL_KEY = "URL";
 
     private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
