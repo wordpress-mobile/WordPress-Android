@@ -24,7 +24,7 @@ public class ReaderTagMenuAdapter extends BaseAdapter {
     public ReaderTagMenuAdapter(Context context, ReaderTag tag) {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mCurrentTag = tag;
-        mSelectedBackground = new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20));
+        mSelectedBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
         loadTags();
     }
 
