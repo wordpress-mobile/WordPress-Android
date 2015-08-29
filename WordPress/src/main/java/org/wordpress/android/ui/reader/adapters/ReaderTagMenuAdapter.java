@@ -62,9 +62,9 @@ public class ReaderTagMenuAdapter extends BaseAdapter {
 
         holder.textView.setText(tag.getCapitalizedTagName());
         if (isCurrentTag(tag)) {
-            holder.textView.setBackground(mSelectedBackground);
+            holder.textView.setBackgroundDrawable(mSelectedBackground);
         } else {
-            holder.textView.setBackground(null);
+            holder.textView.setBackgroundDrawable(null);
         }
 
         return convertView;
