@@ -1779,7 +1779,7 @@ public class WordPressDB {
             int result = db.update(
                     THEMES_TABLE,
                     values,
-                    "id=?",
+                    Theme.ID + "=?",
                     new String[]{ theme.getId() });
             if (result == 0)
                 returnValue = db.insert(THEMES_TABLE, null, values) > 0;
@@ -1819,11 +1819,11 @@ public class WordPressDB {
         // update any old themes that are set to true to false
         ContentValues values = new ContentValues();
         values.put(Theme.IS_CURRENT, false);
-        db.update(THEMES_TABLE, values, "blogId=?", new String[] { blogId });
+        db.update(THEMES_TABLE, values, Theme.BLOG_ID + "=?", new String[] { blogId });
 
         values = new ContentValues();
         values.put(Theme.IS_CURRENT, true);
-        db.update(THEMES_TABLE, values, "blogId=? AND id=?", new String[] { blogId, id });
+        db.update(THEMES_TABLE, values, Theme.BLOG_ID + "=? AND " + Theme.ID + "=?", new String[] { blogId, id });
     }
 
     public int getThemeCount(String blogId) {
@@ -1838,7 +1838,10 @@ public class WordPressDB {
     }
 
     public Theme getTheme(String blogId, String themeId) {
-        Cursor cursor = db.rawQuery("SELECT id, author, screenshot, authorURI, demoURI, name, stylesheet, price FROM " + THEMES_TABLE + " WHERE blogId=? AND id=?", new String[]{blogId, themeId});
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.AUTHOR, Theme.SCREENSHOT, Theme.AUTHOR_URI, Theme.DEMO_URI, Theme.NAME, Theme.STYLESHEET, Theme.PRICE};
+        String[] selection = {blogId, themeId};
+        Cursor cursor = db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.ID + " id=?", selection, null, null, null);
+
         if (cursor.moveToFirst()) {
             String id = cursor.getString(0);
             String author = cursor.getString(1);
