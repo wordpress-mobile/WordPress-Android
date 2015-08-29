@@ -122,8 +122,18 @@ public class WordPressDB {
     private static final String POSTS_TABLE = "posts";
 
     private static final String THEMES_TABLE = "themes";
-    private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
-            + "id text, author text, screenshot text, author_uri text, demo_uri text, name text, stylesheet text, price text, blogId text, isCurrent boolean default false);";
+    private static final String CREATE_TABLE_THEMES = "create table if not exists themes ("
+            + COLUMN_NAME_ID + " integer primary key autoincrement, "
+            + Theme.ID + " text, "
+            + Theme.AUTHOR + " text, "
+            + Theme.SCREENSHOT + " text, "
+            + Theme.AUTHOR_URI + " text, "
+            + Theme.DEMO_URI + " text, "
+            + Theme.NAME + " text, "
+            + Theme.STYLESHEET + " text, "
+            + Theme.PRICE + " text, "
+            + Theme.BLOG_ID + " text, "
+            + Theme.IS_CURRENT + " boolean default false);";
 
     // categories
     private static final String CREATE_TABLE_CATEGORIES = "create table if not exists cats (id integer primary key autoincrement, "
