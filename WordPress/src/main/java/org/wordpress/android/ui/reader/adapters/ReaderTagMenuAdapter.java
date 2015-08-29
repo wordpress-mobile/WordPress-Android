@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +18,13 @@ import org.wordpress.android.models.ReaderTagList;
 public class ReaderTagMenuAdapter extends BaseAdapter {
     private final ReaderTagList mTags = new ReaderTagList();
     private final LayoutInflater mInflater;
+    private final ReaderTag mCurrentTag;
+    private final Drawable mSelectedBackground;
 
-    public ReaderTagMenuAdapter(Context context) {
+    public ReaderTagMenuAdapter(Context context, ReaderTag tag) {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mCurrentTag = tag;
+        mSelectedBackground = new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20));
         loadTags();
     }
 
@@ -55,7 +61,17 @@ public class ReaderTagMenuAdapter extends BaseAdapter {
         }
 
         holder.textView.setText(tag.getCapitalizedTagName());
+        if (isCurrentTag(tag)) {
+            holder.textView.setBackground(mSelectedBackground);
+        } else {
+            holder.textView.setBackground(null);
+        }
+
         return convertView;
+    }
+
+    private boolean isCurrentTag(ReaderTag tag) {
+        return tag != null && ReaderTag.isSameTag(tag, mCurrentTag);
     }
 
     private class TagViewHolder {

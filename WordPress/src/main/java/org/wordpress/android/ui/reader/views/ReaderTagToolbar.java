@@ -18,6 +18,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagMenuAdapter;
  */
 public class ReaderTagToolbar extends LinearLayout {
 
+    private ReaderTag mCurrentTag;
+
     public interface OnTagChangedListener {
         void onTagChanged(ReaderTag tag);
     }
@@ -67,6 +69,7 @@ public class ReaderTagToolbar extends LinearLayout {
     }
 
     public void setCurrentTag(ReaderTag tag) {
+        mCurrentTag = tag;
         mTextTagName.setText(tag != null ? tag.getCapitalizedTagName() : "");
     }
 
@@ -80,7 +83,7 @@ public class ReaderTagToolbar extends LinearLayout {
 
         listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
         listPopup.setModal(true);
-        listPopup.setAdapter(new ReaderTagMenuAdapter(context));
+        listPopup.setAdapter(new ReaderTagMenuAdapter(context, mCurrentTag));
         listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
