@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.adapters.ReaderTagMenuAdapter;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 /**
  * pseudo-toolbar at top of ReaderPostAdapter which enables user to change tags
@@ -61,6 +62,8 @@ public class ReaderTagToolbar extends LinearLayout {
                     ReaderActivityLauncher.showReaderSubs(v.getContext());
                 }
             });
+
+            ReaderUtils.setBackgroundToRoundRipple(btnEditTags);
         }
     }
 

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -141,9 +140,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
                     layoutPostHeader.getPaddingBottom());
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                imgMore.setBackgroundResource(R.drawable.ripple_oval);
-            }
+            ReaderUtils.setBackgroundToRoundRipple(imgMore);
         }
     }
 

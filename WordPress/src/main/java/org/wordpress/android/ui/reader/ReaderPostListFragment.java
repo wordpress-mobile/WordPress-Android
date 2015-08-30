@@ -330,9 +330,14 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
 
         Context context = container.getContext();
+
+        // add the item decoration (divivers) to the recycler, skipping the first item if the first
+        // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
+        // having the tag toolbar take up more vertical space than necessary
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+        boolean skipFirstItem = (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, skipFirstItem));
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
