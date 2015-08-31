@@ -8,7 +8,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.prefs.SiteSettings;
 
 public final class SiteSettingsTable {
-    public static final String SETTINGS_TABLE_NAME = "site-settings";
+    public static final String SETTINGS_TABLE_NAME = "site_settings";
 
     public static final String ID_COLUMN_NAME = "id";
     public static final String ADDRESS_COLUMN_NAME = "address";
@@ -31,7 +31,7 @@ public final class SiteSettingsTable {
             TITLE_COLUMN_NAME + " TEXT, " +
             TAGLINE_COLUMN_NAME + " TEXT, " +
             LANGUAGE_COLUMN_NAME + " INTEGER, " +
-            PRIVACY_COLUMN_NAME + " INTEGER" +
+            PRIVACY_COLUMN_NAME + " INTEGER, " +
             LOCATION_COLUMN_NAME + " BOOLEAN" +
             ");";
 
