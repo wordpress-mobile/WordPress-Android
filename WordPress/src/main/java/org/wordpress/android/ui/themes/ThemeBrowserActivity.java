@@ -101,7 +101,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
         String siteId = getBlogId();
         mFetchingThemes = true;
-        WordPress.getRestClientUtilsV1_2().getThemes(siteId, 1000, 0, new Listener() {
+        WordPress.getRestClientUtilsV1_2().getThemes(siteId, 1000, mThemeBrowserFragment.mPage, new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         new FetchThemesTask().execute(response);

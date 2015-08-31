@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,7 +35,7 @@ import org.wordpress.android.widgets.HeaderGridView;
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener {
+public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
     public interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
         void onPreviewSelected(String themeId);
@@ -45,6 +46,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     }
 
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
+    protected static final String BUNDLE_PAGE = "BUNDLE_PAGE";
 
     protected String mCurrentThemeId;
     protected HeaderGridView mGridView;
@@ -54,6 +56,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     protected ThemeBrowserAdapter mAdapter;
     protected Spinner mSpinner;
     protected ThemeBrowserFragmentCallback mCallback;
+    protected int mPage = 1;
     protected int mSavedScrollPosition = 0;
     private boolean mShouldRefreshOnStart;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -104,6 +107,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         super.onSaveInstanceState(outState);
         if (mGridView != null) {
             outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
+            outState.putInt(BUNDLE_PAGE, mPage);
         }
     }
 
@@ -135,6 +139,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mGridView = (HeaderGridView) view.findViewById(R.id.theme_listview);
         addHeaderViews(inflater);
         mGridView.setRecyclerListener(this);
+        mGridView.setOnScrollListener(this);
     }
 
     private void addHeaderViews(LayoutInflater inflater) {
@@ -196,6 +201,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mSavedScrollPosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSTION, 0);
+            mPage = savedInstanceState.getInt(BUNDLE_PAGE, 1);
         }
     }
 
@@ -246,6 +252,11 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         setEmptyViewVisible(mAdapter.getCount() == 0);
     }
 
+    private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
+        int numberOfColumns = mGridView.getNumColumns();
+        return lastVisibleCount >= totalItemCount - numberOfColumns;
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position > 1) {
@@ -258,7 +269,6 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     @Override
     public void onMovedToScrapHeap(View view) {
         // cancel image fetch requests if the view has been moved to recycler.
-
         NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeBrowserAdapter class
@@ -290,5 +300,18 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount)) {
+            mPage++;
+            ((ThemeBrowserActivity) getActivity()).fetchThemes();
+        }
     }
 }

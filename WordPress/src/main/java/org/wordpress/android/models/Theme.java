@@ -16,6 +16,10 @@ public class Theme {
     public static final String BLOG_ID = "blogId";
     public static final String IS_CURRENT = "isCurrent";
 
+    public static final String PREVIEW_URL = "preview_url";
+    public static final String COST = "cost";
+    public static final String DISPLAY = "display";
+
     private String mId;
     private String mAuthor;
     private String mScreenshot;
@@ -35,21 +39,20 @@ public class Theme {
             String author = "";
             String screenshot = object.getString(SCREENSHOT);
             String authorURI = "";
-            String demoURI = object.getString("preview_url");
+            String demoURI = object.getString(PREVIEW_URL);
             String name = object.getString(NAME);
             String stylesheet = "";
             String price;
             try {
-                JSONObject cost = object.getJSONObject("cost");
-                price = object.getString("display");
+                JSONObject cost = object.getJSONObject(COST);
+                price = cost.getString(DISPLAY);
             } catch (JSONException e) {
                 price = "";
             }
 
             String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-            boolean isCurrent = false;
 
-            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, false);
         }
     }
 
@@ -72,9 +75,8 @@ public class Theme {
             }
 
             String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-            boolean isCurrent = false;
 
-            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, false);
         }
     }
 
