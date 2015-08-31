@@ -1,17 +1,17 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven { url 'https://maven.fabric.io/repo' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.3.1'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/repo' }
 }
@@ -21,23 +21,21 @@ apply plugin: 'android-cq'
 apply plugin: 'io.fabric'
 
 android {
-    packagingOptions {
-        exclude "META-INF/LICENSE.txt"
-        exclude "META-INF/NOTICE.txt"
-    }
+    useLibrary 'org.apache.http.legacy'
+
     dexOptions {
         jumboMode = true
     }
 
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         applicationId "org.wordpress.android"
         versionName "4.4-rc1"
         versionCode 197
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
     }
@@ -75,20 +73,17 @@ dependencies {
     }
     compile 'com.google.code.gson:gson:2.2.2'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-    compile 'com.android.support:support-v13:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:cardview-v7:22.2.1'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
-    compile 'com.android.support:design:22.2.1'
-    compile 'com.github.chrisbanes.photoview:library:1.2.3'
+    compile 'com.android.support:support-v13:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:cardview-v7:23.0.0'
+    compile 'com.android.support:recyclerview-v7:23.0.0'
+    compile 'com.android.support:design:23.0.0'
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-aar:3.8.0'
-    compile 'commons-lang:commons-lang:2.6'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.2'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
-
-    compile 'com.mcxiaoke.volley:library:1.0.16'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
