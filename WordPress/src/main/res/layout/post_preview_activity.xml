@@ -22,6 +22,7 @@
         android:paddingLeft="@dimen/content_margin"
         android:paddingRight="@dimen/content_margin"
         android:visibility="gone"
+        android:background="@color/snackbar_background_color"
         tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
