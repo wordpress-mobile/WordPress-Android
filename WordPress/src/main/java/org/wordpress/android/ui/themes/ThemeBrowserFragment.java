@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,7 +35,26 @@ import org.wordpress.android.widgets.HeaderGridView;
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener {
+public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount)) {
+            mPage++;
+            ((ThemeBrowserActivity) getActivity()).fetchThemes();
+        }
+    }
+
+    private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
+        int numberOfColumns = mGridView.getNumColumns();
+        return lastVisibleCount >= totalItemCount - numberOfColumns;
+    }
+
     public interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
         void onPreviewSelected(String themeId);
@@ -46,6 +66,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
+
     protected HeaderGridView mGridView;
     protected TextView mEmptyView;
     protected TextView mNoResultText;
@@ -53,6 +74,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     protected ThemeBrowserAdapter mAdapter;
     protected Spinner mSpinner;
     protected ThemeBrowserFragmentCallback mCallback;
+    protected int mPage = 1;
     protected int mSavedScrollPosition = 0;
     private boolean mShouldRefreshOnStart;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -134,6 +156,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mGridView = (HeaderGridView) view.findViewById(R.id.theme_listview);
         addHeaderViews(inflater);
         mGridView.setRecyclerListener(this);
+        mGridView.setOnScrollListener(this);
     }
 
     private void addHeaderViews(LayoutInflater inflater) {
