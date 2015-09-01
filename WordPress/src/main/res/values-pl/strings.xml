@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="show">Pokaż</string>
+	<string name="hide">Ukryj</string>
+	<string name="select_all">Wybierz wszystko</string>
 	<string name="select_from_new_picker">Wielokrotny wybór nowym narzędziem</string>
 	<string name="no_media_sources">Nie udało się załadować mediów</string>
 	<string name="loading_blog_videos">Ładowanie filmów</string>
@@ -198,9 +201,6 @@
 	<string name="preference_send_usage_stats_summary">Automatycznie wysyłaj statystyki użytkowania, by pomóc nam ulepszać WordPressa dla Androida</string>
 	<string name="preference_send_usage_stats">Wysyłaj statystyki</string>
 	<string name="preference_privacy">Prywatność</string>
-	<string name="reader_title_reblog">Rebloguj wpis</string>
-	<string name="reader_hint_reblog_comment">Dodaj swoją opinię (opcjonalne) </string>
-	<string name="reader_label_reblog_to">Rebloguj na</string>
 	<string name="update_verb">Zaktualizuj</string>
 	<string name="schedule_verb">Zaplanuj</string>
 	<string name="reader_title_tag_preview">Podgląd tagu</string>
@@ -224,7 +224,6 @@
 	<string name="forums">Fora</string>
 	<string name="help_center">Centrum pomocy</string>
 	<string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>
-	<string name="reader_label_reblog_empty">Nie masz żadnych widocznych blogów na WordPress.com, na których można opublikować ten wpis</string>
 	<string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
 	<string name="out_of_memory">Brak pamięci</string>
 	<string name="theme_auth_error_message">Upewnij się, że masz uprawnienia do zmiany motywu</string>
@@ -297,7 +296,6 @@
 	<string name="blog_name_invalid">Nieprawidłowy adres strony</string>
 	<string name="blog_name_must_include_letters">Adres strony musi zawierać przynajmniej jedną literę (a-z)</string>
 	<string name="email_reserved">Ten adres email został już użyty. Sprawdź czy nie masz w skrzynce odbiorczej maila aktywacyjnego. Jeśli go nie aktywujesz możesz spróbować znów za klika dni.</string>
-	<string name="reader_toast_err_reblog_requires_blog">Wybierz blog</string>
 	<string name="required_field">Wymagane pole</string>
 	<string name="email_hint">Adres email</string>
 	<string name="username_email">Nazwa użytkownika lub email</string>
@@ -383,9 +381,7 @@
 	<string name="dlg_confirm_trash_comments">Wyrzucić do kosza?</string>
 	<string name="dlg_unapproving_comments">Cofanie zatwierdzenia</string>
 	<string name="preview_page">Podejrzyj stronę</string>
-	<string name="page_deleted">Strona została usunięta</string>
 	<string name="preview_post">Podejrzyj wpis</string>
-	<string name="post_deleted">Wpis został usunięty</string>
 	<string name="comment_added">Komentarz został dodany</string>
 	<string name="post_not_published">Wpis nie jest opublikowany</string>
 	<string name="location_not_found">Nieznana lokalizacja</string>
@@ -460,9 +456,6 @@
 	<string name="reader_toast_err_tag_exists">Śledzisz już ten tag</string>
 	<string name="reader_toast_err_tag_invalid">To nie jest poprawny tag</string>
 	<string name="reader_toast_err_share_intent">Nie udało się udostępnić</string>
-	<string name="reader_toast_reblog_success">Wpis został przedrukowany</string>
-	<string name="reader_toast_err_reblog_failed">Nie udało się przedrukować wpisu</string>
-	<string name="reader_toast_err_already_reblogged">Już przedrukowałeś ten wpis</string>
 	<string name="create_account_wpcom">Stwórz konto na WordPress.com</string>
 	<string name="themes">Motywy</string>
 	<string name="all">Wszystkie</string>

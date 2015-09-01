@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Sin conexión</string>
+	<string name="page_trashed">Página enviada a la papelera</string>
+	<string name="post_deleted">Entrada borrada</string>
+	<string name="post_trashed">Entrada enviada a la papelera</string>
+	<string name="stats_no_activity_this_period">Sin actividad en este periodo</string>
+	<string name="trashed">En la papelera</string>
+	<string name="button_back">Atrás</string>
+	<string name="page_deleted">Página borrada</string>
+	<string name="button_more">Más</string>
+	<string name="button_stats">Estadísticas</string>
+	<string name="button_trash">Papelera</string>
+	<string name="button_preview">Vista previa</string>
+	<string name="button_view">Ver</string>
+	<string name="button_edit">Editar</string>
+	<string name="button_publish">Publicar</string>
+	<string name="button_delete">Borrar</string>
+	<string name="my_site_no_sites_view_subtitle">¿Quieres añadir uno?</string>
+	<string name="my_site_no_sites_view_title">Aún no tienes ningún sitio WordPress.</string>
+	<string name="my_site_no_sites_view_drake">Ilustración</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este blog</string>
+	<string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este blog</string>
+	<string name="undo">Deshacer</string>
 	<string name="tabbar_accessibility_label_me">Yo mismo</string>
 	<string name="tabbar_accessibility_label_my_site">Mi sitio</string>
 	<string name="passcodelock_prompt_message">Escribe tu PIN</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Privacidad</string>
 	<string name="preference_send_usage_stats">Enviar estadísticas</string>
 	<string name="preference_send_usage_stats_summary">Enviar automáticamente estadísticas de uso para ayudarnos a mejorar WordPress para Android</string>
-	<string name="reader_title_reblog">Rebloguear entrada</string>
-	<string name="reader_hint_reblog_comment">Añade lo que piensas (opcional)</string>
-	<string name="reader_label_reblog_to">Rebloguear a</string>
 	<string name="update_verb">Actualizar</string>
 	<string name="schedule_verb">Programación</string>
 	<string name="reader_title_subs">Etiquetas y blogs</string>
@@ -274,7 +293,6 @@
 	<string name="ssl_certificate_error">Certificado SSL no válido</string>
 	<string name="forgot_password">¿Has olvidado la contraseña?</string>
 	<string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
-	<string name="reader_label_reblog_empty">No tienes blogs en WordPress.com donde se pueda reblogearse ésto</string>
 	<string name="passcode_wrong_passcode">PIN erróneo</string>
 	<string name="invalid_password_message">La contraseña debe contener al menos 4 caracteres</string>
 	<string name="invalid_username_too_short">Nombre de usuario debe ser superior a 4 caracteres</string>
@@ -370,12 +388,10 @@
 	<string name="saving_changes">Guardando cambios</string>
 	<string name="delete_draft">Eliminar borrador</string>
 	<string name="preview_page">Vista previa de página</string>
-	<string name="page_deleted">Página eliminada</string>
 	<string name="preview_post">Vista previa de entrada</string>
 	<string name="share_action_post">Nueva entrada</string>
 	<string name="share_action_media">Librería multimedia</string>
 	<string name="media_gallery_num_columns">Número de columnas</string>
-	<string name="post_deleted">Entrada eliminada</string>
 	<string name="new_post">Nueva entrada</string>
 	<string name="account_details">Detalles de la cuenta</string>
 	<string name="add_new_category">Añadir nueva categoría</string>
@@ -426,7 +442,6 @@
 	<string name="content_required">Comentario obligatorio</string>
 	<string name="toast_comment_unedited">El comentario no ha cambiado</string>
 	<string name="jetpack_message_not_admin">Se necesita el plugin Jetpack para tener estadísticas. Contacta con el administrador del sitio para activarlo.</string>
-	<string name="reader_toast_err_reblog_requires_blog">Selecciona un blog</string>
 	<string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a-z)</string>
 	<string name="location_not_found">Localización desconocida</string>
 	<string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>
@@ -496,9 +511,6 @@
 	<string name="reader_toast_err_view_image">Imposible ver la imágen</string>
 	<string name="reader_toast_err_url_intent">Imposible abrir %s</string>
 	<string name="nux_tutorial_get_started_title">¡Empezar!</string>
-	<string name="reader_toast_reblog_success">La entrada ha sido reblogueada</string>
-	<string name="reader_toast_err_reblog_failed">No se pudo rebloguear esta entrada </string>
-	<string name="reader_toast_err_already_reblogged">Ya has reblogueado esta entrada </string>
 	<string name="reader_toast_err_tag_exists">Ya estás siguiendo esta etiqueta</string>
 	<string name="reader_label_removed_tag">Eliminado %s</string>
 	<string name="media_add_new_media_gallery">Crear galería</string>
@@ -676,6 +688,12 @@
 		<item>Izquierda</item>
 		<item>Centro</item>
 		<item>Derecha</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Publicados</item>
+		<item>Borradores</item>
+		<item>Programados</item>
+		<item>En la papelera</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Minientrada</item>

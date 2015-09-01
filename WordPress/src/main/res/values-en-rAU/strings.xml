@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">No connection</string>
+	<string name="button_delete">Delete</string>
+	<string name="button_publish">Publish</string>
+	<string name="button_view">View</string>
+	<string name="button_edit">Edit</string>
+	<string name="button_trash">Trash</string>
+	<string name="button_preview">Preview</string>
+	<string name="button_more">More</string>
+	<string name="button_stats">Stats</string>
+	<string name="trashed">Trashed</string>
+	<string name="button_back">Back</string>
+	<string name="page_deleted">Page deleted</string>
+	<string name="stats_no_activity_this_period">No activity this period</string>
+	<string name="post_trashed">Post sent to trash</string>
+	<string name="post_deleted">Post deleted</string>
+	<string name="page_trashed">Page sent to trash</string>
+	<string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
+	<string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
+	<string name="my_site_no_sites_view_drake">Illustration</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">You are not authorised to access this blog</string>
+	<string name="reader_toast_err_follow_blog_not_found">This blog could not be found</string>
+	<string name="undo">Undo</string>
 	<string name="tabbar_accessibility_label_my_site">My Site</string>
 	<string name="tabbar_accessibility_label_me">Me</string>
 	<string name="passcodelock_prompt_message">Enter your PIN</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Privacy</string>
 	<string name="preference_send_usage_stats">Send statistics</string>
 	<string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
-	<string name="reader_title_reblog">Reblog Post</string>
-	<string name="reader_hint_reblog_comment">Add your thoughts (optional)</string>
-	<string name="reader_label_reblog_to">Reblog to</string>
 	<string name="update_verb">Update</string>
 	<string name="schedule_verb">Schedule</string>
 	<string name="reader_title_blog_preview">Preview Blog</string>
@@ -268,7 +287,6 @@
 	<string name="saving">Saving…</string>
 	<string name="media_empty_list">No media</string>
 	<string name="ptr_tip_message">Tip: Pull down to refresh</string>
-	<string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
 	<string name="help">Help</string>
 	<string name="forgot_password">Lost your password?</string>
 	<string name="forums">Forums</string>
@@ -400,9 +418,7 @@
 	<string name="toast_comment_unedited">Comment hasn\'t changed</string>
 	<string name="delete_draft">Delete draft</string>
 	<string name="preview_page">Preview page</string>
-	<string name="page_deleted">Page deleted successfully</string>
 	<string name="preview_post">Preview post</string>
-	<string name="post_deleted">Post deleted successfully</string>
 	<string name="comment_added">Comment added successfully</string>
 	<string name="post_not_published">Post status isn\'t published</string>
 	<string name="page_not_published">Page status isn\'t published</string>
@@ -434,7 +450,6 @@
 	<string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
 	<string name="reader_title_applog">Application log</string>
 	<string name="reader_share_link">Share link</string>
-	<string name="reader_toast_err_reblog_requires_blog">Select a blog</string>
 	<string name="reader_toast_err_add_tag">Unable to add this tag</string>
 	<string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
 	<string name="required_field">Required field</string>
@@ -501,10 +516,7 @@
 	<string name="reader_label_removed_tag">Removed %s</string>
 	<string name="reader_likes_one">One person likes this</string>
 	<string name="reader_likes_only_you">You like this</string>
-	<string name="reader_toast_reblog_success">Post has been reblogged</string>
 	<string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
-	<string name="reader_toast_err_reblog_failed">Couldn\'t reblog this post</string>
-	<string name="reader_toast_err_already_reblogged">You already reblogged this post</string>
 	<string name="reader_toast_err_tag_exists">You already follow this tag</string>
 	<string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
 	<string name="reader_toast_err_share_intent">Unable to share</string>
@@ -676,6 +688,12 @@
 		<item>Left</item>
 		<item>Centre</item>
 		<item>Right</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Published</item>
+		<item>Drafts</item>
+		<item>Scheduled</item>
+		<item>Trashed</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Aside</item>
