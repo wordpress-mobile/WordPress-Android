@@ -4,7 +4,10 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/theme_grid_card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
+    android:focusableInTouchMode="false" >
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
