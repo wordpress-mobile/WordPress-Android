@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">沒有連線</string>
+	<string name="page_trashed">頁面已移至垃圾桶</string>
+	<string name="post_deleted">文章已刪除</string>
+	<string name="post_trashed">文章已移至垃圾桶</string>
+	<string name="stats_no_activity_this_period">此期間沒有任何活動</string>
+	<string name="trashed">已移至垃圾桶</string>
+	<string name="button_back">返回</string>
+	<string name="page_deleted">頁面已刪除</string>
+	<string name="button_more">更多</string>
+	<string name="button_stats">統計</string>
+	<string name="button_trash">垃圾桶</string>
+	<string name="button_preview">預覽</string>
+	<string name="button_view">檢視</string>
+	<string name="button_edit">編輯</string>
+	<string name="button_publish">發表</string>
+	<string name="button_delete">刪除</string>
+	<string name="my_site_no_sites_view_subtitle">你希望加入一個嗎?</string>
+	<string name="my_site_no_sites_view_title">你還沒有任何 WordPress 網站。</string>
+	<string name="my_site_no_sites_view_drake">插畫</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">你沒有存取此網誌的權限</string>
+	<string name="reader_toast_err_follow_blog_not_found">無法找到這個部落格</string>
+	<string name="undo">復原</string>
 	<string name="tabbar_accessibility_label_my_site">我的網站</string>
 	<string name="tabbar_accessibility_label_me">我</string>
 	<string name="passcodelock_prompt_message">輸入 PIN 碼</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">隱私</string>
 	<string name="preference_send_usage_stats">傳送統計資料</string>
 	<string name="preference_send_usage_stats_summary">自動傳送使用統計資料，協助我們改善 Android 版 WordPress</string>
-	<string name="reader_title_reblog">轉發文章</string>
-	<string name="reader_hint_reblog_comment">新增你的想法 (選填)</string>
-	<string name="reader_label_reblog_to">轉發至</string>
 	<string name="update_verb">更新</string>
 	<string name="schedule_verb">排程</string>
 	<string name="reader_title_blog_preview">預覽網誌</string>
@@ -268,7 +287,6 @@
 	<string name="saving">儲存中…</string>
 	<string name="media_empty_list">沒有媒體</string>
 	<string name="ptr_tip_message">秘訣：下拉即可重新整理</string>
-	<string name="reader_label_reblog_empty">你沒有能夠轉發此文章的可見 WordPress.com 目標網誌</string>
 	<string name="help">說明</string>
 	<string name="forgot_password">忘記密碼？</string>
 	<string name="forums">論壇</string>
@@ -400,9 +418,7 @@
 	<string name="toast_comment_unedited">回應尚未變更</string>
 	<string name="delete_draft">刪除草稿</string>
 	<string name="preview_page">預覽頁面</string>
-	<string name="page_deleted">頁面已成功刪除</string>
 	<string name="preview_post">預覽文章</string>
-	<string name="post_deleted">文章已成功刪除</string>
 	<string name="comment_added">回應已成功新增</string>
 	<string name="post_not_published">文章狀態未發佈</string>
 	<string name="page_not_published">頁面狀態未發佈</string>
@@ -434,7 +450,6 @@
 	<string name="jetpack_message_not_admin">統計需要 Jetpack 外掛程式。請聯絡網站管理員。</string>
 	<string name="reader_title_applog">應用程式記錄檔</string>
 	<string name="reader_share_link">分享連結</string>
-	<string name="reader_toast_err_reblog_requires_blog">選取網誌</string>
 	<string name="reader_toast_err_add_tag">無法新增此標籤</string>
 	<string name="reader_toast_err_remove_tag">無法移除此標籤</string>
 	<string name="required_field">必填欄位</string>
@@ -496,9 +511,6 @@
 	<string name="reader_hint_comment_on_comment">回應該迴響</string>
 	<string name="reader_label_added_tag">新增 %s</string>
 	<string name="reader_label_removed_tag">移除 %s</string>
-	<string name="reader_toast_reblog_success">文章已被轉載</string>
-	<string name="reader_toast_err_reblog_failed">無法轉載該文章</string>
-	<string name="reader_toast_err_already_reblogged">你已經轉載該文章</string>
 	<string name="reader_menu_tags">標籤</string>
 	<string name="reader_btn_share">分享</string>
 	<string name="reader_btn_follow">追蹤</string>
@@ -676,6 +688,12 @@
 		<item>靠左</item>
 		<item>置中</item>
 		<item>靠右</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>已發表</item>
+		<item>草稿</item>
+		<item>已排程</item>
+		<item>已移至垃圾桶</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>註記</item>

@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="loading_blog_images">छवियाँ लाई जा रही है</string>
+	<string name="stats_generic_error">आवश्यक सांख्यिकी लोड करने में असफल</string>
+	<string name="error_loading_videos">वीडियो लाने में असमर्थ</string>
+	<string name="no_media_sources">मीडिया लाने में असफल</string>
+	<string name="error_loading_blog_videos">वीडियो लाने में असमर्थ</string>
+	<string name="error_loading_images">छवियाँ लाने में असमर्थ</string>
+	<string name="error_loading_blog_images">छवियाँ लाने में असमर्थ</string>
+	<string name="no_blog_videos">कोई वीडियो नहीं</string>
+	<string name="no_device_images">कोई चित्र नहीं</string>
+	<string name="no_blog_images">कोई चित्र नहीं</string>
+	<string name="no_device_videos">कोई वीडियो नहीं\n</string>
+	<string name="loading_blog_videos">वीडियोलाये जा रहे है</string>
+	<string name="loading_videos">वीडियो लोड हो रहे है</string>
+	<string name="loading_images">छवियाँ लोड हो रही है</string>
 	<string name="reader_menu_block_blog">इस ब्लॉग को ब्लॉक करे</string>
 	<string name="reader_toast_err_block_blog">इस ब्लॉग को ब्लॉक करने में असमर्थ</string>
 	<string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
@@ -19,9 +33,6 @@
 	<string name="preference_privacy">गोपनीयता</string>
 	<string name="preference_send_usage_stats">आंकड़े भेजें</string>
 	<string name="preference_send_usage_stats_summary">स्वचालित रूप से उपयोग के आंकड़े भेज कर हमें एंड्रॉयड के लिए वर्डप्रेस को बेहतर बनाने में मदद करे\n\n</string>
-	<string name="reader_hint_reblog_comment">अपने विचारों को जोड़ें (वैकल्पिक)</string>
-	<string name="reader_title_reblog">पोस्ट को फिर से ब्लॉग करे</string>
-	<string name="reader_label_reblog_to">फिर से ब्लॉग करे</string>
 	<string name="update_verb">अपडेट करे</string>
 	<string name="schedule_verb">निर्धारित करे</string>
 	<string name="reader_label_followed_blog">अनुसरण किये गए ब्लॉग</string>
@@ -45,7 +56,6 @@
 	<string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
 	<string name="forums">फोरम</string>
 	<string name="forgot_password">आपका पासवर्ड खो गया?</string>
-	<string name="reader_label_reblog_empty">इस पोस्ट को फिर से ब्लॉग करने के लिए आपके पास को भी प्रत्यक्ष वर्डप्रेस डॉट कॉम ब्लॉग नहीं है </string>
 	<string name="ssl_certificate_ask_trust">आप आमतौर पर समस्याओं के बिना इस साइट से कनेक्ट करते हैं, तो यह त्रुटि किसी साइट को प्रतिरूपित करने की कोशिश कर रहा है कि अर्थ हो सकता है, और यदि आप जारी नहीं किया जाना चाहिए. क्या आप फिर भी प्रमाण पत्र पर विश्वास करना चाहेंगे?</string>
 	<string name="out_of_memory">डिवाइस की मेमोरी समाप्त</string>
 	<string name="blog_name_required">साइट का पता दर्ज करें</string>
@@ -53,6 +63,7 @@
 	<string name="email_invalid">मान्य ईमेल पता दर्ज करें</string>
 	<string name="error_generic">एक त्रुटि हुई</string>
 	<string name="adding_cat_success">श्रेणी सफलतापूर्वक जोड़ा गया</string>
+	<string name="could_not_remove_account">ब्लॉग हटाया नहीं जा सका</string>
 	<string name="error_downloading_image">छवि डाउनलोड करते समय त्रुटि </string>
 	<string name="comments_empty_list">कोई टिप्पणी नहीं</string>
 	<string name="stats_empty_comments">अभी तक कोई टिप्पणी नहीं</string>
@@ -148,11 +159,9 @@
 	<string name="share_action_post">नया पोस्ट</string>
 	<string name="new_post">नया पोस्ट</string>
 	<string name="open_source_licenses">मुक्त स्रोत लाइसेंस</string>
-	<string name="page_deleted">पृष्ठ सफलतापूर्वक हटा दिया गया</string>
 	<string name="page_settings">पृष्ठ सेटिंग्स</string>
 	<string name="comment_status_unapproved">विचाराधीन</string>
 	<string name="pending_review">समीक्षा विचाराधीन है</string>
-	<string name="post_deleted">पोस्ट सफलतापूर्वक हटा दिया गया</string>
 	<string name="post_format">पोस्ट प्रारूप</string>
 	<string name="post_settings">पोस्ट सेटिंग्स</string>
 	<string name="post_not_published">पोस्ट की स्थिति प्रकाशित नहीं है</string>
@@ -182,7 +191,6 @@
 	<string name="dlg_approving_comments">स्वीकृत किया जा रहा</string>
 	<string name="connection_error">कनेक्शन त्रुटि</string>
 	<string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
-	<string name="reader_toast_err_reblog_requires_blog">एक ब्लॉग को चुने </string>
 	<string name="select_categories">श्रेणियों को चुने</string>
 	<string name="share_action_media">मीडिया संग्रह</string>
 	<string name="required_field">आवश्यक फ़ील्ड</string>
@@ -215,6 +223,8 @@
 	<string name="http_credentials">HTTP क्रेडेंशियल्स (वैकल्पिक)</string>
 	<string name="email_cant_be_used_to_signup">आप पंजीकरण करने के लिए कि उस ईमेल पते का उपयोग नहीं कर सकते हैं. हमें उनके साथ समस्या हो रही है क्योंकि वे  हमारे ईमेल को ब्लॉक कर रहे है. एक अन्य ईमेल प्रदाता का प्रयोग करें.</string>
 	<string name="email_reserved">यह ईमेल पता पहले से ही इस्तेमाल में है. सक्रियण ईमेल के लिए अपने इनबॉक्स की जाँच करें. यदि आप सक्रिय नहीं करेंगे, तो आप कुछ दिनों में फिर से कोशिश कर सकते हैं.</string>
+	<string name="remove_account">ब्लॉग हटाये</string>
+	<string name="blog_removed_successfully">ब्लॉग सफलतापूर्वक हटा दिया गया</string>
 	<string name="deleting_page">पृष्ठ हटाया जा रहा है</string>
 	<string name="deleting_post">पोस्ट हटाया जा रहा है</string>
 	<string name="share_link">कड़ी साझा करे</string>
@@ -257,7 +267,6 @@
 	<string name="jetpack_not_found">जेटपैक प्लगइन नहीं मिला</string>
 	<string name="reader_timespan_now">अब</string>
 	<string name="reader_likes_one">एक व्यक्ति ने पसंद किया</string>
-	<string name="reader_toast_reblog_success">पोस्ट पुनः पोस्ट किया गया है</string>
 	<string name="reader_btn_share">साझा करे</string>
 	<string name="reader_menu_tags">टैग्स</string>
 	<string name="reader_likes_only_you">आपने इसे पसंद किया</string>
@@ -269,8 +278,6 @@
 	<string name="reader_toast_err_share_intent">साझा करने में असमर्थ</string>
 	<string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>
 	<string name="media_add_popup_title">मीडिया संग्रह में जोड़े</string>
-	<string name="reader_toast_err_reblog_failed">इस पोस्ट को फिर से ब्लॉग नहीं कर सके</string>
-	<string name="reader_toast_err_already_reblogged">आपने पहले ही इस पोस्ट को ब्लॉग कर दिया है </string>
 	<string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
 	<string name="select_from_media_library">मीडिया लाइब्रेरी से चुने </string>
 	<string name="reader_share_subject">%s द्वारा साझा किया गया</string>

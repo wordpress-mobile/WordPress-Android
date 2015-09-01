@@ -43,7 +43,6 @@
 	<string name="preference_privacy">Ιδιωτικότητα </string>
 	<string name="preference_send_usage_stats">Αποστολή στατιστικών</string>
 	<string name="preference_send_usage_stats_summary">Αυτόματη αποστολή στατιστικών στοιχείων χρήσης ώστε να μας βοηθήσετε να βελτιώσουμε το WordPress για το Android</string>
-	<string name="reader_hint_reblog_comment">Προσθέστε τις σκέψεις σας (προαιρετικό)</string>
 	<string name="reader_title_blog_preview">Προεπισκόπηση Ιστολογίου</string>
 	<string name="saving">Αποθήκευση...</string>
 	<string name="help_center">Κέντρο βοήθειας</string>
@@ -108,7 +107,6 @@
 	<string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο</string>
 	<string name="reader_likes_one">Σ\'ένα άτομο άρεσε αυτό</string>
 	<string name="reader_likes_only_you">Σας άρεσε αυτό</string>
-	<string name="reader_toast_reblog_success">Το άρθρο αναμεταδώθηκε</string>
 	<string name="reader_toast_err_comment_failed">Δεν ήταν δυνατή η προσθήκη του σχόλιού σας</string>
 	<string name="username_invalid">Εσφαλμένο Όνομα Χρήστη</string>
 	<string name="limit_reached">Φτάσατε το όριο. Μπορείτε να προσπαθήσετε ξανά σε 1 λεπτό. Αν προσπαθήσετε ξανά πριν περάσει η χρονική περίοδος του 1 λεπτού το μόνο που θα καταφέρετε είναι να αυξήσετε το χρόνο αναμονής σας μέχρι να αρθεί η απαγόρευση. Εάν πιστεύετε ότι αυτό είναι σφάλμα, παρακαλώ επικοινωνήστε με την τεχνική υποστήριξη.</string>
@@ -121,8 +119,6 @@
 	<string name="reader_toast_err_view_image">Αδυναμία προβολής της εικόνας</string>
 	<string name="reader_label_added_tag">Προστέθηκε η %s</string>
 	<string name="reader_label_removed_tag">Αφαιρέθηκε το</string>
-	<string name="reader_toast_err_reblog_failed">Δεν ήταν δυνατό να αναρτηθεί αυτό το άρθρο</string>
-	<string name="reader_toast_err_already_reblogged">Έχετε ήδη αναρτήσει αυτό το άρθρο</string>
 	<string name="reader_toast_err_tag_exists">Ακολουθείτε ήδη αυτή την ετικέτα</string>
 	<string name="reader_toast_err_tag_invalid">Αυτή η ετικέτα δεν είναι έγκυρη</string>
 	<string name="reader_toast_err_url_intent">Δε στάθηκε δυνατό να ανοιχθεί το %s</string>

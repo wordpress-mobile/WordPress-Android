@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Keine Verbindung</string>
+	<string name="page_trashed">Seite wurde gelöscht</string>
+	<string name="post_deleted">Beitrag gelöscht</string>
+	<string name="post_trashed">Beitrag wurde gelöscht</string>
+	<string name="stats_no_activity_this_period">Keine Aktivität für diesen Zeitraum</string>
+	<string name="trashed">Gelöscht</string>
+	<string name="button_back">Zurück</string>
+	<string name="page_deleted">Seite gelöscht</string>
+	<string name="button_more">Mehr</string>
+	<string name="button_stats">Statistik</string>
+	<string name="button_trash">Papierkorb</string>
+	<string name="button_preview">Vorschau</string>
+	<string name="button_view">Anzeigen</string>
+	<string name="button_edit">Bearbeiten</string>
+	<string name="button_publish">Veröffentlichen</string>
+	<string name="button_delete">Löschen</string>
+	<string name="my_site_no_sites_view_subtitle">Möchtest du welche hinzufügen?</string>
+	<string name="my_site_no_sites_view_title">Du hast noch keine WordPress-Websites.</string>
+	<string name="my_site_no_sites_view_drake">Illustration</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Du bist nicht berechtigt auf diesen Blog zuzugreifen</string>
+	<string name="reader_toast_err_follow_blog_not_found">Dieser Blog konnte nicht gefunden werden</string>
+	<string name="undo">Rückgängig</string>
 	<string name="tabbar_accessibility_label_my_site">Meine Website</string>
 	<string name="tabbar_accessibility_label_me">Ich</string>
 	<string name="passcodelock_prompt_message">Gib deine PIN ein</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Privatsphäre</string>
 	<string name="preference_send_usage_stats">Statistiken senden</string>
 	<string name="preference_send_usage_stats_summary">Nutzungsstatistiken automatisch versenden, damit wir WordPress für Android weiter verbessern können</string>
-	<string name="reader_label_reblog_to">Rebloggen auf</string>
-	<string name="reader_hint_reblog_comment">Füge deine Gedanken hinzu (optional)</string>
-	<string name="reader_title_reblog">Beitrag rebloggen</string>
 	<string name="update_verb">Update</string>
 	<string name="schedule_verb">Zeitplan</string>
 	<string name="reader_page_followed_blogs">Abonnierte Blogs</string>
@@ -273,7 +292,6 @@
 	<string name="forums">Forums</string>
 	<string name="help_center">Hilfecenter</string>
 	<string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>
-	<string name="reader_label_reblog_empty">Du hast keine sichtbaren WordPress.com-Blogs um diesen Beitrag zu rebloggen.</string>
 	<string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
 	<string name="no_network_message">Es ist kein Netzwerk verfügbar</string>
 	<string name="gallery_error">Das Medien-Objekt konnte nicht abgerufen werden</string>
@@ -365,7 +383,6 @@
 	<string name="view_in_browser">Im Browser anschauen</string>
 	<string name="add_new_category">Neue Kategorie hinzufügen</string>
 	<string name="reader_toast_err_remove_tag">Tag konnte nicht entfernt werden</string>
-	<string name="page_deleted">Seite erfolgreich gelöscht</string>
 	<string name="email_hint">E-Mail-Adresse</string>
 	<string name="share_action_media">Mediathek</string>
 	<string name="username_email">Benutzername oder E-Mail</string>
@@ -405,8 +422,6 @@
 	<string name="delete_page">Seite löschen</string>
 	<string name="dlg_spamming_comments">Als Spam markieren</string>
 	<string name="dlg_confirm_trash_comments">In Papierkorb verschieben?</string>
-	<string name="reader_toast_err_reblog_requires_blog">Wähle einen Blog</string>
-	<string name="post_deleted">Beitrag erfolgreich gelöscht</string>
 	<string name="link_enter_url_text">Linktext (optional)</string>
 	<string name="saving_changes">Änderungen speichern</string>
 	<string name="wordpress_blog">WordPress-Blog</string>
@@ -496,9 +511,6 @@
 	<string name="reader_toast_err_view_image">Kann das Bild nicht anzeigen</string>
 	<string name="jetpack_message">Das Jetpack-Plugin ist erforderlich für Statistiken. Möchtest Du Jetpack installieren?</string>
 	<string name="create_account_wpcom">Erstelle ein Konto auf WordPress.com</string>
-	<string name="reader_toast_reblog_success">Beitrag wurde rebloggt</string>
-	<string name="reader_toast_err_reblog_failed">Konnte den Beitrag nicht rebloggen</string>
-	<string name="reader_toast_err_already_reblogged">Du hast diesen Beitrag bereits rebloggt</string>
 	<string name="reader_toast_err_tag_exists">Du folgt diesem Schlagwort bereits</string>
 	<string name="reader_toast_err_share_intent">Teilen nicht möglich</string>
 	<string name="reader_empty_followed_tags">Du folgst keinen Schlagwörtern</string>
@@ -676,6 +688,12 @@
 		<item>Links</item>
 		<item>Zentriert</item>
 		<item>Rechts</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Veröffentlicht</item>
+		<item>Entwürfe</item>
+		<item>Geplant</item>
+		<item>Gelöscht</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Kurzmitteilung</item>

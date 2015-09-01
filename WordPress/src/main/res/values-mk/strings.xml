@@ -140,9 +140,6 @@
 	<string name="preference_privacy">Приватност</string>
 	<string name="preference_send_usage_stats">Испрати статистика</string>
 	<string name="preference_send_usage_stats_summary">Автоматски испраќај статистика од употребата да ни помогнеш да го подобриме WordPress за Андроид</string>
-	<string name="reader_hint_reblog_comment">Додади твое мислење (изборно)</string>
-	<string name="reader_title_reblog">Реблог напис</string>
-	<string name="reader_label_reblog_to">Реблог до</string>
 	<string name="update_verb">Ажурирај</string>
 	<string name="schedule_verb">Закажи</string>
 	<string name="reader_title_blog_preview">Прегледај го блогот</string>
@@ -166,7 +163,6 @@
 	<string name="help_center">Центар за помош</string>
 	<string name="forums">Форуми</string>
 	<string name="ssl_certificate_error">Невалиден SSl сертификат</string>
-	<string name="reader_label_reblog_empty">Немате видливе WordPress.com блогови оваа мислење може да биде реблогирано исто така</string>
 	<string name="ssl_certificate_ask_trust">Доколку вообичаено се поврзувате на страницата без проблеми, оваа грешка може да значи дека некој се обидува да ја имитира вашата страница и не треба да продолжите. Дали му верувате на сертификатот и покрај тоа?</string>
 	<string name="comments_empty_list">Нема коментари</string>
 	<string name="mnu_comment_unspam">Не е спам</string>
@@ -265,9 +261,7 @@
 	<string name="toast_comment_unedited">Коментарот не е променет</string>
 	<string name="delete_draft">Избриши нацрт</string>
 	<string name="preview_page">Прегледај страница</string>
-	<string name="page_deleted">Страницата е избришана успешно</string>
 	<string name="preview_post">Прегледај напис</string>
-	<string name="post_deleted">Написот е избришан успешно</string>
 	<string name="image_settings">Подесувања на сликата</string>
 	<string name="add_account_blog_url">Адреса на блогот</string>
 	<string name="wordpress_blog">WordPress блог</string>
@@ -278,7 +272,6 @@
 	<string name="jetpack_message_not_admin">Jetpack додатокот е задолжителен за статистика. Контактирајте го администраторот на страницата.</string>
 	<string name="reader_title_applog">Дневник на апликацијата</string>
 	<string name="reader_share_link">Сподели врска</string>
-	<string name="reader_toast_err_reblog_requires_blog">Избери блог</string>
 	<string name="reader_toast_err_add_tag">Неможе да се додаде оваа обележување</string>
 	<string name="reader_toast_err_remove_tag">Неможе да се отстрани оваа обележување</string>
 	<string name="required_field">Задолжително поле</string>
@@ -386,8 +379,6 @@
 	<string name="reader_btn_share">Сподели</string>
 	<string name="reader_btn_follow">Следи</string>
 	<string name="reader_toast_err_comment_failed">Неможе да се испрати вашиот коментар</string>
-	<string name="reader_toast_err_reblog_failed">Неможе да се реблогира овој напис</string>
-	<string name="reader_toast_err_already_reblogged">Веќе го имате реблогирано овој напис</string>
 	<string name="reader_toast_err_tag_exists">Веќе го следите ова обележување</string>
 	<string name="reader_toast_err_tag_invalid">Тоа не е валидно обележување</string>
 	<string name="reader_toast_err_share_intent">Неможе да се сподели</string>
@@ -405,7 +396,6 @@
 	<string name="reader_label_added_tag">Додадено %s</string>
 	<string name="reader_likes_one">На едно лице му се допаѓа ова</string>
 	<string name="reader_likes_only_you">На тебе ти се допаѓа ова</string>
-	<string name="reader_toast_reblog_success">Написот е реблогиран</string>
 	<string name="stats_timeframe_yesterday">Вчера</string>
 	<string name="stats_totals_plays">Пуштени</string>
 	<string name="stats_entry_posts_and_pages">Наслов</string>
