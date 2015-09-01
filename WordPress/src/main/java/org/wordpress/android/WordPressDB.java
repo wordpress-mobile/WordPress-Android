@@ -1843,15 +1843,15 @@ public class WordPressDB {
         Cursor cursor = db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.ID + " id=?", selection, null, null, null);
 
         if (cursor.moveToFirst()) {
-            String id = cursor.getString(0);
-            String author = cursor.getString(1);
-            String screenshot = cursor.getString(2);
-            String authorURI = cursor.getString(3);
-            String demoURI = cursor.getString(4);
-            String name = cursor.getString(5);
-            String stylesheet = cursor.getString(6);
-            String price = cursor.getString(7);
-            boolean isCurrent = cursor.getInt(8) > 0;
+            String id = cursor.getString(cursor.getColumnIndex(Theme.ID));
+            String author = cursor.getString(cursor.getColumnIndex(Theme.AUTHOR));
+            String screenshot = cursor.getString(cursor.getColumnIndex(Theme.SCREENSHOT));
+            String authorURI = cursor.getString(cursor.getColumnIndex(Theme.AUTHOR_URI));
+            String demoURI = cursor.getString(cursor.getColumnIndex(Theme.DEMO_URI));
+            String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
+            String stylesheet = cursor.getString(cursor.getColumnIndex(Theme.STYLESHEET));
+            String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
+            boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) > 0;
 
             Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
             cursor.close();
