@@ -247,9 +247,6 @@
 	<string name="preference_send_usage_stats_summary">Cuir stats cleachdaidh thugainn ach an urrainn dhuinn WordPress airson Android a leasachadh</string>
 	<string name="preference_send_usage_stats">Cuir na stats</string>
 	<string name="preference_privacy">Prìobhaideachd</string>
-	<string name="reader_label_reblog_to">Ath-bhlogaich air</string>
-	<string name="reader_title_reblog">Ath-bhlogaich am post</string>
-	<string name="reader_hint_reblog_comment">Dè tha air d’ inntinn (roghainneil)</string>
 	<string name="schedule_verb">Cuir air an sgeideal</string>
 	<string name="update_verb">Ùraich</string>
 	<string name="reader_toast_err_already_follow_blog">Tha thu a’ leantainn a’ bhloga seo mu thràth</string>
@@ -274,7 +271,6 @@
 	<string name="ssl_certificate_error">Teisteanas SSL mì-dhligheach</string>
 	<string name="forgot_password">Na chaill thu am facal-faire agad?</string>
 	<string name="help">Cobhair</string>
-	<string name="reader_label_reblog_empty">Feumaidh bloga WordPress.com follaiseach a bhith agad mus gabh am post seo ath-bhlogadh ann</string>
 	<string name="nux_cannot_log_in">Chan urrainn dhuinn do chlàradh a-steach</string>
 	<string name="username_or_password_incorrect">Tha an t-ainm-cleachdaiche no am facal-faire a chuir thu a-steach cearr</string>
 	<string name="blog_name_reserved_but_may_be_available">Tha an làrach sin air a ghlèidheadh ach faodaidh gum bi e ri fhaighinn ann am beagan làithean</string>
@@ -352,7 +348,6 @@
 	<string name="required_field">Raon air a bheil feum</string>
 	<string name="reader_toast_err_add_tag">Cha ghabh an taga seo a chur ris</string>
 	<string name="reader_toast_err_remove_tag">Cha ghabh an taga seo a thoirt air falbh</string>
-	<string name="reader_toast_err_reblog_requires_blog">Tagh bloga</string>
 	<string name="reader_share_link">Co-roinn an ceangal</string>
 	<string name="jetpack_message_not_admin">Tha feum air plugan Jetpack mu choinneamh nan stats. Cuir fios gu rianaire na làraich.</string>
 	<string name="reader_title_applog">Loga na h-aplacaid</string>
@@ -384,9 +379,7 @@
 	<string name="page_not_published">Cha deach staid na duilleige fhoillseachadh</string>
 	<string name="post_not_published">Cha deach staid a’ phuist fhoillseachadh</string>
 	<string name="comment_added">Chaidh am beachd a chur ris</string>
-	<string name="post_deleted">Chaidh am post a sguabadh às</string>
 	<string name="preview_post">Ro-sheall am post</string>
-	<string name="page_deleted">Chaidh an duilleag a sguabadh às</string>
 	<string name="preview_page">Ro-sheall an duilleag</string>
 	<string name="delete_draft">Sguab às an dreachd</string>
 	<string name="blog_removed_successfully">Chaidh an làrach a thoirt air falbh</string>
@@ -500,10 +493,7 @@
 	<string name="reader_label_removed_tag">Chaidh %s a thoirt air falbh</string>
 	<string name="reader_likes_one">Tha aon duine ag ràdh gur toigh leotha seo</string>
 	<string name="reader_likes_only_you">\'S toigh leat seo</string>
-	<string name="reader_toast_reblog_success">Chaidh am post ath-bhlogadh</string>
 	<string name="reader_toast_err_comment_failed">Cha b\' urrainn dhuinn do bheachd a phostadh</string>
-	<string name="reader_toast_err_reblog_failed">Cha b\' urrainn dhuinn am post seo ath-bhlogadh</string>
-	<string name="reader_toast_err_already_reblogged">Dh\'ath-bhlogaich thu am post seo mu thràth</string>
 	<string name="reader_toast_err_tag_exists">Tha thu a\' leantainn an taga seo mu thràth</string>
 	<string name="reader_toast_err_tag_invalid">Cha e taga dligheach a tha seo</string>
 	<string name="reader_toast_err_share_intent">Cha ghabh a cho-roinneadh</string>

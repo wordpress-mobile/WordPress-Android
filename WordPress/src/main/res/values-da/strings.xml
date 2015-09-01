@@ -238,9 +238,6 @@
 	<string name="preference_send_usage_stats_summary">Send automatisk brugsstatistik for at hjælpe os med at forbedre WordPress til Android</string>
 	<string name="preference_send_usage_stats">Indsend statistikker</string>
 	<string name="preference_privacy">Privatliv</string>
-	<string name="reader_label_reblog_to">Genblog til</string>
-	<string name="reader_title_reblog">Genblog indlæg</string>
-	<string name="reader_hint_reblog_comment">Del dine tanker (frivilligt)</string>
 	<string name="schedule_verb">Planlæg</string>
 	<string name="update_verb">Opdater</string>
 	<string name="reader_page_followed_blogs">Blogs du følger</string>
@@ -259,7 +256,6 @@
 	<string name="ptr_tip_message">Tip: Træk ned for at genindlæse siden</string>
 	<string name="media_empty_list">Ingen medier</string>
 	<string name="saving">Gemmer...</string>
-	<string name="reader_label_reblog_empty">Du har ingen synlige WordPress.com blogs dette indlæg kan videreblogges til</string>
 	<string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>
 	<string name="help_center">Hjælpecenter</string>
 	<string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
@@ -362,7 +358,6 @@
 	<string name="content_required">Kommentar er påkrævet</string>
 	<string name="email_hint">E-mailadresse</string>
 	<string name="username_email">Brugernavn eller e-mailadresse</string>
-	<string name="reader_toast_err_reblog_requires_blog">Vælg en blog</string>
 	<string name="reader_share_link">Del link</string>
 	<string name="image_settings">Billedeindstillinger</string>
 	<string name="add_account_blog_url">Blog-adresse</string>
@@ -383,10 +378,8 @@
 	<string name="dlg_confirm_trash_comments">Smid i papirkurven?</string>
 	<string name="blog_removed_successfully">Websted blev fjernet</string>
 	<string name="delete_draft">Slet kladde</string>
-	<string name="page_deleted">Side slettet</string>
 	<string name="preview_page">Forhåndsvis side</string>
 	<string name="comment_added">Kommentar tilføjet</string>
-	<string name="post_deleted">Indlæg slettet</string>
 	<string name="preview_post">Forhåndsvis indlæg</string>
 	<string name="saving_changes">Gemmer ændringer</string>
 	<string name="hint_comment_content">Kommentar</string>
@@ -458,7 +451,6 @@
 	<string name="signing_in">Logger ind...</string>
 	<string name="nux_add_selfhosted_blog">Tilføj websted fra egen udbyder</string>
 	<string name="password_invalid">Din adgangskode skal være mere sikker. Sørg for at benytte mindst 7 tegn og blande store og små bogstaver, tal eller specielle tegn.</string>
-	<string name="reader_toast_err_already_reblogged">Du har allerede genblogget dette indlæg</string>
 	<string name="reader_toast_err_tag_exists">Du følger allerede dette tag</string>
 	<string name="username_invalid">Ugyldigt brugernavn</string>
 	<string name="reader_toast_err_comment_failed">Kunne ikke sende din kommentar</string>
@@ -470,7 +462,6 @@
 	<string name="create_account_wpcom">Opret en konto på WordPress.com</string>
 	<string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt tag</string>
 	<string name="jetpack_not_found">Jetpack-pluginnet blev ikke fundet</string>
-	<string name="reader_toast_reblog_success">Indlæg er blevet genblogget</string>
 	<string name="reader_share_subject">Delt fra %s</string>
 	<string name="reader_untitled_post">(Ingen titel)</string>
 	<string name="media_add_popup_title">Tilføj til mediebibliotek</string>
@@ -489,7 +480,6 @@
 	<string name="reader_btn_share">Del</string>
 	<string name="nux_tutorial_get_started_title">Kom i gang!</string>
 	<string name="reader_likes_one">En person synes godt om dette</string>
-	<string name="reader_toast_err_reblog_failed">Kunne ikke genblogge dette indlæg</string>
 	<string name="stats_view_tags_and_categories">Tags &amp; kategorier</string>
 	<string name="media_no_video_title">VideoPress utilgængelig</string>
 	<string name="media_edit_caption_hint">Indtast en tekst her</string>
