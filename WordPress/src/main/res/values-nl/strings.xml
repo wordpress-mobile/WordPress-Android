@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Geen verbinging</string>
+	<string name="button_delete">Verwijderen</string>
+	<string name="button_publish">Publiceren</string>
+	<string name="post_deleted">Bericht verwijderd</string>
+	<string name="post_trashed">Bericht naar de prullenbak verplaatst</string>
+	<string name="page_trashed">Pagina naar de prullenbak verplaatst.</string>
+	<string name="button_back">Terug</string>
+	<string name="page_deleted">Pagina verwijderd</string>
+	<string name="button_more">Meer</string>
+	<string name="button_stats">Statistieken</string>
+	<string name="button_trash">Prullenbak</string>
+	<string name="button_edit">Bewerken</string>
+	<string name="stats_no_activity_this_period">Geen activiteit deze periode</string>
+	<string name="trashed">Verwijderd</string>
+	<string name="button_preview">Voorbeeld</string>
+	<string name="button_view">Bekijk</string>
+	<string name="my_site_no_sites_view_subtitle">Wil je er één toevoegen?</string>
+	<string name="my_site_no_sites_view_title">Je hebt nog geen WordPress-sites.</string>
+	<string name="my_site_no_sites_view_drake">Illustratie</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Je hebt geen rechten om dit blog te openen</string>
+	<string name="reader_toast_err_follow_blog_not_found">Dit blog kon niet worden gevonden</string>
+	<string name="undo">Ongedaan maken</string>
 	<string name="tabbar_accessibility_label_my_site">Mijn site</string>
 	<string name="tabbar_accessibility_label_me">Ik</string>
 	<string name="passcodelock_prompt_message">Je PIN invullen.</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Privacy</string>
 	<string name="preference_send_usage_stats">Verstuur statistieken</string>
 	<string name="preference_send_usage_stats_summary">Stuur automatisch gebruiksstatistieken om ons te helpen WordPress voor Android te verbeteren</string>
-	<string name="reader_title_reblog">Post rebloggen</string>
-	<string name="reader_hint_reblog_comment">Voeg jouw mening toe (optioneel)</string>
-	<string name="reader_label_reblog_to">Rebloggen naar</string>
 	<string name="update_verb">Bijwerken</string>
 	<string name="schedule_verb">Inplannen</string>
 	<string name="reader_title_blog_preview">Voorbeeld blog</string>
@@ -273,7 +292,6 @@
 	<string name="forums">Forums</string>
 	<string name="help_center">Helpcentrum</string>
 	<string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>
-	<string name="reader_label_reblog_empty">Je hebt geen zichtbare WordPress.com-blogs waarnaar dit bericht opnieuw geblogd kan worden</string>
 	<string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
 	<string name="could_not_remove_account">Kon site niet verwijderen</string>
 	<string name="out_of_memory">Apparaatgeheugen vol</string>
@@ -400,9 +418,7 @@
 	<string name="toast_comment_unedited">Reactie is niet gewijzigd</string>
 	<string name="delete_draft">Concept verwijderen</string>
 	<string name="preview_page">Voorbeeld van pagina bekijken</string>
-	<string name="page_deleted">Pagina verwijderd</string>
 	<string name="preview_post">Voorbeeld van bericht bekijken</string>
-	<string name="post_deleted">Bericht verwijderd</string>
 	<string name="comment_added">Reactie toegevoegd</string>
 	<string name="post_not_published">Berichtstatus is niet gepubliceerd</string>
 	<string name="page_not_published">Paginastatus is niet gepubliceerd</string>
@@ -434,7 +450,6 @@
 	<string name="jetpack_message_not_admin">De Jetpack-plugin is vereist voor statistieken. Neem contact op met de sitebeheerder.</string>
 	<string name="reader_title_applog">Applicatielogboek</string>
 	<string name="reader_share_link">Link delen</string>
-	<string name="reader_toast_err_reblog_requires_blog">Een blog selecteren</string>
 	<string name="reader_toast_err_add_tag">Deze tag kan niet worden toegevoegd</string>
 	<string name="reader_toast_err_remove_tag">Deze tag kan niet worden verwijderd</string>
 	<string name="required_field">Vereist veld</string>
@@ -506,10 +521,7 @@
 	<string name="reader_share_subject">gedeeld van %s</string>
 	<string name="reader_likes_one">1 persoon vindt dit leuk</string>
 	<string name="reader_likes_only_you">Je vindt dit leuk</string>
-	<string name="reader_toast_reblog_success">Bericht is herblogd</string>
 	<string name="reader_toast_err_comment_failed">Je reactie kon niet gepost worden</string>
-	<string name="reader_toast_err_reblog_failed">Dit bericht kon niet herblogd worden</string>
-	<string name="reader_toast_err_already_reblogged">Je hebt dit bericht al herblogd</string>
 	<string name="reader_toast_err_tag_exists">Je volgt deze tag al</string>
 	<string name="reader_toast_err_tag_invalid">Dat is geen geldige tag</string>
 	<string name="nux_tutorial_get_started_title">Begin!</string>
@@ -676,6 +688,12 @@
 		<item>Links</item>
 		<item>Midden</item>
 		<item>Rechts</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Gepuliceerd</item>
+		<item>Concept</item>
+		<item>Ingepland</item>
+		<item>Weggegooid</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Aside</item>

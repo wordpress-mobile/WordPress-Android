@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Bağlantı yok</string>
+	<string name="button_back">Geri</string>
+	<string name="page_deleted">Sayfa silindi</string>
+	<string name="button_more">Daha fazla</string>
+	<string name="button_stats">İstatistikler</string>
+	<string name="button_preview">Ön izleme</string>
+	<string name="button_view">Görüntüle</string>
+	<string name="button_edit">Düzenle</string>
+	<string name="button_publish">Yayımla</string>
+	<string name="button_delete">Sil</string>
+	<string name="button_trash">Çöpe taşı</string>
+	<string name="post_deleted">Yazı silindi</string>
+	<string name="trashed">Çöpe taşındı</string>
+	<string name="page_trashed">Sayfa çöpe taşındı</string>
+	<string name="post_trashed">Yazı çöpe taşındı</string>
+	<string name="my_site_no_sites_view_subtitle">Bir tane eklemek ister misiniz?</string>
+	<string name="my_site_no_sites_view_title">Henüz bir WordPress siteniz yok.</string>
+	<string name="my_site_no_sites_view_drake">İlüstrasyon</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Bu bloga erişim için yetkiniz yok</string>
+	<string name="reader_toast_err_follow_blog_not_found">Blog bulunamadı</string>
+	<string name="undo">Geri al</string>
 	<string name="tabbar_accessibility_label_my_site">Sitem</string>
 	<string name="tabbar_accessibility_label_me">Ben</string>
 	<string name="editor_toast_changes_saved">Değişiklikler kaydedildi</string>
@@ -72,7 +93,6 @@
 	<string name="invalid_verification_code">Geçersiz doğrulama kodu</string>
 	<string name="verification_code">Doğrulama kodu</string>
 	<string name="editor_toast_invalid_path">Geçersiz dosya yolu</string>
-	<string name="error_publish_no_network">Bağlantı yokken yayınlanamıyor. Taslak olarak kaydedildi.</string>
 	<string name="media_details_dimensions">Boyutlar:</string>
 	<string name="media_details_file_url">Dosya adresi:</string>
 	<string name="media_details_file_type">Dosya tipi:</string>
@@ -89,6 +109,7 @@
 	<string name="add_to_post">Yazıya ekle</string>
 	<string name="language">Dil</string>
 	<string name="device">Cihaz</string>
+	<string name="error_publish_no_network">Bağlantı yokken yayımlanamıyor. Taslak olarak kaydedildi.</string>
 	<string name="stats_empty_search_terms">Hiç arama terimi kaydedilmedi</string>
 	<string name="stats_entry_search_terms">Arama Terimi</string>
 	<string name="stats_view_authors">Yazarlar</string>
@@ -185,6 +206,7 @@
 	<string name="confirm_delete_media">Seçili öge silinsin mi?</string>
 	<string name="cab_selected">%d seçili</string>
 	<string name="media_gallery_date_range">%1$s ve %2$s arası ortam dosyaları gösteriliyor</string>
+	<string name="comment_reply_to_user">Şunu cevapla: %s</string>
 	<string name="reader_empty_followed_blogs_title">Henüz herhangi bir blog takip etmiyorsunuz.</string>
 	<string name="reader_empty_posts_liked">Henüz hiçbir yazıyı beğenmediniz</string>
 	<string name="faq_button">SSS</string>
@@ -207,7 +229,6 @@
 	<string name="reader_label_comments_on">Yorum yapılan konu:</string>
 	<string name="reader_title_comments">Yorumlar</string>
 	<string name="reader_title_photo_viewer">%1$d / %2$d</string>
-	<string name="error_publish_empty_post">Boş bir yazı yayınlanamaz</string>
 	<string name="error_refresh_unauthorized_posts">Yazıları görüntüleme veya düzenleme izniniz yok</string>
 	<string name="error_refresh_unauthorized_pages">Sayfaları görüntüleme veya düzenleme izniniz yok</string>
 	<string name="error_refresh_unauthorized_comments">Yorumları görüntüleme veya düzenleme izniniz yok</string>
@@ -223,11 +244,11 @@
 	<string name="comment">Yorum Yap</string>
 	<string name="comment_trashed">Yorum iptal edildi</string>
 	<string name="posts_empty_list">Henüz yazı yok. Bir yazı oluşturmaya ne dersiniz?</string>
-	<string name="comment_reply_to_user">Şunu yanıtla: %s</string>
 	<string name="pages_empty_list">Henüz sayfa yok. Bir sayfa oluşturmaya ne dersiniz?</string>
 	<string name="media_empty_list_custom_date">Bu zaman aralığında medya yok</string>
 	<string name="posting_post">Yazılan: "%s"</string>
 	<string name="signing_out">Çıkış yapılıyor…</string>
+	<string name="error_publish_empty_post">Boş bir yazı yayımlanamaz</string>
 	<string name="reader_toast_err_block_blog">Bu blog engellenemiyor</string>
 	<string name="reader_toast_blog_blocked">Bu blogdan yazılar artık gösterilmeyecek</string>
 	<string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
@@ -247,9 +268,6 @@
 	<string name="preference_privacy">Gizlilik</string>
 	<string name="preference_send_usage_stats">Kullanım istatistiklerini gönder</string>
 	<string name="preference_send_usage_stats_summary">Android için WordPress\'i geliştirmemize yardımcı olmak için bize otomatik olarak kullanım istatistiklerini gönderin. </string>
-	<string name="reader_title_reblog">Yazıyı yeniden blogla</string>
-	<string name="reader_hint_reblog_comment">Düşüncelerinizi ekleyin (seçime bağlı)</string>
-	<string name="reader_label_reblog_to">Yeniden blogla</string>
 	<string name="update_verb">Güncelle</string>
 	<string name="schedule_verb">Zamanla</string>
 	<string name="reader_title_blog_preview">Blogun Önizlemesini Yapın</string>
@@ -272,7 +290,6 @@
 	<string name="forums">Forumlar</string>
 	<string name="help_center">Yardım merkezi</string>
 	<string name="forgot_password">Parolanızı mı kaybettiniz?</string>
-	<string name="reader_label_reblog_empty">Reblog yapmak için görüntülenebilir bir WordPress.com blogunuz bulunmuyor.</string>
 	<string name="ssl_certificate_error">Geçersiz SSL setifikası</string>
 	<string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
 	<string name="wait_until_upload_completes">Yükleme tamamlanana kadar bekleyin</string>
@@ -388,7 +405,6 @@
 	<string name="new_media">Yeni medya</string>
 	<string name="view_site">Siteyi görüntüle</string>
 	<string name="reader_share_link">Bağlantıyı paylaş</string>
-	<string name="reader_toast_err_reblog_requires_blog">Bir blog seçin</string>
 	<string name="reader_toast_err_add_tag">Bu etiket eklenemiyor</string>
 	<string name="reader_toast_err_remove_tag">Bu etiket kaldırılamıyor</string>
 	<string name="required_field">Gerekli alan</string>
@@ -401,12 +417,10 @@
 	<string name="toast_comment_unedited">Yorum değiştirilmedi</string>
 	<string name="delete_draft">Taslağı Sil</string>
 	<string name="preview_page">Sayfayı önizle</string>
-	<string name="page_deleted">Sayfa başarıyla silindi</string>
 	<string name="image_settings">Görsel ayarları</string>
 	<string name="add_account_blog_url">Blog adresi</string>
 	<string name="fatal_db_error">Uygulama veritabanı oluşturulurken hata meydana geldi. Uygulamayı tekrar yüklemeyi deneyin.</string>
 	<string name="jetpack_message_not_admin">İstatistikler için Jetpack eklentisi gerekli. Site yöneticisi ile iletişim kurun.</string>
-	<string name="page_not_published">Sayfa durumu yayınlanmadı</string>
 	<string name="view_in_browser">Tarayıcıda görüntüle</string>
 	<string name="location_not_found">Bilinmeyen konum</string>
 	<string name="open_source_licenses">Açık kaynak lisanslar</string>
@@ -434,8 +448,6 @@
 	<string name="author_email">Yazar emaili</string>
 	<string name="author_url">Yazar adresi</string>
 	<string name="preview_post">Yazıyı önizle</string>
-	<string name="post_deleted">Yazı başarıyla silindi</string>
-	<string name="post_not_published">Yazı durumu yayınlanmadı</string>
 	<string name="share_action_post">Yeni yazı</string>
 	<string name="file_error_create">Geçici medya dosyası oluşturulamıyor. Cihazınızda yeterli boş alan olduğundan emin olun.</string>
 	<string name="post_format">Yazı formatı</string>
@@ -446,6 +458,8 @@
 	<string name="email_reserved">Bu email adresi zaten kullanılmış. Gelen kutunuzu aktivasyon emaili için kontrol edin. Eğer aktivasyon yapmazsanız birkaç gün içinde  tekrar deneyebilirsiniz.</string>
 	<string name="blog_name_must_include_letters">Site adresi en az bir tane harf (a-z) içermelidir</string>
 	<string name="blog_name_invalid">Geçersiz ste adresi</string>
+	<string name="post_not_published">Yazı durumu yayımlanmadı</string>
+	<string name="page_not_published">Sayfa durumu yayımlanmadı</string>
 	<string name="share_url_page">Sayfayı paylaş</string>
 	<string name="share_link">Bağlantıyı paylaş</string>
 	<string name="deleting_page">Sayfa siliniyor</string>
@@ -510,9 +524,6 @@
 	<string name="reader_hint_comment_on_post">Yorum ekle</string>
 	<string name="reader_label_added_tag">%s eklendi</string>
 	<string name="reader_label_removed_tag">%s kaldırıldı</string>
-	<string name="reader_toast_reblog_success">Yazı yeniden bloglandı</string>
-	<string name="reader_toast_err_reblog_failed">Bu yazı yeniden bloglanamadı</string>
-	<string name="reader_toast_err_already_reblogged">Bu yazıyı zaten yeniden bloglamışsınız</string>
 	<string name="reader_toast_err_view_image">Imaj görüntülenemedi</string>
 	<string name="reader_empty_followed_tags">Herhangi bir etiketi takip etmiyorsunuz</string>
 	<string name="create_account_wpcom">WordPress.com\'da bir hesap oluştur</string>
@@ -588,11 +599,11 @@
 	<string name="notifications_turn_off">Kapat</string>
 	<string name="notifications_turn_off_1hr">1 saat için kapat</string>
 	<string name="notifications_turn_off_8hr">8 saat için kapat</string>
-	<string name="note_reply_successful">Yanıt yayınlandı</string>
 	<string name="new_notifications">%d yeni bildirim</string>
 	<string name="more_notifications">ve %d daha.</string>
 	<string name="sign_in">Oturum aç</string>
 	<string name="types">Tipler</string>
+	<string name="note_reply_successful">Yanıt yayımlandı</string>
 	<string name="loading">Yükleniyor...</string>
 	<string name="post_signature">Yazı imzası</string>
 	<string name="add_tagline">Yeni yazılara imza ekle</string>
@@ -600,8 +611,8 @@
 	<string name="httppassword">HTTP Sifre</string>
 	<string name="error_media_upload">Ortam yüklenirken bir hata oluştu</string>
 	<string name="post_content">İçerik (metin ve ortam eklemek için dokunun)</string>
-	<string name="publish_date">Yayimla</string>
 	<string name="content_description_add_media">Ortam Dosyasi Ekle</string>
+	<string name="publish_date">Yayımla</string>
 	<string name="incorrect_credentials">Geçersiz kullanıcı adı veya parola.</string>
 	<string name="password">Sifre</string>
 	<string name="username">Kullanici Adi</string>
@@ -643,7 +654,7 @@
 	<string name="quickpress_add_error">Kısayol ismi boş olamaz</string>
 	<string name="draft">Taslak</string>
 	<string name="post_private">Özel</string>
-	<string name="publish_post">Yayınla</string>
+	<string name="publish_post">Yayımla</string>
 	<string name="upload_full_size_image">Yükle ve tam resme bağlantı ver</string>
 	<string name="categories">Kategoriler</string>
 	<string name="tags_separate_with_commas">Etiketler (etiketleri virgül ile ayırın)</string>
@@ -676,6 +687,12 @@
 		<item>Sol</item>
 		<item>Orta</item>
 		<item>Sağ</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Yayımlandı</item>
+		<item>Taslaklar</item>
+		<item>Zamanlandı</item>
+		<item>Çöpe taşındı</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Yan sütun</item>

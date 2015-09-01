@@ -42,8 +42,6 @@
 	<string name="search_current_location">Hely meghatározás</string>
 	<string name="preference_send_usage_stats">Statisztika küldés</string>
 	<string name="preference_privacy">Adatvédelem</string>
-	<string name="reader_title_reblog">Post újrablogolása</string>
-	<string name="reader_label_reblog_to">Post újrablogolása ide</string>
 	<string name="update_verb">Frissítést</string>
 	<string name="schedule_verb">Időzítés</string>
 	<string name="reader_title_subs">Címkék és blogok</string>

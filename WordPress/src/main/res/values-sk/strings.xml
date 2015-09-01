@@ -198,9 +198,6 @@
 	<string name="preference_send_usage_stats_summary">Automaticky odosielať štatistiky užívania pre zlepšenie WordPress pre Android</string>
 	<string name="preference_send_usage_stats">Poslať štatistiky</string>
 	<string name="preference_privacy">Súkromie</string>
-	<string name="reader_label_reblog_to">Reglog k</string>
-	<string name="reader_title_reblog">Publikujte článok znova</string>
-	<string name="reader_hint_reblog_comment">Pridať názor (voliteľné)</string>
 	<string name="schedule_verb">Rozvrh</string>
 	<string name="update_verb">Aktualizovať</string>
 	<string name="reader_toast_err_unfollow_blog">Nie je možné sledovať tento blog</string>
@@ -220,7 +217,6 @@
 	<string name="ptr_tip_message">Potiahnite smerom nadol pre obnovu</string>
 	<string name="saving">Ukladá sa ...</string>
 	<string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
-	<string name="reader_label_reblog_empty">Nemáte viditeľné žiadne WordPress.com blogy, na ktoré by mohol byť reblognutý tento príspevok</string>
 	<string name="ssl_certificate_error">Neplatný SSL certifikát</string>
 	<string name="forgot_password">Stratili ste heslo?</string>
 	<string name="help_center">Centrum Pomocníka</string>
@@ -331,7 +327,6 @@
 	<string name="username_email">Používateľské meno alebo heslo</string>
 	<string name="reader_toast_err_remove_tag">Túto značku nie je možné odstrániť</string>
 	<string name="reader_toast_err_add_tag">Túto značku nie je možné pridať</string>
-	<string name="reader_toast_err_reblog_requires_blog">Vybrať blog</string>
 	<string name="reader_share_link">Zdieľať odkaz</string>
 	<string name="add_account_blog_url">Adresa blogu</string>
 	<string name="image_settings">Nastavenie obrázka</string>
@@ -348,8 +343,6 @@
 	<string name="category_name">Názov kategórie</string>
 	<string name="comment_added">Komentár bol úspešne pridaný</string>
 	<string name="category_parent">Nadradená kategória (voliteľné):</string>
-	<string name="post_deleted">Príspevok bol úspešne vymazaný</string>
-	<string name="page_deleted">Stránka bola úspešne vymazaná</string>
 	<string name="preview_post">Pozrieť náhľad príspevku</string>
 	<string name="delete_draft">Vymazať koncept</string>
 	<string name="preview_page">Náhľad stránky</string>
@@ -430,11 +423,8 @@
 	<string name="nux_welcome_create_account">Vytvoriť účet</string>
 	<string name="nux_tap_continue">Pokračovať</string>
 	<string name="nux_oops_not_selfhosted_blog">Prihlásiť sa do WordPress.com</string>
-	<string name="reader_toast_err_reblog_failed">Príspevok nie je možné reblognúť</string>
-	<string name="reader_toast_err_already_reblogged">Príspevok ste už replogli</string>
 	<string name="reader_label_added_tag">pridané: %s</string>
 	<string name="reader_likes_one">Jeden lajk</string>
-	<string name="reader_toast_reblog_success">Práspevok bol reblognutý</string>
 	<string name="limit_reached">Dosiahli ste limit. Môžete skúsiť o 1 minútu. Pokus o opakovanie skôr ako o minútu len predĺži čas čakania. Ak si myslíte, že nastala chyba, kontaktujte technickú podporu.</string>
 	<string name="reader_share_subject">Zdieľané z %s</string>
 	<string name="reader_empty_followed_tags">Nesledujete žiadne značky</string>
