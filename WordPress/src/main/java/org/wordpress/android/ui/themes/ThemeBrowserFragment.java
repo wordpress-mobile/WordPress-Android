@@ -2,8 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
