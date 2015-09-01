@@ -92,7 +92,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return;
         }
 
-        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
+        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mGridView);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
@@ -240,7 +240,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return;
         }
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mGridView);
         }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);

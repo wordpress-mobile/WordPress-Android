@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.widgets.HeaderGridView;
 
 /**
  * Adapter for the {@link ThemeBrowserFragment}'s listview
@@ -19,10 +21,12 @@ import org.wordpress.android.WordPress;
  */
 public class ThemeBrowserAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
+    private final HeaderGridView mGridView;
 
-    public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery) {
+    public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, HeaderGridView gridView) {
         super(context, c, autoRequery);
         mInflater = LayoutInflater.from(context);
+        mGridView = gridView;
     }
 
     private static class ThemeViewHolder {
@@ -63,6 +67,9 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             urlHolder = new ScreenshotHolder();
             urlHolder.requestURL = screenshotURL;
             themeViewHolder.imageView.setTag(urlHolder);
+            int height = Double.valueOf(mGridView.getColumnWidth() * 0.75).intValue();
+            themeViewHolder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(mGridView.getColumnWidth(), height));
+            themeViewHolder.imageView.requestLayout();
         }
 
         if (!urlHolder.requestURL.equals(screenshotURL)) {
@@ -70,7 +77,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             urlHolder.requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(screenshotURL + "?w=" + 500, WordPress.imageLoader);
+        themeViewHolder.imageView.setImageUrl(screenshotURL + "?w=" + mGridView.getWidth(), WordPress.imageLoader);
     }
 
     static class ScreenshotHolder {
