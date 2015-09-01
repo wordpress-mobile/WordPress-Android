@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import com.android.volley.VolleyError;
@@ -11,9 +13,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.MapUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -43,125 +44,6 @@ public class SiteSettings {
     public static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
     public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
 
-    /**
-     * Holds blog settings and provides methods to (de)serialize .com and self-hosted network calls.
-     */
-    public class SettingsContainer {
-        public String address;
-        public String username;
-        public String password;
-        public String title;
-        public String tagline;
-        public String language;
-        public int languageId;
-        public int privacy;
-        public boolean location;
-
-        boolean isInLocalTable;
-
-        private Map<String, String> serializeParams(boolean dotCom, SettingsContainer remote) {
-            if (dotCom) return serializeDotComParams(remote);
-            else return serializeSelfHostedParams(remote);
-        }
-
-        /**
-         * Helper method to create the parameters for the site settings POST request
-         *
-         * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
-         * https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
-         */
-        private Map<String, String> serializeDotComParams(SettingsContainer remoteSettings) {
-            Map<String, String> params = new HashMap<>();
-
-            if (!title.equals(remoteSettings.title)) {
-                params.put("blogname", title);
-            }
-            if (!tagline.equals(remoteSettings.tagline)) {
-                params.put("blogdescription", tagline);
-            }
-            if (languageId != remoteSettings.languageId) {
-                params.put("lang_id", Integer.toString(languageId));
-            }
-            if (privacy != remoteSettings.privacy) {
-                params.put("blog_public", Integer.toString(privacy));
-            }
-
-            return params;
-        }
-
-        private Map<String, String> serializeSelfHostedParams(SettingsContainer remoteSettings) {
-            Map<String, String> params = new HashMap<>();
-
-            if (!title.equals(remoteSettings.title)) {
-                params.put("blog_title", title);
-            }
-            if (!tagline.equals(remoteSettings.tagline)) {
-                params.put("blog_tagline", tagline);
-            }
-
-            return params;
-        }
-
-        /**
-         * Copies data from another {@link org.wordpress.android.ui.prefs.SiteSettings.SettingsContainer}.
-         */
-        private void copyFrom(SettingsContainer other) {
-            if (other == null) return;
-            address = other.address;
-            username = other.username;
-            password = other.password;
-            title = other.title;
-            tagline = other.tagline;
-            language = other.language;
-            languageId = other.languageId;
-            privacy = other.privacy;
-            location = other.location;
-        }
-
-        /**
-         * Sets values from a .com REST response object.
-         */
-        private void deserializeDotComRestResponse(JSONObject response) {
-            if (response == null) return;
-            JSONObject settingsObject = response.optJSONObject("settings");
-
-            username = mBlog.getUsername();
-            password = mBlog.getPassword();
-            address = response.optString(RestClientUtils.SITE_URL_KEY, "");
-            title = response.optString(RestClientUtils.SITE_TITLE_KEY, "");
-            tagline = response.optString(RestClientUtils.SITE_DESC_KEY, "");
-            language = convertLanguageIdToLanguageCode(
-                    settingsObject.optString(RestClientUtils.SITE_LANGUAGE_ID_KEY));
-            privacy = settingsObject.optInt(RestClientUtils.SITE_PRIVACY_KEY, -2);
-        }
-
-        /**
-         * Sets values from a self-hosted XML-RPC response object.
-         */
-        private void deserializeSelfHostedXmlRpcResponse(Map response) {
-            if (response == null) return;
-            username = mBlog.getUsername();
-            password = mBlog.getPassword();
-            address = getNestedMapValue(response, "blog_url");
-            title = getNestedMapValue(response, "blog_title");
-            tagline = getNestedMapValue(response, "blog_tagline");
-        }
-
-        /**
-         * Sets values from a local database {@link Cursor}.
-         */
-        private void deserializeDatabaseCursor(Cursor cursor) {
-            if (cursor == null) return;
-            address = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.ADDRESS_COLUMN_NAME));
-            username = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.USERNAME_COLUMN_NAME));
-            password = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.PASSWORD_COLUMN_NAME));
-            title = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.TITLE_COLUMN_NAME));
-            tagline = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.TAGLINE_COLUMN_NAME));
-            languageId = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.LANGUAGE_COLUMN_NAME));
-            privacy = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.PRIVACY_COLUMN_NAME));
-        }
-    }
-
     public interface SiteSettingsListener {
         /**
          * Called when settings have been updated with remote changes.
@@ -169,7 +51,7 @@ public class SiteSettings {
          * @param error
          *  null if successful
          */
-        void onSettingsUpdated(Exception error, SettingsContainer container);
+        void onSettingsUpdated(Exception error, SiteSettingsModel container);
 
         /**
          * Called when attempt to update remote settings is finished.
@@ -177,7 +59,7 @@ public class SiteSettings {
          * @param error
          *  null if successful
          */
-        void onSettingsSaved(Exception error, SettingsContainer container);
+        void onSettingsSaved(Exception error, SiteSettingsModel container);
 
         /**
          * Called when a request to validate current credentials has completed.
@@ -188,13 +70,15 @@ public class SiteSettings {
         void onCredentialsValidated(boolean valid);
     }
 
+    private Activity mActivity;
     private Blog mBlog;
-    private SettingsContainer mSettings;
-    private SettingsContainer mRemoteSettings;
+    private SiteSettingsModel mSettings;
+    private SiteSettingsModel mRemoteSettings;
     private SiteSettingsListener mListener;
     private HashMap<String, String> mLanguageCodes = new HashMap<>();
 
     public SiteSettings(Activity host, Blog blog, SiteSettingsListener listener) {
+        mActivity = host;
         mBlog = blog;
         mListener = listener;
 
@@ -213,14 +97,20 @@ public class SiteSettings {
      * to retrieve the latest blog data.
      */
     private void initSettings() {
-        mSettings = new SettingsContainer();
+        mSettings = new SiteSettingsModel();
 
-        Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getUrl());
-        mSettings.isInLocalTable = localSettings != null;
+        int tableKey = mBlog.getLocalTableBlogId();
+        Cursor localSettings = SiteSettingsTable.getSettings(tableKey);
+        mSettings.isInLocalTable = localSettings != null && localSettings.moveToFirst() && localSettings.getCount() > 0;
         if (mSettings.isInLocalTable) {
             mSettings.deserializeDatabaseCursor(localSettings);
+            localSettings.close();
+            setLocation(mSettings.location);
+            mSettings.language =
+                    convertLanguageIdToLanguageCode(Integer.toString(mSettings.languageId));
+            updateOnUiThread(null, mSettings);
         } else {
-            setAddress(mBlog.getUrl());
+            setAddress(mBlog.getHomeURL());
             setUsername(mBlog.getUsername());
             setPassword(mBlog.getPassword());
             setTitle(mBlog.getBlogName());
@@ -248,6 +138,10 @@ public class SiteSettings {
 
     public String getTagline() {
         return mSettings.tagline;
+    }
+
+    public int getPrivacy() {
+        return mSettings.privacy;
     }
 
     public String getLanguageCode() {
@@ -282,16 +176,24 @@ public class SiteSettings {
         mSettings.tagline = tagline;
     }
 
+    public void setPrivacy(int privacy) {
+        mSettings.privacy = privacy;
+    }
+
     public void setLanguageCode(String languageCode) {
-        mSettings.language = languageCode;
+        setLanguageId(Integer.valueOf(mLanguageCodes.get(languageCode)));
     }
 
     public void setLanguageId(int languageId) {
-        mSettings.languageId = languageId;
+        if (mSettings.languageId != languageId) {
+            mSettings.languageId = languageId;
+            mSettings.language = convertLanguageIdToLanguageCode(Integer.toString(languageId));
+        }
     }
 
     public void setLocation(boolean location) {
         mSettings.location = location;
+        siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, location).apply();
     }
 
     /**
@@ -304,18 +206,22 @@ public class SiteSettings {
                         @Override
                         public void onResponse(JSONObject response) {
                             AppLog.d(AppLog.T.API, "Received response to Settings REST request.");
-                            mRemoteSettings = new SettingsContainer();
-                            mRemoteSettings.deserializeDotComRestResponse(response);
-                            mListener.onSettingsUpdated(null, mRemoteSettings);
-                            SiteSettingsTable.saveSettings(mRemoteSettings);
-                            mRemoteSettings.isInLocalTable = true;
-                            if (!mSettings.isInLocalTable) mSettings.copyFrom(mRemoteSettings);
+                            mRemoteSettings = new SiteSettingsModel();
+                            mRemoteSettings.localTableId = mBlog.getLocalTableBlogId();
+                            mRemoteSettings.deserializeDotComRestResponse(mBlog, response);
+                            mRemoteSettings.language = convertLanguageIdToLanguageCode(
+                                    Integer.toString(mRemoteSettings.languageId));
+                            if (!mRemoteSettings.isTheSame(mSettings)) {
+                                updateOnUiThread(null, mRemoteSettings);
+                                mSettings.copyFrom(mRemoteSettings);
+                                SiteSettingsTable.saveSettings(mSettings);
+                            }
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             AppLog.w(AppLog.T.API, "Error response to Settings REST request: " + error);
-                            mListener.onSettingsUpdated(error, null);
+                            updateOnUiThread(error, null);
                         }
                     });
         } else {
@@ -327,9 +233,12 @@ public class SiteSettings {
     }
 
     public void saveSettings() {
+        // Save current settings and attempt to sync remotely
+        SiteSettingsTable.saveSettings(mSettings);
+
         final Map<String, String> params =
                 mSettings.serializeParams(mBlog.isDotcomFlag(), mRemoteSettings);
-        if (params == null || params.size() == 0) return;
+        if (params == null || params.isEmpty()) return;
 
         if (mBlog.isDotcomFlag()) {
             WordPress.getRestClientUtils().setGeneralSiteSettings(
@@ -337,27 +246,27 @@ public class SiteSettings {
                         @Override
                         public void onResponse(JSONObject response) {
                             AppLog.d(AppLog.T.API, "Site Settings saved remotely");
-                            mListener.onSettingsSaved(null, mSettings);
+                            saveOnUiThread(null, mSettings);
                             mRemoteSettings.copyFrom(mSettings);
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
-                            mListener.onSettingsSaved(error, null);
+                            saveOnUiThread(error, null);
                         }
                     }, params);
         } else {
             XMLRPCCallback callback = new XMLRPCCallback() {
                 @Override
                 public void onSuccess(long id, final Object result) {
-                    mListener.onSettingsSaved(null, mSettings);
+                    saveOnUiThread(null, mSettings);
                     mRemoteSettings.copyFrom(mSettings);
                 }
 
                 @Override
                 public void onFailure(long id, final Exception error) {
-                    mListener.onSettingsSaved(error, null);
+                    saveOnUiThread(error, null);
                 }
             };
             final Object[] callParams = {
@@ -378,25 +287,62 @@ public class SiteSettings {
         public void onSuccess(long id, final Object result) {
             if (result instanceof Map) {
                 AppLog.d(AppLog.T.API, "Received response to Settings XML-RPC request.");
-                mRemoteSettings = new SettingsContainer();
-                mRemoteSettings.deserializeSelfHostedXmlRpcResponse((Map) result);
-                SiteSettingsTable.saveSettings(mSettings);
-                mRemoteSettings.isInLocalTable = true;
-                if (!mSettings.isInLocalTable) mSettings.copyFrom(mRemoteSettings);
-                mListener.onSettingsUpdated(null, mRemoteSettings);
+                mRemoteSettings = new SiteSettingsModel();
+                mRemoteSettings.localTableId = mBlog.getLocalTableBlogId();
+                mRemoteSettings.deserializeSelfHostedXmlRpcResponse(mBlog, (Map) result);
+                if (!mRemoteSettings.isTheSame(mSettings)) {
+                    updateOnUiThread(null, mRemoteSettings);
+                    mSettings.copyFrom(mRemoteSettings);
+                    SiteSettingsTable.saveSettings(mSettings);
+                    if (mSettings.isInLocalTable) {
+                    }
+                }
             } else {
                 // Response is considered an error if we are unable to parse it
                 AppLog.w(AppLog.T.API, "Error parsing response to Settings XML-RPC request: " + result);
-                mListener.onSettingsUpdated(new XMLRPCException("Unknown response object"), null);
+                updateOnUiThread(new XMLRPCException("Unknown response object"), null);
             }
         }
 
         @Override
         public void onFailure(long id, final Exception error) {
             AppLog.w(AppLog.T.API, "Error response to Settings XML-RPC request: " + error);
-            mListener.onSettingsUpdated(error, null);
+            updateOnUiThread(error, null);
         }
     };
+
+    private void updateOnUiThread(final Exception error, final SiteSettingsModel settings) {
+        if (mActivity == null || mListener == null) return;
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mListener != null) {
+                    mListener.onSettingsUpdated(error, settings);
+                }
+            }
+        });
+    }
+
+    private void saveOnUiThread(final Exception error, final SiteSettingsModel settings) {
+        if (mActivity == null || mListener == null) return;
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mListener != null) {
+                    mListener.onSettingsSaved(error, settings);
+                }
+            }
+        });
+    }
+
+    /**
+     * Returns a SharedPreference instance to interface with Site Settings.
+     */
+    private SharedPreferences siteSettingsPreferences() {
+        return mActivity.getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
+    }
 
     /**
      * Language IDs, used only by WordPress.com, are integer values that map to a language code.
@@ -427,16 +373,5 @@ public class SiteSettings {
         }
 
         return XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(), mBlog.getHttppassword());
-    }
-
-    /**
-     * Helper method to get a value from a nested Map. Used to parse self-hosted response objects.
-     */
-    private String getNestedMapValue(Map map, String key) {
-        if (map != null && key != null) {
-            return MapUtils.getMapStr((Map) map.get(key), "value");
-        }
-
-        return "";
     }
 }

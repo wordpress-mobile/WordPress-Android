@@ -458,6 +458,7 @@
     <string name="site_settings_username_default_summary">Fetching username</string>
     <string name="site_settings_password_default_summary">Fetching password</string>
     <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
+    <string name="site_settings_save_success">Site settings updated</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>

@@ -26,6 +26,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -33,12 +35,18 @@ import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * Handles changes to WordPress site settings. Syncs with host automatically when user leaves.
  */
 
 public class SiteSettingsFragment extends PreferenceFragment
-        implements Preference.OnPreferenceChangeListener, AdapterView.OnItemLongClickListener, SiteSettings.SiteSettingsListener {
+        implements Preference.OnPreferenceChangeListener,
+                   AdapterView.OnItemLongClickListener,
+                   SiteSettings.SiteSettingsListener {
+    private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
+
     public interface HasHint {
         boolean hasHint();
         String getHintText();
@@ -63,24 +71,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
-
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            getActivity().finish();
-        }
-
         // make sure we have local site data
         mBlog = WordPress.getBlog(
                 getArguments().getInt(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, -1));
-        if (mBlog == null) return;
 
-        // inflate Site Settings preferences from XML
-        addPreferencesFromResource(R.xml.site_settings);
-
-        // set preference references, add change listeners, and setup various entries and values
-        initPreferences();
+        if (!NetworkUtils.checkConnection(getActivity()) || mBlog == null) {
+            getActivity().finish();
+            return;
+        }
 
         mSiteSettings = new SiteSettings(getActivity(), mBlog, this);
+
+        setRetainInstance(true);
+        addPreferencesFromResource(R.xml.site_settings);
+        initPreferences();
     }
 
     @Override
@@ -143,35 +147,36 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         if (preference == mTitlePreference) {
             mSiteSettings.setTitle(newValue.toString());
-            changeEditTextPreferenceValue(mTitlePreference, newValue.toString());
+            changeEditTextPreferenceValue(mTitlePreference, mSiteSettings.getTitle());
             return true;
         } else if (preference == mTaglinePreference) {
             mSiteSettings.setTagline(newValue.toString());
-            changeEditTextPreferenceValue(mTaglinePreference, newValue.toString());
+            changeEditTextPreferenceValue(mTaglinePreference, mSiteSettings.getTagline());
             return true;
         } else if (preference == mAddressPreference) {
             mSiteSettings.setAddress(newValue.toString());
-            changeEditTextPreferenceValue(mAddressPreference, newValue.toString());
+            changeEditTextPreferenceValue(mAddressPreference, mSiteSettings.getAddress());
             return true;
         } else if (preference == mLanguagePreference) {
             mSiteSettings.setLanguageCode(newValue.toString());
-            changeLanguageValue(newValue.toString());
+            changeLanguageValue(mSiteSettings.getLanguageCode());
             return true;
         } else if (preference == mPrivacyPreference) {
-            changePrivacyValue(Integer.valueOf(newValue.toString()));
+            mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
+            changePrivacyValue(mSiteSettings.getPrivacy());
             return true;
         } else if (preference == mUsernamePreference) {
             mSiteSettings.setUsername(newValue.toString());
-            changeEditTextPreferenceValue(mUsernamePreference, newValue.toString());
+            changeEditTextPreferenceValue(mUsernamePreference, mSiteSettings.getUsername());
             return true;
         } else if (preference == mPasswordPreference) {
             mSiteSettings.setPassword(newValue.toString());
-            changeEditTextPreferenceValue(mPasswordPreference, newValue.toString());
+            changeEditTextPreferenceValue(mPasswordPreference, mSiteSettings.getPassword());
             return true;
         } else if (preference == mLocationPreference) {
             mSiteSettings.setLocation((Boolean) newValue);
             SharedPreferences prefs = siteSettingsPreferences();
-            prefs.edit().putBoolean(SiteSettings.LOCATION_PREF_KEY, (Boolean) newValue).apply();
+            prefs.edit().putBoolean(SiteSettings.LOCATION_PREF_KEY, mSiteSettings.getLocation()).apply();
             return true;
         }
 
@@ -198,7 +203,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSettingsUpdated(Exception error, SiteSettings.SettingsContainer container) {
+    public void onSettingsUpdated(Exception error, SiteSettingsModel container) {
         if (error != null) {
             ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
             return;
@@ -213,17 +218,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSettingsSaved(Exception error, SiteSettings.SettingsContainer container) {
-        if (error != null) {
-            ToastUtils.showToast(getActivity(), R.string.error_post_remote_site_settings);
-            return;
-        }
+    public void onSettingsSaved(Exception error, SiteSettingsModel container) {
+        int message = error == null ?
+                R.string.site_settings_save_success : R.string.error_post_remote_site_settings;
+
+        ToastUtils.showToast(WordPress.getContext(), message);
+        mBlog.setBlogName(container.title);
+        WordPress.wpDB.saveBlog(mBlog);
+        EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
 
     @Override
     public void onCredentialsValidated(boolean valid) {
-        if (!valid && isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.username_or_password_incorrect);
+        if (!valid) {
+            ToastUtils.showToast(WordPress.getContext(), R.string.username_or_password_incorrect);
         }
     }
 
@@ -286,9 +294,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (screen != null) {
                 screen.removePreference(findPreference(getString(R.string.pref_key_site_account)));
             }
-            changeLanguageValue(Locale.getDefault().getISO3Language());
+            changeLanguageValue(mSiteSettings.getLanguageCode());
+            changePrivacyValue(mSiteSettings.getPrivacy());
             mPrivacyPreference.setOnPreferenceChangeListener(this);
-            mLanguagePreference.setValue(Locale.getDefault().getCountry());
             mLanguagePreference.setOnPreferenceChangeListener(this);
         } else {
             removePreference(R.string.pref_key_site_general, mPrivacyPreference);
@@ -305,18 +313,23 @@ public class SiteSettingsFragment extends PreferenceFragment
      * If newValue is equal to the current preference text no action will be taken.
      */
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
-        if (pref == null || pref.getEditText().isInEditMode()) return;
+        if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
 
-        if (newValue != null && !newValue.equals(pref.getSummary())) {
-            pref.setText(StringUtils.unescapeHTML(newValue));
-            pref.setSummary(StringUtils.unescapeHTML(newValue));
+        if (!pref.getSummary().equals(newValue)) {
+            String formattedValue = StringUtils.unescapeHTML(newValue.replaceFirst(ADDRESS_FORMAT_REGEX, ""));
+
+            pref.setText(formattedValue);
+            pref.setSummary(formattedValue);
         }
     }
 
     private void changeLanguageValue(String newValue) {
-        if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
+        if (mLanguagePreference == null) return;
+        String expectedSummary = firstLetterCapitalized(getLanguageString(newValue, new Locale(localeInput(newValue))));
+
+        if (!expectedSummary.equals(mLanguagePreference.getSummary())) {
             mLanguagePreference.setValue(newValue);
-            mLanguagePreference.setSummary(getLanguageString(newValue, new Locale(localeInput(newValue))));
+            mLanguagePreference.setSummary(expectedSummary);
 
             // update details to display in selected locale
             String[] languageCodes = getResources().getStringArray(R.array.language_codes);
@@ -327,7 +340,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void changePrivacyValue(int newValue) {
-        if (mPrivacyPreference != null && Integer.valueOf(mPrivacyPreference.getValue()) != newValue) {
+        if (mPrivacyPreference == null) return;
+        String expectedSummary = privacyStringForValue(newValue);
+
+        if (!expectedSummary.equals(mPrivacyPreference.getSummary())) {
             mPrivacyPreference.setValue(String.valueOf(newValue));
             mPrivacyPreference.setSummary(privacyStringForValue(newValue));
             mPrivacyPreference.refreshAdapter();

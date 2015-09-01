@@ -1,11 +1,11 @@
 package org.wordpress.android.datasets;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.prefs.SiteSettings;
+import org.wordpress.android.models.SiteSettingsModel;
 
 public final class SiteSettingsTable {
     public static final String SETTINGS_TABLE_NAME = "site_settings";
@@ -41,21 +41,43 @@ public final class SiteSettingsTable {
         }
     }
 
-    public static Cursor getSettings(String address) {
-        if (TextUtils.isEmpty(address)) return null;
+    public static Cursor getSettings(long id) {
+        if (id < 0) return null;
 
-        String sqlCommand = sqlSelectAllSettings() + sqlWhere(ADDRESS_COLUMN_NAME, address);
+        String sqlCommand = sqlSelectAllSettings() + sqlWhere(ID_COLUMN_NAME, Long.toString(id)) + ";";
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 
-    public static void saveSettings(SiteSettings.SettingsContainer settings) {
+    public static void saveSettings(SiteSettingsModel settings) {
+        if (settings == null) return;
+
+        ContentValues values = new ContentValues();
+        values.put(ID_COLUMN_NAME, settings.localTableId);
+        values.put(ADDRESS_COLUMN_NAME, settings.address);
+        values.put(USERNAME_COLUMN_NAME, settings.username);
+        values.put(PASSWORD_COLUMN_NAME, settings.password);
+        values.put(TITLE_COLUMN_NAME, settings.title);
+        values.put(TAGLINE_COLUMN_NAME, settings.tagline);
+        values.put(PRIVACY_COLUMN_NAME, settings.privacy);
+        values.put(LANGUAGE_COLUMN_NAME, settings.languageId);
+        values.put(LOCATION_COLUMN_NAME, settings.location);
+
+        settings.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
+                SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
+    }
+
+    public static void deleteSettings(SiteSettingsModel settings) {
+        if (settings == null) return;
+
+        String[] args = {Long.toString(settings.localTableId)};
+        WordPress.wpDB.getDatabase().delete(SETTINGS_TABLE_NAME, ID_COLUMN_NAME + "=?", args);
     }
 
     private static String sqlSelectAllSettings() {
-        return "SELECT * FROM " + SETTINGS_TABLE_NAME;
+        return "SELECT * FROM " + SETTINGS_TABLE_NAME + " ";
     }
 
     private static String sqlWhere(String variable, String value) {
-        return "WHERE " + variable + "=" + value;
+        return "WHERE " + variable + "=\"" + value + "\" ";
     }
 }
