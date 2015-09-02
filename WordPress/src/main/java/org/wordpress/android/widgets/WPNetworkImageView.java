@@ -156,6 +156,7 @@ public class WPNetworkImageView extends ImageView {
         // skip this URL if a previous request for it returned a 404
         if (mUrlSkipList.contains(mUrl)) {
             AppLog.d(AppLog.T.READER, "skipping image request " + mUrl);
+            mRequestDidFail = true;
             showErrorImage();
             return;
         }
