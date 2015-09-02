@@ -50,6 +50,7 @@ public class WPNetworkImageView extends ImageView {
 
     private int mDefaultImageResId;
     private int mErrorImageResId;
+    private boolean mRequestDidFail;
 
     private static final HashSet<String> mUrlSkipList = new HashSet<>();
 
@@ -66,6 +67,7 @@ public class WPNetworkImageView extends ImageView {
     public void setImageUrl(String url, ImageType imageType) {
         mUrl = url;
         mImageType = imageType;
+        mRequestDidFail = false;
 
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false);
@@ -76,6 +78,7 @@ public class WPNetworkImageView extends ImageView {
      */
     public void setVideoUrl(final long postId, final String videoUrl) {
         mImageType = ImageType.VIDEO;
+        mRequestDidFail = false;
 
         if (TextUtils.isEmpty(videoUrl)) {
             showDefaultImage();
@@ -110,8 +113,8 @@ public class WPNetworkImageView extends ImageView {
      * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
      */
     private void loadImageIfNecessary(final boolean isInLayoutPass) {
-        // do nothing if image type hasn't been set yet
-        if (mImageType == ImageType.NONE) {
+        // do nothing if image type hasn't been set yet or the previous request failed
+        if (mImageType == ImageType.NONE || mRequestDidFail) {
             return;
         }
 
@@ -167,6 +170,7 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        mRequestDidFail = true;
                         showErrorImage();
                         // keep track of URLs that 404 so we can skip them the next time
                         int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
