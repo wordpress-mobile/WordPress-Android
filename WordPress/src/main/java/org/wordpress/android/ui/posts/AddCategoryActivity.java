@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -30,7 +29,6 @@ public class AddCategoryActivity extends AppCompatActivity {
         if (extras != null) {
             id = extras.getInt("id");
         }
-
         loadCategories();
 
         final Button cancelButton = (Button) findViewById(R.id.cancel);

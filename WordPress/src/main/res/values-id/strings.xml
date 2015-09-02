@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Tak ada koneksi</string>
+	<string name="page_trashed">Halaman dibuang ke tong sampah</string>
+	<string name="post_deleted">Postingan dihapus</string>
+	<string name="post_trashed">Postingan dibuang ke tong sampah</string>
+	<string name="stats_no_activity_this_period">Tidak ada aktivitas dalam periode ini</string>
+	<string name="trashed">Dibuang</string>
+	<string name="button_back">Kembali</string>
+	<string name="page_deleted">Halaman dihapus</string>
+	<string name="button_more">Lainnya</string>
+	<string name="button_stats">Statistik</string>
+	<string name="button_trash">Buang</string>
+	<string name="button_preview">Pratinjau</string>
+	<string name="button_view">Lihat</string>
+	<string name="button_edit">Sunting</string>
+	<string name="button_publish">Terbitkan</string>
+	<string name="button_delete">Hapus</string>
+	<string name="my_site_no_sites_view_subtitle">Mau menambahkan satu?</string>
+	<string name="my_site_no_sites_view_title">Anda belum punya situs WordPress sama sekali.</string>
+	<string name="my_site_no_sites_view_drake">Ilustrasi</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Anda tidak punya otoritas untuk mengakses blog ini.</string>
+	<string name="reader_toast_err_follow_blog_not_found">Blog ini tak bisa ditemukan</string>
+	<string name="undo">Urungkan</string>
 	<string name="tabbar_accessibility_label_my_site">Situs Saya</string>
 	<string name="tabbar_accessibility_label_me">Saya</string>
 	<string name="editor_toast_changes_saved">Perubahan disimpan</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Privasi</string>
 	<string name="preference_send_usage_stats">Kirim statistik</string>
 	<string name="preference_send_usage_stats_summary">Secara otomatis mengirim statistik penggunaan untuk membantu kami meningkatkan WordPress untuk Android</string>
-	<string name="reader_title_reblog">Reblog Pos</string>
-	<string name="reader_hint_reblog_comment">Tambahkan opini Anda (opsional)</string>
-	<string name="reader_label_reblog_to">Reblog ke</string>
 	<string name="update_verb">Mutakhirkan</string>
 	<string name="schedule_verb">Jadwalkan</string>
 	<string name="reader_title_blog_preview">Pratinjau Blog</string>
@@ -273,7 +292,6 @@
 	<string name="forums">Forum</string>
 	<string name="help_center">Pusat bantuan</string>
 	<string name="ssl_certificate_error">Sertifikat SSL tidak sah</string>
-	<string name="reader_label_reblog_empty">Kelihatannya Anda tidak memiliki blog WordPress.com untuk bisa menerbitkan lagi pos ini.</string>
 	<string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
 	<string name="no_network_message">Tidak ada jaringan yang tersedia</string>
 	<string name="blog_not_found">Terjadi kekeliruan ketika mengakses blog ini</string>
@@ -397,9 +415,7 @@
 	<string name="toast_comment_unedited">Komentar belum berubah</string>
 	<string name="delete_draft">Hapus draf</string>
 	<string name="preview_page">Pratinjau laman</string>
-	<string name="page_deleted">Laman berhasil dihapus</string>
 	<string name="preview_post">Pratinjau pos</string>
-	<string name="post_deleted">Pos berhasil dihapus</string>
 	<string name="comment_added">Komentar berhasil ditambahkan</string>
 	<string name="page_not_published">Laman belum diterbitkan</string>
 	<string name="post_not_published">Pos belum diterbitkan</string>
@@ -431,7 +447,6 @@
 	<string name="jetpack_message_not_admin">Plugin Jetpack dibutuhkan untuk statistik. Hubungi administrator situs.</string>
 	<string name="reader_title_applog">Log aplikasi</string>
 	<string name="reader_share_link">Bagikan tautan</string>
-	<string name="reader_toast_err_reblog_requires_blog">Pilih sebuah blog</string>
 	<string name="reader_toast_err_add_tag">Tidak bisa menambahkan tag ini</string>
 	<string name="reader_toast_err_remove_tag">Tidak bisa menghapus tag ini</string>
 	<string name="required_field">Isian wajib</string>
@@ -501,10 +516,7 @@
 	<string name="reader_label_removed_tag">%s dihapus</string>
 	<string name="reader_likes_one">Satu orang menyukai ini</string>
 	<string name="reader_likes_only_you">Anda menyukai ini</string>
-	<string name="reader_toast_reblog_success">Posting akan di muat ulang</string>
 	<string name="reader_toast_err_comment_failed">Tidak bisa menambahkan komentar anda</string>
-	<string name="reader_toast_err_reblog_failed">Tidak bisa memuat ulang posting ini</string>
-	<string name="reader_toast_err_already_reblogged">Anda telah memuat ulang posting ini</string>
 	<string name="reader_toast_err_tag_exists">Anda telah mengikuti tag ini</string>
 	<string name="reader_toast_err_tag_invalid">Tag ini tidak valid</string>
 	<string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>
@@ -676,6 +688,12 @@
 		<item>Kiri</item>
 		<item>Tengah</item>
 		<item>Kanan</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Diterbitkan</item>
+		<item>Draf</item>
+		<item>Terjadwal</item>
+		<item>Dibuang</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Di samping</item>
