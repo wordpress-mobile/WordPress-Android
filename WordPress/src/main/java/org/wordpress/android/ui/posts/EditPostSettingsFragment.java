@@ -88,7 +88,7 @@ public class EditPostSettingsFragment extends Fragment
     private String[] mPostFormats;
     private String[] mPostFormatTitles;
 
-    private static enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
+    private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -472,9 +472,12 @@ public class EditPostSettingsFragment extends Fragment
             mPost.setLocation(mPostLocation);
         }
 
+        if (mCategories != null) {
+            mPost.setJSONCategories(new JSONArray(mCategories));
+        }
+
         mPost.setPostExcerpt(excerpt);
         mPost.setDate_created_gmt(pubDateTimestamp);
-        mPost.setJSONCategories(new JSONArray(mCategories));
         mPost.setKeywords(tags);
         mPost.setPostStatus(status);
         mPost.setPassword(password);
