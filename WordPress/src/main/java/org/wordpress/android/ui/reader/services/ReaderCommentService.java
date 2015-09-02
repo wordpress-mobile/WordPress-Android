@@ -38,6 +38,8 @@ public class ReaderCommentService extends Service {
     private static int mCurrentPage;
 
     public static void startService(Context context, long blogId, long postId, boolean requestNextPage) {
+        if (context == null) return;
+
         Intent intent = new Intent(context, ReaderCommentService.class);
         intent.putExtra(ARG_BLOG_ID, blogId);
         intent.putExtra(ARG_POST_ID, postId);
@@ -47,6 +49,8 @@ public class ReaderCommentService extends Service {
 
     // Requests comments until the passed commentId is found
     public static void startServiceForComment(Context context, long blogId, long postId, long commentId) {
+        if (context == null) return;
+
         Intent intent = new Intent(context, ReaderCommentService.class);
         intent.putExtra(ARG_BLOG_ID, blogId);
         intent.putExtra(ARG_POST_ID, postId);
