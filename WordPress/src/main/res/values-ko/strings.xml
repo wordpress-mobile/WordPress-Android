@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">연결 없음</string>
+	<string name="page_trashed">휴지통으로 이동된 페이지</string>
+	<string name="post_deleted">글 삭제됨</string>
+	<string name="post_trashed">휴지통으로 이동된 글</string>
+	<string name="stats_no_activity_this_period">이 기간에 활동이 없음</string>
+	<string name="trashed">삭제됨</string>
+	<string name="button_back">돌아가기</string>
+	<string name="page_deleted">페이지 삭제됨</string>
+	<string name="button_more">더</string>
+	<string name="button_stats">통계</string>
+	<string name="button_trash">휴지통</string>
+	<string name="button_preview">미리 보기</string>
+	<string name="button_view">보기</string>
+	<string name="button_edit">편집</string>
+	<string name="button_publish">발행</string>
+	<string name="button_delete">삭제</string>
+	<string name="my_site_no_sites_view_subtitle">더 추가하시겠습니까?</string>
+	<string name="my_site_no_sites_view_title">아직 WordPress사이트를 등록하지 않았습니다.</string>
+	<string name="my_site_no_sites_view_drake">Illustration</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">이 블로그에 접근할 권한이 없습니다.</string>
+	<string name="reader_toast_err_follow_blog_not_found">블로그를 찾을 수 없습니다.</string>
+	<string name="undo">실행 취소</string>
 	<string name="tabbar_accessibility_label_my_site">내 사이트</string>
 	<string name="tabbar_accessibility_label_me">내 계정</string>
 	<string name="passcodelock_prompt_message">PIN 입력</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">프라이버시</string>
 	<string name="preference_send_usage_stats">통계 보내기</string>
 	<string name="preference_send_usage_stats_summary">사용 통계를 자동으로 보내면 안드로이드용 워드프레스를 개선하는데 도움이 됩니다.</string>
-	<string name="reader_title_reblog">글 리블로그하기</string>
-	<string name="reader_hint_reblog_comment">생각 추가(선택사항)</string>
-	<string name="reader_label_reblog_to">다음으로 리블로그하기:</string>
 	<string name="update_verb">업데이트</string>
 	<string name="schedule_verb">예약</string>
 	<string name="reader_title_blog_preview">블로그 미리보기</string>
@@ -272,7 +291,6 @@
 	<string name="forgot_password">패스워드를 잊으셨나요?</string>
 	<string name="forums">포럼</string>
 	<string name="help_center">도우미 센터</string>
-	<string name="reader_label_reblog_empty">워드프레스 블로그에 감춰진 게시물은 리블로그 할 수 없습니다.</string>
 	<string name="ssl_certificate_error">잘못된 SSL 인증서</string>
 	<string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>
 	<string name="blog_not_found">블로그에 접속하는 동안 에러가 발생하였습니다.</string>
@@ -355,7 +373,6 @@
 	<string name="reader_title_applog">응용 프로그램 로그</string>
 	<string name="reader_share_link">링크를 공유</string>
 	<string name="email_hint">이메일</string>
-	<string name="reader_toast_err_reblog_requires_blog">블로그를 선택 하십시오</string>
 	<string name="blog_title_invalid">잘못된 사이트 제목</string>
 	<string name="blog_name_invalid">잘못된 사이트 주소</string>
 	<string name="blog_name_must_include_letters">사이트 주소는 반각 영문자의 소문자를 포함해야합니다.</string>
@@ -405,9 +422,7 @@
 	<string name="post_not_published">이 게시물은 아직 공개되지 않았습니다</string>
 	<string name="page_not_published">이 페이지는 아직 공개되지 않았습니다</string>
 	<string name="pending_review">리뷰 진행중</string>
-	<string name="post_deleted">게시물을 삭제했습니다</string>
 	<string name="delete_post">게시물 삭제</string>
-	<string name="page_deleted">게시물을 삭제했습니다</string>
 	<string name="delete_page">페이지를 제거</string>
 	<string name="account_details">계정 정보</string>
 	<string name="required_field">필수 항목</string>
@@ -508,11 +523,8 @@
 	<string name="reader_toast_err_share_intent">공유에 실패</string>
 	<string name="jetpack_message">통계를 보려면 Jetpack 플러그인이 필요합니다. Jetpack을 설치하시겠습니까 ?</string>
 	<string name="reader_likes_one">1명이 "좋아요"를 달았습니다</string>
-	<string name="reader_toast_err_reblog_failed">이 게시물을 리블로그 할 수 없습니다</string>
 	<string name="reader_toast_err_comment_failed">의견을 게시 할 수 없습니다</string>
-	<string name="reader_toast_err_already_reblogged">이 게시물은 이미 리블로그되었습니다</string>
 	<string name="connecting_wpcom">WordPress.com에 연결 중</string>
-	<string name="reader_toast_reblog_success">게시물 리블로그했습니다</string>
 	<string name="limit_reached">한도에 도달했습니다. 1분 후에 다시 시도해 수 있습니다. 이전에 로그인을 시도하면 제한 해제까지의 시간이 더 길어집니다. 오류라고 생각되면 지원에 문의하십시오.</string>
 	<string name="reader_empty_followed_tags">태그를 팔로우하지 않습니다.</string>
 	<string name="create_account_wpcom">WordPress.com에서 계정 만들기</string>
@@ -676,6 +688,12 @@
 		<item>왼쪽</item>
 		<item>중앙</item>
 		<item>오른쪽</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>발행됨</item>
+		<item>임시글</item>
+		<item>예약됨</item>
+		<item>삭제됨</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>곁에</item>
