@@ -8,16 +8,16 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
         card_view:cardElevation="@dimen/card_elevation">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="2dp">
+            android:layout_margin="@dimen/cardview_default_radius">
 
             <org.wordpress.android.ui.FadeInNetworkImageView
                 android:id="@+id/theme_grid_item_image"
@@ -43,14 +43,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/ReaderTextView.Post.Title"
-                        android:layout_marginLeft="10dp" />
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_header_margin" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/alert_green"
-                        android:layout_marginLeft="5dp"/>
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
 
                 </LinearLayout>
 
@@ -61,9 +61,9 @@
 
                     <View
                         android:id="@+id/divider"
-                        android:layout_width="1dp"
+                        android:layout_width="@dimen/theme_browser_separator_thickness"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="@dimen/cardview_default_radius"
                         android:background="@color/reader_divider_grey" />
 
                     <ImageView

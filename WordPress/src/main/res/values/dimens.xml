@@ -57,6 +57,7 @@
     <!--
         native reader dimens
     -->
+    <dimen name="margin_none">0dp</dimen>
     <dimen name="margin_extra_small">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
@@ -187,5 +188,14 @@
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <!--theme browser-->
+    <dimen name="theme_browser_default_column_width">320dp</dimen>
+    <dimen name="theme_browser_cardview_margin_large">5dp</dimen>
+    <dimen name="theme_browser_cardview_margin_small">2dp</dimen>
+    <dimen name="theme_browser_cardview_header_margin">10dp</dimen>
+    <dimen name="theme_browser_separator_thickness">1dp</dimen>
+    <dimen name="theme_browser_header_button_height">50dp</dimen>
+    <dimen name="theme_browser_header_button_weight">1</dimen>
 
 </resources>
