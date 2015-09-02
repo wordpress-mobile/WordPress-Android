@@ -34,7 +34,7 @@ android {
         applicationId "org.wordpress.android"
         versionName "4.5-rc-2"
         versionCode 200
-        minSdkVersion 14
+        minSdkVersion 23
         targetSdkVersion 23
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""

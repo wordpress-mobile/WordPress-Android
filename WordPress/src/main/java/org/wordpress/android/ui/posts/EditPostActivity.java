@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -95,7 +97,8 @@ import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 
-public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener {
+public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -1571,5 +1574,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
         WordPress.wpDB.saveMediaFile(mediaFile);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == EditPostSettingsFragment.PERMISSION_REQUEST_LOCATION) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission request was granted, show Location buttons in Settings
+                mEditPostSettingsFragment.initLocation();
+                return;
+            }
+            // Permission request was denied, do nothing
+        }
     }
 }

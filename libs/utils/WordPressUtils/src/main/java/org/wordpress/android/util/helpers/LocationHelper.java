@@ -1,59 +1,70 @@
 //This Handy-Dandy class acquired and tweaked from http://stackoverflow.com/a/3145655/309558
 package org.wordpress.android.util.helpers;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
+import android.Manifest.permission_group;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LocationHelper {
-    Timer timer1;
-    LocationManager lm;
-    LocationResult locationResult;
-    boolean gps_enabled = false;
-    boolean network_enabled = false;
+    Timer mTimer;
+    LocationManager mLocationManager;
+    LocationResult mLocationResult;
+    boolean mGpsEnabled = false;
+    boolean mNetworkEnabled = false;
 
-    public boolean getLocation(Context context, LocationResult result) {
-        locationResult = result;
-        if (lm == null)
-            lm = (LocationManager) context
-                    .getSystemService(Context.LOCATION_SERVICE);
+    public boolean getLocation(Activity activity, LocationResult result) {
+
+
+        mLocationResult = result;
+        if (mLocationManager == null) {
+            mLocationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        }
 
         // exceptions will be thrown if provider is not permitted.
         try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            mGpsEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
         }
         try {
-            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            mNetworkEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch (Exception ex) {
         }
 
         // don't start listeners if no provider is enabled
-        if (!gps_enabled && !network_enabled)
+        if (!mGpsEnabled && !mNetworkEnabled) {
             return false;
+        }
 
-        if (gps_enabled)
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGps);
+        if (mGpsEnabled) {
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGps);
+        }
 
-        if (network_enabled)
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
+        if (mNetworkEnabled) {
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
+        }
 
-        timer1 = new Timer();
-        timer1.schedule(new GetLastLocation(), 30000);
+        mTimer = new Timer();
+        mTimer.schedule(new GetLastLocation(), 30000);
         return true;
     }
 
     LocationListener locationListenerGps = new LocationListener() {
         public void onLocationChanged(Location location) {
-            timer1.cancel();
-            locationResult.gotLocation(location);
-            lm.removeUpdates(this);
-            lm.removeUpdates(locationListenerNetwork);
+            mTimer.cancel();
+            mLocationResult.gotLocation(location);
+            mLocationManager.removeUpdates(this);
+            mLocationManager.removeUpdates(locationListenerNetwork);
         }
 
         public void onProviderDisabled(String provider) {
@@ -68,10 +79,10 @@ public class LocationHelper {
 
     LocationListener locationListenerNetwork = new LocationListener() {
         public void onLocationChanged(Location location) {
-            timer1.cancel();
-            locationResult.gotLocation(location);
-            lm.removeUpdates(this);
-            lm.removeUpdates(locationListenerGps);
+            mTimer.cancel();
+            mLocationResult.gotLocation(location);
+            mLocationManager.removeUpdates(this);
+            mLocationManager.removeUpdates(locationListenerGps);
         }
 
         public void onProviderDisabled(String provider) {
@@ -87,34 +98,36 @@ public class LocationHelper {
     class GetLastLocation extends TimerTask {
         @Override
         public void run() {
-            lm.removeUpdates(locationListenerGps);
-            lm.removeUpdates(locationListenerNetwork);
+            mLocationManager.removeUpdates(locationListenerGps);
+            mLocationManager.removeUpdates(locationListenerNetwork);
 
             Location net_loc = null, gps_loc = null;
-            if (gps_enabled)
-                gps_loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (network_enabled)
-                net_loc = lm
-                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (mGpsEnabled) {
+                gps_loc = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+            if (mNetworkEnabled) {
+                net_loc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
 
             // if there are both values use the latest one
             if (gps_loc != null && net_loc != null) {
-                if (gps_loc.getTime() > net_loc.getTime())
-                    locationResult.gotLocation(gps_loc);
-                else
-                    locationResult.gotLocation(net_loc);
+                if (gps_loc.getTime() > net_loc.getTime()) {
+                    mLocationResult.gotLocation(gps_loc);
+                } else {
+                    mLocationResult.gotLocation(net_loc);
+                }
                 return;
             }
 
             if (gps_loc != null) {
-                locationResult.gotLocation(gps_loc);
+                mLocationResult.gotLocation(gps_loc);
                 return;
             }
             if (net_loc != null) {
-                locationResult.gotLocation(net_loc);
+                mLocationResult.gotLocation(net_loc);
                 return;
             }
-            locationResult.gotLocation(null);
+            mLocationResult.gotLocation(null);
         }
     }
 
@@ -123,10 +136,10 @@ public class LocationHelper {
     }
 
     public void cancelTimer() {
-        if (timer1 != null) {
-            timer1.cancel();
-            lm.removeUpdates(locationListenerGps);
-            lm.removeUpdates(locationListenerNetwork);
+        if (mTimer != null) {
+            mTimer.cancel();
+            mLocationManager.removeUpdates(locationListenerGps);
+            mLocationManager.removeUpdates(locationListenerNetwork);
         }
     }
 }
