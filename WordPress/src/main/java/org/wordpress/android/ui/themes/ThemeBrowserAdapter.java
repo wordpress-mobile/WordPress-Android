@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -66,6 +65,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         if (urlHolder == null) {
             urlHolder = new ScreenshotHolder();
             urlHolder.requestURL = screenshotURL;
+            themeViewHolder.imageView.setDefaultImageResId(R.drawable.light_grey);
             themeViewHolder.imageView.setTag(urlHolder);
         }
 
