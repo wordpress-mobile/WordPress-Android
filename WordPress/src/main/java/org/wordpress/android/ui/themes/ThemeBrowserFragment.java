@@ -45,6 +45,9 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
     protected static final String BUNDLE_PAGE = "BUNDLE_PAGE";
+    protected static final int THEME_FILTER_ALL_INDEX = 0;
+    protected static final int THEME_FILTER_FREE_INDEX = 1;
+    protected static final int THEME_FILTER_PREMIUM_INDEX = 2;
 
     protected HeaderGridView mGridView;
     protected TextView mEmptyView;
@@ -222,13 +225,14 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         if (WordPress.getCurrentBlog() == null) {
             return null;
         }
+
         String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         switch (position) {
-            case 2:
+            case THEME_FILTER_PREMIUM_INDEX:
                 return WordPress.wpDB.getThemesPremium(blogId);
-            case 1:
+            case THEME_FILTER_FREE_INDEX:
                 return WordPress.wpDB.getThemesFree(blogId);
-            case 0:
+            case THEME_FILTER_ALL_INDEX:
             default:
                 return WordPress.wpDB.getThemesAll(blogId);
         }
