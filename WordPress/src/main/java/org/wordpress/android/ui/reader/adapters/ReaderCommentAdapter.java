@@ -188,11 +188,17 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         final ReaderComment comment = getItem(position);
 
         commentHolder.txtAuthor.setText(comment.getAuthorName());
-        commentHolder.imgAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
         CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), commentHolder.itemView.getWidth());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         commentHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
+
+        if (comment.hasAuthorAvatar()) {
+            String avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz);
+            commentHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            commentHolder.imgAvatar.showDefaultGravatarImage();
+        }
 
         // tapping avatar or author name opens blog preview
         if (comment.hasAuthorBlogId()) {
