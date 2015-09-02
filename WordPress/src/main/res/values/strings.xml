@@ -547,7 +547,7 @@
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
-    <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far...</string>
+    <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most popular day and hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
@@ -1005,7 +1005,13 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
-    <string name="current_theme">CURRENT THEME</string>
+
+    <!--Theme Browser-->
+    <string name="current_theme_caps">CURRENT THEME</string>
+    <string name="current_theme">Current Theme</string>
+    <string name="customize">customize</string>
+    <string name="details">details</string>
+    <string name="support">support</string>
 
     <string-array name="themes_filter_array">
         <item>All</item>

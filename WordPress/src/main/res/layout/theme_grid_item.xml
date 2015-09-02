@@ -1,83 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/theme_grid_card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants"
-    android:focusable="false"
-    android:focusableInTouchMode="false" >
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
         card_view:cardElevation="@dimen/card_elevation">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:orientation="vertical">
+            android:layout_margin="@dimen/cardview_default_radius">
 
             <org.wordpress.android.ui.FadeInNetworkImageView
                 android:id="@+id/theme_grid_item_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:scaleType="centerCrop" />
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_below="@+id/theme_grid_item_image">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="2">
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/ReaderTextView.Post.Title"
-                        android:layout_marginLeft="10dp" />
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_header_margin" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/alert_green"
-                        android:layout_marginLeft="5dp"/>
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
 
                 </LinearLayout>
 
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="2dp"
-                    android:layout_alignParentRight="true"
-                    android:background="@color/reader_divider_grey" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
 
-                <Spinner
-                    android:id="@+id/theme_grid_item_spinner"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="@dimen/margin_large"
-                    android:spinnerMode="dropdown"
-                    android:background="@drawable/ic_action_more" />
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="@dimen/theme_browser_separator_thickness"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/cardview_default_radius"
+                        android:background="@color/reader_divider_grey" />
 
-            </LinearLayout>
+                    <ImageView
+                        android:id="@+id/image_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="?android:selectableItemBackground"
+                        android:paddingBottom="@dimen/margin_large"
+                        android:paddingTop="@dimen/margin_large"
+                        android:src="@drawable/ic_action_more" />
 
-        </LinearLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 
-</LinearLayout>
+</RelativeLayout>

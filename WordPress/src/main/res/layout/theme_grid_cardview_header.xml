@@ -7,10 +7,10 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginBottom="@dimen/cardview_default_radius"
+        android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
         card_view:cardElevation="@dimen/card_elevation">
 
@@ -23,25 +23,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="10dp">
+                android:layout_margin="@dimen/theme_browser_cardview_header_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/current_theme" />
+                    android:text="@string/current_theme_caps" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/header_theme_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="TwentyFifteen" />
+                    android:text="@string/current_theme" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/theme_browser_separator_thickness"
                 android:background="@color/reader_divider_grey" />
 
             <LinearLayout
@@ -52,7 +52,7 @@
                 <LinearLayout
                     android:id="@+id/customize"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center">
@@ -68,26 +68,26 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:textColor="@color/black"
-                        android:text="customize" />
+                        android:text="@string/customize" />
 
                 </LinearLayout>
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
                     android:background="@color/reader_divider_grey" />
 
                 <LinearLayout
                     android:id="@+id/details"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center">
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_margin="0dp"
+                        android:layout_margin="@dimen/margin_none"
                         style="@style/MySiteListRowIcon"
                         android:contentDescription="@string/my_site_btn_blog_posts"
                         android:src="@drawable/my_site_icon_posts" />
@@ -97,26 +97,26 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:textColor="@color/black"
-                        android:text="details" />
+                        android:text="@string/details" />
 
                 </LinearLayout>
 
                 <View
-                    android:layout_width="1dp"
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
                     android:background="@color/reader_divider_grey" />
 
                 <LinearLayout
                     android:id="@+id/support"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center">
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_margin="0dp"
+                        android:layout_margin="@dimen/margin_none"
                         style="@style/MySiteListRowIcon"
                         android:contentDescription="@string/my_site_btn_blog_posts"
                         android:src="@drawable/my_site_icon_posts" />
@@ -126,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:textColor="@color/black"
-                        android:text="support" />
+                        android:text="@string/support" />
 
                 </LinearLayout>
 

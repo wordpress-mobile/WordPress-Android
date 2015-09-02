@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Pas de connexion</string>
+	<string name="trashed">À la corbeille</string>
+	<string name="page_trashed">Page envoyée à la corbeille</string>
+	<string name="post_trashed">Article envoyé à la corbeille</string>
+	<string name="page_deleted">Page supprimée</string>
+	<string name="button_more">Plus</string>
+	<string name="button_stats">Stats</string>
+	<string name="button_trash">Corbeille</string>
+	<string name="button_preview">Aperçu</string>
+	<string name="button_view">Vue</string>
+	<string name="button_edit">Editer</string>
+	<string name="button_publish">Publier</string>
+	<string name="button_delete">Supprimer</string>
+	<string name="post_deleted">Article supprimé</string>
+	<string name="stats_no_activity_this_period">Pas d\'activité durant cette période</string>
+	<string name="button_back">Retour</string>
+	<string name="my_site_no_sites_view_subtitle">Voulez-vous en ajouter un ?</string>
+	<string name="my_site_no_sites_view_title">Vous n\'avez aucun site WordPress pour le moment.</string>
+	<string name="my_site_no_sites_view_drake">Illustration</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Vous n\'êtes pas autorisé à accéder à ce blog</string>
+	<string name="reader_toast_err_follow_blog_not_found">Ce blog est introuvable</string>
+	<string name="undo">Annuler</string>
 	<string name="tabbar_accessibility_label_me">Moi</string>
 	<string name="tabbar_accessibility_label_my_site">Mon site</string>
 	<string name="editor_toast_changes_saved">Modifications enregistrées</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Données personnelles</string>
 	<string name="preference_send_usage_stats">Envoyer statistiques</string>
 	<string name="preference_send_usage_stats_summary">Envoyer automatiquement des statistiques d\'utilisation pour nous aider à améliorer WordPress pour Android</string>
-	<string name="reader_hint_reblog_comment">Ajouter un commentaire (optionnel)</string>
-	<string name="reader_label_reblog_to">Reblogger sur</string>
-	<string name="reader_title_reblog">Reblogger l\'article</string>
 	<string name="update_verb">Mettre à jour</string>
 	<string name="schedule_verb">Programmer</string>
 	<string name="reader_title_blog_preview">Prévisualisation du blog</string>
@@ -274,7 +293,6 @@
 	<string name="help_center">Centre d\'aide</string>
 	<string name="ssl_certificate_error">Certificat SSL invalide</string>
 	<string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
-	<string name="reader_label_reblog_empty">Vous n\'avez pas de blogs WordPress.com visibles pour rebloguer cet article</string>
 	<string name="out_of_memory">L\'appareil n\'a plus assez de mémoire</string>
 	<string name="gallery_error">Le média ne peut pas être récupéré</string>
 	<string name="blog_not_found">Une erreur s\'est produite en accédant à ce blog</string>
@@ -378,8 +396,6 @@
 	<string name="page_settings">Paramètres de page</string>
 	<string name="upload_failed">Échec du chargement</string>
 	<string name="horizontal_alignment">Alignement horizontal</string>
-	<string name="page_deleted">Page supprimée avec succès</string>
-	<string name="post_deleted">Article supprimé avec succès</string>
 	<string name="link_enter_url_text">Texte du lien (optionnel)</string>
 	<string name="comment_status_trash">À la corbeille</string>
 	<string name="trash">Corbeille</string>
@@ -407,7 +423,6 @@
 	<string name="view_site">Voir le site</string>
 	<string name="privacy_policy">Vie privée</string>
 	<string name="reader_share_link">Lien partagé</string>
-	<string name="reader_toast_err_reblog_requires_blog">Sélectionnez un blog</string>
 	<string name="reader_toast_err_add_tag">Impossible d\'ajouter ce mot-clé</string>
 	<string name="reader_toast_err_remove_tag">Impossible de supprimer ce mot-clé </string>
 	<string name="required_field">Champs requis</string>
@@ -497,7 +512,6 @@
 	<string name="reader_hint_comment_on_comment">Répondre au commentaire</string>
 	<string name="reader_label_added_tag">%s Ajouté</string>
 	<string name="reader_label_removed_tag">%s Retiré</string>
-	<string name="reader_toast_err_already_reblogged">Vous avez déjà reblogué cet article</string>
 	<string name="reader_toast_err_tag_exists">Vous suivez déjà ce tag</string>
 	<string name="reader_toast_err_tag_invalid">Ce n\'est pas un tag valide</string>
 	<string name="reader_toast_err_share_intent">Impossible de partager</string>
@@ -508,9 +522,7 @@
 	<string name="connecting_wpcom">Connection à WordPress.com</string>
 	<string name="reader_likes_one">Une personne aime ça</string>
 	<string name="reader_likes_only_you">Vous aimez ça</string>
-	<string name="reader_toast_reblog_success">L\'article à été reblogué</string>
 	<string name="reader_toast_err_comment_failed">Impossible d\'envoyer votre commentaire</string>
-	<string name="reader_toast_err_reblog_failed">Impossible de rebloguer ce post</string>
 	<string name="nux_tutorial_get_started_title">Démarrez!</string>
 	<string name="username_invalid">Nom d\'utilisateur invalide</string>
 	<string name="limit_reached">Limite atteinte. Vous pouvez réessayer dans 1 minute. Si vous pensez que c\'est une erreur, contacter le support.</string>
@@ -676,6 +688,12 @@
 		<item>Gauche</item>
 		<item>Centre</item>
 		<item>Droite</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Publié</item>
+		<item>Brouillons</item>
+		<item>Programmé</item>
+		<item>À la corbeille</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>En passant</item>

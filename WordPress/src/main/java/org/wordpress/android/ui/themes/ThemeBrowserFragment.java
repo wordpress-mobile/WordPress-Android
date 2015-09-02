@@ -2,8 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -47,6 +45,9 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
 
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
     protected static final String BUNDLE_PAGE = "BUNDLE_PAGE";
+    protected static final int THEME_FILTER_ALL_INDEX = 0;
+    protected static final int THEME_FILTER_FREE_INDEX = 1;
+    protected static final int THEME_FILTER_PREMIUM_INDEX = 2;
 
     protected String mCurrentThemeId;
     protected HeaderGridView mGridView;
@@ -95,7 +96,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return;
         }
 
-        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
+        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mGridView);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
@@ -225,13 +226,14 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         if (WordPress.getCurrentBlog() == null) {
             return null;
         }
+
         String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         switch (position) {
-            case 2:
+            case THEME_FILTER_PREMIUM_INDEX:
                 return WordPress.wpDB.getThemesPremium(blogId);
-            case 1:
+            case THEME_FILTER_FREE_INDEX:
                 return WordPress.wpDB.getThemesFree(blogId);
-            case 0:
+            case THEME_FILTER_ALL_INDEX:
             default:
                 return WordPress.wpDB.getThemesAll(blogId);
         }
@@ -243,7 +245,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return;
         }
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mGridView);
         }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);

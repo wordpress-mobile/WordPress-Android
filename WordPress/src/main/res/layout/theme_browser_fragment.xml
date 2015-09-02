@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/theme_no_search_result_found"
         android:visibility="gone"
-        android:layout_margin="16dp"/>
+        android:layout_margin="@dimen/margin_extra_large"/>
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
@@ -22,9 +22,9 @@
             android:id="@+id/theme_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:horizontalSpacing="0dp"
+            android:horizontalSpacing="@dimen/margin_none"
             android:scrollbarStyle="outsideOverlay"
-            android:columnWidth="320dp"
+            android:columnWidth="@dimen/theme_browser_default_column_width"
             android:numColumns="auto_fit"
             android:divider="@android:color/transparent"
             android:stretchMode="columnWidth"
