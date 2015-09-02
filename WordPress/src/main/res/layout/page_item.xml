@@ -62,7 +62,6 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_large"
                 app:fontFamily="merriweather"
-                app:fontVariation="light"
                 tools:text="text_title" />
 
             <org.wordpress.android.widgets.WPTextView
