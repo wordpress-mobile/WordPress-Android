@@ -53,7 +53,7 @@
                     android:id="@+id/customize"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
-                    android:layout_weight="@dimen/theme_browser_header_button_weight"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center">
 
@@ -81,7 +81,7 @@
                     android:id="@+id/details"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
-                    android:layout_weight="@dimen/theme_browser_header_button_weight"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center">
 
@@ -110,7 +110,7 @@
                     android:id="@+id/support"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
-                    android:layout_weight="@dimen/theme_browser_header_button_weight"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center">
 

@@ -196,6 +196,5 @@
     <dimen name="theme_browser_cardview_header_margin">10dp</dimen>
     <dimen name="theme_browser_separator_thickness">1dp</dimen>
     <dimen name="theme_browser_header_button_height">50dp</dimen>
-    <dimen name="theme_browser_header_button_weight">1</dimen>
 
 </resources>
