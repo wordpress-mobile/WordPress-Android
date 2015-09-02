@@ -67,9 +67,6 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             urlHolder = new ScreenshotHolder();
             urlHolder.requestURL = screenshotURL;
             themeViewHolder.imageView.setTag(urlHolder);
-            int height = Double.valueOf(mGridView.getColumnWidth() * 0.75).intValue();
-            themeViewHolder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(mGridView.getColumnWidth(), height));
-            themeViewHolder.imageView.requestLayout();
         }
 
         if (!urlHolder.requestURL.equals(screenshotURL)) {

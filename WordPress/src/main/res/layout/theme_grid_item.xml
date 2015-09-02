@@ -22,9 +22,10 @@
             <org.wordpress.android.ui.FadeInNetworkImageView
                 android:id="@+id/theme_grid_item_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:scaleType="centerCrop" />
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
