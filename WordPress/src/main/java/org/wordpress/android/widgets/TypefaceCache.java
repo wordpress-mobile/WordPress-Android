@@ -39,32 +39,20 @@ public class TypefaceCache {
 
         final String typefaceName;
         if (family == FAMILY_MERRIWEATHER) {
-            if (variation == VARIATION_LIGHT) {
-                // note that there isn't a light bold style
-                switch (fontStyle) {
-                    case Typeface.ITALIC:
-                    case Typeface.BOLD_ITALIC:
-                        typefaceName = "Merriweather-LightItalic.ttf";
-                        break;
-                    default:
-                        typefaceName = "Merriweather-Light.ttf";
-                        break;
-                }
-            } else {
-                switch (fontStyle) {
-                    case Typeface.BOLD:
-                        typefaceName = "Merriweather-Bold.ttf";
-                        break;
-                    case Typeface.ITALIC:
-                        typefaceName = "Merriweather-Italic.ttf";
-                        break;
-                    case Typeface.BOLD_ITALIC:
-                        typefaceName = "Merriweather-BoldItalic.ttf";
-                        break;
-                    default:
-                        typefaceName = "Merriweather-Regular.ttf";
-                        break;
-                }
+            // note that merriweather doesn't have a light variation
+            switch (fontStyle) {
+                case Typeface.BOLD:
+                    typefaceName = "Merriweather-Bold.ttf";
+                    break;
+                case Typeface.ITALIC:
+                    typefaceName = "Merriweather-Italic.ttf";
+                    break;
+                case Typeface.BOLD_ITALIC:
+                    typefaceName = "Merriweather-BoldItalic.ttf";
+                    break;
+                default:
+                    typefaceName = "Merriweather-Regular.ttf";
+                    break;
             }
         } else {
             // Open Sans
