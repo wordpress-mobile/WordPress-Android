@@ -84,12 +84,12 @@ public class WordPress extends Application {
     public static Blog currentBlog;
     public static WordPressDB wpDB;
 
+    public static RequestQueue requestQueue;
+    public static ImageLoader imageLoader;
+
     private static RestClientUtils mRestClientUtils;
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
-
-    public static RequestQueue requestQueue;
-    public static ImageLoader imageLoader;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -162,6 +162,8 @@ public class WordPress extends Application {
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
+        AppLog.i(T.UTILS, "WordPress.onCreate");
+
         if (!PackageUtils.isDebugBuild()) {
             Fabric.with(this, new Crashlytics());
         }
@@ -182,17 +184,8 @@ public class WordPress extends Application {
 
         RestClientUtils.setUserAgent(getUserAgent());
 
-        configureSimperium();
-
         // Volley networking setup
         setupVolleyQueue();
-
-        // Refresh account informations
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            AccountHelper.getDefaultAccount().fetchAccountDetails();
-        }
-
-        ABTestingUtils.init();
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
@@ -205,18 +198,10 @@ public class WordPress extends Application {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
-        AnalyticsUtils.refreshMetadata();
-        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
-        registerForCloudMessaging(this);
-
-        ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
-        registerComponentCallbacks(pnBackendMonitor);
-        registerActivityLifecycleCallbacks(pnBackendMonitor);
-
-        // we want to reset the suggestion table in every launch so we can get a fresh list
-        SuggestionTable.reset(wpDB.getDatabase());
-
+        ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
+        registerComponentCallbacks(applicationLifecycleMonitor);
+        registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
 
         // Track app upgrade
         int versionCode = PackageUtils.getVersionCode(this);
@@ -226,7 +211,26 @@ public class WordPress extends Application {
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
         }
         AppPrefs.setLastAppVersionCode(versionCode);
+    }
 
+    public void deferredInit() {
+        AppLog.i(T.UTILS, "Deferred Initialisation");
+
+        registerForCloudMessaging(this);
+        configureSimperium();
+
+        // we want to reset the suggestion table in every launch so we can get a fresh list
+        SuggestionTable.reset(wpDB.getDatabase());
+
+        // Refresh account informations
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            AccountHelper.getDefaultAccount().fetchAccountDetails();
+        }
+
+        ABTestingUtils.init();
+
+        AnalyticsUtils.refreshMetadata();
+        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -677,9 +681,10 @@ public class WordPress extends Application {
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
-        private Date lastPingDate;
+        private Date mLastPingDate;
         private Date mApplicationOpenedDate;
-        boolean isInBackground = true;
+        boolean mIsInBackground = true;
+        boolean mFirstActivityResumed = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -693,7 +698,7 @@ public class WordPress extends Application {
         public void onTrimMemory(final int level) {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
-                isInBackground = true;
+                mIsInBackground = true;
                 String lastActivityString = AppPrefs.getLastActivityStr();
                 ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
                 Map<String, Object> properties = new HashMap<String, Object>();
@@ -706,7 +711,7 @@ public class WordPress extends Application {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                 AnalyticsTracker.endSession(false);
             } else {
-                isInBackground = false;
+                mIsInBackground = false;
             }
 
             boolean evictBitmaps = false;
@@ -728,14 +733,14 @@ public class WordPress extends Application {
         }
 
         private boolean isPushNotificationPingNeeded() {
-            if (lastPingDate == null) {
+            if (mLastPingDate == null) {
                 // first startup
                 return false;
             }
 
             Date now = new Date();
-            if (DateTimeUtils.secondsBetween(now, lastPingDate) >= DEFAULT_TIMEOUT) {
-                lastPingDate = now;
+            if (DateTimeUtils.secondsBetween(now, mLastPingDate) >= DEFAULT_TIMEOUT) {
+                mLastPingDate = now;
                 return true;
             }
             return false;
@@ -792,11 +797,15 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            if (isInBackground) {
+            if (mIsInBackground) {
                 // was in background before
                 onFromBackground();
             }
-            isInBackground = false;
+            mIsInBackground = false;
+            if (mFirstActivityResumed) {
+                deferredInit();
+            }
+            mFirstActivityResumed = false;
         }
 
         @Override
@@ -809,7 +818,7 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityPaused(Activity arg0) {
-            lastPingDate = new Date();
+            mLastPingDate = new Date();
         }
 
         @Override
