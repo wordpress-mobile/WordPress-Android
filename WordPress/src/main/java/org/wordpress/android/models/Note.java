@@ -5,6 +5,7 @@ package org.wordpress.android.models;
 
 import android.text.Html;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
@@ -134,6 +135,11 @@ public class Note extends Syncable {
 
     public Boolean isCommentReplyType() {
         return isCommentType() && getParentCommentId() > 0;
+    }
+
+    // Returns true if the user has replied to this comment note
+    public Boolean isCommentWithUserReply() {
+        return isCommentType() && !TextUtils.isEmpty(getCommentSubjectNoticon());
     }
 
     public Boolean isUserList() {

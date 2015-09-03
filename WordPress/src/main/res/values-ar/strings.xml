@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">لا يوجد اتصال</string>
+	<string name="page_trashed">تم إرسال الصفحة إلى سلة المهملات</string>
+	<string name="post_deleted">تم حذف المقالة</string>
+	<string name="post_trashed">تم إرسال المقالة إلى سلة المهملات</string>
+	<string name="stats_no_activity_this_period">لا يوجد أي نشاط في هذه الفترة</string>
+	<string name="trashed">أُضيف إلى سلة المهملات</string>
+	<string name="button_back">رجوع</string>
+	<string name="page_deleted">تم حذف الصفحة</string>
+	<string name="button_more">المزيد</string>
+	<string name="button_stats">إحصاءات</string>
+	<string name="button_trash">سلة المهملات</string>
+	<string name="button_preview">معاينة</string>
+	<string name="button_view">عرض</string>
+	<string name="button_edit">تحرير</string>
+	<string name="button_publish">نشر</string>
+	<string name="button_delete">حذف</string>
+	<string name="my_site_no_sites_view_subtitle">هل ترغب في إضافة واحد؟</string>
+	<string name="my_site_no_sites_view_title">ليس لديك أي مواقع وردبرس حتى الآن.</string>
+	<string name="my_site_no_sites_view_drake">رسم توضيحي</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">أنت غير معتمد للوصول إلى هذه المدونة</string>
+	<string name="reader_toast_err_follow_blog_not_found">تعذر العثور على هذه المدونة</string>
+	<string name="undo">تراجع</string>
 	<string name="tabbar_accessibility_label_my_site">موقعي</string>
 	<string name="tabbar_accessibility_label_me">أنا</string>
 	<string name="passcodelock_prompt_message">أدخل مفتاح الـ PIN</string>
@@ -247,9 +269,6 @@
 	<string name="preference_send_usage_stats">إرسال الإحصائيات</string>
 	<string name="preference_privacy">الخصوصية</string>
 	<string name="preference_send_usage_stats_summary">إرسال إحصائيات الاستخدام تلقائيًا لمساعدتنا في تطوير WordPress للإندرويد</string>
-	<string name="reader_hint_reblog_comment">أضف أفكارك ( اختياري )</string>
-	<string name="reader_label_reblog_to">أعد تدوين لـ</string>
-	<string name="reader_title_reblog">إعادة تدوين المقالة</string>
 	<string name="update_verb">تحديث</string>
 	<string name="schedule_verb">جدولة</string>
 	<string name="reader_title_subs">الوسوم والمدونات</string>
@@ -268,7 +287,6 @@
 	<string name="saving">حفظ...</string>
 	<string name="media_empty_list">لا وسائط</string>
 	<string name="ptr_tip_message">نصيحة: اسحب للأسفل من أجل التحديث</string>
-	<string name="reader_label_reblog_empty">ليس لديك مدونات ووردبريس.كوم مرئية. يمكن إعادة تدوينها على</string>
 	<string name="forgot_password">نسيت كلمة المرور؟</string>
 	<string name="help_center">مركز المساعدة</string>
 	<string name="help">المساعدة</string>
@@ -392,9 +410,7 @@
 	<string name="open_source_licenses">رخص البرمجيات الحرة</string>
 	<string name="toast_comment_unedited">لم يتم تغيير التعليق</string>
 	<string name="preview_page">معاينة الصفحة</string>
-	<string name="page_deleted">تم حذف الصفحة بنجاح</string>
 	<string name="preview_post">معاينة المقالة</string>
-	<string name="post_deleted">تم حذف المقالة بنجاح</string>
 	<string name="comment_added">تم إضافة التعليق بنجاح</string>
 	<string name="view_in_browser">عرض في المستعرض</string>
 	<string name="add_new_category">إضافة تصنيف جديد</string>
@@ -414,7 +430,6 @@
 	<string name="category_parent">التصنيف الأصل ( اختياري )</string>
 	<string name="file_error_create">تعذر إنشاء ملف مؤقت لرفع الوسائط. تأكد من وجود مساحة حرة كافية على الجهاز.</string>
 	<string name="reader_share_link">مشاركة رابط</string>
-	<string name="reader_toast_err_reblog_requires_blog">اختر مدونة</string>
 	<string name="reader_toast_err_add_tag">غير قادر على إضافة هذا الوسم</string>
 	<string name="reader_toast_err_remove_tag">غير قادر على حذف هذا الوسم</string>
 	<string name="site_address">عنوانك المستضاف ذاتيًا ( URL )</string>
@@ -503,10 +518,7 @@
 	<string name="reader_label_added_tag">أضيف %s</string>
 	<string name="reader_label_removed_tag">تم حذف %s</string>
 	<string name="reader_toast_err_tag_exists">أنت متابع لهذا الوسم بالفعل</string>
-	<string name="reader_toast_err_already_reblogged">لقد أعدت تدوين هذه المقالة بالفعل</string>
-	<string name="reader_toast_err_reblog_failed">لايمكن إعادة تدوين هذه المقالة</string>
 	<string name="reader_toast_err_comment_failed">لايمكن نشر تعليقك</string>
-	<string name="reader_toast_reblog_success">تم إعادة تدوين المقالة</string>
 	<string name="reader_share_subject">تمت المشاركة من %s</string>
 	<string name="reader_toast_err_url_intent">لايمكن فتح %s</string>
 	<string name="reader_toast_err_view_image">لايمكن عرض الصورة</string>
@@ -676,6 +688,12 @@
 		<item>يسار</item>
 		<item>وسط</item>
 		<item>يمين</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>تم النشر</item>
+		<item>المسودات</item>
+		<item>تمت الجدولة</item>
+		<item>أُضيف إلى سلة المهملات</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>ملاحظة</item>

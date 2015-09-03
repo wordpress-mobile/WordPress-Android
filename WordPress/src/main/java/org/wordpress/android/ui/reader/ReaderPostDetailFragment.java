@@ -294,13 +294,19 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (isAdded() && !succeeded) {
+                if (!isAdded()) {
+                    return;
+                }
+                followButton.setEnabled(true);
+                if (!succeeded) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                     followButton.setIsFollowedAnimated(!isAskingToFollow);
                 }
             }
         };
+
+        followButton.setEnabled(false);
 
         if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, listener)) {
             followButton.setIsFollowedAnimated(isAskingToFollow);
@@ -636,12 +642,14 @@ public class ReaderPostDetailFragment extends Fragment
             });
 
             // clicking the header shows blog preview
-            layoutHeader.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
-                }
-            });
+            if (getPostListType() != ReaderPostListType.BLOG_PREVIEW) {
+                layoutHeader.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
+                    }
+                });
+            }
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
@@ -785,7 +793,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (ReaderUtils.isBlogPreviewUrl(url)) {
             long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
             if (blogId != 0) {
-                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, mPost.getBlogName());
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
             }
             return true;
         }

@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Nicio conexiune</string>
+	<string name="page_trashed">Pagină trimisă la gunoi</string>
+	<string name="post_deleted">Articol șters</string>
+	<string name="post_trashed">Articol trimis la gunoi</string>
+	<string name="stats_no_activity_this_period">Nicio activitate în această perioadă</string>
+	<string name="trashed">Aruncat la gunoi</string>
+	<string name="button_back">Înapoi</string>
+	<string name="page_deleted">Pagină ștearsă</string>
+	<string name="button_more">Mai mult</string>
+	<string name="button_stats">Statistici</string>
+	<string name="button_trash">Gunoi</string>
+	<string name="button_preview">Previzualizare</string>
+	<string name="button_view">Vizualizare</string>
+	<string name="button_edit">Editare</string>
+	<string name="button_publish">Publică</string>
+	<string name="button_delete">Șters</string>
+	<string name="my_site_no_sites_view_subtitle">Vrei să adaugi unul?</string>
+	<string name="my_site_no_sites_view_title">Încă nu ai niciun sit WordPress.</string>
+	<string name="my_site_no_sites_view_drake">Ilustrație</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest blog</string>
+	<string name="reader_toast_err_follow_blog_not_found">Acest blog nu a fost găsit</string>
+	<string name="undo">Revin</string>
 	<string name="tabbar_accessibility_label_my_site">Situl meu</string>
 	<string name="tabbar_accessibility_label_me">Eu</string>
 	<string name="editor_toast_changes_saved">Modificări salvate</string>
@@ -247,9 +269,6 @@
 	<string name="preference_send_usage_stats_summary">Trimite automat statistici pentru a ajuta la îmbunătățirea aplicației WordPress pentru Android</string>
 	<string name="preference_send_usage_stats">Trimite statistici</string>
 	<string name="preference_privacy">Confidențialitate</string>
-	<string name="reader_hint_reblog_comment">Adaugă-ți gîndurile (opțional)</string>
-	<string name="reader_label_reblog_to">Republică la</string>
-	<string name="reader_title_reblog">Republică articolul</string>
 	<string name="schedule_verb">Programare</string>
 	<string name="update_verb">Actualizează</string>
 	<string name="reader_empty_recommended_blogs">Niciun blog recomandat</string>
@@ -274,7 +293,6 @@
 	<string name="help_center">Centru de ajutor</string>
 	<string name="ssl_certificate_error">Certificat SSL invalid</string>
 	<string name="help">Ajutor</string>
-	<string name="reader_label_reblog_empty">Nu ai bloguri WordPress.com vizibile, acest post poate fi re-blogat la</string>
 	<string name="could_not_remove_account">Nu am putut înlătura situl</string>
 	<string name="nux_cannot_log_in">Nu putem să te autentificăm</string>
 	<string name="blog_name_reserved">Acel sit este rezervat</string>
@@ -344,7 +362,6 @@
 	<string name="blog_removed_successfully">Sit înlăturat cu succes</string>
 	<string name="remove_account">Înlătură situl</string>
 	<string name="reader_toast_err_remove_tag">Nu pot șterge această etichetă</string>
-	<string name="reader_toast_err_reblog_requires_blog">Selectează un blog</string>
 	<string name="reader_toast_err_add_tag">Nu pot adăuga această etichetă</string>
 	<string name="reader_title_applog">Jurnalul aplicației</string>
 	<string name="jetpack_message_not_admin">Modulul Jetpack este necesar pentru statistici. Contactează administratorul sitului.</string>
@@ -385,10 +402,8 @@
 	<string name="email_cant_be_used_to_signup">Nu poți folosi acestă adresă de email pentru a te înscrie. Avem probleme cu ele blocându-ne emailurile noastre. Folosește alt furmizor de email.</string>
 	<string name="required_field">Câmp obligatoriu</string>
 	<string name="email_hint">Adresă email</string>
-	<string name="post_deleted">Articolul a fost șters cu succes</string>
 	<string name="comment_added">Comentariul a fost adăugat cu succes</string>
 	<string name="preview_page">Previzualizare pagină</string>
-	<string name="page_deleted">Pagina a fost ștearsă cu succes</string>
 	<string name="preview_post">Previzualizare articol</string>
 	<string name="delete_draft">Șterge schița</string>
 	<string name="content_required">Comentariul e necesar</string>
@@ -494,12 +509,9 @@
 	<string name="reader_toast_err_url_intent">Nu pot deschide %s</string>
 	<string name="connecting_wpcom">Se conectează la WordPress.com</string>
 	<string name="reader_toast_err_view_image">Nu pot vedea imaginea</string>
-	<string name="reader_toast_err_already_reblogged">Ai re-publicat deja acest articol</string>
 	<string name="reader_toast_err_tag_exists">Urmărești deja eticheta asta</string>
 	<string name="reader_toast_err_tag_invalid">Aceea nu e o etichetă validă</string>
-	<string name="reader_toast_reblog_success">articolul a fost re-publicat</string>
 	<string name="reader_toast_err_comment_failed">Nu pot să-ți public comentariu</string>
-	<string name="reader_toast_err_reblog_failed">Nu pot să-ți re-public articolul</string>
 	<string name="reader_likes_only_you">Îți place acesta</string>
 	<string name="reader_label_removed_tag">%s șters</string>
 	<string name="reader_likes_one">Unei persoane îi place acesta</string>
@@ -676,6 +688,12 @@
 		<item>Stânga</item>
 		<item>Centru</item>
 		<item>Dreapta</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Publicat</item>
+		<item>Ciorne</item>
+		<item>Planificat</item>
+		<item>Aruncat la gunoi</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Notă</item>

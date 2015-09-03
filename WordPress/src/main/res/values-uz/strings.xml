@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="loading_videos">Videolarni yuklash</string>
+	<string name="loading_images">Rasmlarni yuklash</string>
+	<string name="device">Qurilma</string>
 	<string name="creating_your_account">Akkauntingiz yaratilmoqda</string>
 	<string name="creating_your_site">Saytingiz yaratilmoqda</string>
 	<string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda...</string>
@@ -35,10 +38,7 @@
 	<string name="reader_btn_unfollow">Kuzatmoqda</string>
 	<string name="reader_hint_comment_on_post">Mulohaza kiriting</string>
 	<string name="reader_hint_comment_on_comment">Mulohazaga javob yozish</string>
-	<string name="reader_toast_reblog_success">Post qayta chop etildi</string>
 	<string name="reader_toast_err_comment_failed">Mulohazangiz kiritilmadi</string>
-	<string name="reader_toast_err_reblog_failed">Qayta chop etilmadi</string>
-	<string name="reader_toast_err_already_reblogged">Allaqachon qayta chop qilgansiz</string>
 	<string name="reader_toast_err_tag_exists">Allaqachon bu tegni kuzatishni boshlagansiz</string>
 	<string name="reader_toast_err_tag_invalid">Bu yaroqli teg emas</string>
 	<string name="reader_toast_err_share_intent">Bo‘lishib bo‘lmadi</string>

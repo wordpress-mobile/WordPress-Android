@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Нет соединения</string>
+	<string name="page_trashed">Страница помещена в корзину</string>
+	<string name="post_deleted">Запись удалена</string>
+	<string name="post_trashed">Запись помещена в корзину</string>
+	<string name="stats_no_activity_this_period">Нет активности за указанный период</string>
+	<string name="page_deleted">Страница удалена</string>
+	<string name="button_more">Ещё</string>
+	<string name="button_stats">Статистика</string>
+	<string name="button_trash">Корзина</string>
+	<string name="button_preview">Просмотреть</string>
+	<string name="button_view">Просмотреть</string>
+	<string name="button_edit">Изменить</string>
+	<string name="button_publish">Опубликовать</string>
+	<string name="button_delete">Удалить</string>
+	<string name="trashed">Удалено</string>
+	<string name="button_back">Назад</string>
+	<string name="my_site_no_sites_view_subtitle">Добавить сайт?</string>
+	<string name="my_site_no_sites_view_title">У вас пока нет сайтов WordPress.</string>
+	<string name="my_site_no_sites_view_drake">Изображение</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">У вас нет разрешения на доступ к этому блогу.</string>
+	<string name="reader_toast_err_follow_blog_not_found">Не удаётся найти этот блог.</string>
+	<string name="undo">Назад</string>
 	<string name="tabbar_accessibility_label_my_site">Мой сайт</string>
 	<string name="tabbar_accessibility_label_me">Я</string>
 	<string name="editor_toast_changes_saved">Обновления сохранены</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Приватность</string>
 	<string name="preference_send_usage_stats">Отправить статистику</string>
 	<string name="preference_send_usage_stats_summary">Автоматически отправлять статистику использования для улучшения WordPress для Android</string>
-	<string name="reader_label_reblog_to">Реблогнуть в</string>
-	<string name="reader_hint_reblog_comment">Опишите своё мнение(необязательно)</string>
-	<string name="reader_title_reblog">Сделать реблог</string>
 	<string name="update_verb">Обновить</string>
 	<string name="schedule_verb">Запланировать</string>
 	<string name="reader_title_blog_preview">Предпросмотр</string>
@@ -274,7 +293,6 @@
 	<string name="ssl_certificate_error">Недействительный сертификат SSL</string>
 	<string name="help_center">Центр помощи</string>
 	<string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
-	<string name="reader_label_reblog_empty">У вас нет видимых блогов WordPress.com, чтобы реблогнуть эту запись</string>
 	<string name="no_network_message">Нет доступной сети.</string>
 	<string name="blog_not_found">Ошибка при попытке подключиться к блогу</string>
 	<string name="wait_until_upload_completes">Подождите конца загрузки</string>
@@ -395,10 +413,8 @@
 	<string name="hint_comment_content">Комментировать</string>
 	<string name="toast_comment_unedited">Комментарий не изменялся</string>
 	<string name="preview_page">Предпросмотр страницы</string>
-	<string name="page_deleted">Страница успешно удалена</string>
 	<string name="preview_post">Предпросмотр записи</string>
 	<string name="delete_draft">Удалить черновик</string>
-	<string name="post_deleted">Запись успешно удалена</string>
 	<string name="comment_added">Комментарий добавлен</string>
 	<string name="view_in_browser">Открыть в браузере</string>
 	<string name="add_new_category">Добавить категорию</string>
@@ -421,7 +437,6 @@
 	<string name="jetpack_message_not_admin">Для статистики нужен плагин Jetpack- свяжитесь с администрацией сайта.</string>
 	<string name="reader_title_applog">Лог приложения</string>
 	<string name="reader_share_link">Поделиться ссылкой</string>
-	<string name="reader_toast_err_reblog_requires_blog">Выберите блог</string>
 	<string name="reader_toast_err_add_tag">Не удается добавить этот тег</string>
 	<string name="reader_toast_err_remove_tag">Не удается удалить этот тег</string>
 	<string name="required_field">Обязательное поле</string>
@@ -500,10 +515,7 @@
 	<string name="reader_likes_one">Одному человеку нравится это</string>
 	<string name="reader_likes_only_you">Вам нравится это</string>
 	<string name="nux_tutorial_get_started_title">Начать работу!</string>
-	<string name="reader_toast_reblog_success">Запись была реблогнута</string>
 	<string name="reader_toast_err_comment_failed">Не удалось оставить комментарий</string>
-	<string name="reader_toast_err_reblog_failed">Не удалось реблогнуть эту запись</string>
-	<string name="reader_toast_err_already_reblogged">Вы реблогнули эту запись</string>
 	<string name="reader_toast_err_tag_exists">Вы подписались на этот тэг</string>
 	<string name="reader_toast_err_tag_invalid">Это неверный тэг</string>
 	<string name="reader_toast_err_share_intent">Не в состоянии поделиться</string>
@@ -676,6 +688,12 @@
 		<item>Слева</item>
 		<item>По центру</item>
 		<item>Справа</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Опубликованные</item>
+		<item>Черновики</item>
+		<item>Запланированные</item>
+		<item>Удалённые</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Заметка</item>

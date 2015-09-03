@@ -133,6 +133,8 @@
     <color name="placeholder_content_text">@color/blue_wordpress</color>
     <color name="format_bar_background">@color/grey_lighten_30</color>
     <color name="image_options_label">@color/grey_lighten_20</color>
+    <!-- copied from private support lib resource: color/design_snackbar_background_color -->
+    <color name="snackbar_background_color">#323232</color>
 
     <!-- Misc -->
     <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>

@@ -84,7 +84,6 @@ public class MySiteFragment extends Fragment
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
-
         // redisplay hidden fab after a short delay
         long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
         new Handler().postDelayed(new Runnable() {
@@ -102,7 +101,7 @@ public class MySiteFragment extends Fragment
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        int fabHeight = getResources().getDimensionPixelSize(R.dimen.fab_size_normal);
+        int fabHeight = getResources().getDimensionPixelSize(R.dimen.design_fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
@@ -293,7 +292,6 @@ public class MySiteFragment extends Fragment
         }
 
         mScrollView.setVisibility(View.VISIBLE);
-        mFabView.setVisibility(View.VISIBLE);
         mNoSiteView.setVisibility(View.GONE);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
