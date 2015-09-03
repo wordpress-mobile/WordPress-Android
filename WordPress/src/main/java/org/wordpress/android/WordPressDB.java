@@ -1812,7 +1812,7 @@ public class WordPressDB {
     public String getCurrentThemeId(String blogId) {
         String[] selection = {blogId, String.valueOf(1)};
 
-        return DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=?", selection);
+        return DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=true", selection);
     }
 
     public void setCurrentTheme(String blogId, String id) {
@@ -1840,7 +1840,7 @@ public class WordPressDB {
     public Theme getTheme(String blogId, String themeId) {
         String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.AUTHOR, Theme.SCREENSHOT, Theme.AUTHOR_URI, Theme.DEMO_URI, Theme.NAME, Theme.STYLESHEET, Theme.PRICE};
         String[] selection = {blogId, themeId};
-        Cursor cursor = db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.ID + " id=?", selection, null, null, null);
+        Cursor cursor = db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.ID + "=?", selection, null, null, null);
 
         if (cursor.moveToFirst()) {
             String id = cursor.getString(cursor.getColumnIndex(Theme.ID));
