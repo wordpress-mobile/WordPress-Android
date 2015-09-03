@@ -22,7 +22,7 @@ public class PostUtils {
         }
 
         String shortCode;
-        Pattern p = Pattern.compile("(\\[ *?([^ ]+) .*?\\])");
+        Pattern p = Pattern.compile("(\\[ *([^ ]+) [^\\[\\]]*\\])");
         Matcher m = p.matcher(postContent);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
