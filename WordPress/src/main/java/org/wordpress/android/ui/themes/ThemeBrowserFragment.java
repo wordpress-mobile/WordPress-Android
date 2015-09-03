@@ -179,16 +179,6 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mGridView.addHeaderView(header);
     }
 
-    private void configureAndAddSearchHeader(LayoutInflater inflater) {
-        View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
-        mSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.themes_filter_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(adapter);
-        mGridView.addHeaderView(headerSearch);
-        mSpinner.setOnItemSelectedListener(this);
-    }
-
     public void setRefreshing(boolean refreshing) {
         mShouldRefreshOnStart = refreshing;
         if (mSwipeToRefreshHelper != null) {
@@ -197,6 +187,16 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
                 refreshView(0);
             }
         }
+    }
+
+    private void configureAndAddSearchHeader(LayoutInflater inflater) {
+        View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
+        mSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.themes_filter_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
+        mGridView.addHeaderView(headerSearch);
+        mSpinner.setOnItemSelectedListener(this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
