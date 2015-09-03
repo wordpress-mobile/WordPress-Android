@@ -2,6 +2,7 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -96,7 +97,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return;
         }
 
-        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mGridView);
+        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
@@ -110,6 +111,10 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
             outState.putInt(BUNDLE_PAGE, mPage);
         }
+    }
+
+    public int getPage() {
+        return mPage;
     }
 
     private void configureSwipeToRefresh(View view) {
@@ -245,7 +250,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return;
         }
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mGridView);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
         }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);
