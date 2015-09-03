@@ -95,7 +95,7 @@
         android:key="@string/pref_key_site_writing"
         android:title="@string/site_settings_writing_header">
 
-        <SwitchPreference
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_enable_location"
             android:key="@string/pref_key_site_location"
             android:title="Enable Location" />
