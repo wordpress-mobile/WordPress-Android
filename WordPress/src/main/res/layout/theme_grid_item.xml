@@ -66,15 +66,13 @@
                         android:layout_marginTop="@dimen/cardview_default_radius"
                         android:background="@color/reader_divider_grey" />
 
-                    <ImageView
-                        android:id="@+id/image_more"
+                    <ImageButton
+                        android:id="@+id/theme_grid_item_image_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:background="?android:selectableItemBackground"
-                        android:paddingBottom="@dimen/margin_large"
-                        android:paddingTop="@dimen/margin_large"
-                        android:src="@drawable/ic_action_more" />
+                        android:padding="@dimen/margin_large"
+                        android:background="@drawable/ic_action_more"
+                        android:contentDescription="@string/button_more" />
 
                 </LinearLayout>
 
