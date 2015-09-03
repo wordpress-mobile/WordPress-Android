@@ -276,8 +276,6 @@ public class WPMainActivity extends Activity
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
         trackLastVisibleTab(mViewPager.getCurrentItem());
-
-        checkConnection();
     }
 
     private void trackLastVisibleTab(int position) {
