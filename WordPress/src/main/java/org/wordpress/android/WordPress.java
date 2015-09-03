@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
 import android.net.http.HttpResponseCache;
@@ -34,6 +36,7 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
@@ -157,6 +160,10 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // disable ConnectionChangeReceive by default
+        setConnectionChangeReceiverEnabled(false);
+
         mContext = this;
 
         ProfilingUtils.start("WordPress.onCreate");
@@ -669,6 +676,15 @@ public class WordPress extends Application {
         }
     }
 
+    private void setConnectionChangeReceiverEnabled(boolean enabled) {
+        AppLog.i(T.UTILS, "setConnectionChangeReceiverEnabled " + enabled);
+        int flag = (enabled ?
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
+        ComponentName component = new ComponentName(this, ConnectionChangeReceiver.class);
+        getPackageManager().setComponentEnabledSetting(component, flag, PackageManager.DONT_KILL_APP);
+    }
+
     /**
      * Detect when the app goes to the background and come back to the foreground.
      *
@@ -710,6 +726,7 @@ public class WordPress extends Application {
                 }
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                 AnalyticsTracker.endSession(false);
+                onToBackground();
             } else {
                 mIsInBackground = false;
             }
@@ -772,12 +789,19 @@ public class WordPress extends Application {
             }
         }
 
+        public void onToBackground() {
+            AppLog.i(T.UTILS, "App goes to background");
+            setConnectionChangeReceiverEnabled(false);
+        }
+
         /**
          * This method is called when:
-         * 1. the app starts (but it's not opened by a service, i.e. an activity is resumed)
+         * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
         public void onFromBackground() {
+            AppLog.i(T.UTILS, "App comes from background");
+            setConnectionChangeReceiverEnabled(true);
             AnalyticsUtils.refreshMetadata();
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
@@ -791,7 +815,6 @@ public class WordPress extends Application {
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
-
             sDeleteExpiredStats.runIfNotLimited();
         }
 
