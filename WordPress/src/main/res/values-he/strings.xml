@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">אין חיבור</string>
+	<string name="page_trashed">העמוד הועבר לפח</string>
+	<string name="post_deleted">הפוסט נמחק</string>
+	<string name="post_trashed">הפוסט הועבר לפח</string>
+	<string name="stats_no_activity_this_period">אין פעילות בפרק זמן זה</string>
+	<string name="trashed">הועבר לפח</string>
+	<string name="button_back">חזרה</string>
+	<string name="page_deleted">העמוד נמחק</string>
+	<string name="button_more">עוד</string>
+	<string name="button_stats">נתונים סטטיסטיים</string>
+	<string name="button_trash">פח</string>
+	<string name="button_preview">תצוגה מקדימה</string>
+	<string name="button_view">הצגה</string>
+	<string name="button_edit">עריכה</string>
+	<string name="button_publish">פרסום</string>
+	<string name="button_delete">מחיקה</string>
+	<string name="my_site_no_sites_view_subtitle">האם תרצה להוסיף אחד?</string>
+	<string name="my_site_no_sites_view_title">עדיין אין לך אתרי וורדפרס.</string>
+	<string name="my_site_no_sites_view_drake">אילוסטרציה</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">אינך מורשה להיכנס לבלוג</string>
+	<string name="reader_toast_err_follow_blog_not_found">הבלוג לא נמצא</string>
+	<string name="undo">ביטול פעולה אחרונה</string>
 	<string name="tabbar_accessibility_label_my_site">האתר שלי</string>
 	<string name="tabbar_accessibility_label_me">אני</string>
 	<string name="passcodelock_prompt_message">הזנת קוד PIN</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">פרטיות</string>
 	<string name="preference_send_usage_stats">שליחת סטטיסטיקות</string>
 	<string name="preference_send_usage_stats_summary">שליחת נתוני שימוש סטטיסטיים שיאפשרו לנו לשפר את WordPress לאנדרויד</string>
-	<string name="reader_hint_reblog_comment">הוסף את מחשבותיך (אופציונלי)</string>
-	<string name="reader_title_reblog">לפרסם מחדש</string>
-	<string name="reader_label_reblog_to">פרסום מחדש אל</string>
 	<string name="update_verb">עדכן</string>
 	<string name="schedule_verb">תזמן</string>
 	<string name="reader_toast_err_unfollow_blog">לא ניתן לבטל את המעקב אחר אתר זה</string>
@@ -268,7 +287,6 @@
 	<string name="saving">שומר...</string>
 	<string name="media_empty_list">אין מדיה</string>
 	<string name="ptr_tip_message">עצה: משוך כלפי מטה כדי לרענן</string>
-	<string name="reader_label_reblog_empty">אין לך אתרים גלויים ב-WordPress.com שניתן לפרסם בהן מחדש את הפוסט הזה</string>
 	<string name="help">עזרה</string>
 	<string name="forgot_password">איבדת את הסיסמה שלך?</string>
 	<string name="forums">פורומים</string>
@@ -345,7 +363,6 @@
 	<string name="blog_removed_successfully">האתר הוסר בהצלחה</string>
 	<string name="add_account_blog_url">כתובת האתר</string>
 	<string name="remove_account">הסר אתר</string>
-	<string name="reader_toast_err_reblog_requires_blog">בחר אתר</string>
 	<string name="error_blog_hidden">זה אתר סמוי ולא ניתן לטעון אותו. אפשר אותו שוב בהגדרות ונסה שנית.</string>
 	<string name="xmlrpc_error">לא ניתן להתחבר. הקלד את הנתיב המלא אל xmlrpc.php באתר שלך ונסה שנית.</string>
 	<string name="select_categories">בחר קטגוריות</string>
@@ -404,9 +421,7 @@
 	<string name="toast_comment_unedited">התגובה לא השתנתה</string>
 	<string name="delete_draft">מחק טיוטה</string>
 	<string name="preview_page">תצוגה מקדימה של הדף</string>
-	<string name="page_deleted">הדף נמחק בהצלחה</string>
 	<string name="preview_post">תצוגה מקדימה של הרשומה</string>
-	<string name="post_deleted">הרשומה נמחקה בהצלחה</string>
 	<string name="comment_added">התגובה הוספה בהצלחה</string>
 	<string name="post_not_published">מצב העריכה לא פורסם</string>
 	<string name="page_not_published">מצב הדף לא פורסם</string>
@@ -482,9 +497,6 @@
 	<string name="nux_welcome_create_account">צור חשבון</string>
 	<string name="nux_add_selfhosted_blog">הוסף אתר באחסון עצמי</string>
 	<string name="signing_in">מתחבר...</string>
-	<string name="reader_toast_err_reblog_failed">לא ניתן לפרסם מחדש רשומה זו באתר</string>
-	<string name="reader_toast_reblog_success">הרשומה פורסמה מחדש באתר</string>
-	<string name="reader_toast_err_already_reblogged">כבר פרסמת מחדש רשומה זו באתר</string>
 	<string name="create_account_wpcom">יצירת חשבון WordPress.com</string>
 	<string name="connecting_wpcom">מתחבר אל WordPress.com</string>
 	<string name="media_add_popup_title">הוסף לספריית המדיה</string>
@@ -676,6 +688,12 @@
 		<item>שמאל</item>
 		<item>מרכז</item>
 		<item>ימין</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>פורסם</item>
+		<item>טיוטות</item>
+		<item>מתוזמן לפרסום</item>
+		<item>הועבר לפח</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>הערה</item>

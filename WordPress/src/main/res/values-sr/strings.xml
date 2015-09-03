@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Нема везе</string>
+	<string name="page_trashed">Страна је послата на отпад</string>
+	<string name="post_deleted">Чланак је обрисан</string>
+	<string name="post_trashed">Чланак је послат на отпад</string>
+	<string name="stats_no_activity_this_period">Нема активности за овај период</string>
+	<string name="trashed">На отпаду</string>
+	<string name="button_back">Назад</string>
+	<string name="page_deleted">Страна је обрисана</string>
+	<string name="button_more">Више</string>
+	<string name="button_stats">Статистике</string>
+	<string name="button_trash">Отпад</string>
+	<string name="button_preview">Предпреглед</string>
+	<string name="button_view">Поглед</string>
+	<string name="button_edit">Уређивање</string>
+	<string name="button_publish">Објављивање</string>
+	<string name="button_delete">Брисање</string>
+	<string name="my_site_no_sites_view_subtitle">Да ли бисте желели да додате једно?</string>
+	<string name="my_site_no_sites_view_title">Још увек немате ниједно Вордпресово веб место.</string>
+	<string name="my_site_no_sites_view_drake">Илустрација</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Нисте овлашћени да приступите овом блогу</string>
+	<string name="reader_toast_err_follow_blog_not_found">Овај блог не може бити пронађен</string>
+	<string name="undo">Врати</string>
 	<string name="tabbar_accessibility_label_me">Ја</string>
 	<string name="tabbar_accessibility_label_my_site">Моје веб место</string>
 	<string name="passcodelock_prompt_message">Унесите свој PIN</string>
@@ -247,9 +269,6 @@
 	<string name="preference_send_usage_stats_summary">Аутоматски пошаљи статистике ради унапређења Вордпреса за Андроид</string>
 	<string name="preference_send_usage_stats">Пошаљи статистике</string>
 	<string name="preference_privacy">Приватност</string>
-	<string name="reader_hint_reblog_comment">Додајте своја размишљања (опционо)</string>
-	<string name="reader_label_reblog_to">Поново објавите чланак на</string>
-	<string name="reader_title_reblog">Поново објавите чланак</string>
 	<string name="update_verb">Ажурирај</string>
 	<string name="schedule_verb">Заказати</string>
 	<string name="reader_empty_recommended_blogs">Нема препоручених блогова</string>
@@ -268,7 +287,6 @@
 	<string name="ptr_tip_message">Савет: Повуците надоле да бисте освежили</string>
 	<string name="saving">Чувам...</string>
 	<string name="media_empty_list">Нема медија</string>
-	<string name="reader_label_reblog_empty">Немате видљивих WordPress.com блогова на којима овај чланак може бити објављен</string>
 	<string name="ssl_certificate_error">Неисправна SSL потврда</string>
 	<string name="help_center">Центар за помоћ</string>
 	<string name="forums">Форуми</string>
@@ -371,7 +389,6 @@
 	<string name="category_name">Име категорије</string>
 	<string name="post_not_published">Стање чланка није објављено</string>
 	<string name="comment_added">Коментар успешно додат</string>
-	<string name="post_deleted">Чланак успешно обрисан</string>
 	<string name="required_field">Неопходно поље</string>
 	<string name="reader_toast_err_remove_tag">Није могуће уклонити ову ознаку</string>
 	<string name="reader_toast_err_add_tag">Није могуће додати ову ознаку</string>
@@ -438,12 +455,10 @@
 	<string name="add_comment">Додајте коментар</string>
 	<string name="edit_post">Уредите чланак</string>
 	<string name="account_details">Детаљи налога</string>
-	<string name="page_deleted">Страна успешно обрисана</string>
 	<string name="delete_page">Обришите страну</string>
 	<string name="preview_page">Прегледајте страну</string>
 	<string name="page_settings">Подешавања стране</string>
 	<string name="select_categories">Одаберите категорије</string>
-	<string name="reader_toast_err_reblog_requires_blog">Одаберите блог</string>
 	<string name="remove_account">Уклони веб место</string>
 	<string name="blog_removed_successfully">Веб место је успешно уклоњено</string>
 	<string name="share_link">Подели везу</string>
@@ -502,10 +517,7 @@
 	<string name="reader_toast_err_share_intent">Није могуће делити</string>
 	<string name="reader_toast_err_tag_invalid">Ово није исправна ознака</string>
 	<string name="reader_toast_err_tag_exists">Већ пратите ову ознаку</string>
-	<string name="reader_toast_err_already_reblogged">Већ сте поново објавили овај чланак</string>
-	<string name="reader_toast_err_reblog_failed">Није могуће поново објавити овај чланак</string>
 	<string name="reader_toast_err_comment_failed">Није могуће објавити ваш коментар</string>
-	<string name="reader_toast_reblog_success">Чланак је поново објављен</string>
 	<string name="reader_likes_only_you">Свиђа вам се ово</string>
 	<string name="reader_likes_one">Једној особи се ово свиђа</string>
 	<string name="reader_label_removed_tag">Уклоњен %s</string>
@@ -676,6 +688,12 @@
 		<item>Лево</item>
 		<item>На средини</item>
 		<item>Десно</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Објављено</item>
+		<item>Нацрти</item>
+		<item>Заказано</item>
+		<item>На отпаду</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Са стране</item>

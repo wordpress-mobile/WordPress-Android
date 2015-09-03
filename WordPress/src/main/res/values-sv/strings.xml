@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Ingen anslutning</string>
+	<string name="stats_no_activity_this_period">Ingen aktivitet denna period</string>
+	<string name="page_deleted">Sidan borttagen</string>
+	<string name="button_more">Mer</string>
+	<string name="button_view">Visa</string>
+	<string name="button_edit">Redigera</string>
+	<string name="button_publish">Publicera</string>
+	<string name="button_delete">Ta bort</string>
+	<string name="page_trashed">Sida flyttad till papperskorgen</string>
+	<string name="post_deleted">Inlägg borttaget</string>
+	<string name="post_trashed">Inlägg flyttat till papperskorgen</string>
+	<string name="trashed">Borttagen</string>
+	<string name="button_back">Tillbaka</string>
+	<string name="button_stats">Statistik</string>
+	<string name="button_trash">Ta bort</string>
+	<string name="button_preview">Förhandsgranska</string>
+	<string name="my_site_no_sites_view_subtitle">Vill du lägga till en?</string>
+	<string name="my_site_no_sites_view_title">Du har inga WordPress-webbplatser än.</string>
+	<string name="my_site_no_sites_view_drake">Illustration</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för åtkomst till denna blogg</string>
+	<string name="reader_toast_err_follow_blog_not_found">Denna blogg kunde inte hittas</string>
+	<string name="undo">Ångra</string>
 	<string name="tabbar_accessibility_label_my_site">Min sida</string>
 	<string name="tabbar_accessibility_label_me">Jag</string>
 	<string name="passcodelock_prompt_message">Ange din PIN</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Integritet</string>
 	<string name="preference_send_usage_stats">Skicka statistik</string>
 	<string name="preference_send_usage_stats_summary">Skicka automatiskt användarstatistik för att hjälpa oss förbättra WordPress för Android</string>
-	<string name="reader_hint_reblog_comment">Lägg till dina tankar (valfritt)</string>
-	<string name="reader_title_reblog">Blogga om detta inlägg</string>
-	<string name="reader_label_reblog_to">Blogga till</string>
 	<string name="update_verb">Uppdatera</string>
 	<string name="schedule_verb">Tidinställ</string>
 	<string name="reader_title_blog_preview">Förhandsgranska blogg</string>
@@ -274,7 +293,6 @@
 	<string name="help_center">Hjälpcenter</string>
 	<string name="ssl_certificate_error">Ogiltigt SSL-ceritfikat</string>
 	<string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>
-	<string name="reader_label_reblog_empty">Du har inga synliga WordPress.com-bloggar att reblogga detta inlägg till</string>
 	<string name="no_network_message">Inget nätverk tillgängligt</string>
 	<string name="mnu_comment_unspam">Inte skräppost</string>
 	<string name="comments_empty_list">Inga kommentarer</string>
@@ -393,7 +411,6 @@
 	<string name="trash_yes">Kasta</string>
 	<string name="trash_no">Kasta inte</string>
 	<string name="preview_post">Förhandsgranska inlägg</string>
-	<string name="post_deleted">Inlägget borttaget</string>
 	<string name="comment_added">Kommentaren tillagd</string>
 	<string name="post_not_published">Inläggets status är inte publicerat</string>
 	<string name="page_not_published">Sidans status är inte publicerat</string>
@@ -414,11 +431,9 @@
 	<string name="learn_more">Läs mer</string>
 	<string name="comment_status_trash">Kastad</string>
 	<string name="preview_page">Förhandsgranska sida</string>
-	<string name="page_deleted">Sidan borttagen</string>
 	<string name="category_desc">Kategoribeskrivning (valfri)</string>
 	<string name="open_source_licenses">Öppen källkodslicens</string>
 	<string name="reader_share_link">Dela länk</string>
-	<string name="reader_toast_err_reblog_requires_blog">Välj blogg</string>
 	<string name="required_field">Obligatoriskt fält</string>
 	<string name="blog_name_invalid">Ogiltig webbplatsadress</string>
 	<string name="blog_title_invalid">Ogiltig webbplatstitel</string>
@@ -500,10 +515,7 @@
 	<string name="reader_label_removed_tag">Tog bort %s</string>
 	<string name="reader_likes_one">En person gillar detta</string>
 	<string name="reader_likes_only_you">Du gillar detta</string>
-	<string name="reader_toast_reblog_success">Inlägget har rebloggats</string>
 	<string name="reader_toast_err_comment_failed">Kunde inte kommentera</string>
-	<string name="reader_toast_err_reblog_failed">Kunde inte reblogga inlägg</string>
-	<string name="reader_toast_err_already_reblogged">Du har redan rebloggat detta inlägg</string>
 	<string name="reader_toast_err_tag_exists">Du följer redan detta ämne</string>
 	<string name="reader_toast_err_tag_invalid">Ogiltigt ämne</string>
 	<string name="reader_toast_err_share_intent">Kunde inte dela</string>
@@ -676,6 +688,12 @@
 		<item>Vänster</item>
 		<item>Centrera</item>
 		<item>Höger</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Publicerad</item>
+		<item>Utkast</item>
+		<item>Tidsinställd</item>
+		<item>Borttagen</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Notering</item>
