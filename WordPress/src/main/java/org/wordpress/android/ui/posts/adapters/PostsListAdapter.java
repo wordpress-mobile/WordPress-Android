@@ -185,7 +185,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (post.hasExcerpt()) {
                 postHolder.txtExcerpt.setVisibility(View.VISIBLE);
-                postHolder.txtExcerpt.setText(PostUtils.collapseShortcode(PostUtils.SHORTCODE_GALLERY, post.getExcerpt()));
+                postHolder.txtExcerpt.setText(PostUtils.collapseShortcodes(post.getExcerpt()));
             } else {
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
