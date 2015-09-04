@@ -819,7 +819,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void onCategoryButtonClick(View v) {
         if (mCategories == null) {
-            ToastUtils.showToast(getActivity(), R.string.category_state_error);
+            ToastUtils.showToast(getActivity(), R.string.error_generic);
             return;
         }
 
