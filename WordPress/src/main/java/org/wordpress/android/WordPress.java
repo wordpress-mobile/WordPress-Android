@@ -217,6 +217,14 @@ public class WordPress extends Application {
         AppPrefs.setLastAppVersionCode(versionCode);
     }
 
+    /**
+     * Application.onCreate is called before any activity, service, or receiver - and it can be called while the app
+     * is in background by a sticky service or a receiver so we don't want Application.onCreate to make network request
+     * or other heavy tasks.
+     *
+     * This deferredInit method is called when the users start an activity for the first time, ie. when he see a
+     * screen for the first time, and it allows us to have heavy calls on first activity startup instead of app startup.
+     */
     public void deferredInit() {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
