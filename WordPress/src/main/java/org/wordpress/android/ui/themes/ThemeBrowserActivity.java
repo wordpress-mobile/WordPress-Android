@@ -47,6 +47,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private ThemeBrowserFragment mThemeBrowserFragment;
     private Theme mCurrentTheme;
 
+    public static boolean isAccessible() {
+        // themes are only accessible to admin wordpress.com users
+        Blog blog = WordPress.getCurrentBlog();
+        return (blog != null && blog.isAdmin() && blog.isDotcomFlag());
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,16 +68,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         setContentView(R.layout.theme_browser_activity);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setElevation(0.0f);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.themes);
-
+        configureToolbar();
         mThemeBrowserFragment = (ThemeBrowserFragment) getFragmentManager().findFragmentById(R.id.theme_tab_fragment);
     }
 
@@ -87,12 +84,44 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mIsRunning = true;
         ActivityId.trackLastActivity(ActivityId.THEMES);
 
-        // fetch themes if we don't have any
-        if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
-                && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
-            fetchThemes();
-            mThemeBrowserFragment.setRefreshing(true);
+        fetchThemesIfNoneAvailable();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsRunning = false;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void fetchThemes() {
@@ -170,48 +199,46 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         );
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     private String getBlogId() {
         if (WordPress.getCurrentBlog() == null)
             return "0";
         return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
 
-    public void onActivateThemeClicked(String themeId) {
+    private void fetchThemesIfNoneAvailable() {
+        if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
+                && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
+            fetchThemes();
+            mThemeBrowserFragment.setRefreshing(true);
+        }
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setElevation(0.0f);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.themes);
+    }
+
+    private void onActivateThemeClicked(String themeId) {
         final String siteId = getBlogId();
         final String newThemeId = themeId;
 
         WordPress.getRestClientUtils().setTheme(siteId, themeId, new Listener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    WordPress.wpDB.setCurrentTheme(siteId, newThemeId);
-                    Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
-                    showAlertDialogOnNewSettingNewTheme(newTheme);
-                }
-            }, new ErrorListener() {
-                @Override
-                    public void onErrorResponse(VolleyError error) {
-                    String yup = "2";
+            @Override
+            public void onResponse(JSONObject response) {
+                WordPress.wpDB.setCurrentTheme(siteId, newThemeId);
+                Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
+                showAlertDialogOnNewSettingNewTheme(newTheme);
+            }
+        }, new ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String yup = "2";
             }
         });
     }
@@ -254,7 +281,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         Intent intent = new Intent(this, ThemeSupportActivity.class);
         intent.putExtra("themeId", themeId);
         intent.putExtra("type", 1);
-        startActivity(intent);
+        startActivityForResult(intent);
     }
 
     @Override
@@ -320,23 +347,5 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 }
             });
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mIsRunning = false;
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_IS_ACTIVATING_THEME, mIsActivatingTheme);
-    }
-
-    public static boolean isAccessible() {
-        // themes are only accessible to admin wordpress.com users
-        Blog blog = WordPress.getCurrentBlog();
-        return (blog != null && blog.isAdmin() && blog.isDotcomFlag());
     }
 }
