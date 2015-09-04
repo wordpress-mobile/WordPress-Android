@@ -52,6 +52,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.xmlrpc.android.ApiHelper;
 
@@ -304,7 +305,7 @@ public class EditPostSettingsFragment extends Fragment
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-            if (mCategories.size() > 0) {
+            if (mCategories != null && mCategories.size() > 0) {
                 bundle.putSerializable("categories", new HashSet<String>(mCategories));
             }
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
@@ -817,6 +818,11 @@ public class EditPostSettingsFragment extends Fragment
      */
 
     private void onCategoryButtonClick(View v) {
+        if (mCategories == null) {
+            ToastUtils.showToast(getActivity(), R.string.category_state_error);
+            return;
+        }
+
         // Get category name by removing prefix from the tag
         boolean listChanged = false;
         String categoryName = (String) v.getTag();
@@ -857,13 +863,16 @@ public class EditPostSettingsFragment extends Fragment
 
         // New category buttons
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        for (String categoryName : mCategories) {
-            Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
-            if (categoryName != null && buttonCategory != null) {
-                buttonCategory.setText(Html.fromHtml(categoryName));
-                buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
-                buttonCategory.setOnClickListener(this);
-                mSectionCategories.addView(buttonCategory);
+
+        if (mCategories != null) {
+            for (String categoryName : mCategories) {
+                Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
+                if (categoryName != null && buttonCategory != null) {
+                    buttonCategory.setText(Html.fromHtml(categoryName));
+                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
+                    buttonCategory.setOnClickListener(this);
+                    mSectionCategories.addView(buttonCategory);
+                }
             }
         }
 

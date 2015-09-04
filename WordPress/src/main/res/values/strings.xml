@@ -53,6 +53,7 @@
     <string name="add_comment">Add comment</string>
     <string name="connection_error">Connection error</string>
     <string name="category_refresh_error">Category refresh error</string>
+    <string name="category_state_error">Category data corrupt</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="cancel_edit">Cancel edit</string>
     <string name="upload_full_size_image">Upload and link to full image</string>
