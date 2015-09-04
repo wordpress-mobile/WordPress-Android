@@ -680,15 +680,6 @@ public class WordPress extends Application {
         }
     }
 
-    private void setConnectionChangeReceiverEnabled(boolean enabled) {
-        AppLog.i(T.UTILS, "setConnectionChangeReceiverEnabled " + enabled);
-        int flag = (enabled ?
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
-        ComponentName component = new ComponentName(this, ConnectionChangeReceiver.class);
-        getPackageManager().setComponentEnabledSetting(component, flag, PackageManager.DONT_KILL_APP);
-    }
-
     /**
      * Detect when the app goes to the background and come back to the foreground.
      *
@@ -795,7 +786,7 @@ public class WordPress extends Application {
 
         public void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
-            setConnectionChangeReceiverEnabled(false);
+            ConnectionChangeReceiver.setEnabled(WordPress.this, false);
         }
 
         /**
@@ -805,7 +796,7 @@ public class WordPress extends Application {
          */
         public void onAppComesFromBackground() {
             AppLog.i(T.UTILS, "App comes from background");
-            setConnectionChangeReceiverEnabled(true);
+            ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata();
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
