@@ -237,7 +237,6 @@ public class WordPress extends Application {
         ABTestingUtils.init();
 
         AnalyticsUtils.refreshMetadata();
-        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -726,7 +725,7 @@ public class WordPress extends Application {
                 }
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                 AnalyticsTracker.endSession(false);
-                onToBackground();
+                onAppGoesToBackground();
             } else {
                 mIsInBackground = false;
             }
@@ -789,7 +788,7 @@ public class WordPress extends Application {
             }
         }
 
-        public void onToBackground() {
+        public void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
             setConnectionChangeReceiverEnabled(false);
         }
@@ -799,7 +798,7 @@ public class WordPress extends Application {
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        public void onFromBackground() {
+        public void onAppComesFromBackground() {
             AppLog.i(T.UTILS, "App comes from background");
             setConnectionChangeReceiverEnabled(true);
             AnalyticsUtils.refreshMetadata();
@@ -822,7 +821,7 @@ public class WordPress extends Application {
         public void onActivityResumed(Activity activity) {
             if (mIsInBackground) {
                 // was in background before
-                onFromBackground();
+                onAppComesFromBackground();
             }
             mIsInBackground = false;
             if (mFirstActivityResumed) {
