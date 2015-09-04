@@ -161,9 +161,6 @@ public class WordPress extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // disable ConnectionChangeReceive by default
-        setConnectionChangeReceiverEnabled(false);
-
         mContext = this;
 
         ProfilingUtils.start("WordPress.onCreate");
