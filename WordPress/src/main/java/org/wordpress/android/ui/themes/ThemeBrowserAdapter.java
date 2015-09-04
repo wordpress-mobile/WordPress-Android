@@ -66,17 +66,23 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.nameView.setText(name);
         themeViewHolder.priceView.setText(price);
 
-        configureImageView(themeViewHolder, screenshotURL);
+        configureImageView(themeViewHolder, screenshotURL, themeId);
         configureImageButton(context, themeViewHolder, themeId);
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL) {
+    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId) {
         ScreenshotHolder urlHolder = (ScreenshotHolder) themeViewHolder.imageView.getTag();
         if (urlHolder == null) {
             urlHolder = new ScreenshotHolder();
             urlHolder.requestURL = screenshotURL;
             themeViewHolder.imageView.setDefaultImageResId(R.drawable.light_grey);
             themeViewHolder.imageView.setTag(urlHolder);
+            themeViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallback.onDetailsSelected(themeId);
+                }
+            });
         }
 
         if (!urlHolder.requestURL.equals(screenshotURL)) {

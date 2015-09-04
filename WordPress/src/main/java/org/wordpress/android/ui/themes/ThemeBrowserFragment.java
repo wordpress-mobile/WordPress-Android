@@ -2,7 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -34,7 +32,7 @@ import org.wordpress.android.widgets.HeaderGridView;
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
+public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
     public interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
         void onPreviewSelected(String themeId);
@@ -100,7 +98,6 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
-        mGridView.setOnItemClickListener(this);
         mGridView.setSelection(mSavedScrollPosition);
     }
 
@@ -262,15 +259,6 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
         int numberOfColumns = mGridView.getNumColumns();
         return lastVisibleCount >= totalItemCount - numberOfColumns;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position > 1) {
-            Cursor cursor = ((ThemeBrowserAdapter) parent.getAdapter()).getCursor();
-            String themeId = cursor.getString(cursor.getColumnIndex("themeId"));
-            mCallback.onDemoSelected(themeId);
-        }
     }
 
     @Override
