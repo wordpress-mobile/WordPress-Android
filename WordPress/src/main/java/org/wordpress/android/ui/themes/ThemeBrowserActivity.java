@@ -40,11 +40,10 @@ import java.util.ArrayList;
  * The theme browser.
  */
 public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
-    private static final String KEY_IS_ACTIVATING_THEME = "is_activating_theme";
+    public static final int THEME_FETCH_MAX = 100;
 
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
-    private boolean mIsActivatingTheme = false;
     private ThemeBrowserFragment mThemeBrowserFragment;
     private Theme mCurrentTheme;
 
@@ -106,7 +105,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (mThemeBrowserFragment != null) {
             page = mThemeBrowserFragment.getPage();
         }
-        WordPress.getRestClientUtilsV1_2().getThemes(siteId, 100, page, new Listener() {
+        WordPress.getRestClientUtilsV1_2().getThemes(siteId, THEME_FETCH_MAX, page, new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         new FetchThemesTask().execute(response);
@@ -243,7 +242,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         String currentURL = blog.getHomeURL();
         currentURL = currentURL.replaceFirst("https://", "");
         String url = String.format("https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s", currentURL, themeId);
-
     }
 
     @Override
