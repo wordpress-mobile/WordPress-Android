@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.themes;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -196,9 +198,43 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
 
+    public void onActivateThemeClicked(String themeId) {
+        final String siteId = getBlogId();
+        final String newThemeId = themeId;
+
+        WordPress.getRestClientUtils().setTheme(siteId, themeId, new Listener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    WordPress.wpDB.setCurrentTheme(siteId, newThemeId);
+                    Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
+                    showAlertDialogOnNewSettingNewTheme(newTheme);
+                }
+            }, new ErrorListener() {
+                @Override
+                    public void onErrorResponse(VolleyError error) {
+                    String yup = "2";
+            }
+        });
+    }
+
+    private void showAlertDialogOnNewSettingNewTheme(Theme newTheme) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage(String.format(getString(R.string.theme_prompt), newTheme.getName(), newTheme.getAuthor()));
+        dialogBuilder.setNegativeButton(R.string.done, null);
+        dialogBuilder.setPositiveButton(R.string.manage_site, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+    }
+
     @Override
     public void onActivateSelected(String themeId) {
-
+        onActivateThemeClicked(themeId);
     }
 
     @Override

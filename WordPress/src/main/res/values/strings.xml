@@ -1038,5 +1038,8 @@
     <string name="theme_demo">Demo</string>
     <string name="theme_details">Details</string>
     <string name="theme_support">Support</string>
+    <string name="done">DONE</string>
+    <string name="manage_site">MANAGE SITE</string>
+    <string name="theme_prompt">"Thanks for choosing %s by %s"</string>
 
 </resources>
