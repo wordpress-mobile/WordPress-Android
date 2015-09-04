@@ -340,12 +340,6 @@
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
 
-        <receiver android:name=".networking.ConnectionChangeReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".ui.themes.ThemeSupportActivity"
             android:label="@string/title_activity_theme_support"

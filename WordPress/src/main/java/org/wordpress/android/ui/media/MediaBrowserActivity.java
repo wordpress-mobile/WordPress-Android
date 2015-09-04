@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
@@ -20,7 +21,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MenuItem.OnActionExpandListener;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -284,7 +285,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onPause();
 
         if (mSearchMenuItem != null) {
-            mSearchMenuItem.collapseActionView();
+            MenuItemCompat.collapseActionView(mSearchMenuItem);
         }
     }
 
@@ -295,7 +296,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         if (mSearchMenuItem != null) {
-            mSearchMenuItem.collapseActionView();
+            MenuItemCompat.collapseActionView(mSearchMenuItem);
         }
 
         FragmentManager fm = getFragmentManager();
@@ -342,8 +343,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return true;
         } else if (i == R.id.menu_search) {
             mSearchMenuItem = item;
-            mSearchMenuItem.setOnActionExpandListener(this);
-            mSearchMenuItem.expandActionView();
+            MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+            MenuItemCompat.expandActionView(mSearchMenuItem);
 
             mSearchView = (SearchView) item.getActionView();
             mSearchView.setOnQueryTextListener(this);
