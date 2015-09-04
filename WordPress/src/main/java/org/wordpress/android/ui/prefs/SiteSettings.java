@@ -13,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.AppLog;
 import org.xmlrpc.android.ApiHelper;
@@ -216,6 +217,9 @@ public class SiteSettings {
                                 mSettings.copyFrom(mRemoteSettings);
                                 SiteSettingsTable.saveSettings(mSettings);
                             }
+
+                            fetchCategories();
+                            fetchPostFormats();
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
@@ -230,6 +234,32 @@ public class SiteSettings {
             Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
             xmlrpcInterface.callAsync(mXmlRpcFetchCallback, ApiHelper.Methods.GET_OPTIONS, params);
         }
+    }
+
+    private void fetchCategories() {
+        WordPress.getRestClientUtilsV1_1().getCategories(Integer.toString(mBlog.getRemoteBlogId()),
+        new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                CategoryModel[] models = CategoryModel.deserializeFromDotComRestResponse(response);
+                if (models == null) return;
+
+                SiteSettingsTable.saveCategories(models);
+                mRemoteSettings.categories = models;
+                mSettings.categories = models;
+                updateOnUiThread(null, mSettings);
+
+                AppLog.d(AppLog.T.API, "Successfully fetched WP.com categories");
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
+            }
+        });
+    }
+
+    private void fetchPostFormats() {
     }
 
     public void saveSettings() {

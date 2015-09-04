@@ -1,8 +1,10 @@
 package org.wordpress.android.models;
 
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.MapUtils;
@@ -25,6 +27,10 @@ public class SiteSettingsModel {
     public int languageId;
     public int privacy;
     public boolean location;
+    public int defaultCategory;
+    public CategoryModel[] categories;
+    public int defaultPostFormat;
+    public int[] postFormats;
 
     public boolean isTheSame(SiteSettingsModel other) {
         return address.equals(other.address) &&
@@ -99,6 +105,10 @@ public class SiteSettingsModel {
         languageId = other.languageId;
         privacy = other.privacy;
         location = other.location;
+        defaultCategory = other.defaultCategory;
+        categories = other.categories;
+        defaultPostFormat = other.defaultPostFormat;
+        postFormats = other.postFormats;
     }
 
     /**
@@ -115,6 +125,8 @@ public class SiteSettingsModel {
         tagline = response.optString(RestClientUtils.SITE_DESC_KEY, "");
         languageId = settingsObject.optInt(RestClientUtils.SITE_LANGUAGE_ID_KEY, -1);
         privacy = settingsObject.optInt(RestClientUtils.SITE_PRIVACY_KEY, -2);
+        defaultCategory = settingsObject.optInt(RestClientUtils.SITE_DEF_CATEGORY_KEY, 0);
+        defaultPostFormat = settingsObject.optInt(RestClientUtils.SITE_DEF_POST_FORMAT_KEY, 0);
     }
 
     /**
@@ -134,6 +146,7 @@ public class SiteSettingsModel {
      */
     public void deserializeDatabaseCursor(Cursor cursor) {
         if (cursor == null) return;
+
         localTableId = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.ID_COLUMN_NAME));
         address = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.ADDRESS_COLUMN_NAME));
         username = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.USERNAME_COLUMN_NAME));
@@ -142,6 +155,25 @@ public class SiteSettingsModel {
         tagline = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.TAGLINE_COLUMN_NAME));
         languageId = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.LANGUAGE_COLUMN_NAME));
         privacy = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.PRIVACY_COLUMN_NAME));
+        defaultCategory = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.DEF_CATEGORY_COLUMN_NAME));
+        defaultPostFormat = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.DEF_POST_FORMAT_COLUMN_NAME));
+
+        String cachedCategories = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.CATEGORIES_COLUMN_NAME));
+        String cachedFormats = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.POST_FORMATS_COLUMN_NAME));
+        if (!TextUtils.isEmpty(cachedCategories)) {
+            String[] split = cachedCategories.split(",");
+            categories = new CategoryModel[split.length];
+            for (int i = 0; i < split.length; ++i) {
+                int catId = Integer.parseInt(split[i]);
+                categories[i] = new CategoryModel();
+                categories[i].deserializeLocalDatabaseCursor(SiteSettingsTable.getCategory(catId));
+            }
+        }
+        if (!TextUtils.isEmpty(cachedFormats)) {
+        }
+    }
+
+    public void loadLocalCategories(int id) {
     }
 
     /**

@@ -25,10 +25,11 @@ import java.util.concurrent.TimeoutException;
 public class RestClientUtils {
     public static final String SITE_TITLE_KEY = "name";
     public static final String SITE_DESC_KEY = "description";
-    public static final String SITE_LANGUAGE_KEY = "lang";
     public static final String SITE_LANGUAGE_ID_KEY = "lang_id";
     public static final String SITE_PRIVACY_KEY = "blog_public";
     public static final String SITE_URL_KEY = "URL";
+    public static final String SITE_DEF_CATEGORY_KEY = "default_category";
+    public static final String SITE_DEF_POST_FORMAT_KEY = "default_post_format";
 
     private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static final String COMMENT_REPLY_CONTENT_FIELD = "content";
@@ -81,6 +82,11 @@ public class RestClientUtils {
 
     public RestClient getRestClient() {
         return mRestClient;
+    }
+
+    public void getCategories(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/categories", siteId);
+        get(path, null, null, listener, errorListener);
     }
 
     /**

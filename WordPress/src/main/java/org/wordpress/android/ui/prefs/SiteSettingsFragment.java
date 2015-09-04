@@ -26,6 +26,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
@@ -33,6 +34,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
@@ -275,8 +277,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mAddressPreference, mSiteSettings.getAddress());
         mLocationPreference.setChecked(siteSettingsPreferences().getBoolean(SiteSettings.LOCATION_PREF_KEY, false));
 
-        String[] details = new String[Math.max(mCategoryPreference.getEntries().length, 1)];
-        mCategoryPreference.setDetails(details);
+        loadCategories();
 
         String[] details2 = new String[Math.max(mFormatPreference.getEntries().length, 1)];
         mFormatPreference.setDetails(details2);
@@ -308,6 +309,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
+    private void loadCategories() {
+        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromDB(mBlog.getLocalTableBlogId());
+        ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
+        String[] categories = new String[categoryLevels.size()];
+
+        for (int i = 0; i < categoryLevels.size(); ++i) {
+            categories[i] = categoryLevels.get(i).getName();
+        }
+
+        mCategoryPreference.setEntries(categories);
+        mCategoryPreference.setEntryValues(categories);
+    }
     /**
      * Helper method to perform validation and set multiple properties on an EditTextPreference.
      * If newValue is equal to the current preference text no action will be taken.

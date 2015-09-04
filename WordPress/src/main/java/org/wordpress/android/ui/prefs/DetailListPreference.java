@@ -227,7 +227,7 @@ public class DetailListPreference extends ListPreference
             }
 
             if (detailText != null) {
-                if (position < mDetails.length && !TextUtils.isEmpty(mDetails[position])) {
+                if (mDetails != null && position < mDetails.length) {
                     detailText.setText(mDetails[position]);
                     detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
                             TypefaceCache.FAMILY_OPEN_SANS,
