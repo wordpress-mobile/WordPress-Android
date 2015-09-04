@@ -8,6 +8,7 @@ import android.util.Xml;
 import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.BlogIdentifier;
@@ -251,6 +252,8 @@ public class ApiHelper {
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
 
+            boolean alreadyTrackedAsJetpackBlog = mBlog.isJetpackPowered();
+
             if (!commentsOnly) {
                 // check the WP number if self-hosted
                 Map<String, String> hPost = ApiHelper.blogOptionsXMLRPCParameters;
@@ -273,6 +276,11 @@ public class ApiHelper {
                 if (versionResult != null) {
                     Map<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
                     ApiHelper.updateBlogOptions(mBlog, blogOptions);
+                }
+
+                if (mBlog.isJetpackPowered() && !alreadyTrackedAsJetpackBlog) {
+                    // blog just added to the app, or the value of jetpack_client_id has just changed
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
                 }
 
                 // get theme post formats
