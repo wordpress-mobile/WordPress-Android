@@ -41,6 +41,7 @@ import java.util.ArrayList;
  */
 public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
     public static final int THEME_FETCH_MAX = 100;
+    public static final int ACTIVATE_THEME = 1;
 
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
@@ -121,7 +122,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ACTIVATE_THEME) {
+            if (resultCode == RESULT_OK) {
+                String themeId = data.getStringExtra("themeId");
+                activateTheme(themeId);
+            }
+        }
     }
 
     public void fetchThemes() {
@@ -224,7 +230,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         actionBar.setTitle(R.string.themes);
     }
 
-    private void onActivateThemeClicked(String themeId) {
+    private void activateTheme(String themeId) {
         final String siteId = getBlogId();
         final String newThemeId = themeId;
 
@@ -260,7 +266,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onActivateSelected(String themeId) {
-        onActivateThemeClicked(themeId);
+        activateTheme(themeId);
     }
 
     @Override
@@ -281,7 +287,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         Intent intent = new Intent(this, ThemeSupportActivity.class);
         intent.putExtra("themeId", themeId);
         intent.putExtra("type", 1);
-        startActivityForResult(intent);
+        startActivityForResult(intent, ACTIVATE_THEME);
     }
 
     @Override
@@ -289,7 +295,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         Intent intent = new Intent(this, ThemeSupportActivity.class);
         intent.putExtra("themeId", themeId);
         intent.putExtra("type", 0);
-        startActivity(intent);
+        startActivityForResult(intent, ACTIVATE_THEME);
     }
 
     @Override
