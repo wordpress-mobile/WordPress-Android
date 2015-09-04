@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 
 import de.greenrobot.event.EventBus;
@@ -37,6 +39,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         boolean isConnected = NetworkUtils.isNetworkAvailable(context);
         if (mIsFirstReceive || isConnected != mWasConnected) {
+            AppLog.i(T.UTILS, "Connection status changed, isConnected=" + isConnected);
             mWasConnected = isConnected;
             mIsFirstReceive = false;
             EventBus.getDefault().post(new ConnectionChangeEvent(isConnected));
