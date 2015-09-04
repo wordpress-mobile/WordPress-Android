@@ -8,9 +8,9 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Theme;
 
 public class ThemeSupportActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,11 +42,15 @@ public class ThemeSupportActivity extends AppCompatActivity {
         WebView webView = (WebView) findViewById(R.id.webView);
         Intent intent = getIntent();
         String themeId = intent.getStringExtra("themeId");
+        String currentBlog = intent.getStringExtra("currentBlog");
         int type = intent.getIntExtra("type", 0);
         String url = "https://theme.wordpress.com/themes/" + themeId + "/";
         if (type == 0) {
             url = url + "support/";
+        } else if (type == 2) {
+            url = String.format("https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s", currentBlog, themeId);
         }
-            webView.loadUrl(url);
+
+        webView.loadUrl(url);
     }
 }

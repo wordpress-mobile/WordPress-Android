@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.webkit.WebViewFragment;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -39,12 +38,13 @@ import java.util.ArrayList;
  * The theme browser.
  */
 public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
+    private static final String KEY_IS_ACTIVATING_THEME = "is_activating_theme";
+
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
-
     private boolean mIsActivatingTheme = false;
     private ThemeBrowserFragment mThemeBrowserFragment;
-    private static final String KEY_IS_ACTIVATING_THEME = "is_activating_theme";
+    private Theme mCurrentTheme;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,13 +142,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Theme theme = Theme.fromJSONV1_1(response);
-                            if (theme != null) {
-                                WordPress.wpDB.setCurrentTheme(siteId, theme.getId());
+                            mCurrentTheme = Theme.fromJSONV1_1(response);
+                            if (mCurrentTheme != null) {
+                                WordPress.wpDB.setCurrentTheme(siteId, mCurrentTheme.getId());
                                 mThemeBrowserFragment.setRefreshing(false);
                                 if (mThemeBrowserFragment.mCurrentThemeTextView != null) {
-                                    mThemeBrowserFragment.mCurrentThemeTextView.setText(theme.getName());
-                                    mThemeBrowserFragment.mCurrentThemeId = theme.getId();
+                                    mThemeBrowserFragment.mCurrentThemeTextView.setText(mCurrentTheme.getName());
+                                    mThemeBrowserFragment.mCurrentThemeId = mCurrentTheme.getId();
                                 }
                             }
                         } catch (JSONException e) {
@@ -159,10 +159,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     @Override
                     public void onErrorResponse(VolleyError response) {
                         String themeId = WordPress.wpDB.getCurrentThemeId(siteId);
-                        Theme currentThemeFromDB = WordPress.wpDB.getTheme(siteId, themeId);
-                        if (currentThemeFromDB != null) {
-                            mThemeBrowserFragment.mCurrentThemeTextView.setText(currentThemeFromDB.getName());
-                            mThemeBrowserFragment.mCurrentThemeId = currentThemeFromDB.getId();
+                        mCurrentTheme = WordPress.wpDB.getTheme(siteId, themeId);
+                        if (mCurrentTheme != null) {
+                            mThemeBrowserFragment.mCurrentThemeTextView.setText(mCurrentTheme.getName());
+                            mThemeBrowserFragment.mCurrentThemeId = mCurrentTheme.getId();
                         }
                     }
                 }
@@ -203,6 +203,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onPreviewSelected(String themeId) {
+        Blog blog = WordPress.getCurrentBlog();
+        String currentURL = blog.getHomeURL();
+        currentURL = currentURL.replaceFirst("https://", "");
+        String url = String.format("https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s", currentURL, themeId);
 
     }
 

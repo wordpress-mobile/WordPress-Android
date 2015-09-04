@@ -94,19 +94,19 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.string.activate:
+                    case R.id.menu_activate:
                         mCallback.onActivateSelected(themeId);
                         break;
-                    case R.string.preview:
+                    case R.id.menu_preview:
                         mCallback.onPreviewSelected(themeId);
                         break;
-                    case R.string.demo:
+                    case R.id.menu_demo:
                         mCallback.onDemoSelected(themeId);
                         break;
-                    case R.string.details:
+                    case R.id.menu_details:
                         mCallback.onDetailsSelected(themeId);
                         break;
-                    case R.string.support:
+                    case R.id.menu_support:
                     default:
                         mCallback.onSupportSelected(themeId);
                         break;
