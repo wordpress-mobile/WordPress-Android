@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
+import org.xmlrpc.android.ApiHelper;
 
 import de.greenrobot.event.EventBus;
 
@@ -348,6 +350,9 @@ public class SitePickerActivity extends AppCompatActivity
             WordPress.wpDB.updateLastBlogId(site.localId);
             setResult(RESULT_OK);
             mDidUserSelectSite = true;
+            new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), null).executeOnExecutor(
+                    AsyncTask.THREAD_POOL_EXECUTOR, false);
+
             finish();
         }
     }
