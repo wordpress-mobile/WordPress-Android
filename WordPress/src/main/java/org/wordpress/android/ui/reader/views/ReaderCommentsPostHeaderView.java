@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +33,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_comments_post_header_view, this);
+        inflate(context, R.layout.reader_comments_post_header_view, this);
     }
 
     public void setPost(final ReaderPost post) {
@@ -43,7 +42,6 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
         TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
         TextView txtDateline = (TextView) findViewById(R.id.text_post_dateline);
-        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
 
         txtTitle.setText(post.getTitle());

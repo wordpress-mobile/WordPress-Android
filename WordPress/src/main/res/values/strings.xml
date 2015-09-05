@@ -800,8 +800,8 @@
     <string name="reader_btn_unfollow">Following</string>
 
     <!-- EditText hints -->
-    <string name="reader_hint_comment_on_post">Reply to post...</string>
-    <string name="reader_hint_comment_on_comment">Reply to comment...</string>
+    <string name="reader_hint_comment_on_post">Reply to post…</string>
+    <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
 
     <!-- TextView labels -->
