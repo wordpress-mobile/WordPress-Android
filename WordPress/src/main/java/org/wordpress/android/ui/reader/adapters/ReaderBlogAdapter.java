@@ -123,13 +123,18 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 case FOLLOWED:
                     final ReaderBlog blogInfo = mFollowedBlogs.get(position);
-                    String domain = UrlUtils.getDomainFromUrl(blogInfo.getUrl());
                     if (blogInfo.hasName()) {
                         blogHolder.txtTitle.setText(blogInfo.getName());
                     } else {
-                        blogHolder.txtTitle.setText(domain);
+                        blogHolder.txtTitle.setText(R.string.reader_untitled_post);
                     }
-                    blogHolder.txtUrl.setText(domain);
+                    if (blogInfo.hasUrl()) {
+                        blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
+                    } else if (blogInfo.hasFeedUrl()) {
+                        blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogInfo.getFeedUrl()));
+                    } else {
+                        blogHolder.txtUrl.setText("");
+                    }
                     blogHolder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
                     break;
             }
