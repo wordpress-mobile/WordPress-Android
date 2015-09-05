@@ -109,6 +109,16 @@ public class ReaderUtils {
         }
     }
 
+    public static String getShortCommentLabelText(Context context, int numComments) {
+        switch (numComments) {
+            case 1:
+                return context.getString(R.string.reader_short_comment_count_one);
+            default:
+                String count = FormatUtils.formatInt(numComments);
+                return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
+        }
+    }
+
     /*
      * returns true if the reader should provide a "logged out" experience - no likes,
      * comments, or anything else that requires a wp.com account
