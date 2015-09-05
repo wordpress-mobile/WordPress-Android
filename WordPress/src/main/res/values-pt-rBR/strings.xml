@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Sem conexão</string>
+	<string name="page_trashed">Página enviada para a lixeira</string>
+	<string name="post_deleted">Post excluído</string>
+	<string name="post_trashed">Post enviado para a lixeira</string>
+	<string name="stats_no_activity_this_period">Nenhuma atividade no período</string>
+	<string name="trashed">Na lixeira</string>
+	<string name="button_back">Voltar</string>
+	<string name="page_deleted">Página excluída</string>
+	<string name="button_more">Mais</string>
+	<string name="button_stats">Estatísticas</string>
+	<string name="button_trash">Enviar para a lixeira</string>
+	<string name="button_preview">Visualizar</string>
+	<string name="button_view">Exibir</string>
+	<string name="button_edit">Editar</string>
+	<string name="button_publish">Publicar</string>
+	<string name="button_delete">Excluir</string>
+	<string name="my_site_no_sites_view_subtitle">Deseja adicionar um?</string>
+	<string name="my_site_no_sites_view_title">Você ainda não possui nenhum site do WordPress.</string>
+	<string name="my_site_no_sites_view_drake">Ilustração</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Você não está autorizado a acessar este blog</string>
+	<string name="reader_toast_err_follow_blog_not_found">Este blog não foi encontrado</string>
+	<string name="undo">Desfazer</string>
 	<string name="tabbar_accessibility_label_my_site">Meu site</string>
 	<string name="tabbar_accessibility_label_me">Eu</string>
 	<string name="passcodelock_prompt_message">Digite seu PIN</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Privacidade</string>
 	<string name="preference_send_usage_stats">Enviar estatísticas</string>
 	<string name="preference_send_usage_stats_summary">Envie estatísticas de uso automaticamente para nos ajudar a melhorar o WordPress para Android</string>
-	<string name="reader_title_reblog">Reblogar um Post</string>
-	<string name="reader_hint_reblog_comment">Adicionar sua opinião (opcional)</string>
-	<string name="reader_label_reblog_to">Reblogar para</string>
 	<string name="update_verb">Atualizar</string>
 	<string name="schedule_verb">Agendar</string>
 	<string name="reader_title_blog_preview">Visualizar Blog</string>
@@ -273,7 +292,6 @@
 	<string name="forums">Fóruns</string>
 	<string name="help_center">Central de ajuda</string>
 	<string name="ssl_certificate_error">Certificado SSL inválido</string>
-	<string name="reader_label_reblog_empty">Não há blogs WordPress.com visíveis para os quais reblogar este post</string>
 	<string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>
 	<string name="notifications_empty_list">Sem notificações</string>
 	<string name="out_of_memory">Dispositivo sem memória</string>
@@ -376,9 +394,7 @@
 	<string name="saving_changes">Salvando alterações</string>
 	<string name="delete_draft">Excluir rascunho</string>
 	<string name="preview_page">Visualizar página</string>
-	<string name="page_deleted">Página excluída com êxito</string>
 	<string name="preview_post">Visualizar post</string>
-	<string name="post_deleted">Post excluído com êxito</string>
 	<string name="comment_added">Comentário adicionado com êxito</string>
 	<string name="add_new_category">Adicionar nova categoria</string>
 	<string name="share_action_post">Novo post</string>
@@ -392,7 +408,6 @@
 	<string name="add_account_blog_url">Endereço do blog</string>
 	<string name="reader_title_applog">Log do aplicativo</string>
 	<string name="reader_share_link">Compartilhar link</string>
-	<string name="reader_toast_err_reblog_requires_blog">Selecionar um blog</string>
 	<string name="required_field">Campo obrigatório</string>
 	<string name="blog_name_invalid">Endereço de site inválido</string>
 	<string name="xmlrpc_error">Não foi possível conectar. Digite o caminho completo para xmlrpc.php em seu site e tente novamente.</string>
@@ -493,10 +508,7 @@
 	<string name="reader_label_removed_tag">Excluído %s</string>
 	<string name="reader_likes_one">Uma pessoa curte isto</string>
 	<string name="reader_likes_only_you">Você curte isto</string>
-	<string name="reader_toast_reblog_success">Post foi reblogado </string>
 	<string name="reader_toast_err_comment_failed">Não foi possível postar o seu comentário </string>
-	<string name="reader_toast_err_reblog_failed">Não foi possível reblogar este post</string>
-	<string name="reader_toast_err_already_reblogged">Você já reblogou este post</string>
 	<string name="reader_toast_err_tag_exists">Você já segue essa tag</string>
 	<string name="reader_toast_err_tag_invalid">Esta tag não é válida</string>
 	<string name="reader_toast_err_share_intent">Não é possível compartilhar </string>
@@ -676,6 +688,12 @@
 		<item>Esquerda</item>
 		<item>Centralizado</item>
 		<item>Direita</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Publicado</item>
+		<item>Rascunhos</item>
+		<item>Agendado</item>
+		<item>Na lixeira</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Nota</item>

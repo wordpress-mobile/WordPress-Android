@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Dim cysylltiad</string>
+	<string name="page_trashed">Anfonwyd y dudalen i\'r Sbwriel</string>
+	<string name="post_deleted">Dilëwyd y dudalen</string>
+	<string name="post_trashed">Anfonwyd y cofnod i\'r Sbwriel</string>
+	<string name="trashed">I\'r Sbwriel</string>
+	<string name="stats_no_activity_this_period">Dim gweithgaredd yn ystod y cyfnod hwn</string>
+	<string name="button_back">Nôl</string>
+	<string name="page_deleted">Dilëwyd y dudalen</string>
+	<string name="button_more">Rhagor</string>
+	<string name="button_stats">Ystadegau</string>
+	<string name="button_trash">Sbwriel</string>
+	<string name="button_edit">Golygu</string>
+	<string name="button_preview">Rhagolwg</string>
+	<string name="button_view">Gweld</string>
+	<string name="button_delete">Dileu</string>
+	<string name="button_publish">Cyhoeddi</string>
+	<string name="my_site_no_sites_view_subtitle">Hoffech chi ychwanegu un?</string>
+	<string name="my_site_no_sites_view_title">Nid oes gennych wefannau WordPress eto.</string>
+	<string name="my_site_no_sites_view_drake">Darlun</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Nid oes gennych hawl i gael mynediad at y blog hwn</string>
+	<string name="reader_toast_err_follow_blog_not_found">Nid oedd modd canfod y blog hwn</string>
+	<string name="undo">Dadwneud</string>
 	<string name="tabbar_accessibility_label_me">Fi</string>
 	<string name="tabbar_accessibility_label_my_site">Fy Ngwefan</string>
 	<string name="editor_toast_changes_saved">Mae\'r newidiadau wedi eu cadw</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Preifatrwydd</string>
 	<string name="preference_send_usage_stats">Anfon ystadegau</string>
 	<string name="preference_send_usage_stats_summary">Anfonwch ystadegau defnydd i\'n cynorthwyo i wella WordPress Android</string>
-	<string name="reader_title_reblog">Ailflogio Cofnod</string>
-	<string name="reader_hint_reblog_comment">Ychwanegwch eich sylwadau (dewisol)</string>
-	<string name="reader_label_reblog_to">Ailflogio i</string>
 	<string name="update_verb">Diweddaru</string>
 	<string name="schedule_verb">Amserlen</string>
 	<string name="reader_toast_err_unfollow_blog">Methu peidio â dilyn y blog hwn</string>
@@ -274,7 +293,6 @@
 	<string name="forgot_password">Wedi colli eich cyfrinair?</string>
 	<string name="forums">Fforymau</string>
 	<string name="help">Cymorth</string>
-	<string name="reader_label_reblog_empty">Nid oes gennych unrhyw flogiau WordPress.com gweladwy i\'r cofnod hwn gael ei ailflogio iddo</string>
 	<string name="nux_cannot_log_in">Nid oes modd i ni eich mewngofnodi</string>
 	<string name="username_or_password_incorrect">Mae\'r enw defnyddiwr neu gyfrinair yn anghywir</string>
 	<string name="blog_name_reserved_but_may_be_available">Mae\'r wefan yna wedi\'i neilltuo ar hyn o bryd ond efallai y bydd ar gael ymhen ychydig o ddyddiau</string>
@@ -352,7 +370,6 @@
 	<string name="required_field">Maes angenrheidiol</string>
 	<string name="reader_toast_err_remove_tag">Methu tynnu\'r tag hwn</string>
 	<string name="reader_toast_err_add_tag">Methu ychwanegu\'r tag hwn</string>
-	<string name="reader_toast_err_reblog_requires_blog">Dewiswch y blog</string>
 	<string name="reader_title_applog">Cofnod yr ap</string>
 	<string name="reader_share_link">Rhannu dolen</string>
 	<string name="jetpack_message_not_admin">Mae angen yr ategyn Jetpack ar gyfer adrodd ar yr ystadegau. Cysylltwch â gweinyddwr y wefan.</string>
@@ -385,8 +402,6 @@
 	<string name="post_not_published">Nid yw statws cofnod wedi ei gyhoeddi</string>
 	<string name="comment_added">Sylw wedi ei ychwanegu\'n llwyddiannus</string>
 	<string name="preview_post">Rhagolwg post</string>
-	<string name="post_deleted">Dilëwyd y dudalen yn llwyddiannus</string>
-	<string name="page_deleted">Dilëwyd y dudalen yn llwyddiannus</string>
 	<string name="preview_page">Rhagolwg tudalen</string>
 	<string name="delete_draft">Dileu\'r drafft</string>
 	<string name="blog_removed_successfully">Tynwyd y blog yn llwyddiannus</string>
@@ -493,10 +508,7 @@
 	<string name="reader_toast_err_share_intent">Methu â rhannu</string>
 	<string name="reader_toast_err_tag_invalid">Nid yw\'n dag dilys</string>
 	<string name="reader_toast_err_tag_exists">Rydych eisoes yn dilyn y tag hwn</string>
-	<string name="reader_toast_err_already_reblogged">Rydych eisioes wedi ailflogio\'r cofnod</string>
-	<string name="reader_toast_err_reblog_failed">Methu ailflogio\'r cofnod</string>
 	<string name="reader_toast_err_comment_failed">Methu cofnodi\'ch sylw</string>
-	<string name="reader_toast_reblog_success">Mae\'r cofnod wedi cael ei ailflogio</string>
 	<string name="reader_likes_only_you">Rydych chi\'n hoffi hwn</string>
 	<string name="reader_likes_one">Mae un person yn hoffi hwn</string>
 	<string name="reader_label_removed_tag">Tynnu %s</string>
@@ -676,6 +688,12 @@
 		<item>Chwith</item>
 		<item>Canol</item>
 		<item>De</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Cyhoeddwyd</item>
+		<item>Drafftiau</item>
+		<item>Amserlenwyd</item>
+		<item>Sbwriel</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Neilleb</item>

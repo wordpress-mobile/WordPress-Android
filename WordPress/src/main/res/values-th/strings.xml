@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="my_site_no_sites_view_subtitle">คุณต้องการจะเพิ่มซักหนึ่งอย่าง</string>
+	<string name="my_site_no_sites_view_title">คุณยังไม่มีเว็บเวิร์ดเพรส</string>
+	<string name="my_site_no_sites_view_drake">ภาพประกอบ</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">คุณไม่มีสิทธิเข้าถึงบล็อกนี้</string>
+	<string name="reader_toast_err_follow_blog_not_found">ไม่สามารถค้นหาบล็อกนี้</string>
+	<string name="undo">ย้อนกลับ</string>
 	<string name="tabbar_accessibility_label_my_site">เว็บของฉัน</string>
 	<string name="tabbar_accessibility_label_me">ฉัน</string>
 	<string name="passcodelock_prompt_message">ใส่ PIN ของคุณ</string>
@@ -247,9 +253,6 @@
 	<string name="preference_privacy">ส่วนตัว</string>
 	<string name="preference_send_usage_stats">ส่งสถิติ</string>
 	<string name="preference_send_usage_stats_summary">ส่งข้อมูลการใช้งานอัตโนมัติเพื่อช่วยเราในการปรับปรุงเวิร์ดเพรสสำหรับแอนดรอยด์</string>
-	<string name="reader_hint_reblog_comment">เพิ่มความเห็นของคุณ (ทางเลือก)</string>
-	<string name="reader_title_reblog">รีบล็อกเรื่อง</string>
-	<string name="reader_label_reblog_to">รีบล็อกไปที่</string>
 	<string name="update_verb">อัปเดต</string>
 	<string name="schedule_verb">ตารางงาน</string>
 	<string name="reader_title_blog_preview">ดูก่อนบล็อก</string>
@@ -273,7 +276,6 @@
 	<string name="forums">ฟอรั่ม</string>
 	<string name="help_center">ศูนย์กลางความช่วยเหลือ</string>
 	<string name="ssl_certificate_error">SSL certificate ใช้งานไม่ได้</string>
-	<string name="reader_label_reblog_empty">คุณไม่มีบล็อก WordPress.com ที่มองเห็นได้  เรื่องนี้สามารถรีบล็อกไปได้ที่</string>
 	<string name="ssl_certificate_ask_trust">ถ้าคุณสามารถเชื่อมต่อกับเว็บนี้บ่อย ๆ โดยไม่มีปัญหา  ความผิดพลาดนี้อาจหมายถึงมีบางคนพยายามเปลี่ยนแปลงเว็บทำให้คุณไม่สามารถดำเนินการต่อได้  คุณต้องการที่จะเชื่อใจการรับรองนี้หรือไม่?</string>
 	<string name="could_not_remove_account">ไม่สามารถลบเว็บ</string>
 	<string name="nux_cannot_log_in">เราไม่สามารถนำคุณเข้าสู่ระบบ</string>
@@ -345,7 +347,6 @@
 	<string name="blog_name_invalid">ที่อยู่เว็บไม่ถูกต้อง</string>
 	<string name="blog_title_invalid">หัวข้อเว็บไม่ถูกต้อง</string>
 	<string name="reader_share_link">แบ่งปันลิงก์</string>
-	<string name="reader_toast_err_reblog_requires_blog">เลือกบล็อก</string>
 	<string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>
 	<string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
 	<string name="required_field">ช่องที่ต้องการ</string>
@@ -366,9 +367,7 @@
 	<string name="share_action_media">คลังไฟล์สื่อ</string>
 	<string name="delete_draft">ลบฉบับร่าง</string>
 	<string name="preview_page">ดูก่อนหน้า</string>
-	<string name="page_deleted">ลบหน้าสำเร็จแล้ว</string>
 	<string name="preview_post">ดูก่อนเรื่อง</string>
-	<string name="post_deleted">ลบเรื่องสำเร็จแล้ว</string>
 	<string name="comment_added">เพิ่มความเห็นสำเร็จแล้ว</string>
 	<string name="post_not_published">สถานะเรื่องยังไม่เผยแพร่</string>
 	<string name="page_not_published">สถานะหน้ายังไม่เผยแพร่</string>
@@ -492,9 +491,6 @@
 	<string name="reader_likes_one">หนึ่งคนชอบสิ่งนี้</string>
 	<string name="reader_likes_only_you">คุณชอบสิ่งนี้</string>
 	<string name="reader_toast_err_comment_failed">ไม่สามารถเขียนความเห็นของคุณ</string>
-	<string name="reader_toast_err_reblog_failed">ไม่สามารถรีบล็อกเรื่องนี้</string>
-	<string name="reader_toast_reblog_success">เรื่องถูกเขียนใหม่แล้ว</string>
-	<string name="reader_toast_err_already_reblogged">คุณได้เขียนใหม่เรื่องนี้แล้ว</string>
 	<string name="reader_toast_err_tag_exists">คุณติดตามป้ายกำกับนี้แล้ว</string>
 	<string name="reader_toast_err_tag_invalid">นี่ไม่ใช่ป้ายกำกับที่ใช้งานได้</string>
 	<string name="reader_toast_err_share_intent">ไม่สามารถแบ่งปันได้</string>

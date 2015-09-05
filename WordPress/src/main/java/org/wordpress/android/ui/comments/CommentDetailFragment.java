@@ -92,7 +92,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private TextView mTxtStatus;
     private TextView mTxtContent;
-    private ImageView mImgSubmitReply;
+    private View mSubmitReplyBtn;
     private SuggestionAutoCompleteText mEditReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
@@ -229,7 +229,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
                 getRemoteBlogId(), getCommentId()));
 
-        mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
+        mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
         mBtnLikeComment.setVisibility(View.GONE);
@@ -256,7 +256,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mRestoredReplyText = null;
         }
 
-        mImgSubmitReply.setOnClickListener(new View.OnClickListener() {
+        mSubmitReplyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitReply();
@@ -774,7 +774,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // disable editor, hide soft keyboard, hide submit icon, and show progress spinner while submitting
         mEditReply.setEnabled(false);
         EditTextUtils.hideSoftInput(mEditReply);
-        mImgSubmitReply.setVisibility(View.GONE);
+        mSubmitReplyBtn.setVisibility(View.GONE);
         final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
@@ -786,7 +786,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
                 if (isAdded()) {
                     mEditReply.setEnabled(true);
-                    mImgSubmitReply.setVisibility(View.VISIBLE);
+                    mSubmitReplyBtn.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
                     updateStatusViews();
                     if (succeeded) {

@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">Nessuna connessione</string>
+	<string name="page_trashed">Pagina inviata al cestino</string>
+	<string name="post_deleted">Articolo cancellato</string>
+	<string name="post_trashed">Articolo inviato al cestino</string>
+	<string name="stats_no_activity_this_period">Nessuna attivata in questo periodo</string>
+	<string name="trashed">Cestinato</string>
+	<string name="button_back">Indietro</string>
+	<string name="page_deleted">Pagina cancellata</string>
+	<string name="button_more">Altro</string>
+	<string name="button_stats">Statistiche</string>
+	<string name="button_trash">Cestino</string>
+	<string name="button_preview">Anteprima</string>
+	<string name="button_view">Visualizza</string>
+	<string name="button_edit">Modifica</string>
+	<string name="button_publish">Pubblica</string>
+	<string name="button_delete">Cancella</string>
+	<string name="my_site_no_sites_view_subtitle">Vuoi aggiungerne uno?</string>
+	<string name="my_site_no_sites_view_title">No hai ancora nessun sito WordPress</string>
+	<string name="my_site_no_sites_view_drake">Illustrazione</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Non sei autorizzato ad accedere a questo blog</string>
+	<string name="reader_toast_err_follow_blog_not_found">impossibile trovare questo blog</string>
+	<string name="undo">Annulla</string>
 	<string name="tabbar_accessibility_label_my_site">Il mio sito</string>
 	<string name="tabbar_accessibility_label_me">Io</string>
 	<string name="editor_toast_changes_saved">Cambiamenti salvati</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">Privacy</string>
 	<string name="preference_send_usage_stats">Invia le statistiche</string>
 	<string name="preference_send_usage_stats_summary">Invia automaticamente le statistiche di utilizzo per aiutarci a migliorare WordPress per Android</string>
-	<string name="reader_title_reblog">Riblogga articolo</string>
-	<string name="reader_hint_reblog_comment">Aggiungi le tue opinioni (opzionale)</string>
-	<string name="reader_label_reblog_to">Riblogga a</string>
 	<string name="update_verb">Aggiorna</string>
 	<string name="schedule_verb">Pianifica</string>
 	<string name="reader_title_blog_preview">Anteprima blog</string>
@@ -268,7 +287,6 @@
 	<string name="saving">Salvataggio in corso...</string>
 	<string name="media_empty_list">Nessun media</string>
 	<string name="ptr_tip_message">Suggerimento: scorri il dito verso il basso per aggiornare</string>
-	<string name="reader_label_reblog_empty">Non sono presenti blog WordPress.com visibili sui quali ripubblicare questo articolo</string>
 	<string name="help">Aiuto</string>
 	<string name="forgot_password">Password dimenticata?</string>
 	<string name="forums">Forum</string>
@@ -400,9 +418,7 @@
 	<string name="toast_comment_unedited">Il commento non è stato modificato</string>
 	<string name="delete_draft">Elimina bozza</string>
 	<string name="preview_page">Anteprima pagina</string>
-	<string name="page_deleted">Pagina eliminata correttamente</string>
 	<string name="preview_post">Anteprima articolo</string>
-	<string name="post_deleted">Articolo eliminato correttamente</string>
 	<string name="comment_added">Commento aggiunto correttamente</string>
 	<string name="post_not_published">Articolo non pubblicato</string>
 	<string name="page_not_published">Pagina non pubblicata</string>
@@ -434,7 +450,6 @@
 	<string name="jetpack_message_not_admin">Il plugin Jetpack è richiesto per le statistiche. Contatta l\'amministratore del sito.</string>
 	<string name="reader_title_applog">Registro applicazione</string>
 	<string name="reader_share_link">Condividi il link</string>
-	<string name="reader_toast_err_reblog_requires_blog">Seleziona un blog</string>
 	<string name="reader_toast_err_add_tag">Impossibile aggiungere questo tag</string>
 	<string name="reader_toast_err_remove_tag">Impossibile rimuovere questo tag</string>
 	<string name="required_field">Campo obbligatorio</string>
@@ -513,9 +528,6 @@
 	<string name="limit_reached">Limite raggiunto. Si consiglia di attendere almeno un minuto prima di riprovare. Se l\'errore persiste, o se pensi che sia un errore del sistema, si prega di contattare il supporto.</string>
 	<string name="username_invalid">Nome utente non valido</string>
 	<string name="nux_tutorial_get_started_title">Inizia!</string>
-	<string name="reader_toast_reblog_success">L\'articolo è stato ribloggato</string>
-	<string name="reader_toast_err_already_reblogged">Hai già ribloggato questo articolo</string>
-	<string name="reader_toast_err_reblog_failed">Errore durante il riblog di questo articolo</string>
 	<string name="themes">Temi</string>
 	<string name="all">Tutto</string>
 	<string name="images">Immagini</string>
@@ -676,6 +688,12 @@
 		<item>A sinistra</item>
 		<item>Al centro</item>
 		<item>A destra</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Pubblicato</item>
+		<item>Bozze</item>
+		<item>Programmato</item>
+		<item>Cestinato</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Nota (aside)</item>

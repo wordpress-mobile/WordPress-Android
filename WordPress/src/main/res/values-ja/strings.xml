@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="connectionbar_no_connection">接続できません</string>
+	<string name="page_trashed">ページをゴミ箱へ移動しました</string>
+	<string name="post_deleted">投稿を削除しました</string>
+	<string name="post_trashed">投稿をゴミ箱へ移動しました</string>
+	<string name="stats_no_activity_this_period">この期間中のアクティビティがありません</string>
+	<string name="trashed">ゴミ箱移動済み</string>
+	<string name="button_back">戻る</string>
+	<string name="page_deleted">ページを削除しました</string>
+	<string name="button_more">続き</string>
+	<string name="button_stats">統計情報</string>
+	<string name="button_trash">ゴミ箱</string>
+	<string name="button_preview">プレビュー</string>
+	<string name="button_view">表示</string>
+	<string name="button_edit">編集</string>
+	<string name="button_publish">公開</string>
+	<string name="button_delete">削除</string>
+	<string name="my_site_no_sites_view_subtitle">追加しますか ?</string>
+	<string name="my_site_no_sites_view_title">まだ WordPress サイトがありません。</string>
+	<string name="my_site_no_sites_view_drake">イラスト</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">このブログにアクセスする権限がありません</string>
+	<string name="reader_toast_err_follow_blog_not_found">ブログが見つかりませんでした</string>
+	<string name="undo">元に戻す</string>
 	<string name="tabbar_accessibility_label_my_site">参加サイト</string>
 	<string name="tabbar_accessibility_label_me">自分</string>
 	<string name="editor_toast_changes_saved">変更を保存しました</string>
@@ -247,9 +269,6 @@
 	<string name="preference_privacy">プライバシー</string>
 	<string name="preference_send_usage_stats">統計情報を送信</string>
 	<string name="preference_send_usage_stats_summary">WordPress for Android を改善するため、利用統計情報を自動的に送信する</string>
-	<string name="reader_hint_reblog_comment">ひとことどうぞ (オプション)</string>
-	<string name="reader_label_reblog_to">リブログ先:</string>
-	<string name="reader_title_reblog">リブログ</string>
 	<string name="update_verb">更新</string>
 	<string name="schedule_verb">予約</string>
 	<string name="reader_label_tag_preview">%s タグの付いた投稿</string>
@@ -273,7 +292,6 @@
 	<string name="help">ヘルプ</string>
 	<string name="help_center">ヘルプセンター</string>
 	<string name="ssl_certificate_error">無効な SSL 証明書</string>
-	<string name="reader_label_reblog_empty">この投稿をリブログできる WordPress.com がありません</string>
 	<string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
 	<string name="error_upload">%sをアップロードする際にエラーが発生しました</string>
 	<string name="error_downloading_image">画像ダウンロードエラー</string>
@@ -400,11 +418,9 @@
 	<string name="mnu_comment_unapprove">承認を解除</string>
 	<string name="new_post">新規投稿</string>
 	<string name="open_source_licenses">オープンソースライセンス</string>
-	<string name="page_deleted">ページを削除しました</string>
 	<string name="page_not_published">このページはまだ公開されていません</string>
 	<string name="page_settings">ページ設定</string>
 	<string name="pending_review">レビュー待ち</string>
-	<string name="post_deleted">投稿を削除しました</string>
 	<string name="post_format">投稿フォーマット</string>
 	<string name="post_not_published">この投稿はまだ公開されていません</string>
 	<string name="post_settings">投稿設定</string>
@@ -414,7 +430,6 @@
 	<string name="reader_share_link">リンクを共有</string>
 	<string name="reader_title_applog">アプリケーションログ</string>
 	<string name="reader_toast_err_add_tag">このブログを追加できません</string>
-	<string name="reader_toast_err_reblog_requires_blog">ブログを選択</string>
 	<string name="reader_toast_err_remove_tag">このタグを削除できません</string>
 	<string name="required_field">記入必須欄</string>
 	<string name="saving_changes">変更を保存中</string>
@@ -510,11 +525,8 @@
 	<string name="jetpack_message">統計情報を表示するには Jetpack プラグインが必要です。Jetpack をインストールしますか ?</string>
 	<string name="reader_timespan_now">今</string>
 	<string name="reader_likes_one">1人がいいねをつけました</string>
-	<string name="reader_toast_err_reblog_failed">この投稿をリブログできませんでした</string>
 	<string name="reader_toast_err_comment_failed">コメントを投稿できませんでした</string>
-	<string name="reader_toast_err_already_reblogged">この投稿はすでにリブログ済みです</string>
 	<string name="connecting_wpcom">WordPress.com に接続中</string>
-	<string name="reader_toast_reblog_success">投稿をリブログしました</string>
 	<string name="limit_reached">上限に達しました。1分後にもう一度お試しいただけます。それより前にログインしようとすると、制限解除までの時間がさらに長くなります。エラーだと思われる場合はサポートにご連絡ください。</string>
 	<string name="themes">テーマ</string>
 	<string name="images">画像</string>
@@ -676,6 +688,12 @@
 		<item>左</item>
 		<item>中央</item>
 		<item>右</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>公開済み</item>
+		<item>下書き</item>
+		<item>予約済み</item>
+		<item>ゴミ箱移動済み</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>アサイド</item>
