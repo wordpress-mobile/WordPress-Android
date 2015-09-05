@@ -381,7 +381,13 @@ public class ReaderBlogActions {
                 } else {
                     statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
                 }
-                urlListener.onFailed(statusCode);
+                // Volley treats a 301 redirect as a failure here, we should treat it as
+                // success since it means the blog url is reachable
+                if (statusCode == 301) {
+                    urlListener.onSuccess();
+                } else {
+                    urlListener.onFailed(statusCode);
+                }
             }
         };
 
