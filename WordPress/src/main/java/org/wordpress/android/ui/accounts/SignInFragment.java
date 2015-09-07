@@ -865,7 +865,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      * user selects it.
      */
     private void refreshFirstTenBlogsContent() {
-        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1);
+        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 10);
         if (visibleBlogs != null && !visibleBlogs.isEmpty()) {
             int numberOfBlogsBeingRefreshed = Math.min(10, visibleBlogs.size());
             for (int i = 0; i < numberOfBlogsBeingRefreshed; i++) {
