@@ -4,8 +4,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Xml;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
@@ -13,6 +18,7 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.networking.WPDelayedHurlStack;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
@@ -30,16 +36,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
@@ -1086,21 +1096,16 @@ public class ApiHelper {
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
     public static String getResponse(final String stringUrl) throws SSLHandshakeException {
+        RequestFuture<String> future = RequestFuture.newFuture();
+        StringRequest request = new StringRequest(stringUrl, future, future);
+        WordPress.requestQueue.add(request);
         try {
-            URL url = new URL(stringUrl);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setInstanceFollowRedirects(true);
-            InputStream inputStream = urlConnection.getInputStream();
-            BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = r.readLine()) != null) {
-                sb.append(line);
-            }
-            return sb.toString();
-        } catch (SSLHandshakeException e) {
-            throw e;
-        } catch (IOException e) {
+            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            AppLog.e(T.API, e);
+        } catch (ExecutionException e) {
+            AppLog.e(T.API, e);
+        } catch (TimeoutException e) {
             AppLog.e(T.API, e);
         }
         return null;
