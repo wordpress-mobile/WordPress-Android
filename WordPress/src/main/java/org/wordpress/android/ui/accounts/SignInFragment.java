@@ -430,8 +430,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
                 }
 
-                // refresh the first 10 blogs
-                refreshFirstTenBlogsContent();
+                // refresh the first 5 blogs
+                refreshFirstFiveBlogsContent();
             }
 
             trackAnalyticsSignIn();
@@ -859,15 +859,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     /**
-     * Get the first ten blogs and call RefreshBlogContentTask. First blog will be autoselected when user login.
+     * Get the first five blogs and call RefreshBlogContentTask. First blog will be autoselected when user login.
      * Also when a user add a new self hosted blog, userBlogList contains only one element.
      * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
      * user selects it.
      */
-    private void refreshFirstTenBlogsContent() {
-        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 10);
+    private void refreshFirstFiveBlogsContent() {
+        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 5);
         if (visibleBlogs != null && !visibleBlogs.isEmpty()) {
-            int numberOfBlogsBeingRefreshed = Math.min(10, visibleBlogs.size());
+            int numberOfBlogsBeingRefreshed = Math.min(5, visibleBlogs.size());
             for (int i = 0; i < numberOfBlogsBeingRefreshed; i++) {
                 Map<String, Object> currentBlog = visibleBlogs.get(i);
                 refreshBlogContent(currentBlog);
