@@ -169,7 +169,7 @@ public class ActivityLauncher {
                 url = url.concat("&preview=true");
             }
         }
-        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, url);
+        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
     }
 
     public static void addMedia(Activity activity) {

@@ -18,13 +18,15 @@ import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.helpers.WPWebChromeClient;
+import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPWebViewClient;
+import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
@@ -71,6 +73,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String URL_TO_LOAD = "url_to_load";
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
+    public static final String SHARABLE_URL = "sharable_url";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
@@ -78,7 +81,7 @@ public class WPWebViewActivity extends WebViewActivity {
         openWPCOMURL(context, url, user);
     }
 
-    public static void openUrlByUsingBlogCredentials(Context context, Blog blog, String url) {
+    public static void openUrlByUsingBlogCredentials(Context context, Blog blog, Post post, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -103,6 +106,9 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        if (post != null) {
+            intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(blog, post));
+        }
         context.startActivity(intent);
     }
 
@@ -298,7 +304,13 @@ public class WPWebViewActivity extends WebViewActivity {
         } else if (itemID == R.id.menu_share) {
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("text/plain");
-            share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
+            // Use the preferred sharable URL or the default webview URL
+            Bundle extras = getIntent().getExtras();
+            String sharableUrl = extras.getString(SHARABLE_URL, null);
+            if (sharableUrl == null) {
+                sharableUrl = mWebView.getUrl();
+            }
+            share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
             startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             return true;
         } else if (itemID == R.id.menu_browser) {
