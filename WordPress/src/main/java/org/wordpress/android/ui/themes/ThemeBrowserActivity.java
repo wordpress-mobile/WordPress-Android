@@ -279,7 +279,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onDemoSelected(String themeId) {
-        
+        Intent intent = new Intent(this, ThemeSupportActivity.class);
+        intent.putExtra("themeId", themeId);
+        intent.putExtra("blogId", getBlogId());
+        intent.putExtra("type", 3);
+        startActivityForResult(intent, ACTIVATE_THEME);
     }
 
     @Override

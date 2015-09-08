@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 
 public class ThemeSupportActivity extends AppCompatActivity {
@@ -46,13 +47,16 @@ public class ThemeSupportActivity extends AppCompatActivity {
         WebView webView = (WebView) findViewById(R.id.webView);
         Intent intent = getIntent();
         mThemeId = intent.getStringExtra("themeId");
-        String currentBlog = intent.getStringExtra("currentBlog");
+        String currentBlog = intent.getStringExtra("blogId");
         int type = intent.getIntExtra("type", 0);
         String url = "https://theme.wordpress.com/themes/" + mThemeId + "/";
         if (type == 0) {
             url = url + "support/";
         } else if (type == 2) {
             url = String.format("https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s", currentBlog, mThemeId);
+        } else if (type == 3) {
+            Theme currentTheme = WordPress.wpDB.getTheme(currentBlog, mThemeId);
+            url = currentTheme.getDemoURI();
         }
 
         webView.loadUrl(url);
