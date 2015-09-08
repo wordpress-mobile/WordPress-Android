@@ -1106,13 +1106,17 @@ public class ApiHelper {
     }
 
     private static String getRedirectURL(String oldURL, NetworkResponse networkResponse) {
-        if (networkResponse.headers != null  && networkResponse.headers.containsKey("Location")) {
+        if (networkResponse.headers != null && networkResponse.headers.containsKey("Location")) {
             String newURL = networkResponse.headers.get("Location");
-            // Relative URL case
-            if (newURL.startsWith("/")) {
+            // Relative URL
+            if (newURL != null && newURL.startsWith("/")) {
                 Uri oldUri = Uri.parse(oldURL);
+                if (oldUri.getScheme() == null || oldUri.getAuthority() == null) {
+                    return null;
+                }
                 return oldUri.getScheme() + "://" + oldUri.getAuthority() + newURL;
             }
+            // Absolute URL
             return newURL;
         }
         return null;
