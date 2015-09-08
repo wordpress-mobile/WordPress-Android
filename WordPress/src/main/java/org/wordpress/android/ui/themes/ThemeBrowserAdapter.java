@@ -62,12 +62,13 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         final String name = cursor.getString(cursor.getColumnIndex("name"));
         final String price = cursor.getString(cursor.getColumnIndex("price"));
         final String themeId = cursor.getString(cursor.getColumnIndex("id"));
+        final boolean isPremium = !price.isEmpty();
 
         themeViewHolder.nameView.setText(name);
         themeViewHolder.priceView.setText(price);
 
         configureImageView(themeViewHolder, screenshotURL, themeId);
-        configureImageButton(context, themeViewHolder, themeId);
+        configureImageButton(context, themeViewHolder, themeId, isPremium);
     }
 
     private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId) {
@@ -93,9 +94,14 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.imageView.setImageUrl(screenshotURL + "?w=" + 500, WordPress.imageLoader);
     }
 
-    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId) {
+    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, boolean isPremium) {
         final PopupMenu popupMenu = new PopupMenu(context, themeViewHolder.imageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
+
+        if (isPremium) {
+            popupMenu.getMenu().removeItem(R.id.menu_activate);
+        }
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
