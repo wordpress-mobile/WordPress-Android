@@ -42,6 +42,9 @@ import java.util.ArrayList;
 public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
     public static final int THEME_FETCH_MAX = 100;
     public static final int ACTIVATE_THEME = 1;
+    public static final String THEME_ID = "theme_id";
+    public static final String BLOG_ID = "blog_id";
+    public static final String THEME_WEB_MODE = "theme_web_mode";
 
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
@@ -124,7 +127,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTIVATE_THEME) {
             if (resultCode == RESULT_OK) {
-                String themeId = data.getStringExtra("themeId");
+                String themeId = data.getStringExtra(THEME_ID);
                 activateTheme(themeId);
             }
         }
@@ -244,7 +247,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }, new ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Something went wrong. Could not activate theme", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.theme_activation_error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -273,32 +276,32 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public void onPreviewSelected(String themeId) {
         Blog blog = WordPress.getCurrentBlog();
         String currentURL = blog.getHomeURL();
-        currentURL = currentURL.replaceFirst("https://", "");
-        String url = String.format("https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s", currentURL, themeId);
+        currentURL = currentURL.replaceFirst(getString(R.string.theme_https_prefix), "");
+        String url = String.format(getString(R.string.theme_preview_url), currentURL, themeId);
     }
 
     @Override
     public void onDemoSelected(String themeId) {
-        Intent intent = new Intent(this, ThemeSupportActivity.class);
-        intent.putExtra("themeId", themeId);
-        intent.putExtra("blogId", getBlogId());
-        intent.putExtra("type", 3);
+        Intent intent = new Intent(this, ThemeWebActivity.class);
+        intent.putExtra(THEME_ID, themeId);
+        intent.putExtra(BLOG_ID, getBlogId());
+        intent.putExtra(THEME_WEB_MODE, 3);
         startActivityForResult(intent, ACTIVATE_THEME);
     }
 
     @Override
     public void onDetailsSelected(String themeId) {
-        Intent intent = new Intent(this, ThemeSupportActivity.class);
-        intent.putExtra("themeId", themeId);
-        intent.putExtra("type", 1);
+        Intent intent = new Intent(this, ThemeWebActivity.class);
+        intent.putExtra(THEME_ID, themeId);
+        intent.putExtra(THEME_WEB_MODE, 1);
         startActivityForResult(intent, ACTIVATE_THEME);
     }
 
     @Override
     public void onSupportSelected(String themeId) {
-        Intent intent = new Intent(this, ThemeSupportActivity.class);
-        intent.putExtra("themeId", themeId);
-        intent.putExtra("type", 0);
+        Intent intent = new Intent(this, ThemeWebActivity.class);
+        intent.putExtra(THEME_ID, themeId);
+        intent.putExtra(THEME_WEB_MODE, 0);
         startActivityForResult(intent, ACTIVATE_THEME);
     }
 

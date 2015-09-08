@@ -11,19 +11,21 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 
-public class ThemeSupportActivity extends AppCompatActivity {
+public class ThemeWebActivity extends AppCompatActivity {
     private String mThemeId;
+    private String mBlogId;
+    private int mThemeMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.theme_support_activity);
+        setContentView(R.layout.theme_web_activity);
         loadThemeUrlInWebView();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.theme_support, menu);
+        getMenuInflater().inflate(R.menu.theme_web, menu);
 
         return true;
     }
@@ -34,7 +36,7 @@ public class ThemeSupportActivity extends AppCompatActivity {
 
         if (id == R.id.action_activate) {
             Intent intent = new Intent();
-            intent.putExtra("themeId", mThemeId);
+            intent.putExtra(ThemeBrowserActivity.THEME_ID, mThemeId);
             setResult(RESULT_OK, intent);
             finish();
             return true;
@@ -46,10 +48,10 @@ public class ThemeSupportActivity extends AppCompatActivity {
     private void loadThemeUrlInWebView() {
         WebView webView = (WebView) findViewById(R.id.webView);
         Intent intent = getIntent();
-        mThemeId = intent.getStringExtra("themeId");
-        String currentBlog = intent.getStringExtra("blogId");
-        int type = intent.getIntExtra("type", 0);
-        String url = "https://theme.wordpress.com/themes/" + mThemeId + "/";
+        mThemeId = intent.getStringExtra(ThemeBrowserActivity.THEME_ID);
+        String currentBlog = intent.getStringExtra(ThemeBrowserActivity.BLOG_ID);
+        int type = intent.getIntExtra(ThemeBrowserActivity.THEME_WEB_MODE, 0);
+        String url = String.format("https://theme.wordpress.com/themes/%s/", mThemeId);
         if (type == 0) {
             url = url + "support/";
         } else if (type == 2) {

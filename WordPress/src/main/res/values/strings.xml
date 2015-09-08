@@ -1045,5 +1045,8 @@
     <string name="theme_done">DONE</string>
     <string name="theme_manage_site">MANAGE SITE</string>
     <string name="theme_prompt" formatted="false">Thanks for choosing %s by %s</string>
+    <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
+    <string name="theme_preview_url"><![CDATA[https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s]]></string>
+    <string name="theme_https_prefix">https://</string>
 
 </resources>

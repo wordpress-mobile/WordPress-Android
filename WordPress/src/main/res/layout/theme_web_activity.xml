@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.wordpress.android.ui.themes.ThemeSupportActivity">
+    tools:context="org.wordpress.android.ui.themes.ThemeWebActivity">
 
     <WebView
         android:id="@+id/webView"
