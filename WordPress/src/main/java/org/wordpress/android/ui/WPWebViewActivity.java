@@ -80,17 +80,17 @@ public class WPWebViewActivity extends WebViewActivity {
 
     public static void openUrlByUsingBlogCredentials(Context context, Blog blog, String url) {
         if (context == null) {
-            AppLog.e(AppLog.T.UTILS, "Context is null!!!");
+            AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
         }
 
         if (blog == null) {
-            AppLog.e(AppLog.T.UTILS, "Blog obj is null!!!");
+            AppLog.e(AppLog.T.UTILS, "Blog obj is null");
             return;
         }
 
         if (TextUtils.isEmpty(url)) {
-            AppLog.e(AppLog.T.UTILS, "Empty or null URL!!");
+            AppLog.e(AppLog.T.UTILS, "Empty or null URL");
             Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
@@ -108,12 +108,12 @@ public class WPWebViewActivity extends WebViewActivity {
 
     public static void openURL(Context context, String url) {
         if (context == null) {
-            AppLog.e(AppLog.T.UTILS, "Context is null!!!");
+            AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
         }
 
         if (TextUtils.isEmpty(url)) {
-            AppLog.e(AppLog.T.UTILS, "Empty or null URL!!");
+            AppLog.e(AppLog.T.UTILS, "Empty or null URL");
             Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
@@ -126,19 +126,19 @@ public class WPWebViewActivity extends WebViewActivity {
 
     private static void openWPCOMURL(Context context, String url, String user) {
         if (context == null) {
-            AppLog.e(AppLog.T.UTILS, "Context is null!!!");
+            AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
         }
 
         if (TextUtils.isEmpty(url)) {
-            AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials!!");
+            AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
             Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (TextUtils.isEmpty(user)) {
-            AppLog.e(AppLog.T.UTILS, "Username empty/null!!!");
+            AppLog.e(AppLog.T.UTILS, "Username empty/null");
             return;
         }
 
@@ -156,7 +156,7 @@ public class WPWebViewActivity extends WebViewActivity {
         Bundle extras = getIntent().getExtras();
 
         if (extras == null) {
-            AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity!!");
+            AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
             finish();
             return;
         }
@@ -164,7 +164,7 @@ public class WPWebViewActivity extends WebViewActivity {
         if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {
             Blog blog = WordPress.getBlog(extras.getInt(LOCAL_BLOG_ID, -1));
             if (blog == null) {
-                AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity!!");
+                AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
                 finish();
             }
             mWebView.setWebViewClient(new WPWebViewClient(blog));
@@ -181,7 +181,7 @@ public class WPWebViewActivity extends WebViewActivity {
         String authURL = extras.getString(AUTHENTICATION_URL);
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
-            AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity!!");
+            AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
             Toast.makeText(this, getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             finish();
@@ -192,14 +192,14 @@ public class WPWebViewActivity extends WebViewActivity {
             loadUrl(addressToLoad);
         } else {
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
-                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity!!");
+                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
                 Toast.makeText(this, getText(R.string.invalid_url_message),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             if (TextUtils.isEmpty(username)) {
-                AppLog.e(AppLog.T.UTILS, "Username empty/null!!!");
+                AppLog.e(AppLog.T.UTILS, "Username empty/null");
                 Toast.makeText(this, getText(R.string.incorrect_credentials), Toast.LENGTH_SHORT).show();
                 finish();
             }
