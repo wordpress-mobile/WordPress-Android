@@ -38,7 +38,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.reader.ReaderEvents;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -340,12 +339,6 @@ public class WPMainActivity extends Activity
                     }
                 }
                 break;
-            case RequestCodes.READER_SUBS:
-                ReaderPostListFragment readerFragment = getReaderListFragment();
-                if (readerFragment != null) {
-                    readerFragment.onActivityResult(requestCode, resultCode, data);
-                }
-                break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     WordPress.registerForCloudMessaging(this);
@@ -402,16 +395,9 @@ public class WPMainActivity extends Activity
     }
 
     /*
-     * returns the reader list fragment from the reader tab
-     */
-    private ReaderPostListFragment getReaderListFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_READER, ReaderPostListFragment.class);
-    }
-
-    /*
      * returns the my site fragment from the sites tab
      */
-    public MySiteFragment getMySiteFragment() {
+    private MySiteFragment getMySiteFragment() {
         return getFragmentByPosition(WPMainTabAdapter.TAB_MY_SITE, MySiteFragment.class);
     }
 
