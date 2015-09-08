@@ -1,10 +1,13 @@
 package org.xmlrpc.android;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Xml;
 import android.webkit.URLUtil;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.RedirectError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -1102,10 +1105,23 @@ public class ApiHelper {
         return getResponse(stringUrl, 0);
     }
 
+    private static String getRedirectURL(String oldURL, NetworkResponse networkResponse) {
+        if (networkResponse.headers != null  && networkResponse.headers.containsKey("Location")) {
+            String newURL = networkResponse.headers.get("Location");
+            // Relative URL case
+            if (newURL.startsWith("/")) {
+                Uri oldUri = Uri.parse(oldURL);
+                return oldUri.getScheme() + "://" + oldUri.getAuthority() + newURL;
+            }
+            return newURL;
+        }
+        return null;
+    }
 
     public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
+        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, 0, 1));
         WordPress.requestQueue.add(request);
         try {
             return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, TimeUnit.SECONDS);
@@ -1120,19 +1136,25 @@ public class ApiHelper {
                 }
                 // Follow redirect
                 RedirectError re = (RedirectError) e.getCause();
-                if (re.networkResponse != null && re.networkResponse.headers != null
-                        && re.networkResponse.headers.containsKey("Location")) {
-                    String newURL = re.networkResponse.headers.get("Location");
-                    AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
+                if (re.networkResponse != null) {
+                    String newURL = getRedirectURL(stringUrl, re.networkResponse);
+                    if (newURL == null) {
+                        AppLog.e(T.API, "Invalid server response", e);
+                        return null;
+                    }
                     // Abort redirect if old URL was HTTPS and not the new one
                     if (URLUtil.isHttpsUrl(stringUrl) && !URLUtil.isHttpsUrl(newURL)) {
                         AppLog.e(T.API, "Redirect from HTTPS to HTTP not allowed.", e);
                         return null;
                     }
                     // Retry getResponse
+                    AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
                     return getResponse(newURL, numberOfRedirects + 1);
                 }
+            } else {
+                AppLog.e(T.API, e);
             }
+
         } catch (TimeoutException e) {
             AppLog.e(T.API, e);
         }
