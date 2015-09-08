@@ -3,7 +3,9 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Xml;
+import android.webkit.URLUtil;
 
+import com.android.volley.RedirectError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
@@ -25,6 +27,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -1096,6 +1099,11 @@ public class ApiHelper {
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
     public static String getResponse(final String stringUrl) throws SSLHandshakeException {
+        return getResponse(stringUrl, 0);
+    }
+
+
+    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
         WordPress.requestQueue.add(request);
@@ -1104,7 +1112,27 @@ public class ApiHelper {
         } catch (InterruptedException e) {
             AppLog.e(T.API, e);
         } catch (ExecutionException e) {
-            AppLog.e(T.API, e);
+            if (e.getCause() != null && e.getCause() instanceof RedirectError) {
+                // Maximum 5 redirects or die
+                if (numberOfRedirects > 5) {
+                    AppLog.e(T.API, "Maximum of 5 redirects reached, aborting.", e);
+                    return null;
+                }
+                // Follow redirect
+                RedirectError re = (RedirectError) e.getCause();
+                if (re.networkResponse != null && re.networkResponse.headers != null
+                        && re.networkResponse.headers.containsKey("Location")) {
+                    String newURL = re.networkResponse.headers.get("Location");
+                    AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
+                    // Abort redirect if old URL was HTTPS and not the new one
+                    if (URLUtil.isHttpsUrl(stringUrl) && !URLUtil.isHttpsUrl(newURL)) {
+                        AppLog.e(T.API, "Redirect from HTTPS to HTTP not allowed.", e);
+                        return null;
+                    }
+                    // Retry getResponse
+                    return getResponse(newURL, numberOfRedirects + 1);
+                }
+            }
         } catch (TimeoutException e) {
             AppLog.e(T.API, e);
         }
