@@ -244,7 +244,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }, new ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String yup = "2";
+                Toast.makeText(getApplicationContext(), "Something went wrong. Could not activate theme", Toast.LENGTH_SHORT).show();
             }
         });
     }
