@@ -43,21 +43,25 @@ public class PostUtils {
 
         // populate on first use
         if (mShortcodeTable.size() == 0) {
-            // video
+            // default shortcodes
+            mShortcodeTable.add("audio");
+            mShortcodeTable.add("caption");
+            mShortcodeTable.add("embed");
+            mShortcodeTable.add("gallery");
+            mShortcodeTable.add("playlist");
+            mShortcodeTable.add("video");
+            mShortcodeTable.add("wp_caption");
+            // audio/video
             mShortcodeTable.add("dailymotion");
             mShortcodeTable.add("flickr");
             mShortcodeTable.add("hulu");
             mShortcodeTable.add("kickstarter");
+            mShortcodeTable.add("soundcloud");
             mShortcodeTable.add("vimeo");
             mShortcodeTable.add("vine");
             mShortcodeTable.add("wpvideo");
             mShortcodeTable.add("youtube");
-            // audio
-            mShortcodeTable.add("audio");
-            mShortcodeTable.add("playlist");
-            mShortcodeTable.add("soundcloud");
             // images and documents
-            mShortcodeTable.add("gallery");
             mShortcodeTable.add("instagram");
             mShortcodeTable.add("scribd");
             mShortcodeTable.add("slideshare");
