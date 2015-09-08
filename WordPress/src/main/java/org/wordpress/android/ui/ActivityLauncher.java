@@ -161,10 +161,13 @@ public class ActivityLauncher {
         if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
         String url = post.getPermaLink();
-        if (-1 == url.indexOf('?')) {
-            url = url.concat("?preview=true");
-        } else {
-            url = url.concat("&preview=true");
+        // Add the preview=true parameter if the post is not published yet
+        if (!post.isPublished()) {
+            if (-1 == url.indexOf('?')) {
+                url = url.concat("?preview=true");
+            } else {
+                url = url.concat("&preview=true");
+            }
         }
         WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, url);
     }
