@@ -10,7 +10,6 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.UnsupportedEncodingException;
 import java.net.IDN;
 import java.net.URI;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -213,5 +212,9 @@ public class UrlUtils {
 
         return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
                 cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
+    }
+
+    public static String appendPreviewURLParameter(String url) {
+        return Uri.parse(url).buildUpon().appendQueryParameter("preview", "true").build().toString();
     }
 }
