@@ -30,6 +30,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
@@ -85,10 +86,11 @@ public class ReaderPostListFragment extends Fragment
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
+    private boolean mHasUpdatedPosts;
     private boolean mIsAnimatingOutNewPostsBar;
 
     private static boolean mHasPurgedReaderDb;
-    private static java.util.Date mLastAutoUpdateDt;
+    private static Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -213,6 +215,7 @@ public class ReaderPostListFragment extends Fragment
             }
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
+            mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
     }
 
@@ -225,6 +228,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        checkAdapter();
 
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
@@ -250,7 +254,7 @@ public class ReaderPostListFragment extends Fragment
                                     setCurrentTag(ReaderTag.getDefaultTag(), true);
                                 } else if (timeToAutoUpdate && !isUpdating()) {
                                     // auto-update the current tag if it's time
-                                    AppLog.i(T.READER, "reader post list > auto-updating current tag");
+                                    AppLog.d(T.READER, "reader post list > auto-updating current tag");
                                     updateCurrentTag();
                                 } else {
                                     // otherwise, refresh posts to make sure any changes are reflected
@@ -282,6 +286,24 @@ public class ReaderPostListFragment extends Fragment
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    /*
+     * ensures the adapter is created and posts are updated if they haven't already been
+     */
+    private void checkAdapter()  {
+        if (isAdded() && mRecyclerView.getAdapter() == null) {
+            mRecyclerView.setAdapter(getPostAdapter());
+
+            if (!mHasUpdatedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
+                mHasUpdatedPosts = true;
+                if (getPostListType().isTagType() && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                    updateCurrentTag();
+                } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                    updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unused")
@@ -319,6 +341,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -405,32 +428,6 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.scrollToPosition(position);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        boolean adapterAlreadyExists = hasPostAdapter();
-        mRecyclerView.setAdapter(getPostAdapter());
-
-        // if adapter didn't already exist, populate it now then update the tag/blog - this
-        // check is important since without it the adapter would be reset and posts would
-        // be updated every time the user moves between fragments
-        if (!adapterAlreadyExists) {
-            boolean isRecreated = (savedInstanceState != null);
-            if (getPostListType().isTagType()) {
-                getPostAdapter().setCurrentTag(mCurrentTag);
-                if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                    updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
-                }
-            } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                getPostAdapter().setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
-                if (!isRecreated) {
-                    updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
-                }
-            }
-        }
-    }
-
     /*
      * called when user taps follow item in popup menu for a post
      */
@@ -464,11 +461,10 @@ public class ReaderPostListFragment extends Fragment
      * from the adapter
      */
     private void blockBlogForPost(final ReaderPost post) {
-        if (post == null || !hasPostAdapter()) {
-            return;
-        }
-
-        if (!NetworkUtils.checkConnection(getActivity())) {
+        if (post == null
+                || !isAdded()
+                || !hasPostAdapter()
+                || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
@@ -483,8 +479,7 @@ public class ReaderPostListFragment extends Fragment
 
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
-        final ReaderBlogActions.BlockedBlogResult blockResult =
-                ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+        final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // remove posts in this blog from the adapter
@@ -641,6 +636,11 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             if (getActivity() instanceof ReaderBlogInfoView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderBlogInfoView.OnBlogInfoLoadedListener) getActivity());
+            }
+            if (getPostListType().isTagType()) {
+                mPostAdapter.setCurrentTag(getCurrentTag());
+            } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             }
         }
         return mPostAdapter;
@@ -1075,6 +1075,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         AppLog.d(T.READER, "reader post list > updating tags and blogs");
+        mLastAutoUpdateDt = new Date();
         ReaderUpdateService.startService(getActivity(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
