@@ -37,7 +37,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
-import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -298,9 +298,9 @@ public class WPMainActivity extends Activity
     private void resetFragments() {
         AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
 
-        // remove the event that determines when followed tags/blogs are updated so they're
+        // reset the timestamp that determines when followed tags/blogs are updated so they're
         // updated when the fragment is recreated (necessary after signin/disconnect)
-        EventBus.getDefault().removeStickyEvent(ReaderEvents.UpdatedFollowedTagsAndBlogs.class);
+        ReaderPostListFragment.resetLastUpdateDate();
 
         // remember the current tab position, then recreate the adapter so new fragments are created
         int position = mViewPager.getCurrentItem();

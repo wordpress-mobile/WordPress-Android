@@ -3,10 +3,7 @@ package org.wordpress.android.ui.reader;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.Date;
 
 /**
  * Reader-related EventBus event classes
@@ -27,16 +24,6 @@ public class ReaderEvents {
 
     public static class FollowedBlogsChanged {}
     public static class RecommendedBlogsChanged {}
-
-    public static class UpdatedFollowedTagsAndBlogs {
-        private final Date mUpdateDate;
-        public UpdatedFollowedTagsAndBlogs() {
-            mUpdateDate = new Date();
-        }
-        public int minutesSinceLastUpdate() {
-            return DateTimeUtils.minutesBetween(mUpdateDate, new Date());
-        }
-    }
 
     public static class UpdatePostsStarted {
         private final ReaderPostService.UpdateAction mAction;

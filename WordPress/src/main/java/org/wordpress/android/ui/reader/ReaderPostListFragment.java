@@ -35,12 +35,14 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -50,6 +52,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +88,7 @@ public class ReaderPostListFragment extends Fragment
     private boolean mIsAnimatingOutNewPostsBar;
 
     private static boolean mHasPurgedReaderDb;
+    private static java.util.Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -1059,18 +1063,19 @@ public class ReaderPostListFragment extends Fragment
      * start background service to get the latest followed tags and blogs if it's time to do so
      */
     private void updateFollowedTagsAndBlogsIfNeeded() {
-        ReaderEvents.UpdatedFollowedTagsAndBlogs lastUpdateEvent =
-                EventBus.getDefault().getStickyEvent(ReaderEvents.UpdatedFollowedTagsAndBlogs.class);
-        if (lastUpdateEvent != null && lastUpdateEvent.minutesSinceLastUpdate() < 120) {
+        if (!isAdded() || !NetworkUtils.isNetworkAvailable(getActivity())) {
             return;
         }
 
-        AppLog.d(T.READER, "reader post list > updating tags and blogs");
-        EventBus.getDefault().postSticky(new ReaderEvents.UpdatedFollowedTagsAndBlogs());
+        if (mLastAutoUpdateDt != null) {
+            int minutesSinceLastUpdate = DateTimeUtils.minutesBetween(mLastAutoUpdateDt, new Date());
+            if (minutesSinceLastUpdate < 120) {
+                return;
+            }
+        }
 
-        ReaderUpdateService.startService(getActivity(),
-                EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
-                           ReaderUpdateService.UpdateTask.FOLLOWED_BLOGS));
+        AppLog.d(T.READER, "reader post list > updating tags and blogs");
+        ReaderUpdateService.startService(getActivity(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
     @Override
@@ -1078,5 +1083,9 @@ public class ReaderPostListFragment extends Fragment
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, 0);
         }
+    }
+
+    public static void resetLastUpdateDate() {
+        mLastAutoUpdateDt = null;
     }
 }
