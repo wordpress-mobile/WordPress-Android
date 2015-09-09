@@ -16,7 +16,7 @@ public class ReaderEvents {
     public static class RecommendedTagsChanged{}
 
     public static class TagAdded {
-        private String mTagName;
+        private final String mTagName;
         public TagAdded(String tagName) {
             mTagName = tagName;
         }
@@ -27,9 +27,6 @@ public class ReaderEvents {
 
     public static class FollowedBlogsChanged {}
     public static class RecommendedBlogsChanged {}
-
-    public static class HasPurgedDatabase {}
-    public static class HasPerformedInitialUpdate {}
 
     public static class UpdatedFollowedTagsAndBlogs {
         private final Date mUpdateDate;

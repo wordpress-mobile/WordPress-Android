@@ -84,6 +84,8 @@ public class ReaderPostListFragment extends Fragment
     private boolean mWasPaused;
     private boolean mIsAnimatingOutNewPostsBar;
 
+    private static boolean mHasPurgedReaderDb;
+
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     private static class HistoryStack extends Stack<String> {
@@ -263,7 +265,6 @@ public class ReaderPostListFragment extends Fragment
         EventBus.getDefault().register(this);
 
         purgeDatabaseIfNeeded();
-        performInitialUpdateIfNeeded();
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             updateFollowedTagsAndBlogsIfNeeded();
         }
@@ -1041,24 +1042,10 @@ public class ReaderPostListFragment extends Fragment
      * since we don't want to purge posts that the user would expect to see when offline
      */
     private void purgeDatabaseIfNeeded() {
-        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPurgedDatabase.class) == null
-                && NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!mHasPurgedReaderDb && NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.d(T.READER, "reader post list > purging database");
+            mHasPurgedReaderDb = true;
             ReaderDatabase.purgeAsync();
-            EventBus.getDefault().postSticky(new ReaderEvents.HasPurgedDatabase());
-        }
-    }
-
-    /*
-     * initial update performed the first time the user opens the reader
-     */
-    private void performInitialUpdateIfNeeded() {
-        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class) == null
-                && NetworkUtils.isNetworkAvailable(getActivity())) {
-            // update current user to ensure we have their user_id as well as their latest info
-            // in case they changed their avatar, name, etc. since last time
-            AppLog.d(T.READER, "reader post list > updating current user");
-            EventBus.getDefault().postSticky(new ReaderEvents.HasPerformedInitialUpdate());
         }
     }
 
