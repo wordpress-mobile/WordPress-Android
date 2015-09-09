@@ -36,6 +36,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -161,13 +162,9 @@ public class ActivityLauncher {
         if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
         String url = post.getPermaLink();
-        // Add the preview=true parameter if the post is not published yet
+        // Add the preview parameter if the post is not published yet
         if (!post.isPublished()) {
-            if (-1 == url.indexOf('?')) {
-                url = url.concat("?preview=true");
-            } else {
-                url = url.concat("&preview=true");
-            }
+            url = UrlUtils.appendPreviewURLParameter(url);
         }
         WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
     }
