@@ -2,13 +2,11 @@
 <org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/text"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:drawableRight="@drawable/reader_dropdown_arrow"
     android:ellipsize="end"
     android:gravity="center_vertical"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:textSize="@dimen/text_sz_large"
+    android:padding="@dimen/margin_large"
     android:textColor="@color/grey"
-    tools:text="spinner item" />
+    android:textSize="@dimen/text_sz_large"
+    tools:text="tag name" />

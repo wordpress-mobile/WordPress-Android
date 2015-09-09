@@ -7,7 +7,6 @@ public class RequestCodes {
     public static final int ADD_ACCOUNT            = 100;
     public static final int REAUTHENTICATE         = 200;
     public static final int ACCOUNT_SETTINGS       = 300;
-    public static final int READER_SUBS            = 400;
     public static final int NOTE_DETAIL            = 600;
     public static final int SITE_PICKER            = 700;
     public static final int EDIT_POST              = 800;
