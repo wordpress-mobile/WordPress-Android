@@ -163,9 +163,7 @@ public class ActivityLauncher {
 
         String url = post.getPermaLink();
         // Add the preview parameter if the post is not published yet
-        if (!post.isPublished()) {
-            url = UrlUtils.appendPreviewURLParameter(url);
-        }
+        url = UrlUtils.appendPreviewURLParameter(url);
         WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
     }
 
