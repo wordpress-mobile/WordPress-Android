@@ -235,39 +235,55 @@ public class ReaderPostListFragment extends Fragment
             mWasPaused = false;
 
             if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
-                // use a separate thread since we're hitting the database here
-                new Thread() {
-                    @Override
-                    public void run() {
-                        // user may have deleted the current tag in ReaderSubsActivity
-                        final boolean isTagValid = ReaderTagTable.tagExists(getCurrentTag());
-
-                        // if tag is still valid, check if it's time to auto-update its posts
-                        final boolean timeToAutoUpdate = isTagValid && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag());
-
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!isTagValid) {
-                                    // current tag no longer exists, revert to default
-                                    AppLog.d(T.READER, "reader post list > current tag no longer valid");
-                                    setCurrentTag(ReaderTag.getDefaultTag(), true);
-                                } else if (timeToAutoUpdate && !isUpdating()) {
-                                    // auto-update the current tag if it's time
-                                    AppLog.d(T.READER, "reader post list > auto-updating current tag");
-                                    updateCurrentTag();
-                                } else {
-                                    // otherwise, refresh posts to make sure any changes are reflected
-                                    refreshPosts();
-                                }
-                            }
-                        });
-                    }
-                }.start();
+                resumeFollowedTag();
             } else {
                 refreshPosts();
             }
         }
+    }
+
+    /*
+     * called when fragment is resumed and we're looking at posts in a followed tag
+     */
+    public void resumeFollowedTag() {
+        // did user just add a tag? if so, switch to it.
+        Object event = EventBus.getDefault().getStickyEvent(ReaderEvents.TagAdded.class);
+        if (event != null) {
+            String tagName = ((ReaderEvents.TagAdded) event).getTagName();
+            EventBus.getDefault().removeStickyEvent(event);
+            ReaderTag newTag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+            setCurrentTag(newTag, true);
+            return;
+        }
+
+        // check whether current tag is still valid and if so whether if it's time to auto-update
+        new Thread() {
+            @Override
+            public void run() {
+                final boolean isTagValid = ReaderTagTable.tagExists(getCurrentTag());
+                final boolean timeToAutoUpdate = isTagValid && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag());
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isAdded()) return;
+
+                        if (!isTagValid) {
+                            // current tag no longer exists, revert to default
+                            AppLog.d(T.READER, "reader post list > current tag no longer valid");
+                            setCurrentTag(ReaderTag.getDefaultTag(), true);
+                        } else if (timeToAutoUpdate && !isUpdating()) {
+                            // auto-update the current tag if it's time
+                            AppLog.d(T.READER, "reader post list > auto-updating current tag");
+                            updateCurrentTag();
+                        } else {
+                            // otherwise, refresh posts to make sure any changes are reflected
+                            refreshPosts();
+                        }
+                    }
+                });
+            }
+        }.start();
     }
 
     @Override
