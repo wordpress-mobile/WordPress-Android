@@ -118,13 +118,12 @@ public class WPMainActivity extends Activity
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                // we want to scroll the active fragment's contents to the top when the user taps
-                // the currently selected tab, but a problem in the v22 support library causes
-                // onTabReselected() to be fired for every tab change rather than just when the
-                // active tab is tapped again - the workaround below, where we check whether the
-                // tab has already been reselected, prevents the problem - note the bug is fixed
-                // in the v23 support lib - https://code.google.com/p/android/issues/detail?id=177189
-                // TODO: remove this workaround once we upgrade to v23 of the support lib
+                // we want to scroll the active fragment's contents to the top when the user taps the currently
+                // selected tab, but a problem in the v22 and v23.0.1 support library causes onTabReselected() to be
+                // fired for every tab change rather than just when the active tab is tapped again - the workaround
+                // below, where we check whether the  tab has already been reselected, prevents the problem.
+                //
+                // Support library ticket: https://code.google.com/p/android/issues/detail?id=177189
                 if (tab.getPosition() == mLastReselectedTabPosition) {
                     Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
                     if (fragment instanceof OnScrollToTopListener) {
