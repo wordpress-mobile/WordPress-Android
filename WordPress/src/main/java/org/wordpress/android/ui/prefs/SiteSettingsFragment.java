@@ -210,6 +210,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
             return;
         }
+
         changeEditTextPreferenceValue(mTitlePreference, container.title);
         changeEditTextPreferenceValue(mTaglinePreference, container.tagline);
         changeEditTextPreferenceValue(mAddressPreference, container.address);
@@ -217,6 +218,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mPasswordPreference, container.password);
         changePrivacyValue(container.privacy);
         changeLanguageValue(container.language);
+
+        if (mFormatPreference != null && container.postFormats != null && container.postFormats.length > 0) {
+            mFormatPreference.setEntries(container.postFormats);
+            mFormatPreference.setEntryValues(container.postFormats);
+        }
     }
 
     @Override

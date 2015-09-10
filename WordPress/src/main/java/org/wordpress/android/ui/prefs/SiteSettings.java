@@ -286,6 +286,7 @@ public class SiteSettings {
                             }
                         }
                     }
+                    updateOnUiThread(null, mRemoteSettings);
                 }
             }
 
