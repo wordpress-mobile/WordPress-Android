@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -138,9 +138,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             super(view);
             txtTagName = (TextView) view.findViewById(R.id.text_topic);
             btnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                btnRemove.setBackgroundResource(R.drawable.ripple_oval);
-            }
+            ReaderUtils.setBackgroundToRoundRipple(btnRemove);
         }
     }
 

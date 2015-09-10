@@ -11,7 +11,6 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 
@@ -26,15 +25,14 @@ import de.greenrobot.event.EventBus;
 public class ReaderPostListActivity extends AppCompatActivity {
 
     private ReaderPostListType mPostListType;
-    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_list);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -108,14 +106,6 @@ public class ReaderPostListActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     removeListFragment();
                     EventBus.getDefault().removeStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class);
-                }
-                break;
-
-            // pass reader-related results to the fragment
-            case RequestCodes.READER_SUBS:
-                ReaderPostListFragment listFragment = getListFragment();
-                if (listFragment != null) {
-                    listFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
         }

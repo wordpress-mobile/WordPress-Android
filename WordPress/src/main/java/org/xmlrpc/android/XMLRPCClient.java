@@ -60,6 +60,8 @@ import de.greenrobot.event.EventBus;
  */
 
 public class XMLRPCClient implements XMLRPCClientInterface {
+    public static final int DEFAULT_CONNECTION_TIMEOUT = 30000;
+    public static final int DEFAULT_SOCKET_TIMEOUT = 60000;
 
     public interface OnBytesUploadedListener {
         public void onBytesUploaded(long uploadedBytes);
@@ -73,8 +75,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
-    private static final int DEFAULT_CONNECTION_TIMEOUT = 30000;
-    private static final int DEFAULT_SOCKET_TIMEOUT = 60000;
 
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
@@ -131,7 +131,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         if (uri != null && uri.getHost() != null && uri.getHost().endsWith("wordpress.com")) {
             mIsWpcom = true;
         }
-        if (mIsWpcom || (uri == null || uri.getScheme() == null || uri.getScheme().equals("http"))) {
+        if (mIsWpcom) {
             //wpcom blog or self-hosted blog on plain HTTP
             client = new DefaultHttpClient();
         } else {
@@ -143,10 +143,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             try {
                 client = new ConnectionClient(port);
             } catch (GeneralSecurityException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustUserSSLCertsSocketFactory", e);
                 client = null;
             } catch (IOException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustUserSSLCertsSocketFactory", e);
                 client = null;
             }
 

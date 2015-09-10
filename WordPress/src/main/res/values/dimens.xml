@@ -90,6 +90,7 @@
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
 
+    <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">38dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
@@ -105,10 +106,8 @@
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
 
-    <dimen name="reader_header_divider_height">2dp</dimen>
-
     <!-- margin to use when indenting comment replies under their parents -->
-    <dimen name="reader_comment_indent_per_level">@dimen/avatar_sz_small</dimen>
+    <dimen name="reader_comment_indent_per_level">24dp</dimen>
 
     <!-- max size for images in Reader comments -->
     <dimen name="reader_comment_max_image_size">160dp</dimen>

@@ -29,6 +29,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -54,7 +55,10 @@ public class SelfSignedSSLCertsManager {
                         SelfSignedSSLCertsManager selfSignedSSLCertsManager;
                         try {
                             selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(ctx);
-                            selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
+                            X509Certificate[] certificates = selfSignedSSLCertsManager.getLastFailureChain();
+                            AppLog.i(T.NUX, "Add the following certificate to our Certificate Manager: " +
+                                    Arrays.toString(certificates));
+                            selfSignedSSLCertsManager.addCertificates(certificates);
                         } catch (GeneralSecurityException e) {
                             AppLog.e(T.API, e);
                         } catch (IOException e) {

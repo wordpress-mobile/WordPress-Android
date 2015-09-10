@@ -341,5 +341,12 @@
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
 
+        <receiver android:name=".networking.ConnectionChangeReceiver"
+                  android:enabled="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

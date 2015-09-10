@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -75,7 +76,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 33;
+    private static final int DATABASE_VERSION = 34;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -341,9 +342,28 @@ public class WordPressDB {
                 db.execSQL(ADD_POST_ID_INDEX);
                 db.execSQL(ADD_BLOG_ID_INDEX);
                 currentVersion++;
+            case 33:
+                deleteUploadedLocalDrafts();
+                currentVersion++;
         }
-
         db.setVersion(DATABASE_VERSION);
+    }
+
+    /*
+     * v4.5 (db version 34) no longer uses the "uploaded" column, and it's no longer added to the
+     * db upon creation - however, earlier versions would set "uploaded=1" for local drafts after
+     * they were uploaded and then exclude these "uploaded local drafts" from the post list - so
+     * we must delete these posts to avoid having them appear (as dups) in the post list.
+     */
+    private void deleteUploadedLocalDrafts() {
+        try {
+            int numDeleted = db.delete(POSTS_TABLE, "uploaded=1 AND localDraft=1", null);
+            if (numDeleted > 0) {
+                AppLog.i(T.DB, "deleted " + numDeleted + " uploaded local drafts");
+            }
+        } catch (SQLiteException e) {
+            // ignore - "uploaded" column doesn't exist
+        }
     }
 
     private void migratePreferencesToAccountTable(Context context) {
