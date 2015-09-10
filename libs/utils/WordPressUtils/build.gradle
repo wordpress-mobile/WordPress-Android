@@ -20,7 +20,7 @@ dependencies {
         exclude group: 'commons-logging'
     }
     compile 'com.mcxiaoke.volley:library:1.0.18'
-    compile 'com.android.support:support-v13:23.0.0'
+    compile 'com.android.support:support-v13:23.0.1'
 }
 
 android {
@@ -29,7 +29,7 @@ android {
     publishNonDefault true
 
     compileSdkVersion 23
-    buildToolsVersion '23.0.0'
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         versionName "1.5.0"

@@ -649,14 +649,14 @@
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
-    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string><string name="notifications_updates_from_wordpress">Updates from WordPress.com</string>
+    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
     <string name="your_sites">Your Sites</string>
     <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
-    <string name="notifications_account_emails">Updates from WordPress.com</string>
+    <string name="notifications_account_emails">Email from WordPress.com</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
     <string name="notifications_other">Other</string>
     <string name="notifications_comments_other_blogs">Comments on other sites</string>
@@ -950,8 +950,8 @@
     <string name="reader_btn_unfollow">Following</string>
 
     <!-- EditText hints -->
-    <string name="reader_hint_comment_on_post">Add your comment</string>
-    <string name="reader_hint_comment_on_comment">Reply to comment</string>
+    <string name="reader_hint_comment_on_post">Reply to post…</string>
+    <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
 
     <!-- TextView labels -->
@@ -970,6 +970,7 @@
     <string name="reader_label_word_count">%,d words</string>
     <string name="reader_label_reading_time_in_minutes">%,d min</string>
     <string name="reader_label_follow_count">%,d followers</string>
+    <string name="reader_label_submit_comment">SEND</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -982,6 +983,9 @@
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_multi">%s Likes</string>
+
+    <string name="reader_short_comment_count_one">1 Comment</string>
+    <string name="reader_short_comment_count_multi">%s Comments</string>
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
