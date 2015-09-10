@@ -886,8 +886,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean canShowLikeCount() {
         return mPost != null
-                && !mPost.isDiscoverPost()
-                && mPost.canLikePost();
+                && (mPost.canLikePost() || mPost.numLikes > 0);
     }
 
 }
