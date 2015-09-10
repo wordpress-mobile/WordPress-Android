@@ -236,30 +236,63 @@ public class SiteSettings {
         }
     }
 
+    /**
+     * Request a list of post categories for a site via the WordPress REST API.
+     */
     private void fetchCategories() {
         WordPress.getRestClientUtilsV1_1().getCategories(Integer.toString(mBlog.getRemoteBlogId()),
-        new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                CategoryModel[] models = CategoryModel.deserializeFromDotComRestResponse(response);
-                if (models == null) return;
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        CategoryModel[] models = CategoryModel.deserializeFromDotComRestResponse(response);
+                        if (models == null) return;
 
-                SiteSettingsTable.saveCategories(models);
-                mRemoteSettings.categories = models;
-                mSettings.categories = models;
-                updateOnUiThread(null, mSettings);
+                        SiteSettingsTable.saveCategories(models);
+                        mRemoteSettings.categories = models;
+                        mSettings.categories = models;
+                        updateOnUiThread(null, mSettings);
 
-                AppLog.d(AppLog.T.API, "Successfully fetched WP.com categories");
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
-            }
-        });
+                        AppLog.d(AppLog.T.API, "Successfully fetched WP.com categories");
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
+                    }
+                });
     }
 
     private void fetchPostFormats() {
+        XMLRPCClientInterface client = instantiateInterface();
+        if (client == null) return;
+
+        Map<String, String> args = new HashMap<>();
+        args.put(ApiHelper.Params.SHOW_SUPPORTED_POST_FORMATS, "true");
+        Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
+                mBlog.getPassword(), args};
+        client.callAsync(new XMLRPCCallback() {
+            @Override
+            public void onSuccess(long id, Object result) {
+                if (result != null && result instanceof HashMap) {
+                    Map<?, ?> resultMap = (HashMap<?, ?>) result;
+                    if (resultMap.containsKey("supported")) {
+                        Map allFormats = (Map) resultMap.get("all");
+                        Object[] supportedFormats = (Object[]) resultMap.get("supported");
+                        mRemoteSettings.postFormats = new String[supportedFormats.length];
+
+                        for (int i = 0; i < supportedFormats.length; ++i) {
+                            if (allFormats.containsKey(supportedFormats[i])) {
+                                mRemoteSettings.postFormats[i] = allFormats.get(supportedFormats[i]).toString();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(long id, Exception error) {
+            }
+        }, ApiHelper.Methods.GET_POST_FORMATS, params);
     }
 
     public void saveSettings() {

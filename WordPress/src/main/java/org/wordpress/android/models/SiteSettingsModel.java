@@ -29,8 +29,8 @@ public class SiteSettingsModel {
     public boolean location;
     public int defaultCategory;
     public CategoryModel[] categories;
-    public int defaultPostFormat;
-    public int[] postFormats;
+    public String defaultPostFormat;
+    public String[] postFormats;
 
     public boolean isTheSame(SiteSettingsModel other) {
         return address.equals(other.address) &&
@@ -126,7 +126,7 @@ public class SiteSettingsModel {
         languageId = settingsObject.optInt(RestClientUtils.SITE_LANGUAGE_ID_KEY, -1);
         privacy = settingsObject.optInt(RestClientUtils.SITE_PRIVACY_KEY, -2);
         defaultCategory = settingsObject.optInt(RestClientUtils.SITE_DEF_CATEGORY_KEY, 0);
-        defaultPostFormat = settingsObject.optInt(RestClientUtils.SITE_DEF_POST_FORMAT_KEY, 0);
+        defaultPostFormat = settingsObject.optString(RestClientUtils.SITE_DEF_POST_FORMAT_KEY, "0");
     }
 
     /**
@@ -156,7 +156,7 @@ public class SiteSettingsModel {
         languageId = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.LANGUAGE_COLUMN_NAME));
         privacy = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.PRIVACY_COLUMN_NAME));
         defaultCategory = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.DEF_CATEGORY_COLUMN_NAME));
-        defaultPostFormat = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.DEF_POST_FORMAT_COLUMN_NAME));
+        defaultPostFormat = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.DEF_POST_FORMAT_COLUMN_NAME));
 
         String cachedCategories = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.CATEGORIES_COLUMN_NAME));
         String cachedFormats = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.POST_FORMATS_COLUMN_NAME));
