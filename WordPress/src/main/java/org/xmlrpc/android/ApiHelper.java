@@ -1,12 +1,22 @@
 package org.xmlrpc.android;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Xml;
+import android.webkit.URLUtil;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
+import com.android.volley.RedirectError;
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
@@ -15,11 +25,13 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.networking.WPDelayedHurlStack;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -31,16 +43,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
@@ -950,21 +966,64 @@ public class ApiHelper {
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
     public static String getResponse(final String stringUrl) throws SSLHandshakeException {
-        try {
-            URL url = new URL(stringUrl);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setInstanceFollowRedirects(true);
-            InputStream inputStream = urlConnection.getInputStream();
-            BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = r.readLine()) != null) {
-                sb.append(line);
+        return getResponse(stringUrl, 0);
+    }
+
+    private static String getRedirectURL(String oldURL, NetworkResponse networkResponse) {
+        if (networkResponse.headers != null && networkResponse.headers.containsKey("Location")) {
+            String newURL = networkResponse.headers.get("Location");
+            // Relative URL
+            if (newURL != null && newURL.startsWith("/")) {
+                Uri oldUri = Uri.parse(oldURL);
+                if (oldUri.getScheme() == null || oldUri.getAuthority() == null) {
+                    return null;
+                }
+                return oldUri.getScheme() + "://" + oldUri.getAuthority() + newURL;
             }
-            return sb.toString();
-        } catch (SSLHandshakeException e) {
-            throw e;
-        } catch (IOException e) {
+            // Absolute URL
+            return newURL;
+        }
+        return null;
+    }
+
+    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException {
+        RequestFuture<String> future = RequestFuture.newFuture();
+        StringRequest request = new StringRequest(stringUrl, future, future);
+        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, 0, 1));
+        WordPress.requestQueue.add(request);
+        try {
+            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            AppLog.e(T.API, e);
+        } catch (ExecutionException e) {
+            if (e.getCause() != null && e.getCause() instanceof RedirectError) {
+                // Maximum 5 redirects or die
+                if (numberOfRedirects > 5) {
+                    AppLog.e(T.API, "Maximum of 5 redirects reached, aborting.", e);
+                    return null;
+                }
+                // Follow redirect
+                RedirectError re = (RedirectError) e.getCause();
+                if (re.networkResponse != null) {
+                    String newURL = getRedirectURL(stringUrl, re.networkResponse);
+                    if (newURL == null) {
+                        AppLog.e(T.API, "Invalid server response", e);
+                        return null;
+                    }
+                    // Abort redirect if old URL was HTTPS and not the new one
+                    if (URLUtil.isHttpsUrl(stringUrl) && !URLUtil.isHttpsUrl(newURL)) {
+                        AppLog.e(T.API, "Redirect from HTTPS to HTTP not allowed.", e);
+                        return null;
+                    }
+                    // Retry getResponse
+                    AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
+                    return getResponse(newURL, numberOfRedirects + 1);
+                }
+            } else {
+                AppLog.e(T.API, e);
+            }
+
+        } catch (TimeoutException e) {
             AppLog.e(T.API, e);
         }
         return null;
