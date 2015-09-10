@@ -29,11 +29,11 @@
         android:id="@+id/blog_title"
         style="@style/StatsModuleTitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal|center_vertical"
         android:layout_margin="4dip"
-        android:text="Titolo" >
+        android:text="Title" >
     </TextView>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -51,15 +51,15 @@
         <!-- Views -->
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="center_vertical|center"
             android:background="@drawable/stats_visitors_and_views_button_white"
             android:clickable="false">
 
             <LinearLayout
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:padding="@dimen/margin_medium"
@@ -91,7 +91,7 @@
                 <TextView
                     android:id="@+id/stats_widget_views"
                     android:textColor="@color/blue_wordpress"
-                    android:textSize="@dimen/text_sz_small"
+                    android:textSize="@dimen/text_sz_medium"
                     android:paddingTop="@dimen/margin_small"
                     android:paddingBottom="@dimen/margin_extra_small"
                     android:maxLines="1"
@@ -105,7 +105,7 @@
         <!-- Visitors -->
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center"
@@ -113,7 +113,7 @@
             android:clickable="false">
 
             <LinearLayout
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:padding="@dimen/margin_medium"
@@ -145,7 +145,7 @@
                 <TextView
                     android:id="@+id/stats_widget_visitors"
                     android:textColor="@color/blue_wordpress"
-                    android:textSize="@dimen/text_sz_small"
+                    android:textSize="@dimen/text_sz_medium"
                     android:paddingTop="@dimen/margin_small"
                     android:paddingBottom="@dimen/margin_extra_small"
                     android:maxLines="1"
