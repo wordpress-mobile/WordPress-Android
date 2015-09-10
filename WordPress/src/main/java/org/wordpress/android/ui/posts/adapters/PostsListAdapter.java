@@ -27,6 +27,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
@@ -184,7 +185,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (post.hasExcerpt()) {
                 postHolder.txtExcerpt.setVisibility(View.VISIBLE);
-                postHolder.txtExcerpt.setText(post.getExcerpt());
+                postHolder.txtExcerpt.setText(PostUtils.collapseShortcodes(post.getExcerpt()));
             } else {
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
@@ -673,4 +674,5 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
     }
+
 }

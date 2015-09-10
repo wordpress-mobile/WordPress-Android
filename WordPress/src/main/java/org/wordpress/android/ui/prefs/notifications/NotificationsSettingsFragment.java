@@ -231,8 +231,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                 getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.DEVICE, 0, mNotificationsSettings, mOnSettingsChangedListener
         );
-        devicePreference.setTitle(R.string.notifications_updates_from_wordpress);
-        devicePreference.setDialogTitle(R.string.notifications_updates_from_wordpress);
+        devicePreference.setTitle(R.string.notifications_account_emails);
+        devicePreference.setDialogTitle(R.string.notifications_account_emails);
         devicePreference.setSummary(R.string.notifications_account_emails_summary);
         otherPreferenceCategory.addPreference(devicePreference);
     }
