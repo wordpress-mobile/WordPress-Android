@@ -513,6 +513,13 @@ public class ReaderPost {
                 && post.isLikesEnabled == this.isLikesEnabled;
     }
 
+    /*
+     * liking is enabled for all wp.com and jp posts with the exception of discover posts
+     */
+    public boolean canLikePost() {
+        return (isWP() || isJetpack) && (!isDiscoverPost());
+    }
+
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
      * sole purpose is to cache commonly-used values for the post that speeds up using them inside
