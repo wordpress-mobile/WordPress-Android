@@ -233,7 +233,6 @@ public class ReaderPostListFragment extends Fragment
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
-
             if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
                 resumeFollowedTag();
             } else {
@@ -245,55 +244,35 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called when fragment is resumed and we're looking at posts in a followed tag
      */
-    public void resumeFollowedTag() {
-        // did user just add a tag? if so, switch to it.
+    private void resumeFollowedTag() {
         Object event = EventBus.getDefault().getStickyEvent(ReaderEvents.TagAdded.class);
         if (event != null) {
+            // user just added a tag so switch to it.
             String tagName = ((ReaderEvents.TagAdded) event).getTagName();
             EventBus.getDefault().removeStickyEvent(event);
             ReaderTag newTag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-            setCurrentTag(newTag, true);
-            return;
+            setCurrentTag(newTag);
+        } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
+            // current tag no longer exists, revert to default
+            AppLog.d(T.READER, "reader post list > current tag no longer valid");
+            setCurrentTag(ReaderTag.getDefaultTag());
+        } else {
+            // otherwise, refresh posts to make sure any changes are reflected and auto-update
+            // posts in the current tag if it's time
+            refreshPosts();
+            updateCurrentTagIfTime();
         }
-
-        // check whether current tag is still valid and if so whether if it's time to auto-update
-        new Thread() {
-            @Override
-            public void run() {
-                final boolean isTagValid = ReaderTagTable.tagExists(getCurrentTag());
-                final boolean timeToAutoUpdate = isTagValid && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag());
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isAdded()) return;
-
-                        if (!isTagValid) {
-                            // current tag no longer exists, revert to default
-                            AppLog.d(T.READER, "reader post list > current tag no longer valid");
-                            setCurrentTag(ReaderTag.getDefaultTag(), true);
-                        } else if (timeToAutoUpdate && !isUpdating()) {
-                            // auto-update the current tag if it's time
-                            AppLog.d(T.READER, "reader post list > auto-updating current tag");
-                            updateCurrentTag();
-                        } else {
-                            // otherwise, refresh posts to make sure any changes are reflected
-                            refreshPosts();
-                        }
-                    }
-                });
-            }
-        }.start();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
         EventBus.getDefault().register(this);
 
-        purgeDatabaseIfNeeded();
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+        // purge database and update followed tags/blog if necessary - note that we don't purge unless
+        // there's a connection to avoid removing posts the user would expect to see offline
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && NetworkUtils.isNetworkAvailable(getActivity())) {
+            purgeDatabaseIfNeeded();
             updateFollowedTagsAndBlogsIfNeeded();
         }
     }
@@ -313,8 +292,8 @@ public class ReaderPostListFragment extends Fragment
 
             if (!mHasUpdatedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
                 mHasUpdatedPosts = true;
-                if (getPostListType().isTagType() && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                    updateCurrentTag();
+                if (getPostListType().isTagType()) {
+                    updateCurrentTagIfTime();
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                     updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
                 }
@@ -689,7 +668,7 @@ public class ReaderPostListFragment extends Fragment
         return mCurrentTag != null;
     }
 
-    private void setCurrentTag(final ReaderTag tag, boolean allowAutoUpdate) {
+    private void setCurrentTag(final ReaderTag tag) {
         if (tag == null) {
             return;
         }
@@ -717,10 +696,7 @@ public class ReaderPostListFragment extends Fragment
         hideNewPostsBar();
         showLoadingProgress(false);
 
-        // update posts in this tag if it's time to do so
-        if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
-            updatePostsWithTag(tag, UpdateAction.REQUEST_NEWER);
-        }
+        updateCurrentTagIfTime();
     }
 
     /*
@@ -742,7 +718,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         ReaderTag newTag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        setCurrentTag(newTag, false);
+        setCurrentTag(newTag);
 
         return true;
     }
@@ -830,11 +806,34 @@ public class ReaderPostListFragment extends Fragment
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
             return;
         }
+        AppLog.d(T.READER, "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
         ReaderPostService.startServiceForTag(getActivity(), tag, updateAction);
     }
 
     private void updateCurrentTag() {
         updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+    }
+
+    /*
+     * update the current tag if it's time to do so
+     */
+    private void updateCurrentTagIfTime() {
+        if (!isAdded() || !hasCurrentTag()) {
+            return;
+        }
+        new Thread() {
+            @Override
+            public void run() {
+                if (isAdded() && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateCurrentTag();
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     private boolean isUpdating() {
@@ -991,7 +990,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
-            setCurrentTag(tag, true);
+            setCurrentTag(tag);
         } else {
             // user isn't previewing a tag, so open in tag preview
             ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
@@ -1012,7 +1011,7 @@ public class ReaderPostListFragment extends Fragment
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
         }
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
-        setCurrentTag(tag, true);
+        setCurrentTag(tag);
     }
 
     /*
@@ -1062,13 +1061,10 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * purge reader db if it hasn't been done yet, but only if there's an active connection
-     * since we don't want to purge posts that the user would expect to see when offline
+     * purge reader db if it hasn't been done yet
      */
     private void purgeDatabaseIfNeeded() {
-        if (!mHasPurgedReaderDb
-                && isAdded()
-                && NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!mHasPurgedReaderDb) {
             AppLog.d(T.READER, "reader post list > purging database");
             mHasPurgedReaderDb = true;
             ReaderDatabase.purgeAsync();
@@ -1079,10 +1075,6 @@ public class ReaderPostListFragment extends Fragment
      * start background service to get the latest followed tags and blogs if it's time to do so
      */
     private void updateFollowedTagsAndBlogsIfNeeded() {
-        if (!isAdded() || !NetworkUtils.isNetworkAvailable(getActivity())) {
-            return;
-        }
-
         if (mLastAutoUpdateDt != null) {
             int minutesSinceLastUpdate = DateTimeUtils.minutesBetween(mLastAutoUpdateDt, new Date());
             if (minutesSinceLastUpdate < 120) {
