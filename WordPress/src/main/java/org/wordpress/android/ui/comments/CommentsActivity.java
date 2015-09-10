@@ -276,10 +276,13 @@ public class CommentsActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     // comment will no longer exist in moderating list if action was undone
-                    if (hasListFragment() && !getListFragment().isModeratingComment(comment.commentID)) {
+                    if (!isFinishing()
+                            && hasListFragment()
+                            && !getListFragment().isModeratingComment(comment.commentID)) {
                         AppLog.d(AppLog.T.COMMENTS, "comment moderation undone");
                         return;
                     }
+
                     CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(boolean succeeded) {
