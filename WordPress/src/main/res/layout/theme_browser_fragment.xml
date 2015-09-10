@@ -22,14 +22,11 @@
             android:id="@+id/theme_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="@dimen/theme_browser_cardview_margin_large"
-            android:paddingRight="@dimen/theme_browser_cardview_margin_large"
-            android:horizontalSpacing="@dimen/theme_browser_cardview_margin_large"
+            android:horizontalSpacing="@dimen/margin_none"
             android:scrollbarStyle="outsideOverlay"
             android:columnWidth="@dimen/theme_browser_default_column_width"
             android:numColumns="auto_fit"
             android:divider="@android:color/transparent"
-            android:dividerHeight="@dimen/theme_browser_cardview_margin_large"
             android:stretchMode="columnWidth"
             android:layout_below="@id/theme_no_search_result_text">
         </org.wordpress.android.widgets.HeaderGridView>
