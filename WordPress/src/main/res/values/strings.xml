@@ -1044,9 +1044,9 @@
     <string name="theme_support">Support</string>
     <string name="theme_done">DONE</string>
     <string name="theme_manage_site">MANAGE SITE</string>
-    <string name="theme_prompt" formatted="false">Thanks for choosing %s by %s</string>
+    <string name="theme_prompt">Thanks for choosing %1$s by %2$s</string>
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
-    <string name="theme_preview_url"><![CDATA[https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s]]></string>
+    <string name="theme_preview_url"><![CDATA[https://wordpress.com/customize/%1$s?nomuse=1&theme=pub/%2$s]]></string>
     <string name="theme_https_prefix">https://</string>
 
 </resources>
