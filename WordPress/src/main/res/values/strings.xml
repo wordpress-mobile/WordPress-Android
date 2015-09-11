@@ -1010,4 +1010,17 @@
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
 
+    <!--Theme Browser-->
+    <string name="current_theme_caps">CURRENT THEME</string>
+    <string name="current_theme">Current Theme</string>
+    <string name="customize">customize</string>
+    <string name="details">details</string>
+    <string name="support">support</string>
+
+    <string-array name="themes_filter_array">
+        <item>All</item>
+        <item>Free</item>
+        <item>Premium</item>
+    </string-array>
+
 </resources>

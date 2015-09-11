@@ -1,221 +1,179 @@
 package org.wordpress.android.models;
 
-import android.text.TextUtils;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.ui.themes.ThemeUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Locale;
-
-/**
- * A model to represent a theme
- */
 public class Theme {
-    private String themeId = null;
-    private String screenshotURL = "";
-    private String name = "";
-    private String description = "";
-    private int trendingRank = 0;
-    private int popularityRank = 0;
-    private String launchDate = "";
-    private long launchDateMs = 0;
-    private String blogId;
-    private String previewURL = "";
-    private boolean isCurrent = false;
-    private boolean isPremium = false;
-    private String features;
+    public static final String ID = "id";
+    public static final String AUTHOR = "author";
+    public static final String SCREENSHOT = "screenshot";
+    public static final String AUTHOR_URI = "author_uri";
+    public static final String DEMO_URI = "demo_uri";
+    public static final String NAME = "name";
+    public static final String STYLESHEET = "stylesheet";
+    public static final String PRICE = "price";
+    public static final String BLOG_ID = "blogId";
+    public static final String IS_CURRENT = "isCurrent";
 
-    public Theme() {
-    }
+    public static final String PREVIEW_URL = "preview_url";
+    public static final String COST = "cost";
+    public static final String DISPLAY = "display";
 
-    public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL, boolean isPremium, String features) {
-        setThemeId(themeId);
-        setScreenshotURL(screenshotURL);
-        setName(name);
-        setDescription(description);
-        setTrendingRank(trendingRank);
-        setPopularityRank(popularityRank);
-        setLaunchDate(launchDate);
-        setBlogId(blogId);
-        setPreviewURL(previewURL);
-        setPremium(isPremium);
-        setFeatures(features);
-    }
+    private String mId;
+    private String mAuthor;
+    private String mScreenshot;
+    private String mAuthorURI;
+    private String mDemoURI;
+    private String mName;
+    private String mStylesheet;
+    private String mPrice;
+    private String mBlogId;
+    private boolean mIsCurrent;
 
-    public void setFeatures(String features) {
-        this.features = features;
-    }
+    public static Theme fromJSONV1_1(JSONObject object) throws JSONException {
+        if (object == null) {
+            return null;
+        } else {
+            String id = object.getString(ID);
+            String author = "";
+            String screenshot = object.getString(SCREENSHOT);
+            String authorURI = "";
+            String demoURI = object.getString(PREVIEW_URL);
+            String name = object.getString(NAME);
+            String stylesheet = "";
+            String price;
+            try {
+                JSONObject cost = object.getJSONObject(COST);
+                price = cost.getString(DISPLAY);
+            } catch (JSONException e) {
+                price = "";
+            }
 
-    public ArrayList<String> getFeaturesArray() {
-        ArrayList<String> features = new ArrayList<String>();
-        if (!TextUtils.isEmpty(this.features)) {
-            String [] arr = this.features.split(",");
-            Collections.addAll(features, arr);
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, false);
         }
-        return features;
     }
 
-    public String getFeatures() {
-        return this.features;
+    public static Theme fromJSONV1_2(JSONObject object) throws JSONException {
+        if (object == null) {
+            return null;
+        } else {
+            String id = object.getString(ID);
+            String author = object.getString(AUTHOR);
+            String screenshot = object.getString(SCREENSHOT);
+            String authorURI = object.getString(AUTHOR_URI);
+            String demoURI = object.getString(DEMO_URI);
+            String name = object.getString(NAME);
+            String stylesheet = object.getString(STYLESHEET);
+            String price;
+            try {
+                price = object.getString(PRICE);
+            } catch (JSONException e) {
+                price = "";
+            }
+
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, false);
+        }
     }
 
-    public String getThemeId() {
-        return themeId;
+    public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name, String stylesheet, String price, String blogId, boolean isCurrent) {
+        setId(id);
+        setAuthor(author);
+        setScreenshot(screenshot);
+        setAuthorURI(authorURI);
+        setDemoURI(demoURI);
+        setName(name);
+        setStylesheet(stylesheet);
+        setPrice(price);
+        setBlogId(blogId);
+        setIsCurrent(isCurrent);
     }
 
-    public void setThemeId(String themeId) {
-        this.themeId = themeId;
+    public void setId(String id) {
+        mId = id;
     }
 
-    public String getScreenshotURL() {
-        return screenshotURL;
+    public String getId() {
+        return mId;
     }
 
-    public void setScreenshotURL(String screenshotURL) {
-        this.screenshotURL = screenshotURL;
+    public void setAuthor(String author) {
+        mAuthor = author;
+    }
+
+    public String getAuthor() {
+        return mAuthor;
+    }
+
+    public String getScreenshot() {
+        return mScreenshot;
+    }
+
+    public void setScreenshot(String mScreenshot) {
+        this.mScreenshot = mScreenshot;
+    }
+
+    public String getAuthorURI() {
+        return mAuthorURI;
+    }
+
+    public void setAuthorURI(String mAuthorURI) {
+        this.mAuthorURI = mAuthorURI;
+    }
+
+    public String getDemoURI() {
+        return mDemoURI;
+    }
+
+    public void setDemoURI(String mDemoURI) {
+        this.mDemoURI = mDemoURI;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String mName) {
+        this.mName = mName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getStylesheet() {
+        return mStylesheet;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStylesheet(String mStylesheet) {
+        this.mStylesheet = mStylesheet;
     }
 
-    public int getTrendingRank() {
-        return trendingRank;
+    public String getPrice() {
+        return mPrice;
     }
 
-    public void setTrendingRank(int trendingRank) {
-        this.trendingRank = trendingRank;
-    }
-
-    public int getPopularityRank() {
-        return popularityRank;
-    }
-
-    public void setPopularityRank(int popularityRank) {
-        this.popularityRank = popularityRank;
-    }
-
-    public String getLaunchDate() {
-        return launchDate;
-    }
-
-    public long getLaunchDateMs() {
-        return launchDateMs;
-    }
-
-    public void setLaunchDate(String launchDate) {
-        this.launchDate = launchDate;
-        try {
-            Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(launchDate);
-            this.launchDateMs = date.getTime();
-        } catch (ParseException e) {
-            AppLog.e(T.THEMES, e);
-        }
+    public void setPrice(String mPrice) {
+        this.mPrice = mPrice;
     }
 
     public String getBlogId() {
-        return blogId;
+        return mBlogId;
     }
 
     public void setBlogId(String blogId) {
-        this.blogId = blogId;
+        mBlogId = blogId;
     }
 
-    public String getPreviewURL() {
-        return previewURL;
+    public boolean getIsCurrent() {
+        return mIsCurrent;
     }
 
-    public void setPreviewURL(String previewURL) {
-        this.previewURL = previewURL;
+    public void setIsCurrent(boolean isCurrent) {
+        mIsCurrent = isCurrent;
     }
 
     public void save() {
         WordPress.wpDB.saveTheme(this);
-    }
-
-    public static Theme fromJSON(JSONObject object) throws JSONException {
-        if (object == null)
-            return null;
-
-        String themeId = object.getString("id");
-        String screenshotURL = object.getString("screenshot") ;
-        String name = object.getString("name");
-        String description = object.getString("description");
-        int trendingRank = object.getInt("trending_rank");
-        int popularityRank = object.getInt("popularity_rank");
-        String launchDate = object.getString("launch_date");
-        String previewURL = object.has("preview_url") ? object.getString("preview_url") : ""; // we don't receive preview_url when we fetch current theme
-
-        // parse cost, e.g
-        // "cost": {
-        //   "display": "$80",
-        //   "number": 80,
-        //   "currency": "USD"
-        // },
-        JSONObject costObject = object.getJSONObject("cost");
-        boolean isPremium = costObject.getInt("number") > 0;
-
-        // if the theme is free, set the blogId to be empty
-        // if the theme is not free, set the blogId to the current blog
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-
-        // build comma-separated list of features
-        StringBuilder sbFeatures = new StringBuilder();
-        JSONArray tags = object.optJSONArray("tags");
-        if (tags != null && tags.length() > 0) {
-            boolean isFirst = true;
-            for (int i = 0; i < tags.length(); i++ ) {
-                String label = ThemeUtils.getLabel(tags.getString(i));
-                if (!TextUtils.isEmpty(label)) {
-                    if (isFirst) {
-                        isFirst = false;
-                    } else {
-                        sbFeatures.append(",");
-                    }
-                    sbFeatures.append(label);
-                }
-            }
-        }
-        String features = sbFeatures.toString();
-
-        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL, isPremium, features);
-    }
-
-    public void setCurrent(boolean isCurrent) {
-        this.isCurrent = isCurrent;
-    }
-
-    public boolean isCurrent() {
-        return isCurrent;
-    }
-
-    public boolean isPremium() {
-        return isPremium;
-    }
-
-    public void setPremium(boolean isPremium) {
-        this.isPremium = isPremium;
     }
 }

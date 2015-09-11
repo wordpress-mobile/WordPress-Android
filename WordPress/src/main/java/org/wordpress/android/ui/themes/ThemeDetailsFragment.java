@@ -244,21 +244,7 @@ public class ThemeDetailsFragment extends DialogFragment {
             if (mNameView != null) {
                 mNameView.setText(theme.getName());
             }
-            mImageView.setImageUrl(theme.getScreenshotURL(), WordPress.imageLoader);
-            mDescriptionView.setText(Html.fromHtml(theme.getDescription()));
-            mDescriptionView.setMovementMethod(WPLinkMovementMethod.getInstance());
-            mPreviewURL = theme.getPreviewURL();
-
-            loadFeatureView(theme.getFeaturesArray());
-            if (theme.isPremium()) {
-                mPremiumThemeView.setVisibility(View.VISIBLE);
-            } else {
-                mPremiumThemeView.setVisibility(View.GONE);
-            }
-
-            if (theme.isCurrent()) {
-                showViewSite();
-            }
+            mImageView.setImageUrl(theme.getScreenshot(), WordPress.imageLoader);
 
             if (getDialog() != null) {
                 getDialog().setTitle(theme.getName());

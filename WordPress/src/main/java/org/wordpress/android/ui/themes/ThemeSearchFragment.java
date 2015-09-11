@@ -18,16 +18,12 @@ import org.wordpress.android.WordPress;
 /**
  * A fragment for display the results of a theme search
  */
-public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
+public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
     public static final String TAG = ThemeSearchFragment.class.getName();
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
 
     public static ThemeSearchFragment newInstance() {
         ThemeSearchFragment fragment = new ThemeSearchFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_SORT, ThemeSortType.POPULAR.ordinal());
-        fragment.setArguments(args);
 
         return fragment;
     }

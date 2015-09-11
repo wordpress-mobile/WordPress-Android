@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/theme_no_search_result_text"
@@ -11,26 +11,25 @@
         android:layout_height="wrap_content"
         android:text="@string/theme_no_search_result_found"
         android:visibility="gone"
-        android:layout_margin="16dp"/>
+        android:layout_margin="@dimen/margin_extra_large"/>
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <GridView
-            android:id="@+id/theme_gridview"
+        <org.wordpress.android.widgets.HeaderGridView
+            android:id="@+id/theme_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:horizontalSpacing="0dp"
-            android:numColumns="@integer/themes_grid_num_columns"
+            android:horizontalSpacing="@dimen/margin_none"
             android:scrollbarStyle="outsideOverlay"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:columnWidth="@dimen/theme_browser_default_column_width"
+            android:numColumns="auto_fit"
+            android:divider="@android:color/transparent"
             android:stretchMode="columnWidth"
             android:layout_below="@id/theme_no_search_result_text">
-        </GridView>
+        </org.wordpress.android.widgets.HeaderGridView>
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
