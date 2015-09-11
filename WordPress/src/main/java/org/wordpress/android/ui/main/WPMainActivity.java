@@ -410,16 +410,10 @@ public class WPMainActivity extends Activity
      * returns the my site fragment from the sites tab
      */
     private MySiteFragment getMySiteFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_MY_SITE, MySiteFragment.class);
-    }
-
-    private <T> T getFragmentByPosition(int position, Class<T> type) {
-        Fragment fragment = mTabAdapter != null ? mTabAdapter.getFragment(position) : null;
-
-        if (fragment != null && type.isInstance(fragment)) {
-            return type.cast(fragment);
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
+        if (fragment instanceof MySiteFragment) {
+            return (MySiteFragment) fragment;
         }
-
         return null;
     }
 
