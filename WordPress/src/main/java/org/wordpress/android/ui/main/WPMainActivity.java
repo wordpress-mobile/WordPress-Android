@@ -83,6 +83,8 @@ public class WPMainActivity extends Activity
         setContentView(R.layout.main_activity);
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
+        mViewPager.setOffscreenPageLimit(WPMainTabAdapter.NUM_TABS - 1);
+
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
