@@ -56,7 +56,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         if (post.isCommentsOpen || post.numReplies > 0) {
             dateLine += "  \u2022  " + ReaderUtils.getShortCommentLabelText(getContext(), post.numReplies);
         }
-        if (post.isLikesEnabled) {
+        if (post.canLikePost() || post.numLikes > 0) {
             dateLine += "  \u2022  " + ReaderUtils.getShortLikeLabelText(getContext(), post.numLikes);
         }
         txtDateline.setText(dateLine);
