@@ -383,6 +383,8 @@ public class StatsService extends Service {
         }
         int parsedBlogID = Integer.parseInt(blogId);
         int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
+
+        // make sure the data is for the current date
         if (!date.equals(StatsUtils.getCurrentDateTZ(localTableBlogId))) {
             return;
         }
@@ -392,26 +394,27 @@ public class StatsService extends Service {
             return;
         }
 
-        if (responseObjectModel == null || responseObjectModel instanceof VolleyError
-                || responseObjectModel instanceof StatsError) {
+        if (responseObjectModel == null) {
             // TODO What we want to do here?
             return;
         }
-        // Another check that the data is available
-        if (!(responseObjectModel instanceof VisitsModel)) {
-            return;
-        }
 
-        VisitsModel visitsModel = (VisitsModel) responseObjectModel;
-        if (visitsModel.getVisits() == null || visitsModel.getVisits().size() == 0) {
-            return;
+        if (responseObjectModel instanceof VisitsModel) {
+            VisitsModel visitsModel = (VisitsModel) responseObjectModel;
+            if (visitsModel.getVisits() == null || visitsModel.getVisits().size() == 0) {
+                return;
+            }
+            List<VisitModel> visits = visitsModel.getVisits();
+            VisitModel data = visits.get(visits.size() - 1);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), data);
+        } else if (responseObjectModel instanceof VolleyError) {
+            VolleyError error = (VolleyError) responseObjectModel;
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), error);
+        } else if (responseObjectModel instanceof StatsError) {
+            StatsError statsError = (StatsError) responseObjectModel;
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), statsError);
         }
-
-        List<VisitModel> visits = visitsModel.getVisits();
-        VisitModel data = visits.get(visits.size() - 1);
-        StatsWidgetProvider.updateWidgets(getApplicationContext(), data);
     }
-
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         final String mRequestBlogId;
@@ -483,7 +486,7 @@ public class StatsService extends Service {
                     mResponseObjectModel = volleyError;
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
-
+                    updateWidgetsIfNecessary(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
             });

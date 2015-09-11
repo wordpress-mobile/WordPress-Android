@@ -10,13 +10,18 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.android.volley.VolleyError;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
@@ -30,7 +35,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     private static Blog checkLoggedAndPrimaryBlog(Context context, AppWidgetManager appWidgetManager) {
         if (!AccountHelper.isSignedInWordPressDotCom()) {
             AppLog.w(AppLog.T.STATS, "Not signed to WordPress.com. Widget update skipped!");
-            showError(context, appWidgetManager, context.getString(R.string.stats_widget_error_login));
+            showMessage(context, appWidgetManager, context.getString(R.string.stats_widget_error_login));
             return null;
         }
 
@@ -38,13 +43,13 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         final int localBlogID = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId((int) primaryBlogId);
         if (primaryBlogId == 0 || localBlogID == 0) {
             AppLog.w(AppLog.T.STATS, "No primary blog found! Widget update skipped!");
-            showError(context, appWidgetManager, "No primary blog found!");
+            showMessage(context, appWidgetManager, "No primary blog found!");
             return null;
         }
 
         final Blog primaryBlog = WordPress.getBlog(localBlogID);
         if (primaryBlog == null) {
-            showError(context, appWidgetManager, "No primary blog found!");
+            showMessage(context, appWidgetManager, "No primary blog found!");
             AppLog.e(AppLog.T.STATS, "Current blog is null. This should never happen here.");
             return null;
         }
@@ -52,12 +57,93 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         // Check credentials for jetpack blogs first
         if (!primaryBlog.isDotcomFlag()
                 && !primaryBlog.hasValidJetpackCredentials() && !AccountHelper.isSignedInWordPressDotCom()) {
-            showError(context, appWidgetManager, "Your Jetpack blog is not connected properly with WordPress.com into the app.");
+            showMessage(context, appWidgetManager, "Your Jetpack blog is not connected properly with WordPress.com into the app.");
             AppLog.w(AppLog.T.STATS, context.getString(R.string.stats_widget_error_login));
             return null;
         }
 
         return primaryBlog;
+    }
+
+    private static void showMessage(Context context, AppWidgetManager appWidgetManager, String message){
+        // Get all ids
+        ComponentName thisWidget = new ComponentName(context, StatsWidgetProvider.class);
+        int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        for (int widgetId : allWidgetIds) {
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);
+            remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.GONE);
+            remoteViews.setTextViewText(R.id.stats_widget_error_text, message);
+            appWidgetManager.updateAppWidget(widgetId, remoteViews);
+        }
+    }
+
+    private static void showStatsData(Context context, AppWidgetManager appWidgetManager, Blog blog, JSONObject data) {
+        // Get all ids
+        ComponentName thisWidget = new ComponentName(context, StatsWidgetProvider.class);
+        int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        String name =  StringEscapeUtils.unescapeHtml(blog.getNameOrHostUrl()) + " " +
+                context.getString(R.string.stats_insights_today);
+
+        for (int widgetId : allWidgetIds) {
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);
+            remoteViews.setTextViewText(R.id.blog_title, name);
+
+            remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.GONE);
+            remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.VISIBLE);
+            remoteViews.setTextViewText(R.id.stats_widget_views, data.optString("views", "0"));
+            remoteViews.setTextViewText(R.id.stats_widget_visitors, data.optString("visitors", "0"));
+
+            Intent intent = new Intent(context, StatsActivity.class);
+            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+            remoteViews.setOnClickPendingIntent(R.id.stats_widget_outer_container, pendingIntent);
+            appWidgetManager.updateAppWidget(widgetId, remoteViews);
+        }
+    }
+
+    private static void updateWidgetsOnError(Context context, AppWidgetManager appWidgetManager) {
+        Blog primaryBlog = checkLoggedAndPrimaryBlog(context, appWidgetManager);
+        if (primaryBlog == null) {
+            return;
+        }
+        final String currentDate = StatsUtils.getCurrentDateTZ(primaryBlog.getLocalTableBlogId());
+
+        JSONObject prevData = getCachedStatsData(primaryBlog, currentDate);
+        if (prevData != null) {
+            showStatsData(context, appWidgetManager, primaryBlog, prevData);
+        } else {
+            showMessage(context, appWidgetManager, context.getString(R.string.stats_widget_error_generic));
+        }
+    }
+
+    // This is called by the Stats service in case of error
+    public static void updateWidgets(Context context, VolleyError error) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        if (error == null) {
+            AppLog.e(AppLog.T.STATS, "Widget received a VolleyError that is null!");
+            return;
+        }
+
+        // If it's an auth error, show it in the widget UI
+        if (error instanceof com.android.volley.AuthFailureError) {
+            showMessage(context, appWidgetManager, context.getString(R.string.stats_widget_error_login));
+            return;
+        }
+
+        updateWidgetsOnError(context, appWidgetManager);
+    }
+
+    // This is called by the Stats service in case of error
+    public static void updateWidgets(Context context, StatsError error) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        if (error == null) {
+            AppLog.e(AppLog.T.STATS, "Widget received a StatsError that is null!");
+            return;
+        }
+
+        updateWidgetsOnError(context, appWidgetManager);
     }
 
     // This is called by the Stats service to keep widgets updated
@@ -76,96 +162,79 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        updateUI(context, appWidgetManager, primaryBlog, String.valueOf(data.getViews()),
-                String.valueOf(data.getVisitors()));
+        try {
+            String currentDate = StatsUtils.getCurrentDateTZ(primaryBlog.getLocalTableBlogId());
+            JSONObject newData = new JSONObject();
+            newData.put("blog_id", data.getBlogID());
+            newData.put("date", currentDate);
+            newData.put("views", data.getViews());
+            newData.put("visitors", data.getVisitors());
+            newData.put("comments", data.getComments());
+            newData.put("likes", data.getLikes());
+            AppPrefs.setStatsWidgetData(newData.toString());
 
-        // Store the fresh data in preferences
-        String currentDate = StatsUtils.getCurrentDateTZ(primaryBlog.getLocalTableBlogId());
-        String prefString = data.getBlogID() + ";" + currentDate + ";" + data.getViews() + ";" + data.getVisitors() +
-                ";" + data.getComments() + ";" + data.getLikes();
-        AppPrefs.setStatsWidgetData(prefString);
-    }
-
-    private static void showError(Context context, AppWidgetManager appWidgetManager, String errorMessage){
-        // Get all ids
-        ComponentName thisWidget = new ComponentName(context, StatsWidgetProvider.class);
-        int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        for (int widgetId : allWidgetIds) {
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);
-            remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.VISIBLE);
-            remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.GONE);
-            remoteViews.setTextViewText(R.id.stats_widget_error_text, errorMessage);
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
+            showStatsData(context, appWidgetManager, primaryBlog, newData);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.STATS, e);
         }
     }
 
-    private static void updateUI(Context context, AppWidgetManager appWidgetManager, Blog blog, String views, String visitors) {
-        // Get all ids
-        ComponentName thisWidget = new ComponentName(context, StatsWidgetProvider.class);
-        int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        String name =  StringEscapeUtils.unescapeHtml(blog.getNameOrHostUrl()) + " " +
-                context.getString(R.string.stats_insights_today);
-
-        for (int widgetId : allWidgetIds) {
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);
-            remoteViews.setTextViewText(R.id.blog_title, name);
-            if (views == null) {
-                remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.VISIBLE);
-                remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.GONE);
-                remoteViews.setTextViewText(R.id.stats_widget_error_text, context.getString(R.string.stats_widget_loading_data));
-            } else {
-                remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.GONE);
-                remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.VISIBLE);
-                remoteViews.setTextViewText(R.id.stats_widget_views, views);
-                remoteViews.setTextViewText(R.id.stats_widget_visitors, visitors);
-            }
-
-            Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-            remoteViews.setOnClickPendingIntent(R.id.stats_widget_outer_container, pendingIntent);
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
-        }
-    }
-
+    // This is called to update the App Widget at intervals defined by the updatePeriodMillis attribute in the AppWidgetProviderInfo.
+    // Also called at booting time!
+    // This method is also called when the user adds the App Widget (except when there is a widget config activity).
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // This is called to update the App Widget at intervals defined by the updatePeriodMillis attribute in the AppWidgetProviderInfo
-        // This method is also called when the user adds the App Widget (except when there is a widget config activity).
-        AppLog.i(AppLog.T.STATS, "onUpdate called");
+        AppLog.d(AppLog.T.STATS, "onUpdate called");
 
         Blog primaryBlog = checkLoggedAndPrimaryBlog(context, appWidgetManager);
         if (primaryBlog == null) {
             return;
         }
 
-        // Read previous data from preferences if available
-        String prevWidgetDataString = AppPrefs.getStatsWidgetData();
-        String views = null;
-        String visitors = null;
-        if (!StringUtils.isEmpty(prevWidgetDataString)) {
-            String[] prevWidgetData = prevWidgetDataString.split(";");
-            if (prevWidgetData.length == 6) {
-                String currentDate = StatsUtils.getCurrentDateTZ(primaryBlog.getLocalTableBlogId());
-                // same blogID and Today
-                if (Integer.parseInt(prevWidgetData[0]) == primaryBlog.getRemoteBlogId()
-                    && currentDate.equals(prevWidgetData[1])) {
-                    // data is fresh
-                    views = prevWidgetData[2];
-                    visitors = prevWidgetData[3];
-                }
-            }
-        }
+        String currentDate = StatsUtils.getCurrentDateTZ(primaryBlog.getLocalTableBlogId());
 
-        updateUI(context, appWidgetManager, primaryBlog, views, visitors);
+        // Update the widget UI with previous Stats data, if available and fresh, or show the loading text.
+        // If it was a prev error, the error data was not stored in pref, so the loading text is shown.
+
+        JSONObject prevData = getCachedStatsData(primaryBlog, currentDate);
+        if (prevData != null) {
+            showStatsData(context, appWidgetManager, primaryBlog, prevData);
+        } else {
+            // empty string in pref.
+            showMessage(context, appWidgetManager, context.getString(R.string.stats_widget_loading_data));
+        }
 
         // start service to get stats
         Intent intent = new Intent(context, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, String.valueOf(primaryBlog.getRemoteBlogId()));
         intent.putExtra(StatsService.ARG_PERIOD, StatsTimeframe.DAY);
-        intent.putExtra(StatsService.ARG_DATE, StatsUtils.getCurrentDateTZ(primaryBlog.getLocalTableBlogId()));
+        intent.putExtra(StatsService.ARG_DATE, currentDate);
         intent.putExtra(StatsService.ARG_SECTION, new int[]{StatsService.StatsEndpointsEnum.VISITS.ordinal()});
         context.startService(intent);
+    }
+
+    @Nullable
+    private static JSONObject getCachedStatsData(Blog primaryBlog, String currentDate) {
+        String prevWidgetDataString = AppPrefs.getStatsWidgetData();
+        if (!StringUtils.isEmpty(prevWidgetDataString)) {
+            // we have prev data. Make sure it's fresh.
+            try {
+                JSONObject prevData = new JSONObject(prevWidgetDataString);
+                if (!prevData.has("date") || !prevData.getString("date").equals(currentDate)) {
+                    return null;
+                }
+
+                // make sure data is about the primary blog id. Same check is in the service.
+                if (!prevData.has("blog_id")  ||
+                        Integer.parseInt(prevData.getString("blog_id")) != primaryBlog.getRemoteBlogId()) {
+                    return null;
+                }
+
+                return prevData;
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+        }
+        return null;
     }
 }

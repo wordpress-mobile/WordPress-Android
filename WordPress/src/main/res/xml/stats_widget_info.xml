@@ -5,5 +5,5 @@
     android:minHeight="40dp"
     android:minWidth="300dp"
     android:previewImage="@drawable/stats_widget"
-    android:updatePeriodMillis="300000">
+    android:updatePeriodMillis="600000">
 </appwidget-provider>
