@@ -289,7 +289,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        if (mPost.isLikesEnabled) {
+        if (mPost.canLikePost()) {
             holder.countLikes.setVisibility(View.VISIBLE);
             holder.countLikes.setSelected(comment.isLikedByCurrentUser);
             holder.countLikes.setCount(comment.numLikes);

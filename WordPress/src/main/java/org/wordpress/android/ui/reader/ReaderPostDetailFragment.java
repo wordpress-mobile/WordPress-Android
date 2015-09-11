@@ -411,7 +411,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setSelected(mPost.isLikedByCurrentUser);
             if (mIsLoggedOutReader) {
                 countLikes.setEnabled(false);
-            } else if (mPost.isLikesEnabled) {
+            } else if (mPost.canLikePost()) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -434,7 +434,7 @@ public class ReaderPostDetailFragment extends Fragment
      * show latest likes for this post
      */
     private void refreshLikes() {
-        if (!isAdded() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
+        if (!isAdded() || !hasPost() || !mPost.canLikePost()) {
             return;
         }
 
@@ -886,8 +886,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean canShowLikeCount() {
         return mPost != null
-                && !mPost.isDiscoverPost()
-                && mPost.isLikesEnabled;
+                && (mPost.canLikePost() || mPost.numLikes > 0);
     }
 
 }
