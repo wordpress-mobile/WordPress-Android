@@ -44,6 +44,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SystemServiceFactory;
+import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
@@ -182,16 +183,20 @@ public class PostUploadService extends Service {
         private int featuredImageID = -1;
         private XMLRPCClientInterface mClient;
 
+        // Used when the upload succeed
+        private Bitmap mLatestIcon;
+
         // Used for analytics
         private boolean mHasImage, mHasVideo, mHasCategory;
 
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
-                mPostUploadNotifier.cancelNotification();
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
+                mPostUploadNotifier.cancelNotification();
+                mPostUploadNotifier.updateNotificationSuccess(mPost, mLatestIcon);
             } else {
-                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
+                mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
             }
 
@@ -204,7 +209,7 @@ public class PostUploadService extends Service {
             super.onCancelled(aBoolean);
             // mPostUploadNotifier and mPost can be null if onCancelled is called before doInBackground
             if (mPostUploadNotifier != null && mPost != null) {
-                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(),
+                mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
             }
         }
@@ -500,6 +505,7 @@ public class PostUploadService extends Service {
                             if (imageIcon != null) {
                                 int squaredSize = DisplayUtils.dpToPx(mContext, 64);
                                 imageIcon = ThumbnailUtils.extractThumbnail(imageIcon, squaredSize, squaredSize);
+                                mLatestIcon = imageIcon;
                             }
 
                             mediaItemCount++;
@@ -919,9 +925,47 @@ public class PostUploadService extends Service {
             mNotificationManager.cancel(mNotificationId);
         }
 
-        public void updateNotificationWithError(String mErrorMessage, boolean isMediaError, boolean isPage,
+        public void updateNotificationSuccess(Post post, Bitmap largeIcon) {
+            AppLog.d(T.POSTS, "updateNotificationSuccess");
+
+            // Get the sharableUrl
+            String sharableUrl = WPMeShortlinks.getPostShortlink(post);
+            if (sharableUrl == null && !TextUtils.isEmpty(post.getPermaLink())) {
+                    // No short link or perma link - can't share, abort
+                    sharableUrl = post.getPermaLink();
+            }
+
+            // Notification builder
+            Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
+                    .page_published) : mContext.getResources().getText(R.string.post_published));
+            notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
+            if (largeIcon == null) {
+                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                        R.drawable.app_icon));
+            } else {
+                notificationBuilder.setLargeIcon(largeIcon);
+            }
+
+            notificationBuilder.setContentTitle(notificationTitle);
+            notificationBuilder.setContentText(post.getTitle());
+
+            // Share intent - started if the user tap the share link button - only if the link exist
+            if (sharableUrl != null) {
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
+                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, share,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_link),
+                        pendingIntent);
+            }
+            mNotificationManager.notify((new Random()).nextInt(), notificationBuilder.build());
+        }
+
+        public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage,
                                                 boolean isVideoPressError) {
-            AppLog.d(T.POSTS, "updateNotificationWithError: " + mErrorMessage);
+            AppLog.d(T.POSTS, "updateNotificationError: " + mErrorMessage);
 
             Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
