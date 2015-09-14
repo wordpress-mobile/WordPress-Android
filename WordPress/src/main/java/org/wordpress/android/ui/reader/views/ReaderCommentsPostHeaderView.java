@@ -2,13 +2,11 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -38,7 +36,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         inflate(context, R.layout.reader_comments_post_header_view, this);
     }
 
-    public void setPost(final ReaderPost post, boolean shouldEnableTitleClick) {
+    public void setPost(final ReaderPost post) {
         if (post == null) return;
 
         TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
@@ -47,15 +45,6 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
 
         txtTitle.setText(post.getTitle());
-        if (shouldEnableTitleClick) {
-            txtTitle.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderPostDetail(getContext(), post.blogId, post.postId);
-                }
-            });
-        }
-
         if (post.hasBlogName()) {
             txtBlogName.setText(post.getBlogName());
         } else {

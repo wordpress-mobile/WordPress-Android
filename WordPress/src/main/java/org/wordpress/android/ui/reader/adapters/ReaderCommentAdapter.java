@@ -48,7 +48,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private final boolean mIsLoggedOutReader;
-    private boolean mTitleClickEnabled;
+    private boolean mHeaderClickEnabled;
 
     private final int mColorAuthor;
     private final int mColorNotAuthor;
@@ -143,8 +143,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mDataRequestedListener = dataRequestedListener;
     }
 
-    public void setTitleClickEnabled(boolean titleClickEnabled) {
-        mTitleClickEnabled = titleClickEnabled;
+    public void setHeaderClickEnabled(boolean headerClickEnabled) {
+        mHeaderClickEnabled = headerClickEnabled;
     }
 
     @Override
@@ -185,7 +185,15 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostHeaderHolder) {
             PostHeaderHolder headerHolder = (PostHeaderHolder) holder;
-            headerHolder.mHeaderView.setPost(mPost, mTitleClickEnabled);
+            headerHolder.mHeaderView.setPost(mPost);
+            if (mHeaderClickEnabled) {
+                headerHolder.mHeaderView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ReaderActivityLauncher.showReaderPostDetail(view.getContext(), mPost.blogId, mPost.postId);
+                    }
+                });
+            }
             return;
         }
 
