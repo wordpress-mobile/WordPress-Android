@@ -815,7 +815,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * update the current tag if it's time to do so
+     * update the current tag if it's time to do so - note that the check is done in the
+     * background since it can be expensive and this is called when the fragment is
+     * resumed, which on slower devices can result in a janky experience
      */
     private void updateCurrentTagIfTime() {
         if (!isAdded() || !hasCurrentTag()) {
