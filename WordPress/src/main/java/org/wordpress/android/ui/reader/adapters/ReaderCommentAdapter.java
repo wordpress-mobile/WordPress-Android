@@ -48,6 +48,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private final boolean mIsLoggedOutReader;
+    private boolean mTitleClickEnabled;
 
     private final int mColorAuthor;
     private final int mColorNotAuthor;
@@ -142,6 +143,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mDataRequestedListener = dataRequestedListener;
     }
 
+    public void setTitleClickEnabled(boolean titleClickEnabled) {
+        mTitleClickEnabled = titleClickEnabled;
+    }
+
     @Override
     public int getItemViewType(int position) {
         return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_COMMENT;
@@ -180,7 +185,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostHeaderHolder) {
             PostHeaderHolder headerHolder = (PostHeaderHolder) holder;
-            headerHolder.mHeaderView.setPost(mPost);
+            headerHolder.mHeaderView.setPost(mPost, mTitleClickEnabled);
             return;
         }
 
