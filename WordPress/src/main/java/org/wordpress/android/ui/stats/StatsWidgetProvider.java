@@ -195,13 +195,14 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
         // Update the widget UI with previous Stats data, if available and fresh, or show the loading text.
         // If it was a prev error, the error data was not stored in pref, so the loading text is shown.
-
+        // empty string in pref.
         JSONObject prevData = getCachedStatsData(primaryBlog, currentDate);
         if (prevData != null) {
             showStatsData(context, appWidgetManager, primaryBlog, prevData);
         } else {
             // empty string in pref.
-            showMessage(context, appWidgetManager, context.getString(R.string.stats_widget_loading_data));
+            showMessage(context, appWidgetManager,
+                    context.getString(R.string.stats_widget_loading_data));
         }
 
         // start service to get stats

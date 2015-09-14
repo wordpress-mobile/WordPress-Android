@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.service;
 
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -368,7 +370,7 @@ public class StatsService extends Service {
     }
 
     // Call an updates on the installed widgets if the blog is the primary, the endpoint is Visits
-    // the timeperiod is DAY, and the date = TODAY
+    // the timeframe is DAY or INSIGHTS, and the date = TODAY
     private void updateWidgetsIfNecessary(String blogId, final StatsEndpointsEnum endpointName,
                                           StatsTimeframe timeframe, String date, int pageRequested,
                                           Serializable responseObjectModel) {
@@ -381,6 +383,14 @@ public class StatsService extends Service {
         if (timeframe != StatsTimeframe.DAY && timeframe != StatsTimeframe.INSIGHTS) {
             return;
         }
+
+        // Check if there are widgets installed on the device
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        ComponentName thisWidget = new ComponentName(this, StatsWidgetProvider.class);
+        if (appWidgetManager.getAppWidgetIds(thisWidget).length == 0) {
+            return;
+        }
+
         int parsedBlogID = Integer.parseInt(blogId);
         int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
 
