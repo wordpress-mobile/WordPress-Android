@@ -634,6 +634,18 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Selected Install Jetpack");
                 break;
+            case STATS_WIDGET_ADDED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats Widget Added");
+                break;
+            case STATS_WIDGET_REMOVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats Widget Removed");
+                break;
+            case STATS_WIDGET_TAPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats Widget Tapped");
+                break;
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Push Notification Received");
