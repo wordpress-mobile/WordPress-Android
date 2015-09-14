@@ -21,6 +21,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
@@ -75,6 +76,15 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.VISIBLE);
             remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.GONE);
             remoteViews.setTextViewText(R.id.stats_widget_error_text, message);
+
+            Intent intent = new Intent(context, WPMainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction("android.intent.action.MAIN");
+            intent.addCategory("android.intent.category.LAUNCHER");
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            remoteViews.setOnClickPendingIntent(R.id.stats_widget_outer_container, pendingIntent);
+
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
     }
@@ -195,11 +205,10 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
 
         String currentDate = StatsUtils.getCurrentDateTZ(primaryBlog.getLocalTableBlogId());
-
         // Update the widget UI with previous Stats data, if available and fresh, or show the loading text.
         // If it was a prev error, the error data was not stored in pref, so the loading text is shown.
         // empty string in pref.
-        JSONObject prevData = getCachedStatsData(primaryBlog, currentDate);
+       JSONObject prevData = getCachedStatsData(primaryBlog, currentDate);
         if (prevData != null) {
             showStatsData(context, appWidgetManager, primaryBlog, prevData);
         } else {
