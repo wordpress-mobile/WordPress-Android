@@ -310,6 +310,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     }
 
+    @Override
+    public void onSearchClicked() {
+        Intent intent = new Intent(this, ThemeSearchActivity.class);
+        startActivityForResult(intent, ACTIVATE_THEME);
+    }
+
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
         @Override
         protected ArrayList<Theme> doInBackground(JSONObject... args) {

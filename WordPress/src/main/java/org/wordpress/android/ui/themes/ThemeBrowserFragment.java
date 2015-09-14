@@ -11,7 +11,9 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -40,6 +42,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         void onDetailsSelected(String themeId);
         void onSupportSelected(String themeId);
         void onCustomizeSelected(String themeId);
+        void onSearchClicked();
     }
 
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
@@ -58,8 +61,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     protected ThemeBrowserFragmentCallback mCallback;
     protected int mPage = 1;
     protected int mSavedScrollPosition = 0;
-    private boolean mShouldRefreshOnStart;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private boolean mShouldRefreshOnStart;
+    private ImageButton mSearchView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -193,6 +197,17 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     private void configureAndAddSearchHeader(LayoutInflater inflater) {
         View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
+        configureFilterSpinner(headerSearch);
+        mSearchView = (ImageButton) headerSearch.findViewById(R.id.theme_search);
+        mSearchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onSearchClicked();
+            }
+        });
+    }
+
+    private void configureFilterSpinner(View headerSearch) {
         mSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.themes_filter_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
