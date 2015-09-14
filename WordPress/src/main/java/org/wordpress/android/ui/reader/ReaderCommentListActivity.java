@@ -188,12 +188,14 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
             }, 300);
 
-            // reset to replying to the post when user hits the back button in the editText
-            // to hide the soft keyboard
+            // reset to replying to the post when user hasn't entered any text and hits
+            // the back button in the editText to hide the soft keyboard
             mEditComment.setOnBackListener(new SuggestionAutoCompleteText.OnEditTextBackListener() {
                 @Override
                 public void onEditTextBack() {
-                    setReplyToCommentId(0);
+                    if (EditTextUtils.isEmpty(mEditComment)) {
+                        setReplyToCommentId(0);
+                    }
                 }
             });
         } else {
