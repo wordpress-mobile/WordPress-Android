@@ -2,7 +2,7 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/stats_widget_layout"
-    android:minHeight="52dp"
+    android:minHeight="40dp"
     android:minWidth="300dp"
     android:previewImage="@drawable/stats_widget"
     android:updatePeriodMillis="600000">
