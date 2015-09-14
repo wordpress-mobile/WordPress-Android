@@ -949,6 +949,15 @@ public class PostUploadService extends Service {
             notificationBuilder.setContentTitle(notificationTitle);
             notificationBuilder.setContentText(post.getTitle());
 
+            // Tap notification intent (open the post list)
+            Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+            PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext, 0,
+                    notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            notificationBuilder.setContentIntent(pendingIntentPost);
+
             // Share intent - started if the user tap the share link button - only if the link exist
             if (sharableUrl != null && post.getStatusEnum() == PostStatus.PUBLISHED) {
                 Intent share = new Intent(Intent.ACTION_SEND);
