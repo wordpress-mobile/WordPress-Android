@@ -151,7 +151,6 @@ public class ReaderPostActions {
                     localPost.numLikes = serverPost.numLikes;
                     localPost.isFollowedByCurrentUser = serverPost.isFollowedByCurrentUser;
                     localPost.isLikedByCurrentUser = serverPost.isLikedByCurrentUser;
-                    localPost.isLikesEnabled = serverPost.isLikesEnabled;
                     localPost.isCommentsOpen = serverPost.isCommentsOpen;
                     localPost.setTitle(serverPost.getTitle());
                     localPost.setText(serverPost.getText());
