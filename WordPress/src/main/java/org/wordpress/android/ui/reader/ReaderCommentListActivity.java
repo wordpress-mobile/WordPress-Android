@@ -264,6 +264,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
             });
 
+            // Enable post title click if we came from notifications with a commentId
+            if (mCommentId > 0) {
+                mCommentAdapter.setHeaderClickEnabled(true);
+            }
+
             // adapter calls this when data has been loaded & displayed
             mCommentAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override
