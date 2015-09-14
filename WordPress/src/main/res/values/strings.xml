@@ -868,7 +868,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
