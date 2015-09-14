@@ -938,7 +938,7 @@ public class PostUploadService extends Service {
             // Notification builder
             Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
-                    .page_published) : mContext.getResources().getText(R.string.post_published));
+                    .page_uploaded) : mContext.getResources().getText(R.string.post_uploaded));
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
             if (largeIcon == null) {
                 notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
@@ -946,12 +946,11 @@ public class PostUploadService extends Service {
             } else {
                 notificationBuilder.setLargeIcon(largeIcon);
             }
-
             notificationBuilder.setContentTitle(notificationTitle);
             notificationBuilder.setContentText(post.getTitle());
 
             // Share intent - started if the user tap the share link button - only if the link exist
-            if (sharableUrl != null) {
+            if (sharableUrl != null && post.getStatusEnum() == PostStatus.PUBLISHED) {
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
