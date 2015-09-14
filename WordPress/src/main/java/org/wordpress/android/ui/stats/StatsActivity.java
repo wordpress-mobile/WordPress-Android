@@ -77,6 +77,12 @@ public class StatsActivity extends AppCompatActivity
     private static final int REQUEST_JETPACK = 7000;
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
+    public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
+
+    public enum StatsLaunchedFrom {
+        STATS_WIDGET,
+        NOTIFICATIONS
+    }
 
     private int mResultCode = -1;
     private boolean mIsInFront;
@@ -162,6 +168,13 @@ public class StatsActivity extends AppCompatActivity
                 mCurrentTimeframe = AppPrefs.getStatsTimeframe();
             }
             mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+
+            if (getIntent().hasExtra(ARG_LAUNCHED_FROM)) {
+                StatsLaunchedFrom from = (StatsLaunchedFrom) getIntent().getSerializableExtra(ARG_LAUNCHED_FROM);
+                if (from == StatsLaunchedFrom.STATS_WIDGET) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED);
+                }
+            }
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app

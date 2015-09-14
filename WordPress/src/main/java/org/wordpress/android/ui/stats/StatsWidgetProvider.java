@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -96,6 +97,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
             Intent intent = new Intent(context, StatsActivity.class);
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
+            intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsActivity.StatsLaunchedFrom.STATS_WIDGET);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
             remoteViews.setOnClickPendingIntent(R.id.stats_widget_outer_container, pendingIntent);
@@ -238,4 +241,24 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
         return null;
     }
+
+    /**
+     *  This is called when an instance the App Widget is created for the first time.
+     *  For example, if the user adds two instances of your App Widget, this is only called the first time.
+     */
+    @Override
+    public void onEnabled(Context context) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_ADDED);
+    }
+
+    /**
+     * This is called when the last instance of your App Widget is deleted from the App Widget host.
+     * This is where you should clean up any work done in onEnabled(Context), such as delete a temporary database.
+     * @param context The Context in which this receiver is running.
+     */
+    @Override
+    public void onDisabled(Context context) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED);
+    }
+
 }
