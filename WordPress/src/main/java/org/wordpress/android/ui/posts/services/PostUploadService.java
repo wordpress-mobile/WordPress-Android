@@ -965,7 +965,7 @@ public class PostUploadService extends Service {
                 share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
                 PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, share,
                         PendingIntent.FLAG_UPDATE_CURRENT);
-                notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_link),
+                notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
                         pendingIntent);
             }
             mNotificationManager.notify((new Random()).nextInt(), notificationBuilder.build());
