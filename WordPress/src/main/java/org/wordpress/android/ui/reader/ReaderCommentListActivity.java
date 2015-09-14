@@ -102,10 +102,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
-            // remove all but the first page of comments for this post if there's an active
-            // connection - infinite scroll will take care of filling in subsequent pages
-            if (NetworkUtils.isNetworkAvailable(this) && mCommentId == 0) {
-                ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
+            // we need to re-request comments every time this activity is shown in order to
+            // correctly reflect deletions and nesting changes - skipped when there's no
+            // connection so we can show existing comments while offline
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
             }
         }
 
