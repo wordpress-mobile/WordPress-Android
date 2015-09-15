@@ -31,6 +31,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -301,11 +302,17 @@ public class MySiteFragment extends Fragment
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
-        String hostName = StringUtils.getHost(mBlog.getUrl());
-        String blogTitle = TextUtils.isEmpty(blogName) ? hostName : blogName;
+        String homeURL;
+        if (!TextUtils.isEmpty(mBlog.getHomeURL())) {
+            homeURL = UrlUtils.removeScheme(mBlog.getHomeURL());
+            homeURL = StringUtils.removeTrailingSlash(homeURL);
+        } else {
+            homeURL = StringUtils.getHost(mBlog.getUrl());
+        }
+        String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
 
         mBlogTitleTextView.setText(blogTitle);
-        mBlogSubtitleTextView.setText(hostName);
+        mBlogSubtitleTextView.setText(homeURL);
     }
 
     @Override
