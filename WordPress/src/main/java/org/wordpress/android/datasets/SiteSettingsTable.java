@@ -13,16 +13,6 @@ public final class SiteSettingsTable {
     public static final String CATEGORIES_TABLE_NAME = "site_categories";
     public static final String POST_FORMATS_TABLE_NAME = "site_post_formats";
 
-    // Categories table column names
-    public static final String CAT_ID_COLUMN_NAME = "ID";
-    public static final String CAT_NAME_COLUMN_NAME = "name";
-    public static final String CAT_SLUG_COLUMN_NAME = "slug";
-    public static final String CAT_DESC_COLUMN_NAME = "description";
-    public static final String CAT_PARENT_ID_COLUMN_NAME = "parent";
-    public static final String CAT_POST_COUNT_COLUMN_NAME = "post_count";
-
-    // Post formats table column names
-
     // Settings table column names
     public static final String ID_COLUMN_NAME = "id";
     public static final String ADDRESS_COLUMN_NAME = "address";
@@ -42,12 +32,12 @@ public final class SiteSettingsTable {
             "CREATE TABLE IF NOT EXISTS " +
                     CATEGORIES_TABLE_NAME +
                     " (" +
-                    CAT_ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-                    CAT_NAME_COLUMN_NAME + " TEXT, " +
-                    CAT_SLUG_COLUMN_NAME + " TEXT, " +
-                    CAT_DESC_COLUMN_NAME + " TEXT, " +
-                    CAT_PARENT_ID_COLUMN_NAME + " INTEGER, " +
-                    CAT_POST_COUNT_COLUMN_NAME + " INTEGER" +
+                    CategoryModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
+                    CategoryModel.NAME_COLUMN_NAME + " TEXT, " +
+                    CategoryModel.SLUG_COLUMN_NAME + " TEXT, " +
+                    CategoryModel.DESC_COLUMN_NAME + " TEXT, " +
+                    CategoryModel.PARENT_ID_COLUMN_NAME + " INTEGER, " +
+                    CategoryModel.POST_COUNT_COLUMN_NAME + " INTEGER" +
                     ");";
 
     private static final String CREATE_SETTINGS_TABLE_SQL =
@@ -79,7 +69,7 @@ public final class SiteSettingsTable {
     public static Cursor getCategory(long id) {
         if (id < 0) return null;
 
-        String sqlCommand = sqlSelectAllCategories() + sqlWhere(CAT_ID_COLUMN_NAME, Long.toString(id)) + ";";
+        String sqlCommand = sqlSelectAllCategories() + sqlWhere(CategoryModel.ID_COLUMN_NAME, Long.toString(id)) + ";";
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 
@@ -93,14 +83,7 @@ public final class SiteSettingsTable {
     public static void saveCategory(CategoryModel category) {
         if (category == null) return;
 
-        ContentValues values = new ContentValues();
-        values.put(CAT_ID_COLUMN_NAME, category.id);
-        values.put(CAT_NAME_COLUMN_NAME, category.name);
-        values.put(CAT_SLUG_COLUMN_NAME, category.slug);
-        values.put(CAT_DESC_COLUMN_NAME, category.description);
-        values.put(CAT_PARENT_ID_COLUMN_NAME, category.parentId);
-        values.put(CAT_POST_COUNT_COLUMN_NAME, category.postCount);
-
+        ContentValues values = category.serializeToDatabase();
         category.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
                 CATEGORIES_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
     }

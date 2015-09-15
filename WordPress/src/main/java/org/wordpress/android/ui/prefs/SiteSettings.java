@@ -240,26 +240,26 @@ public class SiteSettings {
      * Request a list of post categories for a site via the WordPress REST API.
      */
     private void fetchCategories() {
-        WordPress.getRestClientUtilsV1_1().getCategories(Integer.toString(mBlog.getRemoteBlogId()),
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        CategoryModel[] models = CategoryModel.deserializeFromDotComRestResponse(response);
-                        if (models == null) return;
-
-                        SiteSettingsTable.saveCategories(models);
-                        mRemoteSettings.categories = models;
-                        mSettings.categories = models;
-                        updateOnUiThread(null, mSettings);
-
-                        AppLog.d(AppLog.T.API, "Successfully fetched WP.com categories");
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
-                    }
-                });
+//        WordPress.getRestClientUtilsV1_1().getCategories(Integer.toString(mBlog.getRemoteBlogId()),
+//                new RestRequest.Listener() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        CategoryModel[] models = CategoryModel.deserializeFromDotComRestResponse(response);
+//                        if (models == null) return;
+//
+//                        SiteSettingsTable.saveCategories(models);
+//                        mRemoteSettings.categories = models;
+//                        mSettings.categories = models;
+//                        updateOnUiThread(null, mSettings);
+//
+//                        AppLog.d(AppLog.T.API, "Successfully fetched WP.com categories");
+//                    }
+//                }, new RestRequest.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
+//                    }
+//                });
     }
 
     private void fetchPostFormats() {

@@ -103,7 +103,6 @@ public abstract class SiteSettingsInterface {
     public SiteSettingsInterface init() {
         generateLanguageMap();
         initSettings();
-        initSettings();
 
         return this;
     }

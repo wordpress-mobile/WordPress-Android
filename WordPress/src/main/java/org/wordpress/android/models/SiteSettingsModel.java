@@ -165,7 +165,7 @@ public class SiteSettingsModel {
             for (int i = 0; i < split.length; ++i) {
                 int catId = Integer.parseInt(split[i]);
                 categories[i] = new CategoryModel();
-                categories[i].deserializeLocalDatabaseCursor(SiteSettingsTable.getCategory(catId));
+                categories[i].deserializeFromDatabase(SiteSettingsTable.getCategory(catId));
             }
         }
         if (!TextUtils.isEmpty(cachedFormats)) {
