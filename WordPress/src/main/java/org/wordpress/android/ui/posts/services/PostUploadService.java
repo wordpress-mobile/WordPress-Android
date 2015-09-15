@@ -953,6 +953,7 @@ public class PostUploadService extends Service {
             Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            notificationIntent.putExtra(PostsListActivity.EXTRA_BLOG_LOCAL_ID, post.getLocalTableBlogId());
             notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
             PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext, 0,
                     notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
