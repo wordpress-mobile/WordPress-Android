@@ -232,14 +232,15 @@ public class DetailListPreference extends ListPreference
             }
 
             if (detailText != null) {
-                if (mDetails != null && position < mDetails.length) {
+                if (mDetails != null && position < mDetails.length && !TextUtils.isEmpty(mDetails[position])) {
+                    detailText.setVisibility(View.VISIBLE);
                     detailText.setText(mDetails[position]);
                     detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
                             TypefaceCache.FAMILY_OPEN_SANS,
                             Typeface.NORMAL,
                             TypefaceCache.VARIATION_NORMAL));
                 } else {
-                    // TODO: center with radio button
+                    detailText.setVisibility(View.GONE);
                 }
             }
 

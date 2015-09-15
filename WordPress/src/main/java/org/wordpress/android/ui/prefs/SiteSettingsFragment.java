@@ -293,9 +293,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         loadCategories();
 
-        String[] details2 = new String[Math.max(mFormatPreference.getEntries().length, 1)];
-        mFormatPreference.setDetails(details2);
-
         mTitlePreference.setOnPreferenceChangeListener(this);
         mTaglinePreference.setOnPreferenceChangeListener(this);
         mAddressPreference.setOnPreferenceChangeListener(this);

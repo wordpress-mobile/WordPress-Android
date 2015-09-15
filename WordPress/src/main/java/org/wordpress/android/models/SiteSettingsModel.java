@@ -203,9 +203,6 @@ public class SiteSettingsModel {
         return "";
     }
 
-    public void loadLocalCategories(int id) {
-    }
-
     /**
      * Helper method to get a value from a nested Map. Used to parse self-hosted response objects.
      */

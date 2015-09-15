@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,17 +18,19 @@
         android:buttonTint="@color/dialog_compound_button"
         android:id="@+id/radio"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dlp_radio_margin_top" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:id="@+id/text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginLeft="@dimen/dlp_text_margin_start"
         android:layout_marginStart="@dimen/dlp_text_margin_start"
         android:layout_marginRight="@dimen/dlp_text_margin_end"
-        android:layout_marginEnd="@dimen/dlp_text_margin_end">
+        android:layout_marginEnd="@dimen/dlp_text_margin_end"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/radio">
 
         <TextView
             android:id="@+id/main_text"
@@ -50,4 +52,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
