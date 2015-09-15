@@ -11,6 +11,7 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
@@ -110,6 +111,11 @@ public class WPMeShortlinks {
         }
 
         return "http://wp.me/" + type + blogShortlink + "-" + id;
+    }
+
+    public static String getPostShortlink(Post post) {
+        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(post.getLocalTableBlogId());
+        return getPostShortlink(blog, post);
     }
 
     /**

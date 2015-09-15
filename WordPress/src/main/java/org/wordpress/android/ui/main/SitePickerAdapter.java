@@ -133,8 +133,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     public void onBindViewHolder(SiteViewHolder holder, final int position) {
         SiteRecord site = getItem(position);
 
-        holder.txtTitle.setText(site.getBlogNameOrHostName());
-        holder.txtDomain.setText(site.hostName);
+        holder.txtTitle.setText(site.getBlogNameOrHomeURL());
+        holder.txtDomain.setText(site.homeURL);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -343,7 +343,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         for (int i = 0; i < sites.size(); i++) {
             SiteRecord record = sites.get(i);
             String siteNameLowerCase = record.blogName.toLowerCase();
-            String hostNameLowerCase = record.hostName.toLowerCase();
+            String hostNameLowerCase = record.homeURL.toLowerCase();
 
             if (siteNameLowerCase.contains(mLastSearch.toLowerCase()) || hostNameLowerCase.contains(mLastSearch.toLowerCase())) {
                 filteredSiteList.add(record);
@@ -373,7 +373,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         @Override
         protected Void doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
-            String[] extraFields = {"isHidden", "dotcomFlag"};
+            String[] extraFields = {"isHidden", "dotcomFlag", "homeURL"};
 
             if (mIsInSearchMode) {
                 blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
@@ -394,7 +394,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                             return 1;
                         }
                     }
-                    return site1.getBlogNameOrHostName().compareToIgnoreCase(site2.getBlogNameOrHostName());
+                    return site1.getBlogNameOrHomeURL().compareToIgnoreCase(site2.getBlogNameOrHomeURL());
                 }
             });
 
@@ -440,7 +440,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         final int localId;
         final int blogId;
         final String blogName;
-        final String hostName;
+        final String homeURL;
         final String url;
         final String blavatarUrl;
         final boolean isDotCom;
@@ -449,17 +449,17 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
             blogId = MapUtils.getMapInt(account, "blogId");
-            blogName = BlogUtils.getBlogNameFromAccountMap(account);
-            hostName = BlogUtils.getHostNameFromAccountMap(account);
+            blogName = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
+            homeURL = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
             isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
             isHidden = MapUtils.getMapBool(account, "isHidden");
         }
 
-        String getBlogNameOrHostName() {
+        String getBlogNameOrHomeURL() {
             if (TextUtils.isEmpty(blogName)) {
-                return hostName;
+                return homeURL;
             }
             return blogName;
         }

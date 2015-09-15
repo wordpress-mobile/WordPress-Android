@@ -245,7 +245,7 @@ public class SitePickerActivity extends AppCompatActivity
             for (SiteRecord site : hiddenSites) {
                 if (site.localId == mCurrentLocalId) {
                     skippedCurrentSite = true;
-                    currentSiteName = site.getBlogNameOrHostName();
+                    currentSiteName = site.getBlogNameOrHomeURL();
                 } else {
                     WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
                     StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
