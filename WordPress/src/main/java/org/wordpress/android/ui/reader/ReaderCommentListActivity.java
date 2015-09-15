@@ -102,10 +102,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
-            // remove all but the first page of comments for this post if there's an active
-            // connection - infinite scroll will take care of filling in subsequent pages
-            if (NetworkUtils.isNetworkAvailable(this) && mCommentId == 0) {
-                ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
+            // we need to re-request comments every time this activity is shown in order to
+            // correctly reflect deletions and nesting changes - skipped when there's no
+            // connection so we can show existing comments while offline
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
             }
         }
 
@@ -117,7 +118,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", AccountHelper
-                        .getCurrentUsernameForBlog(null), mPostId, mBlogId));
+                .getCurrentUsernameForBlog(null), mPostId, mBlogId));
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
 
         if (!loadPost()) {
@@ -187,6 +188,19 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     scrollToCommentId(mReplyToCommentId);
                 }
             }, 300);
+
+            // reset to replying to the post when user hasn't entered any text and hits
+            // the back button in the editText to hide the soft keyboard
+            mEditComment.setOnBackListener(new SuggestionAutoCompleteText.OnEditTextBackListener() {
+                @Override
+                public void onEditTextBack() {
+                    if (EditTextUtils.isEmpty(mEditComment)) {
+                        setReplyToCommentId(0);
+                    }
+                }
+            });
+        } else {
+            mEditComment.setOnBackListener(null);
         }
     }
 
@@ -471,5 +485,4 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return 0;
         }
     }
-
 }

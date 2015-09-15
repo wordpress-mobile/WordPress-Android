@@ -2,6 +2,7 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.MultiAutoCompleteTextView;
 
@@ -10,6 +11,11 @@ import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
 public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
     PersistentEditTextHelper mPersistentEditTextHelper;
+    private OnEditTextBackListener mBackListener;
+
+    public interface OnEditTextBackListener {
+        void onEditTextBack();
+    }
 
     public SuggestionAutoCompleteText(Context context) {
         super(context, null);
@@ -55,5 +61,22 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
             return;
         }
         getAutoSaveTextHelper().saveString(this);
+    }
+
+    public void setOnBackListener(OnEditTextBackListener listener) {
+        mBackListener = listener;
+    }
+
+    /*
+     * detect when user hits the back button while soft keyboard is showing (hiding the keyboard)
+     */
+    @Override
+    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+        if (mBackListener != null
+                && event.getKeyCode() == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_UP) {
+            mBackListener.onEditTextBack();
+        }
+        return super.dispatchKeyEvent(event);
     }
 }

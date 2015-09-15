@@ -325,7 +325,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             showLikes = post.numLikes > 0;
             showComments = post.numReplies > 0;
         } else {
-            showLikes = post.isWP() && post.isLikesEnabled;
+            showLikes = post.canLikePost();
             showComments = post.isWP() && !post.isJetpack && (post.isCommentsOpen || post.numReplies > 0);
         }
 

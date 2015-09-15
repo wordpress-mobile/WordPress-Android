@@ -398,6 +398,9 @@ public class CommentsListFragment extends Fragment {
         mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public boolean isModeratingComment(long commentId) {
+        return hasCommentAdapter() && getCommentAdapter().isModeratingCommentId(commentId);
+    }
     public void setCommentIsModerating(long commentId, boolean isModerating) {
         if (!hasCommentAdapter()) return;
 

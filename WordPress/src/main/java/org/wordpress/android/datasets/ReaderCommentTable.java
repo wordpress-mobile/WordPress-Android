@@ -102,11 +102,11 @@ public class ReaderCommentTable {
     }
 
     /*
-     * removes all but the first page of comments for the passed post
+     * removes all comments for the passed post
      */
-    public static void purgeExcessCommentsForPost(long blogId, long postId) {
+    public static void purgeCommentsForPost(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
-        ReaderDatabase.getWritableDb().delete("tbl_comments", "page_number!=1 AND blog_id=? AND post_id=?", args);
+        ReaderDatabase.getWritableDb().delete("tbl_comments", "blog_id=? AND post_id=?", args);
     }
 
     /*
