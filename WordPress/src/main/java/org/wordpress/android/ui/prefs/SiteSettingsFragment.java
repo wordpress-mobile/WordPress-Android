@@ -51,7 +51,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     public interface HasHint {
         boolean hasHint();
-        String getHintText();
+        String getHint();
+        void setHint(String hint);
     }
 
     private Blog mBlog;
@@ -196,7 +197,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 View.OnLongClickListener longListener = (View.OnLongClickListener) obj;
                 return longListener.onLongClick(view);
             } else if (obj instanceof HasHint && ((HasHint) obj).hasHint()) {
-                ToastUtils.showToast(getActivity(), ((HasHint)obj).getHintText(), ToastUtils.Duration.SHORT);
+                ToastUtils.showToast(getActivity(), ((HasHint)obj).getHint(), ToastUtils.Duration.SHORT);
                 return true;
             }
         }

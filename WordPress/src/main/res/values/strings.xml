@@ -447,6 +447,10 @@
     <string name="site_language_hint">Language this blog is primarily written in.</string>
     <string name="site_username_hint">Current user account.</string>
     <string name="site_password_hint">Change your password.</string>
+    <string name="site_location_hint">Automatically add location data to your posts.</string>
+    <string name="site_category_hint">Sets new post category.</string>
+    <string name="site_format_hint">Sets new post format.</string>
+    <string name="site_related_posts_hint">Show or hide related posts in reader.</string>
     <string name="site_settings_related_posts_title">Related Posts</string>
     <string name="site_settings_related_header_title">Related Posts</string>
     <string name="site_settings_related_posts_summary">Show related content after posts</string>
