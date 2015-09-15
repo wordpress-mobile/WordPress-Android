@@ -243,6 +243,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 WordPress.wpDB.setCurrentTheme(siteId, newThemeId);
                 Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
                 showAlertDialogOnNewSettingNewTheme(newTheme);
+                fetchCurrentTheme();
             }
         }, new ErrorListener() {
             @Override
