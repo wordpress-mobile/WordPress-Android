@@ -151,14 +151,15 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     }
 
     private String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
+        String[] extraFields = {"homeURL"};
+        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("isHidden = 0", extraFields);
         if (accounts.size() > 0) {
             final String blogNames[] = new String[accounts.size()];
             mAccountIDs = new int[accounts.size()];
             Blog blog;
             for (int i = 0; i < accounts.size(); i++) {
                 Map<String, Object> account = accounts.get(i);
-                blogNames[i] = BlogUtils.getBlogNameOrHostNameFromAccountMap(account);
+                blogNames[i] = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
                 mAccountIDs[i] = (Integer) account.get("id");
                 blog = WordPress.wpDB.instantiateBlogByLocalId(mAccountIDs[i]);
                 if (blog == null) {
