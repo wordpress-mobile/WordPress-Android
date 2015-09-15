@@ -439,7 +439,11 @@
     <string name="site_settings_visibility_title">Privacy</string>
     <string name="site_settings_username_title">Username</string>
     <string name="site_settings_password_title">Password</string>
-    <string name="site_settings_language_header">@string/language</string>
+    <string name="site_settings_language_title">@string/language</string>
+    <string name="site_settings_location_title">Enable Location</string>
+    <string name="site_settings_category_title">Default Category</string>
+    <string name="site_settings_format_title">Default Format</string>
+    <string name="site_settings_related_posts_title">Related Posts</string>
     <string name="site_title_hint">In a few words, explain what this site is about.</string>
     <string name="site_tagline_hint">A short description or catchy phrase to describe your blog.</string>
     <string name="site_address_hint">Changing your address is not currently supported.</string>
@@ -451,8 +455,6 @@
     <string name="site_category_hint">Sets new post category.</string>
     <string name="site_format_hint">Sets new post format.</string>
     <string name="site_related_posts_hint">Show or hide related posts in reader.</string>
-    <string name="site_settings_related_posts_title">Related Posts</string>
-    <string name="site_settings_related_header_title">Related Posts</string>
     <string name="site_settings_related_posts_summary">Show related content after posts</string>
     <string name="site_settings_title_default_summary">Fetching title</string>
     <string name="site_settings_tagline_default_summary">Fetching tagline</string>
