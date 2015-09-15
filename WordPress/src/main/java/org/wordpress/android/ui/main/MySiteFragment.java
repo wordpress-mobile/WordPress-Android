@@ -301,11 +301,19 @@ public class MySiteFragment extends Fragment
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
-        String hostName = StringUtils.getHost(mBlog.getUrl());
-        String blogTitle = TextUtils.isEmpty(blogName) ? hostName : blogName;
+        String homeURL;
+        if (!TextUtils.isEmpty(mBlog.getHomeURL())) {
+            homeURL = mBlog.getHomeURL().replace("http://", "").replace("https://", "").trim();
+            if (homeURL.endsWith("/")) {
+                homeURL = homeURL.substring(0, homeURL.length() -1);
+            }
+        } else {
+            homeURL = StringUtils.getHost(mBlog.getUrl());
+        }
+        String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
 
         mBlogTitleTextView.setText(blogTitle);
-        mBlogSubtitleTextView.setText(hostName);
+        mBlogSubtitleTextView.setText(homeURL);
     }
 
     @Override
