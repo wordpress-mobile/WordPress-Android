@@ -7,7 +7,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,7 +40,6 @@ public class CommentsActivity extends AppCompatActivity
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private long mSelectedCommentId;
-    private boolean mSnackbarDidUndo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -257,7 +255,6 @@ public class CommentsActivity extends AppCompatActivity
                 }
             });
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH) {
-            // Remove comment from comments list
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
 
@@ -265,14 +262,11 @@ public class CommentsActivity extends AppCompatActivity
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mSnackbarDidUndo = true;
                     getListFragment().setCommentIsModerating(comment.commentID, false);
-                    // On undo load from the db to show the comment again
                     getListFragment().loadComments();
                 }
             };
 
-            mSnackbarDidUndo = false;
             Snackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo, undoListener)
                     .show();
@@ -281,9 +275,14 @@ public class CommentsActivity extends AppCompatActivity
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (mSnackbarDidUndo) {
+                    // comment will no longer exist in moderating list if action was undone
+                    if (!isFinishing()
+                            && hasListFragment()
+                            && !getListFragment().isModeratingComment(comment.commentID)) {
+                        AppLog.d(AppLog.T.COMMENTS, "comment moderation undone");
                         return;
                     }
+
                     CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(boolean succeeded) {
