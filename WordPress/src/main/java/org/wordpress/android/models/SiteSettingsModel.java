@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.MapUtils;
@@ -34,13 +33,13 @@ public class SiteSettingsModel {
 
     public boolean isTheSame(SiteSettingsModel other) {
         return address.equals(other.address) &&
-                username.equals(other.username) &&
-                password.equals(other.password) &&
-                title.equals(other.title) &&
-                tagline.equals(other.tagline) &&
-                languageId == other.languageId &&
-                privacy == other.privacy &&
-                location == other.location;
+               username.equals(other.username) &&
+               password.equals(other.password) &&
+               title.equals(other.title) &&
+               tagline.equals(other.tagline) &&
+               languageId == other.languageId &&
+               privacy == other.privacy &&
+               location == other.location;
     }
 
     public Map<String, String> serializeParams(boolean dotCom, SiteSettingsModel remote) {
@@ -171,6 +170,37 @@ public class SiteSettingsModel {
         }
         if (!TextUtils.isEmpty(cachedFormats)) {
         }
+    }
+
+    public String[] getCategoriesForDisplay() {
+        if (categories == null) return null;
+
+        String[] categoryStrings = new String[categories.length];
+        for (int i = 0; i < categories.length; ++i) {
+            categoryStrings[i] = categories[i].name;
+        }
+
+        return categoryStrings;
+    }
+
+    public String getDefaultCategoryForDisplay() {
+        for (CategoryModel model : categories) {
+            if (model.id == defaultCategory) {
+                return model.name;
+            }
+        }
+
+        return "";
+    }
+
+    public String getDefaultFormatForDisplay() {
+        for (String format : postFormats) {
+            if (format.equalsIgnoreCase(defaultPostFormat)) {
+                return format;
+            }
+        }
+
+        return "";
     }
 
     public void loadLocalCategories(int id) {

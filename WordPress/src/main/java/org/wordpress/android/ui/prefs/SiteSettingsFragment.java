@@ -220,9 +220,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         changePrivacyValue(container.privacy);
         changeLanguageValue(container.language);
 
-        if (mFormatPreference != null && container.postFormats != null && container.postFormats.length > 0) {
+        if (mCategoryPreference != null && container.categories != null) {
+            mCategoryPreference.setEntries(container.getCategoriesForDisplay());
+            mCategoryPreference.setEntryValues(container.getCategoriesForDisplay());
+            mCategoryPreference.setSummary(container.getDefaultCategoryForDisplay());
+        }
+
+        if (mFormatPreference != null && container.postFormats != null) {
             mFormatPreference.setEntries(container.postFormats);
             mFormatPreference.setEntryValues(container.postFormats);
+            mFormatPreference.setSummary(container.getDefaultFormatForDisplay());
         }
     }
 
