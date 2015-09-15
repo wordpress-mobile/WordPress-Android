@@ -31,6 +31,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -303,10 +304,8 @@ public class MySiteFragment extends Fragment
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
         String homeURL;
         if (!TextUtils.isEmpty(mBlog.getHomeURL())) {
-            homeURL = mBlog.getHomeURL().replace("http://", "").replace("https://", "").trim();
-            if (homeURL.endsWith("/")) {
-                homeURL = homeURL.substring(0, homeURL.length() -1);
-            }
+            homeURL = UrlUtils.removeScheme(mBlog.getHomeURL());
+            homeURL = StringUtils.removeTrailingSlash(homeURL);
         } else {
             homeURL = StringUtils.getHost(mBlog.getUrl());
         }

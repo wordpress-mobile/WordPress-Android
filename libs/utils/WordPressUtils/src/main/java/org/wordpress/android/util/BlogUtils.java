@@ -36,10 +36,8 @@ public class BlogUtils {
      * Return the blog home URL setting or the host name if home URL is an empty string.
      */
     public static String getHomeURLOrHostNameFromAccountMap(Map<String, Object> account) {
-        String homeURL = MapUtils.getMapStr(account, "homeURL").replace("http://", "").replace("https://", "").trim();
-        if (homeURL.endsWith("/")) {
-            homeURL = homeURL.substring(0, homeURL.length() -1);
-        }
+        String homeURL = UrlUtils.removeScheme(MapUtils.getMapStr(account, "homeURL"));
+        homeURL = StringUtils.removeTrailingSlash(homeURL);
 
         if (homeURL.length() == 0) {
             return StringUtils.getHost(MapUtils.getMapStr(account, "url"));
