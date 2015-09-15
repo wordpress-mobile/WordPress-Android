@@ -45,13 +45,13 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         final int localBlogID = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId((int) primaryBlogId);
         if (primaryBlogId == 0 || localBlogID == 0) {
             AppLog.w(AppLog.T.STATS, "No primary blog found! Widget update skipped!");
-            showMessage(context, appWidgetManager, "No primary blog found!");
+            showMessage(context, appWidgetManager, context.getString(R.string.stats_widget_error_generic));
             return null;
         }
 
         final Blog primaryBlog = WordPress.getBlog(localBlogID);
         if (primaryBlog == null) {
-            showMessage(context, appWidgetManager, "No primary blog found!");
+            showMessage(context, appWidgetManager, context.getString(R.string.stats_widget_error_generic));
             AppLog.e(AppLog.T.STATS, "Current blog is null. This should never happen here.");
             return null;
         }
