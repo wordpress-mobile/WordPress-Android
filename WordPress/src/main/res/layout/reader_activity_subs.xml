@@ -32,7 +32,7 @@
         android:layout_height="1dp"
         android:layout_above="@+id/layout_bottom"
         android:layout_alignWithParentIfMissing="true"
-        android:background="@color/grey_light" />
+        android:background="@color/reader_divider_grey" />
 
     <LinearLayout
         android:id="@+id/layout_bottom"

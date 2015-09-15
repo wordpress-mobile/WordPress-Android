@@ -38,17 +38,33 @@
         android:layout_marginTop="@dimen/margin_large"
         android:scrollbars="none" />
 
-    <!-- liking avatars are inserted into this view at runtime -->
-    <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
-        android:id="@+id/layout_liking_users_view"
+    <LinearLayout
+        android:id="@+id/liking_users_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/avatar_sz_small"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginLeft="@dimen/reader_detail_margin"
-        android:layout_marginRight="@dimen/reader_detail_margin"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:background="?android:selectableItemBackground"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:background="@color/reader_divider_grey" />
+
+        <!-- liking avatars are inserted into this view at runtime -->
+        <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
+            android:id="@+id/layout_liking_users_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:minHeight="@dimen/avatar_sz_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingLeft="@dimen/reader_detail_margin"
+            android:paddingRight="@dimen/reader_detail_margin"
+            android:paddingTop="@dimen/margin_medium" />
+
+    </LinearLayout>
 
 </LinearLayout>
