@@ -151,12 +151,12 @@ public class ReaderTag implements Serializable {
     }
 
     public boolean isPostsILike() {
-        return tagType == ReaderTagType.DEFAULT && getTagName().equals(TAG_NAME_LIKED);
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
     }
     public boolean isFollowedSites() {
-        return tagType == ReaderTagType.DEFAULT && getTagName().equals(TAG_NAME_FOLLOWED_SITES);
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }
     public boolean isFreshlyPressed() {
-        return tagType == ReaderTagType.DEFAULT && getTagName().equals(TAG_NAME_FRESHLY_PRESSED);
+        return tagType == ReaderTagType.DEFAULT && getTagName().endsWith("/freshly-pressed");
     }
 }
