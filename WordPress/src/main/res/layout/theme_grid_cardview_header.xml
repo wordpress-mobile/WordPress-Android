@@ -58,8 +58,10 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_margin="0dp"
-                        style="@style/MySiteListRowIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_none"
+                        android:adjustViewBounds="true"
                         android:contentDescription="@string/customize"
                         android:src="@drawable/ic_theme_customize" />
 
@@ -87,8 +89,9 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_none"
-                        style="@style/MySiteListRowIcon"
+                        android:adjustViewBounds="true"
                         android:contentDescription="@string/details"
                         android:src="@drawable/ic_theme_details" />
 
@@ -116,8 +119,9 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_none"
-                        style="@style/MySiteListRowIcon"
+                        android:adjustViewBounds="true"
                         android:contentDescription="@string/support"
                         android:src="@drawable/ic_theme_support" />
 
