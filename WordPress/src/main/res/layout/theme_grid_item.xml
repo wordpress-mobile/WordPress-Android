@@ -70,14 +70,12 @@
 
                     <ImageView
                         android:id="@+id/image_more"
-                        android:layout_width="@dimen/theme_browser_more_button_height"
+                        android:layout_width="@dimen/theme_browser_more_button_width"
                         android:layout_height="@dimen/theme_browser_more_button_height"
-                        android:padding="@dimen/theme_browser_more_button_padding"
                         android:adjustViewBounds="true"
                         android:layout_gravity="center"
                         android:background="?android:selectableItemBackground"
-                        android:paddingBottom="@dimen/margin_large"
-                        android:paddingTop="@dimen/margin_large"
+                        android:padding="@dimen/theme_browser_more_button_padding"
                         android:src="@drawable/ic_action_more_grey" />
 
                 </LinearLayout>
