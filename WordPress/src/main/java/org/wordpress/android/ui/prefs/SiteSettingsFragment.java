@@ -46,7 +46,7 @@ import de.greenrobot.event.EventBus;
 public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener,
                    AdapterView.OnItemLongClickListener,
-                   SiteSettings.SiteSettingsListener {
+                   SiteSettingsInterface.SiteSettingsListener {
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     public interface HasHint {
@@ -68,7 +68,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mCategoryPreference;
     private DetailListPreference mFormatPreference;
 
-    private SiteSettings mSiteSettings;
+    private SiteSettingsInterface mSiteSettings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        mSiteSettings = new SiteSettings(getActivity(), mBlog, this);
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
 
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.site_settings);
@@ -138,10 +138,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return view;
-    }
-
-    private SharedPreferences siteSettingsPreferences() {
-        return getActivity().getSharedPreferences(SiteSettings.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -445,6 +441,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (category != null) {
             category.removePreference(preference);
         }
+    }
+
+    private SharedPreferences siteSettingsPreferences() {
+        return getActivity().getSharedPreferences(SiteSettings.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
     }
 
     private String localeInput(String languageCode) {
