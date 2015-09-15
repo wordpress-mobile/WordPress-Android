@@ -1013,9 +1013,9 @@
     <!--Theme Browser-->
     <string name="current_theme_caps">CURRENT THEME</string>
     <string name="current_theme">Current Theme</string>
-    <string name="customize">customize</string>
-    <string name="details">details</string>
-    <string name="support">support</string>
+    <string name="customize">Customize</string>
+    <string name="details">Details</string>
+    <string name="support">Support</string>
 
     <string-array name="themes_filter_array">
         <item>All</item>
