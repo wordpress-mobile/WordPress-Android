@@ -68,6 +68,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mLayoutFooter;
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
+    private View mLikingUsersContainer;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -134,6 +135,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
         mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
+        mLikingUsersContainer = view.findViewById(R.id.liking_users_container);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -411,7 +413,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setSelected(mPost.isLikedByCurrentUser);
             if (mIsLoggedOutReader) {
                 countLikes.setEnabled(false);
-            } else if (mPost.isLikesEnabled) {
+            } else if (mPost.canLikePost()) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -421,8 +423,8 @@ public class ReaderPostDetailFragment extends Fragment
             }
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now
-            if (mPost.numLikes > 0 && mLikingUsersView.getVisibility() == View.GONE) {
-                mLikingUsersView.setVisibility(View.INVISIBLE);
+            if (mPost.numLikes > 0 && mLikingUsersContainer.getVisibility() == View.GONE) {
+                mLikingUsersContainer.setVisibility(View.INVISIBLE);
             }
         } else {
             countLikes.setVisibility(View.INVISIBLE);
@@ -434,14 +436,14 @@ public class ReaderPostDetailFragment extends Fragment
      * show latest likes for this post
      */
     private void refreshLikes() {
-        if (!isAdded() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
+        if (!isAdded() || !hasPost() || !mPost.canLikePost()) {
             return;
         }
 
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
-            if (mLikingUsersView.getVisibility() != View.GONE) {
-                AniUtils.fadeOut(mLikingUsersView, AniUtils.Duration.SHORT);
+            if (mLikingUsersContainer.getVisibility() != View.GONE) {
+                AniUtils.fadeOut(mLikingUsersContainer, AniUtils.Duration.SHORT);
             }
             return;
         }
@@ -454,8 +456,8 @@ public class ReaderPostDetailFragment extends Fragment
             }
         });
 
-        if (mLikingUsersView.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mLikingUsersView, AniUtils.Duration.SHORT);
+        if (mLikingUsersContainer.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mLikingUsersContainer, AniUtils.Duration.SHORT);
         }
 
         mLikingUsersView.showLikingUsers(mPost);
@@ -886,8 +888,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean canShowLikeCount() {
         return mPost != null
-                && !mPost.isDiscoverPost()
-                && mPost.isLikesEnabled;
+                && (mPost.canLikePost() || mPost.numLikes > 0);
     }
 
 }

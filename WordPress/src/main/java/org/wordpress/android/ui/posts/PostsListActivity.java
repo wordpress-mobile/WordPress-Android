@@ -13,17 +13,18 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ToastUtils;
 
 public class PostsListActivity extends AppCompatActivity {
-
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
     public static final String EXTRA_ERROR_INFO_LINK = "errorInfoLink";
+    public static final String EXTRA_BLOG_LOCAL_ID = "EXTRA_BLOG_LOCAL_ID";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
@@ -53,6 +54,7 @@ public class PostsListActivity extends AppCompatActivity {
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
         showErrorDialogIfNeeded(getIntent().getExtras());
+        showWarningToastIfNeeded(getIntent().getExtras());
     }
 
     @Override
@@ -67,7 +69,7 @@ public class PostsListActivity extends AppCompatActivity {
         ActivityLauncher.slideOutToRight(this);
     }
 
-    /*
+    /**
      * intent extras will contain error info if this activity was started from an
      * upload error notification
      */
@@ -101,6 +103,19 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         builder.create().show();
+    }
+
+    /**
+     * Show a toast when the user taps a Post Upload notification referencing a post that's not from the current
+     * selected Blog
+     */
+    private void showWarningToastIfNeeded(Bundle extras) {
+        if (extras == null || !extras.containsKey(EXTRA_BLOG_LOCAL_ID) || isFinishing()) {
+            return;
+        }
+        if (extras.getInt(EXTRA_BLOG_LOCAL_ID, -1) != WordPress.getCurrentLocalTableBlogId()) {
+            ToastUtils.showToast(this, R.string.error_open_list_from_notification);
+        }
     }
 
     public boolean isRefreshing() {

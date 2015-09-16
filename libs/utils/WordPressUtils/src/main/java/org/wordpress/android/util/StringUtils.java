@@ -181,6 +181,14 @@ public class StringUtils {
         return new StringBuilder(strLen).append(Character.toTitleCase(firstChar)).append(str.substring(1)).toString();
     }
 
+    public static String removeTrailingSlash(final String str) {
+        if (TextUtils.isEmpty(str) || !str.endsWith("/")) {
+            return str;
+        }
+
+        return str.substring(0, str.length() -1);
+    }
+
     /*
      * Wrap an image URL in a photon URL
      * Check out http://developer.wordpress.com/docs/photon/

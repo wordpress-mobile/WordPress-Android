@@ -100,14 +100,14 @@ public class ReaderPostActions {
      * get the latest version of this post - note that the post is only considered changed if the
      * like/comment count has changed, or if the current user's like/follow status has changed
      */
-    public static void updatePost(final ReaderPost originalPost,
+    public static void updatePost(final ReaderPost localPost,
                                   final UpdateResultListener resultListener) {
-        String path = "read/sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
+        String path = "read/sites/" + localPost.blogId + "/posts/" + localPost.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostResponse(originalPost, jsonObject, resultListener);
+                handleUpdatePostResponse(localPost, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -123,7 +123,7 @@ public class ReaderPostActions {
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleUpdatePostResponse(final ReaderPost originalPost,
+    private static void handleUpdatePostResponse(final ReaderPost localPost,
                                                  final JSONObject jsonObject,
                                                  final UpdateResultListener resultListener) {
         if (jsonObject == null) {
@@ -138,36 +138,28 @@ public class ReaderPostActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderPost updatedPost = ReaderPost.fromJson(jsonObject);
-                boolean hasChanges = !originalPost.isSamePost(updatedPost);
+                ReaderPost serverPost = ReaderPost.fromJson(jsonObject);
+                boolean hasChanges = !serverPost.isSamePost(localPost);
 
                 if (hasChanges) {
                     AppLog.d(T.READER, "post updated");
-                    // set the featured image for the updated post to that of the original
-                    // post - this should be done even if the updated post has a featured
-                    // image since that may have been set by ReaderPost.findFeaturedImage()
-                    if (originalPost.hasFeaturedImage()) {
-                        updatedPost.setFeaturedImage(originalPost.getFeaturedImage());
-                    }
-
-                    // likewise for featured video
-                    if (originalPost.hasFeaturedVideo()) {
-                        updatedPost.setFeaturedVideo(originalPost.getFeaturedVideo());
-                        updatedPost.isVideoPress = originalPost.isVideoPress;
-                    }
-
-                    // retain the pubDate and timestamp of the original post - this is important
-                    // since these control how the post is sorted in the list view, and we don't
-                    // want that sorting to change
-                    updatedPost.timestamp = originalPost.timestamp;
-                    updatedPost.setPublished(originalPost.getPublished());
-
-                    ReaderPostTable.addOrUpdatePost(updatedPost);
+                    // copy changes over to the local post - this is done instead of simply overwriting
+                    // the local post with the server post because the server post was retrieved using
+                    // the read/sites/$siteId/posts/$postId endpoint which is missing some information
+                    // https://github.com/wordpress-mobile/WordPress-Android/issues/3164
+                    localPost.numReplies = serverPost.numReplies;
+                    localPost.numLikes = serverPost.numLikes;
+                    localPost.isFollowedByCurrentUser = serverPost.isFollowedByCurrentUser;
+                    localPost.isLikedByCurrentUser = serverPost.isLikedByCurrentUser;
+                    localPost.isCommentsOpen = serverPost.isCommentsOpen;
+                    localPost.setTitle(serverPost.getTitle());
+                    localPost.setText(serverPost.getText());
+                    ReaderPostTable.addOrUpdatePost(localPost);
                 }
 
                 // always update liking users regardless of whether changes were detected - this
                 // ensures that the liking avatars are immediately available to post detail
-                if (handlePostLikes(updatedPost, jsonObject)) {
+                if (handlePostLikes(serverPost, jsonObject)) {
                     hasChanges = true;
                 }
 
