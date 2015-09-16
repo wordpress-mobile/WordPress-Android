@@ -104,6 +104,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.VISIBLE);
             remoteViews.setTextViewText(R.id.stats_widget_views, data.optString("views", "0"));
             remoteViews.setTextViewText(R.id.stats_widget_visitors, data.optString("visitors", "0"));
+            remoteViews.setTextViewText(R.id.stats_widget_comments, data.optString("comments", "0"));
+            remoteViews.setTextViewText(R.id.stats_widget_likes, data.optString("likes", "0"));
 
             Intent intent = new Intent(context, StatsActivity.class);
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
