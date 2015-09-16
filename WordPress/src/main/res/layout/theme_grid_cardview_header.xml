@@ -58,6 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:orientation="vertical"
                     android:gravity="center">
 
@@ -88,6 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:orientation="vertical"
                     android:gravity="center">
 
@@ -118,6 +120,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:orientation="vertical"
                     android:gravity="center">
 

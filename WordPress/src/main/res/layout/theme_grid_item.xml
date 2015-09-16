@@ -68,21 +68,14 @@
                         android:layout_height="match_parent"
                         android:background="@color/reader_divider_grey" />
 
-                    <ImageView
-                        android:id="@+id/image_more"
-                        android:layout_width="@dimen/theme_browser_more_button_width"
-                        android:layout_height="@dimen/theme_browser_more_button_height"
-                        android:adjustViewBounds="true"
-                        android:layout_gravity="center"
-                        android:background="?android:selectableItemBackground"
-                        android:padding="@dimen/theme_browser_more_button_padding"
-                        android:src="@drawable/ic_action_more_grey" />
                     <ImageButton
                         android:id="@+id/theme_grid_item_image_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/margin_large"
-                        android:background="@drawable/ic_action_more"
+                        android:layout_width="@dimen/theme_browser_more_button_width"
+                        android:layout_height="@dimen/theme_browser_more_button_height"
+                        android:padding="@dimen/theme_browser_more_button_padding"
+                        android:adjustViewBounds="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:src="@drawable/ic_action_more_grey"
                         android:contentDescription="@string/button_more" />
 
                 </LinearLayout>
