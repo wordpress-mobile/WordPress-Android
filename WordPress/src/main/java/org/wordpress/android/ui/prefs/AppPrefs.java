@@ -34,8 +34,8 @@ public class AppPrefs {
         // index of the last app-version
         LAST_APP_VERSION_INDEX,
 
-        // index of the last values stored for Stats Widget
-        STATS_WIDGET_ITEM_INDEX,
+        // last data stored for the Stats Widget
+        STATS_WIDGET_DATA,
     }
 
     private static SharedPreferences prefs() {
@@ -199,12 +199,12 @@ public class AppPrefs {
     }
 
     public static String getStatsWidgetData() {
-        return getString(PrefKey.STATS_WIDGET_ITEM_INDEX);
+        return getString(PrefKey.STATS_WIDGET_DATA);
     }
     public static void setStatsWidgetData(String widgetData) {
-        setString(PrefKey.STATS_WIDGET_ITEM_INDEX, widgetData);
+        setString(PrefKey.STATS_WIDGET_DATA, widgetData);
     }
     public static void resetStatsWidgetData() {
-        remove(PrefKey.STATS_WIDGET_ITEM_INDEX);
+        remove(PrefKey.STATS_WIDGET_DATA);
     }
 }
