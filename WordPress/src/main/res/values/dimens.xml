@@ -139,7 +139,9 @@
     <dimen name="stats_barchart_height">128dp</dimen>
     <dimen name="stats_barchart_legend_item">12dp</dimen>
     <dimen name="stats_widget_one_cell">40dp</dimen>
-    <dimen name="stats_widget_four_cells">300dp</dimen>
+    <dimen name="stats_widget_four_cells">250dp</dimen>
+    <dimen name="stats_widget_five_cells">320dp</dimen>
+    <dimen name="stats_widget_width">@dimen/stats_widget_four_cells</dimen>
     <dimen name="stats_widget_main_container_size">52dp</dimen>
     <dimen name="stats_widget_image_layout_size">12dp</dimen>
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
