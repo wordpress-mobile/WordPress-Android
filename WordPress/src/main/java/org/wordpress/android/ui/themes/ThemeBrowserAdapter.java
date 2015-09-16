@@ -76,7 +76,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         if (urlHolder == null) {
             urlHolder = new ScreenshotHolder();
             urlHolder.requestURL = screenshotURL;
-            themeViewHolder.imageView.setDefaultImageResId(R.drawable.light_grey);
+            themeViewHolder.imageView.setDefaultImageResId(R.drawable.theme_loading);
             themeViewHolder.imageView.setTag(urlHolder);
             themeViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,7 +87,6 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
 
         if (!urlHolder.requestURL.equals(screenshotURL)) {
-            themeViewHolder.imageView.setImageBitmap(null);
             urlHolder.requestURL = screenshotURL;
         }
 
