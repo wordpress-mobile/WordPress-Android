@@ -242,7 +242,7 @@ public class StatsService extends Service {
                     mResponseObjectModel = StatsUtils.parseResponse(sectionToUpdate, blogId, response);
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(sectionToUpdate, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, mResponseObjectModel));
-                    updateWidgetsIfNecessary(blogId, sectionToUpdate, timeframe, date, pageRequested, mResponseObjectModel);
+                    updateWidgetsUI(blogId, sectionToUpdate, timeframe, date, pageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(null);
                     return;
                 } catch (JSONException e) {
@@ -371,9 +371,9 @@ public class StatsService extends Service {
 
     // Call an updates on the installed widgets if the blog is the primary, the endpoint is Visits
     // the timeframe is DAY or INSIGHTS, and the date = TODAY
-    private void updateWidgetsIfNecessary(String blogId, final StatsEndpointsEnum endpointName,
-                                          StatsTimeframe timeframe, String date, int pageRequested,
-                                          Serializable responseObjectModel) {
+    private void updateWidgetsUI(String blogId, final StatsEndpointsEnum endpointName,
+                                 StatsTimeframe timeframe, String date, int pageRequested,
+                                 Serializable responseObjectModel) {
         if (pageRequested != -1) {
             return;
         }
@@ -384,28 +384,19 @@ public class StatsService extends Service {
             return;
         }
 
-        // Check if there are widgets installed on the device
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        ComponentName thisWidget = new ComponentName(this, StatsWidgetProvider.class);
-        if (appWidgetManager.getAppWidgetIds(thisWidget).length == 0) {
-            return;
-        }
-
         int parsedBlogID = Integer.parseInt(blogId);
         int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
-
         // make sure the data is for the current date
         if (!date.equals(StatsUtils.getCurrentDateTZ(localTableBlogId))) {
-            return;
-        }
-        // make sure data is about the primary blog id
-        final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
-        if (localTableBlogId != WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId((int) primaryBlogId)) {
             return;
         }
 
         if (responseObjectModel == null) {
             // TODO What we want to do here?
+            return;
+        }
+
+        if (!StatsWidgetProvider.shouldUpdateWidgetForBlog(this, blogId)) {
             return;
         }
 
@@ -468,7 +459,7 @@ public class StatsService extends Service {
                     }
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
-                    updateWidgetsIfNecessary(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
+                    updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
             });
@@ -496,7 +487,7 @@ public class StatsService extends Service {
                     mResponseObjectModel = volleyError;
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
-                    updateWidgetsIfNecessary(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
+                    updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
             });

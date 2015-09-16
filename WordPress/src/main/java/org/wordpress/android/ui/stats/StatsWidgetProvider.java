@@ -111,7 +111,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
             intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsActivity.StatsLaunchedFrom.STATS_WIDGET);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             remoteViews.setOnClickPendingIntent(R.id.stats_widget_outer_container, pendingIntent);
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
@@ -159,6 +159,23 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
 
         updateWidgetsOnError(context, appWidgetManager);
+    }
+
+    public static void updateWidgetsOnLogout(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        AppLog.d(AppLog.T.STATS, "updateWidgetsOnLogout called");
+
+        checkLoggedAndPrimaryBlog(context, appWidgetManager);
+    }
+
+
+    public static void updateWidgetsOnLogin(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        AppLog.d(AppLog.T.STATS, "updateWidgetsOnLogin called");
+
+        // empty string in pref.
+        showMessage(context, appWidgetManager,
+                context.getString(R.string.stats_widget_loading_data));
     }
 
     // This is called by the Stats service to keep widgets updated
@@ -219,13 +236,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                     context.getString(R.string.stats_widget_loading_data));
         }
 
-        // start service to get stats
-        Intent intent = new Intent(context, StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, String.valueOf(primaryBlog.getRemoteBlogId()));
-        intent.putExtra(StatsService.ARG_PERIOD, StatsTimeframe.DAY);
-        intent.putExtra(StatsService.ARG_DATE, currentDate);
-        intent.putExtra(StatsService.ARG_SECTION, new int[]{StatsService.StatsEndpointsEnum.VISITS.ordinal()});
-        context.startService(intent);
+        enqueueStatsRequestForBlog(context, String.valueOf(primaryBlog.getRemoteBlogId()), currentDate);
     }
 
     @Nullable
@@ -272,4 +283,39 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED);
     }
 
+    /**
+     * This is called from the StatsService and from ApiHelper.RefreshBlogContentTask to check there is
+     * at least 1 Stats Widget installed for the current blog.
+     */
+    public static boolean shouldUpdateWidgetForBlog(Context context, String blogID) {
+        // Check if there are widgets installed on the device
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, StatsWidgetProvider.class);
+        if (appWidgetManager.getAppWidgetIds(thisWidget).length == 0) {
+            return false;
+        }
+
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
+            AppLog.w(AppLog.T.STATS, "Not signed to WordPress.com.");
+            return false;
+        }
+
+        long parsedBlogID = Long.parseLong(blogID);
+        final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
+        if (parsedBlogID != primaryBlogId) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void enqueueStatsRequestForBlog(Context context, String blogID, String date) {
+        // start service to get stats
+        Intent intent = new Intent(context, StatsService.class);
+        intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
+        intent.putExtra(StatsService.ARG_PERIOD, StatsTimeframe.DAY);
+        intent.putExtra(StatsService.ARG_DATE, date);
+        intent.putExtra(StatsService.ARG_SECTION, new int[]{StatsService.StatsEndpointsEnum.VISITS.ordinal()});
+        context.startService(intent);
+    }
 }
