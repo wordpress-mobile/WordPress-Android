@@ -48,14 +48,14 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Site Settings saved remotely");
-                        saveOnUiThread(null, mSettings);
+                        saveOnUiThread(null);
                         mRemoteSettings.copyFrom(mSettings);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
-                        saveOnUiThread(error, null);
+                        saveOnUiThread(error);
                     }
                 }, params);
     }
@@ -74,19 +74,19 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                         mRemoteSettings.localTableId = mBlog.getLocalTableBlogId();
                         mRemoteSettings.deserializeDotComRestResponse(mBlog, response);
-                        mRemoteSettings.language = convertLanguageIdToLanguageCode(
+                        mRemoteSettings.language = languageIdToLanguageCode(
                                 Integer.toString(mRemoteSettings.languageId));
                         if (!mRemoteSettings.isTheSame(mSettings)) {
-                            updateOnUiThread(null, mRemoteSettings);
                             mSettings.copyFrom(mRemoteSettings);
                             SiteSettingsTable.saveSettings(mSettings);
+                            updateOnUiThread(null);
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error response to Settings REST request: " + error);
-                        updateOnUiThread(error, null);
+                        updateOnUiThread(error);
                     }
                 });
     }
@@ -107,7 +107,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         SiteSettingsTable.saveCategories(models);
                         mRemoteSettings.categories = models;
                         mSettings.categories = models;
-                        updateOnUiThread(null, mSettings);
+                        updateOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override

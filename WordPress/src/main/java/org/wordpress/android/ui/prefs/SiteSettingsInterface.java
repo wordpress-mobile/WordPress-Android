@@ -8,6 +8,7 @@ import android.database.Cursor;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
@@ -43,7 +44,7 @@ public abstract class SiteSettingsInterface {
          * @param error
          *  null if successful
          */
-        void onSettingsUpdated(Exception error, SiteSettingsModel container);
+        void onSettingsUpdated(Exception error);
 
         /**
          * Called when attempt to update remote settings is finished.
@@ -51,7 +52,7 @@ public abstract class SiteSettingsInterface {
          * @param error
          *  null if successful
          */
-        void onSettingsSaved(Exception error, SiteSettingsModel container);
+        void onSettingsSaved(Exception error);
 
         /**
          * Called when a request to validate current credentials has completed.
@@ -99,8 +100,12 @@ public abstract class SiteSettingsInterface {
     /**
      * Needed so that subclasses can be created before initializing. the final member variables
      * are null until object has been created so XML-RPC callbacks will not run.
+     *
+     * @return
+     * returns itself for the convenience of
+     * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)}
      */
-    public SiteSettingsInterface init() {
+    protected SiteSettingsInterface init() {
         generateLanguageMap();
         initSettings();
 
@@ -139,6 +144,44 @@ public abstract class SiteSettingsInterface {
         return mSettings.location;
     }
 
+    public boolean isSameFormatList(CharSequence[] ids) {
+        if (ids == null) return mSettings.postFormats == null;
+        if (mSettings.postFormats == null || ids.length != mSettings.postFormats.length) return false;
+
+        for (int i = 0; i < ids.length; ++i) {
+            if (!mSettings.postFormats[i].equals(ids[i])) return false;
+        }
+
+        return true;
+    }
+
+    public boolean isSameCategoryList(CharSequence[] ids) {
+        if (ids == null) return mSettings.categories == null;
+        if (mSettings.categories == null) return false;
+
+        for (int i = 0; i < ids.length; ++i) {
+            if (Integer.valueOf(ids[i].toString()) != mSettings.categories[i].id) return false;
+        }
+
+        return true;
+    }
+
+    public String[] getFormats() {
+        return mSettings.postFormats;
+    }
+
+    public CategoryModel[] getCategories() {
+        return mSettings.categories;
+    }
+
+    public String[] getCategoriesForDisplay() {
+        return mSettings.getCategoriesForDisplay();
+    }
+
+    public int getDefaultCategory() {
+        return mSettings.defaultCategory;
+    }
+
     public void setAddress(String address) {
         mSettings.address = address;
     }
@@ -170,7 +213,7 @@ public abstract class SiteSettingsInterface {
     public void setLanguageId(int languageId) {
         if (mSettings.languageId != languageId) {
             mSettings.languageId = languageId;
-            mSettings.language = convertLanguageIdToLanguageCode(Integer.toString(languageId));
+            mSettings.language = languageIdToLanguageCode(Integer.toString(languageId));
         }
     }
 
@@ -179,53 +222,65 @@ public abstract class SiteSettingsInterface {
         siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, location).apply();
     }
 
+    public void setDefaultFormat(String format) {
+        mSettings.defaultPostFormat = format.toLowerCase();
+    }
+
+    public String getDefaultFormat() {
+        return mSettings.defaultPostFormat;
+    }
+
     /**
-     * Attempts to load cached settings for the blog then sends a request to the remote endpoint
-     * to retrieve the latest blog data.
+     * Attempts to load cached settings for the blog then fetches remote settings.
      */
     private void initSettings() {
-        int tableKey = mBlog.getLocalTableBlogId();
-        Cursor localSettings = SiteSettingsTable.getSettings(tableKey);
-
-        if (localSettings != null && localSettings.moveToFirst() && localSettings.getCount() > 0) {
-            mSettings.isInLocalTable = true;
-            mSettings.deserializeDatabaseCursor(localSettings);
-            localSettings.close();
-            mSettings.language =
-                    convertLanguageIdToLanguageCode(Integer.toString(mSettings.languageId));
-            setLocation(mSettings.location);
-            updateOnUiThread(null, mSettings);
-        } else {
-            mSettings.isInLocalTable = false;
-            setAddress(mBlog.getHomeURL());
-            setUsername(mBlog.getUsername());
-            setPassword(mBlog.getPassword());
-            setTitle(mBlog.getBlogName());
-        }
+        loadCachedSettings();
 
         // Always fetch remote data to get any changes
         fetchRemoteData();
         fetchPostFormats();
     }
 
-    protected void updateOnUiThread(final Exception error, final SiteSettingsModel settings) {
+    private void loadCachedSettings() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getLocalTableBlogId());
+
+                if (localSettings != null && localSettings.moveToFirst() && localSettings.getCount() > 0) {
+                    mSettings.deserializeDatabaseCursor(localSettings);
+                    mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
+                    localSettings.close();
+                    updateOnUiThread(null);
+                } else {
+                    mSettings.isInLocalTable = false;
+                    setAddress(mBlog.getHomeURL());
+                    setUsername(mBlog.getUsername());
+                    setPassword(mBlog.getPassword());
+                    setTitle(mBlog.getBlogName());
+                }
+            }
+        }).start();
+    }
+
+    protected void updateOnUiThread(final Exception error) {
         if (mActivity == null || mListener == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mListener.onSettingsUpdated(error, settings);
+                mListener.onSettingsUpdated(error);
             }
         });
     }
 
-    protected void saveOnUiThread(final Exception error, final SiteSettingsModel settings) {
+    protected void saveOnUiThread(final Exception error) {
         if (mActivity == null || mListener == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mListener.onSettingsSaved(error, settings);
+                mListener.onSettingsSaved(error);
             }
         });
     }
@@ -256,7 +311,7 @@ public abstract class SiteSettingsInterface {
      * be defined by appending a -** where ** is the region code (en-GB -> English, Great Britain).
      * https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
      */
-    protected String convertLanguageIdToLanguageCode(String id) {
+    protected String languageIdToLanguageCode(String id) {
         if (id != null) {
             for (String key : mLanguageCodes.keySet()) {
                 if (id.equals(mLanguageCodes.get(key))) {
@@ -304,8 +359,13 @@ public abstract class SiteSettingsInterface {
                                 mRemoteSettings.postFormats[i] = allFormats.get(supportedFormats[i]).toString();
                             }
                         }
+
+                        // TODO: compare post formats and categories in isTheSame
+//                        if (!mRemoteSettings.isTheSame(mSettings)) {
+                            mSettings.copyFormatsFrom(mRemoteSettings);
+//                        }
                     }
-                    updateOnUiThread(null, mRemoteSettings);
+                    updateOnUiThread(null);
                 }
             }
 

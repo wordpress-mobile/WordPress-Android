@@ -105,8 +105,6 @@
             android:id="@+id/pref_default_category"
             android:key="@string/pref_key_site_category"
             android:title="@string/site_settings_category_title"
-            android:entries="@array/post_formats_array"
-            android:entryValues="@array/post_formats_array"
             app:longClickHint="@string/site_category_hint" />
 
         <org.wordpress.android.ui.prefs.DetailListPreference

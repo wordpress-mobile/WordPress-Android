@@ -9,8 +9,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
+import android.preference.PreferenceGroup;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -26,15 +25,13 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.CategoryNode;
-import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
@@ -56,6 +53,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private Blog mBlog;
+    private SiteSettingsInterface mSiteSettings;
 
     private EditTextPreference mTitlePreference;
     private EditTextPreference mTaglinePreference;
@@ -64,11 +62,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mPrivacyPreference;
     private EditTextPreference mUsernamePreference;
     private EditTextPreference mPasswordPreference;
-    private SwitchPreference mLocationPreference;
+    private WPSwitchPreference mLocationPreference;
     private DetailListPreference mCategoryPreference;
     private DetailListPreference mFormatPreference;
-
-    private SiteSettingsInterface mSiteSettings;
+    private DetailListPreference mRelatedPostsPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +75,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlog = WordPress.getBlog(
                 getArguments().getInt(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, -1));
 
+        // TODO: offline editing
         if (!NetworkUtils.checkConnection(getActivity()) || mBlog == null) {
             getActivity().finish();
             return;
@@ -177,6 +175,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             SharedPreferences prefs = siteSettingsPreferences();
             prefs.edit().putBoolean(SiteSettings.LOCATION_PREF_KEY, mSiteSettings.getLocation()).apply();
             return true;
+        } else if (preference == mCategoryPreference) {
+            // TODO
+        } else if (preference == mFormatPreference) {
+            // TODO
+            mSiteSettings.setDefaultFormat(newValue.toString());
+            mFormatPreference.setSummary(mSiteSettings.getDefaultFormat());
+        } else if (preference == mRelatedPostsPreference) {
+            // TODO
         }
 
         return false;
@@ -202,40 +208,22 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSettingsUpdated(Exception error, SiteSettingsModel container) {
+    public void onSettingsUpdated(Exception error) {
         if (error != null) {
             ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
             return;
         }
 
-        changeEditTextPreferenceValue(mTitlePreference, container.title);
-        changeEditTextPreferenceValue(mTaglinePreference, container.tagline);
-        changeEditTextPreferenceValue(mAddressPreference, container.address);
-        changeEditTextPreferenceValue(mUsernamePreference, container.username);
-        changeEditTextPreferenceValue(mPasswordPreference, container.password);
-        changePrivacyValue(container.privacy);
-        changeLanguageValue(container.language);
-
-        if (mCategoryPreference != null && container.categories != null) {
-            mCategoryPreference.setEntries(container.getCategoriesForDisplay());
-            mCategoryPreference.setEntryValues(container.getCategoriesForDisplay());
-            mCategoryPreference.setSummary(container.getDefaultCategoryForDisplay());
-        }
-
-        if (mFormatPreference != null && container.postFormats != null) {
-            mFormatPreference.setEntries(container.postFormats);
-            mFormatPreference.setEntryValues(container.postFormats);
-            mFormatPreference.setSummary(container.getDefaultFormatForDisplay());
-        }
+        updatePreferences();
     }
 
     @Override
-    public void onSettingsSaved(Exception error, SiteSettingsModel container) {
+    public void onSettingsSaved(Exception error) {
         int message = error == null ?
                 R.string.site_settings_save_success : R.string.error_post_remote_site_settings;
 
         ToastUtils.showToast(WordPress.getContext(), message);
-        mBlog.setBlogName(container.title);
+        mBlog.setBlogName(mSiteSettings.getTitle());
         WordPress.wpDB.saveBlog(mBlog);
         EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
@@ -253,7 +241,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mTitlePreference != null) mTitlePreference.setEnabled(allow);
         if (mTaglinePreference != null) mTaglinePreference.setEnabled(allow);
         if (mPrivacyPreference != null) mPrivacyPreference.setEnabled(allow);
-        if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
         if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
     }
 
@@ -276,18 +263,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPasswordPreference =
                 (EditTextPreference) findPreference(getString(R.string.pref_key_site_password));
         mLocationPreference =
-                (SwitchPreference) findPreference(getString(R.string.pref_key_site_location));
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_location));
         mCategoryPreference =
                 (DetailListPreference) findPreference(getString(R.string.pref_key_site_category));
         mFormatPreference =
                 (DetailListPreference) findPreference(getString(R.string.pref_key_site_format));
-
-        changeEditTextPreferenceValue(mTitlePreference, mSiteSettings.getTitle());
-        changeEditTextPreferenceValue(mTaglinePreference, mSiteSettings.getTagline());
-        changeEditTextPreferenceValue(mAddressPreference, mSiteSettings.getAddress());
-        mLocationPreference.setChecked(siteSettingsPreferences().getBoolean(SiteSettings.LOCATION_PREF_KEY, false));
-
-        loadCategories();
+        mRelatedPostsPreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_related_posts));
 
         mTitlePreference.setOnPreferenceChangeListener(this);
         mTaglinePreference.setOnPreferenceChangeListener(this);
@@ -295,39 +277,86 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLocationPreference.setOnPreferenceChangeListener(this);
         mCategoryPreference.setOnPreferenceChangeListener(this);
         mFormatPreference.setOnPreferenceChangeListener(this);
+        mPrivacyPreference.setOnPreferenceChangeListener(this);
+        mLanguagePreference.setOnPreferenceChangeListener(this);
+        mUsernamePreference.setOnPreferenceChangeListener(this);
+        mPasswordPreference.setOnPreferenceChangeListener(this);
+        mRelatedPostsPreference.setOnPreferenceChangeListener(this);
 
+        updatePreferences();
+
+        // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
-            PreferenceScreen screen =
-                    (PreferenceScreen) findPreference(getString(R.string.pref_key_site_screen));
-            if (screen != null) {
-                screen.removePreference(findPreference(getString(R.string.pref_key_site_account)));
-            }
-            changeLanguageValue(mSiteSettings.getLanguageCode());
-            changePrivacyValue(mSiteSettings.getPrivacy());
-            mPrivacyPreference.setOnPreferenceChangeListener(this);
-            mLanguagePreference.setOnPreferenceChangeListener(this);
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_account);
         } else {
-            removePreference(R.string.pref_key_site_general, mPrivacyPreference);
-            removePreference(R.string.pref_key_site_general, mLanguagePreference);
-            changeEditTextPreferenceValue(mUsernamePreference, mSiteSettings.getUsername());
-            changeEditTextPreferenceValue(mPasswordPreference, mSiteSettings.getPassword());
-            mUsernamePreference.setOnPreferenceChangeListener(this);
-            mPasswordPreference.setOnPreferenceChangeListener(this);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
         }
     }
 
-    private void loadCategories() {
-        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromDB(mBlog.getLocalTableBlogId());
-        ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
-        String[] categories = new String[categoryLevels.size()];
+    private void updatePreferences() {
+        mLocationPreference.setChecked(mSiteSettings.getLocation());
+        changeEditTextPreferenceValue(mTitlePreference, mSiteSettings.getTitle());
+        changeEditTextPreferenceValue(mTaglinePreference, mSiteSettings.getTagline());
+        changeEditTextPreferenceValue(mAddressPreference, mSiteSettings.getAddress());
+        changeEditTextPreferenceValue(mUsernamePreference, mSiteSettings.getUsername());
+        changeEditTextPreferenceValue(mPasswordPreference, mSiteSettings.getPassword());
+        changePrivacyValue(mSiteSettings.getPrivacy());
+        changeLanguageValue(mSiteSettings.getLanguageCode());
+        // TODO: related posts and post formats
+        changeRelatedPostsValue();
+        setCategories();
+        setPostFormats();
+    }
 
-        for (int i = 0; i < categoryLevels.size(); ++i) {
-            categories[i] = categoryLevels.get(i).getName();
+    private void setCategories() {
+        // Ignore if there are no changes
+        if (mSiteSettings.isSameCategoryList(mCategoryPreference.getEntryValues())) {
+            mCategoryPreference.setValue(String.valueOf(mSiteSettings.getDefaultCategory()));
+            return;
         }
 
-        mCategoryPreference.setEntries(categories);
-        mCategoryPreference.setEntryValues(categories);
+        CategoryModel[] models = mSiteSettings.getCategories();
+        if (models == null) return;
+        String[] entries = new String[models.length];
+        String[] values = new String[models.length];
+
+        for (int i = 0; i < models.length; ++i) {
+            entries[i] = models[i].name;
+            values[i] = String.valueOf(models[i].id);
+        }
+
+        mCategoryPreference.setEntries(entries);
+        mCategoryPreference.setEntryValues(values);
+        mCategoryPreference.setValue(String.valueOf(mSiteSettings.getDefaultCategory()));
+        mCategoryPreference.setSummary(mCategoryPreference.getEntry());
     }
+
+    private void setPostFormats() {
+        // Ignore if there are no changes
+        if (mSiteSettings.isSameFormatList(mFormatPreference.getEntryValues())) {
+            mFormatPreference.setValue(String.valueOf(mSiteSettings.getDefaultFormat()));
+            return;
+        }
+
+        String[] formats = mSiteSettings.getFormats();
+        if (formats == null) return;
+        String[] entries = new String[formats.length];
+        String[] values = new String[formats.length];
+
+        for (int i = 0; i < formats.length; ++i) {
+            entries[i] = formats[i];
+            values[i] = formats[i].toLowerCase();
+        }
+
+        mFormatPreference.setEntries(entries);
+        mFormatPreference.setEntryValues(values);
+        mFormatPreference.setValue(String.valueOf(mSiteSettings.getDefaultFormat()));
+        mFormatPreference.setSummary(mFormatPreference.getEntry());
+    }
+
+    private void changeRelatedPostsValue() {
+    }
+
     /**
      * Helper method to perform validation and set multiple properties on an EditTextPreference.
      * If newValue is equal to the current preference text no action will be taken.
@@ -433,13 +462,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Removes a {@link Preference} from the {@link PreferenceCategory} with the given key.
      */
-    private void removePreference(int categoryKey, Preference preference) {
-        if (preference == null) return;
+    private void removePreference(int parentKey, int preference) {
+        PreferenceGroup parent = (PreferenceGroup) findPreference(getString(parentKey));
 
-        PreferenceCategory category = (PreferenceCategory) findPreference(getString(categoryKey));
-
-        if (category != null) {
-            category.removePreference(preference);
+        if (parent != null) {
+            parent.removePreference(findPreference(getString(preference)));
         }
     }
 

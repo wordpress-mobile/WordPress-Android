@@ -40,13 +40,13 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         XMLRPCCallback callback = new XMLRPCCallback() {
             @Override
             public void onSuccess(long id, final Object result) {
-                saveOnUiThread(null, mSettings);
+                saveOnUiThread(null);
                 mRemoteSettings.copyFrom(mSettings);
             }
 
             @Override
             public void onFailure(long id, final Exception error) {
-                saveOnUiThread(error, null);
+                saveOnUiThread(error);
             }
         };
         final Object[] callParams = {
@@ -81,21 +81,21 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
 
                 deserializeCategoriesResponse(mRemoteSettings, (Object[]) result);
                 if (!mRemoteSettings.isTheSame(mSettings)) {
-                    updateOnUiThread(null, mRemoteSettings);
                     mSettings.copyFrom(mRemoteSettings);
                     SiteSettingsTable.saveSettings(mSettings);
+                    updateOnUiThread(null);
                 }
             } else {
                 // Response is considered an error if we are unable to parse it
                 AppLog.w(AppLog.T.API, "Error parsing Categories XML-RPC response: " + result);
-                updateOnUiThread(new XMLRPCException("Unknown response object"), null);
+                updateOnUiThread(new XMLRPCException("Unknown response object"));
             }
         }
 
         @Override
         public void onFailure(long id, Exception error) {
             AppLog.w(AppLog.T.API, "Error Categories XML-RPC response: " + error);
-            updateOnUiThread(error, null);
+            updateOnUiThread(error);
         }
     };
 
@@ -110,21 +110,21 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
 
                 deserializeOptionsResponse(mRemoteSettings, (Map) result);
                 if (!mRemoteSettings.isTheSame(mSettings)) {
-                    updateOnUiThread(null, mRemoteSettings);
                     mSettings.copyFrom(mRemoteSettings);
                     SiteSettingsTable.saveSettings(mSettings);
+                    updateOnUiThread(null);
                 }
             } else {
                 // Response is considered an error if we are unable to parse it
                 AppLog.w(AppLog.T.API, "Error parsing Options XML-RPC response: " + result);
-                updateOnUiThread(new XMLRPCException("Unknown response object"), null);
+                updateOnUiThread(new XMLRPCException("Unknown response object"));
             }
         }
 
         @Override
         public void onFailure(long id, final Exception error) {
             AppLog.w(AppLog.T.API, "Error Options XML-RPC response: " + error);
-            updateOnUiThread(error, null);
+            updateOnUiThread(error);
         }
     };
 

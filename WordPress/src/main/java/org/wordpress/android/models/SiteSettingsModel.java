@@ -93,6 +93,7 @@ public class SiteSettingsModel {
      */
     public void copyFrom(SiteSettingsModel other) {
         if (other == null) return;
+
         isInLocalTable = other.isInLocalTable;
         localTableId = other.localTableId;
         address = other.address;
@@ -108,6 +109,11 @@ public class SiteSettingsModel {
         categories = other.categories;
         defaultPostFormat = other.defaultPostFormat;
         postFormats = other.postFormats;
+    }
+
+    public void copyFormatsFrom(SiteSettingsModel other) {
+        if (other.postFormats == null) return;
+        postFormats = other.postFormats.clone();
     }
 
     /**
@@ -170,6 +176,8 @@ public class SiteSettingsModel {
         }
         if (!TextUtils.isEmpty(cachedFormats)) {
         }
+
+        isInLocalTable = true;
     }
 
     public String[] getCategoriesForDisplay() {
