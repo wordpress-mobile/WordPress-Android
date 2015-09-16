@@ -61,7 +61,9 @@ public class UrlUtilsTest extends InstrumentationTestCase {
         params.put("w", "200");
         params.put("h", "300");
         String url = UrlUtils.appendUrlParameters("http://wp.com/test", params);
-        assertEquals("http://wp.com/test?h=300&w=200", url);
+        if (!url.equals("http://wp.com/test?h=300&w=200") && !url.equals("http://wp.com/test?w=200&h=300")) {
+            assertTrue("failed test on url: " + url, false);
+        }
     }
 
     public void testAppendUrlParameters2() {
@@ -69,6 +71,8 @@ public class UrlUtilsTest extends InstrumentationTestCase {
         params.put("h", "300");
         params.put("w", "200");
         String url = UrlUtils.appendUrlParameters("/relative/test", params);
-        assertEquals("/relative/test?h=300&w=200", url);
+        if (!url.equals("/relative/test?h=300&w=200") && !url.equals("/relative/test?w=200&h=300")) {
+            assertTrue("failed test on url: " + url, false);
+        }
     }
 }
