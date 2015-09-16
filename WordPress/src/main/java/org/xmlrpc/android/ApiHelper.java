@@ -306,8 +306,8 @@ public class ApiHelper {
 
                 //Update Stats widgets if necessary
                 String currentBlogID = String.valueOf(mBlog.getRemoteBlogId());
-                String currentDate = StatsUtils.getCurrentDateTZ(mBlog.getLocalTableBlogId());
                 if (StatsWidgetProvider.shouldUpdateWidgetForBlog(WordPress.getContext(), currentBlogID)) {
+                    String currentDate = StatsUtils.getCurrentDateTZ(mBlog.getLocalTableBlogId());
                     StatsWidgetProvider.enqueueStatsRequestForBlog(WordPress.getContext(), currentBlogID, currentDate);
                 }
             }
