@@ -138,6 +138,25 @@ public class UrlUtils {
         }
     }
 
+
+    /**
+     * returns the passed url without the scheme
+     */
+    public static String removeScheme(final String urlString) {
+        if (urlString == null) {
+            return null;
+        }
+
+        int doubleslash = urlString.indexOf("//");
+        if (doubleslash == -1) {
+            doubleslash = 0;
+        } else {
+            doubleslash += 2;
+        }
+
+        return urlString.substring(doubleslash, urlString.length());
+    }
+
     /**
      * returns the passed url without the query parameters
      */

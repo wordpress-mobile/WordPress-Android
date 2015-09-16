@@ -3,7 +3,7 @@ package org.wordpress.android.ui.main;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Parcelable;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -13,9 +13,9 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 /**
  * pager adapter containing tab fragments used by WPMainActivity
  */
-class WPMainTabAdapter extends FragmentStatePagerAdapter {
+class WPMainTabAdapter extends FragmentPagerAdapter {
 
-    private static final int NUM_TABS = 4;
+    static final int NUM_TABS = 4;
 
     static final int TAB_MY_SITE = 0;
     static final int TAB_READER  = 1;
