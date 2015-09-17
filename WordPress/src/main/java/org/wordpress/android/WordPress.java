@@ -195,22 +195,32 @@ public class WordPress extends Application {
 
         HelpshiftHelper.init(this);
 
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
-        AnalyticsTracker.init(getContext());
-
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
 
-        // Track app upgrade
-        int versionCode = PackageUtils.getVersionCode(this);
-        int oldVersionCode = AppPrefs.getLastAppVersionCode();
-        if (oldVersionCode != 0 && oldVersionCode < versionCode) {
-            // app upgraded
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
-        }
-        AppPrefs.setLastAppVersionCode(versionCode);
+        // AnalyticsTrackerNosara must be instantiated on the main thread
+        initAnalytics(new AnalyticsTrackerNosara(getContext()));
+    }
+
+    private void initAnalytics(final AnalyticsTrackerNosara analyticsTrackerNosara) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
+                AnalyticsTracker.registerTracker(analyticsTrackerNosara);
+                        AnalyticsTracker.init(getContext());
+
+                // Track app upgrade
+                int versionCode = PackageUtils.getVersionCode(getContext());
+                int oldVersionCode = AppPrefs.getLastAppVersionCode();
+                if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+                    // app upgraded
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
+                }
+                AppPrefs.setLastAppVersionCode(versionCode);
+            }
+        }).start();
     }
 
     /**
