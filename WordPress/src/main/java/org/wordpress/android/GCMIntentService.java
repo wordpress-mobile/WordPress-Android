@@ -25,8 +25,6 @@ import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiv
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -129,7 +127,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         mPreviousNoteId = noteId;
         mPreviousNoteTime = thisTime;
-        
+
         // Update notification content for the same noteId if it is already showing
         int pushId = 0;
         for (int id : mActiveNotificationsMap.keySet()) {
@@ -404,10 +402,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             NotificationsUtils.registerDeviceForPushNotifications(context, regId);
-
-            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-            }
+            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
             AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }
