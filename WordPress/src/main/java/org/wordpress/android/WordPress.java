@@ -159,7 +159,7 @@ public class WordPress extends Application {
 
         mContext = this;
 
-        ProfilingUtils.start("WordPress.onCreate");
+        ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);
         AppLog.i(T.UTILS, "WordPress.onCreate");
