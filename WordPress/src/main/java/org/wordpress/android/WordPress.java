@@ -227,9 +227,6 @@ public class WordPress extends Application {
         registerForCloudMessaging(this);
         configureSimperium();
 
-        // we want to reset the suggestion table in every launch so we can get a fresh list
-        SuggestionTable.reset(wpDB.getDatabase());
-
         // Refresh account informations
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
