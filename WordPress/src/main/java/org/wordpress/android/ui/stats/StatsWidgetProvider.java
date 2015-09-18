@@ -271,6 +271,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_ADDED);
+        AnalyticsTracker.flush();
     }
 
     /**
@@ -281,6 +282,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED);
+        AnalyticsTracker.flush();
     }
 
     /**

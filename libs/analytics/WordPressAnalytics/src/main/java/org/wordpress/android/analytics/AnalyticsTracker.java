@@ -155,6 +155,16 @@ public final class AnalyticsTracker {
         }
     }
 
+
+    public static void flush() {
+        if (mHasUserOptedOut) {
+            return;
+        }
+        for (Tracker tracker : TRACKERS) {
+            tracker.flush();
+        }
+    }
+
     public static void endSession(boolean force) {
         if (mHasUserOptedOut && !force) {
             return;
