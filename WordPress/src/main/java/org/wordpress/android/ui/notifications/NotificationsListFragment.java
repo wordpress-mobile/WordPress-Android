@@ -140,6 +140,9 @@ public class NotificationsListFragment extends Fragment
             if (mNotesAdapter == null) {
                 mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
                 mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
+            }
+
+            if (mRecyclerView.getAdapter() == null) {
                 mRecyclerView.setAdapter(mNotesAdapter);
             }
         } else {
