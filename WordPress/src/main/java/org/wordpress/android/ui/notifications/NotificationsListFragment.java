@@ -140,9 +140,8 @@ public class NotificationsListFragment extends Fragment
             if (mNotesAdapter == null) {
                 mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
                 mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
+                mRecyclerView.setAdapter(mNotesAdapter);
             }
-
-            mRecyclerView.setAdapter(mNotesAdapter);
         } else {
             if (!AccountHelper.isSignedInWordPressDotCom()) {
                 // let user know that notifications require a wp.com account and enable sign-in
