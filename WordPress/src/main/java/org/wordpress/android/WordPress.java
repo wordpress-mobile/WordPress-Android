@@ -7,12 +7,12 @@ import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteException;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -156,6 +156,7 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        long startDate = SystemClock.elapsedRealtime();
 
         mContext = this;
 
@@ -200,10 +201,10 @@ public class WordPress extends Application {
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
 
         // AnalyticsTrackerNosara must be instantiated on the main thread
-        initAnalytics(new AnalyticsTrackerNosara(getContext()));
+        initAnalytics(new AnalyticsTrackerNosara(getContext()), SystemClock.elapsedRealtime() - startDate);
     }
 
-    private void initAnalytics(final AnalyticsTrackerNosara analyticsTrackerNosara) {
+    private void initAnalytics(final AnalyticsTrackerNosara analyticsTrackerNosara, final long elapsedTimeOnCreate) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -215,8 +216,10 @@ public class WordPress extends Application {
                 int versionCode = PackageUtils.getVersionCode(getContext());
                 int oldVersionCode = AppPrefs.getLastAppVersionCode();
                 if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+                    Map<String, Long> properties = new HashMap<String, Long>(1);
+                    properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
                     // app upgraded
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
                 }
                 AppPrefs.setLastAppVersionCode(versionCode);
             }
