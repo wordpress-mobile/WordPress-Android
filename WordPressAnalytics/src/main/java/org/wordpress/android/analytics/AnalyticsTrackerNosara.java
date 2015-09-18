@@ -397,12 +397,16 @@ public class AnalyticsTrackerNosara extends Tracker {
 
     @Override
     public void endSession() {
+        this.flush();
+    }
+
+    @Override
+    public void flush() {
         if (mNosaraClient == null) {
             return;
         }
         mNosaraClient.flush();
     }
-
 
     @Override
     public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,

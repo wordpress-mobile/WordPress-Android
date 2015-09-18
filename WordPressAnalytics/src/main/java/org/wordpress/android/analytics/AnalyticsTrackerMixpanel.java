@@ -175,6 +175,11 @@ public class AnalyticsTrackerMixpanel extends Tracker {
     }
 
     @Override
+    public void flush() {
+        mMixpanel.flush();
+    }
+
+    @Override
     public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
                                 int sessionCount, int numBlogs, int versionCode, String username, String email) {
         // Register super properties
