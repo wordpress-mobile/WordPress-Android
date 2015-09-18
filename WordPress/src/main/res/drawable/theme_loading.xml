@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/ic_theme_loading"
+        android:gravity="center" />
+
+    <item
+        android:drawable="@drawable/theme_loading_background" />
+
+</layer-list>
