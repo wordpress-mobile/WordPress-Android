@@ -11,6 +11,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -33,6 +34,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.Locale;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -121,7 +123,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     TypefaceCache.VARIATION_LIGHT));
                             title.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                                     res.getDimensionPixelSize(R.dimen.text_sz_medium));
-                            title.setTextColor(res.getColor(R.color.orange_jazzy));
+                            title.setTextColor(ContextCompat.getColor(getActivity(),
+                                                                      R.color.orange_jazzy));
                         }
                     }
 
@@ -131,6 +134,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 });
                 prefList.setOnItemLongClickListener(this);
                 prefList.setFooterDividersEnabled(false);
+                //noinspection deprecation
                 prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
             }
         }
@@ -173,12 +177,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mLocationPreference) {
             mSiteSettings.setLocation((Boolean) newValue);
             SharedPreferences prefs = siteSettingsPreferences();
-            prefs.edit().putBoolean(SiteSettings.LOCATION_PREF_KEY, mSiteSettings.getLocation()).apply();
+            prefs.edit().putBoolean(SiteSettingsInterface.LOCATION_PREF_KEY, mSiteSettings.getLocation()).apply();
             return true;
         } else if (preference == mCategoryPreference) {
-            // TODO
+            mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
+            mCategoryPreference.setSummary(mCategoryPreference.getEntry());
         } else if (preference == mFormatPreference) {
-            // TODO
             mSiteSettings.setDefaultFormat(newValue.toString());
             mFormatPreference.setSummary(mSiteSettings.getDefaultFormat());
         } else if (preference == mRelatedPostsPreference) {
@@ -214,7 +218,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        updatePreferences();
+        setPreferencesFromSiteSettings();
     }
 
     @Override
@@ -283,7 +287,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPasswordPreference.setOnPreferenceChangeListener(this);
         mRelatedPostsPreference.setOnPreferenceChangeListener(this);
 
-        updatePreferences();
+        setPreferencesFromSiteSettings();
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
@@ -293,7 +297,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void updatePreferences() {
+    private void setPreferencesFromSiteSettings() {
         mLocationPreference.setChecked(mSiteSettings.getLocation());
         changeEditTextPreferenceValue(mTitlePreference, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePreference, mSiteSettings.getTagline());
@@ -302,7 +306,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mPasswordPreference, mSiteSettings.getPassword());
         changePrivacyValue(mSiteSettings.getPrivacy());
         changeLanguageValue(mSiteSettings.getLanguageCode());
-        // TODO: related posts and post formats
         changeRelatedPostsValue();
         setCategories();
         setPostFormats();
@@ -338,14 +341,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        String[] formats = mSiteSettings.getFormats();
-        if (formats == null) return;
-        String[] entries = new String[formats.length];
-        String[] values = new String[formats.length];
+        Map<String, String> formats = mSiteSettings.getFormats();
+        String[] formatKeys = mSiteSettings.getFormatKeys();
+        if (formats == null || formatKeys == null) return;
+        String[] entries = new String[formatKeys.length];
+        String[] values = new String[formatKeys.length];
 
-        for (int i = 0; i < formats.length; ++i) {
-            entries[i] = formats[i];
-            values[i] = formats[i].toLowerCase();
+        for (int i = 0; i < entries.length; ++i) {
+            entries[i] = formats.get(formatKeys[i]);
+            values[i] = formatKeys[i];
         }
 
         mFormatPreference.setEntries(entries);
@@ -355,6 +359,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void changeRelatedPostsValue() {
+        // TODO
     }
 
     /**
@@ -471,7 +476,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private SharedPreferences siteSettingsPreferences() {
-        return getActivity().getSharedPreferences(SiteSettings.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
+        return getActivity().getSharedPreferences(SiteSettingsInterface.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
     }
 
     private String localeInput(String languageCode) {

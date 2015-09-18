@@ -88,6 +88,8 @@ public abstract class SiteSettingsInterface {
 
     private final HashMap<String, String> mLanguageCodes;
 
+    private Thread mLoadCacheThread;
+
     protected SiteSettingsInterface(Activity host, Blog blog, SiteSettingsListener listener) {
         mActivity = host;
         mBlog = blog;
@@ -98,7 +100,7 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Needed so that subclasses can be created before initializing. the final member variables
+     * Needed so that subclasses can be created before initializing. The final member variables
      * are null until object has been created so XML-RPC callbacks will not run.
      *
      * @return
@@ -144,30 +146,14 @@ public abstract class SiteSettingsInterface {
         return mSettings.location;
     }
 
-    public boolean isSameFormatList(CharSequence[] ids) {
-        if (ids == null) return mSettings.postFormats == null;
-        if (mSettings.postFormats == null || ids.length != mSettings.postFormats.length) return false;
-
-        for (int i = 0; i < ids.length; ++i) {
-            if (!mSettings.postFormats[i].equals(ids[i])) return false;
-        }
-
-        return true;
-    }
-
-    public boolean isSameCategoryList(CharSequence[] ids) {
-        if (ids == null) return mSettings.categories == null;
-        if (mSettings.categories == null) return false;
-
-        for (int i = 0; i < ids.length; ++i) {
-            if (Integer.valueOf(ids[i].toString()) != mSettings.categories[i].id) return false;
-        }
-
-        return true;
-    }
-
-    public String[] getFormats() {
+    public Map<String, String> getFormats() {
         return mSettings.postFormats;
+    }
+
+    public String[] getFormatKeys() {
+        if (mSettings.postFormats == null) return null;
+        // TODO: don't generate a new array each time
+        return mSettings.postFormats.keySet().toArray(new String[mSettings.postFormats.size()]);
     }
 
     public CategoryModel[] getCategories() {
@@ -222,6 +208,10 @@ public abstract class SiteSettingsInterface {
         siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, location).apply();
     }
 
+    public void setDefaultCategory(int category) {
+        mSettings.defaultCategory = category;
+    }
+
     public void setDefaultFormat(String format) {
         mSettings.defaultPostFormat = format.toLowerCase();
     }
@@ -231,39 +221,50 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Attempts to load cached settings for the blog then fetches remote settings.
+     * Checks if the provided list of post format IDs is the same (order dependent) as the current
+     * list of Post Formats in the local settings object.
+     *
+     * @param ids
+     * an array of post format IDs
+     * @return
+     * true unless the provided IDs are different from the current IDs or in a different order
      */
-    private void initSettings() {
-        loadCachedSettings();
+    public boolean isSameFormatList(CharSequence[] ids) {
+        if (ids == null) return mSettings.postFormats == null;
+        if (mSettings.postFormats == null || ids.length != mSettings.postFormats.size()) return false;
 
-        // Always fetch remote data to get any changes
-        fetchRemoteData();
-        fetchPostFormats();
+        String[] keys = mSettings.postFormats.keySet().toArray(new String[mSettings.postFormats.size()]);
+        for (int i = 0; i < ids.length; ++i) {
+            if (!keys[i].equals(ids[i])) return false;
+        }
+
+        return true;
     }
 
-    private void loadCachedSettings() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getLocalTableBlogId());
+    /**
+     * Checks if the provided list of category IDs is the same (order dependent) as the current
+     * list of Categories in the local settings object.
+     *
+     * @param ids
+     * an array of integers stored as Strings (for convenience)
+     * @return
+     * true unless the provided IDs are different from the current IDs or in a different order
+     */
+    public boolean isSameCategoryList(CharSequence[] ids) {
+        if (ids == null) return mSettings.categories == null;
+        if (mSettings.categories == null || ids.length != mSettings.categories.length) return false;
 
-                if (localSettings != null && localSettings.moveToFirst() && localSettings.getCount() > 0) {
-                    mSettings.deserializeDatabaseCursor(localSettings);
-                    mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
-                    localSettings.close();
-                    updateOnUiThread(null);
-                } else {
-                    mSettings.isInLocalTable = false;
-                    setAddress(mBlog.getHomeURL());
-                    setUsername(mBlog.getUsername());
-                    setPassword(mBlog.getPassword());
-                    setTitle(mBlog.getBlogName());
-                }
-            }
-        }).start();
+        for (int i = 0; i < ids.length; ++i) {
+            if (Integer.valueOf(ids[i].toString()) != mSettings.categories[i].id) return false;
+        }
+
+        return true;
     }
 
-    protected void updateOnUiThread(final Exception error) {
+    /**
+     * Notifies listener that settings have been updated with the latest remote data.
+     */
+    protected void notifyUpdatedOnUiThread(final Exception error) {
         if (mActivity == null || mListener == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
@@ -274,7 +275,10 @@ public abstract class SiteSettingsInterface {
         });
     }
 
-    protected void saveOnUiThread(final Exception error) {
+    /**
+     * Notifies listener that settings have been saved or an error occurred while saving.
+     */
+    protected void notifySavedOnUiThread(final Exception error) {
         if (mActivity == null || mListener == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
@@ -304,7 +308,7 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Language IDs, used only by WordPress.com, are integer values that map to a language code.
+     * Language IDs, used only by WordPress, are integer values that map to a language code.
      * https://github.com/Automattic/calypso-pre-oss/blob/72c2029b0805a73b749a2b64dd1d8655cae528d0/config/production.json#L86-L227
      *
      * Language codes are unique two-letter identifiers defined by ISO 639-1. Region dialects can
@@ -323,13 +327,44 @@ public abstract class SiteSettingsInterface {
         return "";
     }
 
-    private void generateLanguageMap() {
-        // Generate map of language codes
-        String[] languageIds = mActivity.getResources().getStringArray(R.array.lang_ids);
-        String[] languageCodes = mActivity.getResources().getStringArray(R.array.language_codes);
-        for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
-            mLanguageCodes.put(languageCodes[i], languageIds[i]);
-        }
+    /**
+     * Attempts to load cached settings for the blog then fetches remote settings.
+     */
+    private void initSettings() {
+        loadCachedSettings();
+
+        // Always fetch remote data to get any changes
+        fetchRemoteData();
+        fetchPostFormats();
+    }
+
+    /**
+     * Need to defer loading the cached settings to a thread so it completes after initialization.
+     */
+    private void loadCachedSettings() {
+        mLoadCacheThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getLocalTableBlogId());
+
+                if (localSettings != null && localSettings.moveToFirst() && localSettings.getCount() > 0) {
+                    mSettings.deserializeDatabaseCursor(localSettings);
+                    mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
+                    localSettings.close();
+                    notifyUpdatedOnUiThread(null);
+                } else {
+                    mSettings.isInLocalTable = false;
+                    setAddress(mBlog.getHomeURL());
+                    setUsername(mBlog.getUsername());
+                    setPassword(mBlog.getPassword());
+                    setTitle(mBlog.getBlogName());
+                }
+
+                mLoadCacheThread = null;
+            }
+        });
+
+        mLoadCacheThread.start();
     }
 
     /**
@@ -349,23 +384,26 @@ public abstract class SiteSettingsInterface {
             public void onSuccess(long id, Object result) {
                 if (result != null && result instanceof HashMap) {
                     Map<?, ?> resultMap = (HashMap<?, ?>) result;
+                    Map allFormats;
+                    Object[] supportedFormats;
                     if (resultMap.containsKey("supported")) {
-                        Map allFormats = (Map) resultMap.get("all");
-                        Object[] supportedFormats = (Object[]) resultMap.get("supported");
-                        mRemoteSettings.postFormats = new String[supportedFormats.length];
-
-                        for (int i = 0; i < supportedFormats.length; ++i) {
-                            if (allFormats.containsKey(supportedFormats[i])) {
-                                mRemoteSettings.postFormats[i] = allFormats.get(supportedFormats[i]).toString();
-                            }
-                        }
-
-                        // TODO: compare post formats and categories in isTheSame
-//                        if (!mRemoteSettings.isTheSame(mSettings)) {
-                            mSettings.copyFormatsFrom(mRemoteSettings);
-//                        }
+                        allFormats = (Map) resultMap.get("all");
+                        supportedFormats = (Object[]) resultMap.get("supported");
+                    } else {
+                        allFormats = resultMap;
+                        supportedFormats = allFormats.keySet().toArray();
                     }
-                    updateOnUiThread(null);
+                    mRemoteSettings.postFormats = new HashMap<>();
+
+                    for (int i = 0; i < supportedFormats.length; ++i) {
+                        if (allFormats.containsKey(supportedFormats[i])) {
+                            mRemoteSettings.postFormats.put(supportedFormats[i].toString(), allFormats.get(supportedFormats[i]).toString());
+                        }
+                    }
+
+                    // TODO: compare post formats and categories in isTheSame
+                    mSettings.copyFormatsFrom(mRemoteSettings);
+                    notifyUpdatedOnUiThread(null);
                 }
             }
 
@@ -373,5 +411,17 @@ public abstract class SiteSettingsInterface {
             public void onFailure(long id, Exception error) {
             }
         }, ApiHelper.Methods.GET_POST_FORMATS, params);
+    }
+
+    /**
+     * Creates a map from language codes to WordPress language IDs.
+     */
+    private void generateLanguageMap() {
+        // Generate map of language codes
+        String[] languageIds = mActivity.getResources().getStringArray(R.array.lang_ids);
+        String[] languageCodes = mActivity.getResources().getStringArray(R.array.language_codes);
+        for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
+            mLanguageCodes.put(languageCodes[i], languageIds[i]);
+        }
     }
 }

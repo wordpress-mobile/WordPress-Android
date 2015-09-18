@@ -8,10 +8,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 
+import java.util.Map;
+
 public final class SiteSettingsTable {
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CATEGORIES_TABLE_NAME = "site_categories";
-    public static final String POST_FORMATS_TABLE_NAME = "site_post_formats";
 
     // Settings table column names
     public static final String ID_COLUMN_NAME = "id";
@@ -111,7 +112,7 @@ public final class SiteSettingsTable {
         values.put(DEF_CATEGORY_COLUMN_NAME, settings.defaultCategory);
         values.put(CATEGORIES_COLUMN_NAME, commaSeparatedElements(settings.categories));
         values.put(DEF_POST_FORMAT_COLUMN_NAME, settings.defaultPostFormat);
-//        values.put(POST_FORMATS_COLUMN_NAME, commaSeparatedElements(settings.postFormats));
+        values.put(POST_FORMATS_COLUMN_NAME, serializePostFormats(settings.postFormats));
 
         settings.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
                 SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
@@ -136,14 +137,26 @@ public final class SiteSettingsTable {
         return "WHERE " + variable + "=\"" + value + "\" ";
     }
 
+    private static String serializePostFormats(Map<String, String> formats) {
+        if (formats == null || formats.size() == 0) return "";
+
+        StringBuilder builder = new StringBuilder();
+        for (String key : formats.keySet()) {
+            builder.append(key).append(",").append(formats.get(key)).append(";");
+        }
+        builder.setLength(builder.length() - 1);
+
+        return builder.toString();
+    }
+
     private static String commaSeparatedElements(CategoryModel[] elements) {
         if (elements == null) return "";
 
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < elements.length - 1; ++i) {
-            builder.append(Integer.toString(elements[i].id)).append(",");
+        for (CategoryModel element : elements) {
+            builder.append(Integer.toString(element.id)).append(",");
         }
-        builder.append(Integer.toString(elements[elements.length - 1].id));
+        builder.setLength(builder.length() - 1);
 
         return builder.toString();
     }

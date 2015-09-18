@@ -29,7 +29,7 @@ public class SiteSettingsModel {
     public int defaultCategory;
     public CategoryModel[] categories;
     public String defaultPostFormat;
-    public String[] postFormats;
+    public Map<String, String> postFormats;
 
     public boolean isTheSame(SiteSettingsModel other) {
         return address.equals(other.address) &&
@@ -45,6 +45,16 @@ public class SiteSettingsModel {
     public Map<String, String> serializeParams(boolean dotCom, SiteSettingsModel remote) {
         if (dotCom) return serializeDotComParams(remote);
         else return serializeSelfHostedParams(remote);
+    }
+
+    public boolean isSamePostFormats(String[] keys) {
+        if (keys == null) return postFormats == null;
+
+        for (String key : keys) {
+            if (!postFormats.containsKey(key)) return false;
+        }
+
+        return true;
     }
 
     /**
@@ -113,7 +123,7 @@ public class SiteSettingsModel {
 
     public void copyFormatsFrom(SiteSettingsModel other) {
         if (other.postFormats == null) return;
-        postFormats = other.postFormats.clone();
+        postFormats = new HashMap<>(other.postFormats);
     }
 
     /**
@@ -175,6 +185,12 @@ public class SiteSettingsModel {
             }
         }
         if (!TextUtils.isEmpty(cachedFormats)) {
+            String[] split = cachedFormats.split(";");
+            postFormats = new HashMap<>();
+            for (String format : split) {
+                String[] kvp = format.split(",");
+                postFormats.put(kvp[0], kvp[1]);
+            }
         }
 
         isInLocalTable = true;
@@ -202,10 +218,8 @@ public class SiteSettingsModel {
     }
 
     public String getDefaultFormatForDisplay() {
-        for (String format : postFormats) {
-            if (format.equalsIgnoreCase(defaultPostFormat)) {
-                return format;
-            }
+        if (postFormats.containsKey(defaultPostFormat)) {
+            return postFormats.get(defaultPostFormat);
         }
 
         return "";

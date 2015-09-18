@@ -48,14 +48,14 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Site Settings saved remotely");
-                        saveOnUiThread(null);
+                        notifySavedOnUiThread(null);
                         mRemoteSettings.copyFrom(mSettings);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error POSTing site settings changes: " + error);
-                        saveOnUiThread(error);
+                        notifySavedOnUiThread(error);
                     }
                 }, params);
     }
@@ -79,14 +79,14 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         if (!mRemoteSettings.isTheSame(mSettings)) {
                             mSettings.copyFrom(mRemoteSettings);
                             SiteSettingsTable.saveSettings(mSettings);
-                            updateOnUiThread(null);
+                            notifyUpdatedOnUiThread(null);
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error response to Settings REST request: " + error);
-                        updateOnUiThread(error);
+                        notifyUpdatedOnUiThread(error);
                     }
                 });
     }
@@ -107,7 +107,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         SiteSettingsTable.saveCategories(models);
                         mRemoteSettings.categories = models;
                         mSettings.categories = models;
-                        updateOnUiThread(null);
+                        notifyUpdatedOnUiThread(null);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override

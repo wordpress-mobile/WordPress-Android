@@ -16,13 +16,13 @@ import org.xmlrpc.android.XMLRPCException;
 import java.util.Map;
 
 class SelfHostedSiteSettings extends SiteSettingsInterface {
-    private static final String BLOG_URL_KEY = "blog_url";
-    private static final String BLOG_TITLE_KEY = "blog_title";
-    private static final String BLOG_TAGLINE_KEY = "blog_tagline";
-    private static final String BLOG_CATEGORY_ID_KEY = "categoryId";
-    private static final String BLOG_CATEGORY_PARENT_ID_KEY = "parentId";
-    private static final String BLOG_CATEGORY_DESCRIPTION_KEY = "categoryDescription";
-    private static final String BLOG_CATEGORY_NAME_KEY = "categoryName";
+    public static final String BLOG_URL_KEY = "blog_url";
+    public static final String BLOG_TITLE_KEY = "blog_title";
+    public static final String BLOG_TAGLINE_KEY = "blog_tagline";
+    public static final String BLOG_CATEGORY_ID_KEY = "categoryId";
+    public static final String BLOG_CATEGORY_PARENT_ID_KEY = "parentId";
+    public static final String BLOG_CATEGORY_DESCRIPTION_KEY = "categoryDescription";
+    public static final String BLOG_CATEGORY_NAME_KEY = "categoryName";
 
     SelfHostedSiteSettings(Activity host, Blog blog, SiteSettingsListener listener) {
         super(host, blog, listener);
@@ -40,13 +40,13 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         XMLRPCCallback callback = new XMLRPCCallback() {
             @Override
             public void onSuccess(long id, final Object result) {
-                saveOnUiThread(null);
+                notifySavedOnUiThread(null);
                 mRemoteSettings.copyFrom(mSettings);
             }
 
             @Override
             public void onFailure(long id, final Exception error) {
-                saveOnUiThread(error);
+                notifySavedOnUiThread(error);
             }
         };
         final Object[] callParams = {
@@ -83,19 +83,19 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 if (!mRemoteSettings.isTheSame(mSettings)) {
                     mSettings.copyFrom(mRemoteSettings);
                     SiteSettingsTable.saveSettings(mSettings);
-                    updateOnUiThread(null);
+                    notifyUpdatedOnUiThread(null);
                 }
             } else {
                 // Response is considered an error if we are unable to parse it
                 AppLog.w(AppLog.T.API, "Error parsing Categories XML-RPC response: " + result);
-                updateOnUiThread(new XMLRPCException("Unknown response object"));
+                notifyUpdatedOnUiThread(new XMLRPCException("Unknown response object"));
             }
         }
 
         @Override
         public void onFailure(long id, Exception error) {
             AppLog.w(AppLog.T.API, "Error Categories XML-RPC response: " + error);
-            updateOnUiThread(error);
+            notifyUpdatedOnUiThread(error);
         }
     };
 
@@ -112,19 +112,19 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 if (!mRemoteSettings.isTheSame(mSettings)) {
                     mSettings.copyFrom(mRemoteSettings);
                     SiteSettingsTable.saveSettings(mSettings);
-                    updateOnUiThread(null);
+                    notifyUpdatedOnUiThread(null);
                 }
             } else {
                 // Response is considered an error if we are unable to parse it
                 AppLog.w(AppLog.T.API, "Error parsing Options XML-RPC response: " + result);
-                updateOnUiThread(new XMLRPCException("Unknown response object"));
+                notifyUpdatedOnUiThread(new XMLRPCException("Unknown response object"));
             }
         }
 
         @Override
         public void onFailure(long id, final Exception error) {
             AppLog.w(AppLog.T.API, "Error Options XML-RPC response: " + error);
-            updateOnUiThread(error);
+            notifyUpdatedOnUiThread(error);
         }
     };
 
