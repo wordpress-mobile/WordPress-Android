@@ -30,7 +30,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/theme_grid_item_image">
+                android:layout_below="@+id/theme_grid_item_image"
+                android:layout_marginTop="@dimen/cardview_default_radius">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -42,14 +43,16 @@
                         android:id="@+id/theme_grid_item_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/ReaderTextView.Post.Title"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
                         android:layout_marginLeft="@dimen/theme_browser_cardview_header_margin" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/alert_green"
+                        android:textStyle="bold"
+                        android:textColor="@color/theme_price"
                         android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
 
                 </LinearLayout>
@@ -63,7 +66,6 @@
                         android:id="@+id/divider"
                         android:layout_width="@dimen/theme_browser_separator_thickness"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/cardview_default_radius"
                         android:background="@color/reader_divider_grey" />
 
                     <ImageButton
@@ -73,6 +75,15 @@
                         android:padding="@dimen/margin_large"
                         android:background="@drawable/ic_action_more"
                         android:contentDescription="@string/button_more" />
+                    <ImageView
+                        android:id="@+id/image_more"
+                        android:layout_width="@dimen/theme_browser_more_button_width"
+                        android:layout_height="@dimen/theme_browser_more_button_height"
+                        android:adjustViewBounds="true"
+                        android:layout_gravity="center"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="@dimen/theme_browser_more_button_padding"
+                        android:src="@drawable/ic_action_more_grey" />
 
                 </LinearLayout>
 
