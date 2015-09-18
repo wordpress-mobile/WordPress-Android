@@ -31,7 +31,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -59,6 +58,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
@@ -277,19 +277,12 @@ public class WordPress extends Application {
     private boolean createAndVerifyWpDb() {
         try {
             wpDB = new WordPressDB(this);
-            // verify account data
-            List<Map<String, Object>> accounts = wpDB.getAllBlogs();
-            for (Map<String, Object> account : accounts) {
-                if (account == null || account.get("blogName") == null || account.get("url") == null) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (SQLiteException sqle) {
-            AppLog.e(T.DB, sqle);
-            return false;
-        } catch (RuntimeException re) {
-            AppLog.e(T.DB, re);
+            // verify account data - query will return 1 if any blog names or urls are null
+            int result = SqlUtils.intForQuery(wpDB.getDatabase(),
+                    "SELECT 1 FROM accounts WHERE blogName IS NULL OR url IS NULL LIMIT 1", null);
+            return result != 1;
+        } catch (RuntimeException e) {
+            AppLog.e(T.DB, e);
             return false;
         }
     }
