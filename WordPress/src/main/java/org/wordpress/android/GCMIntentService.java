@@ -25,6 +25,7 @@ import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiv
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.models.AccountHelper;
@@ -82,6 +83,9 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     private void handleDefaultPush(Context context, Bundle extras) {
+        // Ensure Simperium is running so that notes sync
+        SimperiumUtils.configureSimperium(context, AccountHelper.getDefaultAccount().getAccessToken());
+
         long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
         String pushUserId = extras.getString(PUSH_ARG_USER);
         // pushUserId is always set server side, but better to double check it here.
