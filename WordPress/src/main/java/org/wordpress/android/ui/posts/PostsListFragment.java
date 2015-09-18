@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
@@ -468,14 +467,15 @@ public class PostsListFragment extends Fragment
             text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
         }
 
-        Snackbar.make(getView().findViewById(R.id.coordinator), text, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, undoListener)
-                .show();
+        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.coordinator), text, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener);
 
         // wait for the undo snackbar to disappear before actually deleting the post
-        new Handler().postDelayed(new Runnable() {
+        snackbar.setCallback(new Snackbar.Callback() {
             @Override
-            public void run() {
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
+
                 // if the post no longer exists in the list of trashed posts it's because the
                 // user undid the trash, so don't perform the deletion
                 if (!mTrashedPosts.contains(post)) {
@@ -493,6 +493,8 @@ public class PostsListFragment extends Fragment
                     new ApiHelper.DeleteSinglePostTask().execute(apiArgs);
                 }
             }
-        }, Constants.SNACKBAR_LONG_DURATION_MS);
+        });
+
+        snackbar.show();
     }
 }
