@@ -6,14 +6,12 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.BlogPairId;
@@ -267,14 +265,15 @@ public class CommentsActivity extends AppCompatActivity
                 }
             };
 
-            Snackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo, undoListener)
-                    .show();
+            Snackbar snackbar = Snackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, undoListener);
 
             // do the actual moderation once the undo bar has been hidden
-            new Handler().postDelayed(new Runnable() {
+            snackbar.setCallback(new Snackbar.Callback() {
                 @Override
-                public void run() {
+                public void onDismissed(Snackbar snackbar, int event) {
+                    super.onDismissed(snackbar, event);
+
                     // comment will no longer exist in moderating list if action was undone
                     if (!isFinishing()
                             && hasListFragment()
@@ -289,9 +288,7 @@ public class CommentsActivity extends AppCompatActivity
                             if (isFinishing() || !hasListFragment()) {
                                 return;
                             }
-
                             getListFragment().setCommentIsModerating(comment.commentID, false);
-
                             if (!succeeded) {
                                 // show comment again upon error
                                 getListFragment().loadComments();
@@ -303,7 +300,9 @@ public class CommentsActivity extends AppCompatActivity
                         }
                     });
                 }
-            }, Constants.SNACKBAR_LONG_DURATION_MS);
+            });
+
+            snackbar.show();
         }
     }
 

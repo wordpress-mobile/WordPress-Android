@@ -456,10 +456,10 @@ public class ReaderPostTable {
             if (!isFollowed) {
                 if (blogId != 0) {
                     db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
-                            new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWING});
+                            new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWED_SITES});
                 } else {
                     db.delete("tbl_post_tags", "feed_id=? AND tag_name=?",
-                            new String[]{Long.toString(feedId), ReaderTag.TAG_NAME_FOLLOWING});
+                            new String[]{Long.toString(feedId), ReaderTag.TAG_NAME_FOLLOWED_SITES});
                 }
             }
 
@@ -588,7 +588,7 @@ public class ReaderPostTable {
             // longer followed if this is "Blogs I Follow"
             if (tag.isPostsILike()) {
                 sql += " AND tbl_posts.is_liked != 0";
-            } else if (tag.isBlogsIFollow()) {
+            } else if (tag.isFollowedSites()) {
                 sql += " AND tbl_posts.is_followed != 0";
             }
         }
@@ -658,7 +658,7 @@ public class ReaderPostTable {
         if (tag.tagType == ReaderTagType.DEFAULT) {
             if (tag.isPostsILike()) {
                 sql += " AND tbl_posts.is_liked != 0";
-            } else if (tag.isBlogsIFollow()) {
+            } else if (tag.isFollowedSites()) {
                 sql += " AND tbl_posts.is_followed != 0";
             }
         }
