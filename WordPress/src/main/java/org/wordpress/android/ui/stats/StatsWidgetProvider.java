@@ -110,6 +110,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             Intent intent = new Intent(context, StatsActivity.class);
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
             intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsActivity.StatsLaunchedFrom.STATS_WIDGET);
+            intent.putExtra(StatsActivity.ARG_DESIDERED_TIMEFRAME, StatsTimeframe.INSIGHTS);
+
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
