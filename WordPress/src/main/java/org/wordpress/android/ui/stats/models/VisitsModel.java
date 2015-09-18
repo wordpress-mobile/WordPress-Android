@@ -68,6 +68,7 @@ public class VisitsModel implements Serializable {
                 try {
                     JSONArray currentDayData = dataJSON.getJSONArray(i);
                     VisitModel currentVisitModel = new VisitModel();
+                    currentVisitModel.setBlogID(getBlogID());
                     currentVisitModel.setPeriod(currentDayData.getString(periodColumnIndex));
                     currentVisitModel.setViews(currentDayData.getInt(viewsColumnIndex));
                     currentVisitModel.setVisitors(currentDayData.getInt(visitorsColumnIndex));

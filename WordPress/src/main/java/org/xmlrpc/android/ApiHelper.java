@@ -27,6 +27,8 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.networking.WPDelayedHurlStack;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -301,6 +303,13 @@ public class ApiHelper {
 
                 // get theme post formats
                 new GetPostFormatsTask().execute(mBlog);
+
+                //Update Stats widgets if necessary
+                String currentBlogID = String.valueOf(mBlog.getRemoteBlogId());
+                if (StatsWidgetProvider.shouldUpdateWidgetForBlog(WordPress.getContext(), currentBlogID)) {
+                    String currentDate = StatsUtils.getCurrentDateTZ(mBlog.getLocalTableBlogId());
+                    StatsWidgetProvider.enqueueStatsRequestForBlog(WordPress.getContext(), currentBlogID, currentDate);
+                }
             }
 
             // Check if user is an admin

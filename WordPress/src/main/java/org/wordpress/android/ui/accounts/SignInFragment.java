@@ -46,6 +46,7 @@ import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -443,6 +444,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     EnumSet.of(UpdateTask.TAGS));
 
             if (isWPComLogin()) {
+                //Update previous stats widgets
+                StatsWidgetProvider.updateWidgetsOnLogin(getActivity().getApplicationContext());
+
                 // Fire off a synchronous request to get the primary blog
                 WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override
