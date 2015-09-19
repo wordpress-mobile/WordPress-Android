@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_multi">%s Commentaires</string>
+	<string name="reader_short_comment_count_one">1 Commentaire</string>
+	<string name="reader_label_submit_comment">ENVOYER</string>
+	<string name="reader_hint_comment_on_post">Répondre à l\'article...</string>
+	<string name="reader_discover_visit_blog">Visiter %s</string>
+	<string name="reader_discover_attribution_blog">Publié à l\'origine sur %s</string>
+	<string name="reader_discover_attribution_author">Publié à l\'origine par %s</string>
+	<string name="reader_discover_attribution_author_and_blog">Publié à l\'origine par %1$s sur %2$s</string>
+	<string name="reader_short_like_count_multi">%s Likes</string>
+	<string name="reader_short_like_count_one">1 Like</string>
+	<string name="reader_label_follow_count">%,d abonnés</string>
+	<string name="reader_short_like_count_none">Like</string>
+	<string name="reader_label_reading_time_in_minutes">%,d min</string>
+	<string name="reader_label_word_count">%,d mots</string>
+	<string name="reader_menu_tags">Éditer les tags et les blogs</string>
+	<string name="reader_title_post_detail">Article du Reader</string>
+	<string name="local_draft_explainer">Cet article est un brouillon local qui n\'a pas été publié</string>
+	<string name="local_changes_explainer">Cet article contient des modifications locales qui n\'ont pas été publiées</string>
+	<string name="notifications_push_summary">Paramètres de notifications qui apparaissent sur votre appareil.</string>
+	<string name="notifications_email_summary">Paramètres de notifications qui vous sont envoyé par email.</string>
+	<string name="notifications_tab_summary">Paramètres de notifications qui apparaissent dans le tab Notifications.</string>
+	<string name="notifications_disabled">Les notifications de l\'Appli ont été désactivées. Toucher ici pour les activer dans les Paramètres.</string>
+	<string name="notification_types">Types de notifications</string>
+	<string name="error_loading_notifications">Les paramètres de notifications ne peuvent pas être chargés.</string>
+	<string name="replies_to_your_comments">Réponses à vos commentaires</string>
+	<string name="comment_likes">Likes de commentaires</string>
+	<string name="app_notifications">Notifications de l\'Appli</string>
+	<string name="notifications_tab">Tab de notifications</string>
+	<string name="email">Email</string>
+	<string name="notifications_comments_other_blogs">Commentaires sur d\'autres sites</string>
+	<string name="notifications_wpcom_updates">Mis à jour WordPress.com</string>
+	<string name="notifications_other">Autre</string>
+	<string name="notifications_account_emails">Mis à jour de WordPress.com</string>
+	<string name="notifications_account_emails_summary">Nous vous enverrons des emails importants concernant votre compte, mais vous pouvez aussi recevoir des extras très utiles.</string>
+	<string name="your_sites">Vos Sites</string>
+	<string name="notifications_sights_and_sounds">Vues et Sons</string>
+	<string name="notifications_updates_from_wordpress">Mis à jour de WordPress.com</string>
+	<string name="stats_insights_latest_post_trend">Cela fait %1$s que %2$s a été publié. Comment l\'article a évolué jusqu\'à maintenant…</string>
+	<string name="stats_insights_latest_post_summary">Résumé du dernier article</string>
+	<string name="button_revert">Annuler modifications</string>
+	<string name="yesterday">Hier</string>
+	<string name="days_ago">il y a %d jours</string>
 	<string name="connectionbar_no_connection">Pas de connexion</string>
 	<string name="trashed">À la corbeille</string>
 	<string name="page_trashed">Page envoyée à la corbeille</string>
@@ -216,14 +258,10 @@
 	<string name="create_new_blog_wpcom">Créer votre blog WordPress.com</string>
 	<string name="new_blog_wpcom_created">Blog WordPress.com créé!</string>
 	<string name="reader_empty_comments">Pas encore de commentaires</string>
-	<string name="reader_likes_multi_short">%,d personne</string>
 	<string name="reader_empty_posts_in_tag">Pas d\'articles avec ce tag</string>
 	<string name="reader_label_comment_count_multi">%,d commentaires</string>
 	<string name="reader_label_view_original">Voir l\'article original</string>
 	<string name="reader_label_like">Aime</string>
-	<string name="reader_label_liked_by">Aimé par</string>
-	<string name="reader_label_liked_by_you">Vous aimez</string>
-	<string name="reader_likes_one_short">1 personne</string>
 	<string name="reader_label_comment_count_single">Un commentaire</string>
 	<string name="reader_label_comments_closed">Les commentaires sont fermés</string>
 	<string name="reader_label_comments_on">Commentaires sur</string>
@@ -233,7 +271,6 @@
 	<string name="error_refresh_unauthorized_posts">Vous n\'avez pas la permission de voir ou éditer les articles</string>
 	<string name="error_refresh_unauthorized_pages">Vous n\'avez pas la permission de voir ou éditer les pages</string>
 	<string name="error_refresh_unauthorized_comments">Vous n\'avez pas la permission de voir ou éditer les commentaires</string>
-	<string name="overwrite_local_changes">Vous avez fait des changements sur un article qui n\'a par encore été uploadé. Voulez-vous continuer à rafraichir et potentiellement perdre les changements locaux?</string>
 	<string name="older_month">Plus d\'un mois</string>
 	<string name="older_two_days">Plus de 2 jours</string>
 	<string name="older_last_week">Plus d\'une semaine</string>
@@ -271,8 +308,6 @@
 	<string name="preference_send_usage_stats_summary">Envoyer automatiquement des statistiques d\'utilisation pour nous aider à améliorer WordPress pour Android</string>
 	<string name="update_verb">Mettre à jour</string>
 	<string name="schedule_verb">Programmer</string>
-	<string name="reader_title_blog_preview">Prévisualisation du blog</string>
-	<string name="reader_title_tag_preview">Prévisualisation du tag</string>
 	<string name="reader_title_subs">Tags &amp; blogs</string>
 	<string name="reader_page_followed_tags">Tags suivis</string>
 	<string name="reader_page_followed_blogs">Blogs suivis</string>
@@ -284,6 +319,8 @@
 	<string name="reader_toast_err_follow_blog">Impossible de s\'abonner à ce blog</string>
 	<string name="reader_toast_err_unfollow_blog">Impossible de se désabonner de ce blog</string>
 	<string name="reader_empty_recommended_blogs">Pas de blogs recommandés</string>
+	<string name="reader_title_blog_preview">Blog du Reader</string>
+	<string name="reader_title_tag_preview">Tag du Reader</string>
 	<string name="ptr_tip_message">Tip: Tirer vers le bas pour rafraichir</string>
 	<string name="media_empty_list">Pas de media</string>
 	<string name="saving">Sauvegarde...</string>
@@ -505,11 +542,8 @@
 	<string name="reader_timespan_now">actuellement</string>
 	<string name="reader_untitled_post">(Sans Titre)</string>
 	<string name="reader_share_subject">Partagé depuis %s</string>
-	<string name="reader_menu_tags">Tags</string>
 	<string name="reader_btn_share">Partager</string>
 	<string name="reader_btn_follow">Suivre</string>
-	<string name="reader_hint_comment_on_post">Ajouter votre commentaire</string>
-	<string name="reader_hint_comment_on_comment">Répondre au commentaire</string>
 	<string name="reader_label_added_tag">%s Ajouté</string>
 	<string name="reader_label_removed_tag">%s Retiré</string>
 	<string name="reader_toast_err_tag_exists">Vous suivez déjà ce tag</string>
@@ -528,6 +562,7 @@
 	<string name="limit_reached">Limite atteinte. Vous pouvez réessayer dans 1 minute. Si vous pensez que c\'est une erreur, contacter le support.</string>
 	<string name="reader_btn_unfollow">Abonné</string>
 	<string name="media_add_new_media_gallery">Créer une galerie</string>
+	<string name="reader_hint_comment_on_comment">Répondre au commentaire…</string>
 	<string name="themes">Thèmes</string>
 	<string name="media_gallery_image_order_random">Aléatoire</string>
 	<string name="media_gallery_type">Catégorie</string>
@@ -595,15 +630,8 @@
 	<string name="upload">Envoyer</string>
 	<string name="sign_in">Se connecter</string>
 	<string name="notifications">Notifications</string>
-	<string name="types">Types</string>
-	<string name="manage_notifications">Gérer les notifications</string>
-	<string name="enable_notifications">Activer les notifications</string>
-	<string name="options">Options</string>
-	<string name="notifications_turn_off_1hr">Désactiver pour une heure</string>
 	<string name="note_reply_successful">Réponse envoyée</string>
 	<string name="new_notifications">%d nouvelles notifications</string>
-	<string name="notifications_turn_off">Désactiver</string>
-	<string name="notifications_turn_off_8hr">Désactiver pour 8 heures</string>
 	<string name="more_notifications">et %d autres.</string>
 	<string name="loading">Chargement…</string>
 	<string name="post_signature">Signature des articles</string>
@@ -650,6 +678,7 @@
 	<string name="immediately">Immédiatement</string>
 	<string name="quickpress_add_alert_title">Choisir le nom du raccourci</string>
 	<string name="settings">Paramètres</string>
+	<string name="today">Aujourd\'hui</string>
 	<string name="share_url">Partager cette URL</string>
 	<string name="quickpress_window_title">Sélectionner le blog pour le raccourci QuickPress</string>
 	<string name="quickpress_add_error">Le nom du raccourci ne peut pas être vide</string>
@@ -683,11 +712,34 @@
 	<string name="reply">Répondre</string>
 	<string name="yes">Oui</string>
 	<string name="no">Non</string>
+	<string name="notification_settings">Paramètres de notification</string>
 	<string-array name="alignment_array">
 		<item>Aucun</item>
 		<item>Gauche</item>
 		<item>Centre</item>
 		<item>Droite</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>Commentaires sur mon site</item>
+		<item>Likes sur mes commentaires</item>
+		<item>Likes sur mes articles</item>
+		<item>Suivi de site</item>
+		<item>Achievements de site</item>
+		<item>Mentions de mon nom d\'utilisateur</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>Réponses à mes commentaires</item>
+		<item>Likes sur mes commentaires</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>Suggestions</item>
+		<item>Étude</item>
+		<item>Communauté</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>Astuces pour tirer le maximum de WordPress.com.</item>
+		<item>Opportunités de participer aux sondages et études WordPress.com.</item>
+		<item>Informations sur les cours et les événement WordPress.com (en ligne &amp; en personne).</item>
 	</string-array>
 	<string-array name="post_filters_array">
 		<item>Publié</item>
