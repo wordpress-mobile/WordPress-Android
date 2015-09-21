@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_multi">%s kommentarer</string>
+	<string name="reader_short_comment_count_one">1 kommentar</string>
+	<string name="reader_label_submit_comment">SKICKA</string>
+	<string name="reader_hint_comment_on_post">Svara inlägget...</string>
+	<string name="reader_discover_visit_blog">Besök %s</string>
+	<string name="reader_discover_attribution_blog">Först publicerat på %s</string>
+	<string name="reader_discover_attribution_author">Först publicerat av %s</string>
+	<string name="reader_discover_attribution_author_and_blog">Först publicerat av %1$s på %2$s</string>
+	<string name="reader_short_like_count_multi">%s gillar</string>
+	<string name="reader_short_like_count_one">1 gillar</string>
+	<string name="reader_label_follow_count">%,d följare</string>
+	<string name="reader_short_like_count_none">Gilla</string>
+	<string name="reader_label_reading_time_in_minutes">%,d min</string>
+	<string name="reader_menu_tags">Redigera etiketter och bloggar</string>
+	<string name="reader_label_word_count">%,d ord</string>
+	<string name="reader_title_post_detail">Läsare-inlägg</string>
+	<string name="local_draft_explainer">Det här inlägget är ett lokalt utkast som inte har publicerats</string>
+	<string name="local_changes_explainer">Det här inlägget har lokala ändringar som inte har publicerats</string>
+	<string name="notifications_push_summary">Inställningar för notiser som visas på din enhet.</string>
+	<string name="notifications_email_summary">Inställningar för notiser som skickas till den e-post som är knutet till ditt konto.</string>
+	<string name="notifications_tab_summary">Inställningar för notiser som visas under fliken Notiser.</string>
+	<string name="notifications_disabled">App-notiser har inaktiverats. Tryck här för att aktivera dem i Inställningar.</string>
+	<string name="notification_types">Notistyper</string>
+	<string name="error_loading_notifications">Det gick inte att läsa in notisinställningar</string>
+	<string name="replies_to_your_comments">Svar på dina kommentarer</string>
+	<string name="comment_likes">Gillar för kommentarer</string>
+	<string name="app_notifications">App-notiser</string>
+	<string name="notifications_tab">Fliken Notiser</string>
+	<string name="email">E-post</string>
+	<string name="notifications_comments_other_blogs">Kommentarer på andra webbplatser</string>
+	<string name="notifications_other">Andra</string>
+	<string name="notifications_wpcom_updates">WordPress.com-nyheter</string>
+	<string name="notifications_account_emails">Uppdateringar från WordPress.com</string>
+	<string name="notifications_account_emails_summary">Vi skickar dig alltid viktiga e-postmeddelanden om ditt konto, men du kan även få värdefullt extramaterial.</string>
+	<string name="your_sites">Dina webbplatser</string>
+	<string name="notifications_sights_and_sounds">Bilder och ljud</string>
+	<string name="notifications_updates_from_wordpress">Nyheter från WordPress.com</string>
+	<string name="stats_insights_latest_post_trend">Det har gått %1$s sedan %2$s publicerades. Så här har det gått för inlägget hittills…</string>
+	<string name="stats_insights_latest_post_summary">Sammanfattning av senaste inlägg</string>
+	<string name="button_revert">Återställ</string>
+	<string name="days_ago">%d dagar sedan</string>
+	<string name="yesterday">I går</string>
 	<string name="connectionbar_no_connection">Ingen anslutning</string>
 	<string name="stats_no_activity_this_period">Ingen aktivitet denna period</string>
 	<string name="page_deleted">Sidan borttagen</string>
@@ -8,14 +50,14 @@
 	<string name="button_edit">Redigera</string>
 	<string name="button_publish">Publicera</string>
 	<string name="button_delete">Ta bort</string>
-	<string name="page_trashed">Sida flyttad till papperskorgen</string>
-	<string name="post_deleted">Inlägg borttaget</string>
-	<string name="post_trashed">Inlägg flyttat till papperskorgen</string>
 	<string name="trashed">Borttagen</string>
 	<string name="button_back">Tillbaka</string>
 	<string name="button_stats">Statistik</string>
 	<string name="button_trash">Ta bort</string>
 	<string name="button_preview">Förhandsgranska</string>
+	<string name="page_trashed">Sidan placerad i papperskorgen</string>
+	<string name="post_deleted">Inlägg raderat</string>
+	<string name="post_trashed">Inlägget placerat i papperskorgen</string>
 	<string name="my_site_no_sites_view_subtitle">Vill du lägga till en?</string>
 	<string name="my_site_no_sites_view_title">Du har inga WordPress-webbplatser än.</string>
 	<string name="my_site_no_sites_view_drake">Illustration</string>
@@ -216,14 +258,10 @@
 	<string name="create_new_blog_wpcom">Skapa en blogg på WordPress.com</string>
 	<string name="new_blog_wpcom_created">Blogg på WordPress.com skapad!</string>
 	<string name="reader_empty_comments">Inga kommentarer än</string>
-	<string name="reader_likes_multi_short">%,d personer</string>
 	<string name="reader_empty_posts_in_tag">Inga inlägg med denna etikett</string>
 	<string name="reader_label_comment_count_multi">%,d kommentarer</string>
 	<string name="reader_label_view_original">Visa originalartikel</string>
 	<string name="reader_label_like">Gilla</string>
-	<string name="reader_label_liked_by">Gillat av</string>
-	<string name="reader_label_liked_by_you">Gillat av dig</string>
-	<string name="reader_likes_one_short">1 person</string>
 	<string name="reader_label_comment_count_single">En kommentar</string>
 	<string name="reader_label_comments_closed">Kommentarer inaktiverade</string>
 	<string name="reader_label_comments_on">Kommentarer till</string>
@@ -233,7 +271,6 @@
 	<string name="error_refresh_unauthorized_posts">Du saknar behörighet för att visa eller redigera inlägg</string>
 	<string name="error_refresh_unauthorized_pages">Du saknar behörighet för att visa eller redigera sidor</string>
 	<string name="error_refresh_unauthorized_comments">Du saknar behörighet för att visa eller redigera kommentarer</string>
-	<string name="overwrite_local_changes">Du har gjort ändringar för ett inlägg som inte laddats upp än. Vill du fortsätta att uppdatera och skriva över lokala ändringar?</string>
 	<string name="older_month">Äldre än en månad</string>
 	<string name="older_two_days">Äldre än 2 dagar</string>
 	<string name="older_last_week">Äldre än en vecka</string>
@@ -271,8 +308,6 @@
 	<string name="preference_send_usage_stats_summary">Skicka automatiskt användarstatistik för att hjälpa oss förbättra WordPress för Android</string>
 	<string name="update_verb">Uppdatera</string>
 	<string name="schedule_verb">Tidinställ</string>
-	<string name="reader_title_blog_preview">Förhandsgranska blogg</string>
-	<string name="reader_title_tag_preview">Förhandsgranska tagg</string>
 	<string name="reader_title_subs">Taggar &amp; bloggar</string>
 	<string name="reader_page_followed_tags">Följda taggar</string>
 	<string name="reader_page_followed_blogs">Följda bloggar</string>
@@ -284,6 +319,8 @@
 	<string name="reader_toast_err_follow_blog">Kunde inte följa denna blogg</string>
 	<string name="reader_toast_err_unfollow_blog">Kunde inte sluta följa denna blogg</string>
 	<string name="reader_empty_recommended_blogs">Inga rekommenderade bloggar</string>
+	<string name="reader_title_blog_preview">Läsare-blogg</string>
+	<string name="reader_title_tag_preview">Läsare-etikett</string>
 	<string name="saving">Sparar...</string>
 	<string name="media_empty_list">Ingen media</string>
 	<string name="ptr_tip_message">Tips: Dra ned för att uppdatera</string>
@@ -509,8 +546,6 @@
 	<string name="reader_btn_share">Dela</string>
 	<string name="reader_btn_follow">Följ</string>
 	<string name="reader_btn_unfollow">Följer</string>
-	<string name="reader_hint_comment_on_post">Skriv dina tankar</string>
-	<string name="reader_hint_comment_on_comment">Svara kommentar</string>
 	<string name="reader_label_added_tag">Lade till %s</string>
 	<string name="reader_label_removed_tag">Tog bort %s</string>
 	<string name="reader_likes_one">En person gillar detta</string>
@@ -527,7 +562,7 @@
 	<string name="username_invalid">Ogiltigt användarnamn</string>
 	<string name="limit_reached">Gräns nådd. Du kan försöka igen om 1 minut. Att försöka igen innan kommer bara öka tiden du måste vänta innan förbudet är upphävt. Vänligen kontakta support om du tror detta är ett fel.</string>
 	<string name="nux_tutorial_get_started_title">Kom igång!</string>
-	<string name="reader_menu_tags">Etiketter</string>
+	<string name="reader_hint_comment_on_comment">Svara kommentaren...</string>
 	<string name="themes">Teman</string>
 	<string name="all">Alla</string>
 	<string name="images">Bilder</string>
@@ -594,16 +629,9 @@
 	<string name="passcode_turn_on">Slå på PIN-kodlås</string>
 	<string name="upload">Ladda upp</string>
 	<string name="sign_in">Logga in</string>
-	<string name="manage_notifications">Hantera notifikationer</string>
-	<string name="types">Typer</string>
-	<string name="options">Inställningar</string>
-	<string name="notifications_turn_off">Stäng av</string>
-	<string name="notifications_turn_off_1hr">Stäng av i 1 timma</string>
-	<string name="notifications_turn_off_8hr">Stäng av i 8 timmar</string>
 	<string name="note_reply_successful">Svar publicerat</string>
 	<string name="more_notifications">och %d mer.</string>
 	<string name="notifications">Notifieringar</string>
-	<string name="enable_notifications">Aktivera notifieringar</string>
 	<string name="new_notifications">%d nya notifieringar</string>
 	<string name="loading">Laddar...</string>
 	<string name="post_signature">Inläggssignatur</string>
@@ -649,6 +677,7 @@
 	<string name="post_password">Lösenord (valfritt)</string>
 	<string name="immediately">Omedelbart</string>
 	<string name="quickpress_add_alert_title">Ange genvägsnamn</string>
+	<string name="today">Idag</string>
 	<string name="settings">Inställningar</string>
 	<string name="share_url">Dela URL</string>
 	<string name="quickpress_add_error">Genvägsnamn kan inte vara tomt</string>
@@ -683,11 +712,34 @@
 	<string name="error">Fel</string>
 	<string name="preview">Förhandsgranska</string>
 	<string name="on">om</string>
+	<string name="notification_settings">Notisinställningar</string>
 	<string-array name="alignment_array">
 		<item>Ingen</item>
 		<item>Vänster</item>
 		<item>Centrera</item>
 		<item>Höger</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>Kommentarer på min webbplats</item>
+		<item>Gilla-markeringar för mina kommentarer</item>
+		<item>Gilla-markeringar för mina inlägg</item>
+		<item>Webbplatsföljare</item>
+		<item>Webbplats-troféer</item>
+		<item>Omnämnande av användarnamn</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>Svar på mina kommentarer</item>
+		<item>Gillar mina kommentarer</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>Förslag</item>
+		<item>Forskning</item>
+		<item>Community</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>Tips för att få ut så mycket som möjligt av WordPress.com.</item>
+		<item>Möjligheter att delta i WordPress.coms studier och undersökningar.</item>
+		<item>Information om kurser och evenemang på WordPress.com (online och fysiska möten).</item>
 	</string-array>
 	<string-array name="post_filters_array">
 		<item>Publicerad</item>

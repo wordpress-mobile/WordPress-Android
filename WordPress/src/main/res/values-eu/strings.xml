@@ -26,6 +26,7 @@
 	<string name="me_btn_login_logout">Saioa hasi/itxi</string>
 	<string name="me_btn_settings">Kontuaren ezarpenak</string>
 	<string name="site_picker_add_site">Gehitu gunea</string>
+	<string name="site_picker_add_self_hosted">Gehitu zuk ostatatutako gunea</string>
 	<string name="my_site_btn_view_site">Ikusi gunea</string>
 	<string name="site_picker_title">Aukeratu gunea</string>
 	<string name="my_site_btn_switch_site">Aldatu gunez</string>
@@ -63,12 +64,10 @@
 	<string name="sure_to_remove_account">Ezabatu gune hau?</string>
 	<string name="signing_out">Saioa ixten...</string>
 	<string name="reader_title_comments">Iruzkinak</string>
-	<string name="reader_likes_one_short">Pertsona 1</string>
 	<string name="reader_label_comments_closed">Iruzkinak itxita daude</string>
 	<string name="reader_label_comment_count_single">Iruzkin bat</string>
 	<string name="reader_label_comment_count_multi">%,d iruzkin</string>
 	<string name="reader_empty_posts_in_tag">Ez dago bidalketarik etiketa honekin</string>
-	<string name="reader_likes_multi_short">%,d pertsona</string>
 	<string name="new_blog_wpcom_created">WordPress.com bloga sortuta!</string>
 	<string name="reader_empty_followed_blogs_title">Oraindik ez duzu blogik jarraitzen</string>
 	<string name="reader_empty_posts_liked">Ez duzu gustuko bidalketarik</string>
@@ -203,7 +202,6 @@
 	<string name="comment_added">Iruzkina ondo gehitu da</string>
 	<string name="page_not_published">Orrialdearen egoera ez dago argitaratuta</string>
 	<string name="required_field">Beharrezko eremua</string>
-	<string name="site_address">Zure ostatatutako helbidea (URL)</string>
 	<string name="scaled_image_error">Sartu eskalatutako zabalera balio bat</string>
 	<string name="learn_more">Gehiago jakin</string>
 	<string name="media_gallery_type_thumbnail_grid">Miniaturen sareta</string>
@@ -260,6 +258,7 @@
 	<string name="category_slug">Karegoriaren slug-a (hautazkoa)</string>
 	<string name="category_parent">Kategoriaren gurasoa (hautazkoa)</string>
 	<string name="http_credentials">HTTP egiaztagiria (hautazkoa)</string>
+	<string name="site_address">Zuk ostatatutako helbidea (URL)</string>
 	<string name="share_url_page">Partekatu orrialdea</string>
 	<string name="share_link">Partekatu esteka</string>
 	<string name="deleting_page">Orrialdea ezabatzen</string>
@@ -292,9 +291,9 @@
 	<string name="nux_welcome_create_account">Sortu kontua</string>
 	<string name="password_invalid">Pasahitz seguruago bat behar duzu. Ziurtatu gutxienez 7 karaktere erabiltzeaz, letra larri eta xeheak, zenbakiak eta karaktere bereziak nahasteaz.</string>
 	<string name="nux_tap_continue">Jarraitu</string>
-	<string name="nux_add_selfhosted_blog">Gehitu zuk ostatatutako blog bat</string>
 	<string name="signing_in">Saioa hasten...</string>
-	<string name="nux_oops_not_selfhosted_blog">WordPress.com-en saioa hasi</string>
+	<string name="nux_add_selfhosted_blog">Gehitu zuk ostatatutako gunea</string>
+	<string name="nux_oops_not_selfhosted_blog">Hasi saioa WordPress.com-en</string>
 	<string name="reader_label_added_tag">%s gehitua</string>
 	<string name="connecting_wpcom">WordPress.com-era konektatzen</string>
 	<string name="reader_toast_err_tag_invalid">Hau ez da etiketa zuzen bat</string>
@@ -306,7 +305,6 @@
 	<string name="empty_list_default">Zerrenda hau hutsik dago</string>
 	<string name="reader_timespan_now">orain</string>
 	<string name="reader_share_subject">%s-tik partekatua</string>
-	<string name="reader_menu_tags">Etiketak</string>
 	<string name="reader_btn_share">Partekatu</string>
 	<string name="reader_btn_follow">Jarraitu</string>
 	<string name="media_add_popup_title">Gehitu media bildumara</string>
@@ -316,8 +314,6 @@
 	<string name="jetpack_message">Jetpack plugina ezinbestekoa da estatistikentzako. Jetpack instalatu nahi duzu?</string>
 	<string name="reader_untitled_post">(Izenbururik gabe)</string>
 	<string name="reader_btn_unfollow">Jarraitzen</string>
-	<string name="reader_hint_comment_on_post">Gehitu zure iruzkina</string>
-	<string name="reader_hint_comment_on_comment">Erantzun iruzkinari</string>
 	<string name="reader_label_removed_tag">%s ezabatua</string>
 	<string name="reader_likes_one">Pertsona batek hau gustuko du</string>
 	<string name="reader_likes_only_you">Hau gustuko duzu</string>
@@ -326,6 +322,7 @@
 	<string name="create_account_wpcom">Sortu kontu bat WordPress.com-en</string>
 	<string name="username_invalid">Erabiltzaile-izen okerra</string>
 	<string name="limit_reached">Mugara iritsi zara. Minutu bat barru berriz proba dezakezu. Lehenago saiatuz gero debekua luzatzea besterik ez duzu lortuko. Hau errore bat dela baderitzozu, kontaktatu laguntzarekin. </string>
+	<string name="reader_hint_comment_on_comment">Erantzun iruzkinari...</string>
 	<string name="images">Irudiak</string>
 	<string name="custom_date">Data pertsonalizatua</string>
 	<string name="media_gallery_type">Mota</string>
@@ -393,15 +390,8 @@
 	<string name="upload">Igo</string>
 	<string name="new_notifications">%d jakinarazpen berri</string>
 	<string name="notifications">Jakinarazpenak</string>
-	<string name="types">Motak</string>
-	<string name="notifications_turn_off">Itzali</string>
-	<string name="options">Aukerak</string>
 	<string name="more_notifications">eta %d gehiago.</string>
 	<string name="sign_in">Saioa hasi</string>
-	<string name="manage_notifications">Kudeatu jakinarazpenak</string>
-	<string name="enable_notifications">Gaitu jakinarazpenak</string>
-	<string name="notifications_turn_off_1hr">Itzali ordu batez</string>
-	<string name="notifications_turn_off_8hr">Itzali 8 orduz</string>
 	<string name="note_reply_successful">Erantzuna argitaratuta.</string>
 	<string name="loading">Kargatzen...</string>
 	<string name="httppassword">HTTP pasahitza</string>
@@ -447,6 +437,7 @@
 	<string name="immediately">Berehala</string>
 	<string name="post_password">Pasahitza (hautazkoa)</string>
 	<string name="quickpress_add_alert_title">Sarbide zuzenaren izena</string>
+	<string name="today">Gaur</string>
 	<string name="settings">Hobespenak</string>
 	<string name="share_url">Partekatu URLa</string>
 	<string name="quickpress_add_error">Sarbide zuzenaren izena ezin da hutsik egon.</string>
