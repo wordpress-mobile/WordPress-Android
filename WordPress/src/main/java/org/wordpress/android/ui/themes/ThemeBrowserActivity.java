@@ -64,7 +64,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setElevation(0.0f);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.themes);

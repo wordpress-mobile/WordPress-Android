@@ -16,7 +16,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
 public class PostsListActivity extends AppCompatActivity {
@@ -32,9 +31,6 @@ public class PostsListActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ProfilingUtils.split("PostsListActivity.onCreate");
-        ProfilingUtils.dump();
 
         setContentView(R.layout.post_list_activity);
 

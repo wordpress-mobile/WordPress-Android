@@ -47,6 +47,7 @@ import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -78,6 +79,8 @@ public class WPMainActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setStatusBarColor();
+
+        ProfilingUtils.split("WPMainActivity.onCreate");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
@@ -278,6 +281,10 @@ public class WPMainActivity extends Activity
         trackLastVisibleTab(mViewPager.getCurrentItem());
 
         checkConnection();
+
+        ProfilingUtils.split("WPMainActivity.onResume");
+        ProfilingUtils.dump();
+        ProfilingUtils.stop();
     }
 
     private void trackLastVisibleTab(int position) {
