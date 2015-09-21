@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -147,19 +146,6 @@ public class ReaderPostDetailFragment extends Fragment
         // hide footer and scrollView until the post is loaded
         mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
-
-        // set the footer spacer height to match the footer height once it's laid out
-        mLayoutFooter.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                if (isAdded()) {
-                    int footerHeight = mLayoutFooter.getHeight();
-                    View spacer = getView().findViewById(R.id.footer_spacer);
-                    spacer.getLayoutParams().height = footerHeight;
-                }
-            }
-        });
 
         return view;
     }
