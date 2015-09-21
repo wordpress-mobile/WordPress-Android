@@ -43,6 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <!-- spacer so toolbar footer doesn't overlay content -->
                 <View
                     android:id="@+id/footer_spacer"
                     android:layout_width="match_parent"

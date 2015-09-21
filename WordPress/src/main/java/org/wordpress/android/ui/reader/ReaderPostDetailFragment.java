@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -68,7 +69,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mLayoutFooter;
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
-    private View mLikingUsersContainer;
+    private View mLikingUsersDivider;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -135,7 +136,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
         mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
-        mLikingUsersContainer = view.findViewById(R.id.liking_users_container);
+        mLikingUsersDivider = view.findViewById(R.id.layout_liking_users_divider);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -146,6 +147,19 @@ public class ReaderPostDetailFragment extends Fragment
         // hide footer and scrollView until the post is loaded
         mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
+
+        // set the footer spacer height to match the footer height once it's laid out
+        mLayoutFooter.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mScrollView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                if (isAdded()) {
+                    int footerHeight = mLayoutFooter.getHeight();
+                    View spacer = getView().findViewById(R.id.footer_spacer);
+                    spacer.getLayoutParams().height = footerHeight;
+                }
+            }
+        });
 
         return view;
     }
@@ -421,10 +435,11 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 });
             }
-            // if we know refreshLikes() is going to show the liking layout, force it to take up
-            // space right now
-            if (mPost.numLikes > 0 && mLikingUsersContainer.getVisibility() == View.GONE) {
-                mLikingUsersContainer.setVisibility(View.INVISIBLE);
+            // if we know refreshLikes() is going to show the liking users, force liking user
+            // views to take up space right now
+            if (mPost.numLikes > 0 && mLikingUsersView.getVisibility() == View.GONE) {
+                mLikingUsersView.setVisibility(View.INVISIBLE);
+                mLikingUsersDivider.setVisibility(View.INVISIBLE);
             }
         } else {
             countLikes.setVisibility(View.INVISIBLE);
@@ -442,9 +457,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
-            if (mLikingUsersContainer.getVisibility() != View.GONE) {
-                AniUtils.fadeOut(mLikingUsersContainer, AniUtils.Duration.SHORT);
-            }
+            mLikingUsersView.setVisibility(View.GONE);
+            mLikingUsersDivider.setVisibility(View.GONE);
             return;
         }
 
@@ -456,10 +470,8 @@ public class ReaderPostDetailFragment extends Fragment
             }
         });
 
-        if (mLikingUsersContainer.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mLikingUsersContainer, AniUtils.Duration.SHORT);
-        }
-
+        mLikingUsersDivider.setVisibility(View.VISIBLE);
+        mLikingUsersView.setVisibility(View.VISIBLE);
         mLikingUsersView.showLikingUsers(mPost);
     }
 
