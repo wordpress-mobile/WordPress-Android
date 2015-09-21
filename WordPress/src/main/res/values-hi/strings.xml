@@ -259,7 +259,6 @@
 	<string name="nux_add_selfhosted_blog">अपने से होस्ट किया हुआ साईट जोड़े</string>
 	<string name="password_invalid">आपको एक अधिक सुरक्षित पासवर्ड की जरूरत है. सुनिश्चित करें की आप 7 या अधिक वर्णों ,बड़े और छोटे अक्षरों, संख्या या विशेष वर्ण मिश्रण का उपयोग कर रहे है.</string>
 	<string name="reader_untitled_post">(शीर्षक रहित)</string>
-	<string name="reader_hint_comment_on_post">अपनी टिप्पणी जोड़ें</string>
 	<string name="reader_label_added_tag">जोड़ा गया %s</string>
 	<string name="reader_toast_err_comment_failed">आपकी टिप्पणी पोस्ट नहीं कर सके</string>
 	<string name="media_add_new_media_gallery">गैलरी बनाएं</string>
@@ -268,12 +267,10 @@
 	<string name="reader_timespan_now">अब</string>
 	<string name="reader_likes_one">एक व्यक्ति ने पसंद किया</string>
 	<string name="reader_btn_share">साझा करे</string>
-	<string name="reader_menu_tags">टैग्स</string>
 	<string name="reader_likes_only_you">आपने इसे पसंद किया</string>
 	<string name="reader_btn_follow">अनुसरण करे</string>
 	<string name="reader_btn_unfollow">अनुसरण कर रहे</string>
 	<string name="reader_label_removed_tag">हटाये गए %s</string>
-	<string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे</string>
 	<string name="reader_toast_err_url_intent">खोलने में असमर्थ %s</string>
 	<string name="reader_toast_err_share_intent">साझा करने में असमर्थ</string>
 	<string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>
@@ -287,6 +284,7 @@
 	<string name="connecting_wpcom">WordPress.com से कनेक्ट हो रहा</string>
 	<string name="jetpack_message">Jetpack प्लगइन आँकड़ों के लिए आवश्यक है. आप Jetpack इनस्टॉल करना चाहते हैं?</string>
 	<string name="limit_reached">सीमा पहुँच गयी. आप 1 मिनट में फिर से कोशिश कर सकते हैं. उसके पहले कोशिश करने पर आपके प्रतिबंध हटाने के इन्तजार समय में वृद्धि होगी. आपको लगता है यह त्रुटी है तो, सहायता से संपर्क करे.</string>
+	<string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे...</string>
 	<string name="all">सभी</string>
 	<string name="stats_view_comments">टिप्पणियां</string>
 	<string name="stats_totals_comments">टिप्पणियां</string>
@@ -352,17 +350,10 @@
 	<string name="media_gallery_type_tiled">टाइल किया हुआ</string>
 	<string name="upload">अपलोड</string>
 	<string name="notifications">सूचनाएं</string>
-	<string name="options">विकल्प</string>
-	<string name="enable_notifications">सूचनाएं सक्रिय करे </string>
 	<string name="note_reply_successful">जवाब प्रकाशित हो गया</string>
 	<string name="new_notifications">%d नयी सूचनाएं</string>
 	<string name="more_notifications">और %d और भी.</string>
-	<string name="notifications_turn_off">बंद करें</string>
-	<string name="notifications_turn_off_1hr">1 घन्टे के लिए बंद करें</string>
-	<string name="notifications_turn_off_8hr">8 घंटो के लिए बंद करें</string>
-	<string name="types">प्रकार</string>
 	<string name="sign_in">साइन इन</string>
-	<string name="manage_notifications">सूचनाएं का प्रबंधन</string>
 	<string name="loading">लोड किया जा रहा...</string>
 	<string name="httppassword">एचटीटीपी कूटशब्द</string>
 	<string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
