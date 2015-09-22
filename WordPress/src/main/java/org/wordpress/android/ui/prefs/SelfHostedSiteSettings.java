@@ -17,13 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 class SelfHostedSiteSettings extends SiteSettingsInterface {
-    public static final String BLOG_URL_KEY = "blog_url";
-    public static final String BLOG_TITLE_KEY = "blog_title";
-    public static final String BLOG_TAGLINE_KEY = "blog_tagline";
-    public static final String BLOG_CATEGORY_ID_KEY = "categoryId";
-    public static final String BLOG_CATEGORY_PARENT_ID_KEY = "parentId";
-    public static final String BLOG_CATEGORY_DESCRIPTION_KEY = "categoryDescription";
-    public static final String BLOG_CATEGORY_NAME_KEY = "categoryName";
+    // XML-RPC wp.getOptions keys
+    private static final String BLOG_URL_KEY = "blog_url";
+    private static final String BLOG_TITLE_KEY = "blog_title";
+    private static final String BLOG_TAGLINE_KEY = "blog_tagline";
+    private static final String BLOG_CATEGORY_ID_KEY = "categoryId";
+    private static final String BLOG_CATEGORY_PARENT_ID_KEY = "parentId";
+    private static final String BLOG_CATEGORY_DESCRIPTION_KEY = "categoryDescription";
+    private static final String BLOG_CATEGORY_NAME_KEY = "categoryName";
 
     SelfHostedSiteSettings(Activity host, Blog blog, SiteSettingsListener listener) {
         super(host, blog, listener);

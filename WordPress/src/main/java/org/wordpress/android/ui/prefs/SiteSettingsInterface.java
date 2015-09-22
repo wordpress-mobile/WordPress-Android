@@ -209,7 +209,6 @@ public abstract class SiteSettingsInterface {
 
     public void setLocation(boolean location) {
         mSettings.location = location;
-        siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, location).apply();
     }
 
     public void setDefaultCategory(int category) {
@@ -355,6 +354,7 @@ public abstract class SiteSettingsInterface {
                     Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
                     mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
                     mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
+                    mRemoteSettings.location = mSettings.location;
                     localSettings.close();
                     notifyUpdatedOnUiThread(null);
                 } else {
@@ -400,9 +400,9 @@ public abstract class SiteSettingsInterface {
                     }
                     mRemoteSettings.postFormats = new HashMap<>();
 
-                    for (int i = 0; i < supportedFormats.length; ++i) {
-                        if (allFormats.containsKey(supportedFormats[i])) {
-                            mRemoteSettings.postFormats.put(supportedFormats[i].toString(), allFormats.get(supportedFormats[i]).toString());
+                    for (Object supportedFormat : supportedFormats) {
+                        if (allFormats.containsKey(supportedFormat)) {
+                            mRemoteSettings.postFormats.put(supportedFormat.toString(), allFormats.get(supportedFormat).toString());
                         }
                     }
 

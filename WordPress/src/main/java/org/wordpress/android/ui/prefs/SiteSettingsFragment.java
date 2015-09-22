@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -176,17 +175,17 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mLocationPreference) {
             mSiteSettings.setLocation((Boolean) newValue);
-            SharedPreferences prefs = siteSettingsPreferences();
-            prefs.edit().putBoolean(SiteSettingsInterface.LOCATION_PREF_KEY, mSiteSettings.getLocation()).apply();
             return true;
         } else if (preference == mCategoryPreference) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             mCategoryPreference.setSummary(mCategoryPreference.getEntry());
             mCategoryPreference.refreshAdapter();
+            return true;
         } else if (preference == mFormatPreference) {
             mSiteSettings.setDefaultFormat(newValue.toString());
             mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
             mFormatPreference.refreshAdapter();
+            return true;
         } else if (preference == mRelatedPostsPreference) {
             // TODO
         }
@@ -475,10 +474,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (parent != null) {
             parent.removePreference(findPreference(getString(preference)));
         }
-    }
-
-    private SharedPreferences siteSettingsPreferences() {
-        return getActivity().getSharedPreferences(SiteSettingsInterface.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
     }
 
     private String localeInput(String languageCode) {

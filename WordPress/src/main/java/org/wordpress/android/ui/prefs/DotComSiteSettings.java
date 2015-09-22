@@ -18,23 +18,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 class DotComSiteSettings extends SiteSettingsInterface {
-    // Settings WP.com REST response keys
-    public static final String BLOG_TITLE_KEY = "blogname";
-    public static final String BLOG_DESC_KEY = "blogdescription";
-    public static final String BLOG_LANG_ID_KEY = "lang_id";
-    public static final String BLOG_PRIVACY_KEY = "blog_public";
-    public static final String BLOG_DEF_CATEGORY_KEY = "default_category";
-    public static final String BLOG_DEF_POST_FORMAT_KEY = "default_post_format";
+    // WP.com REST keys used in response to a settings GET request
+    public static final String GET_TITLE_KEY = "name";
+    public static final String GET_DESC_KEY = "description";
+    public static final String GET_LANGUAGE_ID_KEY = "lang_id";
+    public static final String GET_PRIVACY_KEY = "blog_public";
+    public static final String GET_URL_KEY = "URL";
+    public static final String GET_DEF_CATEGORY_KEY = "default_category";
+    public static final String GET_DEF_POST_FORMAT_KEY = "default_post_format";
 
-    // Categories WP.com REST response keys
-    public static final String ID_KEY = "ID";
-    public static final String NAME_KEY = "name";
-    public static final String SLUG_KEY = "slug";
-    public static final String DESC_KEY = "description";
-    public static final String PARENT_ID_KEY = "parent";
-    public static final String POST_COUNT_KEY = "post_count";
-    public static final String NUM_POSTS_KEY = "found";
-    public static final String CATEGORIES_KEY = "categories";
+    // WP.com REST keys used to POST updates to site settings
+    private static final String SET_TITLE_KEY = "blogname";
+    private static final String SET_DESC_KEY = "blogdescription";
+    private static final String SET_LANG_ID_KEY = GET_LANGUAGE_ID_KEY;
+    private static final String SET_PRIVACY_KEY = GET_PRIVACY_KEY;
+    private static final String SET_DEF_CATEGORY_KEY = GET_DEF_CATEGORY_KEY;
+    private static final String SET_DEF_POST_FORMAT_KEY = GET_DEF_POST_FORMAT_KEY;
+
+    // WP.com REST keys used in response to a categories GET request
+    private static final String ID_KEY = "ID";
+    private static final String NAME_KEY = "name";
+    private static final String SLUG_KEY = "slug";
+    private static final String DESC_KEY = "description";
+    private static final String PARENT_ID_KEY = "parent";
+    private static final String POST_COUNT_KEY = "post_count";
+    private static final String NUM_POSTS_KEY = "found";
+    private static final String CATEGORIES_KEY = "categories";
 
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
@@ -47,6 +56,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public void saveSettings() {
         // Save current settings and attempt to sync remotely
         SiteSettingsTable.saveSettings(mSettings);
+        siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, mSettings.location);
 
         final Map<String, String> params = serializeDotComParams();
         if (params == null || params.isEmpty()) return;
@@ -81,9 +91,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Received response to Settings REST request.");
 
                         mRemoteSettings.localTableId = mBlog.getLocalTableBlogId();
-                        mRemoteSettings.deserializeDotComRestResponse(mBlog, response);
-                        mRemoteSettings.language = languageIdToLanguageCode(
-                                Integer.toString(mRemoteSettings.languageId));
+                        deserializeDotComRestResponse(mBlog, response);
                         if (!mRemoteSettings.isTheSame(mSettings)) {
                             mSettings.copyFrom(mRemoteSettings);
                             SiteSettingsTable.saveSettings(mSettings);
@@ -100,6 +108,25 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     /**
+     * Sets values from a .com REST response object.
+     */
+    public void deserializeDotComRestResponse(Blog blog, JSONObject response) {
+        if (blog == null || response == null) return;
+        JSONObject settingsObject = response.optJSONObject("settings");
+
+        mRemoteSettings.username = blog.getUsername();
+        mRemoteSettings.password = blog.getPassword();
+        mRemoteSettings.address = response.optString(GET_URL_KEY, "");
+        mRemoteSettings.title = response.optString(GET_TITLE_KEY, "");
+        mRemoteSettings.tagline = response.optString(GET_DESC_KEY, "");
+        mRemoteSettings.languageId = settingsObject.optInt(GET_LANGUAGE_ID_KEY, -1);
+        mRemoteSettings.privacy = settingsObject.optInt(GET_PRIVACY_KEY, -2);
+        mRemoteSettings.defaultCategory = settingsObject.optInt(GET_DEF_CATEGORY_KEY, 0);
+        mRemoteSettings.defaultPostFormat = settingsObject.optString(GET_DEF_POST_FORMAT_KEY, "0");
+        mRemoteSettings.language = languageIdToLanguageCode(Integer.toString(mRemoteSettings.languageId));
+    }
+
+    /**
      * Helper method to create the parameters for the site settings POST request
      *
      * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
@@ -109,22 +136,22 @@ class DotComSiteSettings extends SiteSettingsInterface {
         Map<String, String> params = new HashMap<>();
 
         if (mSettings.title!= null && !mSettings.title.equals(mRemoteSettings.title)) {
-            params.put(BLOG_TITLE_KEY, mSettings.title);
+            params.put(SET_TITLE_KEY, mSettings.title);
         }
         if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
-            params.put(BLOG_DESC_KEY, mSettings.tagline);
+            params.put(SET_DESC_KEY, mSettings.tagline);
         }
         if (mSettings.languageId != mRemoteSettings.languageId) {
-            params.put(BLOG_LANG_ID_KEY, String.valueOf((mSettings.languageId)));
+            params.put(SET_LANG_ID_KEY, String.valueOf((mSettings.languageId)));
         }
         if (mSettings.privacy != mRemoteSettings.privacy) {
-            params.put(BLOG_PRIVACY_KEY, String.valueOf((mSettings.privacy)));
+            params.put(SET_PRIVACY_KEY, String.valueOf((mSettings.privacy)));
         }
         if (mSettings.defaultCategory != mRemoteSettings.defaultCategory) {
-            params.put(BLOG_DEF_CATEGORY_KEY, String.valueOf(mSettings.defaultCategory));
+            params.put(SET_DEF_CATEGORY_KEY, String.valueOf(mSettings.defaultCategory));
         }
         if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat.equals(mRemoteSettings.defaultPostFormat)) {
-            params.put(BLOG_DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
+            params.put(SET_DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
         }
 
         return params;

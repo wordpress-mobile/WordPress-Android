@@ -4,9 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import org.json.JSONObject;
-import org.wordpress.android.networking.RestClientUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,24 +94,6 @@ public class SiteSettingsModel {
     }
 
     /**
-     * Sets values from a .com REST response object.
-     */
-    public void deserializeDotComRestResponse(Blog blog, JSONObject response) {
-        if (blog == null || response == null) return;
-        JSONObject settingsObject = response.optJSONObject("settings");
-
-        username = blog.getUsername();
-        password = blog.getPassword();
-        address = response.optString(RestClientUtils.SITE_URL_KEY, "");
-        title = response.optString(RestClientUtils.SITE_TITLE_KEY, "");
-        tagline = response.optString(RestClientUtils.SITE_DESC_KEY, "");
-        languageId = settingsObject.optInt(RestClientUtils.SITE_LANGUAGE_ID_KEY, -1);
-        privacy = settingsObject.optInt(RestClientUtils.SITE_PRIVACY_KEY, -2);
-        defaultCategory = settingsObject.optInt(RestClientUtils.SITE_DEF_CATEGORY_KEY, 0);
-        defaultPostFormat = settingsObject.optString(RestClientUtils.SITE_DEF_POST_FORMAT_KEY, "0");
-    }
-
-    /**
      * Sets values from a local database {@link Cursor}.
      */
     public void deserializeOptionsDatabaseCursor(Cursor cursor, Map<Integer, CategoryModel> models) {
@@ -130,6 +109,9 @@ public class SiteSettingsModel {
         privacy = cursor.getInt(cursor.getColumnIndex(PRIVACY_COLUMN_NAME));
         defaultCategory = cursor.getInt(cursor.getColumnIndex(DEF_CATEGORY_COLUMN_NAME));
         defaultPostFormat = cursor.getString(cursor.getColumnIndex(DEF_POST_FORMAT_COLUMN_NAME));
+
+        String cachedLocation = cursor.getString(cursor.getColumnIndex(LOCATION_COLUMN_NAME));
+        location = cachedLocation != null && !cachedLocation.equals(String.valueOf(0));
 
         String cachedCategories = cursor.getString(cursor.getColumnIndex(CATEGORIES_COLUMN_NAME));
         String cachedFormats = cursor.getString(cursor.getColumnIndex(POST_FORMATS_COLUMN_NAME));
@@ -166,6 +148,7 @@ public class SiteSettingsModel {
         values.put(TAGLINE_COLUMN_NAME, tagline);
         values.put(PRIVACY_COLUMN_NAME, privacy);
         values.put(LANGUAGE_COLUMN_NAME, languageId);
+        values.put(LOCATION_COLUMN_NAME, location);
         values.put(DEF_CATEGORY_COLUMN_NAME, defaultCategory);
         values.put(CATEGORIES_COLUMN_NAME, commaSeparatedElements(categories));
         values.put(DEF_POST_FORMAT_COLUMN_NAME, defaultPostFormat);
