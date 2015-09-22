@@ -406,7 +406,6 @@ public abstract class SiteSettingsInterface {
                         }
                     }
 
-                    // TODO: compare post formats and categories in isTheSame
                     mSettings.copyFormatsFrom(mRemoteSettings);
                     notifyUpdatedOnUiThread(null);
                 }
