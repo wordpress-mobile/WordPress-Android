@@ -87,14 +87,10 @@
 	<string name="new_blog_wpcom_created">WordPress.com блог создаден!</string>
 	<string name="reader_empty_comments">Нема коментари сеуште</string>
 	<string name="agree_terms_of_service">Со креирање на сметка вие се согласувате на фасцинирачките %1$sУслови за користење%2$s</string>
-	<string name="reader_likes_multi_short">%,d луѓе</string>
 	<string name="reader_label_comment_count_multi">%,d коментари</string>
 	<string name="reader_label_view_original">Види ја оригиналната статија</string>
 	<string name="reader_empty_posts_in_tag">Нема постови со оваа ознака</string>
 	<string name="reader_label_like">Сака</string>
-	<string name="reader_label_liked_by">Допаднато од</string>
-	<string name="reader_label_liked_by_you">Ти се допаѓа</string>
-	<string name="reader_likes_one_short">едно лице</string>
 	<string name="reader_label_comment_count_single">Еден коментар</string>
 	<string name="reader_label_comments_closed">Коментари затворени</string>
 	<string name="reader_label_comments_on">Коментари на</string>
@@ -104,7 +100,6 @@
 	<string name="error_refresh_unauthorized_posts">Немате дозвола за гледање или уредување на написи</string>
 	<string name="error_publish_empty_post">Неможе да се објави празен напис</string>
 	<string name="reader_title_photo_viewer">%1$d of %2$d</string>
-	<string name="overwrite_local_changes">Направивте измени на напис кој сеуште не е качен. Продолжи со освежување и презапиши ги локалните промени?</string>
 	<string name="older_month">Постари од месец</string>
 	<string name="older_two_days">Постари од 2 дена</string>
 	<string name="older_last_week">Постари од седмица</string>
@@ -142,8 +137,6 @@
 	<string name="preference_send_usage_stats_summary">Автоматски испраќај статистика од употребата да ни помогнеш да го подобриме WordPress за Андроид</string>
 	<string name="update_verb">Ажурирај</string>
 	<string name="schedule_verb">Закажи</string>
-	<string name="reader_title_blog_preview">Прегледај го блогот</string>
-	<string name="reader_title_tag_preview">Прегледај ја ознаката</string>
 	<string name="reader_title_subs">Ознаки и Блогови</string>
 	<string name="reader_page_followed_tags">Проследени ознаки</string>
 	<string name="reader_page_followed_blogs">Проследени блогови</string>
@@ -366,7 +359,6 @@
 	<string name="password_invalid">Потребна ви е посигурна лозинка. Употребете 7 или повеќе карактери помешани со големи и мали букви, бројки и специјални карактери.</string>
 	<string name="nux_add_selfhosted_blog">Додади автономна страница</string>
 	<string name="reader_label_removed_tag">Одстранети %s</string>
-	<string name="reader_menu_tags">Етикети</string>
 	<string name="media_add_popup_title">Додади во медиа библиотеката</string>
 	<string name="media_add_new_media_gallery">Креирај галерија</string>
 	<string name="empty_list_default">Оваа листа е празна</string>
@@ -391,8 +383,6 @@
 	<string name="limit_reached">Ограничувањето е достигнато. Може да се обидете повторно за 1 минута. Доколку се обидете повторно пред тоа време, ќе го зголемите времето за чекање пред да биде отстранета забраната. Доколку мислите дека ова е грешка, контактирајте ја поддршката.</string>
 	<string name="nux_tutorial_get_started_title">Започнете!</string>
 	<string name="reader_btn_unfollow">Следење</string>
-	<string name="reader_hint_comment_on_post">Додади коментар</string>
-	<string name="reader_hint_comment_on_comment">Одговори на коментар</string>
 	<string name="reader_label_added_tag">Додадено %s</string>
 	<string name="reader_likes_one">На едно лице му се допаѓа ова</string>
 	<string name="reader_likes_only_you">На тебе ти се допаѓа ова</string>
@@ -460,14 +450,7 @@
 	<string name="media_add_popup_capture_video">Снимање</string>
 	<string name="unattached">Неприкачени</string>
 	<string name="upload">Качување</string>
-	<string name="options">Опции</string>
 	<string name="notifications">Известувања</string>
-	<string name="manage_notifications">Управувај со известувања</string>
-	<string name="enable_notifications">Овозможи известувања</string>
-	<string name="types">Типови</string>
-	<string name="notifications_turn_off">Исклучи</string>
-	<string name="notifications_turn_off_1hr">Исклучи за 1 час</string>
-	<string name="notifications_turn_off_8hr">Исклучи за 8 часа</string>
 	<string name="new_notifications">%d нови известувања</string>
 	<string name="more_notifications">и уште %d .</string>
 	<string name="sign_in">Најави се</string>
@@ -516,6 +499,7 @@
 	<string name="post_password">Лозинка (опционално)</string>
 	<string name="immediately">Веднаш</string>
 	<string name="quickpress_add_alert_title">Постави име на кратенка</string>
+	<string name="today">Денес</string>
 	<string name="settings">Поставувања</string>
 	<string name="share_url">URL за споделување</string>
 	<string name="quickpress_add_error">Името на кратенката не смее да биде празно</string>

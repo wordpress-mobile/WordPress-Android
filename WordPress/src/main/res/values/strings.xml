@@ -940,8 +940,8 @@
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_page_followed_blogs">Followed blogs</string>
-    <string name="reader_page_recommended_blogs">Blogs you may like</string>
+    <string name="reader_page_followed_blogs">Followed sites</string>
+    <string name="reader_page_recommended_blogs">Sites you may like</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
@@ -961,7 +961,7 @@
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
-    <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
+    <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
@@ -1026,7 +1026,7 @@
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
-    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
+    <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
     <string name="reader_empty_comments">No comments yet</string>

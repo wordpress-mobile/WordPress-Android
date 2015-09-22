@@ -314,10 +314,10 @@ public class ReaderPostListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
-        // refresh posts if user is viewing "Blogs I Follow"
+        // refresh posts if user is viewing "Followed Sites"
         if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
                 && hasCurrentTag()
-                && getCurrentTag().isBlogsIFollow()) {
+                && getCurrentTag().isFollowedSites()) {
             refreshPosts();
         }
     }
@@ -530,7 +530,7 @@ public class ReaderPostListFragment extends Fragment
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             titleResId = R.string.reader_empty_posts_in_blog;
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
-            if (getCurrentTag().isBlogsIFollow()) {
+            if (getCurrentTag().isFollowedSites()) {
                 titleResId = R.string.reader_empty_followed_blogs_title;
                 descriptionResId = R.string.reader_empty_followed_blogs_description;
             } else if (getCurrentTag().isPostsILike()) {

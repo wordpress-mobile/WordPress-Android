@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.text.Layout;
@@ -33,7 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -469,15 +467,15 @@ public class NotificationsUtils {
         };
 
         mSnackbarDidUndo = false;
-        Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, undoListener)
-                .show();
+        Snackbar snackbar = Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener);
 
         // Deleted notifications in Simperium never come back, so we won't
         // make the request until the undo bar fades away
-        new Handler().postDelayed(new Runnable() {
+        snackbar.setCallback(new Snackbar.Callback() {
             @Override
-            public void run() {
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
                 if (mSnackbarDidUndo) {
                     return;
                 }
@@ -492,7 +490,9 @@ public class NotificationsUtils {
                             }
                         });
             }
-        }, Constants.SNACKBAR_LONG_DURATION_MS);
+        });
+
+        snackbar.show();
     }
 
     /**

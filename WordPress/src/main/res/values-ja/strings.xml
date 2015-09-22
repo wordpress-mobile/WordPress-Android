@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_multi">%s件のコメント</string>
+	<string name="reader_short_comment_count_one">1件のコメント</string>
+	<string name="reader_label_submit_comment">送信</string>
+	<string name="reader_hint_comment_on_post">投稿に返信…</string>
+	<string name="reader_discover_visit_blog">%s を表示</string>
+	<string name="reader_discover_attribution_blog">%s から引用</string>
+	<string name="reader_discover_attribution_author">元の投稿者: %s</string>
+	<string name="reader_discover_attribution_author_and_blog">元の投稿者: %1$s サイト: %2$s</string>
+	<string name="reader_short_like_count_multi">%s個の「いいね」</string>
+	<string name="reader_short_like_count_one">1個の「いいね」</string>
+	<string name="reader_label_follow_count">%,d人のフォロワー</string>
+	<string name="reader_short_like_count_none">いいね</string>
+	<string name="reader_label_reading_time_in_minutes">%,d分</string>
+	<string name="reader_menu_tags">タグとブログの編集</string>
+	<string name="reader_label_word_count">%,d語</string>
+	<string name="reader_title_post_detail">Reader 投稿</string>
+	<string name="local_draft_explainer">この投稿は公開されていないローカルの下書きです</string>
+	<string name="local_changes_explainer">この投稿には公開されていないローカルの変更があります</string>
+	<string name="notifications_push_summary">デバイスに表示される通知の設定。</string>
+	<string name="notifications_email_summary">アカウントに結び付けられているメールに送信される通知の設定。</string>
+	<string name="notifications_tab_summary">「通知」タブに表示される通知の設定。</string>
+	<string name="notifications_disabled">アプリ通知が無効化されています。ここをタップして「設定」で有効化します。</string>
+	<string name="notification_types">通知の種類</string>
+	<string name="error_loading_notifications">通知設定を読み込めませんでした</string>
+	<string name="replies_to_your_comments">コメントへの返信</string>
+	<string name="comment_likes">コメントへの「いいね」</string>
+	<string name="app_notifications">アプリ通知</string>
+	<string name="notifications_tab">「通知」タブ</string>
+	<string name="email">メール</string>
+	<string name="notifications_comments_other_blogs">他のサイトのコメント</string>
+	<string name="notifications_wpcom_updates">WordPress.com のニュース</string>
+	<string name="notifications_other">その他</string>
+	<string name="notifications_account_emails">WordPress.com からのニュース</string>
+	<string name="notifications_account_emails_summary">アカウントに関する重要なお知らせは常にメールでお送りしますが、役に立つ追加情報を受け取ることもできます。</string>
+	<string name="your_sites">あなたのサイト</string>
+	<string name="notifications_sights_and_sounds">視覚効果と音声</string>
+	<string name="notifications_updates_from_wordpress">WordPress.com からのニュース</string>
+	<string name="stats_insights_latest_post_trend">「%2$s」が公開されてから%1$sが経過しました。過去の投稿のパフォーマンスを次に示します…</string>
+	<string name="stats_insights_latest_post_summary">最新の投稿概要</string>
+	<string name="button_revert">戻す</string>
+	<string name="days_ago">%d日前</string>
+	<string name="yesterday">昨日</string>
 	<string name="connectionbar_no_connection">接続できません</string>
 	<string name="page_trashed">ページをゴミ箱へ移動しました</string>
 	<string name="post_deleted">投稿を削除しました</string>
@@ -219,8 +261,6 @@
 	<string name="reader_empty_posts_in_tag">このタグを使った投稿はありません</string>
 	<string name="reader_label_view_original">元の記事を表示</string>
 	<string name="reader_label_like">いいね</string>
-	<string name="reader_label_liked_by">いいね:</string>
-	<string name="reader_label_liked_by_you">いいねをつけました</string>
 	<string name="reader_label_comments_closed">コメントは停止中です。</string>
 	<string name="reader_label_comments_on">次の投稿へのコメント:</string>
 	<string name="reader_title_comments">コメント</string>
@@ -242,12 +282,9 @@
 	<string name="media_empty_list_custom_date">この期間のメディアはありません。</string>
 	<string name="posting_post">"%s" を投稿</string>
 	<string name="signing_out">ログアウト中…</string>
-	<string name="reader_likes_multi_short">%,d人</string>
 	<string name="reader_label_comment_count_multi">コメント%,d件</string>
-	<string name="reader_likes_one_short">1人</string>
 	<string name="reader_label_comment_count_single">1件のコメント</string>
 	<string name="older_month">1ヶ月以上前</string>
-	<string name="overwrite_local_changes">まだアップロードしていない投稿に変更を加えました。更新処理を続けて、ローカルの変更を上書きしますか ?</string>
 	<string name="older_two_days">2日以上前</string>
 	<string name="older_last_week">1週間以上前</string>
 	<string name="reader_toast_blog_blocked">このブログからの投稿は今後表示されません</string>
@@ -274,7 +311,6 @@
 	<string name="reader_label_tag_preview">%s タグの付いた投稿</string>
 	<string name="reader_label_followed_blog">ブログをフォローしました</string>
 	<string name="reader_toast_err_already_follow_blog">このブログをすでにフォローしています</string>
-	<string name="reader_title_blog_preview">ブログをプレビュー</string>
 	<string name="reader_toast_err_unfollow_blog">このブログをフォローできませんでした</string>
 	<string name="reader_toast_err_get_blog_info">このブログを表示できません</string>
 	<string name="reader_page_followed_blogs">フォロー中のブログ</string>
@@ -283,7 +319,8 @@
 	<string name="reader_toast_err_follow_blog">このブログをフォローできません</string>
 	<string name="reader_page_followed_tags">フォロー中のタグ</string>
 	<string name="reader_empty_recommended_blogs">おすすめブログはありません</string>
-	<string name="reader_title_tag_preview">タグをプレビュー</string>
+	<string name="reader_title_blog_preview">Reader ブログ</string>
+	<string name="reader_title_tag_preview">Reader タグ</string>
 	<string name="saving">保存中…</string>
 	<string name="media_empty_list">メディアなし</string>
 	<string name="ptr_tip_message">ヒント: 再読み込みするにはプルダウン</string>
@@ -503,17 +540,14 @@
 	<string name="empty_list_default">リストが空です</string>
 	<string name="select_from_media_library">メディアライブラリから選択</string>
 	<string name="reader_untitled_post">(無題)</string>
-	<string name="reader_menu_tags">タグ</string>
 	<string name="reader_btn_share">共有</string>
 	<string name="reader_btn_follow">フォロー</string>
 	<string name="reader_btn_unfollow">フォロー中</string>
-	<string name="reader_hint_comment_on_comment">コメントに返信</string>
 	<string name="reader_label_added_tag">%s を追加</string>
 	<string name="reader_label_removed_tag">%s を削除</string>
 	<string name="reader_likes_only_you">「いいね」をつけました</string>
 	<string name="username_invalid">無効なユーザー名</string>
 	<string name="reader_share_subject">%s から共有</string>
-	<string name="reader_hint_comment_on_post">コメントを追加</string>
 	<string name="jetpack_not_found">Jetpack プラグインが見つかりません</string>
 	<string name="reader_toast_err_view_image">画像を表示できません</string>
 	<string name="reader_toast_err_tag_exists">すでにこのタグをフォロー中です</string>
@@ -528,6 +562,7 @@
 	<string name="reader_toast_err_comment_failed">コメントを投稿できませんでした</string>
 	<string name="connecting_wpcom">WordPress.com に接続中</string>
 	<string name="limit_reached">上限に達しました。1分後にもう一度お試しいただけます。それより前にログインしようとすると、制限解除までの時間がさらに長くなります。エラーだと思われる場合はサポートにご連絡ください。</string>
+	<string name="reader_hint_comment_on_comment">コメントに返信…</string>
 	<string name="themes">テーマ</string>
 	<string name="images">画像</string>
 	<string name="media_gallery_image_order_random">ランダム</string>
@@ -593,18 +628,11 @@
 	<string name="media_no_video_message">動画をアップロードするには VideoPress アップグレードを追加してください。</string>
 	<string name="custom_date">カスタム日付</string>
 	<string name="upload">アップロード</string>
-	<string name="notifications_turn_off">無効化</string>
-	<string name="notifications_turn_off_1hr">1時間無効化</string>
-	<string name="notifications_turn_off_8hr">8時間無効化</string>
 	<string name="sign_in">ログイン</string>
-	<string name="options">設定</string>
 	<string name="notifications">通知</string>
-	<string name="enable_notifications">通知を有効化する</string>
-	<string name="manage_notifications">通知の管理</string>
 	<string name="note_reply_successful">返信を公開しました</string>
 	<string name="more_notifications">あと%d件。</string>
 	<string name="new_notifications">%d件の新しい通知</string>
-	<string name="types">種類</string>
 	<string name="loading">読込中…</string>
 	<string name="post_signature">投稿の署名</string>
 	<string name="add_tagline">新規投稿に署名を追加</string>
@@ -650,6 +678,7 @@
 	<string name="immediately">すぐに</string>
 	<string name="quickpress_add_alert_title">ショートカット名を設定する</string>
 	<string name="settings">設定</string>
+	<string name="today">今日</string>
 	<string name="share_url">URLを共有</string>
 	<string name="quickpress_window_title">QuickPress ショートカット用のブログを選択</string>
 	<string name="quickpress_add_error">ショートカット名を記入してください</string>
@@ -683,11 +712,34 @@
 	<string name="no">いいえ</string>
 	<string name="error">エラー</string>
 	<string name="category_refresh_error">カテゴリーの再読み込みエラー</string>
+	<string name="notification_settings">通知設定</string>
 	<string-array name="alignment_array">
 		<item>なし</item>
 		<item>左</item>
 		<item>中央</item>
 		<item>右</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>サイト上のコメント</item>
+		<item>自分のコメントへの「いいね」</item>
+		<item>自分の投稿への「いいね」</item>
+		<item>サイトでフォロー</item>
+		<item>サイトの達成記録</item>
+		<item>ユーザー名への言及</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>自分のコメントへの返信</item>
+		<item>自分のコメントへの「いいね」</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>提案</item>
+		<item>リサーチ</item>
+		<item>コミュニティ</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>WordPress.com を最大限に活用するためのヒント。</item>
+		<item>WordPress.com の研究・調査に参加する機会。</item>
+		<item>WordPress.com のコースやイベント (オンライン・オフライン) の情報。</item>
 	</string-array>
 	<string-array name="post_filters_array">
 		<item>公開済み</item>

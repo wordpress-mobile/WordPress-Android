@@ -5,6 +5,9 @@
 <resources>
     <style name="CalypsoTheme" parent="@style/WordPress">
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:popupMenuStyle">@style/Calypso.PopupMenu</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/Calypso.TextAppearance</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/Calypso.TextAppearance</item>
     </style>
 
     <style name="Calypso.SiteSettingsTheme" parent="CalypsoTheme">
@@ -35,6 +38,10 @@
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:paddingLeft">@dimen/dlp_title_padding_start</item>
         <item name="android:paddingRight">@dimen/dlp_title_padding_end</item>
+    </style>
+
+    <style name="CalypsoTheme.NoActionBarShadow" parent="CalypsoTheme">
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="Calypso.NoActionBar" parent="CalypsoTheme">
