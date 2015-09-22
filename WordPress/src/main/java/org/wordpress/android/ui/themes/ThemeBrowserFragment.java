@@ -90,7 +90,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Cursor cursor = fetchThemes(0);
+        Cursor cursor = fetchThemes(mSpinner.getSelectedItemPosition());
         if (cursor == null) {
             return;
         }
@@ -186,7 +186,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         if (mSwipeToRefreshHelper != null) {
             mSwipeToRefreshHelper.setRefreshing(refreshing);
             if (!refreshing) {
-                refreshView(0);
+                refreshView(mSpinner.getSelectedItemPosition());
             }
         }
     }
