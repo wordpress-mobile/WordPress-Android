@@ -351,8 +351,9 @@ public abstract class SiteSettingsInterface {
             public void run() {
                 Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getLocalTableBlogId());
 
-                if (localSettings != null && localSettings.moveToFirst() && localSettings.getCount() > 0) {
-                    mSettings.deserializeDatabaseCursor(localSettings);
+                if (localSettings != null) {
+                    Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
+                    mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
                     mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
                     localSettings.close();
                     notifyUpdatedOnUiThread(null);

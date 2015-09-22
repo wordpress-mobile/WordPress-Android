@@ -8,56 +8,42 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public final class SiteSettingsTable {
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CATEGORIES_TABLE_NAME = "site_categories";
 
-    // Settings table column names
-    public static final String ID_COLUMN_NAME = "id";
-    public static final String ADDRESS_COLUMN_NAME = "address";
-    public static final String USERNAME_COLUMN_NAME = "username";
-    public static final String PASSWORD_COLUMN_NAME = "password";
-    public static final String TITLE_COLUMN_NAME = "title";
-    public static final String TAGLINE_COLUMN_NAME = "tagline";
-    public static final String LANGUAGE_COLUMN_NAME = "language";
-    public static final String PRIVACY_COLUMN_NAME = "privacy";
-    public static final String LOCATION_COLUMN_NAME = "location";
-    public static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
-    public static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
-    public static final String CATEGORIES_COLUMN_NAME = "categories";
-    public static final String POST_FORMATS_COLUMN_NAME = "postFormats";
-
     private static final String CREATE_CATEGORIES_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
-                    CATEGORIES_TABLE_NAME +
-                    " (" +
-                    CategoryModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-                    CategoryModel.NAME_COLUMN_NAME + " TEXT, " +
-                    CategoryModel.SLUG_COLUMN_NAME + " TEXT, " +
-                    CategoryModel.DESC_COLUMN_NAME + " TEXT, " +
-                    CategoryModel.PARENT_ID_COLUMN_NAME + " INTEGER, " +
-                    CategoryModel.POST_COUNT_COLUMN_NAME + " INTEGER" +
-                    ");";
+            CATEGORIES_TABLE_NAME +
+            " (" +
+            CategoryModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
+            CategoryModel.NAME_COLUMN_NAME + " TEXT, " +
+            CategoryModel.SLUG_COLUMN_NAME + " TEXT, " +
+            CategoryModel.DESC_COLUMN_NAME + " TEXT, " +
+            CategoryModel.PARENT_ID_COLUMN_NAME + " INTEGER, " +
+            CategoryModel.POST_COUNT_COLUMN_NAME + " INTEGER" +
+            ");";
 
     private static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
             SETTINGS_TABLE_NAME +
             " (" +
-            ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-            ADDRESS_COLUMN_NAME + " TEXT, " +
-            USERNAME_COLUMN_NAME + " TEXT, " +
-            PASSWORD_COLUMN_NAME + " TEXT, " +
-            TITLE_COLUMN_NAME + " TEXT, " +
-            TAGLINE_COLUMN_NAME + " TEXT, " +
-            LANGUAGE_COLUMN_NAME + " INTEGER, " +
-            PRIVACY_COLUMN_NAME + " INTEGER, " +
-            LOCATION_COLUMN_NAME + " BOOLEAN, " +
-            DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
-            DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
-            CATEGORIES_COLUMN_NAME + " TEXT, " +
-            POST_FORMATS_COLUMN_NAME + " TEXT" +
+            SiteSettingsModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
+            SiteSettingsModel.ADDRESS_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.USERNAME_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.PASSWORD_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.TITLE_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.TAGLINE_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.LANGUAGE_COLUMN_NAME + " INTEGER, " +
+            SiteSettingsModel.PRIVACY_COLUMN_NAME + " INTEGER, " +
+            SiteSettingsModel.LOCATION_COLUMN_NAME + " BOOLEAN, " +
+            SiteSettingsModel.DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.CATEGORIES_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.POST_FORMATS_COLUMN_NAME + " TEXT" +
             ");";
 
     public static void createTable(SQLiteDatabase db) {
@@ -65,6 +51,23 @@ public final class SiteSettingsTable {
             db.execSQL(CREATE_SETTINGS_TABLE_SQL);
             db.execSQL(CREATE_CATEGORIES_TABLE_SQL);
         }
+    }
+
+    public static Map<Integer, CategoryModel> getAllCategories() {
+        String sqlCommand = sqlSelectAllCategories() + ";";
+        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
+
+        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return null;
+
+        Map<Integer, CategoryModel> models = new HashMap<>();
+        for (int i = 0; i < cursor.getCount(); ++i) {
+            CategoryModel model = new CategoryModel();
+            model.deserializeFromDatabase(cursor);
+            models.put(model.id, model);
+            cursor.moveToNext();
+        }
+
+        return models;
     }
 
     public static Cursor getCategory(long id) {
@@ -77,7 +80,7 @@ public final class SiteSettingsTable {
     public static Cursor getSettings(long id) {
         if (id < 0) return null;
 
-        String sqlCommand = sqlSelectAllSettings() + sqlWhere(ID_COLUMN_NAME, Long.toString(id)) + ";";
+        String sqlCommand = sqlSelectAllSettings() + sqlWhere(SiteSettingsModel.ID_COLUMN_NAME, Long.toString(id)) + ";";
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 
@@ -100,20 +103,7 @@ public final class SiteSettingsTable {
     public static void saveSettings(SiteSettingsModel settings) {
         if (settings == null) return;
 
-        ContentValues values = new ContentValues();
-        values.put(ID_COLUMN_NAME, settings.localTableId);
-        values.put(ADDRESS_COLUMN_NAME, settings.address);
-        values.put(USERNAME_COLUMN_NAME, settings.username);
-        values.put(PASSWORD_COLUMN_NAME, settings.password);
-        values.put(TITLE_COLUMN_NAME, settings.title);
-        values.put(TAGLINE_COLUMN_NAME, settings.tagline);
-        values.put(PRIVACY_COLUMN_NAME, settings.privacy);
-        values.put(LANGUAGE_COLUMN_NAME, settings.languageId);
-        values.put(DEF_CATEGORY_COLUMN_NAME, settings.defaultCategory);
-        values.put(CATEGORIES_COLUMN_NAME, commaSeparatedElements(settings.categories));
-        values.put(DEF_POST_FORMAT_COLUMN_NAME, settings.defaultPostFormat);
-        values.put(POST_FORMATS_COLUMN_NAME, serializePostFormats(settings.postFormats));
-
+        ContentValues values = settings.serializeToDatabase();
         settings.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
                 SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
     }
@@ -122,7 +112,7 @@ public final class SiteSettingsTable {
         if (settings == null) return;
 
         String[] args = {Long.toString(settings.localTableId)};
-        WordPress.wpDB.getDatabase().delete(SETTINGS_TABLE_NAME, ID_COLUMN_NAME + "=?", args);
+        WordPress.wpDB.getDatabase().delete(SETTINGS_TABLE_NAME, SiteSettingsModel.ID_COLUMN_NAME + "=?", args);
     }
 
     private static String sqlSelectAllCategories() {
@@ -135,29 +125,5 @@ public final class SiteSettingsTable {
 
     private static String sqlWhere(String variable, String value) {
         return "WHERE " + variable + "=\"" + value + "\" ";
-    }
-
-    private static String serializePostFormats(Map<String, String> formats) {
-        if (formats == null || formats.size() == 0) return "";
-
-        StringBuilder builder = new StringBuilder();
-        for (String key : formats.keySet()) {
-            builder.append(key).append(",").append(formats.get(key)).append(";");
-        }
-        builder.setLength(builder.length() - 1);
-
-        return builder.toString();
-    }
-
-    private static String commaSeparatedElements(CategoryModel[] elements) {
-        if (elements == null) return "";
-
-        StringBuilder builder = new StringBuilder();
-        for (CategoryModel element : elements) {
-            builder.append(Integer.toString(element.id)).append(",");
-        }
-        builder.setLength(builder.length() - 1);
-
-        return builder.toString();
     }
 }

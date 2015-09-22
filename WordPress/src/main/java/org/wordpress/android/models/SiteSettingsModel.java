@@ -1,10 +1,10 @@
 package org.wordpress.android.models;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.networking.RestClientUtils;
 
 import java.util.HashMap;
@@ -14,6 +14,21 @@ import java.util.Map;
  * Holds blog settings and provides methods to (de)serialize .com and self-hosted network calls.
  */
 public class SiteSettingsModel {
+    // Settings table column names
+    public static final String ID_COLUMN_NAME = "id";
+    public static final String ADDRESS_COLUMN_NAME = "address";
+    public static final String USERNAME_COLUMN_NAME = "username";
+    public static final String PASSWORD_COLUMN_NAME = "password";
+    public static final String TITLE_COLUMN_NAME = "title";
+    public static final String TAGLINE_COLUMN_NAME = "tagline";
+    public static final String LANGUAGE_COLUMN_NAME = "language";
+    public static final String PRIVACY_COLUMN_NAME = "privacy";
+    public static final String LOCATION_COLUMN_NAME = "location";
+    public static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
+    public static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
+    public static final String CATEGORIES_COLUMN_NAME = "categories";
+    public static final String POST_FORMATS_COLUMN_NAME = "postFormats";
+
     public boolean isInLocalTable;
     public long localTableId;
     public String address;
@@ -102,29 +117,28 @@ public class SiteSettingsModel {
     /**
      * Sets values from a local database {@link Cursor}.
      */
-    public void deserializeDatabaseCursor(Cursor cursor) {
-        if (cursor == null) return;
+    public void deserializeOptionsDatabaseCursor(Cursor cursor, Map<Integer, CategoryModel> models) {
+        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return;
 
-        localTableId = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.ID_COLUMN_NAME));
-        address = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.ADDRESS_COLUMN_NAME));
-        username = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.USERNAME_COLUMN_NAME));
-        password = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.PASSWORD_COLUMN_NAME));
-        title = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.TITLE_COLUMN_NAME));
-        tagline = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.TAGLINE_COLUMN_NAME));
-        languageId = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.LANGUAGE_COLUMN_NAME));
-        privacy = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.PRIVACY_COLUMN_NAME));
-        defaultCategory = cursor.getInt(cursor.getColumnIndex(SiteSettingsTable.DEF_CATEGORY_COLUMN_NAME));
-        defaultPostFormat = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.DEF_POST_FORMAT_COLUMN_NAME));
+        localTableId = cursor.getInt(cursor.getColumnIndex(ID_COLUMN_NAME));
+        address = cursor.getString(cursor.getColumnIndex(ADDRESS_COLUMN_NAME));
+        username = cursor.getString(cursor.getColumnIndex(USERNAME_COLUMN_NAME));
+        password = cursor.getString(cursor.getColumnIndex(PASSWORD_COLUMN_NAME));
+        title = cursor.getString(cursor.getColumnIndex(TITLE_COLUMN_NAME));
+        tagline = cursor.getString(cursor.getColumnIndex(TAGLINE_COLUMN_NAME));
+        languageId = cursor.getInt(cursor.getColumnIndex(LANGUAGE_COLUMN_NAME));
+        privacy = cursor.getInt(cursor.getColumnIndex(PRIVACY_COLUMN_NAME));
+        defaultCategory = cursor.getInt(cursor.getColumnIndex(DEF_CATEGORY_COLUMN_NAME));
+        defaultPostFormat = cursor.getString(cursor.getColumnIndex(DEF_POST_FORMAT_COLUMN_NAME));
 
-        String cachedCategories = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.CATEGORIES_COLUMN_NAME));
-        String cachedFormats = cursor.getString(cursor.getColumnIndex(SiteSettingsTable.POST_FORMATS_COLUMN_NAME));
-        if (!TextUtils.isEmpty(cachedCategories)) {
+        String cachedCategories = cursor.getString(cursor.getColumnIndex(CATEGORIES_COLUMN_NAME));
+        String cachedFormats = cursor.getString(cursor.getColumnIndex(POST_FORMATS_COLUMN_NAME));
+        if (models != null && !TextUtils.isEmpty(cachedCategories)) {
             String[] split = cachedCategories.split(",");
             categories = new CategoryModel[split.length];
             for (int i = 0; i < split.length; ++i) {
                 int catId = Integer.parseInt(split[i]);
-                categories[i] = new CategoryModel();
-                categories[i].deserializeFromDatabase(SiteSettingsTable.getCategory(catId));
+                categories[i] = models.get(catId);
             }
         }
         if (!TextUtils.isEmpty(cachedFormats)) {
@@ -137,6 +151,51 @@ public class SiteSettingsModel {
         }
 
         isInLocalTable = true;
+    }
+    
+    /**
+     * Creates the {@link ContentValues} object to store this category data in a local database.
+     */
+    public ContentValues serializeToDatabase() {
+        ContentValues values = new ContentValues();
+        values.put(ID_COLUMN_NAME, localTableId);
+        values.put(ADDRESS_COLUMN_NAME, address);
+        values.put(USERNAME_COLUMN_NAME, username);
+        values.put(PASSWORD_COLUMN_NAME, password);
+        values.put(TITLE_COLUMN_NAME, title);
+        values.put(TAGLINE_COLUMN_NAME, tagline);
+        values.put(PRIVACY_COLUMN_NAME, privacy);
+        values.put(LANGUAGE_COLUMN_NAME, languageId);
+        values.put(DEF_CATEGORY_COLUMN_NAME, defaultCategory);
+        values.put(CATEGORIES_COLUMN_NAME, commaSeparatedElements(categories));
+        values.put(DEF_POST_FORMAT_COLUMN_NAME, defaultPostFormat);
+        values.put(POST_FORMATS_COLUMN_NAME, serializePostFormats(postFormats));
+        
+        return values;
+    }
+
+    private static String serializePostFormats(Map<String, String> formats) {
+        if (formats == null || formats.size() == 0) return "";
+
+        StringBuilder builder = new StringBuilder();
+        for (String key : formats.keySet()) {
+            builder.append(key).append(",").append(formats.get(key)).append(";");
+        }
+        builder.setLength(builder.length() - 1);
+
+        return builder.toString();
+    }
+
+    private static String commaSeparatedElements(CategoryModel[] elements) {
+        if (elements == null) return "";
+
+        StringBuilder builder = new StringBuilder();
+        for (CategoryModel element : elements) {
+            builder.append(Integer.toString(element.id)).append(",");
+        }
+        builder.setLength(builder.length() - 1);
+
+        return builder.toString();
     }
 
     public String[] getCategoriesForDisplay() {
