@@ -63,11 +63,11 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
      */
     @Override
     protected void fetchRemoteData() {
-        XMLRPCClientInterface xmlrpcInterface = instantiateInterface();
-        if (xmlrpcInterface == null) return;
         Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
-        xmlrpcInterface.callAsync(mOptionsCallback, ApiHelper.Methods.GET_OPTIONS, params);
-        xmlrpcInterface.callAsync(mCategoriesCallback, ApiHelper.Methods.GET_CATEGORIES, params);
+
+        // Need two interfaces or the first call gets aborted
+        instantiateInterface().callAsync(mOptionsCallback, ApiHelper.Methods.GET_OPTIONS, params);
+        instantiateInterface().callAsync(mCategoriesCallback, ApiHelper.Methods.GET_CATEGORIES, params);
     }
 
     /**
@@ -80,11 +80,9 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 AppLog.d(AppLog.T.API, "Received Categories XML-RPC response.");
 
                 deserializeCategoriesResponse(mRemoteSettings, (Object[]) result);
-                if (!mRemoteSettings.isTheSame(mSettings)) {
-                    mSettings.copyFrom(mRemoteSettings);
-                    SiteSettingsTable.saveSettings(mSettings);
-                    notifyUpdatedOnUiThread(null);
-                }
+                mSettings.categories = mRemoteSettings.categories;
+                SiteSettingsTable.saveSettings(mSettings);
+                notifyUpdatedOnUiThread(null);
             } else {
                 // Response is considered an error if we are unable to parse it
                 AppLog.w(AppLog.T.API, "Error parsing Categories XML-RPC response: " + result);
@@ -109,11 +107,9 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 AppLog.d(AppLog.T.API, "Received Options XML-RPC response.");
 
                 deserializeOptionsResponse(mRemoteSettings, (Map) result);
-                if (!mRemoteSettings.isTheSame(mSettings)) {
-                    mSettings.copyFrom(mRemoteSettings);
-                    SiteSettingsTable.saveSettings(mSettings);
-                    notifyUpdatedOnUiThread(null);
-                }
+                mSettings.copyFrom(mRemoteSettings);
+                SiteSettingsTable.saveSettings(mSettings);
+                notifyUpdatedOnUiThread(null);
             } else {
                 // Response is considered an error if we are unable to parse it
                 AppLog.w(AppLog.T.API, "Error parsing Options XML-RPC response: " + result);
