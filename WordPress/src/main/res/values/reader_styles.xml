@@ -103,10 +103,6 @@
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
     </style>
-    <style name="ReaderImageView.Avatar.Like" parent="ReaderImageView">
-        <item name="android:layout_width">@dimen/avatar_sz_small</item>
-        <item name="android:layout_height">@dimen/avatar_sz_small</item>
-    </style>
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
