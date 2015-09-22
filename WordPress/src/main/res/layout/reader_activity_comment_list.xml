@@ -21,9 +21,8 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
         style="@style/ReaderTextView.EmptyList"
-        android:layout_centerInParent="true"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_large"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         android:text="@string/reader_empty_comments"
         android:textColor="@color/grey_darken_10"
         android:visibility="gone"
