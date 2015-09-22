@@ -93,9 +93,21 @@ function checkVersions() {
 	echo "last git tag version is $tag"
 }
 
+function checkGradleProperties() {
+	/bin/echo -n "Check WordPress/gradle.properties..."
+	checksum=`cat WordPress/gradle.properties|grep "^wp."|tr "[A-Z]" "[a-z]"|sed "s/ //g"|sort|sha1sum |cut -d- -f1| sed "s/ //g"`
+	known_checksum="e55897c69b6c2e17facb1c9ad4afe45f566eed20"
+	if [ x$checksum != x$known_checksum ]; then
+		pFail
+		exit 5
+	fi
+	pOk
+}
+
 checkNewLanguages
 checkENStrings
 checkVersions
 checkSamsungWorkaround
+checkGradleProperties
 # checkDeviceToTest
 # runConnectedTests
