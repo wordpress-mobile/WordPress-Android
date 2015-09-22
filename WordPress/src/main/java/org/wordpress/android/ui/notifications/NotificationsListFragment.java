@@ -81,39 +81,6 @@ public class NotificationsListFragment extends Fragment
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        // setup the initial notes adapter, starts listening to the bucket
-        mBucket = SimperiumUtils.getNotesBucket();
-        if (mBucket != null) {
-            if (mNotesAdapter == null) {
-                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-                mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
-                    @Override
-                    public void onClickNote(String noteId) {
-                        if (!isAdded()) {
-                            return;
-                        }
-
-                        if (TextUtils.isEmpty(noteId)) return;
-
-                        // open the latest version of this note just in case it has changed - this can
-                        // happen if the note was tapped from the list fragment after it was updated
-                        // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(getActivity(), noteId, false, true);
-                    }
-                });
-            }
-
-            mRecyclerView.setAdapter(mNotesAdapter);
-        } else {
-            if (!AccountHelper.isSignedInWordPressDotCom()) {
-                // let user know that notifications require a wp.com account and enable sign-in
-                showEmptyView(R.string.notifications_account_required, true);
-            } else {
-                // failed for some other reason
-                showEmptyView(R.string.error_refresh_notifications, false);
-            }
-        }
-
         return view;
     }
 
@@ -129,6 +96,8 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+
+        configureBucketAndAdapter();
         refreshNotes();
 
         // start listening to bucket change events
@@ -163,6 +132,45 @@ public class NotificationsListFragment extends Fragment
 
         super.onDestroy();
     }
+
+    // Sets up the notes bucket and list adapter
+    private void configureBucketAndAdapter() {
+        mBucket = SimperiumUtils.getNotesBucket();
+        if (mBucket != null) {
+            if (mNotesAdapter == null) {
+                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+                mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
+            }
+
+            if (mRecyclerView.getAdapter() == null) {
+                mRecyclerView.setAdapter(mNotesAdapter);
+            }
+        } else {
+            if (!AccountHelper.isSignedInWordPressDotCom()) {
+                // let user know that notifications require a wp.com account and enable sign-in
+                showEmptyView(R.string.notifications_account_required, true);
+            } else {
+                // failed for some other reason
+                showEmptyView(R.string.error_refresh_notifications, false);
+            }
+        }
+    }
+
+    private OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
+        @Override
+        public void onClickNote(String noteId) {
+            if (!isAdded()) {
+                return;
+            }
+
+            if (TextUtils.isEmpty(noteId)) return;
+
+            // open the latest version of this note just in case it has changed - this can
+            // happen if the note was tapped from the list fragment after it was updated
+            // by another fragment (such as NotificationCommentLikeFragment)
+            openNote(getActivity(), noteId, false, true);
+        }
+    };
 
     /**
      * Open a note fragment based on the type of note

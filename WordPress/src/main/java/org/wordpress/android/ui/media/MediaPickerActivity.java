@@ -353,7 +353,6 @@ public class MediaPickerActivity extends AppCompatActivity
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setElevation(0);
             actionBar.show();
         }
 

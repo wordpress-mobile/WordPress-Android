@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_multi">%s 댓글</string>
+	<string name="reader_short_comment_count_one">1 댓글</string>
+	<string name="reader_label_submit_comment">보내기</string>
+	<string name="reader_hint_comment_on_post">보내</string>
+	<string name="reader_discover_visit_blog">%s 방문</string>
+	<string name="reader_discover_attribution_blog">원래 %s에 게시됨</string>
+	<string name="reader_discover_attribution_author">원래 %s님이 게시함</string>
+	<string name="reader_discover_attribution_author_and_blog">원래 %2$s에 %1$s님이 게시함</string>
+	<string name="reader_short_like_count_multi">좋아요 %s개</string>
+	<string name="reader_short_like_count_one">좋아요 1개</string>
+	<string name="reader_label_follow_count">팔로워 %,d명</string>
+	<string name="reader_short_like_count_none">좋아요</string>
+	<string name="reader_label_reading_time_in_minutes">최소 %,d</string>
+	<string name="reader_menu_tags">태그 및 블로그 편집</string>
+	<string name="reader_label_word_count">단어 %,d자</string>
+	<string name="reader_title_post_detail">리더 글</string>
+	<string name="local_draft_explainer">이 글은 아직 발행되지 않은 로컬 임시글입니다.</string>
+	<string name="local_changes_explainer">이 글은 아직 발행되지 않은 로컬 변경입니다.</string>
+	<string name="notifications_push_summary">사용자 기기에 표시되는 알림에 대한 설정입니다.</string>
+	<string name="notifications_email_summary">사용자 계정에 연결된 이메일로 전송되는 알림에 대한 설정입니다.</string>
+	<string name="notifications_tab_summary">알림 탭에 표시되는 알림에 대한 설정입니다.</string>
+	<string name="notifications_disabled">앱 알림이 사용 중지되었습니다. 설정에서 사용 설정하려면 여기를 누르세요.</string>
+	<string name="notification_types">알림 유형</string>
+	<string name="error_loading_notifications">알림 설정을 로드할 수 없습니다.</string>
+	<string name="replies_to_your_comments">댓글에 대한 답글</string>
+	<string name="comment_likes">댓글 좋아요</string>
+	<string name="app_notifications">앱 알림</string>
+	<string name="notifications_tab">알림 탭</string>
+	<string name="email">이메일</string>
+	<string name="notifications_comments_other_blogs">다른 사이트의 댓글</string>
+	<string name="notifications_wpcom_updates">워드프레스닷컴 소식</string>
+	<string name="notifications_other">기타</string>
+	<string name="notifications_account_emails">워드프레스닷컴 소식</string>
+	<string name="notifications_account_emails_summary">사용자 계정에 관한 중요 이메일을 항상 보내 드리며, 유용한 정보도 받으실 수 있습니다.</string>
+	<string name="notifications_sights_and_sounds">보기 및 사운드</string>
+	<string name="your_sites">내 사이트</string>
+	<string name="notifications_updates_from_wordpress">워드프레스닷컴 소식</string>
+	<string name="stats_insights_latest_post_trend">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 지금까지 글의 성과입니다.</string>
+	<string name="stats_insights_latest_post_summary">최신 글 요약</string>
+	<string name="button_revert">되돌리기</string>
+	<string name="days_ago">%d일 전</string>
+	<string name="yesterday">어제</string>
 	<string name="connectionbar_no_connection">연결 없음</string>
 	<string name="page_trashed">휴지통으로 이동된 페이지</string>
 	<string name="post_deleted">글 삭제됨</string>
@@ -216,14 +258,10 @@
 	<string name="create_new_blog_wpcom">WordPress.com 블로그 만들기</string>
 	<string name="new_blog_wpcom_created">WordPress.com 블로그 생성!</string>
 	<string name="reader_empty_comments">아직 댓글이 없음</string>
-	<string name="reader_likes_multi_short">%,d명</string>
 	<string name="reader_empty_posts_in_tag">이 태그가 지정된 게시물이 없음</string>
 	<string name="reader_label_comment_count_multi">댓글 %,d개</string>
 	<string name="reader_label_view_original">원본 기사 보기</string>
 	<string name="reader_label_like">좋아요</string>
-	<string name="reader_label_liked_by">좋아요를 표시한 회원:</string>
-	<string name="reader_label_liked_by_you">좋아요를 표시함</string>
-	<string name="reader_likes_one_short">1명</string>
 	<string name="reader_label_comment_count_single">1개의 댓글</string>
 	<string name="reader_label_comments_closed">댓글을 남길 수 없습니다.</string>
 	<string name="reader_label_comments_on">댓글:</string>
@@ -233,7 +271,6 @@
 	<string name="error_refresh_unauthorized_posts">게시물을 확인 또는 편집할 권한이 없습니다.</string>
 	<string name="error_refresh_unauthorized_pages">페이지를 확인 또는 편집할 권한이 없습니다.</string>
 	<string name="error_refresh_unauthorized_comments">댓글을 확인 또는 편집할 권한이 없습니다.</string>
-	<string name="overwrite_local_changes">아직 업로드하지 않은 게시물을 변경하셨습니다. 새로 고침하여 계속 진행하며 로컬 변경 사항을 덮어쓰시겠습니까?</string>
 	<string name="older_month">1개월 이전</string>
 	<string name="older_two_days">2일 이전</string>
 	<string name="older_last_week">1주일 이전</string>
@@ -271,8 +308,6 @@
 	<string name="preference_send_usage_stats_summary">사용 통계를 자동으로 보내면 안드로이드용 워드프레스를 개선하는데 도움이 됩니다.</string>
 	<string name="update_verb">업데이트</string>
 	<string name="schedule_verb">예약</string>
-	<string name="reader_title_blog_preview">블로그 미리보기</string>
-	<string name="reader_title_tag_preview">태그 미리보기</string>
 	<string name="reader_title_subs">태그 및 블로그</string>
 	<string name="reader_page_followed_tags">팔로우된 태그</string>
 	<string name="reader_page_followed_blogs">팔로우된 블로그</string>
@@ -284,6 +319,8 @@
 	<string name="reader_toast_err_follow_blog">이 블로그를 팔로우할 수 없습니다.</string>
 	<string name="reader_toast_err_unfollow_blog">이 블로그에 대한 팔로우를 취소할 수 없습니다.</string>
 	<string name="reader_empty_recommended_blogs">추천 블로그가 없습니다.</string>
+	<string name="reader_title_blog_preview">리더 블로그</string>
+	<string name="reader_title_tag_preview">리더 태그</string>
 	<string name="saving">저장중...</string>
 	<string name="media_empty_list">미디어가 없습니다.</string>
 	<string name="ptr_tip_message">팁: 당겨서 새로 고침</string>
@@ -500,7 +537,6 @@
 	<string name="media_add_new_media_gallery">갤러리 만들기</string>
 	<string name="select_from_media_library">미디어 라이브러리에서 선택</string>
 	<string name="reader_timespan_now">지금</string>
-	<string name="reader_menu_tags">태그</string>
 	<string name="reader_btn_share">공유</string>
 	<string name="reader_btn_follow">팔로우</string>
 	<string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
@@ -509,13 +545,11 @@
 	<string name="media_add_popup_title">미디어 라이브러리 에 추가</string>
 	<string name="reader_untitled_post">(제목 없음)</string>
 	<string name="reader_btn_unfollow">팔로잉</string>
-	<string name="reader_hint_comment_on_comment">코멘트에 회신</string>
 	<string name="reader_label_added_tag">%s를 추가</string>
 	<string name="reader_label_removed_tag">%s를 제거</string>
 	<string name="reader_likes_only_you">"좋아요"를 클릭 했습니다</string>
 	<string name="username_invalid">잘못된 사용자 이름</string>
 	<string name="reader_share_subject">%s에서 공유</string>
-	<string name="reader_hint_comment_on_post">댓글 을 추가</string>
 	<string name="jetpack_not_found">Jetpack 플러그인 을 찾을 수 없습니다</string>
 	<string name="reader_toast_err_view_image">이미지를 표시 할 수 없습니다</string>
 	<string name="reader_toast_err_tag_exists">이미 이 태그를 팔로우 중입니다</string>
@@ -528,6 +562,7 @@
 	<string name="limit_reached">한도에 도달했습니다. 1분 후에 다시 시도해 수 있습니다. 이전에 로그인을 시도하면 제한 해제까지의 시간이 더 길어집니다. 오류라고 생각되면 지원에 문의하십시오.</string>
 	<string name="reader_empty_followed_tags">태그를 팔로우하지 않습니다.</string>
 	<string name="create_account_wpcom">WordPress.com에서 계정 만들기</string>
+	<string name="reader_hint_comment_on_comment">답변 달기</string>
 	<string name="themes">테마</string>
 	<string name="images">이미지</string>
 	<string name="media_gallery_image_order_random">랜덤</string>
@@ -595,16 +630,9 @@
 	<string name="upload">업로드</string>
 	<string name="sign_in">로그인</string>
 	<string name="notifications">알림</string>
-	<string name="manage_notifications">알림 관리</string>
-	<string name="notifications_turn_off">비활성화</string>
-	<string name="notifications_turn_off_1hr">1시간 비활성화</string>
-	<string name="notifications_turn_off_8hr">8시간 비활성화</string>
-	<string name="options">설정</string>
-	<string name="enable_notifications">알림을 활성화</string>
 	<string name="note_reply_successful">답장을 공개했습니다</string>
 	<string name="more_notifications">%d개.</string>
 	<string name="new_notifications">%d개의 새로운 알림</string>
-	<string name="types">종류</string>
 	<string name="loading">로드 중입니다...</string>
 	<string name="post_signature">리뷰 서명</string>
 	<string name="add_tagline">새 게시물에 서명을 추가</string>
@@ -649,6 +677,7 @@
 	<string name="post_password">암호(옵션)</string>
 	<string name="immediately">즉시</string>
 	<string name="quickpress_add_alert_title">바로 가기 이름을 설정</string>
+	<string name="today">오늘</string>
 	<string name="settings">설정</string>
 	<string name="share_url">URL을 공유</string>
 	<string name="quickpress_window_title">QuickPress 바로가기에 대한 블로그를 선택</string>
@@ -683,11 +712,34 @@
 	<string name="reply">회신</string>
 	<string name="on">선택</string>
 	<string name="category_refresh_error">카테고리의 다시 읽기 오류</string>
+	<string name="notification_settings">알림 설정</string>
 	<string-array name="alignment_array">
 		<item>없음</item>
 		<item>왼쪽</item>
 		<item>중앙</item>
 		<item>오른쪽</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>내 사이트의 댓글</item>
+		<item>내 댓글의 좋아요</item>
+		<item>내 게시글의 좋아요</item>
+		<item>사이트 팔로우</item>
+		<item>사이트 작성 글</item>
+		<item>사용자명 멘션</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>내 댓글에 대한 답글</item>
+		<item>내 댓글의 좋아요</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>제안</item>
+		<item>리서치</item>
+		<item>커뮤니티</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>워드프레스닷컴을 최대한 활용하기 위한 팁.</item>
+		<item>워드프레스닷컴 리서치 및 설문 조사에 참여할 기회.</item>
+		<item>워드프레스닷컴 강의 및 이벤트에 대한 정보(온라인 및 직접 만남).</item>
 	</string-array>
 	<string-array name="post_filters_array">
 		<item>발행됨</item>

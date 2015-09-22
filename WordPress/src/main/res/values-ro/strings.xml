@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_multi">%s comentarii</string>
+	<string name="reader_short_comment_count_one">1 comentariu</string>
+	<string name="reader_label_submit_comment">TRIMITE</string>
+	<string name="reader_hint_comment_on_post">Răspunde la articol...</string>
+	<string name="reader_discover_visit_blog">Vizitează %s</string>
+	<string name="reader_discover_attribution_blog">Inițial publicat pe %s</string>
+	<string name="reader_discover_attribution_author">Inițial publicat de %s</string>
+	<string name="reader_discover_attribution_author_and_blog">Inițial publicat de %1$s pe %2$s</string>
+	<string name="reader_short_like_count_multi">%s aprecieri</string>
+	<string name="reader_short_like_count_one">1 apreciere</string>
+	<string name="reader_label_follow_count">%,d urmăritori</string>
+	<string name="reader_short_like_count_none">Aprecieri</string>
+	<string name="reader_label_reading_time_in_minutes">%,d min</string>
+	<string name="reader_menu_tags">Editare etichete și bloguri</string>
+	<string name="reader_label_word_count">%,d cuvinte</string>
+	<string name="reader_title_post_detail">Cititor articol</string>
+	<string name="local_draft_explainer">Acest articol este o schiță locală care nu a fost publicată</string>
+	<string name="local_changes_explainer">Acest articol are modificări locale care nu au fost publicate</string>
+	<string name="notifications_push_summary">Setări pentru notificările ce apar pe dispozitivul tău mobil.</string>
+	<string name="notifications_email_summary">Setările pentru notificările ce sunt trimise la emailul legat de contul tău.</string>
+	<string name="notifications_tab_summary">Setările pentru notificările ce apar în fila Notificări.</string>
+	<string name="notifications_disabled">Notificările aplicației au fost dezactivate. Apăsați aici pentru a le activa în Setări.</string>
+	<string name="notification_types">Tipuri notificare</string>
+	<string name="error_loading_notifications">Nu s-au putut încărca setările notificărilor</string>
+	<string name="replies_to_your_comments">Răspunsuri la comentariile tale</string>
+	<string name="comment_likes">Aprecieri comentariu</string>
+	<string name="email">Email</string>
+	<string name="notifications_tab">Filă notificări</string>
+	<string name="app_notifications">Notificări aplicație</string>
+	<string name="notifications_comments_other_blogs">Comentarii pe alte situri</string>
+	<string name="notifications_other">Alte</string>
+	<string name="notifications_wpcom_updates">Actualizări WordPress.com</string>
+	<string name="notifications_account_emails">Actualizări de la WordPress.com</string>
+	<string name="notifications_account_emails_summary">Vom trimite întotdeauna emailuri importante cu privire la contul tău, dar poți de asemenea să primești unele utile, extra.</string>
+	<string name="your_sites">Siturile tale</string>
+	<string name="notifications_sights_and_sounds">Imagini și sunete</string>
+	<string name="notifications_updates_from_wordpress">Actualizări de la WordPress.com</string>
+	<string name="stats_insights_latest_post_trend">A trecut %1$s de când %2$s a fost publicat. Iată performanțele articolului  până în prezent ...</string>
+	<string name="stats_insights_latest_post_summary">Rezumatul ultimului articol</string>
+	<string name="button_revert">Revenire</string>
+	<string name="yesterday">Ieri</string>
+	<string name="days_ago">%d zile în urmă</string>
 	<string name="connectionbar_no_connection">Nicio conexiune</string>
 	<string name="page_trashed">Pagină trimisă la gunoi</string>
 	<string name="post_deleted">Articol șters</string>
@@ -223,7 +265,6 @@
 	<string name="older_two_days">Mai vechi de 2 zile</string>
 	<string name="older_last_week">Mai vechi de o săptămână</string>
 	<string name="older_month">Mai vechi de o lună</string>
-	<string name="overwrite_local_changes">Ai făcut modificări într-un articol ce n-a fost încă încărcat. Continui cu reîmprospătarea și suprascrierea modificărilor locale?</string>
 	<string name="error_refresh_unauthorized_pages">Nu ai permisiunea de a vedea sau edita pagini</string>
 	<string name="error_refresh_unauthorized_comments">Nu ai permisiunea de a vedea sau edita comentarii</string>
 	<string name="error_refresh_unauthorized_posts">Nu ai permisiunea de a vedea sau edita articole</string>
@@ -232,14 +273,10 @@
 	<string name="reader_label_comments_on">Comentarii deschise</string>
 	<string name="reader_title_comments">Comentarii</string>
 	<string name="error_publish_empty_post">Nu pot publica un articol gol</string>
-	<string name="reader_likes_one_short">1 persoană</string>
-	<string name="reader_label_liked_by_you">Plăcut de tine</string>
 	<string name="reader_label_view_original">Vezi articolul original</string>
 	<string name="reader_label_like">Place</string>
-	<string name="reader_label_liked_by">Plăcut de</string>
 	<string name="reader_label_comment_count_multi">%,d comentarii</string>
 	<string name="reader_empty_posts_in_tag">Niciun articol cu această etichetă</string>
-	<string name="reader_likes_multi_short">%,d oameni</string>
 	<string name="reader_empty_comments">Niciun comentariu încă</string>
 	<string name="create_new_blog_wpcom">Crează un blog la WordPress.com</string>
 	<string name="new_blog_wpcom_created">Blogul de la WordPress.com a fost creat!</string>
@@ -282,8 +319,8 @@
 	<string name="reader_label_followed_blog">Urmărire blog</string>
 	<string name="reader_page_followed_tags">Etichete urmărite</string>
 	<string name="reader_title_subs">Etichete și bloguri</string>
-	<string name="reader_title_tag_preview">Previzualizare etichetă</string>
 	<string name="reader_title_blog_preview">Previzualizare blog</string>
+	<string name="reader_title_tag_preview">Etichetă cititor</string>
 	<string name="ptr_tip_message">Sfat: Trage în jos pentru reîmprospătare</string>
 	<string name="saving">Salvare...</string>
 	<string name="media_empty_list">Nicio media</string>
@@ -517,10 +554,8 @@
 	<string name="reader_likes_one">Unei persoane îi place acesta</string>
 	<string name="reader_label_added_tag">%s adăugat</string>
 	<string name="reader_btn_unfollow">Urmăresc</string>
-	<string name="reader_hint_comment_on_post">Adaugă cometariul tău</string>
 	<string name="reader_hint_comment_on_comment">Răspunde la comentariu</string>
 	<string name="reader_btn_follow">Urmărește</string>
-	<string name="reader_menu_tags">Etichete</string>
 	<string name="reader_timespan_now">acum</string>
 	<string name="reader_untitled_post">(Fără titlu)</string>
 	<string name="jetpack_not_found">Modulul Jetpack nu e găsit</string>
@@ -596,13 +631,6 @@
 	<string name="more_notifications">și încă %d.</string>
 	<string name="new_notifications">%d notificări noi</string>
 	<string name="note_reply_successful">Răspuns publicat</string>
-	<string name="notifications_turn_off_1hr">Închide după o oră</string>
-	<string name="notifications_turn_off_8hr">Închide după opt ore</string>
-	<string name="types">Tipuri</string>
-	<string name="options">Opțiuni</string>
-	<string name="notifications_turn_off">Închide</string>
-	<string name="manage_notifications">Gestiune notificări</string>
-	<string name="enable_notifications">Validează notificările</string>
 	<string name="notifications">Notificări</string>
 	<string name="sign_in">Autentificare</string>
 	<string name="loading">Se încarcă...</string>
@@ -650,6 +678,7 @@
 	<string name="immediately">Imediat</string>
 	<string name="quickpress_add_alert_title">Setare nume scurtătură</string>
 	<string name="settings">Setări</string>
+	<string name="today">Azi</string>
 	<string name="share_url">Partajare URL</string>
 	<string name="quickpress_window_title">Selecție blog pentru scurtătură QuickPress</string>
 	<string name="quickpress_add_error">Numele scurtăturii nu poate fi gol</string>
@@ -683,11 +712,34 @@
 	<string name="save">Salvare</string>
 	<string name="add">Adaugă</string>
 	<string name="cancel">Anulare</string>
+	<string name="notification_settings">Setări notificare</string>
 	<string-array name="alignment_array">
 		<item>Nimic</item>
 		<item>Stânga</item>
 		<item>Centru</item>
 		<item>Dreapta</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>Comentarii pe situl meu</item>
+		<item>Aprecieri la comentariile mele</item>
+		<item>Aprecieri la articolele mele</item>
+		<item>Urmăriri sit</item>
+		<item>Realizările sitului</item>
+		<item>Mențiuni nume utilizator</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>Răspunsuri la comentariile mele</item>
+		<item>Aprecieri la comentariile mele</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>Sugestii</item>
+		<item>Cercetare</item>
+		<item>Comunitate</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>Sfaturi pentru a obține ce este mai bun din WordPress.com.</item>
+		<item>Oportunități de a participa în cercetări și sondaje WordPress.com.</item>
+		<item>Informații despre cursuri și evenimente WordPress.com (on-line &amp; în-persoană).</item>
 	</string-array>
 	<string-array name="post_filters_array">
 		<item>Publicat</item>
