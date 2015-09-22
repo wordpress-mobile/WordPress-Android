@@ -14,9 +14,18 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.util.AppLog;
 
+import java.util.HashMap;
 import java.util.Map;
 
 class DotComSiteSettings extends SiteSettingsInterface {
+    // Settings WP.com REST response keys
+    public static final String BLOG_TITLE_KEY = "blogname";
+    public static final String BLOG_DESC_KEY = "blogdescription";
+    public static final String BLOG_LANG_ID_KEY = "lang_id";
+    public static final String BLOG_PRIVACY_KEY = "blog_public";
+    public static final String BLOG_DEF_CATEGORY_KEY = "default_category";
+    public static final String BLOG_DEF_POST_FORMAT_KEY = "default_post_format";
+
     // Categories WP.com REST response keys
     public static final String ID_KEY = "ID";
     public static final String NAME_KEY = "name";
@@ -39,8 +48,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         // Save current settings and attempt to sync remotely
         SiteSettingsTable.saveSettings(mSettings);
 
-        final Map<String, String> params =
-                mSettings.serializeDotComParams(mRemoteSettings);
+        final Map<String, String> params = serializeDotComParams();
         if (params == null || params.isEmpty()) return;
 
         WordPress.getRestClientUtils().setGeneralSiteSettings(
@@ -89,6 +97,37 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         notifyUpdatedOnUiThread(error);
                     }
                 });
+    }
+
+    /**
+     * Helper method to create the parameters for the site settings POST request
+     *
+     * Using undocumented endpoint WPCOM_JSON_API_Site_Settings_Endpoint
+     * https://wpcom.trac.automattic.com/browser/trunk/public.api/rest/json-endpoints.php#L1903
+     */
+    public Map<String, String> serializeDotComParams() {
+        Map<String, String> params = new HashMap<>();
+
+        if (mSettings.title!= null && !mSettings.title.equals(mRemoteSettings.title)) {
+            params.put(BLOG_TITLE_KEY, mSettings.title);
+        }
+        if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
+            params.put(BLOG_DESC_KEY, mSettings.tagline);
+        }
+        if (mSettings.languageId != mRemoteSettings.languageId) {
+            params.put(BLOG_LANG_ID_KEY, String.valueOf((mSettings.languageId)));
+        }
+        if (mSettings.privacy != mRemoteSettings.privacy) {
+            params.put(BLOG_PRIVACY_KEY, String.valueOf((mSettings.privacy)));
+        }
+        if (mSettings.defaultCategory != mRemoteSettings.defaultCategory) {
+            params.put(BLOG_DEF_CATEGORY_KEY, String.valueOf(mSettings.defaultCategory));
+        }
+        if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat.equals(mRemoteSettings.defaultPostFormat)) {
+            params.put(BLOG_DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
+        }
+
+        return params;
     }
 
     /**

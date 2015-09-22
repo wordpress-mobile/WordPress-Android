@@ -182,9 +182,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mCategoryPreference) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             mCategoryPreference.setSummary(mCategoryPreference.getEntry());
+            mCategoryPreference.refreshAdapter();
         } else if (preference == mFormatPreference) {
             mSiteSettings.setDefaultFormat(newValue.toString());
-            mFormatPreference.setSummary(mSiteSettings.getDefaultFormat());
+            mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
+            mFormatPreference.refreshAdapter();
         } else if (preference == mRelatedPostsPreference) {
             // TODO
         }

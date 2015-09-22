@@ -13,6 +13,7 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 class SelfHostedSiteSettings extends SiteSettingsInterface {
@@ -28,13 +29,25 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         super(host, blog, listener);
     }
 
+    public Map<String, String> serializeSelfHostedParams() {
+        Map<String, String> params = new HashMap<>();
+
+        if (mSettings.title != null && !mSettings.title.equals(mRemoteSettings.title)) {
+            params.put(BLOG_TITLE_KEY, mSettings.title);
+        }
+        if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
+            params.put(BLOG_TAGLINE_KEY, mSettings.tagline);
+        }
+
+        return params;
+    }
+
     @Override
     public void saveSettings() {
         // Save current settings and attempt to sync remotely
         SiteSettingsTable.saveSettings(mSettings);
 
-        final Map<String, String> params =
-                mSettings.serializeSelfHostedParams(mRemoteSettings);
+        final Map<String, String> params = serializeSelfHostedParams();
         if (params == null || params.isEmpty()) return;
 
         XMLRPCCallback callback = new XMLRPCCallback() {

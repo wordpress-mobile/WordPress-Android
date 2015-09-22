@@ -164,6 +164,10 @@ public abstract class SiteSettingsInterface {
         return mSettings.getCategoriesForDisplay();
     }
 
+    public String getDefaultPostFormatDisplay() {
+        return getFormats().get(mSettings.defaultPostFormat);
+    }
+
     public int getDefaultCategory() {
         return mSettings.defaultCategory;
     }
