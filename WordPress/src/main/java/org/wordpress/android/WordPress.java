@@ -208,9 +208,11 @@ public class WordPress extends Application {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
+                AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(),
+                        BuildConfig.MIXPANEL_TOKEN));
                 AnalyticsTracker.registerTracker(analyticsTrackerNosara);
-                        AnalyticsTracker.init(getContext());
+                AnalyticsTracker.init(getContext());
+                AnalyticsUtils.refreshMetadata();
 
                 // Track app upgrade
                 int versionCode = PackageUtils.getVersionCode(getContext());
@@ -244,8 +246,6 @@ public class WordPress extends Application {
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
         }
-
-        AnalyticsUtils.refreshMetadata();
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
