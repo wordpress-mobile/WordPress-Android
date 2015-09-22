@@ -27,6 +27,19 @@ function pFail() {
 	echo "[$(tput setaf 1)KO$(tput sgr0)]"
 }
 
+function checkSamsungWorkaround() {
+	/bin/echo -n "Check for the Samsung android.support.v7.internal.view.menu workaround..."
+	./gradlew clean > /dev/null 2>&1
+	./gradlew assembleVanillaRelease > /dev/null 2>&1
+	apktool -f -r d WordPress/build/outputs/apk/WordPress-vanilla-release-unaligned.apk -o /tmp/wpandroid-checksamsungworkaround/ > /dev/null
+	ls -1 /tmp/wpandroid-checksamsungworkaround/smali/android/support/v7/internal/view/menu/MenuBuilder* > /dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		pFail
+		exit 4
+	fi
+	pOk
+}
+
 function checkENStrings() {
 	if [[ -n $(git status --porcelain|grep "M res") ]]; then
 		/bin/echo -n "Unstagged changes detected in $RESDIR/ - can't continue..."
@@ -83,5 +96,6 @@ function checkVersions() {
 checkNewLanguages
 checkENStrings
 checkVersions
+checkSamsungWorkaround
 # checkDeviceToTest
 # runConnectedTests
