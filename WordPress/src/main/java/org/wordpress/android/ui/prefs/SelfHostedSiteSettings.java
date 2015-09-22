@@ -47,6 +47,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     public void saveSettings() {
         // Save current settings and attempt to sync remotely
         SiteSettingsTable.saveSettings(mSettings);
+        siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, mSettings.location);
 
         final Map<String, String> params = serializeSelfHostedParams();
         if (params == null || params.isEmpty()) return;

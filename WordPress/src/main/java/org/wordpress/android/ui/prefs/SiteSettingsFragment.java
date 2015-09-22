@@ -178,11 +178,13 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mCategoryPreference) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
-            mCategoryPreference.setSummary(mCategoryPreference.getEntry());
+            mCategoryPreference.setValue(newValue.toString());
+            mCategoryPreference.setSummary(mSiteSettings.getDefaultCategoryForDisplay());
             mCategoryPreference.refreshAdapter();
             return true;
         } else if (preference == mFormatPreference) {
             mSiteSettings.setDefaultFormat(newValue.toString());
+            mFormatPreference.setValue(newValue.toString());
             mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
             mFormatPreference.refreshAdapter();
             return true;

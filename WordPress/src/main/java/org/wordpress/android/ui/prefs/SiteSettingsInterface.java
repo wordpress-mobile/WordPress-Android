@@ -172,6 +172,16 @@ public abstract class SiteSettingsInterface {
         return mSettings.defaultCategory;
     }
 
+    public String getDefaultCategoryForDisplay() {
+        for (CategoryModel model : getCategories()) {
+            if (model.id == getDefaultCategory()) {
+                return model.name;
+            }
+        }
+
+        return "";
+    }
+
     public void setAddress(String address) {
         mSettings.address = address;
     }

@@ -37,7 +37,7 @@ public class CategoryModel {
      * Sets data from a local database {@link Cursor}.
      */
     public void deserializeFromDatabase(Cursor cursor) {
-        if (cursor == null || !cursor.moveToFirst()) return;
+        if (cursor == null) return;
 
         id = cursor.getInt(cursor.getColumnIndex(ID_COLUMN_NAME));
         name = cursor.getString(cursor.getColumnIndex(NAME_COLUMN_NAME));
