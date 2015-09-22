@@ -170,7 +170,6 @@ public class WordPress extends Application {
         }
 
         versionName = PackageUtils.getVersionName(this);
-        HelpshiftHelper.init(this);
         initWpDb();
         enableHttpResponseCache(mContext);
 
