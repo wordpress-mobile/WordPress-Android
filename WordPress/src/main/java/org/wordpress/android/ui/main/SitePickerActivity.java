@@ -428,7 +428,7 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    static void addSite(Activity activity) {
+    public static void addSite(Activity activity) {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
         if (AccountHelper.isSignedInWordPressDotCom()) {
@@ -444,7 +444,7 @@ public class SitePickerActivity extends AppCompatActivity
      * dialog which appears after user taps "Add site" - enables choosing whether to create
      * a new wp.com blog or add an existing self-hosted one
      */
-    static class AddSiteDialog extends DialogFragment {
+    public static class AddSiteDialog extends DialogFragment {
         static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
 
         @NonNull
