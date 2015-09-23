@@ -213,16 +213,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         showNotificationForBuilder(builder, context, pushId);
 
-        // Also add a GroupSummary notification. This is REQUIRED to support Android 4.x
-        String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
-        NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setGroup(NOTIFICATION_GROUP_KEY)
-                .setGroupSummary(true)
-                .setAutoCancel(true);
-
-        // Make the notification InboxStyle if we have multiple notifications
+        // Also add a group summary notification, which is required for non-wearable devices
         if (mActiveNotificationsMap.size() > 1) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             int noteCtr = 1;
@@ -252,23 +243,25 @@ public class GCMIntentService extends GCMBaseIntentService {
                         mActiveNotificationsMap.size() - mMaxInboxItems));
             }
 
-            groupBuilder.setTicker(message)
+            String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
+            NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setColor(getResources().getColor(R.color.blue_wordpress))
+                    .setGroup(NOTIFICATION_GROUP_KEY)
+                    .setGroupSummary(true)
+                    .setAutoCancel(true)
+                    .setTicker(message)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText(subject)
                     .setStyle(inboxStyle);
+
+            showNotificationForBuilder(groupBuilder, context, GROUP_NOTIFICATION_ID);
         } else {
-            groupBuilder.setTicker(message)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-
-            if (largeIconBitmap != null) {
-                groupBuilder.setLargeIcon(largeIconBitmap);
-            }
+            // Set the individual notification we've already built as the group summary
+            builder.setGroupSummary(true);
+            showNotificationForBuilder(builder, context, GROUP_NOTIFICATION_ID);
         }
-
-        showNotificationForBuilder(groupBuilder, context, GROUP_NOTIFICATION_ID);
-
+        
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
