@@ -28,6 +28,9 @@ import java.util.List;
  * Based on BarGraph from the GraphView library.
  */
 class StatsBarGraph extends GraphView {
+
+    private static final int DEFAULT_MAX_Y = 10;
+
     // Keep tracks of every bar drawn on the graph.
     private final List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
     private int mBarPositionToHighlight = -1;
@@ -292,14 +295,10 @@ class StatsBarGraph extends GraphView {
     protected double getMaxY() {
         double maxY = super.getMaxY();
         if (maxY == 0) {
-            return 10;
+            return DEFAULT_MAX_Y;
         }
 
-        if (maxY % 2 == 0) {
-            return maxY;
-        } else {
-            return maxY+1;
-        }
+        return maxY + (maxY % 2);
     }
 
     /**
