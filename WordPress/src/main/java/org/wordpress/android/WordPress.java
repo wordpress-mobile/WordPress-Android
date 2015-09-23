@@ -170,7 +170,6 @@ public class WordPress extends Application {
         }
 
         versionName = PackageUtils.getVersionName(this);
-        HelpshiftHelper.init(this);
         initWpDb();
         enableHttpResponseCache(mContext);
 
@@ -200,30 +199,25 @@ public class WordPress extends Application {
         registerComponentCallbacks(applicationLifecycleMonitor);
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
 
-        // AnalyticsTrackerNosara must be instantiated on the main thread
-        initAnalytics(new AnalyticsTrackerNosara(getContext()), SystemClock.elapsedRealtime() - startDate);
+        initAnalytics(SystemClock.elapsedRealtime() - startDate);
     }
 
-    private void initAnalytics(final AnalyticsTrackerNosara analyticsTrackerNosara, final long elapsedTimeOnCreate) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
-                AnalyticsTracker.registerTracker(analyticsTrackerNosara);
-                        AnalyticsTracker.init(getContext());
+    private void initAnalytics(final long elapsedTimeOnCreate) {
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
+        AnalyticsTracker.init(getContext());
+        AnalyticsUtils.refreshMetadata();
 
-                // Track app upgrade
-                int versionCode = PackageUtils.getVersionCode(getContext());
-                int oldVersionCode = AppPrefs.getLastAppVersionCode();
-                if (oldVersionCode != 0 && oldVersionCode < versionCode) {
-                    Map<String, Long> properties = new HashMap<String, Long>(1);
-                    properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
-                    // app upgraded
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
-                }
-                AppPrefs.setLastAppVersionCode(versionCode);
-            }
-        }).start();
+        // Track app upgrade
+        int versionCode = PackageUtils.getVersionCode(getContext());
+        int oldVersionCode = AppPrefs.getLastAppVersionCode();
+        if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+            Map<String, Long> properties = new HashMap<String, Long>(1);
+            properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
+            // app upgraded
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
+        }
+        AppPrefs.setLastAppVersionCode(versionCode);
     }
 
     /**
@@ -244,8 +238,6 @@ public class WordPress extends Application {
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
         }
-
-        AnalyticsUtils.refreshMetadata();
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
