@@ -199,7 +199,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.newBlogForResult(getActivity());
+                SitePickerActivity.addSite(getActivity());
             }
         });
 
@@ -238,6 +238,7 @@ public class MySiteFragment extends Fragment
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
+
             case RequestCodes.CREATE_BLOG:
                 // if the user created a new blog refresh the blog details
                 mBlog = WordPress.getCurrentBlog();
