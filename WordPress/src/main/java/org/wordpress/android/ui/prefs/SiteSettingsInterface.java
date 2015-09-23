@@ -36,6 +36,8 @@ import java.util.Map;
 public abstract class SiteSettingsInterface {
     public static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
     public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
+    public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
+    public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
     public interface SiteSettingsListener {
         /**
