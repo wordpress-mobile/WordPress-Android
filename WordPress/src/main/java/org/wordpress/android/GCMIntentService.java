@@ -1,7 +1,6 @@
 
 package org.wordpress.android;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
@@ -129,7 +129,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         mPreviousNoteId = noteId;
         mPreviousNoteTime = thisTime;
-        
+
         // Update notification content for the same noteId if it is already showing
         int pushId = 0;
         for (int id : mActiveNotificationsMap.keySet()) {
@@ -213,10 +213,18 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         showNotificationForBuilder(builder, context, pushId);
 
-        // When we have multiple notifications, add an inbox style notification for non-wearable devices
+        // Also add a GroupSummary notification. This is REQUIRED to support Android 4.x
+        String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
+        NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
+                .setGroup(NOTIFICATION_GROUP_KEY)
+                .setGroupSummary(true)
+                .setAutoCancel(true);
+
+        // Make the notification InboxStyle if we have multiple notifications
         if (mActiveNotificationsMap.size() > 1) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
             int noteCtr = 1;
             for (Bundle pushBundle : mActiveNotificationsMap.values()) {
                 // InboxStyle notification is limited to 5 lines
@@ -244,21 +252,22 @@ public class GCMIntentService extends GCMBaseIntentService {
                         mActiveNotificationsMap.size() - mMaxInboxItems));
             }
 
-            String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
-
-            NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setColor(getResources().getColor(R.color.blue_wordpress))
+            groupBuilder.setTicker(message)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText(subject)
-                    .setGroup(NOTIFICATION_GROUP_KEY)
-                    .setGroupSummary(true)
-                    .setTicker(message)
-                    .setAutoCancel(true)
                     .setStyle(inboxStyle);
+        } else {
+            groupBuilder.setTicker(message)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
-            showNotificationForBuilder(groupBuilder, context, GROUP_NOTIFICATION_ID);
+            if (largeIconBitmap != null) {
+                groupBuilder.setLargeIcon(largeIconBitmap);
+            }
         }
+
+        showNotificationForBuilder(groupBuilder, context, GROUP_NOTIFICATION_ID);
 
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
@@ -304,8 +313,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, notificationId, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(notificationId, builder.build());
     }
 
@@ -348,8 +356,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
     }
 
@@ -454,8 +461,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     public static void removeAllNotifications(Context context) {
         if (context == null || !hasNotifications()) return;
 
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         for (Integer pushId : mActiveNotificationsMap.keySet()) {
             notificationManager.cancel(pushId);
         }
