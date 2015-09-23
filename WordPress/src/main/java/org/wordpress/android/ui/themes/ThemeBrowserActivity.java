@@ -267,6 +267,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         alertDialog.show();
     }
 
+    private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
+        Intent intent = new Intent(this, ThemeWebActivity.class);
+        intent.putExtra(THEME_ID, themeId);
+        intent.putExtra(THEME_WEB_MODE, type.ordinal());
+        startActivityForResult(intent, ACTIVATE_THEME);
+    }
+
     @Override
     public void onActivateSelected(String themeId) {
         activateTheme(themeId);
@@ -274,40 +281,27 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onPreviewSelected(String themeId) {
-        Blog blog = WordPress.getCurrentBlog();
-        String currentURL = blog.getHomeURL();
-        currentURL = currentURL.replaceFirst(getString(R.string.theme_https_prefix), "");
-        String url = String.format(getString(R.string.theme_preview_url), currentURL, themeId);
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 
     @Override
     public void onDemoSelected(String themeId) {
-        Intent intent = new Intent(this, ThemeWebActivity.class);
-        intent.putExtra(THEME_ID, themeId);
-        intent.putExtra(BLOG_ID, getBlogId());
-        intent.putExtra(THEME_WEB_MODE, 3);
-        startActivityForResult(intent, ACTIVATE_THEME);
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DEMO);
     }
 
     @Override
     public void onDetailsSelected(String themeId) {
-        Intent intent = new Intent(this, ThemeWebActivity.class);
-        intent.putExtra(THEME_ID, themeId);
-        intent.putExtra(THEME_WEB_MODE, 1);
-        startActivityForResult(intent, ACTIVATE_THEME);
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DETAILS);
     }
 
     @Override
     public void onSupportSelected(String themeId) {
-        Intent intent = new Intent(this, ThemeWebActivity.class);
-        intent.putExtra(THEME_ID, themeId);
-        intent.putExtra(THEME_WEB_MODE, 0);
-        startActivityForResult(intent, ACTIVATE_THEME);
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.SUPPORT);
     }
 
     @Override
     public void onCustomizeSelected(String themeId) {
-
+        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.CUSTOMIZE);
     }
 
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {

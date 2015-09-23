@@ -9,17 +9,33 @@ import android.webkit.WebView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
 
 public class ThemeWebActivity extends AppCompatActivity {
+
+    private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s";
+    private static String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support/";
+
+    public enum ThemeWebActivityType {
+        PREVIEW,
+        DEMO,
+        DETAILS,
+        SUPPORT,
+        CUSTOMIZE,
+    }
+
     private String mThemeId;
+    private Theme mCurrentTheme;
     private String mBlogId;
-    private int mThemeMode;
+    private ThemeWebActivityType mType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.theme_web_activity);
+        setCurrentThemeAndThemeId();
+        getSupportActionBar().setTitle(mCurrentTheme.getName());
         loadThemeUrlInWebView();
     }
 
@@ -45,20 +61,39 @@ public class ThemeWebActivity extends AppCompatActivity {
         }
     }
 
+    private void setCurrentThemeAndThemeId() {
+        mThemeId = getIntent().getStringExtra(ThemeBrowserActivity.THEME_ID);
+
+        mBlogId = WordPress.getCurrentBlog().getDotComBlogId();
+        mCurrentTheme = WordPress.wpDB.getTheme(mBlogId, mThemeId);
+
+        int typeValue = getIntent().getIntExtra(ThemeBrowserActivity.THEME_WEB_MODE, 0);
+        mType = ThemeWebActivityType.values()[typeValue];
+    }
+
     private void loadThemeUrlInWebView() {
         WebView webView = (WebView) findViewById(R.id.webView);
-        Intent intent = getIntent();
-        mThemeId = intent.getStringExtra(ThemeBrowserActivity.THEME_ID);
-        String currentBlog = intent.getStringExtra(ThemeBrowserActivity.BLOG_ID);
-        int type = intent.getIntExtra(ThemeBrowserActivity.THEME_WEB_MODE, 0);
-        String url = String.format("https://theme.wordpress.com/themes/%s/", mThemeId);
-        if (type == 0) {
-            url = url + "support/";
-        } else if (type == 2) {
-            url = String.format("https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s", currentBlog, mThemeId);
-        } else if (type == 3) {
-            Theme currentTheme = WordPress.wpDB.getTheme(currentBlog, mThemeId);
-            url = currentTheme.getDemoURI();
+        String url = "";
+
+        switch (mType) {
+            case PREVIEW:
+                String currentURL = WordPress.getCurrentBlog().getHomeURL();
+                currentURL = currentURL.replaceFirst(getString(R.string.theme_https_prefix), "");
+                url = String.format(getString(R.string.theme_preview_url), currentURL, mThemeId);
+                break;
+            case DEMO:
+                url = mCurrentTheme.getDemoURI();
+                break;
+            case DETAILS: // details
+                break;
+            case SUPPORT:
+                url = String.format(THEME_URL_SUPPORT, mThemeId);
+                break;
+            case CUSTOMIZE:
+                url = String.format(THEME_URL_CUSTOMIZE, mBlogId, mThemeId);
+                break;
+            default:
+                break;
         }
 
         webView.loadUrl(url);
