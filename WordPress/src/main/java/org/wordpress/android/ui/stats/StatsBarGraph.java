@@ -286,6 +286,22 @@ class StatsBarGraph extends GraphView {
         return 0;
     }
 
+    // Make sure the highest number is always even, so the halfway mark is correctly balanced in the middle of the graph
+    // Also make sure to display a default value when there is no activity in the period.
+    @Override
+    protected double getMaxY() {
+        double maxY = super.getMaxY();
+        if (maxY == 0) {
+            return 10;
+        }
+
+        if (maxY % 2 == 0) {
+            return maxY;
+        } else {
+            return maxY+1;
+        }
+    }
+
     /**
      * Private class that is used to hold the local (to the canvas) coordinate on the screen
      * of every single bar in the graph
