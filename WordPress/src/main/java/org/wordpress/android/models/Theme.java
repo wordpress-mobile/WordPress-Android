@@ -173,6 +173,10 @@ public class Theme {
         mIsCurrent = isCurrent;
     }
 
+    public boolean isPremium() {
+        return !mPrice.equals("");
+    }
+
     public void save() {
         WordPress.wpDB.saveTheme(this);
     }
