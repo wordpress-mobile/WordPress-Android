@@ -76,7 +76,9 @@ public class MySiteFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        AniUtils.showFab(mFabView, false);
+        if (mFabView.getVisibility() == View.VISIBLE) {
+            AniUtils.showFab(mFabView, false);
+        }
     }
 
     @Override
@@ -90,7 +92,9 @@ public class MySiteFragment extends Fragment
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isAdded() && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                if (isAdded()
+                        && mBlog != null
+                        && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
                     AniUtils.showFab(mFabView, true);
                 }
             }
