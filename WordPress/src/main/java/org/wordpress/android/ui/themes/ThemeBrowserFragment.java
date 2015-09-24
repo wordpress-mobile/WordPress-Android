@@ -253,6 +253,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             mNoResultText.setVisibility(View.GONE);
         }
         mAdapter.changeCursor(cursor);
+        mAdapter.notifyDataSetChanged();
         setEmptyViewVisible(mAdapter.getCount() == 0);
     }
 
