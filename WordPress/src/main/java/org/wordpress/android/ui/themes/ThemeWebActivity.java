@@ -15,6 +15,8 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 
 public class ThemeWebActivity extends WPWebViewActivity {
+    public static final String IS_CURRENT_THEME = "is_current_theme";
+    public static final String IS_PREMIUM_THEME = "is_premium_theme";
     private static final String THEME_URL_PREVIEW = "%s/?nomuse=1&theme=pub/%s";
     private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s";
     private static final String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support";
@@ -28,15 +30,15 @@ public class ThemeWebActivity extends WPWebViewActivity {
         CUSTOMIZE,
     }
 
-    public static void openTheme(Context context, String themeId, ThemeWebActivityType type) {
+    public static void openTheme(Context context, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
         String url = getUrl(context, currentTheme, blogId, type);
 
-        openWPCOMURL(context, url, currentTheme, AccountHelper.getDefaultAccount().getUserName());
+        openWPCOMURL(context, url, currentTheme, AccountHelper.getDefaultAccount().getUserName(), isCurrentTheme);
     }
 
-    private static void openWPCOMURL(Context context, String url, Theme currentTheme, String user) {
+    private static void openWPCOMURL(Context context, String url, Theme currentTheme, String user, Boolean isCurrentTheme) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -58,7 +60,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
         intent.putExtra(ThemeWebActivity.AUTHENTICATION_USER, user);
         intent.putExtra(ThemeWebActivity.URL_TO_LOAD, url);
         intent.putExtra(ThemeWebActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
-        intent.putExtra("isPremium", currentTheme.isPremium());
+        intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
+        intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
+
         context.startActivity(intent);
     }
 
@@ -96,9 +100,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
         getMenuInflater().inflate(R.menu.theme_web, menu);
 
         Bundle bundle = getIntent().getExtras();
-        Boolean isPremiumTheme = bundle.getBoolean("isPremium", false);
+        Boolean isPremiumTheme = bundle.getBoolean(IS_PREMIUM_THEME, false);
+        Boolean isCurrentTheme = bundle.getBoolean(IS_CURRENT_THEME, false);
 
-        if (isPremiumTheme) {
+        if (isPremiumTheme || isCurrentTheme) {
             menu.findItem(R.id.action_activate).setVisible(false);
         }
 

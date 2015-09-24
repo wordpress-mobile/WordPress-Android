@@ -268,7 +268,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
-        ThemeWebActivity.openTheme(this, themeId, type);
+        boolean isCurrentTheme = mCurrentTheme.getId().equals(mCurrentTheme.getId());
+        ThemeWebActivity.openTheme(this, themeId, type, isCurrentTheme);
     }
 
     @Override
