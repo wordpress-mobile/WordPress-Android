@@ -102,6 +102,13 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        ((ThemeBrowserActivity) getActivity()).fetchCurrentTheme();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mGridView != null) {
