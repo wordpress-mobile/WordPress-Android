@@ -76,7 +76,9 @@ public class MySiteFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        AniUtils.showFab(mFabView, false);
+        if (mFabView.getVisibility() == View.VISIBLE) {
+            AniUtils.showFab(mFabView, false);
+        }
     }
 
     @Override
@@ -90,7 +92,9 @@ public class MySiteFragment extends Fragment
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isAdded() && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                if (isAdded()
+                        && mBlog != null
+                        && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
                     AniUtils.showFab(mFabView, true);
                 }
             }
@@ -199,7 +203,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.newBlogForResult(getActivity());
+                SitePickerActivity.addSite(getActivity());
             }
         });
 
@@ -238,6 +242,7 @@ public class MySiteFragment extends Fragment
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
+
             case RequestCodes.CREATE_BLOG:
                 // if the user created a new blog refresh the blog details
                 mBlog = WordPress.getCurrentBlog();

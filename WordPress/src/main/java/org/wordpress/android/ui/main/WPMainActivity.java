@@ -351,6 +351,7 @@ public class WPMainActivity extends Activity
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
+            case RequestCodes.CREATE_BLOG:
                 if (resultCode == RESULT_OK) {
                     MySiteFragment mySiteFragment = getMySiteFragment();
                     if (mySiteFragment != null) {
@@ -400,14 +401,6 @@ public class WPMainActivity extends Activity
             case RequestCodes.ACCOUNT_SETTINGS:
                 if (resultCode == SettingsFragment.LANGUAGE_CHANGED) {
                     resetFragments();
-                }
-                break;
-            case RequestCodes.CREATE_BLOG:
-                if (resultCode == RESULT_OK) {
-                    MySiteFragment mySiteFragment = getMySiteFragment();
-                    if (mySiteFragment != null) {
-                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
-                    }
                 }
                 break;
         }
