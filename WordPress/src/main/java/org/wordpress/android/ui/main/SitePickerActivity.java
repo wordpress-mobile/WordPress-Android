@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -29,7 +30,6 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
@@ -143,7 +143,7 @@ public class SitePickerActivity extends AppCompatActivity
             showSoftKeyboard();
             return true;
         } else if (itemId == R.id.menu_add) {
-            addSite();
+            addSite(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -154,7 +154,7 @@ public class SitePickerActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case SignInActivity.CREATE_ACCOUNT_REQUEST:
+            case RequestCodes.ADD_ACCOUNT:
             case RequestCodes.CREATE_BLOG:
                 if (resultCode != RESULT_CANCELED) {
                     getAdapter().loadSites();
@@ -428,15 +428,15 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    private void addSite() {
+    public static void addSite(Activity activity) {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
         if (AccountHelper.isSignedInWordPressDotCom()) {
             DialogFragment dialog = new AddSiteDialog();
-            dialog.show(this.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
+            dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {
             // user isn't signed into wp.com, so simply enable adding self-hosted
-            ActivityLauncher.addSelfHostedSiteForResult(SitePickerActivity.this);
+            ActivityLauncher.addSelfHostedSiteForResult(activity);
         }
     }
 
