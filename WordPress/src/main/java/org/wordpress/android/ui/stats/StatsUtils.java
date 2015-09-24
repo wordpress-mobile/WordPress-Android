@@ -353,6 +353,20 @@ public class StatsUtils {
         AppLog.e(T.STATS, "Volley Error Message: " + volleyError.getMessage(), volleyError);
     }
 
+    public static synchronized boolean isRESTDisabledError(final Serializable error) {
+        if (error == null || !(error instanceof com.android.volley.AuthFailureError)) {
+            return false;
+        }
+        com.android.volley.AuthFailureError volleyError = (com.android.volley.AuthFailureError) error;
+        if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            return errorMessage.contains("api calls") && errorMessage.contains("disabled");
+        } else {
+            AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
+            return false;
+        }
+    }
+
     public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
             throws JSONException {
         Serializable model = null;
