@@ -88,7 +88,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         Boolean isPremiumTheme = bundle.getBoolean("isPremium", false);
 
         if (isPremiumTheme) {
-            menu.findItem(R.id.action_settings).setVisible(false);
+            menu.findItem(R.id.action_activate).setVisible(false);
         }
 
         return true;
