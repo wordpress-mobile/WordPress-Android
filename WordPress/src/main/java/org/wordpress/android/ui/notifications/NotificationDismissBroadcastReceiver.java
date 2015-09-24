@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.notifications;
 
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationManagerCompat;
 
 import org.wordpress.android.GCMIntentService;
 
@@ -21,8 +21,7 @@ public class NotificationDismissBroadcastReceiver extends BroadcastReceiver {
 
             // Dismiss the grouped notification if a user dismisses all notifications from a wear device
             if (!GCMIntentService.hasNotifications()) {
-                NotificationManager notificationManager = (NotificationManager) context
-                        .getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
             }
         }
