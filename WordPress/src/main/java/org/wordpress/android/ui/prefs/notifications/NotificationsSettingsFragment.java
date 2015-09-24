@@ -354,8 +354,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     }
 
     public void addToolbarToPreferenceScreen(PreferenceScreen preferenceScreen) {
-        if (!isAdded()) return;
         final Dialog dialog = preferenceScreen.getDialog();
+        if (!isAdded() || dialog == null) return;
 
         LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
         Toolbar toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);
