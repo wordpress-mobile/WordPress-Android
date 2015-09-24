@@ -29,10 +29,11 @@ function pFail() {
 
 function checkSamsungWorkaround() {
 	/bin/echo -n "Check for the Samsung android.support.v7.internal.view.menu workaround..."
-	./gradlew clean > /dev/null 2>&1
-	./gradlew assembleVanillaRelease > /dev/null 2>&1
-	apktool -f -r d WordPress/build/outputs/apk/WordPress-vanilla-release-unaligned.apk -o /tmp/wpandroid-checksamsungworkaround/ > /dev/null
-	ls -1 /tmp/wpandroid-checksamsungworkaround/smali/android/support/v7/internal/view/menu/MenuBuilder* > /dev/null 2>&1
+	apktool > /dev/null 2>&1 || (pFail; echo "You need apktool installed to run this check (brew install apktool)"; exit 1) || exit 4
+	./gradlew clean --offline > /dev/null 2>&1
+	./gradlew assembleVanillaRelease --offline > /dev/null 2>&1
+	rm -rf /tmp/wpandroid-checksamsungworkaround/
+	apktool -f -r d WordPress/build/outputs/apk/WordPress-vanilla-release-unaligned.apk -o /tmp/wpandroid-checksamsungworkaround/ > /dev/null && ls -1 /tmp/wpandroid-checksamsungworkaround/smali/android/support/v7/internal/view/menu/MenuBuilder* > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
 		pFail
 		exit 4
