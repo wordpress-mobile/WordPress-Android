@@ -1,12 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/webview_wrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="org.wordpress.android.ui.themes.ThemeWebActivity">
+    android:layout_height="match_parent">
 
     <WebView
         android:id="@+id/webView"
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/progress_bar_height"
+        android:indeterminate="false"
+        android:layout_alignTop="@+id/webView"
+        android:progressDrawable="@drawable/progressbar_horizontal" />
+
+</RelativeLayout>

@@ -268,10 +268,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
-        Intent intent = new Intent(this, ThemeWebActivity.class);
-        intent.putExtra(THEME_ID, themeId);
-        intent.putExtra(THEME_WEB_MODE, type.ordinal());
-        startActivityForResult(intent, ACTIVATE_THEME);
+        ThemeWebActivity.openTheme(this, themeId, type);
     }
 
     @Override
