@@ -1,70 +1,117 @@
 package org.wordpress.android.ui.themes;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.webkit.WebView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.util.AppLog;
 
-public class ThemeWebActivity extends AppCompatActivity {
-    private String mThemeId;
-    private String mBlogId;
-    private int mThemeMode;
+public class ThemeWebActivity extends WPWebViewActivity {
+    public static final String IS_CURRENT_THEME = "is_current_theme";
+    public static final String IS_PREMIUM_THEME = "is_premium_theme";
+    private static final String THEME_URL_PREVIEW = "%s/?nomuse=1&theme=pub/%s";
+    private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s";
+    private static final String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support";
+    private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.theme_web_activity);
-        loadThemeUrlInWebView();
+    public enum ThemeWebActivityType {
+        PREVIEW,
+        DEMO,
+        DETAILS,
+        SUPPORT,
+        CUSTOMIZE,
+    }
+
+    public static void openTheme(Context context, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
+        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+        Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
+        String url = getUrl(context, currentTheme, blogId, type);
+
+        openWPCOMURL(context, url, currentTheme, AccountHelper.getDefaultAccount().getUserName(), isCurrentTheme);
+    }
+
+    private static void openWPCOMURL(Context context, String url, Theme currentTheme, String user, Boolean isCurrentTheme) {
+        if (context == null) {
+            AppLog.e(AppLog.T.UTILS, "Context is null");
+            return;
+        }
+
+        if (TextUtils.isEmpty(url)) {
+            AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(user)) {
+            AppLog.e(AppLog.T.UTILS, "Username empty/null");
+            return;
+        }
+
+        Intent intent = new Intent(context, ThemeWebActivity.class);
+        intent.putExtra(ThemeWebActivity.AUTHENTICATION_USER, user);
+        intent.putExtra(ThemeWebActivity.URL_TO_LOAD, url);
+        intent.putExtra(ThemeWebActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
+        intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
+
+        context.startActivity(intent);
+    }
+
+    public static String getUrl(Context context, Theme theme, String blogId, ThemeWebActivityType type) {
+        String url = "";
+        String homeURL = WordPress.getCurrentBlog().getHomeURL();
+
+        switch (type) {
+            case PREVIEW:
+                url = String.format(THEME_URL_PREVIEW, homeURL, theme.getId());
+                break;
+            case DEMO:
+                url = theme.getDemoURI();
+                break;
+            case DETAILS:
+                String currentURL = homeURL.replaceFirst(context.getString(R.string.theme_https_prefix), "");
+                url = String.format(THEME_URL_DETAILS, currentURL, theme.getId());
+                break;
+            case SUPPORT:
+                url = String.format(THEME_URL_SUPPORT, theme.getId());
+                break;
+            case CUSTOMIZE:
+                url = String.format(THEME_URL_CUSTOMIZE, blogId, theme.getId());
+                break;
+            default:
+                break;
+        }
+
+        return url;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.theme_web, menu);
+
+        Bundle bundle = getIntent().getExtras();
+        Boolean isPremiumTheme = bundle.getBoolean(IS_PREMIUM_THEME, false);
+        Boolean isCurrentTheme = bundle.getBoolean(IS_CURRENT_THEME, false);
+
+        if (isPremiumTheme || isCurrentTheme) {
+            menu.findItem(R.id.action_activate).setVisible(false);
+        }
 
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_activate) {
-            Intent intent = new Intent();
-            intent.putExtra(ThemeBrowserActivity.THEME_ID, mThemeId);
-            setResult(RESULT_OK, intent);
-            finish();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void loadThemeUrlInWebView() {
-        WebView webView = (WebView) findViewById(R.id.webView);
-        Intent intent = getIntent();
-        mThemeId = intent.getStringExtra(ThemeBrowserActivity.THEME_ID);
-        String currentBlog = intent.getStringExtra(ThemeBrowserActivity.BLOG_ID);
-        int type = intent.getIntExtra(ThemeBrowserActivity.THEME_WEB_MODE, 0);
-        String url = String.format("https://theme.wordpress.com/themes/%s/", mThemeId);
-        if (type == 0) {
-            url = url + "support/";
-        } else if (type == 2) {
-            url = String.format("https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s", currentBlog, mThemeId);
-        } else if (type == 3) {
-            Theme currentTheme = WordPress.wpDB.getTheme(currentBlog, mThemeId);
-            url = currentTheme.getDemoURI();
-        }
-
-        webView.loadUrl(url);
-    }
-
-    public String getThemeId() {
-        return mThemeId;
+    public void configureView() {
+        setContentView(R.layout.theme_web_activity);
     }
 }

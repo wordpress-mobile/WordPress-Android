@@ -32,12 +32,7 @@ public abstract class WebViewActivity extends AppCompatActivity {
         // such as AuthenticatedWebViewActivity
         setTitle("");
 
-        setContentView(R.layout.webview);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        configureView();
 
         // note: do NOT call mWebView.getSettings().setUserAgentString(WordPress.getUserAgent())
         // here since it causes problems with the browser-sniffing that some sites rely on to
@@ -63,6 +58,15 @@ public abstract class WebViewActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         resumeWebView();
+    }
+
+    public void configureView() {
+        setContentView(R.layout.webview);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void pauseWebView() {

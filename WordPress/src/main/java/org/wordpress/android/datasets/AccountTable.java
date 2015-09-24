@@ -33,6 +33,10 @@ public class AccountTable {
                 + "access_token            TEXT)");
     }
 
+    public static void migrationAddEmailAddressField(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD email TEXT DEFAULT '';");
+    }
+
     private static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE);
     }
@@ -54,6 +58,7 @@ public class AccountTable {
         values.put("site_count", account.getSiteCount());
         values.put("visible_site_count", account.getVisibleSiteCount());
         values.put("access_token", account.getAccessToken());
+        values.put("email", account.getEmail());
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -78,6 +83,7 @@ public class AccountTable {
                 account.setSiteCount(c.getInt(c.getColumnIndex("site_count")));
                 account.setVisibleSiteCount(c.getInt(c.getColumnIndex("visible_site_count")));
                 account.setAccessToken(c.getString(c.getColumnIndex("access_token")));
+                account.setEmail(c.getString(c.getColumnIndex("email")));
             }
             return account;
         } finally {

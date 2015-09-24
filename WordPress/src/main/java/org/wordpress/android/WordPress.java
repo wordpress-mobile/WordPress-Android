@@ -5,16 +5,14 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteException;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -33,7 +31,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -48,8 +45,6 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -63,6 +58,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
@@ -160,10 +156,11 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        long startDate = SystemClock.elapsedRealtime();
 
         mContext = this;
 
-        ProfilingUtils.start("WordPress.onCreate");
+        ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);
         AppLog.i(T.UTILS, "WordPress.onCreate");
@@ -173,7 +170,6 @@ public class WordPress extends Application {
         }
 
         versionName = PackageUtils.getVersionName(this);
-        HelpshiftHelper.init(this);
         initWpDb();
         enableHttpResponseCache(mContext);
 
@@ -199,20 +195,27 @@ public class WordPress extends Application {
 
         HelpshiftHelper.init(this);
 
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
-        AnalyticsTracker.init(getContext());
-
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
 
+        initAnalytics(SystemClock.elapsedRealtime() - startDate);
+    }
+
+    private void initAnalytics(final long elapsedTimeOnCreate) {
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
+        AnalyticsTracker.init(getContext());
+        AnalyticsUtils.refreshMetadata();
+
         // Track app upgrade
-        int versionCode = PackageUtils.getVersionCode(this);
+        int versionCode = PackageUtils.getVersionCode(getContext());
         int oldVersionCode = AppPrefs.getLastAppVersionCode();
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+            Map<String, Long> properties = new HashMap<String, Long>(1);
+            properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
             // app upgraded
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
         }
         AppPrefs.setLastAppVersionCode(versionCode);
     }
@@ -231,17 +234,10 @@ public class WordPress extends Application {
         registerForCloudMessaging(this);
         configureSimperium();
 
-        // we want to reset the suggestion table in every launch so we can get a fresh list
-        SuggestionTable.reset(wpDB.getDatabase());
-
         // Refresh account informations
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
         }
-
-        ABTestingUtils.init();
-
-        AnalyticsUtils.refreshMetadata();
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -276,19 +272,12 @@ public class WordPress extends Application {
     private boolean createAndVerifyWpDb() {
         try {
             wpDB = new WordPressDB(this);
-            // verify account data
-            List<Map<String, Object>> accounts = wpDB.getAllBlogs();
-            for (Map<String, Object> account : accounts) {
-                if (account == null || account.get("blogName") == null || account.get("url") == null) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (SQLiteException sqle) {
-            AppLog.e(T.DB, sqle);
-            return false;
-        } catch (RuntimeException re) {
-            AppLog.e(T.DB, re);
+            // verify account data - query will return 1 if any blog names or urls are null
+            int result = SqlUtils.intForQuery(wpDB.getDatabase(),
+                    "SELECT 1 FROM accounts WHERE blogName IS NULL OR url IS NULL LIMIT 1", null);
+            return result != 1;
+        } catch (RuntimeException e) {
+            AppLog.e(T.DB, e);
             return false;
         }
     }
@@ -404,9 +393,7 @@ public class WordPress extends Application {
         }
 
         // Register to Helpshift notifications
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        }
+        HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         AnalyticsTracker.registerPushNotificationToken(regId);
     }
 

@@ -65,7 +65,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setElevation(0.0f);
             actionBar.setTitle(StringUtils.unescapeHTML(blog.getNameOrHostUrl()));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

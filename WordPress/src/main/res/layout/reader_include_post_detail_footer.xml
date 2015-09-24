@@ -27,6 +27,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/reader_detail_margin"
         android:layout_marginTop="@dimen/margin_medium"
+        android:layout_toLeftOf="@+id/layout_icons"
         android:background="?android:selectableItemBackground"
         android:ellipsize="end"
         android:gravity="center_vertical"

@@ -32,8 +32,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.5-rc-4"
-        versionCode 204
+        versionName "4.6-rc-1"
+        versionCode 208
         minSdkVersion 14
         targetSdkVersion 23
 
@@ -97,7 +97,7 @@ dependencies {
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile 'com.simperium.android:simperium:0.6.4'
+    compile 'com.simperium.android:simperium:0.6.6'
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')

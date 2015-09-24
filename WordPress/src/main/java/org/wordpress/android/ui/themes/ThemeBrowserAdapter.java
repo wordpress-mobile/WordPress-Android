@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -35,12 +36,14 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         private final TextView nameView;
         private final TextView priceView;
         private final ImageButton imageButton;
+        private final FrameLayout frameLayout;
 
         ThemeViewHolder(View view) {
             imageView = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
             nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
             priceView = (TextView) view.findViewById(R.id.theme_grid_item_price);
             imageButton = (ImageButton) view.findViewById(R.id.theme_grid_item_image_button);
+            frameLayout = (FrameLayout) view.findViewById(R.id.theme_grid_item_image_layout);
         }
     }
 
@@ -78,7 +81,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             urlHolder.requestURL = screenshotURL;
             themeViewHolder.imageView.setDefaultImageResId(R.drawable.theme_loading);
             themeViewHolder.imageView.setTag(urlHolder);
-            themeViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mCallback.onDetailsSelected(themeId);
@@ -93,20 +96,20 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.imageView.setImageUrl(screenshotURL + "?w=" + 500, WordPress.imageLoader);
     }
 
-    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, boolean isPremium) {
+    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium) {
         final PopupMenu popupMenu = new PopupMenu(context, themeViewHolder.imageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
-
-        if (isPremium) {
-            popupMenu.getMenu().removeItem(R.id.menu_activate);
-        }
-
+        
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_activate:
-                        mCallback.onActivateSelected(themeId);
+                        if (isPremium) {
+                            mCallback.onDetailsSelected(themeId);
+                        } else {
+                            mCallback.onActivateSelected(themeId);
+                        }
                         break;
                     case R.id.menu_preview:
                         mCallback.onPreviewSelected(themeId);
