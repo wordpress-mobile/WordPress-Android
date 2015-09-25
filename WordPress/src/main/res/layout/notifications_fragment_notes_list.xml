@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,8 +11,66 @@
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/notifications_content_margin"
         android:paddingRight="@dimen/notifications_content_margin"
+        android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
-        android:scrollbarStyle="outsideOverlay" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <RadioGroup
+                android:id="@+id/notifications_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="0"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium">
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button_left"
+                    android:text="@string/all" />
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button"
+                    android:text="@string/unread" />
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button"
+                    android:text="@string/tab_comments" />
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button"
+                    android:text="@string/follows" />
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button_right"
+                    android:text="@string/stats_likes" />
+            </RadioGroup>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/notifications_list_divider" />
+
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/empty_view"
@@ -42,4 +101,4 @@
             tools:visibility="visible" />
 
     </LinearLayout>
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -603,6 +603,8 @@
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
     <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
+    <string name="unread">Unread</string>
+    <string name="follows">Follows</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
