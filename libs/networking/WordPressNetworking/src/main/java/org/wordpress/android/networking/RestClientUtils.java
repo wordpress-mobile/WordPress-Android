@@ -197,7 +197,7 @@ public class RestClientUtils {
      * Get all a site's themes
      */
     public void getThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes/?tier=all?number=%d&offset=%d", siteId, limit, offset);
+        String path = String.format("sites/%s/themes/?tier=all&number=%d&offset=%d", siteId, limit, offset);
         get(path, listener, errorListener);
     }
 
@@ -205,9 +205,9 @@ public class RestClientUtils {
      * Set a site's theme
      */
     public void setTheme(String siteId, String themeId, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("theme", themeId);
-        String path = String.format("sites/%s/themes/?tier=all?limit=%d&offset=%d", siteId, 1, 0);
+        String path = String.format("sites/%s/themes/mine", siteId);
         post(path, params, null, listener, errorListener);
     }
 

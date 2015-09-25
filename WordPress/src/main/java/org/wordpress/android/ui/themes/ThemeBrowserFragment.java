@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.themes;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -33,7 +32,7 @@ import org.wordpress.android.widgets.HeaderGridView;
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements OnItemClickListener, RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
+public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
     public interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
         void onPreviewSelected(String themeId);
@@ -49,6 +48,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     protected static final int THEME_FILTER_FREE_INDEX = 1;
     protected static final int THEME_FILTER_PREMIUM_INDEX = 2;
 
+    protected String mCurrentThemeId;
     protected HeaderGridView mGridView;
     protected TextView mEmptyView;
     protected TextView mNoResultText;
@@ -62,13 +62,13 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try {
-            mCallback = (ThemeBrowserFragmentCallback) activity;
+            mCallback = (ThemeBrowserFragmentCallback) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement ThemeBrowserFragmentCallback");
+            throw new ClassCastException(context.toString() + " must implement ThemeBrowserFragmentCallback");
         }
     }
 
@@ -90,16 +90,22 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Cursor cursor = fetchThemes(0);
+        Cursor cursor = fetchThemes(mSpinner.getSelectedItemPosition());
         if (cursor == null) {
             return;
         }
 
-        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mGridView);
+        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
-        mGridView.setOnItemClickListener(this);
         mGridView.setSelection(mSavedScrollPosition);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ((ThemeBrowserActivity) getActivity()).fetchCurrentTheme();
     }
 
     @Override
@@ -109,6 +115,10 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
             outState.putInt(BUNDLE_PAGE, mPage);
         }
+    }
+
+    public int getPage() {
+        return mPage;
     }
 
     private void configureSwipeToRefresh(View view) {
@@ -155,7 +165,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mCallback.onCustomizeSelected(mCurrentThemeId);
             }
         });
 
@@ -163,7 +173,7 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mCallback.onDetailsSelected(mCurrentThemeId);
             }
         });
 
@@ -171,11 +181,21 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         support.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mCallback.onSupportSelected(mCurrentThemeId);
             }
         });
 
         mGridView.addHeaderView(header);
+    }
+
+    public void setRefreshing(boolean refreshing) {
+        mShouldRefreshOnStart = refreshing;
+        if (mSwipeToRefreshHelper != null) {
+            mSwipeToRefreshHelper.setRefreshing(refreshing);
+            if (!refreshing) {
+                refreshView(mSpinner.getSelectedItemPosition());
+            }
+        }
     }
 
     private void configureAndAddSearchHeader(LayoutInflater inflater) {
@@ -186,16 +206,6 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
         mSpinner.setAdapter(adapter);
         mGridView.addHeaderView(headerSearch);
         mSpinner.setOnItemSelectedListener(this);
-    }
-
-    public void setRefreshing(boolean refreshing) {
-        mShouldRefreshOnStart = refreshing;
-        if (mSwipeToRefreshHelper != null) {
-            mSwipeToRefreshHelper.setRefreshing(refreshing);
-            if (!refreshing) {
-                refreshView(0);
-            }
-        }
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -244,27 +254,19 @@ public class ThemeBrowserFragment extends Fragment implements OnItemClickListene
             return;
         }
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mGridView);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
         }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);
         }
         mAdapter.changeCursor(cursor);
+        mAdapter.notifyDataSetChanged();
         setEmptyViewVisible(mAdapter.getCount() == 0);
     }
 
     private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
         int numberOfColumns = mGridView.getNumColumns();
         return lastVisibleCount >= totalItemCount - numberOfColumns;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position > 1) {
-            Cursor cursor = ((ThemeBrowserAdapter) parent.getAdapter()).getCursor();
-            String themeId = cursor.getString(cursor.getColumnIndex("themeId"));
-            mCallback.onDemoSelected(themeId);
-        }
     }
 
     @Override

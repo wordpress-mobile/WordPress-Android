@@ -1026,4 +1026,31 @@
         <item>Premium</item>
     </string-array>
 
+    <string-array name="themes_more_array">
+        <item>Activate</item>
+        <item>Preview</item>
+        <item>Demo</item>
+        <item>Details</item>
+        <item>Support</item>
+    </string-array>
+
+    <string name="title_activity_theme_support">Themes</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="activate">Activate</string>
+    <string name="demo">Demo</string>
+    <string name="theme_activate">Activate</string>
+    <string name="theme_preview">Preview</string>
+    <string name="theme_demo">Demo</string>
+    <string name="theme_details">Details</string>
+    <string name="theme_support">Support</string>
+    <string name="theme_done">DONE</string>
+    <string name="theme_manage_site">MANAGE SITE</string>
+    <string name="theme_prompt">Thanks for choosing %1$s by %2$s</string>
+    <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
+    <string name="theme_preview_url"><![CDATA[https://wordpress.com/customize/%1$s?nomuse=1&theme=pub/%2$s]]></string>
+    <string name="theme_https_prefix">https://</string>
+    <string name="theme_web_activity">Theme Web Activity</string>
+
 </resources>

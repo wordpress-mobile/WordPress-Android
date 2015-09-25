@@ -19,18 +19,26 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/cardview_default_radius">
 
-            <org.wordpress.android.ui.FadeInNetworkImageView
-                android:id="@+id/theme_grid_item_image"
+            <FrameLayout
+                android:id="@+id/theme_grid_item_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter" />
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <org.wordpress.android.ui.FadeInNetworkImageView
+                    android:id="@+id/theme_grid_item_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter" />
+
+            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/theme_grid_item_image"
+                android:layout_below="@+id/theme_grid_item_image_layout"
                 android:layout_marginTop="@dimen/cardview_default_radius">
 
                 <LinearLayout
@@ -68,15 +76,15 @@
                         android:layout_height="match_parent"
                         android:background="@color/reader_divider_grey" />
 
-                    <ImageView
-                        android:id="@+id/image_more"
+                    <ImageButton
+                        android:id="@+id/theme_grid_item_image_button"
                         android:layout_width="@dimen/theme_browser_more_button_width"
                         android:layout_height="@dimen/theme_browser_more_button_height"
-                        android:adjustViewBounds="true"
-                        android:layout_gravity="center"
-                        android:background="?android:selectableItemBackground"
                         android:padding="@dimen/theme_browser_more_button_padding"
-                        android:src="@drawable/ic_action_more_grey" />
+                        android:adjustViewBounds="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:src="@drawable/ic_action_more_grey"
+                        android:contentDescription="@string/button_more" />
 
                 </LinearLayout>
 
