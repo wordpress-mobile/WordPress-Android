@@ -82,7 +82,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
+        mSiteSettings = SiteSettingsInterface.getInterface(true, getActivity(), mBlog, this);
 
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.site_settings);

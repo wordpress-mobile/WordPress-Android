@@ -32,14 +32,14 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     }
 
     @Override
-    protected SiteSettingsInterface init() {
-        super.init();
+    protected SiteSettingsInterface init(boolean fetch) {
+        super.init(fetch);
 
         if (mSettings.defaultCategory == 0) {
-            mSettings.defaultCategory = siteSettingsPreferences().getInt(DEF_CATEGORY_PREF_KEY, 0);
+            mSettings.defaultCategory = siteSettingsPreferences(mActivity).getInt(DEF_CATEGORY_PREF_KEY, 0);
         }
         if (TextUtils.isEmpty(mSettings.defaultPostFormat) || mSettings.defaultPostFormat.equals("0")) {
-            mSettings.defaultPostFormat = siteSettingsPreferences().getString(DEF_FORMAT_PREF_KEY, "0");
+            mSettings.defaultPostFormat = siteSettingsPreferences(mActivity).getString(DEF_FORMAT_PREF_KEY, "0");
         }
 
         return this;

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
@@ -39,6 +40,32 @@ public abstract class SiteSettingsInterface {
     public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
     public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
+    /**
+     * Returns a SharedPreference instance to interface with Site Settings.
+     */
+    public static SharedPreferences siteSettingsPreferences(Context context) {
+        return context.getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
+    }
+
+    public static String getDefaultCategory(Context context) {
+        int id = siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 0);
+
+        if (id != 0) {
+            CategoryModel category = new CategoryModel();
+            Cursor cursor = SiteSettingsTable.getCategory(id);
+            if (cursor != null && cursor.moveToFirst()) {
+                category.deserializeFromDatabase(cursor);
+                return category.name;
+            }
+        }
+
+        return "";
+    }
+
+    public static String getDefaultFormat(Context context) {
+        return siteSettingsPreferences(context).getString(DEF_FORMAT_PREF_KEY, "");
+    }
+
     public interface SiteSettingsListener {
         /**
          * Called when settings have been updated with remote changes.
@@ -67,9 +94,9 @@ public abstract class SiteSettingsInterface {
 
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
-        siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, mSettings.location);
-        siteSettingsPreferences().edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory);
-        siteSettingsPreferences().edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat);
+        siteSettingsPreferences(mActivity).edit().putBoolean(LOCATION_PREF_KEY, mSettings.location).apply();
+        siteSettingsPreferences(mActivity).edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory).apply();
+        siteSettingsPreferences(mActivity).edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat).apply();
     }
 
     protected abstract void fetchRemoteData();
@@ -77,13 +104,13 @@ public abstract class SiteSettingsInterface {
     /**
      * Instantiates the appropriate (self-hosted or .com) SiteSettingsInterface.
      */
-    public static SiteSettingsInterface getInterface(Activity host, Blog blog, SiteSettingsListener listener) {
+    public static SiteSettingsInterface getInterface(boolean fetch, Activity host, Blog blog, SiteSettingsListener listener) {
         if (host == null || blog == null) return null;
 
         if (blog.isDotcomFlag()) {
-            return new DotComSiteSettings(host, blog, listener).init();
+            return new DotComSiteSettings(host, blog, listener).init(fetch);
         } else {
-            return new SelfHostedSiteSettings(host, blog, listener).init();
+            return new SelfHostedSiteSettings(host, blog, listener).init(fetch);
         }
     }
 
@@ -114,9 +141,9 @@ public abstract class SiteSettingsInterface {
      * returns itself for the convenience of
      * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)}
      */
-    protected SiteSettingsInterface init() {
+    protected SiteSettingsInterface init(boolean fetchRemote) {
         generateLanguageMap();
-        initSettings();
+        initSettings(fetchRemote);
 
         return this;
     }
@@ -310,13 +337,6 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Returns a SharedPreference instance to interface with Site Settings.
-     */
-    protected SharedPreferences siteSettingsPreferences() {
-        return mActivity.getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
-    }
-
-    /**
      * Helper method to create an XML-RPC interface for the current blog.
      */
     protected XMLRPCClientInterface instantiateInterface() {
@@ -350,12 +370,13 @@ public abstract class SiteSettingsInterface {
     /**
      * Attempts to load cached settings for the blog then fetches remote settings.
      */
-    private void initSettings() {
+    private void initSettings(boolean fetchRemote) {
         loadCachedSettings();
 
-        // Always fetch remote data to get any changes
-        fetchRemoteData();
-        fetchPostFormats();
+        if (fetchRemote) {
+            fetchRemoteData();
+            fetchPostFormats();
+        }
     }
 
     /**
