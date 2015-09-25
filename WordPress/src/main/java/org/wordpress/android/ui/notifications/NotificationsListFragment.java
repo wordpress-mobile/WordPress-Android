@@ -2,11 +2,9 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
-import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
@@ -40,7 +38,7 @@ import de.greenrobot.event.EventBus;
 
 public class NotificationsListFragment extends Fragment
         implements Bucket.Listener<Note>,
-                   WPMainActivity.OnScrollToTopListener {
+                   WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
@@ -52,6 +50,7 @@ public class NotificationsListFragment extends Fragment
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
     private ViewGroup mEmptyView;
+    private RadioGroup mFilterRadioGroup;
 
     private int mRestoredScrollPosition;
 
@@ -73,6 +72,8 @@ public class NotificationsListFragment extends Fragment
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
+        mFilterRadioGroup = (RadioGroup)view.findViewById(R.id.notifications_radio_group);
+        mFilterRadioGroup.setOnCheckedChangeListener(this);
         mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
 
         RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
@@ -255,7 +256,27 @@ public class NotificationsListFragment extends Fragment
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mNotesAdapter.reloadNotes();
+                int checkedId = mFilterRadioGroup.getCheckedRadioButtonId();
+                switch (checkedId) {
+                    case R.id.notifications_filter_all:
+                        mNotesAdapter.queryNotes();
+                        break;
+                    case R.id.notifications_filter_unread:
+                        mNotesAdapter.queryNotes(Note.Schema.UNREAD_INDEX, 1);
+                        break;
+                    case R.id.notifications_filter_comments:
+                        mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_COMMENT_TYPE);
+                        break;
+                    case R.id.notifications_filter_follows:
+                        mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_FOLLOW_TYPE);
+                        break;
+                    case R.id.notifications_filter_likes:
+                        mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_LIKE_TYPE);
+                        break;
+                    default:
+                        mNotesAdapter.queryNotes();
+                }
+
                 restoreListScrollPosition();
                 if (mNotesAdapter.getCount() > 0) {
                     hideEmptyView();
@@ -297,6 +318,12 @@ public class NotificationsListFragment extends Fragment
 
     private void setRestoredListPosition(int listPosition) {
         mRestoredScrollPosition = listPosition;
+    }
+
+    // Notification filter methods
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+        refreshNotes();
     }
 
     /**
