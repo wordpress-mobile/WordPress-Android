@@ -60,6 +60,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -684,6 +685,9 @@ public class WordPress extends Application {
         boolean mIsInBackground = true;
         boolean mFirstActivityResumed = true;
 
+        private Class<?> mClass;
+        private int mOrientation = -1;
+
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
         }
@@ -802,6 +806,17 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityResumed(Activity activity) {
+            // Need to track orientation to apply preferred language on rotation
+            int orientation = activity.getResources().getConfiguration().orientation;
+            boolean shouldRestart =
+                    mOrientation == -1 || mOrientation != orientation || !mClass.equals(activity.getClass());
+
+            if (shouldRestart) {
+                mOrientation = orientation;
+                mClass = activity.getClass();
+            }
+            WPActivityUtils.applyLocale(activity, shouldRestart);
+
             if (mIsInBackground) {
                 // was in background before
                 onAppComesFromBackground();
