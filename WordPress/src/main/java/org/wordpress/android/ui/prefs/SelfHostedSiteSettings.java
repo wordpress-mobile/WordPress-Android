@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.Activity;
+import android.text.TextUtils;
 
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
@@ -30,6 +31,20 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         super(host, blog, listener);
     }
 
+    @Override
+    protected SiteSettingsInterface init() {
+        super.init();
+
+        if (mSettings.defaultCategory == 0) {
+            mSettings.defaultCategory = siteSettingsPreferences().getInt(DEF_CATEGORY_PREF_KEY, 0);
+        }
+        if (TextUtils.isEmpty(mSettings.defaultPostFormat) || mSettings.defaultPostFormat.equals("0")) {
+            mSettings.defaultPostFormat = siteSettingsPreferences().getString(DEF_FORMAT_PREF_KEY, "0");
+        }
+
+        return this;
+    }
+
     public Map<String, String> serializeSelfHostedParams() {
         Map<String, String> params = new HashMap<>();
 
@@ -45,9 +60,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
 
     @Override
     public void saveSettings() {
-        // Save current settings and attempt to sync remotely
-        SiteSettingsTable.saveSettings(mSettings);
-        siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, mSettings.location);
+        super.saveSettings();
 
         final Map<String, String> params = serializeSelfHostedParams();
         if (params == null || params.isEmpty()) return;

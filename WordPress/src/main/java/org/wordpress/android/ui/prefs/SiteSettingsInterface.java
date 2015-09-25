@@ -65,7 +65,12 @@ public abstract class SiteSettingsInterface {
         void onCredentialsValidated(boolean valid);
     }
 
-    public abstract void saveSettings();
+    public void saveSettings() {
+        SiteSettingsTable.saveSettings(mSettings);
+        siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, mSettings.location);
+        siteSettingsPreferences().edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory);
+        siteSettingsPreferences().edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat);
+    }
 
     protected abstract void fetchRemoteData();
 

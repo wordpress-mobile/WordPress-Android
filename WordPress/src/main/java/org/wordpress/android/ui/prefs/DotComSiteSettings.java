@@ -54,9 +54,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
     @Override
     public void saveSettings() {
-        // Save current settings and attempt to sync remotely
-        SiteSettingsTable.saveSettings(mSettings);
-        siteSettingsPreferences().edit().putBoolean(LOCATION_PREF_KEY, mSettings.location);
+        super.saveSettings();
 
         final Map<String, String> params = serializeDotComParams();
         if (params == null || params.isEmpty()) return;
