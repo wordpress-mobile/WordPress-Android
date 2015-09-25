@@ -256,6 +256,7 @@ public class NotificationsListFragment extends Fragment
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // Filter the list according to the RadioGroup selection
                 int checkedId = mFilterRadioGroup.getCheckedRadioButtonId();
                 switch (checkedId) {
                     case R.id.notifications_filter_all:
