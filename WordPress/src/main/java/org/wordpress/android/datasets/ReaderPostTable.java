@@ -58,7 +58,8 @@ public class ReaderPostTable {
           + "secondary_tag,"        // 29
           + "attachments_json,"     // 30
           + "discover_json,"        // 31
-          + "word_count";           // 32
+          + "word_count,"           // 32
+          + "has_gap_marker";       // 33
 
     // used when querying multiple rows and skipping tbl_posts.text
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -92,7 +93,8 @@ public class ReaderPostTable {
           + "tbl_posts.secondary_tag,"        // 28
           + "tbl_posts.attachments_json,"     // 29
           + "tbl_posts.discover_json,"        // 30
-          + "tbl_posts.word_count";           // 31
+          + "tbl_posts.word_count,"           // 31
+          + "tbl_posts.has_gap_marker";       // 32
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -128,6 +130,7 @@ public class ReaderPostTable {
                 + " secondary_tag       TEXT,"
                 + " attachments_json    TEXT,"
                 + " discover_json       TEXT,"
+                + " has_gap_marker      INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
         db.execSQL("CREATE INDEX idx_posts_timestamp ON tbl_posts(timestamp)");
@@ -504,7 +507,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, feed_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5,?6)");
 
@@ -544,6 +547,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(30, post.getAttachmentsJson());
                 stmtPosts.bindString(31, post.getDiscoverJson());
                 stmtPosts.bindLong  (32, post.wordCount);
+                stmtPosts.bindLong  (33, SqlUtils.boolToSql(post.hasGapMarker));
                 stmtPosts.execute();
             }
 
@@ -759,6 +763,8 @@ public class ReaderPostTable {
 
         post.setAttachmentsJson(c.getString(c.getColumnIndex("attachments_json")));
         post.setDiscoverJson(c.getString(c.getColumnIndex("discover_json")));
+
+        post.hasGapMarker = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("has_gap_marker")));
 
         return post;
     }

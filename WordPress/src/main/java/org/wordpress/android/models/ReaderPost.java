@@ -54,6 +54,7 @@ public class ReaderPost {
     public boolean isPrivate;
     public boolean isVideoPress;
     public boolean isJetpack;
+    public boolean hasGapMarker;
 
     private String attachmentsJson;
     private String discoverJson;
