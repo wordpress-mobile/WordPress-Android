@@ -316,8 +316,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onSearchClicked() {
-        Intent intent = new Intent(this, ThemeSearchActivity.class);
-        startActivityForResult(intent, ACTIVATE_THEME);
+        ThemeSearchFragment themeSearchFragment = new ThemeSearchFragment();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.theme_browser_container, themeSearchFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
