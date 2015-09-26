@@ -102,6 +102,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgAvatar;
 
         private final ViewGroup layoutPostHeader;
+        private final ViewGroup layoutGapMarker;
 
         private final ViewGroup layoutDiscover;
         private final WPNetworkImageView imgDiscoverAvatar;
@@ -131,6 +132,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
+            layoutGapMarker = (ViewGroup) itemView.findViewById(R.id.layout_gap_marker);
 
             // adjust the right padding of the post header to allow right padding of the  "..." icon
             // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
@@ -223,6 +225,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
         ReaderTypes.ReaderPostListType postListType = getPostListType();
+
+        postHolder.layoutGapMarker.setVisibility(post.hasGapMarker ? View.VISIBLE : View.GONE);
 
         postHolder.txtTitle.setText(post.getTitle());
 

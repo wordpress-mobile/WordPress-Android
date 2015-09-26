@@ -184,7 +184,7 @@ public class ReaderPostService extends Service {
                 if (updateAction == UpdateAction.REQUEST_NEWER) {
                     ReaderTagTable.setTagLastUpdated(tag);
                 }
-                handleUpdatePostsResponse(tag, jsonObject, resultListener);
+                handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -214,7 +214,7 @@ public class ReaderPostService extends Service {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsResponse(null, jsonObject, resultListener);
+                handleUpdatePostsResponse(null, jsonObject, updateAction, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -242,7 +242,7 @@ public class ReaderPostService extends Service {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsResponse(null, jsonObject, resultListener);
+                handleUpdatePostsResponse(null, jsonObject, updateAction, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -258,10 +258,11 @@ public class ReaderPostService extends Service {
     }
 
     /*
-     * called after requesting posts with a specific tag or in a specific blog
+     * called after requesting posts with a specific tag or in a specific blog/feed
      */
     private static void handleUpdatePostsResponse(final ReaderTag tag,
                                                   final JSONObject jsonObject,
+                                                  final UpdateAction updateAction,
                                                   final UpdateResultListener resultListener) {
         if (jsonObject == null) {
             resultListener.onUpdateResult(UpdateResult.FAILED);
@@ -274,6 +275,16 @@ public class ReaderPostService extends Service {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
                 if (updateResult.isNewOrChanged()) {
+                    // add gap marker if the oldest existing post is older than oldest new post
+                    if (tag != null && updateAction == UpdateAction.REQUEST_NEWER) {
+                        ReaderPostTable.removeGapMarkerForTag(tag);
+                        long oldestTimestampExisting = ReaderPostTable.getOldestTimestampWithTag(tag);
+                        long oldestTimestampServer = serverPosts.getOldestTimestamp();
+                        if (oldestTimestampExisting > 0 && oldestTimestampExisting < oldestTimestampServer) {
+                            serverPosts.get(serverPosts.size() - 1).hasGapMarker = true;
+                            AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
+                        }
+                    }
                     ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
                 }
                 AppLog.d(AppLog.T.READER, "requested posts response = " + updateResult.toString());

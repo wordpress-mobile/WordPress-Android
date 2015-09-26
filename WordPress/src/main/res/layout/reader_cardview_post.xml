@@ -20,6 +20,23 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/layout_gap_marker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visibility">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_lighten_20"
+                android:padding="@dimen/margin_extra_large"
+                android:gravity="center"
+                android:text="~~Gap Marker ~~"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/layout_post_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

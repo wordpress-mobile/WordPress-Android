@@ -429,6 +429,29 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
 
+    public static long getOldestTimestampWithTag(final ReaderTag tag) {
+        if (tag == null) {
+            return 0;
+        }
+
+        String sql = "SELECT tbl_posts.timestamp FROM tbl_posts, tbl_post_tags"
+                + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
+                + " ORDER BY timestamp LIMIT 1";
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    public static void removeGapMarkerForTag(final ReaderTag tag) {
+        if (tag == null) return;
+
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        // SQLite doesn't support JOINs in UPDATE statements, so we have to resort to an IN clause here
+        String sql = "UPDATE tbl_posts SET has_gap_marker=0 WHERE has_gap_marker!=0 AND pseudo_id"
+                  + " IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags WHERE tag_name=? AND tag_type=?)";
+        ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+
     public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
         setFollowStatusForPosts(blogId, 0, isFollowed);
     }
