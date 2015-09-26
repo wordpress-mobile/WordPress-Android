@@ -73,7 +73,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         setContentView(R.layout.theme_browser_activity);
         configureToolbar();
-        mThemeBrowserFragment = (ThemeBrowserFragment) getFragmentManager().findFragmentById(R.id.theme_tab_fragment);
+        addBrowserFragment();
     }
 
     @Override
@@ -230,6 +230,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.themes);
+    }
+
+    private void addBrowserFragment() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        mThemeBrowserFragment = new ThemeBrowserFragment();
+        fragmentTransaction.add(R.id.theme_browser_container, mThemeBrowserFragment);
+        fragmentTransaction.commit();
     }
 
     private void activateTheme(String themeId) {
