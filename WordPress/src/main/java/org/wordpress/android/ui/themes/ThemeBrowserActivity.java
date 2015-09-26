@@ -84,9 +84,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.themes));
+        if (actionBar != null) {
+            // Shadow removed on Activities with a tab toolbar
+            actionBar.setElevation(0.0f);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getString(R.string.themes));
+        }
 
         mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
 
