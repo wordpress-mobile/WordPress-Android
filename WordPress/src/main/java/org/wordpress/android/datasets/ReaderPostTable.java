@@ -449,7 +449,7 @@ public class ReaderPostTable {
     }
 
     /*
-     * retuns the blogId/postId of the post with the passed tag that has a gap marker (if any exists)
+     * returns the blogId/postId of the post with the passed tag that has a gap marker, or null if none exists
      */
     public static ReaderBlogIdPostId getGapMarkerForTag(final ReaderTag tag) {
         if (tag == null) {
@@ -461,7 +461,9 @@ public class ReaderPostTable {
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (cursor.moveToFirst()) {
-                return new ReaderBlogIdPostId(cursor.getLong(0), cursor.getLong(1));
+                long blogId = cursor.getLong(0);
+                long postId = cursor.getLong(1);
+                return new ReaderBlogIdPostId(blogId, postId);
             } else {
                 return null;
             }
