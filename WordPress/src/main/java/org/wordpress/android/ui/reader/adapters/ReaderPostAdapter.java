@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
@@ -43,6 +44,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
+    private ReaderBlogIdPostId mGapMarkerIds;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
@@ -226,7 +228,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
         ReaderTypes.ReaderPostListType postListType = getPostListType();
 
-        postHolder.layoutGapMarker.setVisibility(post.hasGapMarker ? View.VISIBLE : View.GONE);
+        // show gap marker if one should appear below this post
+        if (mGapMarkerIds != null
+                && mGapMarkerIds.getPostId() == post.postId
+                && mGapMarkerIds.getBlogId() == post.blogId) {
+            postHolder.layoutGapMarker.setVisibility(View.VISIBLE);
+        } else {
+            postHolder.layoutGapMarker.setVisibility(View.GONE);
+        }
 
         postHolder.txtTitle.setText(post.getTitle());
 
@@ -715,8 +724,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 case TAG_FOLLOWED:
                     allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
+                    mGapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
+                    mGapMarkerIds = null;
                     if (mCurrentFeedId != 0) {
                         allPosts = ReaderPostTable.getPostsInFeed(mCurrentFeedId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                         numExisting = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);

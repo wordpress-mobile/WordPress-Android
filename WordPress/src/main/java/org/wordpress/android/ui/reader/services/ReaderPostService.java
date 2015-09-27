@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -275,13 +276,15 @@ public class ReaderPostService extends Service {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
                 if (updateResult.isNewOrChanged()) {
-                    // add gap marker if the oldest existing post is older than oldest new post
                     if (tag != null && updateAction == UpdateAction.REQUEST_NEWER) {
+                        // clear existing gap marker for this tag
                         ReaderPostTable.removeGapMarkerForTag(tag);
+                        // set gap marker if the oldest existing post is older than oldest new post
                         long oldestTimestampExisting = ReaderPostTable.getOldestTimestampWithTag(tag);
                         long oldestTimestampServer = serverPosts.getOldestTimestamp();
                         if (oldestTimestampExisting > 0 && oldestTimestampExisting < oldestTimestampServer) {
-                            serverPosts.get(serverPosts.size() - 1).hasGapMarker = true;
+                            ReaderPost postWithGap = serverPosts.get(serverPosts.size() - 1);
+                            ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag);
                             AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
                         }
                     }

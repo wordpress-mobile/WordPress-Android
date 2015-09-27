@@ -58,8 +58,7 @@ public class ReaderPostTable {
           + "secondary_tag,"        // 29
           + "attachments_json,"     // 30
           + "discover_json,"        // 31
-          + "word_count,"           // 32
-          + "has_gap_marker";       // 33
+          + "word_count";           // 32
 
     // used when querying multiple rows and skipping tbl_posts.text
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -93,8 +92,7 @@ public class ReaderPostTable {
           + "tbl_posts.secondary_tag,"        // 28
           + "tbl_posts.attachments_json,"     // 29
           + "tbl_posts.discover_json,"        // 30
-          + "tbl_posts.word_count,"           // 31
-          + "tbl_posts.has_gap_marker";       // 32
+          + "tbl_posts.word_count";           // 31
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -130,18 +128,18 @@ public class ReaderPostTable {
                 + " secondary_tag       TEXT,"
                 + " attachments_json    TEXT,"
                 + " discover_json       TEXT,"
-                + " has_gap_marker      INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
         db.execSQL("CREATE INDEX idx_posts_timestamp ON tbl_posts(timestamp)");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
-                + "   post_id     INTEGER DEFAULT 0,"
-                + "   blog_id     INTEGER DEFAULT 0,"
-                + "   feed_id     INTEGER DEFAULT 0,"
-                + "   pseudo_id   TEXT NOT NULL,"
-                + "   tag_name    TEXT NOT NULL COLLATE NOCASE,"
-                + "   tag_type    INTEGER DEFAULT 0,"
+                + "   post_id           INTEGER DEFAULT 0,"
+                + "   blog_id           INTEGER DEFAULT 0,"
+                + "   feed_id           INTEGER DEFAULT 0,"
+                + "   pseudo_id         TEXT NOT NULL,"
+                + "   tag_name          TEXT NOT NULL COLLATE NOCASE,"
+                + "   tag_type          INTEGER DEFAULT 0,"
+                + "   has_gap_marker    INTEGER DEFAULT 0,"
                 + "   PRIMARY KEY (post_id, blog_id, tag_name, tag_type)"
                 + ")");
     }
@@ -446,9 +444,42 @@ public class ReaderPostTable {
         if (tag == null) return;
 
         String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        // SQLite doesn't support JOINs in UPDATE statements, so we have to resort to an IN clause here
-        String sql = "UPDATE tbl_posts SET has_gap_marker=0 WHERE has_gap_marker!=0 AND pseudo_id"
-                  + " IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags WHERE tag_name=? AND tag_type=?)";
+        String sql = "UPDATE tbl_post_tags SET has_gap_marker=0 WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
+        ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+
+    /*
+     * retuns the blogId/postId of the post with the passed tag that has a gap marker (if any exists)
+     */
+    public static ReaderBlogIdPostId getGapMarkerForTag(final ReaderTag tag) {
+        if (tag == null) {
+            return null;
+        }
+
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String sql = "SELECT blog_id, post_id FROM tbl_post_tags WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            if (cursor.moveToFirst()) {
+                return new ReaderBlogIdPostId(cursor.getLong(0), cursor.getLong(1));
+            } else {
+                return null;
+            }
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+    public static void setGapMarkerForTag(long blogId, long postId, ReaderTag tag) {
+        if (tag == null) return;
+
+        String[] args = {
+                Long.toString(blogId),
+                Long.toString(postId),
+                tag.getTagName(),
+                Integer.toString(tag.tagType.toInt())
+        };
+        String sql = "UPDATE tbl_post_tags SET has_gap_marker=1 WHERE blog_id=? AND post_id=? AND tag_name=? AND tag_type=?";
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
@@ -530,7 +561,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, feed_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5,?6)");
 
@@ -540,12 +571,12 @@ public class ReaderPostTable {
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
                 stmtPosts.bindLong  (2,  post.blogId);
-                stmtPosts.bindLong  (3,  post.feedId);
+                stmtPosts.bindLong(3,  post.feedId);
                 stmtPosts.bindString(4, post.getPseudoId());
-                stmtPosts.bindString(5,  post.getAuthorName());
-                stmtPosts.bindLong  (6, post.authorId);
+                stmtPosts.bindString(5, post.getAuthorName());
+                stmtPosts.bindLong(6, post.authorId);
                 stmtPosts.bindString(7, post.getTitle());
-                stmtPosts.bindString(8,  maxText(post));
+                stmtPosts.bindString(8, maxText(post));
                 stmtPosts.bindString(9,  post.getExcerpt());
                 stmtPosts.bindString(10, post.getUrl());
                 stmtPosts.bindString(11, post.getShortUrl());
@@ -554,7 +585,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(14, post.getFeaturedImage());
                 stmtPosts.bindString(15, post.getFeaturedVideo());
                 stmtPosts.bindString(16, post.getPostAvatar());
-                stmtPosts.bindLong  (17, post.timestamp);
+                stmtPosts.bindLong(17, post.timestamp);
                 stmtPosts.bindString(18, post.getPublished());
                 stmtPosts.bindLong  (19, post.numReplies);
                 stmtPosts.bindLong  (20, post.numLikes);
@@ -564,13 +595,12 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isExternal));
                 stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isPrivate));
                 stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isJetpack));
+                stmtPosts.bindLong(27, SqlUtils.boolToSql(post.isJetpack));
                 stmtPosts.bindString(28, post.getPrimaryTag());
                 stmtPosts.bindString(29, post.getSecondaryTag());
                 stmtPosts.bindString(30, post.getAttachmentsJson());
                 stmtPosts.bindString(31, post.getDiscoverJson());
                 stmtPosts.bindLong  (32, post.wordCount);
-                stmtPosts.bindLong  (33, SqlUtils.boolToSql(post.hasGapMarker));
                 stmtPosts.execute();
             }
 
@@ -786,8 +816,6 @@ public class ReaderPostTable {
 
         post.setAttachmentsJson(c.getString(c.getColumnIndex("attachments_json")));
         post.setDiscoverJson(c.getString(c.getColumnIndex("discover_json")));
-
-        post.hasGapMarker = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("has_gap_marker")));
 
         return post;
     }
