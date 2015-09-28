@@ -157,7 +157,7 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    private OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
+    private final OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
         @Override
         public void onClickNote(String noteId) {
             if (!isAdded()) {
@@ -250,7 +250,7 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    void refreshNotes() {
+    private void refreshNotes() {
         if (!isAdded() || mNotesAdapter == null) {
             return;
         }

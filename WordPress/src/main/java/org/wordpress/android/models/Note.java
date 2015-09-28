@@ -53,7 +53,7 @@ public class Note extends Syncable {
     private final Object mSyncLock = new Object();
     private String mLocalStatus;
 
-    public static enum EnabledActions {
+    public enum EnabledActions {
         ACTION_REPLY,
         ACTION_APPROVE,
         ACTION_UNAPPROVE,
@@ -61,7 +61,7 @@ public class Note extends Syncable {
         ACTION_LIKE
     }
 
-    public static enum NoteTimeGroup {
+    public enum NoteTimeGroup {
         GROUP_TODAY,
         GROUP_YESTERDAY,
         GROUP_OLDER_TWO_DAYS,
@@ -146,7 +146,7 @@ public class Note extends Syncable {
         return isLikeType() || isCommentLikeType() || isFollowType() || isReblogType();
     }
 
-    public String getLocalStatus() {
+    private String getLocalStatus() {
         return StringUtils.notNullStr(mLocalStatus);
     }
 
@@ -169,7 +169,7 @@ public class Note extends Syncable {
         return null;
     }
 
-    public Spannable getFormattedSubject() {
+    private Spannable getFormattedSubject() {
         return NotificationsUtils.getSpannableContentForRanges(getSubject());
     }
 
@@ -250,7 +250,7 @@ public class Note extends Syncable {
         return !isRead();
     }
 
-    Boolean isRead() {
+    private Boolean isRead() {
         return queryJSON("read", 0) == 1;
     }
 
@@ -512,7 +512,7 @@ public class Note extends Syncable {
 
             @Override
             public List<Index> index(Note note) {
-                List<Index> indexes = new ArrayList<Index>();
+                List<Index> indexes = new ArrayList<>();
                 try {
                     indexes.add(new Index(TIMESTAMP_INDEX, note.getTimestamp()));
                 } catch (NumberFormatException e) {
