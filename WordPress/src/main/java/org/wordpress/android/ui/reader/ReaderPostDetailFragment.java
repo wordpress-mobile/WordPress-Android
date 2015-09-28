@@ -633,13 +633,16 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-            followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    togglePostFollowed();
-                }
-            });
+            followButton.setVisibility(mIsLoggedOutReader ? View.GONE : View.VISIBLE);
+            if (!mIsLoggedOutReader) {
+                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
+                followButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        togglePostFollowed();
+                    }
+                });
+            }
 
             // clicking the header shows blog preview
             if (getPostListType() != ReaderPostListType.BLOG_PREVIEW) {
