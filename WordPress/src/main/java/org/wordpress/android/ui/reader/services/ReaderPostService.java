@@ -40,7 +40,11 @@ public class ReaderPostService extends Service {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_FEED_ID = "feed_id";
 
-    public enum UpdateAction {REQUEST_NEWER, REQUEST_OLDER}
+    public enum UpdateAction {
+        REQUEST_NEWER,          // request the newest posts for this tag/blog/feed
+        REQUEST_OLDER,          // request posts older than the oldest existing one for this tag/blog/feed
+        REQUEST_OLDER_THAN_GAP  // request posts older than the one with the gap marker for this tag (not supported for blog/feed)
+    }
 
     /*
      * update posts with the passed tag
@@ -170,12 +174,22 @@ public class ReaderPostService extends Service {
         // return newest posts first (this is the default, but make it explicit since it's important)
         sb.append("&order=DESC");
 
-        // if older posts are being requested, add the &before param based on the oldest existing post
-        if (updateAction == UpdateAction.REQUEST_OLDER) {
-            String dateOldest = ReaderPostTable.getOldestPubDateWithTag(tag);
-            if (!TextUtils.isEmpty(dateOldest)) {
-                sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-            }
+        String beforeDate;
+        switch (updateAction) {
+            case REQUEST_OLDER:
+                // request posts older than the oldest existing post with this tag
+                beforeDate = ReaderPostTable.getOldestPubDateWithTag(tag);
+                break;
+            case REQUEST_OLDER_THAN_GAP:
+                // request posts older than the post with the gap marker for this tag
+                beforeDate = ReaderPostTable.getGapMarkerPubDateForTag(tag);
+                break;
+            default:
+                beforeDate = null;
+                break;
+        }
+        if (!TextUtils.isEmpty(beforeDate)) {
+            sb.append("&before=").append(UrlUtils.urlEncode(beforeDate));
         }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -276,23 +290,29 @@ public class ReaderPostService extends Service {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
                 if (updateResult.isNewOrChanged()) {
-                    // determine whether a "gap marker" needs to be used on the last server
-                    // post - the adapter uses this to place a gap between the last server
-                    // post and the most recent existing post to signify there are missing
-                    // posts between them - only applies to posts with a specfic tag
                     ReaderPost postWithGap = null;
                     if (tag != null && updateAction == UpdateAction.REQUEST_NEWER) {
-                        // clear existing gap marker for this tag
-                        ReaderPostTable.removeGapMarkerForTag(tag);
-                        // set gap marker if the oldest existing post is older than oldest new post
+                        // determine whether a "gap marker" needs to be used on the last server
+                        // post - the adapter uses this to place a gap between the last server
+                        // post and the most recent existing post to signify there are missing
+                        // posts between them - only applies to posts with a specfic tag
                         long oldestTimestampExisting = ReaderPostTable.getOldestTimestampWithTag(tag);
                         long oldestTimestampServer = serverPosts.getOldestTimestamp();
                         if (oldestTimestampExisting > 0 && oldestTimestampExisting < oldestTimestampServer) {
                             postWithGap = serverPosts.get(serverPosts.size() - 1);
                             AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
                         }
+                        ReaderPostTable.removeGapMarkerForTag(tag);
+                    } else if (tag != null && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                        // delete existing posts older than the one with the gap marker, then
+                        // remove the existing gap marker
+                        ReaderPostTable.deletePostsOlderThanGapMarkerForTag(tag);
+                        ReaderPostTable.removeGapMarkerForTag(tag);
                     }
+
                     ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
+
+                    // gap marker must be set after saving server posts
                     if (postWithGap != null) {
                         ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag);
                     }

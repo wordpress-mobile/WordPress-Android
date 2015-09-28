@@ -485,6 +485,42 @@ public class ReaderPostTable {
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
+    public static String getGapMarkerPubDateForTag(ReaderTag tag) {
+        ReaderBlogIdPostId ids = getGapMarkerForTag(tag);
+        if (ids == null) {
+            return null;
+        }
+        String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
+        String sql = "SELECT published FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    public static long getGapMarkerTimestampForTag(ReaderTag tag) {
+        ReaderBlogIdPostId ids = getGapMarkerForTag(tag);
+        if (ids == null) {
+            return 0;
+        }
+
+        String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
+        String sql = "SELECT timestamp FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    /*
+     * delete posts with the passed tag that are older than one with the gap marker for this tag
+     */
+    public static void deletePostsOlderThanGapMarkerForTag(ReaderTag tag) {
+        long timestamp = getGapMarkerTimestampForTag(tag);
+        if (timestamp == 0) return;
+
+        String[] args = {Long.toString(timestamp), tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String sql = "DELETE FROM tbl_posts WHERE timestamp < ?"
+                + " AND pseudo_id IN ("
+                + "     SELECT pseudo_id FROM tbl_post_tags WHERE tag_name=? AND tag_type=?"
+                + ")";
+        ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+
     public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
         setFollowStatusForPosts(blogId, 0, isFollowed);
     }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
@@ -232,6 +234,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // are missing posts between this post and the next one
         if (mGapMarkerIds != null && post.hasIds(mGapMarkerIds)) {
             postHolder.layoutGapMarker.setVisibility(View.VISIBLE);
+            postHolder.layoutGapMarker.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fillTheGap((ViewGroup) v, position);
+                }
+            });
         } else {
             postHolder.layoutGapMarker.setVisibility(View.GONE);
         }
@@ -416,6 +424,26 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         }
+    }
+
+    /*
+     * user tapped the gap marker to load missing posts - fill the gap between the post at
+     * the passed position and the one below it
+     */
+    private void fillTheGap(ViewGroup gapView, int position) {
+        ReaderPost postAboveGap = getItem(position);
+        if (postAboveGap == null) {
+            gapView.setVisibility(View.GONE);
+            return;
+        }
+
+        final TextView txtGap = (TextView) gapView.findViewById(R.id.text_gap_marker);
+        final ProgressBar progressGap = (ProgressBar) gapView.findViewById(R.id.progress_gap_marker);
+
+        txtGap.setVisibility(View.INVISIBLE);
+        progressGap.setVisibility(View.VISIBLE);
+
+        ReaderPostService.startServiceForTag(gapView.getContext(), mCurrentTag, ReaderPostService.UpdateAction.REQUEST_OLDER_THAN_GAP);
     }
 
     private void showDiscoverData(final ReaderPostViewHolder postHolder,
