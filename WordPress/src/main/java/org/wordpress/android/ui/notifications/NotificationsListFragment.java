@@ -245,7 +245,6 @@ public class NotificationsListFragment extends Fragment
 
     private void hideEmptyView() {
         if (isAdded() && mEmptyView != null) {
-            mFilterRadioGroup.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         }
     }
