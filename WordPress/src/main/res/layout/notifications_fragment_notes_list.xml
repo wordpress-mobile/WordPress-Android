@@ -18,6 +18,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/notifications_content_margin"
+        android:layout_marginRight="@dimen/notifications_content_margin"
         android:background="@color/white"
         app:elevation="0dp">
 
