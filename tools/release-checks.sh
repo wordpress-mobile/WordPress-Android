@@ -36,6 +36,7 @@ function checkSamsungWorkaround() {
 	apktool -f -r d WordPress/build/outputs/apk/WordPress-vanilla-release-unaligned.apk -o /tmp/wpandroid-checksamsungworkaround/ > /dev/null && ls -1 /tmp/wpandroid-checksamsungworkaround/smali/android/support/v7/internal/view/menu/MenuBuilder* > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
 		pFail
+		echo "See http://stackoverflow.com/q/24809580/58332 for more informations"
 		exit 4
 	fi
 	pOk
