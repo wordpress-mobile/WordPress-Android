@@ -126,6 +126,11 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         return mPage;
     }
 
+    protected void addHeaderViews(LayoutInflater inflater) {
+        addMainHeader(inflater);
+        configureAndAddSearchHeader(inflater);
+    }
+
     private void configureSwipeToRefresh(View view) {
         // swipe to refresh setup but not for the search view
         if (!(this instanceof ThemeSearchFragment)) {
@@ -155,11 +160,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         addHeaderViews(inflater);
         mGridView.setRecyclerListener(this);
         mGridView.setOnScrollListener(this);
-    }
-
-    private void addHeaderViews(LayoutInflater inflater) {
-        addMainHeader(inflater);
-        configureAndAddSearchHeader(inflater);
     }
 
     private void addMainHeader(LayoutInflater inflater) {

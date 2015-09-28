@@ -123,6 +123,11 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         inflater.inflate(R.menu.theme_search, menu);
     }
 
+    @Override
+    protected void addHeaderViews(LayoutInflater inflater) {
+        // No header on Search
+    }
+
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
         if (mAdapter == null || WordPress.getCurrentBlog() == null) {
