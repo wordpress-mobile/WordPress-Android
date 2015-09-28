@@ -94,7 +94,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Cursor cursor = fetchThemes(mSpinner.getSelectedItemPosition());
+
+        Cursor cursor = fetchThemes(getSpinnerPosition());
         if (cursor == null) {
             return;
         }
@@ -197,7 +198,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         if (mSwipeToRefreshHelper != null) {
             mSwipeToRefreshHelper.setRefreshing(refreshing);
             if (!refreshing) {
-                refreshView(mSpinner.getSelectedItemPosition());
+                refreshView(getSpinnerPosition());
             }
         }
     }
@@ -282,6 +283,14 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
         int numberOfColumns = mGridView.getNumColumns();
         return lastVisibleCount >= totalItemCount - numberOfColumns;
+    }
+
+    private int getSpinnerPosition() {
+        if (mSpinner != null) {
+            return mSpinner.getSelectedItemPosition();
+        } else {
+            return 0;
+        }
     }
 
     @Override
