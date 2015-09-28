@@ -193,6 +193,11 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
+    public void getSearchThemes(String siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/themes?tier=all&number=%d&offset=%d&search=%s", siteId, limit, offset, searchTerm);
+        get(path, listener, errorListener);
+    }
+
     /**
      * Get all a site's themes
      */
