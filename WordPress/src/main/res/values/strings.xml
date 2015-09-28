@@ -825,6 +825,7 @@
     <string name="reader_label_reading_time_in_minutes">%,d min</string>
     <string name="reader_label_follow_count">%,d followers</string>
     <string name="reader_label_submit_comment">SEND</string>
+    <string name="reader_label_gap_marker">Load more posts</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
