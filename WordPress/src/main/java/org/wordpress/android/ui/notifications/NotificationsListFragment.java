@@ -227,12 +227,12 @@ public class NotificationsListFragment extends Fragment
 
     private void showEmptyView(@StringRes int stringResId, boolean showSignIn) {
         if (isAdded() && mEmptyView != null) {
-            mFilterRadioGroup.setVisibility(View.GONE);
             ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(stringResId);
             mEmptyView.setVisibility(View.VISIBLE);
             Button btnSignIn = (Button) mEmptyView.findViewById(R.id.button_sign_in);
             btnSignIn.setVisibility(showSignIn ? View.VISIBLE : View.GONE);
             if (showSignIn) {
+                mFilterRadioGroup.setVisibility(View.GONE);
                 btnSignIn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
