@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class JSONUtils {
     private static String QUERY_SEPERATOR=".";
@@ -25,6 +24,10 @@ public class JSONUtils {
      * traverse the object graph and pull out the desired property
      */
     public static <U> U queryJSON(JSONObject source, String query, U defaultObject) {
+        if (source == null) {
+            AppLog.e(T.UTILS, "Parameter source is null, can't query a null object");
+            return defaultObject;
+        }
         int nextSeperator = query.indexOf(QUERY_SEPERATOR);
         int nextIndexStart = query.indexOf(QUERY_ARRAY_INDEX_START);
         if (nextSeperator == -1 && nextIndexStart == -1) {
@@ -89,7 +92,11 @@ public class JSONUtils {
      * Acceptable indexes include negative numbers to reference items from the end of
      * the list as well as "last" and "first" as more explicit references to "0" and "-1"
      */
-    public static <U> U queryJSON(JSONArray source, String query, U defaultObject){
+    public static <U> U queryJSON(JSONArray source, String query, U defaultObject) {
+        if (source == null) {
+            AppLog.e(T.UTILS, "Parameter source is null, can't query a null object");
+            return defaultObject;
+        }
         // query must start with [ have an index and then have ]
         int indexStart = query.indexOf(QUERY_ARRAY_INDEX_START);
         int indexEnd = query.indexOf(QUERY_ARRAY_INDEX_END);
