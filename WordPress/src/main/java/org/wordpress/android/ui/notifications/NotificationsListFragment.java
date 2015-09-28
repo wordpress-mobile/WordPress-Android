@@ -227,6 +227,7 @@ public class NotificationsListFragment extends Fragment
 
     private void showEmptyView(@StringRes int stringResId, boolean showSignIn) {
         if (isAdded() && mEmptyView != null) {
+            mFilterRadioGroup.setVisibility(View.GONE);
             ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(stringResId);
             mEmptyView.setVisibility(View.VISIBLE);
             Button btnSignIn = (Button) mEmptyView.findViewById(R.id.button_sign_in);
@@ -244,6 +245,7 @@ public class NotificationsListFragment extends Fragment
 
     private void hideEmptyView() {
         if (isAdded() && mEmptyView != null) {
+            mFilterRadioGroup.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         }
     }
