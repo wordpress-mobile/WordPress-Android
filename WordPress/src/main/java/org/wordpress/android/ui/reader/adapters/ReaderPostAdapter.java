@@ -228,10 +228,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
         ReaderTypes.ReaderPostListType postListType = getPostListType();
 
-        // show gap marker if one should appear below this post
-        if (mGapMarkerIds != null
-                && mGapMarkerIds.getPostId() == post.postId
-                && mGapMarkerIds.getBlogId() == post.blogId) {
+        // show gap marker if one should appear below this post - this signifies that there
+        // are missing posts between this post and the next one
+        if (mGapMarkerIds != null && post.hasIds(mGapMarkerIds)) {
             postHolder.layoutGapMarker.setVisibility(View.VISIBLE);
         } else {
             postHolder.layoutGapMarker.setVisibility(View.GONE);
@@ -724,7 +723,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 case TAG_FOLLOWED:
                     allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
+                    // determine whether a gap marker exists for this tag
                     mGapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
+                    // make sure the gap marker isn't on the last post (can happen if all older
+                    // posts have been purged)
+                    if (mGapMarkerIds != null
+                            && allPosts.size() > 0
+                            && allPosts.get(allPosts.size() - 1).hasIds(mGapMarkerIds)) {
+                        mGapMarkerIds = null;
+                        ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
+                    }
                     break;
                 case BLOG_PREVIEW:
                     mGapMarkerIds = null;
