@@ -106,6 +106,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         public void onSuccess(long id, Object result) {
             if (result instanceof Object[]) {
                 AppLog.d(AppLog.T.API, "Received Categories XML-RPC response.");
+                credentialsVerified(true);
 
                 deserializeCategoriesResponse(mRemoteSettings, (Object[]) result);
                 mSettings.categories = mRemoteSettings.categories;
@@ -133,6 +134,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         public void onSuccess(long id, final Object result) {
             if (result instanceof Map) {
                 AppLog.d(AppLog.T.API, "Received Options XML-RPC response.");
+                credentialsVerified(true);
 
                 deserializeOptionsResponse(mRemoteSettings, (Map) result);
                 mSettings.copyFrom(mRemoteSettings);

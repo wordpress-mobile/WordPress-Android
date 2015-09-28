@@ -25,8 +25,10 @@ public class SiteSettingsModel {
     public static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
     public static final String CATEGORIES_COLUMN_NAME = "categories";
     public static final String POST_FORMATS_COLUMN_NAME = "postFormats";
+    public static final String CREDS_VERIFIED_COLUMN_NAME = "credsVerified";
 
     public boolean isInLocalTable;
+    public boolean hasVerifiedCredentials;
     public long localTableId;
     public String address;
     public String username;
@@ -42,27 +44,22 @@ public class SiteSettingsModel {
     public String defaultPostFormat;
     public Map<String, String> postFormats;
 
-    public boolean isTheSame(SiteSettingsModel other) {
-        return address.equals(other.address) &&
-               username.equals(other.username) &&
-               password.equals(other.password) &&
-               title.equals(other.title) &&
-               tagline.equals(other.tagline) &&
-               languageId == other.languageId &&
-               privacy == other.privacy &&
-               location == other.location &&
-               defaultPostFormat.equals(other.defaultPostFormat) &&
-               defaultCategory == other.defaultCategory;
-    }
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof SiteSettingsModel)) return false;
+        SiteSettingsModel otherModel = (SiteSettingsModel) other;
 
-    public boolean isSamePostFormats(String[] keys) {
-        if (keys == null) return postFormats == null;
-
-        for (String key : keys) {
-            if (!postFormats.containsKey(key)) return false;
-        }
-
-        return true;
+        return localTableId == otherModel.localTableId &&
+                address.equals(otherModel.address) &&
+                username.equals(otherModel.username) &&
+                password.equals(otherModel.password) &&
+                title.equals(otherModel.title) &&
+                tagline.equals(otherModel.tagline) &&
+                languageId == otherModel.languageId &&
+                privacy == otherModel.privacy &&
+                location == otherModel.location &&
+                defaultPostFormat.equals(otherModel.defaultPostFormat) &&
+                defaultCategory == otherModel.defaultCategory;
     }
 
     /**
@@ -72,6 +69,7 @@ public class SiteSettingsModel {
         if (other == null) return;
 
         isInLocalTable = other.isInLocalTable;
+        hasVerifiedCredentials = other.hasVerifiedCredentials;
         localTableId = other.localTableId;
         address = other.address;
         username = other.username;
@@ -88,33 +86,27 @@ public class SiteSettingsModel {
         postFormats = other.postFormats;
     }
 
-    public void copyFormatsFrom(SiteSettingsModel other) {
-        if (other.postFormats == null) return;
-        postFormats = new HashMap<>(other.postFormats);
-    }
-
     /**
      * Sets values from a local database {@link Cursor}.
      */
     public void deserializeOptionsDatabaseCursor(Cursor cursor, Map<Integer, CategoryModel> models) {
         if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return;
 
-        localTableId = cursor.getInt(cursor.getColumnIndex(ID_COLUMN_NAME));
-        address = cursor.getString(cursor.getColumnIndex(ADDRESS_COLUMN_NAME));
-        username = cursor.getString(cursor.getColumnIndex(USERNAME_COLUMN_NAME));
-        password = cursor.getString(cursor.getColumnIndex(PASSWORD_COLUMN_NAME));
-        title = cursor.getString(cursor.getColumnIndex(TITLE_COLUMN_NAME));
-        tagline = cursor.getString(cursor.getColumnIndex(TAGLINE_COLUMN_NAME));
-        languageId = cursor.getInt(cursor.getColumnIndex(LANGUAGE_COLUMN_NAME));
-        privacy = cursor.getInt(cursor.getColumnIndex(PRIVACY_COLUMN_NAME));
-        defaultCategory = cursor.getInt(cursor.getColumnIndex(DEF_CATEGORY_COLUMN_NAME));
-        defaultPostFormat = cursor.getString(cursor.getColumnIndex(DEF_POST_FORMAT_COLUMN_NAME));
+        localTableId = getIntFromCursor(cursor, ID_COLUMN_NAME);
+        address = getStringFromCursor(cursor, ADDRESS_COLUMN_NAME);
+        username = getStringFromCursor(cursor, USERNAME_COLUMN_NAME);
+        password = getStringFromCursor(cursor, PASSWORD_COLUMN_NAME);
+        title = getStringFromCursor(cursor, TITLE_COLUMN_NAME);
+        tagline = getStringFromCursor(cursor, TAGLINE_COLUMN_NAME);
+        languageId = getIntFromCursor(cursor, LANGUAGE_COLUMN_NAME);
+        privacy = getIntFromCursor(cursor, PRIVACY_COLUMN_NAME);
+        defaultCategory = getIntFromCursor(cursor, DEF_CATEGORY_COLUMN_NAME);
+        defaultPostFormat = getStringFromCursor(cursor, DEF_POST_FORMAT_COLUMN_NAME);
+        location = getBooleanFromCursor(cursor, LOCATION_COLUMN_NAME);
+        hasVerifiedCredentials = getBooleanFromCursor(cursor, CREDS_VERIFIED_COLUMN_NAME);
 
-        String cachedLocation = cursor.getString(cursor.getColumnIndex(LOCATION_COLUMN_NAME));
-        location = cachedLocation != null && !cachedLocation.equals(String.valueOf(0));
-
-        String cachedCategories = cursor.getString(cursor.getColumnIndex(CATEGORIES_COLUMN_NAME));
-        String cachedFormats = cursor.getString(cursor.getColumnIndex(POST_FORMATS_COLUMN_NAME));
+        String cachedCategories = getStringFromCursor(cursor, CATEGORIES_COLUMN_NAME);
+        String cachedFormats = getStringFromCursor(cursor, POST_FORMATS_COLUMN_NAME);
         if (models != null && !TextUtils.isEmpty(cachedCategories)) {
             String[] split = cachedCategories.split(",");
             categories = new CategoryModel[split.length];
@@ -150,14 +142,23 @@ public class SiteSettingsModel {
         values.put(LANGUAGE_COLUMN_NAME, languageId);
         values.put(LOCATION_COLUMN_NAME, location);
         values.put(DEF_CATEGORY_COLUMN_NAME, defaultCategory);
-        values.put(CATEGORIES_COLUMN_NAME, commaSeparatedElements(categories));
+        values.put(CATEGORIES_COLUMN_NAME, categoryIdList(categories));
         values.put(DEF_POST_FORMAT_COLUMN_NAME, defaultPostFormat);
-        values.put(POST_FORMATS_COLUMN_NAME, serializePostFormats(postFormats));
-        
+        values.put(POST_FORMATS_COLUMN_NAME, postFormatList(postFormats));
+        values.put(CREDS_VERIFIED_COLUMN_NAME, hasVerifiedCredentials);
+
         return values;
     }
 
-    private static String serializePostFormats(Map<String, String> formats) {
+    /**
+     * Used to serialize post formats to store in a local database.
+     *
+     * @param formats
+     * map of post formats where the key is the format ID and the value is the format name
+     * @return
+     * a String of semi-colon separated KVP's of Post Formats; Post Format ID -> Post Format Name
+     */
+    private static String postFormatList(Map<String, String> formats) {
         if (formats == null || formats.size() == 0) return "";
 
         StringBuilder builder = new StringBuilder();
@@ -169,44 +170,47 @@ public class SiteSettingsModel {
         return builder.toString();
     }
 
-    private static String commaSeparatedElements(CategoryModel[] elements) {
-        if (elements == null) return "";
+    /**
+     * Used to serialize categories to store in a local database.
+     *
+     * @param elements
+     * {@link CategoryModel} array to create String ID list from
+     * @return
+     * a String of comma-separated integer Category ID's
+     */
+    private static String categoryIdList(CategoryModel[] elements) {
+        if (elements == null || elements.length == 0) return "";
 
         StringBuilder builder = new StringBuilder();
         for (CategoryModel element : elements) {
-            builder.append(Integer.toString(element.id)).append(",");
+            builder.append(String.valueOf(element.id)).append(",");
         }
         builder.setLength(builder.length() - 1);
 
         return builder.toString();
     }
 
-    public String[] getCategoriesForDisplay() {
-        if (categories == null) return null;
-
-        String[] categoryStrings = new String[categories.length];
-        for (int i = 0; i < categories.length; ++i) {
-            categoryStrings[i] = categories[i].name;
-        }
-
-        return categoryStrings;
+    /**
+     * Helper method to get an integer value from a given column in a Cursor.
+     */
+    private int getIntFromCursor(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex != -1 ? cursor.getInt(columnIndex) : -1;
     }
 
-    public String getDefaultCategoryForDisplay() {
-        for (CategoryModel model : categories) {
-            if (model.id == defaultCategory) {
-                return model.name;
-            }
-        }
-
-        return "";
+    /**
+     * Helper method to get a String value from a given column in a Cursor.
+     */
+    private String getStringFromCursor(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex != -1 ? cursor.getString(columnIndex) : "";
     }
 
-    public String getDefaultFormatForDisplay() {
-        if (postFormats.containsKey(defaultPostFormat)) {
-            return postFormats.get(defaultPostFormat);
-        }
-
-        return "";
+    /**
+     * Helper method to get a boolean value (stored as an int) from a given column in a Cursor.
+     */
+    private boolean getBooleanFromCursor(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
 }

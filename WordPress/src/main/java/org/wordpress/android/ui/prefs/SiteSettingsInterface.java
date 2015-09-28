@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
@@ -66,12 +65,15 @@ public abstract class SiteSettingsInterface {
         return siteSettingsPreferences(context).getString(DEF_FORMAT_PREF_KEY, "");
     }
 
+    public class AuthenticationError extends Exception {
+    }
+
     public interface SiteSettingsListener {
         /**
          * Called when settings have been updated with remote changes.
          *
          * @param error
-         *  null if successful
+         * null if successful
          */
         void onSettingsUpdated(Exception error);
 
@@ -79,17 +81,17 @@ public abstract class SiteSettingsInterface {
          * Called when attempt to update remote settings is finished.
          *
          * @param error
-         *  null if successful
+         * null if successful
          */
         void onSettingsSaved(Exception error);
 
         /**
          * Called when a request to validate current credentials has completed.
          *
-         * @param valid
-         *  true if the current credentials are valid
+         * @param error
+         * null if successful
          */
-        void onCredentialsValidated(boolean valid);
+        void onCredentialsValidated(Exception error);
     }
 
     public void saveSettings() {
@@ -131,21 +133,6 @@ public abstract class SiteSettingsInterface {
         mSettings = new SiteSettingsModel();
         mRemoteSettings = new SiteSettingsModel();
         mLanguageCodes = new HashMap<>();
-    }
-
-    /**
-     * Needed so that subclasses can be created before initializing. The final member variables
-     * are null until object has been created so XML-RPC callbacks will not run.
-     *
-     * @return
-     * returns itself for the convenience of
-     * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)}
-     */
-    protected SiteSettingsInterface init(boolean fetchRemote) {
-        generateLanguageMap();
-        initSettings(fetchRemote);
-
-        return this;
     }
 
     public String getAddress() {
@@ -192,10 +179,6 @@ public abstract class SiteSettingsInterface {
 
     public CategoryModel[] getCategories() {
         return mSettings.categories;
-    }
-
-    public String[] getCategoriesForDisplay() {
-        return mSettings.getCategoriesForDisplay();
     }
 
     public String getDefaultPostFormatDisplay() {
@@ -309,6 +292,21 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
+     * Needed so that subclasses can be created before initializing. The final member variables
+     * are null until object has been created so XML-RPC callbacks will not run.
+     *
+     * @return
+     * returns itself for the convenience of
+     * {@link SiteSettingsInterface#getInterface(boolean, Activity, Blog, SiteSettingsListener)}
+     */
+    protected SiteSettingsInterface init(boolean fetchRemote) {
+        generateLanguageMap();
+        initSettings(fetchRemote);
+
+        return this;
+    }
+
+    /**
      * Notifies listener that settings have been updated with the latest remote data.
      */
     protected void notifyUpdatedOnUiThread(final Exception error) {
@@ -334,6 +332,23 @@ public abstract class SiteSettingsInterface {
                 mListener.onSettingsSaved(error);
             }
         });
+    }
+
+    /**
+     * If there is a change in verification status the listener is notified.
+     */
+    protected void credentialsVerified(boolean valid) {
+        if (valid) {
+            if (!mSettings.hasVerifiedCredentials) {
+                notifyCredentialsVerifiedOnUiThread(null);
+            }
+            mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = true;
+        } else {
+            if (mSettings.hasVerifiedCredentials) {
+                notifyCredentialsVerifiedOnUiThread(new AuthenticationError());
+            }
+            mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = false;
+        }
     }
 
     /**
@@ -365,18 +380,6 @@ public abstract class SiteSettingsInterface {
         }
 
         return "";
-    }
-
-    /**
-     * Attempts to load cached settings for the blog then fetches remote settings.
-     */
-    private void initSettings(boolean fetchRemote) {
-        loadCachedSettings();
-
-        if (fetchRemote) {
-            fetchRemoteData();
-            fetchPostFormats();
-        }
     }
 
     /**
@@ -425,6 +428,8 @@ public abstract class SiteSettingsInterface {
         client.callAsync(new XMLRPCCallback() {
             @Override
             public void onSuccess(long id, Object result) {
+                credentialsVerified(true);
+
                 if (result != null && result instanceof HashMap) {
                     Map<?, ?> resultMap = (HashMap<?, ?>) result;
                     Map allFormats;
@@ -436,15 +441,15 @@ public abstract class SiteSettingsInterface {
                         allFormats = resultMap;
                         supportedFormats = allFormats.keySet().toArray();
                     }
-                    mRemoteSettings.postFormats = new HashMap<>();
 
+                    mRemoteSettings.postFormats = new HashMap<>();
                     for (Object supportedFormat : supportedFormats) {
                         if (allFormats.containsKey(supportedFormat)) {
                             mRemoteSettings.postFormats.put(supportedFormat.toString(), allFormats.get(supportedFormat).toString());
                         }
                     }
+                    mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
 
-                    mSettings.copyFormatsFrom(mRemoteSettings);
                     notifyUpdatedOnUiThread(null);
                 }
             }
@@ -453,6 +458,32 @@ public abstract class SiteSettingsInterface {
             public void onFailure(long id, Exception error) {
             }
         }, ApiHelper.Methods.GET_POST_FORMATS, params);
+    }
+
+    /**
+     * Notifies listener that credentials have been validated or are incorrect.
+     */
+    private void notifyCredentialsVerifiedOnUiThread(final Exception error) {
+        if (mActivity == null || mListener == null) return;
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mListener.onCredentialsValidated(error);
+            }
+        });
+    }
+
+    /**
+     * Attempts to load cached settings for the blog then fetches remote settings.
+     */
+    private void initSettings(boolean fetchRemote) {
+        loadCachedSettings();
+
+        if (fetchRemote) {
+            fetchRemoteData();
+            fetchPostFormats();
+        }
     }
 
     /**

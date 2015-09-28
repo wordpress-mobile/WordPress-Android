@@ -236,8 +236,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onCredentialsValidated(boolean valid) {
-        if (!valid) {
+    public void onCredentialsValidated(Exception error) {
+        if (error != null) {
             ToastUtils.showToast(WordPress.getContext(), R.string.username_or_password_incorrect);
         }
     }

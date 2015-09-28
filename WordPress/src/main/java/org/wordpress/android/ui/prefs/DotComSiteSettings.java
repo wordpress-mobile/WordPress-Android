@@ -87,10 +87,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Received response to Settings REST request.");
+                        credentialsVerified(true);
 
                         mRemoteSettings.localTableId = mBlog.getLocalTableBlogId();
                         deserializeDotComRestResponse(mBlog, response);
-                        if (!mRemoteSettings.isTheSame(mSettings)) {
+                        if (!mRemoteSettings.equals(mSettings)) {
                             mSettings.copyFrom(mRemoteSettings);
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
@@ -164,6 +165,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
+                        credentialsVerified(true);
 
                         CategoryModel[] models = deserializeJsonRestResponse(response);
                         if (models == null) return;

@@ -43,7 +43,8 @@ public final class SiteSettingsTable {
             SiteSettingsModel.DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
             SiteSettingsModel.DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
             SiteSettingsModel.CATEGORIES_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.POST_FORMATS_COLUMN_NAME + " TEXT" +
+            SiteSettingsModel.POST_FORMATS_COLUMN_NAME + " TEXT, " +
+            SiteSettingsModel.CREDS_VERIFIED_COLUMN_NAME + " BOOLEAN" +
             ");";
 
     public static void createTable(SQLiteDatabase db) {
@@ -106,13 +107,6 @@ public final class SiteSettingsTable {
         ContentValues values = settings.serializeToDatabase();
         settings.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
                 SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
-    }
-
-    public static void deleteSettings(SiteSettingsModel settings) {
-        if (settings == null) return;
-
-        String[] args = {Long.toString(settings.localTableId)};
-        WordPress.wpDB.getDatabase().delete(SETTINGS_TABLE_NAME, SiteSettingsModel.ID_COLUMN_NAME + "=?", args);
     }
 
     private static String sqlSelectAllCategories() {
