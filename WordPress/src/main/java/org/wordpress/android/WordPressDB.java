@@ -1855,7 +1855,7 @@ public class WordPressDB {
 
     public Cursor getThemes(String blogId, String searchTerm) {
         String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE};
-        String[] selection = {blogId, searchTerm};
+        String[] selection = {blogId, "%" + searchTerm + "%"};
 
         return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.NAME + " LIKE ?", selection, null, null, null);
     }
