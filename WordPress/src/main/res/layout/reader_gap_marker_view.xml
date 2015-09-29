@@ -19,7 +19,7 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="@drawable/shape_roundrect_grey_dark"
+        android:background="@drawable/reader_gap_marker_background"
         android:gravity="center"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingLeft="@dimen/margin_extra_large"

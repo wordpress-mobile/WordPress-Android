@@ -15,7 +15,8 @@ import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.util.NetworkUtils;
 
 /**
- * marker view between posts indicating a gap in time between them
+ * marker view between posts indicating a gap in time between them that can be filled in - designed
+ * for use inside ReaderPostAdapter
  */
 public class ReaderGapMarkerView extends RelativeLayout {
     private TextView mText;
@@ -57,12 +58,14 @@ public class ReaderGapMarkerView extends RelativeLayout {
     }
 
     private void fillTheGap() {
-        if (mCurrentTag == null || !NetworkUtils.checkConnection(getContext())) {
+        if (mCurrentTag == null
+                || !NetworkUtils.checkConnection(getContext())) {
             return;
         }
 
-        showProgress();
+        // start service to fill the gap - EventBus will notify the owning fragment of new posts
         ReaderPostService.startServiceForTag(getContext(), mCurrentTag, UpdateAction.REQUEST_OLDER_THAN_GAP);
+        showProgress();
     }
 
     private void showProgress() {
