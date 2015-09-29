@@ -17,7 +17,7 @@ import static junit.framework.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.robolectric.shadows.ShadowLog.LogItem;
 
-@Config(emulateSdk = 18)
+@Config(sdk = 18)
 @RunWith(RobolectricTestRunner.class)
 public class JsCallbackReceiverTest {
     private final static String EDITOR_LOG_TAG = "WordPress-" + AppLog.T.EDITOR.toString();

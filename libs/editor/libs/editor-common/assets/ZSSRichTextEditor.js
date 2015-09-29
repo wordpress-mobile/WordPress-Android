@@ -802,7 +802,16 @@ ZSSEditor.updateImage = function(url, alt) {
 };
 
 ZSSEditor.insertImage = function(url, alt) {
-    var html = '<img src="'+url+'" alt="'+alt+'" />';
+    var space = '<br>';
+    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
+    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
+
+    var html = '<img src="' + url + '" alt="' + alt + '" />';
+
+    if (this.getFocusedField().getHTML().length == 0) {
+        html = paragraphOpenTag + html;
+    }
+    html = html + paragraphCloseTag + paragraphOpenTag + space;
 
     this.insertHTML(html);
     this.sendEnabledStyles();
@@ -822,7 +831,9 @@ ZSSEditor.insertImage = function(url, alt) {
  *                                      does not check for that.  It would be a mistake.
  */
 ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
-    var space = '&nbsp';
+    var space = '<br>';
+    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
+    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
     var progressIdentifier = this.getImageProgressIdentifier(imageNodeIdentifier);
     var imageContainerIdentifier = this.getImageContainerIdentifier(imageNodeIdentifier);
     var imgContainerStart = '<span id="' + imageContainerIdentifier+'" class="img_container" contenteditable="false" data-failed="Tap to try again!">';
@@ -830,7 +841,11 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var progress = '<progress id="' + progressIdentifier+'" value=0  class="wp_media_indicator"  contenteditable="false"></progress>';
     var image = '<img data-wpid="' + imageNodeIdentifier + '" src="' + localImageUrl + '" alt="" />';
     var html = imgContainerStart + progress+image + imgContainerEnd;
-    html = space + html + space;
+
+    if (this.getFocusedField().getHTML().length == 0) {
+        html = paragraphOpenTag + html;
+    }
+    html = html + paragraphCloseTag + paragraphOpenTag + space;
 
     this.insertHTML(html);
     this.sendEnabledStyles();
@@ -1062,7 +1077,8 @@ ZSSEditor.updateCurrentImageMeta = function( imageMetaString ) {
     // elements surround the targeted node.  This approach is safer.
     var node = ZSSEditor.findImageCaptionNode( ZSSEditor.currentEditingImage );
     node.insertAdjacentHTML( 'afterend', html );
-    node.remove();
+    // Use {node}.{parent}.removeChild() instead of {node}.remove(), since Android API<19 doesn't support Node.remove()
+    node.parentNode.removeChild(node);
 
     ZSSEditor.currentEditingImage = null;
 }
@@ -1075,7 +1091,14 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
         sizeClass = " small";
     }
 
-    var overlay = '<span class="edit-overlay"><span class="edit-content">Edit</span></span>';
+    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">Edit</span></span>';
+
+    if (document.body.style.filter == null) {
+        // CSS Filters (including blur) are not supported
+        // Use dark semi-transparent background for edit overlay instead of blur in this case
+        overlay = overlay + '<div class="edit-overlay-bg"></div>';
+    }
+
     var html = '<span class="edit-container' + sizeClass + '">' + overlay + '</span>';
    	node.insertAdjacentHTML( 'beforebegin', html );
     var selectionNode = node.previousSibling;
@@ -1091,7 +1114,8 @@ ZSSEditor.removeImageSelectionFormatting = function( imageNode ) {
     var parentNode = node.parentNode;
     var container = parentNode.parentNode;
     container.insertBefore( node, parentNode );
-    parentNode.remove();
+    // Use {node}.{parent}.removeChild() instead of {node}.remove(), since Android API<19 doesn't support Node.remove()
+    container.removeChild(parentNode);
 }
 
 ZSSEditor.removeImageSelectionFormattingFromHTML = function( html ) {
@@ -1312,7 +1336,9 @@ ZSSEditor.extractImageMeta = function( imageNode ) {
 
     // Extract caption
     var captionMeta = ZSSEditor.captionMetaForImage( imageNode )
-    metadata = $.extend( metadata, captionMeta );
+    if (captionMeta.caption != '') {
+        metadata = $.extend( metadata, captionMeta );
+    }
 
     // Extract linkTo
     if ( imageNode.parentNode && imageNode.parentNode.nodeName === 'A' ) {
