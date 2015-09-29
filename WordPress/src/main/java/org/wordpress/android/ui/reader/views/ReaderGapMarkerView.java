@@ -9,6 +9,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.reader.services.ReaderPostService;
+import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
+import org.wordpress.android.util.NetworkUtils;
 
 /**
  * marker view between posts indicating a gap in time between them
@@ -17,6 +21,7 @@ public class ReaderGapMarkerView extends RelativeLayout {
     private TextView mText;
     private ImageView mImage;
     private ProgressBar mProgress;
+    private ReaderTag mCurrentTag;
 
     public ReaderGapMarkerView(Context context) {
         super(context);
@@ -42,20 +47,27 @@ public class ReaderGapMarkerView extends RelativeLayout {
         mText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showProgress();
+                fillTheGap();
             }
         });
+    }
+
+    public void setCurrentTag(ReaderTag tag) {
+        mCurrentTag = tag;
+    }
+
+    private void fillTheGap() {
+        if (mCurrentTag == null || !NetworkUtils.checkConnection(getContext())) {
+            return;
+        }
+
+        showProgress();
+        ReaderPostService.startServiceForTag(getContext(), mCurrentTag, UpdateAction.REQUEST_OLDER_THAN_GAP);
     }
 
     private void showProgress() {
         mText.setVisibility(View.INVISIBLE);
         mImage.setVisibility(View.INVISIBLE);
         mProgress.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgress() {
-        mText.setVisibility(View.VISIBLE);
-        mImage.setVisibility(View.VISIBLE);
-        mProgress.setVisibility(View.GONE);
     }
 }
