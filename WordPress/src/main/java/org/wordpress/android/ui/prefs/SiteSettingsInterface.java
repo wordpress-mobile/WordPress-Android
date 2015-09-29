@@ -16,6 +16,7 @@ import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -106,13 +107,13 @@ public abstract class SiteSettingsInterface {
     /**
      * Instantiates the appropriate (self-hosted or .com) SiteSettingsInterface.
      */
-    public static SiteSettingsInterface getInterface(boolean fetch, Activity host, Blog blog, SiteSettingsListener listener) {
+    public static SiteSettingsInterface getInterface(Activity host, Blog blog, SiteSettingsListener listener) {
         if (host == null || blog == null) return null;
 
         if (blog.isDotcomFlag()) {
-            return new DotComSiteSettings(host, blog, listener).init(fetch);
+            return new DotComSiteSettings(host, blog, listener);
         } else {
-            return new SelfHostedSiteSettings(host, blog, listener).init(fetch);
+            return new SelfHostedSiteSettings(host, blog, listener);
         }
     }
 
@@ -123,8 +124,6 @@ public abstract class SiteSettingsInterface {
     protected final SiteSettingsModel mRemoteSettings;
 
     private final HashMap<String, String> mLanguageCodes;
-
-    private Thread mLoadCacheThread;
 
     protected SiteSettingsInterface(Activity host, Blog blog, SiteSettingsListener listener) {
         mActivity = host;
@@ -159,6 +158,19 @@ public abstract class SiteSettingsInterface {
         return mSettings.privacy;
     }
 
+    public String getPrivacyForDisplay() {
+        switch (mSettings.privacy) {
+            case -1:
+                return mActivity.getString(R.string.privacy_private);
+            case 0:
+                return mActivity.getString(R.string.privacy_hidden);
+            case 1:
+                return mActivity.getString(R.string.privacy_public);
+            default:
+                return "";
+        }
+    }
+
     public String getLanguageCode() {
         return mSettings.language;
     }
@@ -181,6 +193,18 @@ public abstract class SiteSettingsInterface {
         return mSettings.categories;
     }
 
+    public Map<Integer, String> getCategoryNames() {
+        Map<Integer, String> categoryNames = new HashMap<>();
+
+        if (mSettings.categories != null && mSettings.categories.length == 0) {
+            for (CategoryModel model : mSettings.categories) {
+                categoryNames.put(model.id, model.name);
+            }
+        }
+
+        return categoryNames;
+    }
+
     public String getDefaultPostFormatDisplay() {
         return getFormats().get(mSettings.defaultPostFormat);
     }
@@ -190,9 +214,11 @@ public abstract class SiteSettingsInterface {
     }
 
     public String getDefaultCategoryForDisplay() {
-        for (CategoryModel model : getCategories()) {
-            if (model.id == getDefaultCategory()) {
-                return model.name;
+        if (getCategories() != null) {
+            for (CategoryModel model : getCategories()) {
+                if (model != null && model.id == getDefaultCategory()) {
+                    return model.name;
+                }
             }
         }
 
@@ -224,7 +250,8 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setLanguageCode(String languageCode) {
-        setLanguageId(Integer.valueOf(mLanguageCodes.get(languageCode)));
+        mSettings.language = languageCode;
+        mSettings.languageId = Integer.valueOf(mLanguageCodes.get(languageCode));
     }
 
     public void setLanguageId(int languageId) {
@@ -387,31 +414,27 @@ public abstract class SiteSettingsInterface {
      * Need to defer loading the cached settings to a thread so it completes after initialization.
      */
     private void loadCachedSettings() {
-        mLoadCacheThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getLocalTableBlogId());
+        Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getRemoteBlogId());
 
-                if (localSettings != null) {
-                    Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
-                    mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
-                    mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
-                    mRemoteSettings.location = mSettings.location;
-                    localSettings.close();
-                    notifyUpdatedOnUiThread(null);
-                } else {
-                    mSettings.isInLocalTable = false;
-                    setAddress(mBlog.getHomeURL());
-                    setUsername(mBlog.getUsername());
-                    setPassword(mBlog.getPassword());
-                    setTitle(mBlog.getBlogName());
-                }
-
-                mLoadCacheThread = null;
+        if (localSettings != null) {
+            Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
+            mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
+            mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
+            if (mSettings.language == null) {
+                setLanguageCode(Locale.getDefault().getLanguage());
             }
-        });
-
-        mLoadCacheThread.start();
+            mRemoteSettings.language = mSettings.language;
+            mRemoteSettings.languageId = mSettings.languageId;
+            mRemoteSettings.location = mSettings.location;
+            localSettings.close();
+            notifyUpdatedOnUiThread(null);
+        } else {
+            mSettings.isInLocalTable = false;
+            setAddress(mBlog.getHomeURL());
+            setUsername(mBlog.getUsername());
+            setPassword(mBlog.getPassword());
+            setTitle(mBlog.getBlogName());
+        }
     }
 
     /**

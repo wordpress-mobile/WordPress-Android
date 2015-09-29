@@ -89,7 +89,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Received response to Settings REST request.");
                         credentialsVerified(true);
 
-                        mRemoteSettings.localTableId = mBlog.getLocalTableBlogId();
+                        mRemoteSettings.localTableId = mBlog.getRemoteBlogId();
                         deserializeDotComRestResponse(mBlog, response);
                         if (!mRemoteSettings.equals(mSettings)) {
                             mSettings.copyFrom(mRemoteSettings);

@@ -118,7 +118,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
 
                 deserializeCategoriesResponse(mRemoteSettings, (Object[]) result);
                 mSettings.categories = mRemoteSettings.categories;
-                SiteSettingsTable.saveSettings(mSettings);
+                SiteSettingsTable.saveCategories(mSettings.categories);
                 notifyUpdatedOnUiThread(null);
             } else {
                 // Response is considered an error if we are unable to parse it

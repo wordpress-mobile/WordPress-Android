@@ -14,7 +14,6 @@
             android:id="@+id/pref_site_title"
             android:key="@string/pref_key_site_title"
             android:title="@string/site_settings_title_title"
-            android:summary="@string/site_settings_title_default_summary"
             app:summaryLines="1"
             app:maxSummaryLines="2"
             app:longClickHint="@string/site_title_hint" />
@@ -23,7 +22,6 @@
             android:id="@+id/pref_site_tagline"
             android:key="@string/pref_key_site_tagline"
             android:title="@string/site_settings_tagline_title"
-            android:summary="@string/site_settings_tagline_default_summary"
             app:summaryLines="1"
             app:maxSummaryLines="1"
             app:longClickHint="@string/site_tagline_hint" />
@@ -33,7 +31,6 @@
             android:id="@+id/pref_site_address"
             android:key="@string/pref_key_site_address"
             android:title="@string/site_settings_address_title"
-            android:summary="@string/site_settings_address_default_summary"
             app:summaryLines="1"
             app:maxSummaryLines="1"
             app:longClickHint="@string/site_address_hint" />
@@ -45,7 +42,6 @@
             android:entries="@array/privacy_entries"
             android:entryValues="@array/privacy_values"
             android:defaultValue="-2"
-            android:summary="@string/site_settings_privacy_default_summary"
             app:dialogTitle="@string/site_settings_visibility_title"
             app:dialogHelpUrl="@string/privacy_settings_url"
             app:longClickHint="@string/site_privacy_hint"
@@ -55,7 +51,6 @@
             android:id="@+id/pref_site_language"
             android:key="@string/pref_key_site_language"
             android:title="@string/site_settings_language_title"
-            android:summary="@string/site_settings_language_default_summary"
             android:entries="@array/available_languages"
             android:entryValues="@array/language_codes"
             app:dialogTitle="@string/site_settings_language_title"
@@ -73,7 +68,6 @@
             android:id="@+id/pref_site_username"
             android:key="@string/pref_key_site_username"
             android:title="@string/site_settings_username_title"
-            android:summary="@string/site_settings_username_default_summary"
             app:summaryLines="1"
             app:maxSummaryLines="2"
             app:longClickHint="@string/site_username_hint" />
@@ -82,7 +76,6 @@
             android:id="@+id/pref_site_password"
             android:key="@string/pref_key_site_password"
             android:title="@string/site_settings_password_title"
-            android:summary="@string/site_settings_password_default_summary"
             android:inputType="textPassword"
             app:summaryLines="1"
             app:maxSummaryLines="2"

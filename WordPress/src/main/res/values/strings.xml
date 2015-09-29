@@ -458,13 +458,6 @@
     <string name="site_format_hint">Sets new post format.</string>
     <string name="site_related_posts_hint">Show or hide related posts in reader.</string>
     <string name="site_settings_related_posts_summary">Show related content after posts</string>
-    <string name="site_settings_title_default_summary">Fetching title</string>
-    <string name="site_settings_tagline_default_summary">Fetching tagline</string>
-    <string name="site_settings_address_default_summary">Fetching address</string>
-    <string name="site_settings_privacy_default_summary">Fetching privacy</string>
-    <string name="site_settings_language_default_summary">Fetching language</string>
-    <string name="site_settings_username_default_summary">Fetching username</string>
-    <string name="site_settings_password_default_summary">Fetching password</string>
     <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
     <string name="site_settings_save_success">Site settings updated</string>
 
@@ -789,7 +782,7 @@
         <item>tr</item>
         <item>eu</item>
         <item>he</item>
-        <item>pt-BR</item>
+        <item>pt_BR</item>
         <item>ar</item>
         <item>ro</item>
         <item>mk</item>
@@ -802,8 +795,8 @@
 
     <!-- Language IDs for WordPress REST call -->
     <string-array name="lang_ids">
-        <item>79</item>
         <item>1</item>
+        <item>79</item>
         <item>15</item>
         <item>17</item>
         <item>19</item>
