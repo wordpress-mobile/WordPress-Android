@@ -380,6 +380,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
+    /**
+     * Detail strings for the dialog are generated in the selected language.
+     */
     private void changeLanguageValue(String newValue) {
         if (mLanguagePreference == null) return;
         String expectedSummary = firstLetterCapitalized(getLanguageString(newValue, new Locale(localeInput(newValue))));
@@ -396,6 +399,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
+    /**
+     * Updates the privacy preference summary.
+     */
     private void changePrivacyValue(int newValue) {
         if (mPrivacyPreference == null) return;
         String expectedSummary = privacyStringForValue(newValue);
@@ -480,13 +486,11 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private String localeInput(String languageCode) {
         if (TextUtils.isEmpty(languageCode)) return "";
-
         return languageCode.substring(0, 2);
     }
 
     private String firstLetterCapitalized(String input) {
         if (TextUtils.isEmpty(input)) return "";
-
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 }

@@ -21,6 +21,8 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     // XML-RPC wp.getOptions keys
     private static final String BLOG_URL_KEY = "blog_url";
     private static final String BLOG_TITLE_KEY = "blog_title";
+    private static final String BLOG_USERNAME_KEY = "username";
+    private static final String BLOG_PASSWORD_KEY = "password";
     private static final String BLOG_TAGLINE_KEY = "blog_tagline";
     private static final String BLOG_CATEGORY_ID_KEY = "categoryId";
     private static final String BLOG_CATEGORY_PARENT_ID_KEY = "parentId";
@@ -32,7 +34,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     }
 
     @Override
-    protected SiteSettingsInterface init(boolean fetch) {
+    public SiteSettingsInterface init(boolean fetch) {
         super.init(fetch);
 
         if (mSettings.defaultCategory == 0) {
@@ -53,6 +55,12 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
             params.put(BLOG_TAGLINE_KEY, mSettings.tagline);
+        }
+        if (mSettings.username != null && !mSettings.username.equals(mRemoteSettings.username)) {
+            params.put(BLOG_USERNAME_KEY, mSettings.username);
+        }
+        if (mSettings.password != null && !mSettings.password.equals(mRemoteSettings.password)) {
+            params.put(BLOG_PASSWORD_KEY, mSettings.password);
         }
 
         return params;

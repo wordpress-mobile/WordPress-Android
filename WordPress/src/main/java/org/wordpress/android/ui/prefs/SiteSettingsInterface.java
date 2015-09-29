@@ -228,6 +228,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setLanguageId(int languageId) {
+        // Want to prevent O(n) language code lookup if there is no change
         if (mSettings.languageId != languageId) {
             mSettings.languageId = languageId;
             mSettings.language = languageIdToLanguageCode(Integer.toString(languageId));
@@ -299,7 +300,7 @@ public abstract class SiteSettingsInterface {
      * returns itself for the convenience of
      * {@link SiteSettingsInterface#getInterface(boolean, Activity, Blog, SiteSettingsListener)}
      */
-    protected SiteSettingsInterface init(boolean fetchRemote) {
+    public SiteSettingsInterface init(boolean fetchRemote) {
         generateLanguageMap();
         initSettings(fetchRemote);
 

@@ -160,7 +160,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
      * Request a list of post categories for a site via the WordPress REST API.
      */
     private void fetchCategories() {
-        WordPress.getRestClientUtilsV1_1().getCategories(Integer.toString(mBlog.getRemoteBlogId()),
+        WordPress.getRestClientUtilsV1_1().getCategories(String.valueOf(mBlog.getRemoteBlogId()),
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
