@@ -81,12 +81,6 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             urlHolder.requestURL = screenshotURL;
             themeViewHolder.imageView.setDefaultImageResId(R.drawable.theme_loading);
             themeViewHolder.imageView.setTag(urlHolder);
-            themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCallback.onDetailsSelected(themeId);
-                }
-            });
         }
 
         if (!urlHolder.requestURL.equals(screenshotURL)) {
@@ -94,6 +88,12 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
 
         themeViewHolder.imageView.setImageUrl(screenshotURL + "?w=" + 500, WordPress.imageLoader);
+        themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onDetailsSelected(themeId);
+            }
+        });
     }
 
     private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium) {
