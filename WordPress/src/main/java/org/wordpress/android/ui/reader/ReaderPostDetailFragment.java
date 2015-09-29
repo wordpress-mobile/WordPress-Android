@@ -880,16 +880,26 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private boolean canShowCommentCount() {
-        return mPost != null
-                && mPost.isWP()
+        if (mPost == null) {
+            return false;
+        }
+        if (mIsLoggedOutReader) {
+            return mPost.numReplies > 0;
+        }
+        return mPost.isWP()
                 && !mPost.isJetpack
                 && !mPost.isDiscoverPost()
                 && (mPost.isCommentsOpen || mPost.numReplies > 0);
     }
 
     private boolean canShowLikeCount() {
-        return mPost != null
-                && (mPost.canLikePost() || mPost.numLikes > 0);
+        if (mPost == null) {
+            return false;
+        }
+        if (mIsLoggedOutReader) {
+            return mPost.numLikes > 0;
+        }
+        return mPost.canLikePost() || mPost.numLikes > 0;
     }
 
 }
