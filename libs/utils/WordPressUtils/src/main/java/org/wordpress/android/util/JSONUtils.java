@@ -10,15 +10,15 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.ArrayList;
 
 public class JSONUtils {
-    private static String QUERY_SEPERATOR=".";
-    private static String QUERY_ARRAY_INDEX_START="[";
-    private static String QUERY_ARRAY_INDEX_END="]";
-    private static String QUERY_ARRAY_FIRST="first";
-    private static String QUERY_ARRAY_LAST="last";
+    private static String QUERY_SEPERATOR = ".";
+    private static String QUERY_ARRAY_INDEX_START = "[";
+    private static String QUERY_ARRAY_INDEX_END = "]";
+    private static String QUERY_ARRAY_FIRST = "first";
+    private static String QUERY_ARRAY_LAST = "last";
 
     private static final String JSON_NULL_STR = "null";
+    private static final String TAG = "JSONUtils";
 
-    private static final String TAG="JSONUtils";
     /**
      * Given a JSONObject and a key path (e.g property.child) and a default it will
      * traverse the object graph and pull out the desired property
@@ -26,6 +26,10 @@ public class JSONUtils {
     public static <U> U queryJSON(JSONObject source, String query, U defaultObject) {
         if (source == null) {
             AppLog.e(T.UTILS, "Parameter source is null, can't query a null object");
+            return defaultObject;
+        }
+        if (query == null) {
+            AppLog.e(T.UTILS, "Parameter query is null");
             return defaultObject;
         }
         int nextSeperator = query.indexOf(QUERY_SEPERATOR);
@@ -59,9 +63,6 @@ public class JSONUtils {
         String nextQuery = query.substring(endQuery);
         String key = query.substring(0, endQuery);
         try {
-            if (source == null) {
-                return defaultObject;
-            }
             if (nextQuery.indexOf(QUERY_SEPERATOR) == 0) {
                 return queryJSON(source.getJSONObject(key), nextQuery.substring(1), defaultObject);
             } else if (nextQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0) {
@@ -95,6 +96,10 @@ public class JSONUtils {
     public static <U> U queryJSON(JSONArray source, String query, U defaultObject) {
         if (source == null) {
             AppLog.e(T.UTILS, "Parameter source is null, can't query a null object");
+            return defaultObject;
+        }
+        if (query == null) {
+            AppLog.e(T.UTILS, "Parameter query is null");
             return defaultObject;
         }
         // query must start with [ have an index and then have ]
