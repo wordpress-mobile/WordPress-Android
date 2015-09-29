@@ -325,7 +325,7 @@ public abstract class SiteSettingsInterface {
      *
      * @return
      * returns itself for the convenience of
-     * {@link SiteSettingsInterface#getInterface(boolean, Activity, Blog, SiteSettingsListener)}
+     * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)}
      */
     public SiteSettingsInterface init(boolean fetchRemote) {
         generateLanguageMap();

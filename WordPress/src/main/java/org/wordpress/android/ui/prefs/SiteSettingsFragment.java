@@ -389,7 +389,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (TextUtils.isEmpty(mLanguagePreference.getSummary()) ||
                 !newValue.equals(mLanguagePreference.getValue())) {
             mLanguagePreference.setValue(newValue);
-            String summary = getLanguageString(newValue, new Locale(localeInput(newValue)));
+            String summary = getLanguageString(newValue, languageLocale(newValue));
             mLanguagePreference.setSummary(summary);
 
             // update details to display in selected locale
@@ -428,7 +428,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         for (int i = 0; i < languageCodes.length; ++i) {
             displayStrings[i] = firstLetterCapitalized(getLanguageString(
-                    String.valueOf(languageCodes[i]), new Locale(localeInput(languageCodes[i].toString()))));
+                    String.valueOf(languageCodes[i]), languageLocale(languageCodes[i].toString())));
         }
 
         return displayStrings;
@@ -444,7 +444,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
             detailStrings[i] = firstLetterCapitalized(
-                    getLanguageString(languageCodes[i].toString(), new Locale(localeInput(locale))));
+                    getLanguageString(languageCodes[i].toString(), languageLocale(locale)));
         }
 
         return detailStrings;
@@ -458,8 +458,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             return "";
         }
 
-        Locale languageLocale = new Locale(localeInput(languageCode));
-        return languageLocale.getDisplayLanguage(displayLocale) + languageCode.substring(2);
+        Locale languageLocale = languageLocale(languageCode);
+        String displayLanguage = languageLocale.getDisplayLanguage(displayLocale);
+        String displayCountry = languageLocale.getDisplayCountry(displayLocale);
+
+        if (!TextUtils.isEmpty(displayCountry)) {
+            return displayLanguage + " (" + displayCountry + ")";
+        }
+        return displayLanguage;
     }
 
     /**
@@ -473,9 +479,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private String localeInput(String languageCode) {
-        if (TextUtils.isEmpty(languageCode)) return "";
-        return languageCode.substring(0, 2);
+    private Locale languageLocale(String languageCode) {
+        if (TextUtils.isEmpty(languageCode)) return Locale.getDefault();
+
+        if (languageCode.length() > 2) {
+            return new Locale(languageCode.substring(0, 2), languageCode.substring(3));
+        }
+
+        return new Locale(languageCode);
     }
 
     private String firstLetterCapitalized(String input) {
