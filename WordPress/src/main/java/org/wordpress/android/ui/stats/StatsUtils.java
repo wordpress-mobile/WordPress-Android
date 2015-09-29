@@ -318,6 +318,22 @@ public class StatsUtils {
         return statsAuthenticatedUser;
     }
 
+    public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
+        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
+        // the current wpcom account. We need to load the correct localID here, otherwise options are
+        // blank
+        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
+                remoteBlogID,
+                null);
+        if (localId == 0) {
+            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                    remoteBlogID
+            );
+        }
+
+        return localId;
+    }
+
     /**
      * Return the remote blogId as stored on the wpcom backend.
      * <p>

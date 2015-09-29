@@ -397,7 +397,8 @@ public class StatsService extends Service {
             return;
         }
 
-        if (!StatsWidgetProvider.shouldUpdateWidgetForBlog(this, blogId)) {
+        if (!StatsWidgetProvider.isBlogDisplayedInWidget(parsedBlogID)) {
+            AppLog.d(AppLog.T.STATS, "The blog with remoteID " + parsedBlogID + " is NOT displayed in a widget. Stats Service doesn't call an update of the widget.");
             return;
         }
 
@@ -408,13 +409,13 @@ public class StatsService extends Service {
             }
             List<VisitModel> visits = visitsModel.getVisits();
             VisitModel data = visits.get(visits.size() - 1);
-            StatsWidgetProvider.updateWidgets(getApplicationContext(), data);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, data);
         } else if (responseObjectModel instanceof VolleyError) {
             VolleyError error = (VolleyError) responseObjectModel;
-            StatsWidgetProvider.updateWidgets(getApplicationContext(), error);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, error);
         } else if (responseObjectModel instanceof StatsError) {
             StatsError statsError = (StatsError) responseObjectModel;
-            StatsWidgetProvider.updateWidgets(getApplicationContext(), statsError);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, statsError);
         }
     }
 
@@ -477,17 +478,9 @@ public class StatsService extends Service {
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
                     if (volleyError instanceof com.android.volley.AuthFailureError) {
-                        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
-                        // the current wpcom account. We need to load the correct localID here, otherwise options are
-                        // blank
-                        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
-                                Integer.parseInt(mRequestBlogId),
-                                null);
-                        if (localId == 0) {
-                            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                                    Integer.parseInt(mRequestBlogId)
-                            );
-                        }
+                        int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(
+                                Integer.parseInt(mRequestBlogId)
+                        );
                         Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
                         if (blog != null && blog.isJetpackPowered()) {
                             // It's a kind of edge case, but the Jetpack site could have REST Disabled

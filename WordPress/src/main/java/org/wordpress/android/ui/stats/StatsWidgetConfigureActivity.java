@@ -15,7 +15,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -56,19 +55,29 @@ public class StatsWidgetConfigureActivity extends Activity implements AdapterVie
         // Intent without the widget id, just bail.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
-        }
-
-        // no visible blogs, or not logged. Finish with a toast
-        String[] blogNames = getBlogNames();
-        if (blogNames == null) {
-            finishIfNoVisibleBlogs();
             return;
         }
 
+        // If not signed into WordPress inform the user
+        if (!AccountHelper.isSignedIn()) {
+            ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_login, ToastUtils.Duration.LONG);
+            finish();
+            return;
+        }
+
+        String[] blogNames = getBlogNames();
+        if (blogNames == null || blogNames.length == 0) {
+            ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_visible_blog, ToastUtils.Duration.LONG);
+            finish();
+            return;
+        }
+
+        // Preselect the first blog in the list
+        mSelectedBlogID = mAccountIDs[0];
+
         // only one blog, skip config
         if (blogNames.length == 1) {
-            mSelectedBlogID = mAccountIDs[0];
-            shareIt();
+            addWidgetToScreenAndFinish();
             return;
         }
 
@@ -77,28 +86,17 @@ public class StatsWidgetConfigureActivity extends Activity implements AdapterVie
 
         mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
+        mBlogSpinner.setOnItemSelectedListener(this);
 
-        if (blogNames.length == 1) {
-            mBlogSpinner.setVisibility(View.GONE);
-            mBlogSpinnerTitle.setVisibility(View.GONE);
-        } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    R.layout.spinner_menu_dropdown_item, blogNames);
-            mBlogSpinner.setAdapter(adapter);
-        }
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                R.layout.spinner_menu_dropdown_item, blogNames);
+        mBlogSpinner.setAdapter(adapter);
     }
 
-    private void shareIt() {
+    private void addWidgetToScreenAndFinish() {
         final Context context = StatsWidgetConfigureActivity.this;
-
-        // Push widget update to surface with newly set prefix
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        // StatsWidgetProvider.updateAppWidget(context, appWidgetManager, mAppWidgetId, titlePrefix);
-
-        // update UI here??
-        // save the widget ID and blogID
-
+        StatsWidgetProvider.setupNewWidget(context, mAppWidgetId, mSelectedBlogID);
         // Make sure we pass back the original appWidgetId
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
@@ -116,19 +114,6 @@ public class StatsWidgetConfigureActivity extends Activity implements AdapterVie
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // noop
-    }
-
-
-    private void finishIfNoVisibleBlogs() {
-        // If not signed in, then ask to sign in, else inform the user to set at least one blog
-        // visible
-        if (!AccountHelper.isSignedIn()) {
-            ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
-            finish();
-        } else {
-            ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
-            finish();
-        }
     }
 
     private String[] getBlogNames() {
@@ -153,8 +138,7 @@ public class StatsWidgetConfigureActivity extends Activity implements AdapterVie
         return null;
     }
 
-
-    public void onShareClicked(View view) {
-        shareIt();
+    public void onOkClicked(View view) {
+        addWidgetToScreenAndFinish();
     }
 }
