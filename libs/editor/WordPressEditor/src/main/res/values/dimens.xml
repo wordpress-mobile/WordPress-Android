@@ -8,7 +8,7 @@
     <dimen name="format_bar_scroll_right_margin">-7dp</dimen>
 
     <dimen name="format_bar_button_margin_tablet">@dimen/format_bar_button_margin_tablet_small</dimen>
-    <dimen name="format_bar_button_margin_tablet_small">2dp</dimen>
+    <dimen name="format_bar_button_margin_tablet_small">0dp</dimen>
     <dimen name="format_bar_button_margin_tablet_large">7dp</dimen>
     <dimen name="format_bar_button_margin_tablet_extra_large">12dp</dimen>
 
@@ -29,6 +29,20 @@
 
     <dimen name="link_dialog_margin_inner">4dp</dimen>
     <dimen name="link_dialog_margin_outer">16dp</dimen>
+
+    <dimen name="image_settings_dialog_padding">16dp</dimen>
+    <dimen name="image_settings_dialog_extra_margin">0dp</dimen>
+    <dimen name="image_settings_dialog_extra_margin_tablet">84dp</dimen>
+    <dimen name="image_settings_dialog_label_indent">4dp</dimen>
+    <dimen name="image_settings_dialog_label_margin_bottom">4dp</dimen>
+    <dimen name="image_settings_dialog_input_margin_bottom">16dp</dimen>
+    <dimen name="image_settings_dialog_input_field_start_margin">-4dp</dimen>
+    <dimen name="image_settings_dialog_top_separator_margin_top">16dp</dimen>
+    <dimen name="image_settings_dialog_thumbnail_container_margin_bottom">8dp</dimen>
+    <dimen name="image_settings_dialog_thumbnail_size">100dp</dimen>
+    <dimen name="image_settings_dialog_thumbnail_left_margin">4dp</dimen>
+    <dimen name="image_settings_dialog_thumbnail_right_margin">8dp</dimen>
+    <dimen name="image_settings_dialog_filename_margin_left">16dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
 

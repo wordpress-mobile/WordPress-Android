@@ -16,7 +16,7 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 
-@Config(emulateSdk = 18)
+@Config(sdk = 18)
 @RunWith(RobolectricTestRunner.class)
 public class HtmlStyleUtilsTest {
 
