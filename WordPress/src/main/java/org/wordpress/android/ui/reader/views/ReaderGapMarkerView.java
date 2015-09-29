@@ -54,10 +54,8 @@ public class ReaderGapMarkerView extends RelativeLayout {
     }
 
     public void setCurrentTag(ReaderTag tag) {
-        if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
-            mCurrentTag = tag;
-            hideProgress();
-        }
+        mCurrentTag = tag;
+        hideProgress();
     }
 
     private void fillTheGap() {
