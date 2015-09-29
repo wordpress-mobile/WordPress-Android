@@ -19,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/reader_tag_toolbar_margin"
         android:background="?android:selectableItemBackground"
         android:drawablePadding="@dimen/margin_medium"
         android:drawableRight="@drawable/reader_dropdown_arrow"

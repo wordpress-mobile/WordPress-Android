@@ -86,17 +86,6 @@
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
 
-    <!--
-        left margin for tag toolbar on reader post list - set to match card content padding
-        on normal portrait devices since there's no left/right margins on the cards, none
-        on tablets or landscape devices so they're flush with the cards (which do have a
-        left/right margin now)
-    -->
-    <dimen name="reader_tag_toolbar_margin_normal">@dimen/reader_card_content_padding</dimen>
-    <dimen name="reader_tag_toolbar_margin_landscape">0dp</dimen>
-    <dimen name="reader_tag_toolbar_margin_tablet">0dp</dimen>
-    <dimen name="reader_tag_toolbar_margin">@dimen/reader_tag_toolbar_margin_normal</dimen>
-
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
