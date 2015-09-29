@@ -9,6 +9,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_small"
+    android:layout_marginLeft="@dimen/reader_card_margin"
+    android:layout_marginRight="@dimen/reader_card_margin"
     android:layout_marginTop="@dimen/margin_small"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
@@ -17,12 +19,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/reader_card_content_padding"
         android:background="?android:selectableItemBackground"
         android:drawablePadding="@dimen/margin_medium"
         android:drawableRight="@drawable/reader_dropdown_arrow"
         android:ellipsize="end"
-        android:padding="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding"
+        android:paddingTop="@dimen/margin_medium"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_large"
         tools:text="current tag" />

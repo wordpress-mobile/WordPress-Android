@@ -357,11 +357,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.likeCount.setSelected(post.isLikedByCurrentUser);
             postHolder.likeCount.setVisibility(View.VISIBLE);
             // can't like when logged out
-            if (mIsLoggedOutReader) {
-                postHolder.likeCount.setEnabled(false);
-                postHolder.likeCount.setOnClickListener(null);
-            } else {
-                postHolder.likeCount.setEnabled(true);
+            if (!mIsLoggedOutReader) {
                 postHolder.likeCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

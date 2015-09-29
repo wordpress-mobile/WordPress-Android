@@ -51,13 +51,18 @@ public class ReaderTagInfoView extends LinearLayout {
         TextView txtTagName = (TextView) findViewById(R.id.text_tag);
         txtTagName.setText(ReaderUtils.makeHashTag(tag.getTagName()));
 
-        mFollowButton.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.getTagName()));
-        mFollowButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFollowStatus();
-            }
-        });
+        if (ReaderUtils.isLoggedOutReader()) {
+            mFollowButton.setVisibility(View.GONE);
+        } else {
+            mFollowButton.setVisibility(View.VISIBLE);
+            mFollowButton.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.getTagName()));
+            mFollowButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFollowStatus();
+                }
+            });
+        }
     }
 
     private void toggleFollowStatus() {
