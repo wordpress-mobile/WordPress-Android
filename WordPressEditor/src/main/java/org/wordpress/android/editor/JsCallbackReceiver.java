@@ -2,7 +2,10 @@ package org.wordpress.android.editor;
 
 import android.webkit.JavascriptInterface;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.JSONUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -90,8 +93,45 @@ public class JsCallbackReceiver {
                 AppLog.d(AppLog.T.EDITOR, "Image replaced, " + params);
                 break;
             case CALLBACK_IMAGE_TAP:
-                // TODO: Notifies that an image was tapped
                 AppLog.d(AppLog.T.EDITOR, "Image tapped, " + params);
+
+                String uploadStatus = "";
+
+                List<String> mediaIds = new ArrayList<>();
+                mediaIds.add("id");
+                mediaIds.add("url");
+                mediaIds.add("meta");
+
+                Set<String> mediaDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, mediaIds);
+                Map<String, String> mediaDataMap = Utils.buildMapFromKeyValuePairs(mediaDataSet);
+
+                String mediaId = mediaDataMap.get("id");
+
+                String mediaUrl = mediaDataMap.get("url");
+                if (mediaUrl != null) {
+                    mediaUrl = Utils.decodeHtml(mediaUrl);
+                }
+
+                String mediaMeta = mediaDataMap.get("meta");
+                if (mediaMeta != null) {
+                    mediaMeta = Utils.decodeHtml(mediaMeta);
+
+                    try {
+                        String classes = JSONUtils.getString(new JSONObject(mediaMeta), "classes");
+                        Set<String> classesSet = Utils.splitDelimitedString(classes, ", ");
+
+                        if (classesSet.contains("uploading")) {
+                            uploadStatus = "uploading";
+                        } else if (classesSet.contains("failed")) {
+                            uploadStatus = "failed";
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        AppLog.d(AppLog.T.EDITOR, "Media meta data from callback-image-tap was not JSON-formatted");
+                    }
+                }
+
+                mListener.onMediaTapped(mediaId, mediaUrl, mediaMeta, uploadStatus);
                 break;
             case CALLBACK_LINK_TAP:
                 // Extract and HTML-decode the link data from the callback params
