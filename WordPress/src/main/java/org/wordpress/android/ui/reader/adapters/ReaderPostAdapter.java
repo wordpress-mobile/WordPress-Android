@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
+import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
 import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
@@ -46,7 +47,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
-    private ReaderBlogIdPostId mGapMarkerIds;
+    private int mGapMarkerPosition = -1;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
@@ -84,6 +85,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_BLOG_INFO   = 1;
     private static final int VIEW_TYPE_TAG_INFO    = 2;
     private static final int VIEW_TYPE_TAG_TOOLBAR = 3;
+    private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
@@ -106,7 +108,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgAvatar;
 
         private final ViewGroup layoutPostHeader;
-        private final ViewGroup layoutGapMarker;
 
         private final ViewGroup layoutDiscover;
         private final WPNetworkImageView imgDiscoverAvatar;
@@ -136,7 +137,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
-            layoutGapMarker = (ViewGroup) itemView.findViewById(R.id.layout_gap_marker);
 
             // adjust the right padding of the post header to allow right padding of the  "..." icon
             // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
@@ -174,6 +174,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    class GapMarkerViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderGapMarkerView mGapMarkerView;
+        public GapMarkerViewHolder(View itemView) {
+            super(itemView);
+            mGapMarkerView = (ReaderGapMarkerView) itemView;
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position == 0 && mShowTagToolbar) {
@@ -185,6 +193,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (position == 0 && isTagPreview()) {
             // first item is a ReaderTagInfoView
             return VIEW_TYPE_TAG_INFO;
+        } else if (position == mGapMarkerPosition) {
+            return VIEW_TYPE_GAP_MARKER;
         }
         return VIEW_TYPE_POST;
     }
@@ -201,6 +211,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             case VIEW_TYPE_TAG_INFO:
                 return new TagInfoViewHolder(new ReaderTagInfoView(context));
+
+            case VIEW_TYPE_GAP_MARKER:
+                return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
             default:
                 View postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
@@ -229,20 +242,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
         ReaderTypes.ReaderPostListType postListType = getPostListType();
-
-        // show gap marker if one should appear below this post - this signifies that there
-        // are missing posts between this post and the next one
-        if (mGapMarkerIds != null && post.hasIds(mGapMarkerIds)) {
-            postHolder.layoutGapMarker.setVisibility(View.VISIBLE);
-            postHolder.layoutGapMarker.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fillTheGap((ViewGroup) v, position);
-                }
-            });
-        } else {
-            postHolder.layoutGapMarker.setVisibility(View.GONE);
-        }
 
         postHolder.txtTitle.setText(post.getTitle());
 
@@ -642,10 +641,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private ReaderPost getItem(int position) {
-        if (hasCustomFirstItem()) {
-            return position == 0 ? null : mPosts.get(position - 1);
+        if (position == 0 && hasCustomFirstItem()) {
+            return null;
         }
-        return mPosts.get(position);
+        if (position == mGapMarkerPosition) {
+            return null;
+        }
+
+        int arrayPos = hasCustomFirstItem() ? position - 1 : position;
+
+        if (mGapMarkerPosition > -1 && position > mGapMarkerPosition) {
+            arrayPos--;
+        }
+
+        return mPosts.get(arrayPos);
     }
 
     @Override
@@ -751,19 +760,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 case TAG_FOLLOWED:
                     allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
-                    // determine whether a gap marker exists for this tag
-                    mGapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
-                    // make sure the gap marker isn't on the last post (can happen if all older
-                    // posts have been purged)
-                    if (mGapMarkerIds != null
-                            && allPosts.size() > 0
-                            && allPosts.get(allPosts.size() - 1).hasIds(mGapMarkerIds)) {
-                        mGapMarkerIds = null;
-                        ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
-                    }
                     break;
                 case BLOG_PREVIEW:
-                    mGapMarkerIds = null;
                     if (mCurrentFeedId != 0) {
                         allPosts = ReaderPostTable.getPostsInFeed(mCurrentFeedId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                         numExisting = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
@@ -783,6 +781,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+
+            // determine whether a gap marker exists for this tag
+            mGapMarkerPosition = -1;
+            if (getPostListType().isTagType()) {
+                ReaderBlogIdPostId gapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
+                if (gapMarkerIds != null) {
+                    mGapMarkerPosition = allPosts.indexOfIds(gapMarkerIds);
+                    // remove the gap marker if it's on the first or last post
+                    if (mGapMarkerPosition == 0 || mGapMarkerPosition == allPosts.size()) {
+                        mGapMarkerPosition = -1;
+                        ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
+                    }
+                }
+            }
 
             return true;
         }
