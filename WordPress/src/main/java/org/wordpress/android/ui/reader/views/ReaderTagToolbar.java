@@ -56,14 +56,19 @@ public class ReaderTagToolbar extends LinearLayout {
                 }
             });
 
-            btnEditTags.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderSubs(v.getContext());
-                }
-            });
+            if (ReaderUtils.isLoggedOutReader()) {
+                btnEditTags.setVisibility(View.GONE);
+            } else {
+                btnEditTags.setVisibility(View.VISIBLE);
+                btnEditTags.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderSubs(v.getContext());
+                    }
+                });
 
-            ReaderUtils.setBackgroundToRoundRipple(btnEditTags);
+                ReaderUtils.setBackgroundToRoundRipple(btnEditTags);
+            }
         }
     }
 
