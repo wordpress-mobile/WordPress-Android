@@ -21,7 +21,7 @@ public class LinkDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.link_dialog, null);
+        View view = inflater.inflate(R.layout.dialog_link, null);
 
         final EditText urlEditText = (EditText) view.findViewById(R.id.linkURL);
         final EditText linkEditText = (EditText) view.findViewById(R.id.linkText);
