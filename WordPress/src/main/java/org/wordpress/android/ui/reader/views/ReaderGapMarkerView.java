@@ -54,7 +54,10 @@ public class ReaderGapMarkerView extends RelativeLayout {
     }
 
     public void setCurrentTag(ReaderTag tag) {
-        mCurrentTag = tag;
+        if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
+            mCurrentTag = tag;
+            hideProgress();
+        }
     }
 
     private void fillTheGap() {
@@ -63,7 +66,8 @@ public class ReaderGapMarkerView extends RelativeLayout {
             return;
         }
 
-        // start service to fill the gap - EventBus will notify the owning fragment of new posts
+        // start service to fill the gap - EventBus will notify the owning fragment of new posts,
+        // and will take care of hiding this view
         ReaderPostService.startServiceForTag(getContext(), mCurrentTag, UpdateAction.REQUEST_OLDER_THAN_GAP);
         showProgress();
     }
@@ -72,5 +76,11 @@ public class ReaderGapMarkerView extends RelativeLayout {
         mText.setVisibility(View.INVISIBLE);
         mImage.setVisibility(View.INVISIBLE);
         mProgress.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        mText.setVisibility(View.VISIBLE);
+        mImage.setVisibility(View.VISIBLE);
+        mProgress.setVisibility(View.GONE);
     }
 }

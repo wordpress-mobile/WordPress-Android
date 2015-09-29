@@ -769,10 +769,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ReaderBlogIdPostId gapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
                 if (gapMarkerIds != null) {
                     mGapMarkerPosition = allPosts.indexOfIds(gapMarkerIds);
-                    // remove the gap marker if it's on the first or last post
+                    // remove the gap marker if it's on the first or last post (edge case but
+                    // it can happen following a purge)
                     if (mGapMarkerPosition == 0 || mGapMarkerPosition == allPosts.size()) {
                         mGapMarkerPosition = -1;
                         ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
+                    }
+                    if (mGapMarkerPosition > -1) {
+                        AppLog.d(AppLog.T.READER, "gap marker at position " + mGapMarkerPosition);
                     }
                 }
             }

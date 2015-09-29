@@ -290,24 +290,32 @@ public class ReaderPostService extends Service {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
                 if (updateResult.isNewOrChanged()) {
+                    // gap detection - only applies to posts with a specific tag
                     ReaderPost postWithGap = null;
-                    if (tag != null && updateAction == UpdateAction.REQUEST_NEWER) {
-                        // determine whether a "gap marker" needs to be used on the last server
-                        // post - the adapter uses this to place a gap between the last server
-                        // post and the most recent existing post to signify there are missing
-                        // posts between them - only applies to posts with a specfic tag
-                        long oldestTimestampExisting = ReaderPostTable.getOldestTimestampWithTag(tag);
-                        long oldestTimestampServer = serverPosts.getOldestTimestamp();
-                        if (oldestTimestampExisting > 0 && oldestTimestampExisting < oldestTimestampServer) {
-                            postWithGap = serverPosts.get(serverPosts.size() - 1);
-                            AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
+                    if (tag != null) {
+                        switch (updateAction) {
+                            case REQUEST_NEWER:
+                                // if there's no overlap between server and local (ie: all server
+                                // posts are new), assume there's a gap between server and local
+                                // provided that local posts exist
+                                if (ReaderPostTable.getNumPostsWithTag(tag) > 0
+                                        && !ReaderPostTable.hasOverlap(serverPosts)) {
+                                    // remove the last server post to deal with the edge case of
+                                    // there actually not being a gap between local & server
+                                    serverPosts.remove(serverPosts.size() - 1);
+                                    // now treat the last server post as having a gap
+                                    postWithGap = serverPosts.get(serverPosts.size() - 1);
+                                    AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
+                                }
+                                ReaderPostTable.removeGapMarkerForTag(tag);
+                                break;
+                            case REQUEST_OLDER_THAN_GAP:
+                                // if service was started as a request to fill a gap, delete existing posts
+                                // older than the one with the gap marker, then remove the existing gap marker
+                                ReaderPostTable.deletePostsOlderThanGapMarkerForTag(tag);
+                                ReaderPostTable.removeGapMarkerForTag(tag);
+                                break;
                         }
-                        ReaderPostTable.removeGapMarkerForTag(tag);
-                    } else if (tag != null && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {
-                        // delete existing posts older than the one with the gap marker, then
-                        // remove the existing gap marker
-                        ReaderPostTable.deletePostsOlderThanGapMarkerForTag(tag);
-                        ReaderPostTable.removeGapMarkerForTag(tag);
                     }
 
                     ReaderPostTable.addOrUpdatePosts(tag, serverPosts);

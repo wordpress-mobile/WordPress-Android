@@ -87,14 +87,4 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         }
         return postsInBlog;
     }
-
-    public long getOldestTimestamp() {
-        long oldest = 0;
-        for (ReaderPost post: this) {
-            if (oldest == 0 || post.timestamp < oldest) {
-                oldest = post.timestamp;
-            }
-        }
-        return oldest;
-    }
 }

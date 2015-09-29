@@ -290,6 +290,18 @@ public class ReaderPostTable {
     }
 
     /*
+     * returns true if any posts in the passed list exist in this list
+     */
+    public static boolean hasOverlap(ReaderPostList posts) {
+        for (ReaderPost post: posts) {
+            if (postExists(post.blogId, post.postId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
      * returns the #comments known to exist for this post (ie: #comments the server says this post has), which
      * may differ from ReaderCommentTable.getNumCommentsForPost (which returns # local comments for this post)
      */
@@ -425,19 +437,6 @@ public class ReaderPostTable {
                   + " WHERE feed_id = ?"
                   + " ORDER BY published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
-    }
-
-    public static long getOldestTimestampWithTag(final ReaderTag tag) {
-        if (tag == null) {
-            return 0;
-        }
-
-        String sql = "SELECT tbl_posts.timestamp FROM tbl_posts, tbl_post_tags"
-                + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
-                + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
-                + " ORDER BY timestamp LIMIT 1";
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     public static void removeGapMarkerForTag(final ReaderTag tag) {
