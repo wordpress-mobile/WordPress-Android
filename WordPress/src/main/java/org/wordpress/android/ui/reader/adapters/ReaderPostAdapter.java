@@ -316,53 +316,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.txtTag.setOnClickListener(null);
         }
 
-        boolean showLikes;
-        boolean showComments;
-        if (post.isDiscoverPost()) {
-            showLikes = false;
-            showComments = false;
-        } else if (mIsLoggedOutReader) {
-            showLikes = post.numLikes > 0;
-            showComments = post.numReplies > 0;
-        } else {
-            showLikes = post.canLikePost();
-            showComments = post.isWP() && !post.isJetpack && (post.isCommentsOpen || post.numReplies > 0);
-        }
-
-        if (showLikes || showComments) {
-            showCounts(postHolder, post);
-        }
-
-        if (showLikes) {
-            postHolder.likeCount.setSelected(post.isLikedByCurrentUser);
-            postHolder.likeCount.setVisibility(View.VISIBLE);
-            // can't like when logged out
-            if (!mIsLoggedOutReader) {
-                postHolder.likeCount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggleLike(v.getContext(), postHolder, post);
-                    }
-                });
-            }
-        } else {
-            postHolder.likeCount.setVisibility(View.GONE);
-            postHolder.likeCount.setOnClickListener(null);
-        }
-
-        if (showComments) {
-            postHolder.commentCount.setVisibility(View.VISIBLE);
-            postHolder.commentCount.setEnabled(true);
-            postHolder.commentCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(v.getContext(), post.blogId, post.postId);
-                }
-            });
-        } else {
-            postHolder.commentCount.setVisibility(View.GONE);
-            postHolder.commentCount.setOnClickListener(null);
-        }
+        showLikes(postHolder, post);
+        showComments(postHolder, post);
 
         // more menu only shows for followed tags
         if (!mIsLoggedOutReader && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
@@ -625,17 +580,58 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    /*
-     * shows like & comment count
-     */
-    private void showCounts(ReaderPostViewHolder holder, ReaderPost post) {
-        holder.likeCount.setCount(post.numLikes);
+    private void showLikes(final ReaderPostViewHolder holder, final ReaderPost post) {
+        boolean canShowLikes;
+        if (post.isDiscoverPost()) {
+            canShowLikes = false;
+        } else if (mIsLoggedOutReader) {
+            canShowLikes = post.numLikes > 0;
+        } else {
+            canShowLikes = post.canLikePost();
+        }
 
-        if (post.numReplies > 0 || post.isCommentsOpen) {
+        if (canShowLikes) {
+            holder.likeCount.setCount(post.numLikes);
+            holder.likeCount.setSelected(post.isLikedByCurrentUser);
+            holder.likeCount.setVisibility(View.VISIBLE);
+            // can't like when logged out
+            if (!mIsLoggedOutReader) {
+                holder.likeCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleLike(v.getContext(), holder, post);
+                    }
+                });
+            }
+        } else {
+            holder.likeCount.setVisibility(View.GONE);
+            holder.likeCount.setOnClickListener(null);
+        }
+    }
+
+    private void showComments(final ReaderPostViewHolder holder, final ReaderPost post) {
+        boolean canShowComments;
+        if (post.isDiscoverPost()) {
+            canShowComments = false;
+        } else if (mIsLoggedOutReader) {
+            canShowComments = post.numReplies > 0;
+        } else {
+            canShowComments = post.isWP() && !post.isJetpack && (post.isCommentsOpen || post.numReplies > 0);
+        }
+
+        if (canShowComments) {
             holder.commentCount.setCount(post.numReplies);
             holder.commentCount.setVisibility(View.VISIBLE);
+            holder.commentCount.setEnabled(true);
+            holder.commentCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderComments(v.getContext(), post.blogId, post.postId);
+                }
+            });
         } else {
             holder.commentCount.setVisibility(View.GONE);
+            holder.commentCount.setOnClickListener(null);
         }
     }
 
@@ -666,7 +662,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (updatedPost != null && position > -1) {
             mPosts.set(position, updatedPost);
             holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
-            showCounts(holder, updatedPost);
+            showLikes(holder, updatedPost);
         }
     }
 
