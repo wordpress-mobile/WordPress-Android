@@ -29,13 +29,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewHolder> {
+public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewHolder> {
 
-    interface OnSiteClickListener {
+    public interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
     }
 
-    interface OnSelectedCountChangedListener {
+    public interface OnSelectedCountChangedListener {
         void onSelectedCountChanged(int numSelected);
     }
 
@@ -115,11 +115,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return mSites.get(position);
     }
 
-    void setOnSelectedCountChangedListener(OnSelectedCountChangedListener listener) {
+    public void setOnSelectedCountChangedListener(OnSelectedCountChangedListener listener) {
         mSelectedCountListener = listener;
     }
 
-    void setOnSiteClickListener(OnSiteClickListener listener) {
+    public void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
     }
 
@@ -298,7 +298,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         return sites;
     }
 
-    SiteList getHiddenSites() {
+    public SiteList getHiddenSites() {
         SiteList hiddenSites = new SiteList();
         for (SiteRecord site: mSites) {
             if (site.isHidden) {
@@ -436,15 +436,15 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     /**
      * SiteRecord is a simplified version of the full account (blog) record
      */
-    static class SiteRecord {
-        final int localId;
-        final int blogId;
-        final String blogName;
-        final String homeURL;
-        final String url;
-        final String blavatarUrl;
-        final boolean isDotCom;
-        boolean isHidden;
+    public static class SiteRecord {
+        public final int localId;
+        public final int blogId;
+        public final String blogName;
+        public final String homeURL;
+        public final String url;
+        public final String blavatarUrl;
+        public final boolean isDotCom;
+        public boolean isHidden;
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
@@ -457,7 +457,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             isHidden = MapUtils.getMapBool(account, "isHidden");
         }
 
-        String getBlogNameOrHomeURL() {
+        public String getBlogNameOrHomeURL() {
             if (TextUtils.isEmpty(blogName)) {
                 return homeURL;
             }
@@ -465,7 +465,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    static class SiteList extends ArrayList<SiteRecord> {
+   public static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
         SiteList(List<Map<String, Object>> accounts) {
             if (accounts != null) {

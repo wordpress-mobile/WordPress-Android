@@ -178,6 +178,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.stats.StatsWidgetConfigureActivity2"
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/site_picker_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".ui.WPWebViewActivity"
             android:theme="@style/Calypso.NoActionBar"/>
 
