@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/relatedPostImage"
+        android:layout_width="match_parent"
+        android:layout_height="96dp" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/relatedPostTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_sz_medium"
+        android:textColor="@color/grey_dark"
+        app:fontFamily="openSans"
+        app:fontVariation="light"
+        tools:text="Post Title" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/relatedPostSubtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textSize="@dimen/text_sz_related_post_small"
+        android:textColor="@color/grey_dark"
+        app:fontFamily="openSans"
+        app:fontVariation="normal"
+        tools:text="Post Subtext" />
+
+</LinearLayout>

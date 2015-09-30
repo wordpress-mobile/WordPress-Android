@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -42,6 +43,7 @@ import de.greenrobot.event.EventBus;
 
 public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener,
+                   Preference.OnPreferenceClickListener,
                    AdapterView.OnItemLongClickListener,
                    SiteSettingsInterface.SiteSettingsListener {
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
@@ -65,7 +67,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mLocationPreference;
     private DetailListPreference mCategoryPreference;
     private DetailListPreference mFormatPreference;
-    private DetailListPreference mRelatedPostsPreference;
+    private Preference mRelatedPostsPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,6 +150,17 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference == mRelatedPostsPreference) {
+            DialogFragment relatedPosts = new RelatedPostsDialog();
+            relatedPosts.show(getFragmentManager(), "Related Posts");
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (newValue == null) return false;
 
@@ -194,8 +207,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
             mFormatPreference.refreshAdapter();
             return true;
-        } else if (preference == mRelatedPostsPreference) {
-            // TODO
         }
 
         return false;
@@ -281,8 +292,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 (DetailListPreference) findPreference(getString(R.string.pref_key_site_category));
         mFormatPreference =
                 (DetailListPreference) findPreference(getString(R.string.pref_key_site_format));
-        mRelatedPostsPreference =
-                (DetailListPreference) findPreference(getString(R.string.pref_key_site_related_posts));
+        mRelatedPostsPreference = findPreference(getString(R.string.pref_key_site_related_posts));
 
         mTitlePreference.setOnPreferenceChangeListener(this);
         mTaglinePreference.setOnPreferenceChangeListener(this);
@@ -294,7 +304,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLanguagePreference.setOnPreferenceChangeListener(this);
         mUsernamePreference.setOnPreferenceChangeListener(this);
         mPasswordPreference.setOnPreferenceChangeListener(this);
-        mRelatedPostsPreference.setOnPreferenceChangeListener(this);
+        mRelatedPostsPreference.setOnPreferenceClickListener(this);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {

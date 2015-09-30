@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPSwitch
+        android:id="@+id/toggleRelatedPostsSwitch"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Show Related Posts"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        app:fontFamily="openSans"
+        app:fontVariation="normal" />
+
+    <TextView
+        android:id="@+id/toggleRelatedPostsSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Related Posts displays relevant content from your site below your posts."/>
+
+    <CheckBox
+        android:id="@+id/showHeaderCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Header" />
+
+    <CheckBox
+        android:id="@+id/showImagesCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Images" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/grey" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Preview" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Related Posts"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_sz_related_post_small"
+        android:textColor="@color/grey_darken_20"
+        app:fontFamily="openSans"
+        app:fontVariation="light" />
+
+    <ListView
+        android:id="@+id/relatedPostsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+</LinearLayout>
