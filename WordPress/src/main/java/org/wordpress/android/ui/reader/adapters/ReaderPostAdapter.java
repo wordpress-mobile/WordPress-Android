@@ -622,7 +622,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (canShowComments) {
             holder.commentCount.setCount(post.numReplies);
             holder.commentCount.setVisibility(View.VISIBLE);
-            holder.commentCount.setEnabled(true);
             holder.commentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -661,7 +660,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
         if (updatedPost != null && position > -1) {
             mPosts.set(position, updatedPost);
-            holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
             showLikes(holder, updatedPost);
         }
     }
