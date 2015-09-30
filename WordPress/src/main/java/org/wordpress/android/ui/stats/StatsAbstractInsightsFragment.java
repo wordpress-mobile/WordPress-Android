@@ -129,7 +129,10 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         }
 
         if (isDataEmpty(0)) {
-            showErrorUI(null);
+            // This is just an additional check. We only have 1 endpoint per fragment here.
+            // mDatamodels is either null or not empty at position 0
+            String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+            showErrorUI(label);
             return;
         }
 
@@ -158,12 +161,21 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
             label += "<br/>" + getString(R.string.no_network_message);
         }
 
+        if (StatsUtils.isRESTDisabledError(error)) {
+            label += "<br/>" + getString(R.string.stats_enable_rest_api_in_jetpack);
+        }
+
         showErrorUI(label);
     }
 
     protected final void showErrorUI(String label) {
         if (!isAdded()) {
             return;
+        }
+
+        // Use the generic error message when the string passed to this method is null.
+        if (label == null) {
+            label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
         }
 
         if (label.contains("<")) {

@@ -8,7 +8,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_large"
     android:paddingTop="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPTextView
@@ -38,33 +37,26 @@
         android:layout_marginTop="@dimen/margin_large"
         android:scrollbars="none" />
 
-    <LinearLayout
-        android:id="@+id/liking_users_container"
+    <View
+        android:id="@+id/layout_liking_users_divider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/reader_divider_grey"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:background="@color/reader_divider_grey" />
-
-        <!-- liking avatars are inserted into this view at runtime -->
-        <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
-            android:id="@+id/layout_liking_users_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:minHeight="@dimen/avatar_sz_small"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingLeft="@dimen/reader_detail_margin"
-            android:paddingRight="@dimen/reader_detail_margin"
-            android:paddingTop="@dimen/margin_medium" />
-
-    </LinearLayout>
+    <!-- liking avatars are inserted into this view at runtime -->
+    <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
+        android:id="@+id/layout_liking_users_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/avatar_sz_small"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="?android:selectableItemBackground"
+        android:paddingLeft="@dimen/reader_detail_margin"
+        android:paddingRight="@dimen/reader_detail_margin"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>

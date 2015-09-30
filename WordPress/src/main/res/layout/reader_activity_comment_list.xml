@@ -9,26 +9,24 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        style="@style/ReaderTextView.EmptyList"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_below="@+id/toolbar"
+        android:text="@string/reader_empty_comments"
+        android:textColor="@color/grey_darken_10"
+        android:visibility="gone"
+        app:fixWidowWords="true"
+        tools:visibility="visible" />
+
     <org.wordpress.android.ui.reader.views.ReaderRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_bottom"
         android:layout_below="@+id/toolbar"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/reader_listitem_comment" />
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_empty"
-        style="@style/ReaderTextView.EmptyList"
-        android:layout_centerInParent="true"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_large"
-        android:text="@string/reader_empty_comments"
-        android:textColor="@color/grey_darken_10"
-        android:visibility="gone"
-        app:fixWidowWords="true"
-        tools:visibility="visible" />
+        android:scrollbars="vertical" />
 
     <RelativeLayout
         android:id="@+id/layout_bottom"

@@ -96,7 +96,7 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".ui.prefs.LicensesActivity"
-            android:theme="@style/CalypsoTheme"/>
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.prefs.SettingsActivity"
             android:configChanges="locale|orientation"
