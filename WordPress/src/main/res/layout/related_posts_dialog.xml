@@ -9,10 +9,9 @@
 
     <org.wordpress.android.widgets.WPSwitch
         android:id="@+id/toggleRelatedPostsSwitch"
-        android:layout_weight="1"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Related Posts"
+        android:text="@string/related_posts_switch_title"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
         app:fontFamily="openSans"
@@ -22,19 +21,19 @@
         android:id="@+id/toggleRelatedPostsSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Related Posts displays relevant content from your site below your posts."/>
+        android:text="@string/related_posts_switch_summary"/>
 
     <CheckBox
         android:id="@+id/showHeaderCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show Header" />
+        android:text="@string/related_posts_show_header_title" />
 
     <CheckBox
         android:id="@+id/showImagesCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show Images" />
+        android:text="@string/related_posts_show_images_title" />
 
     <View
         android:layout_width="match_parent"
@@ -44,12 +43,12 @@
     <org.wordpress.android.widgets.WPTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Preview" />
+        android:text="@string/preview" />
 
     <org.wordpress.android.widgets.WPTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Related Posts"
+        android:text="@string/related_posts_preview_header"
         android:textStyle="bold"
         android:textSize="@dimen/text_sz_related_post_small"
         android:textColor="@color/grey_darken_20"

@@ -460,6 +460,11 @@
     <string name="site_settings_related_posts_summary">Show related content after posts</string>
     <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
     <string name="site_settings_save_success">Site settings updated</string>
+    <string name="related_posts_switch_title">Show Related Posts</string>
+    <string name="related_posts_switch_summary">Related Posts displays relevant content from your site below your posts.</string>
+    <string name="related_posts_show_header_title">Show Header</string>
+    <string name="related_posts_show_images_title">Show Images</string>
+    <string name="related_posts_preview_header">Related Posts</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
