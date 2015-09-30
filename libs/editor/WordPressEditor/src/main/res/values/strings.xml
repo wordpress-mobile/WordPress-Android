@@ -7,6 +7,13 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="save">Save</string>
+
+    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
+    <string name="alert_html_toggle_uploading">You are currently uploading media. Please wait until this completes.</string>
+
+    <string name="stop_upload_dialog_title">Stop uploading?</string>
+    <string name="stop_upload_button">Stop Upload</string>
 
     <string name="format_bar_tag_bold" translatable="false">bold</string>
     <string name="format_bar_tag_italic" translatable="false">italic</string>
@@ -31,11 +38,23 @@
     <string name="horizontal_alignment">Horizontal alignment</string>
     <string name="caption">Caption (optional)</string>
 
+    <string name="image_caption">Caption</string>
+    <string name="image_alt_text">Alt text</string>
+    <string name="image_link_to">Link to</string>
+    <string name="image_width">Width</string>
+
     <string-array name="alignment_array">
         <item>None</item>
         <item>Left</item>
         <item>Center</item>
         <item>Right</item>
+    </string-array>
+
+    <string-array name="image_size_array">
+        <item>Thumbnail</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>Full Size</item>
     </string-array>
 
 </resources>

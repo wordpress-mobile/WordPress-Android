@@ -173,6 +173,11 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
             return;
         }
 
+        // Use the generic error message when the string passed to this method is null.
+        if (label == null) {
+            label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+        }
+
         if (label.contains("<")) {
             mErrorLabel.setText(Html.fromHtml(label));
         } else {
