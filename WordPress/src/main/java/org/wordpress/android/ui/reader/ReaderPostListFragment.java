@@ -734,6 +734,16 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
+     * same as above but clears posts before refreshing
+     */
+    private void reloadPosts() {
+        hideNewPostsBar();
+        if (hasPostAdapter()) {
+            getPostAdapter().reload();
+        }
+    }
+
+    /*
      * get posts for the current blog from the server
      */
     private void updatePostsInCurrentBlogOrFeed(final UpdateAction updateAction) {
@@ -780,6 +790,12 @@ public class ReaderPostListFragment extends Fragment
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
             setEmptyTitleAndDescription(requestFailed);
+            // if we requested posts in order to fill a gap but the request failed or didn't
+            // return any posts, reload the adapter so the gap marker is reset (hiding its
+            // progress bar)
+            if (event.getAction() == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                reloadPosts();
+            }
         }
     }
 

@@ -544,7 +544,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * same as refresh() above but first clears the existing posts
      */
-    private void reload() {
+    public void reload() {
         clear();
         loadPosts();
     }
