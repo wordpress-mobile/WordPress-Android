@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +83,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
         setRetainInstance(true);
+        setToolbarColor();
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         mEmptyView = (TextView) view.findViewById(R.id.text_empty);
 
@@ -198,6 +201,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
                 refreshView(getSpinnerPosition());
             }
         }
+    }
+
+    protected void setToolbarColor() {
+        ThemeBrowserActivity themeBrowserActivity = (ThemeBrowserActivity) getActivity();
+        Toolbar toolbar = (Toolbar) themeBrowserActivity.findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(ContextCompat.getColor(themeBrowserActivity.getApplicationContext(), R.color.blue_wordpress));
     }
 
     private void configureAndAddSearchHeader(LayoutInflater inflater) {

@@ -127,6 +127,14 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     protected void addHeaderViews(LayoutInflater inflater) {
         // No header on Search
     }
+
+    @Override
+    protected void setToolbarColor() {
+        ThemeBrowserActivity themeBrowserActivity = (ThemeBrowserActivity) getActivity();
+        Toolbar toolbar = (Toolbar) themeBrowserActivity.findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(ContextCompat.getColor(themeBrowserActivity.getApplicationContext(), R.color.white));
+    }
+
     @Override
     protected void configureSwipeToRefresh(View view) {
         super.configureSwipeToRefresh(view);
