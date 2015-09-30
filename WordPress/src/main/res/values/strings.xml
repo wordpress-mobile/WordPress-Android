@@ -438,8 +438,9 @@
     <!-- stats: Widget labels -->
     <string name="stats_widget_name">WordPress Today\'s Stats</string>
     <string name="stats_widget_loading_data">Loading data…</string>
-    <string name="stats_widget_error_no_account">Please login into WordPress</string>
     <string name="stats_widget_error_generic">Stats couldn\'t be loaded</string>
+    <string name="stats_widget_error_no_account">Please login into WordPress</string>
+    <string name="stats_widget_error_no_permissions">Your WordPress.com account can\'t access Stats on this blog</string>
     <string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
     <string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
     <string name="stats_widget_error_jetpack_no_blogid">Please refresh your self-hosted site in the app, and try adding the widget later</string>

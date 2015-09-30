@@ -140,7 +140,21 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             if (widgetIDs.length == 0){
                 return;
             }
-            showMessage(context, widgetIDs, context.getString(R.string.stats_sign_in_jetpack_different_com_account));
+
+            // Check if Jetpack or .com
+            int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
+            Blog blog = WordPress.getBlog(localId);
+            if (blog == null) {
+                return;
+            }
+
+            if (blog.isDotcomFlag()) {
+                // User cannot access stats for this .com blog
+                showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_no_permissions));
+            } else {
+                // Not logged into wpcom, or the main .com account of the app is not linked with this blog
+                showMessage(context, widgetIDs, context.getString(R.string.stats_sign_in_jetpack_different_com_account));
+            }
             return;
         }
 
