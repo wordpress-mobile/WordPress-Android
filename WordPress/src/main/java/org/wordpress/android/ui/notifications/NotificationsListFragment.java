@@ -5,7 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.design.widget.AppBarLayout.LayoutParams;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -268,10 +268,13 @@ public class NotificationsListFragment extends Fragment
     }
 
     private void setFilterViewScrollable(boolean isScrollable) {
-        if (mFilterView != null && mFilterView.getLayoutParams() instanceof LayoutParams) {
-            LayoutParams params = (LayoutParams) mFilterView.getLayoutParams();
+        if (mFilterView != null && mFilterView.getLayoutParams() instanceof AppBarLayout.LayoutParams) {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mFilterView.getLayoutParams();
             if (isScrollable) {
-                params.setScrollFlags(LayoutParams.SCROLL_FLAG_SCROLL|LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                params.setScrollFlags(
+                        AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL|
+                        AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                );
             } else {
                 params.setScrollFlags(0);
             }
