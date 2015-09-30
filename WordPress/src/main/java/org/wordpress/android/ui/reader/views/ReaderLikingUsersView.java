@@ -63,10 +63,10 @@ public class ReaderLikingUsersView extends LinearLayout {
      * returns count of avatars that can fit the current space
      */
     private int getMaxAvatars() {
-        int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
-        int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
-        int likeAvatarSizeWithMargin = mLikeAvatarSz + (marginExtraSmall * 2);
-        int spaceForAvatars = getWidth() - (marginLarge * 2);
+        int marginAvatar = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+        int marginReader = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int likeAvatarSizeWithMargin = mLikeAvatarSz + (marginAvatar * 2);
+        int spaceForAvatars = getWidth() - (marginReader * 2);
         return spaceForAvatars / likeAvatarSizeWithMargin;
     }
 

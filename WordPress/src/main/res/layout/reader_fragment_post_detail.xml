@@ -14,9 +14,8 @@
         <org.wordpress.android.widgets.WPScrollView
             android:id="@+id/scroll_view_reader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:fillViewport="true"
             android:scrollbarStyle="insideOverlay">
 
             <LinearLayout

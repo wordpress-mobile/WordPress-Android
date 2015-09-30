@@ -207,7 +207,7 @@ public class ActivityLauncher {
 
     public static void newAccountForResult(Activity activity) {
         Intent intent = new Intent(activity, NewAccountActivity.class);
-        activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void newBlogForResult(Activity activity) {
@@ -249,7 +249,7 @@ public class ActivityLauncher {
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
-        activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void slideInFromRight(Context context, Intent intent) {

@@ -27,6 +27,21 @@ function pFail() {
 	echo "[$(tput setaf 1)KO$(tput sgr0)]"
 }
 
+function checkSamsungWorkaround() {
+	/bin/echo -n "Check for the Samsung android.support.v7.internal.view.menu workaround..."
+	apktool > /dev/null 2>&1 || (pFail; echo "You need apktool installed to run this check (brew install apktool)"; exit 1) || exit 4
+	./gradlew clean --offline > /dev/null 2>&1
+	./gradlew assembleVanillaRelease --offline > /dev/null 2>&1
+	rm -rf /tmp/wpandroid-checksamsungworkaround/
+	apktool -f -r d WordPress/build/outputs/apk/WordPress-vanilla-release-unaligned.apk -o /tmp/wpandroid-checksamsungworkaround/ > /dev/null && ls -1 /tmp/wpandroid-checksamsungworkaround/smali/android/support/v7/internal/view/menu/MenuBuilder* > /dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		pFail
+		echo "See http://stackoverflow.com/q/24809580/58332 for more informations"
+		exit 4
+	fi
+	pOk
+}
+
 function checkENStrings() {
 	if [[ -n $(git status --porcelain|grep "M res") ]]; then
 		/bin/echo -n "Unstagged changes detected in $RESDIR/ - can't continue..."
@@ -80,8 +95,21 @@ function checkVersions() {
 	echo "last git tag version is $tag"
 }
 
+function checkGradleProperties() {
+	/bin/echo -n "Check WordPress/gradle.properties..."
+	checksum=`cat WordPress/gradle.properties|grep "^wp."|tr "[A-Z]" "[a-z]"|sed "s/ //g"|sort|sha1sum |cut -d- -f1| sed "s/ //g"`
+	known_checksum="e55897c69b6c2e17facb1c9ad4afe45f566eed20"
+	if [ x$checksum != x$known_checksum ]; then
+		pFail
+		exit 5
+	fi
+	pOk
+}
+
 checkNewLanguages
 checkENStrings
 checkVersions
+checkSamsungWorkaround
+checkGradleProperties
 # checkDeviceToTest
 # runConnectedTests
