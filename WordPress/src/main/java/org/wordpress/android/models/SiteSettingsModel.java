@@ -11,6 +11,10 @@ import java.util.Map;
  * Holds blog settings and provides methods to (de)serialize .com and self-hosted network calls.
  */
 public class SiteSettingsModel {
+    public static final int RELATED_POSTS_ENABLED_FLAG = 0x1;
+    public static final int RELATED_POST_HEADER_FLAG = 0x2;
+    public static final int RELATED_POST_IMAGE_FLAG = 0x4;
+
     // Settings table column names
     public static final String ID_COLUMN_NAME = "id";
     public static final String ADDRESS_COLUMN_NAME = "address";
@@ -26,6 +30,29 @@ public class SiteSettingsModel {
     public static final String CATEGORIES_COLUMN_NAME = "categories";
     public static final String POST_FORMATS_COLUMN_NAME = "postFormats";
     public static final String CREDS_VERIFIED_COLUMN_NAME = "credsVerified";
+    public static final String RELATED_POSTS_COLUMN_NAME = "relatedPosts";
+
+    public static final String SETTINGS_TABLE_NAME = "site_settings";
+    public static final String CREATE_SETTINGS_TABLE_SQL =
+            "CREATE TABLE IF NOT EXISTS " +
+                    SETTINGS_TABLE_NAME +
+                    " (" +
+                    SiteSettingsModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
+                    SiteSettingsModel.ADDRESS_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.USERNAME_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.PASSWORD_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.TITLE_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.TAGLINE_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.LANGUAGE_COLUMN_NAME + " INTEGER, " +
+                    SiteSettingsModel.PRIVACY_COLUMN_NAME + " INTEGER, " +
+                    SiteSettingsModel.LOCATION_COLUMN_NAME + " BOOLEAN, " +
+                    SiteSettingsModel.DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.CATEGORIES_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.POST_FORMATS_COLUMN_NAME + " TEXT, " +
+                    SiteSettingsModel.CREDS_VERIFIED_COLUMN_NAME + " BOOLEAN, " +
+                    SiteSettingsModel.RELATED_POSTS_COLUMN_NAME + " INTEGER" +
+                    ");";
 
     public boolean isInLocalTable;
     public boolean hasVerifiedCredentials;
@@ -43,6 +70,9 @@ public class SiteSettingsModel {
     public CategoryModel[] categories;
     public String defaultPostFormat;
     public Map<String, String> postFormats;
+    public boolean showRelatedPosts;
+    public boolean showRelatedPostHeaders;
+    public boolean showRelatedPostImages;
 
     @Override
     public boolean equals(Object other) {
@@ -84,6 +114,9 @@ public class SiteSettingsModel {
         categories = other.categories;
         defaultPostFormat = other.defaultPostFormat;
         postFormats = other.postFormats;
+        showRelatedPosts = other.showRelatedPosts;
+        showRelatedPostHeaders = other.showRelatedPostHeaders;
+        showRelatedPostImages = other.showRelatedPostImages;
     }
 
     /**
@@ -104,6 +137,8 @@ public class SiteSettingsModel {
         defaultPostFormat = getStringFromCursor(cursor, DEF_POST_FORMAT_COLUMN_NAME);
         location = getBooleanFromCursor(cursor, LOCATION_COLUMN_NAME);
         hasVerifiedCredentials = getBooleanFromCursor(cursor, CREDS_VERIFIED_COLUMN_NAME);
+
+        setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
         String cachedCategories = getStringFromCursor(cursor, CATEGORIES_COLUMN_NAME);
         String cachedFormats = getStringFromCursor(cursor, POST_FORMATS_COLUMN_NAME);
@@ -146,8 +181,25 @@ public class SiteSettingsModel {
         values.put(DEF_POST_FORMAT_COLUMN_NAME, defaultPostFormat);
         values.put(POST_FORMATS_COLUMN_NAME, postFormatList(postFormats));
         values.put(CREDS_VERIFIED_COLUMN_NAME, hasVerifiedCredentials);
+        values.put(RELATED_POSTS_COLUMN_NAME, getRelatedPostsFlags());
 
         return values;
+    }
+
+    public int getRelatedPostsFlags() {
+        int flags = 0;
+
+        if (showRelatedPosts) flags |= RELATED_POSTS_ENABLED_FLAG;
+        if (showRelatedPostHeaders) flags |= RELATED_POST_HEADER_FLAG;
+        if (showRelatedPostImages) flags |= RELATED_POST_IMAGE_FLAG;
+
+        return flags;
+    }
+
+    public void setRelatedPostsFlags(int flags) {
+        showRelatedPosts = (flags & RELATED_POSTS_ENABLED_FLAG) > 0;
+        showRelatedPostHeaders = (flags & RELATED_POST_HEADER_FLAG) > 0;
+        showRelatedPostImages = (flags & RELATED_POST_IMAGE_FLAG) > 0;
     }
 
     /**

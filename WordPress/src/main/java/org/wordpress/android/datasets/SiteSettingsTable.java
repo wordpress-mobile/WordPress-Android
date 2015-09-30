@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class SiteSettingsTable {
-    public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CATEGORIES_TABLE_NAME = "site_categories";
 
     private static final String CREATE_CATEGORIES_TABLE_SQL =
@@ -27,29 +26,9 @@ public final class SiteSettingsTable {
             CategoryModel.POST_COUNT_COLUMN_NAME + " INTEGER" +
             ");";
 
-    private static final String CREATE_SETTINGS_TABLE_SQL =
-            "CREATE TABLE IF NOT EXISTS " +
-            SETTINGS_TABLE_NAME +
-            " (" +
-            SiteSettingsModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-            SiteSettingsModel.ADDRESS_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.USERNAME_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.PASSWORD_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.TITLE_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.TAGLINE_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.LANGUAGE_COLUMN_NAME + " INTEGER, " +
-            SiteSettingsModel.PRIVACY_COLUMN_NAME + " INTEGER, " +
-            SiteSettingsModel.LOCATION_COLUMN_NAME + " BOOLEAN, " +
-            SiteSettingsModel.DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.CATEGORIES_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.POST_FORMATS_COLUMN_NAME + " TEXT, " +
-            SiteSettingsModel.CREDS_VERIFIED_COLUMN_NAME + " BOOLEAN" +
-            ");";
-
     public static void createTable(SQLiteDatabase db) {
         if (db != null) {
-            db.execSQL(CREATE_SETTINGS_TABLE_SQL);
+            db.execSQL(SiteSettingsModel.CREATE_SETTINGS_TABLE_SQL);
             db.execSQL(CREATE_CATEGORIES_TABLE_SQL);
         }
     }
@@ -106,7 +85,7 @@ public final class SiteSettingsTable {
 
         ContentValues values = settings.serializeToDatabase();
         settings.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
-                SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
+                SiteSettingsModel.SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
 
         saveCategories(settings.categories);
     }
@@ -116,7 +95,7 @@ public final class SiteSettingsTable {
     }
 
     private static String sqlSelectAllSettings() {
-        return "SELECT * FROM " + SETTINGS_TABLE_NAME + " ";
+        return "SELECT * FROM " + SiteSettingsModel.SETTINGS_TABLE_NAME + " ";
     }
 
     private static String sqlWhere(String variable, String value) {
