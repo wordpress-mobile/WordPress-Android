@@ -310,6 +310,12 @@ public class WPMainActivity extends Activity
         }
     }
 
+    public void setReaderTabActive() {
+        if (isFinishing() || mViewPager == null) return;
+
+        mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
+    }
+
     /*
      * re-create the fragment adapter so all its fragments are also re-created - used when
      * user signs in/out so the fragments reflect the active account
