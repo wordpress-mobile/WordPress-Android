@@ -13,11 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
@@ -55,7 +58,7 @@ public class StatsWidgetConfigureActivity2 extends AppCompatActivity
 
         // If not signed into WordPress inform the user
         if (!AccountHelper.isSignedIn()) {
-            ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_login, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_account, ToastUtils.Duration.LONG);
             finish();
             return;
         }
@@ -121,6 +124,22 @@ public class StatsWidgetConfigureActivity2 extends AppCompatActivity
     }
 
     private void addWidgetToScreenAndFinish(int localID) {
+        final Blog currentBlog = WordPress.getBlog(localID);
+
+        if (currentBlog == null) {
+            AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + localID + " cannot be loaded from the DB.");
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        final String remoteBlogID = StatsUtils.getBlogId(localID);
+        if (remoteBlogID == null) {
+            Toast.makeText(this, R.string.stats_widget_error_jetpack_no_blogid, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         final Context context = StatsWidgetConfigureActivity2.this;
         StatsWidgetProvider.setupNewWidget(context, mAppWidgetId, localID);
         // Make sure we pass back the original appWidgetId

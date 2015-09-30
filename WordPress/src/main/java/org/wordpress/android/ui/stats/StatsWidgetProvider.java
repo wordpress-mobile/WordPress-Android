@@ -140,7 +140,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             if (widgetIDs.length == 0){
                 return;
             }
-            showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_login));
+            showMessage(context, widgetIDs, context.getString(R.string.stats_sign_in_jetpack_different_com_account));
             return;
         }
 
@@ -289,7 +289,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     // This is called by the Widget config activity at the end if the process
-     static void setupNewWidget(Context context, int widgetID, int localBlogID) {
+    static void setupNewWidget(Context context, int widgetID, int localBlogID) {
         AppLog.d(AppLog.T.STATS, "setupNewWidget called");
 
         Blog blog = WordPress.getBlog(localBlogID);
@@ -297,6 +297,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             AppLog.e(AppLog.T.STATS, "setupNewWidget: No blog found in the db!");
             return;
         }
+
+        // At this point the remote ID cannot be null
+        String remoteBlogID = StatsUtils.getBlogId(localBlogID);
 
         // Store the widgetID+blogID into preferences
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
@@ -313,7 +316,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             if (prevKeys == null) {
                 prevKeys = new JSONObject();
             }
-            prevKeys.put(String.valueOf(widgetID), blog.getRemoteBlogId());
+            prevKeys.put(String.valueOf(widgetID), remoteBlogID);
             AppPrefs.setStatsWidgetsKeys(prevKeys.toString());
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);
@@ -325,13 +328,13 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         showMessage(context, new int[]{widgetID},
                 context.getString(R.string.stats_widget_loading_data));
 
-        enqueueStatsRequestForBlog(context, String.valueOf(blog.getRemoteBlogId()), currentDate);
+        enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);
     }
 
     private static void refreshWidgets(Context context, int[] appWidgetIds) {
         // If not signed into WordPress inform the user
         if (!AccountHelper.isSignedIn()) {
-            showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_login));
+            showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));
             return;
         }
 

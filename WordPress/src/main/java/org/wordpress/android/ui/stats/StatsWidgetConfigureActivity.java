@@ -60,7 +60,7 @@ public class StatsWidgetConfigureActivity extends Activity implements AdapterVie
 
         // If not signed into WordPress inform the user
         if (!AccountHelper.isSignedIn()) {
-            ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_login, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_account, ToastUtils.Duration.LONG);
             finish();
             return;
         }
