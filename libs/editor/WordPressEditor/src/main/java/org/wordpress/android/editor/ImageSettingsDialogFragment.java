@@ -209,9 +209,9 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             actionBar.setTitle(mPreviousActionBarTitle);
             actionBar.setHomeAsUpIndicator(null);
             actionBar.setDisplayHomeAsUpEnabled(mPreviousHomeAsUpEnabled);
-            if (mPreviousCustomView != null) {
-                actionBar.setCustomView(mPreviousCustomView);
-            } else {
+
+            actionBar.setCustomView(mPreviousCustomView);
+            if (mPreviousCustomView == null) {
                 actionBar.setDisplayShowCustomEnabled(false);
             }
         }
