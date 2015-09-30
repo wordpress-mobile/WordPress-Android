@@ -2,8 +2,10 @@ package org.wordpress.android.ui.themes;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -79,15 +84,28 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         mSearchMenuItem.expandActionView();
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
+        configureSearchView();
+    }
+
+    public void configureSearchView() {
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);
+        mSearchView.setMaxWidth(10000);
+
+        TextView textView = (TextView) mSearchView.findViewById(R.id.search_src_text);
+        textView.setTextColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.black));
+        textView.setHintTextColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.grey));
+
+        ImageView imageView = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
+        imageView.setVisibility(View.VISIBLE);
+        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.hs__action_search));
     }
 
     private void clearFocus(View view) {
         if (view != null) {
-            view.clearFocus();;
+            view.clearFocus();
         }
     }
 
@@ -156,7 +174,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
         return WordPress.wpDB.getThemes(blogId, mLastSearch);
     }
-
 
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
