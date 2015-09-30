@@ -131,7 +131,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         configureAndAddSearchHeader(inflater);
     }
 
-    private void configureSwipeToRefresh(View view) {
+    protected void configureSwipeToRefresh(View view) {
         // swipe to refresh setup but not for the search view
         if (!(this instanceof ThemeSearchFragment)) {
             mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), (CustomSwipeRefreshLayout) view.findViewById(

@@ -127,6 +127,10 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     protected void addHeaderViews(LayoutInflater inflater) {
         // No header on Search
     }
+    @Override
+    protected void configureSwipeToRefresh(View view) {
+        // No swipe to refresh on Search
+    }
 
     @Override
     public void setRefreshing(boolean refreshing) {
@@ -143,6 +147,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
         return WordPress.wpDB.getThemes(blogId, mLastSearch);
     }
+
 
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
