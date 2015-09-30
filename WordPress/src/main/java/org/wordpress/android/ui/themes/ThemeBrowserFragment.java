@@ -63,7 +63,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     protected int mSavedScrollPosition = 0;
     protected SwipeToRefreshHelper mSwipeToRefreshHelper;
     protected boolean mShouldRefreshOnStart;
-    protected ImageButton mSearchView;
+    protected ImageButton mSearchButton;
 
     @Override
     public void onAttach(Context context) {
@@ -203,8 +203,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private void configureAndAddSearchHeader(LayoutInflater inflater) {
         View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
         configureFilterSpinner(headerSearch);
-        mSearchView = (ImageButton) headerSearch.findViewById(R.id.theme_search);
-        mSearchView.setOnClickListener(new View.OnClickListener() {
+        mSearchButton = (ImageButton) headerSearch.findViewById(R.id.theme_search);
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCallback.onSearchClicked();

@@ -29,9 +29,12 @@
 
             <ImageButton
                 android:id="@+id/theme_search"
-                android:layout_width="@dimen/theme_browser_header_button_height"
-                android:layout_height="@dimen/theme_browser_header_button_height"
-                android:background="@drawable/hs__action_search"
+                android:layout_width="@dimen/theme_browser_more_button_height"
+                android:layout_height="@dimen/theme_browser_more_button_height"
+                android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
+                android:layout_centerVertical="true"
+                android:src="@drawable/hs__action_search"
+                android:backgroundTint="@color/transparent"
                 android:layout_alignParentRight="true" />
 
         </RelativeLayout>
