@@ -49,6 +49,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
     private ThemeBrowserFragment mThemeBrowserFragment;
+    private ThemeSearchFragment mThemeSearchFragment;
     private Theme mCurrentTheme;
 
     public static boolean isAccessible() {
@@ -74,6 +75,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setContentView(R.layout.theme_browser_activity);
         configureToolbar();
         addBrowserFragment();
+        mThemeSearchFragment = new ThemeSearchFragment();
     }
 
     @Override
@@ -167,6 +169,41 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                             Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG)
                                     .show();
                             AppLog.d(T.THEMES, "Failed to fetch themes: " + response.toString());
+                        }
+                        mFetchingThemes = false;
+                    }
+                }
+        );
+    }
+
+    public void searchThemes(String searchTerm) {
+        String siteId = getBlogId();
+        mFetchingThemes = true;
+        int page = 1;
+        if (mThemeSearchFragment != null) {
+            page = mThemeSearchFragment.getPage();
+        }
+
+        WordPress.getRestClientUtilsV1_2().getSearchThemes(siteId, THEME_FETCH_MAX, page, searchTerm, new Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        new FetchThemesTask().execute(response);
+                    }
+                }, new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError response) {
+                        if (response.toString().equals(AuthFailureError.class.getName())) {
+                            String errorTitle = getString(R.string.theme_auth_error_title);
+                            String errorMsg = getString(R.string.theme_auth_error_message);
+
+                            if (mIsRunning) {
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
+                                        errorTitle);
+                                ft.add(fragment, "alert");
+                                ft.commitAllowingStateLoss();
+                            }
+                            AppLog.d(T.THEMES, "Failed to fetch themes: failed authenticate user");
                         }
                         mFetchingThemes = false;
                     }
@@ -316,9 +353,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onSearchClicked() {
-        ThemeSearchFragment themeSearchFragment = new ThemeSearchFragment();
+
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.theme_browser_container, themeSearchFragment);
+        fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -370,6 +407,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                              .show();
                     }
                     mThemeBrowserFragment.setRefreshing(false);
+                    mThemeSearchFragment.setRefreshing(false);
                 }
             });
         }

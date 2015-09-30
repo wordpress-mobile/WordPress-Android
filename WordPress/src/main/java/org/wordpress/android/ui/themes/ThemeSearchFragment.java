@@ -128,21 +128,25 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         // No header on Search
     }
 
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        refreshView(getSpinnerPosition());
+    }
+
+    @Override
+    protected Cursor fetchThemes(int position) {
+        if (WordPress.getCurrentBlog() == null) {
+            return null;
+        }
+
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+
+        return WordPress.wpDB.getThemes(blogId, mLastSearch);
+    }
+
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
-        if (mAdapter == null || WordPress.getCurrentBlog() == null) {
-            return;
-        }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-        Cursor cursor = WordPress.wpDB.getThemes(blogId, searchTerm);
 
-        mAdapter.changeCursor(cursor);
-        mGridView.invalidateViews();
-
-        if (cursor == null || cursor.getCount() == 0) {
-            mNoResultText.setVisibility(View.VISIBLE);
-        } else {
-            mNoResultText.setVisibility(View.GONE);
-        }
+        ((ThemeBrowserActivity) getActivity()).searchThemes(searchTerm);
     }
 }

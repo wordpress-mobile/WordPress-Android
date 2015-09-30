@@ -247,7 +247,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
      *
      * @return a db Cursor or null if current blog is null
      */
-    private Cursor fetchThemes(int position) {
+    protected Cursor fetchThemes(int position) {
         if (WordPress.getCurrentBlog() == null) {
             return null;
         }
@@ -264,7 +264,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
-    private void refreshView(int position) {
+    protected void refreshView(int position) {
         Cursor cursor = fetchThemes(position);
         if (cursor == null) {
             return;
@@ -285,7 +285,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         return lastVisibleCount >= totalItemCount - numberOfColumns;
     }
 
-    private int getSpinnerPosition() {
+    protected int getSpinnerPosition() {
         if (mSpinner != null) {
             return mSpinner.getSelectedItemPosition();
         } else {
