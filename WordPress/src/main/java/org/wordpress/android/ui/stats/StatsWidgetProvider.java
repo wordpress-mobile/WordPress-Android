@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -102,22 +103,6 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public static void updateWidgetsOnLogout(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        AppLog.d(AppLog.T.STATS, "updateWidgetsOnLogout called");
-
-    }
-
-
-    public static void updateWidgetsOnLogin(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        AppLog.d(AppLog.T.STATS, "updateWidgetsOnLogin called");
-
-        // empty string in pref.
-//        showMessage(context, appWidgetManager,
-  //              context.getString(R.string.stats_widget_loading_data));
-    }
-
     private static void updateWidgetsOnError(Context context, int remoteBlogID) {
         int[] widgetIDs = getWidgetIDsFromRemoteBlogID(remoteBlogID);
         if (widgetIDs.length == 0){
@@ -131,8 +116,15 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        String currentDate = StatsUtils.getCurrentDateTZ(blog.getLocalTableBlogId());
         showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_generic));
+    }
+
+    public static void updateWidgetsOnLogout(Context context) {
+        refreshAllWidgets(context);
+    }
+
+    public static void updateWidgetsOnLogin(Context context) {
+        refreshAllWidgets(context);
     }
 
     // This is called by the Stats service in case of error
@@ -167,7 +159,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
     // This is called by the Stats service to keep widgets updated
     public static void updateWidgets(Context context, int remoteBlogID, VisitModel data) {
-        AppLog.d(AppLog.T.STATS, "updateWidgets called");
+        AppLog.d(AppLog.T.STATS, "updateWidgets called for the blogID " + remoteBlogID);
 
         int[] widgetIDs = getWidgetIDsFromRemoteBlogID(remoteBlogID);
         if (widgetIDs.length == 0){
@@ -200,25 +192,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         AppLog.d(AppLog.T.STATS, "onUpdate called");
-
-        // If not signed into WordPress inform the user
-        if (!AccountHelper.isSignedIn()) {
-            showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_login));
-          return;
-        }
-
-        for (int widgetId : appWidgetIds) {
-            int remoteBlogID = getRemoteBlogIDFromWidgetID(widgetId);
-            int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
-            Blog blog = WordPress.getBlog(localId);
-            if (blog == null) {
-                // Update the UI of the current widget with a generic message for now
-                showMessage(context, new int[] {widgetId}, context.getString(R.string.stats_widget_error_blog_gone));
-                continue;
-            }
-            String currentDate = StatsUtils.getCurrentDateTZ(localId);
-            enqueueStatsRequestForBlog(context, String.valueOf(remoteBlogID), currentDate);
-        }
+        refreshWidgets(context, appWidgetIds);
     }
 
     /**
@@ -276,7 +250,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         return false;
     }
 
-    public static synchronized int[] getWidgetIDsFromRemoteBlogID(int remoteBlogID) {
+    private static synchronized int[] getWidgetIDsFromRemoteBlogID(int remoteBlogID) {
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
         if (StringUtils.isEmpty(prevWidgetKeysString)) {
             return new int[0];
@@ -300,7 +274,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         return ArrayUtils.toPrimitive(widgetIDs.toArray(new Integer[widgetIDs.size()]));
     }
 
-    public static synchronized int getRemoteBlogIDFromWidgetID(int widgetID) {
+    private static synchronized int getRemoteBlogIDFromWidgetID(int widgetID) {
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
         if (StringUtils.isEmpty(prevWidgetKeysString)) {
             return 0;
@@ -315,7 +289,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     // This is called by the Widget config activity at the end if the process
-    public static void setupNewWidget(Context context, int widgetID, int localBlogID) {
+     static void setupNewWidget(Context context, int widgetID, int localBlogID) {
         AppLog.d(AppLog.T.STATS, "setupNewWidget called");
 
         Blog blog = WordPress.getBlog(localBlogID);
@@ -352,5 +326,37 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                 context.getString(R.string.stats_widget_loading_data));
 
         enqueueStatsRequestForBlog(context, String.valueOf(blog.getRemoteBlogId()), currentDate);
+    }
+
+    private static void refreshWidgets(Context context, int[] appWidgetIds) {
+        // If not signed into WordPress inform the user
+        if (!AccountHelper.isSignedIn()) {
+            showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_login));
+            return;
+        }
+
+        for (int widgetId : appWidgetIds) {
+            int remoteBlogID = getRemoteBlogIDFromWidgetID(widgetId);
+            // This could happen on logout when prefs are erased completely
+            if (remoteBlogID == 0) {
+                showMessage(context, new int[] {widgetId}, context.getString(R.string.stats_widget_error_readd_widget));
+                continue;
+            }
+            int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
+            if (localId == 0 || WordPress.getBlog(localId) == null) {
+                // No blog in the app
+                showMessage(context, new int[] {widgetId}, context.getString(R.string.stats_widget_error_readd_widget));
+                continue;
+            }
+            String currentDate = StatsUtils.getCurrentDateTZ(localId);
+            enqueueStatsRequestForBlog(context, String.valueOf(remoteBlogID), currentDate);
+        }
+    }
+
+    private static void refreshAllWidgets(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, StatsWidgetProvider.class);
+        int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        refreshWidgets(context, allWidgetIds);
     }
 }

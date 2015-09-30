@@ -495,7 +495,7 @@ public class WordPress extends Application {
         // broadcast an event: wpcom user signed out
         EventBus.getDefault().post(new UserSignedOutWordPressCom());
 
-        // broadcast an event only if the user is completly signed out
+        // broadcast an event only if the user is completely signed out
         if (!AccountHelper.isSignedIn()) {
             EventBus.getDefault().post(new UserSignedOutCompletely());
         }
