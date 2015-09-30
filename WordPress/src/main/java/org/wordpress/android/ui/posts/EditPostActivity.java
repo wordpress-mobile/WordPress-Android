@@ -33,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
@@ -362,7 +363,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_post, menu);
+        if (mShowNewEditor) {
+            inflater.inflate(R.menu.edit_post, menu);
+        } else {
+            inflater.inflate(R.menu.edit_post_legacy, menu);
+        }
 
         mTags = (SuggestionAutoCompleteText) findViewById(R.id.tags);
         if (mTags != null) {
@@ -381,13 +386,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean showMenuItems = true;
+        if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
+            showMenuItems = false;
+        }
+
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
+        MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
+
         if (previewMenuItem != null) {
-            if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
-                previewMenuItem.setVisible(false);
-            } else {
-                previewMenuItem.setVisible(true);
-            }
+            previewMenuItem.setVisible(showMenuItems);
+        }
+
+        if (settingsMenuItem != null) {
+            settingsMenuItem.setVisible(showMenuItems);
         }
 
         // Set text of the save button in the ActionBar
@@ -473,6 +485,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         } else if (itemId == R.id.menu_preview_post) {
             mViewPager.setCurrentItem(PAGE_PREVIEW);
+        } else if (itemId == R.id.menu_post_settings) {
+            InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+            mViewPager.setCurrentItem(PAGE_SETTINGS);
         } else if (itemId == android.R.id.home) {
             Fragment fragment = getFragmentManager().findFragmentByTag(
                     ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
