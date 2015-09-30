@@ -129,7 +129,8 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     }
     @Override
     protected void configureSwipeToRefresh(View view) {
-        // No swipe to refresh on Search
+        super.configureSwipeToRefresh(view);
+        mSwipeToRefreshHelper.setEnabled(false);
     }
 
     @Override

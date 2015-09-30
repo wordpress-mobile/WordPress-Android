@@ -61,9 +61,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     protected ThemeBrowserFragmentCallback mCallback;
     protected int mPage = 1;
     protected int mSavedScrollPosition = 0;
-    private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private boolean mShouldRefreshOnStart;
-    private ImageButton mSearchView;
+    protected SwipeToRefreshHelper mSwipeToRefreshHelper;
+    protected boolean mShouldRefreshOnStart;
+    protected ImageButton mSearchView;
 
     @Override
     public void onAttach(Context context) {
@@ -132,27 +132,24 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     protected void configureSwipeToRefresh(View view) {
-        // swipe to refresh setup but not for the search view
-        if (!(this instanceof ThemeSearchFragment)) {
-            mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), (CustomSwipeRefreshLayout) view.findViewById(
-                    R.id.ptr_layout), new RefreshListener() {
-                @Override
-                public void onRefreshStarted() {
-                    if (!isAdded()) {
-                        return;
-                    }
-                    if (!NetworkUtils.checkConnection(getActivity())) {
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                        mEmptyView.setText(R.string.no_network_title);
-                        return;
-                    }
-                    if (getActivity() instanceof ThemeBrowserActivity) {
-                        ((ThemeBrowserActivity) getActivity()).fetchThemes();
-                    }
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), (CustomSwipeRefreshLayout) view.findViewById(
+                R.id.ptr_layout), new RefreshListener() {
+            @Override
+            public void onRefreshStarted() {
+                if (!isAdded()) {
+                    return;
                 }
-            });
-            mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
-        }
+                if (!NetworkUtils.checkConnection(getActivity())) {
+                    mSwipeToRefreshHelper.setRefreshing(false);
+                    mEmptyView.setText(R.string.no_network_title);
+                    return;
+                }
+                if (getActivity() instanceof ThemeBrowserActivity) {
+                    ((ThemeBrowserActivity) getActivity()).fetchThemes();
+                }
+            }
+        });
+        mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }
 
     private void configureGridView(LayoutInflater inflater, View view) {
