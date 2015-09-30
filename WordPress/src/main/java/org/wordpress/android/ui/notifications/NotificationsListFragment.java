@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout.LayoutParams;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -21,6 +21,7 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -50,7 +51,9 @@ public class NotificationsListFragment extends Fragment
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
     private ViewGroup mEmptyView;
+    private View mFilterView;
     private RadioGroup mFilterRadioGroup;
+    private View mFilterDivider;
 
     private int mRestoredScrollPosition;
 
@@ -72,9 +75,12 @@ public class NotificationsListFragment extends Fragment
         View view = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
+
         mFilterRadioGroup = (RadioGroup)view.findViewById(R.id.notifications_radio_group);
         mFilterRadioGroup.setOnCheckedChangeListener(this);
+        mFilterDivider = view.findViewById(R.id.notifications_filter_divider);
         mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
+        mFilterView = view.findViewById(R.id.notifications_filter);
 
         RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
         animator.setSupportsChangeAnimations(true);
@@ -149,10 +155,11 @@ public class NotificationsListFragment extends Fragment
         } else {
             if (!AccountHelper.isSignedInWordPressDotCom()) {
                 // let user know that notifications require a wp.com account and enable sign-in
-                showEmptyView(R.string.notifications_account_required, true);
+                showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
+                mFilterRadioGroup.setVisibility(View.GONE);
             } else {
                 // failed for some other reason
-                showEmptyView(R.string.error_refresh_notifications, false);
+                showEmptyView(R.string.error_refresh_notifications);
             }
         }
     }
@@ -225,27 +232,57 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    private void showEmptyView(@StringRes int stringResId, boolean showSignIn) {
+    private void showEmptyView(@StringRes int titleResId) {
+        showEmptyView(titleResId, 0, 0);
+    }
+
+    private void showEmptyView(@StringRes int titleResId, @StringRes int descriptionResId, @StringRes int buttonResId) {
         if (isAdded() && mEmptyView != null) {
-            ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(stringResId);
             mEmptyView.setVisibility(View.VISIBLE);
-            Button btnSignIn = (Button) mEmptyView.findViewById(R.id.button_sign_in);
-            btnSignIn.setVisibility(showSignIn ? View.VISIBLE : View.GONE);
-            if (showSignIn) {
-                mFilterRadioGroup.setVisibility(View.GONE);
-                btnSignIn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityLauncher.showSignInForResult(getActivity());
-                    }
-                });
+            mFilterDivider.setVisibility(View.GONE);
+            setFilterViewScrollable(false);
+            ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(titleResId);
+
+            TextView descriptionTextView = (TextView) mEmptyView.findViewById(R.id.text_empty_description);
+            if (descriptionResId > 0) {
+                descriptionTextView.setText(descriptionResId);
+            } else {
+                descriptionTextView.setVisibility(View.GONE);
+            }
+
+            TextView btnAction = (TextView)mEmptyView.findViewById(R.id.button_empty_action);
+            if (buttonResId > 0) {
+                btnAction.setText(buttonResId);
+                btnAction.setVisibility(View.VISIBLE);
+            } else {
+                btnAction.setVisibility(View.GONE);
+            }
+
+            btnAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performActionForActiveFilter();
+                }
+            });
+        }
+    }
+
+    private void setFilterViewScrollable(boolean isScrollable) {
+        if (mFilterView != null && mFilterView.getLayoutParams() instanceof LayoutParams) {
+            LayoutParams params = (LayoutParams) mFilterView.getLayoutParams();
+            if (isScrollable) {
+                params.setScrollFlags(LayoutParams.SCROLL_FLAG_SCROLL|LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+            } else {
+                params.setScrollFlags(0);
             }
         }
     }
 
     private void hideEmptyView() {
         if (isAdded() && mEmptyView != null) {
+            setFilterViewScrollable(true);
             mEmptyView.setVisibility(View.GONE);
+            mFilterDivider.setVisibility(View.VISIBLE);
         }
     }
 
@@ -283,10 +320,81 @@ public class NotificationsListFragment extends Fragment
                 if (mNotesAdapter.getCount() > 0) {
                     hideEmptyView();
                 } else {
-                    showEmptyView(R.string.notifications_empty_list, false);
+                    showEmptyViewForCurrentFilter();
                 }
             }
         });
+    }
+
+    // Show different empty list message and action button based on the active filter
+    private void showEmptyViewForCurrentFilter() {
+        if (!AccountHelper.isSignedInWordPressDotCom()) return;
+
+        switch (mFilterRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.notifications_filter_all:
+                showEmptyView(
+                        R.string.notifications_empty_all,
+                        R.string.notifications_empty_action_all,
+                        R.string.notifications_empty_view_reader
+                );
+                break;
+            case R.id.notifications_filter_unread:
+                // User might not have a blog, if so just show the title
+                if (WordPress.getCurrentBlog() == null) {
+                    showEmptyView(R.string.notifications_empty_unread);
+                } else {
+                    showEmptyView(
+                            R.string.notifications_empty_unread,
+                            R.string.notifications_empty_action_unread,
+                            R.string.new_post
+                    );
+                }
+                break;
+            case R.id.notifications_filter_comments:
+                showEmptyView(
+                        R.string.notifications_empty_comments,
+                        R.string.notifications_empty_action_comments,
+                        R.string.notifications_empty_view_reader
+                );
+                break;
+            case R.id.notifications_filter_follows:
+                showEmptyView(
+                        R.string.notifications_empty_followers,
+                        R.string.notifications_empty_action_followers_likes,
+                        R.string.notifications_empty_view_reader
+                );
+                break;
+            case R.id.notifications_filter_likes:
+                showEmptyView(
+                        R.string.notifications_empty_likes,
+                        R.string.notifications_empty_action_followers_likes,
+                        R.string.notifications_empty_view_reader
+                );
+                break;
+            default:
+                showEmptyView(R.string.notifications_empty_list);
+        }
+    }
+
+    private void performActionForActiveFilter() {
+        if (mFilterRadioGroup == null || !isAdded()) return;
+
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
+            ActivityLauncher.showSignInForResult(getActivity());
+            return;
+        }
+
+        switch (mFilterRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.notifications_filter_unread:
+                // Create a new post
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), false);
+                break;
+            default:
+                // Switch to Reader tab
+                if (getActivity() instanceof WPMainActivity) {
+                    ((WPMainActivity)getActivity()).setReaderTabActive();
+                }
+        }
     }
 
     private void restoreListScrollPosition() {
