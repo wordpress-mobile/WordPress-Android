@@ -402,6 +402,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 @Override
                 public void run() {
                     mFetchingThemes = false;
+                    if (result == null) {
+                        mThemeBrowserFragment.mEmptyView.setText("No themes");
+                        mThemeSearchFragment.mEmptyView.setText("No themes");
+                    }
                     mThemeBrowserFragment.setRefreshing(false);
                     mThemeSearchFragment.setRefreshing(false);
                 }
