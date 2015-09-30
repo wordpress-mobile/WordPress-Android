@@ -402,10 +402,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 @Override
                 public void run() {
                     mFetchingThemes = false;
-                    if (result == null) {
-                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT)
-                             .show();
-                    }
                     mThemeBrowserFragment.setRefreshing(false);
                     mThemeSearchFragment.setRefreshing(false);
                 }
