@@ -23,6 +23,7 @@
             android:id="@+id/layout_post_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
             android:paddingBottom="@dimen/margin_large"
             android:paddingLeft="@dimen/reader_card_content_padding"
             android:paddingRight="@dimen/reader_card_content_padding"
@@ -33,7 +34,6 @@
                 style="@style/ReaderImageView.Avatar"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_large"
-                android:background="?android:selectableItemBackground"
                 tools:src="@drawable/gravatar_placeholder" />
 
             <LinearLayout
@@ -43,7 +43,6 @@
                 android:layout_marginRight="@dimen/margin_large"
                 android:layout_toLeftOf="@+id/image_more"
                 android:layout_toRightOf="@+id/image_avatar"
-                android:background="?android:selectableItemBackground"
                 android:orientation="vertical">
 
                 <org.wordpress.android.widgets.WPTextView
@@ -68,16 +67,23 @@
 
             <ImageView
                 android:id="@+id/image_more"
-                style="@style/ReaderImageView.More"
+                android:layout_width="@dimen/reader_more_icon"
+                android:layout_height="@dimen/reader_more_icon"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:background="?android:selectableItemBackground"
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_large"
+                android:src="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_featured"
-            android:layout_marginBottom="@dimen/margin_small"
-            style="@style/ReaderImageView.Featured" />
+            style="@style/ReaderImageView.Featured"
+            android:layout_marginBottom="@dimen/margin_small" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
@@ -145,17 +151,20 @@
             android:id="@+id/layout_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_medium">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_tag"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/count_comments"
                 android:background="?android:selectableItemBackground"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingRight="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
@@ -169,8 +178,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin_medium"
                 android:layout_toLeftOf="@+id/count_likes"
+                android:padding="@dimen/margin_medium"
                 wp:readerIcon="comment" />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -179,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_small"
+                android:padding="@dimen/margin_medium"
                 wp:readerIcon="like" />
 
         </RelativeLayout>

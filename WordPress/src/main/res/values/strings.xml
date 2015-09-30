@@ -228,6 +228,8 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
+    <string name="post_uploaded">Post uploaded</string>
+    <string name="page_uploaded">Page uploaded</string>
     <string name="post_password">Password (optional)</string>
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
@@ -435,6 +437,7 @@
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
     <string name="stats_sign_in_jetpack_different_com_account">To view your stats, sign in to the WordPress.com account you used to connect Jetpack.</string>
+    <string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -551,7 +554,7 @@
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
-    <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far...</string>
+    <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most popular day and hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
@@ -603,14 +606,14 @@
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
-    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string><string name="notifications_updates_from_wordpress">Updates from WordPress.com</string>
+    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
     <string name="your_sites">Your Sites</string>
     <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
-    <string name="notifications_account_emails">Updates from WordPress.com</string>
+    <string name="notifications_account_emails">Email from WordPress.com</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
     <string name="notifications_other">Other</string>
     <string name="notifications_comments_other_blogs">Comments on other sites</string>
@@ -747,6 +750,7 @@
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
+    <string name="error_open_list_from_notification">This post or page was published on another site</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
@@ -781,15 +785,17 @@
 
     <!-- activity titles -->
     <string name="reader_title_applog">Application log</string>
-    <string name="reader_title_blog_preview">Preview Blog</string>
+    <string name="reader_title_blog_preview">Reader Blog</string>
+    <string name="reader_title_tag_preview">Reader Tag</string>
+    <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments">Comments</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_page_followed_blogs">Followed blogs</string>
-    <string name="reader_page_recommended_blogs">Blogs you may like</string>
+    <string name="reader_page_followed_blogs">Followed sites</string>
+    <string name="reader_page_recommended_blogs">Sites you may like</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
@@ -807,9 +813,9 @@
     <string name="reader_btn_unfollow">Following</string>
 
     <!-- EditText hints -->
-    <string name="reader_hint_comment_on_post">Add your comment</string>
-    <string name="reader_hint_comment_on_comment">Reply to comment</string>
-    <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
+    <string name="reader_hint_comment_on_post">Reply to post…</string>
+    <string name="reader_hint_comment_on_comment">Reply to comment…</string>
+    <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
@@ -826,6 +832,8 @@
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_word_count">%,d words</string>
     <string name="reader_label_reading_time_in_minutes">%,d min</string>
+    <string name="reader_label_follow_count">%,d followers</string>
+    <string name="reader_label_submit_comment">SEND</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -838,6 +846,9 @@
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_multi">%s Likes</string>
+
+    <string name="reader_short_comment_count_one">1 Comment</string>
+    <string name="reader_short_comment_count_multi">%s Comments</string>
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
@@ -869,8 +880,8 @@
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
-    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
+    <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>

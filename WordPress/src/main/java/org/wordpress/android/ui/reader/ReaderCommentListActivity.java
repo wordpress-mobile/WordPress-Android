@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -9,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -28,7 +28,6 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
@@ -41,8 +40,8 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private ReaderRecyclerView mRecyclerView;
     private SuggestionAutoCompleteText mEditComment;
-    private ImageView mImgSubmitComment;
+    private View mSubmitReplyBtn;
     private ViewGroup mCommentBox;
 
     private boolean mIsUpdatingComments;
@@ -87,8 +86,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
@@ -99,23 +102,24 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
-            // remove all but the first page of comments for this post if there's an active
-            // connection - infinite scroll will take care of filling in subsequent pages
-            if (NetworkUtils.isNetworkAvailable(this) && mCommentId == 0) {
-                ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
+            // we need to re-request comments every time this activity is shown in order to
+            // correctly reflect deletions and nesting changes - skipped when there's no
+            // connection so we can show existing comments while offline
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
             }
         }
 
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
-        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_detail_margin);
+        int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", AccountHelper
-                        .getCurrentUsernameForBlog(null), mPostId, mBlogId));
-        mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
+                .getCurrentUsernameForBlog(null), mPostId, mBlogId));
+        mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -184,6 +188,19 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     scrollToCommentId(mReplyToCommentId);
                 }
             }, 300);
+
+            // reset to replying to the post when user hasn't entered any text and hits
+            // the back button in the editText to hide the soft keyboard
+            mEditComment.setOnBackListener(new SuggestionAutoCompleteText.OnEditTextBackListener() {
+                @Override
+                public void onEditTextBack() {
+                    if (EditTextUtils.isEmpty(mEditComment)) {
+                        setReplyToCommentId(0);
+                    }
+                }
+            });
+        } else {
+            mEditComment.setOnBackListener(null);
         }
     }
 
@@ -204,15 +221,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return false;
         }
 
-        final TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
-        final WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
-        final TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
-
-        txtTitle.setText(mPost.getTitle());
-
-        String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium));
-        imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
-
+        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
         if (ReaderUtils.isLoggedOutReader()) {
             mCommentBox.setVisibility(View.GONE);
             txtCommentsClosed.setVisibility(View.GONE);
@@ -230,7 +239,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
             });
 
-            mImgSubmitComment.setOnClickListener(new View.OnClickListener() {
+            mSubmitReplyBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     submitComment();
@@ -240,18 +249,6 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mCommentBox.setVisibility(View.GONE);
             mEditComment.setEnabled(false);
             txtCommentsClosed.setVisibility(View.VISIBLE);
-        }
-
-        if (mCommentId > 0) {
-            txtTitle.setBackgroundResource(R.drawable.selectable_background_wordpress);
-            txtTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isFinishing()) return;
-
-                    ReaderActivityLauncher.showReaderPostDetail(ReaderCommentListActivity.this, mBlogId, mPostId);
-                }
-            });
         }
 
         return true;
@@ -280,6 +277,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     setReplyToCommentId(commentId);
                 }
             });
+
+            // Enable post title click if we came from notifications with a commentId
+            if (mCommentId > 0) {
+                mCommentAdapter.setHeaderClickEnabled(true);
+            }
 
             // adapter calls this when data has been loaded & displayed
             mCommentAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
@@ -398,7 +400,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
      * scrolls the passed comment to the top of the listView
      */
     private void scrollToCommentId(long commentId) {
-        int position = getCommentAdapter().indexOfCommentId(commentId);
+        int position = getCommentAdapter().positionOfCommentId(commentId);
         if (position > -1) {
             mRecyclerView.scrollToPosition(position);
         }
@@ -408,7 +410,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
      * Smoothly scrolls the passed comment to the top of the listView
      */
     private void smoothScrollToCommentId(long commentId) {
-        int position = getCommentAdapter().indexOfCommentId(commentId);
+        int position = getCommentAdapter().positionOfCommentId(commentId);
         if (position > -1) {
             mRecyclerView.smoothScrollToPosition(position);
         }
@@ -429,7 +431,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
 
-        mImgSubmitComment.setEnabled(false);
+        mSubmitReplyBtn.setEnabled(false);
         mEditComment.setEnabled(false);
         mIsSubmittingComment = true;
 
@@ -444,7 +446,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     return;
                 }
                 mIsSubmittingComment = false;
-                mImgSubmitComment.setEnabled(true);
+                mSubmitReplyBtn.setEnabled(true);
                 mEditComment.setEnabled(true);
                 if (succeeded) {
                     // stop highlighting the fake comment and replace it with the real one
@@ -488,5 +490,4 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return 0;
         }
     }
-
 }

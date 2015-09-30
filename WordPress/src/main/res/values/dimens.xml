@@ -3,11 +3,16 @@
     <dimen name="settings_padding">16dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
+
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_content_offset">72dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
+
+    <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
+    <dimen name="appbar_elevation">8dp</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
@@ -15,8 +20,8 @@
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
 
-	<dimen name="media_grid_local_image_width">160dp</dimen>
-	<dimen name="media_grid_progress_height">50dp</dimen>
+    <dimen name="media_grid_local_image_width">160dp</dimen>
+    <dimen name="media_grid_progress_height">50dp</dimen>
 
     <dimen name="theme_details_fragment_width">650dp</dimen>
     <dimen name="theme_details_fragment_height">450dp</dimen>
@@ -87,25 +92,24 @@
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
 
+    <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">38dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
-    <!-- like/comment/follow icons in reader -->
     <dimen name="reader_button_icon">24dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
+    <dimen name="reader_more_icon">48dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
 
-    <dimen name="reader_header_divider_height">2dp</dimen>
-
     <!-- margin to use when indenting comment replies under their parents -->
-    <dimen name="reader_comment_indent_per_level">@dimen/avatar_sz_small</dimen>
+    <dimen name="reader_comment_indent_per_level">24dp</dimen>
 
     <!-- max size for images in Reader comments -->
     <dimen name="reader_comment_max_image_size">160dp</dimen>
@@ -128,6 +132,7 @@
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
     <dimen name="notifications_content_margin">0dp</dimen>
+    <dimen name="notifications_avatar_sz">48dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
 

@@ -68,6 +68,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mLayoutFooter;
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
+    private View mLikingUsersDivider;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -134,6 +135,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
         mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
+        mLikingUsersDivider = view.findViewById(R.id.layout_liking_users_divider);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -294,13 +296,19 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (isAdded() && !succeeded) {
+                if (!isAdded()) {
+                    return;
+                }
+                followButton.setEnabled(true);
+                if (!succeeded) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                     followButton.setIsFollowedAnimated(!isAskingToFollow);
                 }
             }
         };
+
+        followButton.setEnabled(false);
 
         if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, listener)) {
             followButton.setIsFollowedAnimated(isAskingToFollow);
@@ -405,7 +413,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setSelected(mPost.isLikedByCurrentUser);
             if (mIsLoggedOutReader) {
                 countLikes.setEnabled(false);
-            } else if (mPost.isLikesEnabled) {
+            } else if (mPost.canLikePost()) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -413,10 +421,11 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 });
             }
-            // if we know refreshLikes() is going to show the liking layout, force it to take up
-            // space right now
+            // if we know refreshLikes() is going to show the liking users, force liking user
+            // views to take up space right now
             if (mPost.numLikes > 0 && mLikingUsersView.getVisibility() == View.GONE) {
                 mLikingUsersView.setVisibility(View.INVISIBLE);
+                mLikingUsersDivider.setVisibility(View.INVISIBLE);
             }
         } else {
             countLikes.setVisibility(View.INVISIBLE);
@@ -428,15 +437,14 @@ public class ReaderPostDetailFragment extends Fragment
      * show latest likes for this post
      */
     private void refreshLikes() {
-        if (!isAdded() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
+        if (!isAdded() || !hasPost() || !mPost.canLikePost()) {
             return;
         }
 
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
-            if (mLikingUsersView.getVisibility() != View.GONE) {
-                AniUtils.fadeOut(mLikingUsersView, AniUtils.Duration.SHORT);
-            }
+            mLikingUsersView.setVisibility(View.GONE);
+            mLikingUsersDivider.setVisibility(View.GONE);
             return;
         }
 
@@ -448,10 +456,8 @@ public class ReaderPostDetailFragment extends Fragment
             }
         });
 
-        if (mLikingUsersView.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mLikingUsersView, AniUtils.Duration.SHORT);
-        }
-
+        mLikingUsersDivider.setVisibility(View.VISIBLE);
+        mLikingUsersView.setVisibility(View.VISIBLE);
         mLikingUsersView.showLikingUsers(mPost);
     }
 
@@ -627,21 +633,26 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-            followButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    togglePostFollowed();
-                }
-            });
+            followButton.setVisibility(mIsLoggedOutReader ? View.GONE : View.VISIBLE);
+            if (!mIsLoggedOutReader) {
+                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
+                followButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        togglePostFollowed();
+                    }
+                });
+            }
 
             // clicking the header shows blog preview
-            layoutHeader.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
-                }
-            });
+            if (getPostListType() != ReaderPostListType.BLOG_PREVIEW) {
+                layoutHeader.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
+                    }
+                });
+            }
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
@@ -785,7 +796,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (ReaderUtils.isBlogPreviewUrl(url)) {
             long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
             if (blogId != 0) {
-                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId, mPost.getBlogName());
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
             }
             return true;
         }
@@ -869,17 +880,26 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private boolean canShowCommentCount() {
-        return mPost != null
-                && mPost.isWP()
+        if (mPost == null) {
+            return false;
+        }
+        if (mIsLoggedOutReader) {
+            return mPost.numReplies > 0;
+        }
+        return mPost.isWP()
                 && !mPost.isJetpack
                 && !mPost.isDiscoverPost()
                 && (mPost.isCommentsOpen || mPost.numReplies > 0);
     }
 
     private boolean canShowLikeCount() {
-        return mPost != null
-                && !mPost.isDiscoverPost()
-                && mPost.isLikesEnabled;
+        if (mPost == null) {
+            return false;
+        }
+        if (mIsLoggedOutReader) {
+            return mPost.numLikes > 0;
+        }
+        return mPost.canLikePost() || mPost.numLikes > 0;
     }
 
 }

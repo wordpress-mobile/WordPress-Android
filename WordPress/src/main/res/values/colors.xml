@@ -12,7 +12,7 @@
     <color name="color_primary_dark">@color/status_bar_tint</color>
     <color name="color_accent">@color/orange_jazzy</color>
     <color name="color_control_activated">@color/blue_light</color>
-    <color name="color_control_highlight">@color/pressed_wordpress</color>
+    <color name="color_control_highlight">@color/grey_lighten_20</color>
 
     <color name="fab_normal">@color/color_accent</color>
     <color name="fab_pressed">@color/orange_fire</color>
@@ -129,6 +129,8 @@
 
     <!-- Editor -->
     <color name="image_options_label">@color/grey_lighten_20</color>
+    <!-- copied from private support lib resource: color/design_snackbar_background_color -->
+    <color name="snackbar_background_color">#323232</color>
 
     <!-- Misc -->
     <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>

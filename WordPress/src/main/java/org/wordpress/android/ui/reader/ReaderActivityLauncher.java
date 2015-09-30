@@ -13,12 +13,10 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
@@ -67,7 +65,6 @@ public class ReaderActivityLauncher {
                                                   long postId) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
-        intent.putExtra(ReaderConstants.ARG_TITLE, context.getString(R.string.reader_title_blog_preview));
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
@@ -77,19 +74,14 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog
      */
-    public static void showReaderBlogPreview(Context context, long blogId, String title) {
+    public static void showReaderBlogPreview(Context context, long blogId) {
         if (blogId == 0) {
             return;
-        }
-
-        if (TextUtils.isEmpty(title)) {
-            title = ReaderBlogTable.getBlogNameFromBlogId(blogId);
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderConstants.ARG_TITLE, title);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
@@ -99,25 +91,20 @@ public class ReaderActivityLauncher {
             return;
         }
         if (post.isExternal) {
-            showReaderFeedPreview(context, post.feedId, post.getBlogName());
+            showReaderFeedPreview(context, post.feedId);
         } else {
-            showReaderBlogPreview(context, post.blogId, post.getBlogName());
+            showReaderBlogPreview(context, post.blogId);
         }
     }
 
-    public static void showReaderFeedPreview(Context context, long feedId, String title) {
+    public static void showReaderFeedPreview(Context context, long feedId) {
         if (feedId == 0) {
             return;
-        }
-
-        if (TextUtils.isEmpty(title)) {
-            title = ReaderBlogTable.getBlogNameFromFeedId(feedId);
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
-        intent.putExtra(ReaderConstants.ARG_TITLE, title);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
@@ -180,9 +167,9 @@ public class ReaderActivityLauncher {
     /*
      * show followed tags & blogs
      */
-    public static void showReaderSubsForResult(Activity activity) {
-        Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        ActivityLauncher.slideInFromRightForResult(activity, intent, RequestCodes.READER_SUBS);
+    public static void showReaderSubs(Context context) {
+        Intent intent = new Intent(context, ReaderSubsActivity.class);
+        context.startActivity(intent);
     }
 
     /*

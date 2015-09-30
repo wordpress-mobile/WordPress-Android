@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -33,7 +33,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     }
 
     private final WeakReference<Context> mWeakContext;
-    private ReaderTagList mTags = new ReaderTagList();
+    private final ReaderTagList mTags = new ReaderTagList();
     private TagDeletedListener mTagDeletedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
 
@@ -138,9 +138,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             super(view);
             txtTagName = (TextView) view.findViewById(R.id.text_topic);
             btnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                btnRemove.setBackgroundResource(R.drawable.ripple_oval);
-            }
+            ReaderUtils.setBackgroundToRoundRipple(btnRemove);
         }
     }
 
@@ -148,8 +146,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
      * AsyncTask to load tags
      */
     private boolean mIsTaskRunning = false;
-    private class LoadTagsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderTagList tmpTags;
+    private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -159,14 +156,14 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             mIsTaskRunning = false;
         }
         @Override
-        protected Boolean doInBackground(Void... params) {
-            tmpTags = ReaderTagTable.getFollowedTags();
-            return !mTags.isSameList(tmpTags);
+        protected ReaderTagList doInBackground(Void... params) {
+            return ReaderTagTable.getFollowedTags();
         }
         @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                mTags = (ReaderTagList)(tmpTags.clone());
+        protected void onPostExecute(ReaderTagList tagList) {
+            if (tagList != null && !tagList.isSameList(mTags)) {
+                mTags.clear();
+                mTags.addAll(tagList);
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;

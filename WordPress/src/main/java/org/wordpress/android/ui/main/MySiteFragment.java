@@ -31,6 +31,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -75,7 +76,9 @@ public class MySiteFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        AniUtils.showFab(mFabView, false);
+        if (mFabView.getVisibility() == View.VISIBLE) {
+            AniUtils.showFab(mFabView, false);
+        }
     }
 
     @Override
@@ -85,17 +88,17 @@ public class MySiteFragment extends Fragment
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
         // redisplay hidden fab after a short delay
-        if (mFabView.getVisibility() != View.VISIBLE) {
-            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAdded()) {
-                        AniUtils.showFab(mFabView, true);
-                    }
+        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()
+                        && mBlog != null
+                        && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                    AniUtils.showFab(mFabView, true);
                 }
-            }, delayMs);
-        }
+            }
+        }, delayMs);
     }
 
     @Override
@@ -103,7 +106,7 @@ public class MySiteFragment extends Fragment
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        int fabHeight = getResources().getDimensionPixelSize(R.dimen.fab_size_normal);
+        int fabHeight = getResources().getDimensionPixelSize(R.dimen.design_fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
@@ -200,7 +203,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.newBlogForResult(getActivity());
+                SitePickerActivity.addSite(getActivity());
             }
         });
 
@@ -239,6 +242,7 @@ public class MySiteFragment extends Fragment
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
+
             case RequestCodes.CREATE_BLOG:
                 // if the user created a new blog refresh the blog details
                 mBlog = WordPress.getCurrentBlog();
@@ -294,7 +298,6 @@ public class MySiteFragment extends Fragment
         }
 
         mScrollView.setVisibility(View.VISIBLE);
-        mFabView.setVisibility(View.VISIBLE);
         mNoSiteView.setVisibility(View.GONE);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
@@ -304,11 +307,17 @@ public class MySiteFragment extends Fragment
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
-        String hostName = StringUtils.getHost(mBlog.getUrl());
-        String blogTitle = TextUtils.isEmpty(blogName) ? hostName : blogName;
+        String homeURL;
+        if (!TextUtils.isEmpty(mBlog.getHomeURL())) {
+            homeURL = UrlUtils.removeScheme(mBlog.getHomeURL());
+            homeURL = StringUtils.removeTrailingSlash(homeURL);
+        } else {
+            homeURL = StringUtils.getHost(mBlog.getUrl());
+        }
+        String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
 
         mBlogTitleTextView.setText(blogTitle);
-        mBlogSubtitleTextView.setText(hostName);
+        mBlogSubtitleTextView.setText(homeURL);
     }
 
     @Override

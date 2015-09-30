@@ -15,7 +15,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
  */
 class WPMainTabAdapter extends FragmentStatePagerAdapter {
 
-    private static final int NUM_TABS = 4;
+    static final int NUM_TABS = 4;
 
     static final int TAB_MY_SITE = 0;
     static final int TAB_READER  = 1;

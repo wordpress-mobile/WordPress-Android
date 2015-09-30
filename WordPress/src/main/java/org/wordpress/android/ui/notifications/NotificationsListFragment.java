@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,7 +65,7 @@ public class NotificationsListFragment extends Fragment
      * For responding to tapping of notes
      */
     public interface OnNoteClickListener {
-        public void onClickNote(String noteId);
+        void onClickNote(String noteId);
     }
 
     @Override
@@ -79,39 +80,6 @@ public class NotificationsListFragment extends Fragment
         mRecyclerView.setItemAnimator(animator);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
-        // setup the initial notes adapter, starts listening to the bucket
-        mBucket = SimperiumUtils.getNotesBucket();
-        if (mBucket != null) {
-            if (mNotesAdapter == null) {
-                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-                mNotesAdapter.setOnNoteClickListener(new OnNoteClickListener() {
-                    @Override
-                    public void onClickNote(String noteId) {
-                        if (!isAdded()) {
-                            return;
-                        }
-
-                        if (TextUtils.isEmpty(noteId)) return;
-
-                        // open the latest version of this note just in case it has changed - this can
-                        // happen if the note was tapped from the list fragment after it was updated
-                        // by another fragment (such as NotificationCommentLikeFragment)
-                        openNote(getActivity(), noteId, false, true);
-                    }
-                });
-            }
-
-            mRecyclerView.setAdapter(mNotesAdapter);
-        } else {
-            if (!AccountHelper.isSignedInWordPressDotCom()) {
-                // let user know that notifications require a wp.com account and enable sign-in
-                showEmptyView(R.string.notifications_account_required, true);
-            } else {
-                // failed for some other reason
-                showEmptyView(R.string.error_refresh_notifications, false);
-            }
-        }
 
         return view;
     }
@@ -128,6 +96,8 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+
+        configureBucketAndAdapter();
         refreshNotes();
 
         // start listening to bucket change events
@@ -135,9 +105,8 @@ public class NotificationsListFragment extends Fragment
             mBucket.addListener(this);
         }
 
-        // Remove notification if it is showing when we resume this activity.
-        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
-        notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
+        // Remove app notification if it is showing when we resume
+        cancelNotifications();
 
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
@@ -163,6 +132,45 @@ public class NotificationsListFragment extends Fragment
 
         super.onDestroy();
     }
+
+    // Sets up the notes bucket and list adapter
+    private void configureBucketAndAdapter() {
+        mBucket = SimperiumUtils.getNotesBucket();
+        if (mBucket != null) {
+            if (mNotesAdapter == null) {
+                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+                mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
+            }
+
+            if (mRecyclerView.getAdapter() == null) {
+                mRecyclerView.setAdapter(mNotesAdapter);
+            }
+        } else {
+            if (!AccountHelper.isSignedInWordPressDotCom()) {
+                // let user know that notifications require a wp.com account and enable sign-in
+                showEmptyView(R.string.notifications_account_required, true);
+            } else {
+                // failed for some other reason
+                showEmptyView(R.string.error_refresh_notifications, false);
+            }
+        }
+    }
+
+    private OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
+        @Override
+        public void onClickNote(String noteId) {
+            if (!isAdded()) {
+                return;
+            }
+
+            if (TextUtils.isEmpty(noteId)) return;
+
+            // open the latest version of this note just in case it has changed - this can
+            // happen if the note was tapped from the list fragment after it was updated
+            // by another fragment (such as NotificationCommentLikeFragment)
+            openNote(getActivity(), noteId, false, true);
+        }
+    };
 
     /**
      * Open a note fragment based on the type of note
@@ -213,22 +221,6 @@ public class NotificationsListFragment extends Fragment
             mNotesAdapter.addModeratingNoteId(noteId);
         } else {
             mNotesAdapter.removeModeratingNoteId(noteId);
-        }
-    }
-
-    public void updateLastSeenTime() {
-        // set the timestamp to now
-        try {
-            if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
-                Note newestNote = mNotesAdapter.getNote(0);
-                BucketObject meta = SimperiumUtils.getMetaBucket().get("meta");
-                if (meta != null && newestNote != null) {
-                    meta.setProperty("last_seen", newestNote.getTimestamp());
-                    meta.save();
-                }
-            }
-        } catch (BucketObjectMissingException e) {
-            // try again later, meta is created by wordpress.com
         }
     }
 
@@ -360,6 +352,15 @@ public class NotificationsListFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().registerSticky(this);
+    }
+
+    // Removes app notifications from the system bar
+    private void cancelNotifications() {
+        new Thread(new Runnable() {
+            public void run() {
+                GCMIntentService.removeAllNotifications(getActivity());
+            }
+        }).start();
     }
 
     @SuppressWarnings("unused")

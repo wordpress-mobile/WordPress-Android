@@ -231,8 +231,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                 getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.DEVICE, 0, mNotificationsSettings, mOnSettingsChangedListener
         );
-        devicePreference.setTitle(R.string.notifications_updates_from_wordpress);
-        devicePreference.setDialogTitle(R.string.notifications_updates_from_wordpress);
+        devicePreference.setTitle(R.string.notifications_account_emails);
+        devicePreference.setDialogTitle(R.string.notifications_account_emails);
         devicePreference.setSummary(R.string.notifications_account_emails_summary);
         otherPreferenceCategory.addPreference(devicePreference);
     }
@@ -248,6 +248,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference timelinePreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.TIMELINE, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
+        timelinePreference.setIcon(R.drawable.ic_bell_grey);
         timelinePreference.setTitle(R.string.notifications_tab);
         timelinePreference.setDialogTitle(R.string.notifications_tab);
         timelinePreference.setSummary(R.string.notifications_tab_summary);
@@ -256,6 +257,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference emailPreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.EMAIL, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
+        emailPreference.setIcon(R.drawable.ic_email_grey);
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
         emailPreference.setSummary(R.string.notifications_email_summary);
@@ -264,6 +266,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
+        devicePreference.setIcon(R.drawable.ic_phone_grey);
         devicePreference.setTitle(R.string.app_notifications);
         devicePreference.setDialogTitle(R.string.app_notifications);
         devicePreference.setSummary(R.string.notifications_push_summary);
@@ -351,8 +354,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     }
 
     public void addToolbarToPreferenceScreen(PreferenceScreen preferenceScreen) {
-        if (!isAdded()) return;
         final Dialog dialog = preferenceScreen.getDialog();
+        if (!isAdded() || dialog == null) return;
 
         LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
         Toolbar toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);

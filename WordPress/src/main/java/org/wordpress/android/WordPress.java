@@ -7,12 +7,12 @@ import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteException;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -31,9 +31,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
@@ -45,8 +45,6 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -60,7 +58,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -84,12 +84,12 @@ public class WordPress extends Application {
     public static Blog currentBlog;
     public static WordPressDB wpDB;
 
+    public static RequestQueue requestQueue;
+    public static ImageLoader imageLoader;
+
     private static RestClientUtils mRestClientUtils;
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
-
-    public static RequestQueue requestQueue;
-    public static ImageLoader imageLoader;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -157,17 +157,20 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        long startDate = SystemClock.elapsedRealtime();
+
         mContext = this;
 
-        ProfilingUtils.start("WordPress.onCreate");
+        ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);
+        AppLog.i(T.UTILS, "WordPress.onCreate");
+
         if (!PackageUtils.isDebugBuild()) {
             Fabric.with(this, new Crashlytics());
         }
 
         versionName = PackageUtils.getVersionName(this);
-        HelpshiftHelper.init(this);
         initWpDb();
         enableHttpResponseCache(mContext);
 
@@ -182,17 +185,8 @@ public class WordPress extends Application {
 
         RestClientUtils.setUserAgent(getUserAgent());
 
-        configureSimperium();
-
         // Volley networking setup
         setupVolleyQueue();
-
-        // Refresh account informations
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            AccountHelper.getDefaultAccount().fetchAccountDetails();
-        }
-
-        ABTestingUtils.init();
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
@@ -202,30 +196,49 @@ public class WordPress extends Application {
 
         HelpshiftHelper.init(this);
 
+        ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
+        registerComponentCallbacks(applicationLifecycleMonitor);
+        registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
+
+        initAnalytics(SystemClock.elapsedRealtime() - startDate);
+    }
+
+    private void initAnalytics(final long elapsedTimeOnCreate) {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
         AnalyticsUtils.refreshMetadata();
 
-        registerForCloudMessaging(this);
-
-        ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
-        registerComponentCallbacks(pnBackendMonitor);
-        registerActivityLifecycleCallbacks(pnBackendMonitor);
-
-        // we want to reset the suggestion table in every launch so we can get a fresh list
-        SuggestionTable.reset(wpDB.getDatabase());
-
-
         // Track app upgrade
-        int versionCode = PackageUtils.getVersionCode(this);
+        int versionCode = PackageUtils.getVersionCode(getContext());
         int oldVersionCode = AppPrefs.getLastAppVersionCode();
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+            Map<String, Long> properties = new HashMap<String, Long>(1);
+            properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
             // app upgraded
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
         }
         AppPrefs.setLastAppVersionCode(versionCode);
+    }
 
+    /**
+     * Application.onCreate is called before any activity, service, or receiver - it can be called while the app
+     * is in background by a sticky service or a receiver, so we don't want Application.onCreate to make network request
+     * or other heavy tasks.
+     *
+     * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
+     * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
+     */
+    public void deferredInit() {
+        AppLog.i(T.UTILS, "Deferred Initialisation");
+
+        registerForCloudMessaging(this);
+        configureSimperium();
+
+        // Refresh account informations
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            AccountHelper.getDefaultAccount().fetchAccountDetails();
+        }
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -260,19 +273,12 @@ public class WordPress extends Application {
     private boolean createAndVerifyWpDb() {
         try {
             wpDB = new WordPressDB(this);
-            // verify account data
-            List<Map<String, Object>> accounts = wpDB.getAllBlogs();
-            for (Map<String, Object> account : accounts) {
-                if (account == null || account.get("blogName") == null || account.get("url") == null) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (SQLiteException sqle) {
-            AppLog.e(T.DB, sqle);
-            return false;
-        } catch (RuntimeException re) {
-            AppLog.e(T.DB, re);
+            // verify account data - query will return 1 if any blog names or urls are null
+            int result = SqlUtils.intForQuery(wpDB.getDatabase(),
+                    "SELECT 1 FROM accounts WHERE blogName IS NULL OR url IS NULL LIMIT 1", null);
+            return result != 1;
+        } catch (RuntimeException e) {
+            AppLog.e(T.DB, e);
             return false;
         }
     }
@@ -388,9 +394,7 @@ public class WordPress extends Application {
         }
 
         // Register to Helpshift notifications
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        }
+        HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         AnalyticsTracker.registerPushNotificationToken(regId);
     }
 
@@ -676,9 +680,13 @@ public class WordPress extends Application {
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
-        private Date lastPingDate;
+        private Date mLastPingDate;
         private Date mApplicationOpenedDate;
-        boolean isInBackground = true;
+        boolean mIsInBackground = true;
+        boolean mFirstActivityResumed = true;
+
+        private Class<?> mClass;
+        private int mOrientation = -1;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -692,7 +700,7 @@ public class WordPress extends Application {
         public void onTrimMemory(final int level) {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
-                isInBackground = true;
+                mIsInBackground = true;
                 String lastActivityString = AppPrefs.getLastActivityStr();
                 ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
                 Map<String, Object> properties = new HashMap<String, Object>();
@@ -704,8 +712,9 @@ public class WordPress extends Application {
                 }
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                 AnalyticsTracker.endSession(false);
+                onAppGoesToBackground();
             } else {
-                isInBackground = false;
+                mIsInBackground = false;
             }
 
             boolean evictBitmaps = false;
@@ -727,14 +736,14 @@ public class WordPress extends Application {
         }
 
         private boolean isPushNotificationPingNeeded() {
-            if (lastPingDate == null) {
+            if (mLastPingDate == null) {
                 // first startup
                 return false;
             }
 
             Date now = new Date();
-            if (DateTimeUtils.secondsBetween(now, lastPingDate) >= DEFAULT_TIMEOUT) {
-                lastPingDate = now;
+            if (DateTimeUtils.secondsBetween(now, mLastPingDate) >= DEFAULT_TIMEOUT) {
+                mLastPingDate = now;
                 return true;
             }
             return false;
@@ -766,12 +775,19 @@ public class WordPress extends Application {
             }
         }
 
+        public void onAppGoesToBackground() {
+            AppLog.i(T.UTILS, "App goes to background");
+            ConnectionChangeReceiver.setEnabled(WordPress.this, false);
+        }
+
         /**
          * This method is called when:
-         * 1. the app starts (but it's not opened by a service, i.e. an activity is resumed)
+         * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        public void onFromBackground() {
+        public void onAppComesFromBackground() {
+            AppLog.i(T.UTILS, "App comes from background");
+            ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata();
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
@@ -785,17 +801,31 @@ public class WordPress extends Application {
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
-
             sDeleteExpiredStats.runIfNotLimited();
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
-            if (isInBackground) {
-                // was in background before
-                onFromBackground();
+            // Need to track orientation to apply preferred language on rotation
+            int orientation = activity.getResources().getConfiguration().orientation;
+            boolean shouldRestart =
+                    mOrientation == -1 || mOrientation != orientation || !mClass.equals(activity.getClass());
+
+            if (shouldRestart) {
+                mOrientation = orientation;
+                mClass = activity.getClass();
             }
-            isInBackground = false;
+            WPActivityUtils.applyLocale(activity, shouldRestart);
+
+            if (mIsInBackground) {
+                // was in background before
+                onAppComesFromBackground();
+            }
+            mIsInBackground = false;
+            if (mFirstActivityResumed) {
+                deferredInit();
+            }
+            mFirstActivityResumed = false;
         }
 
         @Override
@@ -808,7 +838,7 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityPaused(Activity arg0) {
-            lastPingDate = new Date();
+            mLastPingDate = new Date();
         }
 
         @Override

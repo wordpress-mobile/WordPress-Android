@@ -39,15 +39,17 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         if (event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS) {
             super.onEventMainThread(event);
         } else {
-            // Another additional check. It ensures that the main data is available, and it should be at this point!!
-            if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
-                showErrorUI(null);
-                return;
-            }
 
+            // Check the response of the 2nd rest call before going deeper into updating the UI.
             if (event.mResponseObjectModel instanceof VolleyError ||
                     event.mResponseObjectModel instanceof StatsError) {
                 showErrorUI(event.mResponseObjectModel);
+                return;
+            }
+
+            // Here an another additional check that ensures the main data returned from the 1st call is available.
+            if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
+                showErrorUI(null);
                 return;
             }
 

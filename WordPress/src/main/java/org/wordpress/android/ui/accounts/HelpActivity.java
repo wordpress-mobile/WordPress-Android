@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,25 +13,16 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
 public class HelpActivity extends AppCompatActivity {
-    final private static String FAQ_URL = "http://android.wordpress.org/faq/";
-    final private static String FORUM_URL = "http://android.forums.wordpress.org/";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            initHelpshiftLayout();
-        } else {
-            initDefaultLayout();
-        }
+        initHelpshiftLayout();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -110,26 +100,6 @@ public class HelpActivity extends AppCompatActivity {
                     origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
                 }
                 HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, origin);
-            }
-        });
-    }
-
-    private void initDefaultLayout() {
-        setContentView(R.layout.help_activity);
-
-        WPTextView helpCenterButton = (WPTextView) findViewById(R.id.help_button);
-        helpCenterButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FAQ_URL)));
-            }
-        });
-
-        WPTextView forumButton = (WPTextView) findViewById(R.id.forum_button);
-        forumButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FORUM_URL)));
             }
         });
     }
