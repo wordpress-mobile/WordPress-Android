@@ -381,33 +381,37 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
-        if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
-            previewMenuItem.setVisible(false);
-        } else {
-            previewMenuItem.setVisible(true);
+        if (previewMenuItem != null) {
+            if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
+                previewMenuItem.setVisible(false);
+            } else {
+                previewMenuItem.setVisible(true);
+            }
         }
 
         // Set text of the save button in the ActionBar
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
-            switch (mPost.getStatusEnum()) {
-                case SCHEDULED:
-                    saveMenuItem.setTitle(getString(R.string.schedule_verb));
-                    break;
-                case PUBLISHED:
-                case UNKNOWN:
-                    if (mPost.isLocalDraft()) {
-                        saveMenuItem.setTitle(R.string.publish_post);
-                    } else {
-                        saveMenuItem.setTitle(R.string.update_verb);
-                    }
-                    break;
-                default:
-                    if (mPost.isLocalDraft()) {
-                        saveMenuItem.setTitle(R.string.save);
-                    } else {
-                        saveMenuItem.setTitle(R.string.update_verb);
-                    }
+            if (saveMenuItem != null) {
+                switch (mPost.getStatusEnum()) {
+                    case SCHEDULED:
+                        saveMenuItem.setTitle(getString(R.string.schedule_verb));
+                        break;
+                    case PUBLISHED:
+                    case UNKNOWN:
+                        if (mPost.isLocalDraft()) {
+                            saveMenuItem.setTitle(R.string.publish_post);
+                        } else {
+                            saveMenuItem.setTitle(R.string.update_verb);
+                        }
+                        break;
+                    default:
+                        if (mPost.isLocalDraft()) {
+                            saveMenuItem.setTitle(R.string.save);
+                        } else {
+                            saveMenuItem.setTitle(R.string.update_verb);
+                        }
+                }
             }
         }
 
