@@ -134,6 +134,7 @@
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
     <dimen name="notifications_content_margin">0dp</dimen>
     <dimen name="notifications_avatar_sz">48dp</dimen>
+    <dimen name="notifications_text_indent_sz">22dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
 
