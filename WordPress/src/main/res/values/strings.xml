@@ -603,7 +603,7 @@
     <string name="notifications_empty_likes">No new likes to show&#8230;yet.</string>
     <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
     <string name="notifications_empty_action_unread">Reignite the conversation: write a new post.</string>
-    <string name="notifications_empty_action_comments">Join a conversation: search for blogs that share your interests in the Reader.</string>
+    <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
     <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
     <string name="notifications_account_required">Sign in to WordPress.com for notifications</string>
     <string name="notifications_empty_view_reader">View Reader</string>
