@@ -16,7 +16,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
@@ -34,7 +34,7 @@
                 android:contentDescription="@string/help"
                 android:src="@drawable/dashicon_info"
                 android:tint="@color/blue_dark" />
-        </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
             android:layout_width="fill_parent"
