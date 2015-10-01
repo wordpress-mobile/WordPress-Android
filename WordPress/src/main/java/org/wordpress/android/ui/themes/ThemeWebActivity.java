@@ -18,8 +18,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
     public static final String IS_PREMIUM_THEME = "is_premium_theme";
     public static final String THEME_NAME = "theme_name";
-    private static final String THEME_URL_PREVIEW = "%s/?theme=pub/%s&hide_banners=true";
-    private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s";
+    private static final String THEME_DOMAIN_PUBLIC = "pub";
+    private static final String THEME_DOMAIN_PREMIUM = "premium";
+    private static final String THEME_URL_PREVIEW = "%s/?theme=%s/%s&hide_banners=true";
+    private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=%s/%s";
     private static final String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support";
     private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s";
 
@@ -34,7 +36,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static void openTheme(Context context, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
-        String url = getUrl(context, currentTheme, blogId, type);
+        String url = getUrl(context, currentTheme, blogId, type, currentTheme.isPremium());
 
         openWPCOMURL(context, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
     }
@@ -66,13 +68,14 @@ public class ThemeWebActivity extends WPWebViewActivity {
         context.startActivity(intent);
     }
 
-    public static String getUrl(Context context, Theme theme, String blogId, ThemeWebActivityType type) {
+    public static String getUrl(Context context, Theme theme, String blogId, ThemeWebActivityType type, boolean isPremium) {
         String url = "";
         String homeURL = WordPress.getCurrentBlog().getHomeURL();
+        String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
 
         switch (type) {
             case PREVIEW:
-                url = String.format(THEME_URL_PREVIEW, homeURL, theme.getId());
+                url = String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getId());
                 break;
             case DEMO:
                 url = theme.getDemoURI();
@@ -85,7 +88,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 url = String.format(THEME_URL_SUPPORT, theme.getId());
                 break;
             case CUSTOMIZE:
-                url = String.format(THEME_URL_CUSTOMIZE, blogId, theme.getId());
+                url = String.format(THEME_URL_CUSTOMIZE, blogId, domain, theme.getId());
                 break;
             default:
                 break;
