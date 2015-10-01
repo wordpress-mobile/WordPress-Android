@@ -1563,6 +1563,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
+    public void onMediaRetryClicked(String mediaId) {
+
+    }
+
+    @Override
+    public void onMediaUploadCancelClicked(String mediaId) {
+
+    }
+
+    @Override
     public void onEditorFragmentInitialized() {
         fillContentEditorFields();
     }

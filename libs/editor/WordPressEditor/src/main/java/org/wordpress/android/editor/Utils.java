@@ -1,15 +1,22 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
+import android.net.Uri;
 
 import org.wordpress.android.util.AppLog;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -147,5 +154,50 @@ public class Utils {
         }
 
         return changeMap;
+    }
+
+    public static Uri downloadExternalMedia(Context context, Uri imageUri) {
+        if(context != null && imageUri != null) {
+            File cacheDir = null;
+
+            if(context.getApplicationContext() != null) {
+                cacheDir = context.getCacheDir();
+            }
+
+            try {
+                InputStream inputStream;
+                if(imageUri.toString().startsWith("content://")) {
+                    inputStream = context.getContentResolver().openInputStream(imageUri);
+                    if(inputStream == null) {
+                        AppLog.e(AppLog.T.UTILS, "openInputStream returned null");
+                        return null;
+                    }
+                } else {
+                    inputStream = (new URL(imageUri.toString())).openStream();
+                }
+
+                String fileName = "thumb-" + System.currentTimeMillis();
+
+                File f = new File(cacheDir, fileName);
+                FileOutputStream output = new FileOutputStream(f);
+                byte[] data = new byte[1024];
+
+                int count;
+                while((count = inputStream.read(data)) != -1) {
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                inputStream.close();
+                return Uri.fromFile(f);
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.UTILS, e);
+            }
+
+            return null;
+        } else {
+            return null;
+        }
     }
 }

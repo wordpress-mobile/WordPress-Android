@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,8 +12,84 @@
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/notifications_content_margin"
         android:paddingRight="@dimen/notifications_content_margin"
+        android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
-        android:scrollbarStyle="outsideOverlay" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/notifications_content_margin"
+        android:layout_marginRight="@dimen/notifications_content_margin"
+        android:background="@color/white"
+        app:elevation="0dp">
+
+        <LinearLayout
+            android:id="@+id/notifications_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <RadioGroup
+                android:id="@+id/notifications_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/notifications_filter_all"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@drawable/calypso_segmented_control_background">
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    android:id="@+id/notifications_filter_all"
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button_start"
+                    android:text="@string/all" />
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    android:id="@+id/notifications_filter_unread"
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button"
+                    android:layout_marginLeft="-1dp"
+                    android:layout_marginStart="-1dp"
+                    android:text="@string/unread" />
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    android:id="@+id/notifications_filter_comments"
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button"
+                    android:layout_marginLeft="-1dp"
+                    android:layout_marginStart="-1dp"
+                    android:text="@string/tab_comments" />
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    android:id="@+id/notifications_filter_follows"
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button"
+                    android:layout_marginLeft="-1dp"
+                    android:layout_marginStart="-1dp"
+                    android:text="@string/follows" />
+
+                <org.wordpress.android.widgets.WPRadioButton
+                    android:id="@+id/notifications_filter_likes"
+                    style="@style/Calypso.SegmentedControl"
+                    android:background="@drawable/calypso_segmented_control_button_end"
+                    android:layout_marginLeft="-1dp"
+                    android:layout_marginStart="-1dp"
+                    android:text="@string/stats_likes" />
+            </RadioGroup>
+
+            <View
+                android:id="@+id/notifications_filter_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/notifications_list_divider" />
+
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/empty_view"
@@ -25,21 +103,45 @@
         tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_empty"
-            style="@style/WordPress.EmptyList.Title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_double_extra_large"
+            app:fontVariation="light"
+            android:id="@+id/text_empty"
             android:text="@string/notifications_empty_list" />
 
-        <org.wordpress.android.widgets.OpenSansButton
-            android:id="@+id/button_sign_in"
+        <org.wordpress.android.widgets.WPTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:text="@string/sign_in"
-            android:textColor="@color/grey_dark"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:gravity="center"
+            android:id="@+id/text_empty_description"
+            android:textSize="@dimen/text_sz_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:textColor="@color/grey" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/empty_list_button_top_margin"
+            card_view:cardBackgroundColor="@color/blue_medium"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius"
+            card_view:cardElevation="@dimen/card_elevation">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/button_empty_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_medium"
+                android:textAllCaps="true"
+                android:textColor="@color/white" />
+
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
