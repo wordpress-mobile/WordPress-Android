@@ -175,10 +175,9 @@ public class ReaderPostTable {
     }
 
     /*
-     * purge excess posts in the passed tag - note we only keep as many posts as are returned
-     * by a single request
+     * purge excess posts in the passed tag
      */
-    private static final int MAX_POSTS_PER_TAG = ReaderConstants.READER_MAX_POSTS_TO_REQUEST;
+    private static final int MAX_POSTS_PER_TAG = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
     private static int purgePostsForTag(SQLiteDatabase db, ReaderTag tag) {
         int numPosts = getNumPostsWithTag(tag);
         if (numPosts <= MAX_POSTS_PER_TAG) {
@@ -493,7 +492,7 @@ public class ReaderPostTable {
 
     /*
      * delete posts with the passed tag that are older than one with the gap marker for
-     * this tag - note this may leave some stray posts in tbl_post_tags, but these will
+     * this tag - note this may leave some stray posts in tbl_posts, but these will
      * be cleaned up by the next purge
      */
     public static void deletePostsOlderThanGapMarkerForTag(ReaderTag tag) {
@@ -501,9 +500,11 @@ public class ReaderPostTable {
         if (timestamp == 0) return;
 
         String[] args = {Long.toString(timestamp), tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        String where = "timestamp < ? AND pseudo_id IN"
-                    + " (SELECT pseudo_id FROM tbl_post_tags WHERE tag_name=? AND tag_type=?)";
-        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", where, args);
+        String where = "pseudo_id IN (SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
+                + " WHERE tbl_posts.timestamp < ?"
+                + " AND tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
+                + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?)";
+        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags", where, args);
         AppLog.d(AppLog.T.READER, "removed " + numDeleted + " posts older than gap marker");
     }
 

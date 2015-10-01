@@ -324,6 +324,10 @@ public class ReaderPostService extends Service {
                     if (postWithGap != null) {
                         ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag);
                     }
+                } else if (updateResult == UpdateResult.UNCHANGED && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                    // edge case - request to fill gap returned nothing new, so remove the gap marker
+                    ReaderPostTable.removeGapMarkerForTag(tag);
+                    AppLog.w(AppLog.T.READER, "attempt to fill gap returned nothing new");
                 }
                 AppLog.d(AppLog.T.READER, "requested posts response = " + updateResult.toString());
                 resultListener.onUpdateResult(updateResult);
