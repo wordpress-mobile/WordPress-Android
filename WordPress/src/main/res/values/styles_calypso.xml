@@ -43,4 +43,18 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowFullscreen">false</item>
     </style>
+
+    <style name="Calypso.SegmentedControl" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/calypso_segmented_control_text</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>
