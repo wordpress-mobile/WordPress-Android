@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
@@ -1197,22 +1198,44 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        String mediaTitle;
-        if (MediaUtils.isVideo(imageUri.toString())) {
-            mediaTitle = getResources().getString(R.string.video);
-        } else {
-            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
-        }
+        if (mShowNewEditor) {
+            String path = "";
+            if (imageUri.toString().contains("content:")) {
+                String[] projection = new String[]{MediaStore.Images.Media.DATA};
 
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setPostID(getPost().getLocalTablePostId());
-        mediaFile.setTitle(mediaTitle);
-        mediaFile.setFilePath(imageUri.toString());
-        if (imageUri.getEncodedPath() != null) {
-            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
+                Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
+                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
+                    path = cur.getString(dataColumn);
+                    cur.close();
+                }
+            } else {
+                // File is not in media library
+                path = imageUri.toString().replace("file://", "");
+            }
+
+            MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
+            if (mediaFile != null) {
+                mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), WordPress.imageLoader);
+            }
+        } else {
+            String mediaTitle;
+            if (MediaUtils.isVideo(imageUri.toString())) {
+                mediaTitle = getResources().getString(R.string.video);
+            } else {
+                mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
+            }
+
+            MediaFile mediaFile = new MediaFile();
+            mediaFile.setPostID(getPost().getLocalTablePostId());
+            mediaFile.setTitle(mediaTitle);
+            mediaFile.setFilePath(imageUri.toString());
+            if (imageUri.getEncodedPath() != null) {
+                mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
+            }
+            WordPress.wpDB.saveMediaFile(mediaFile);
+            mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
         }
-        WordPress.wpDB.saveMediaFile(mediaFile);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
 
         return true;
     }
@@ -1594,18 +1617,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * @param mediaIdOut
      *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
-    private void queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
+    private MediaFile queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
             Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
 
         // File not found
         File file = new File(path);
         if (!file.exists()) {
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
-            return;
+            return null;
         }
 
         Blog blog = WordPress.getCurrentBlog();
@@ -1640,6 +1663,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         saveMediaFile(mediaFile);
         startMediaUploadService();
+
+        return mediaFile;
     }
 
     /**
