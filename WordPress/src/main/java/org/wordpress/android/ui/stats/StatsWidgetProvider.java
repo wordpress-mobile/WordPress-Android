@@ -250,10 +250,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         AppLog.d(AppLog.T.STATS, "onEnabled called");
-        AppPrefs.resetStatsWidgetsKeys();
-        AppPrefs.resetStatsWidgetsData();
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_ADDED);
         AnalyticsTracker.flush();
+        // Note: don't erase prefs here, since for some reasons this method is called after the booting of the device.
     }
 
     /**
