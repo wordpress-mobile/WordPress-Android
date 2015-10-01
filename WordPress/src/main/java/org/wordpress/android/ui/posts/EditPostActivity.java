@@ -1556,6 +1556,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    public void onEventMainThread(MediaUploadEvents.MediaUploadFailed event) {
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadFailed(event.mLocalId);
+        }
+    }
+
     public void onEventMainThread(MediaUploadEvents.MediaUploadProgress event) {
         if (mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadProgress(event.mLocalId, event.mProgress);
