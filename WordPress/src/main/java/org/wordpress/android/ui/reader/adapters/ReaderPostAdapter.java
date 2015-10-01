@@ -771,7 +771,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         // it can happen following a purge)
                         if (mGapMarkerPosition >= allPosts.size() - 1) {
                             mGapMarkerPosition = -1;
-                            AppLog.w(AppLog.T.READER, "gap marker at last post, removed");
+                            AppLog.w(AppLog.T.READER, "gap marker at/after last post, removed");
                             ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
                         } else {
                             AppLog.d(AppLog.T.READER, "gap marker at position " + mGapMarkerPosition);

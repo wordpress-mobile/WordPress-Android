@@ -189,10 +189,10 @@ public class ReaderPostTable {
         String where = "pseudo_id IN ("
                 + "  SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
                 + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
-                + "  AND tbl_post_tags.tag_name=?1"
-                + "  AND tbl_post_tags.tag_type=?2"
+                + "  AND tbl_post_tags.tag_name=?"
+                + "  AND tbl_post_tags.tag_type=?"
                 + "  ORDER BY tbl_posts.timestamp"
-                + "  LIMIT ?3"
+                + "  LIMIT ?"
                 + ")";
         int numDeleted = db.delete("tbl_post_tags", where, args);
         AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
