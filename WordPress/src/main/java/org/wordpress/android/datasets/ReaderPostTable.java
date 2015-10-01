@@ -393,20 +393,6 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns the id of the newest post with the passed tag
-     */
-    public static long getNewestPostIdWithTag(final ReaderTag tag) {
-        if (tag == null) {
-            return 0;
-        }
-        String sql = "SELECT tbl_posts.post_id FROM tbl_posts, tbl_post_tags"
-                  + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
-                  + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
-                  + " ORDER BY published DESC LIMIT 1";
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
-    }
-    /*
      * returns the iso8601 published date of the oldest post with the passed tag
      */
     public static String getOldestPubDateWithTag(final ReaderTag tag) {
@@ -494,7 +480,7 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
-    public static long getGapMarkerTimestampForTag(ReaderTag tag) {
+    private static long getGapMarkerTimestampForTag(ReaderTag tag) {
         ReaderBlogIdPostId ids = getGapMarkerForTag(tag);
         if (ids == null) {
             return 0;
@@ -506,18 +492,19 @@ public class ReaderPostTable {
     }
 
     /*
-     * delete posts with the passed tag that are older than one with the gap marker for this tag
+     * delete posts with the passed tag that are older than one with the gap marker for
+     * this tag - note this may leave some stray posts in tbl_post_tags, but these will
+     * be cleaned up by the next purge
      */
     public static void deletePostsOlderThanGapMarkerForTag(ReaderTag tag) {
         long timestamp = getGapMarkerTimestampForTag(tag);
         if (timestamp == 0) return;
 
         String[] args = {Long.toString(timestamp), tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        String sql = "DELETE FROM tbl_posts WHERE timestamp < ?"
-                + " AND pseudo_id IN ("
-                + "     SELECT pseudo_id FROM tbl_post_tags WHERE tag_name=? AND tag_type=?"
-                + ")";
-        ReaderDatabase.getWritableDb().execSQL(sql, args);
+        String where = "timestamp < ? AND pseudo_id IN"
+                    + " (SELECT pseudo_id FROM tbl_post_tags WHERE tag_name=? AND tag_type=?)";
+        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", where, args);
+        AppLog.d(AppLog.T.READER, "removed " + numDeleted + " posts older than gap marker");
     }
 
     public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
