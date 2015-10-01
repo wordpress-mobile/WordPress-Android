@@ -75,7 +75,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setContentView(R.layout.theme_browser_activity);
         configureToolbar();
         addBrowserFragment();
-        mThemeSearchFragment = new ThemeSearchFragment();
     }
 
     @Override
@@ -88,6 +87,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     protected void onResume() {
         super.onResume();
         mIsRunning = true;
+        mThemeSearchFragment = new ThemeSearchFragment();
         ActivityId.trackLastActivity(ActivityId.THEMES);
 
         fetchThemesIfNoneAvailable();
