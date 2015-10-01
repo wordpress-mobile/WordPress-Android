@@ -95,8 +95,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
 
         Cursor cursor = fetchThemes(getSpinnerPosition());
         if (cursor == null) {
@@ -107,11 +107,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         mGridView.setSelection(mSavedScrollPosition);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         ((ThemeBrowserActivity) getActivity()).fetchCurrentTheme();
     }
