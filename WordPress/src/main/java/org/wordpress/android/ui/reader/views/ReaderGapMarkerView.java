@@ -72,13 +72,11 @@ public class ReaderGapMarkerView extends RelativeLayout {
 
     private void showProgress() {
         mText.setVisibility(View.INVISIBLE);
-        mImage.setVisibility(View.INVISIBLE);
         mProgress.setVisibility(View.VISIBLE);
     }
 
     private void hideProgress() {
         mText.setVisibility(View.VISIBLE);
-        mImage.setVisibility(View.VISIBLE);
         mProgress.setVisibility(View.GONE);
     }
 }
