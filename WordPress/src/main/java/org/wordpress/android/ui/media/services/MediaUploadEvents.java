@@ -4,9 +4,11 @@ public class MediaUploadEvents {
     public static class MediaUploadSucceed {
         public final String mLocalId;
         public final String mRemoteId;
-        MediaUploadSucceed(String localId, String remoteId) {
+        public final String mRemoteUrl;
+        MediaUploadSucceed(String localId, String remoteId, String remoteUrl) {
             mLocalId = localId;
             mRemoteId = remoteId;
+            mRemoteUrl = remoteUrl;
         }
     }
 

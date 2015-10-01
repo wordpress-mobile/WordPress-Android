@@ -117,12 +117,12 @@ public class MediaUploadService extends Service {
         ApiHelper.UploadMediaTask task = new ApiHelper.UploadMediaTask(mContext, mediaFile,
                 new ApiHelper.UploadMediaTask.Callback() {
             @Override
-            public void onSuccess(String id) {
+            public void onSuccess(String remoteId, String remoteUrl) {
                 // once the file has been uploaded, delete the local database entry and
                 // download the new one so that we are up-to-date and so that users can edit it.
                 WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
-                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadSucceed(mediaId, id));
-                fetchMediaFile(id);
+                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadSucceed(mediaId, remoteId, remoteUrl));
+                fetchMediaFile(remoteId);
             }
 
             @Override

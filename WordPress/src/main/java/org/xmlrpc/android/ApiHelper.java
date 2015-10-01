@@ -726,9 +726,9 @@ public class ApiHelper {
         }
     }
 
-    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, String> {
+    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, Map<?, ?>> {
         public interface Callback extends GenericErrorCallback {
-            public void onSuccess(String id);
+            void onSuccess(String remoteId, String remoteUrl);
         }
         private Callback mCallback;
         private Context mContext;
@@ -742,7 +742,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected String doInBackground(List<?>... params) {
+        protected Map<?, ?> doInBackground(List<?>... params) {
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
@@ -790,7 +790,7 @@ public class ApiHelper {
             }
 
             if (resultMap != null && resultMap.containsKey("id")) {
-                return (String) resultMap.get("id");
+                return resultMap;
             } else {
                 setError(ErrorType.INVALID_RESULT, "Invalid result");
             }
@@ -810,10 +810,12 @@ public class ApiHelper {
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Map<?, ?> result) {
             if (mCallback != null) {
                 if (result != null) {
-                    mCallback.onSuccess(result);
+                    String remoteId = (String) result.get("id");
+                    String remoteUrl = (String) result.get("url");
+                    mCallback.onSuccess(remoteId, remoteUrl);
                 } else {
                     mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }
