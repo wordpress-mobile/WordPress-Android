@@ -169,9 +169,6 @@
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
-    <dimen name="my_site_no_site_view_subtitle_margin_top">18dp</dimen>
-    <dimen name="my_site_no_site_view_subtitle_font">21sp</dimen>
-    <dimen name="my_site_no_site_view_button_margin_top">50dp</dimen>
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
@@ -190,6 +187,9 @@
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <!--empty lists-->
+    <dimen name="empty_list_button_top_margin">32dp</dimen>
 
     <!--theme browser-->
     <dimen name="theme_browser_default_column_width">320dp</dimen>

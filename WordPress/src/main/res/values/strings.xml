@@ -596,13 +596,25 @@
     <string name="more_notifications">and %d more.</string>
     <string name="reply_failed">Reply failed</string>
     <string name="notifications_empty_list">No notifications</string>
+    <string name="notifications_empty_all">No notifications&#8230;yet.</string>
+    <string name="notifications_empty_unread">You\'re all caught up!</string>
+    <string name="notifications_empty_comments">No new comments&#8230;yet.</string>
+    <string name="notifications_empty_followers">No new followers to report&#8230;yet.</string>
+    <string name="notifications_empty_likes">No new likes to show&#8230;yet.</string>
+    <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
+    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post.</string>
+    <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
+    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
     <string name="notifications_account_required">Sign in to WordPress.com for notifications</string>
+    <string name="notifications_empty_view_reader">View Reader</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
     <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
+    <string name="unread">Unread</string>
+    <string name="follows">Follows</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>

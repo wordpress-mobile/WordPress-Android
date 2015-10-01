@@ -118,14 +118,17 @@ public class SimperiumUtils {
     public static void resetBucketsAndDeauthorize() {
         if (mNotesBucket != null) {
             mNotesBucket.reset();
+            mNotesBucket = null;
         }
         if (mMetaBucket != null) {
             mMetaBucket.reset();
+            mMetaBucket = null;
         }
 
         // Reset user status
         if (mSimperium != null) {
             mSimperium.getUser().setStatus(User.Status.UNKNOWN);
+            mSimperium = null;
         }
     }
 
