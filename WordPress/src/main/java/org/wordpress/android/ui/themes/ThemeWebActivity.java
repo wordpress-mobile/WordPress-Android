@@ -20,6 +20,7 @@ import org.wordpress.android.util.WPMeShortlinks;
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
     public static final String IS_PREMIUM_THEME = "is_premium_theme";
+    public static final String THEME_NAME = "theme_name";
     private static final String THEME_URL_PREVIEW = "%s/?theme=pub/%s&hide_banners=true";
     private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s";
     private static final String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support";
@@ -63,6 +64,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         intent.putExtra(ThemeWebActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
         intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
+        intent.putExtra(THEME_NAME, currentTheme.getName());
 
         context.startActivity(intent);
     }
@@ -114,5 +116,14 @@ public class ThemeWebActivity extends WPWebViewActivity {
     @Override
     public void configureView() {
         setContentView(R.layout.theme_web_activity);
+        setActionBarTitleToThemeName();
+    }
+
+    private void setActionBarTitleToThemeName() {
+        Bundle bundle = getIntent().getExtras();
+        String themeName = bundle.getString(THEME_NAME);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(themeName);
+        }
     }
 }
