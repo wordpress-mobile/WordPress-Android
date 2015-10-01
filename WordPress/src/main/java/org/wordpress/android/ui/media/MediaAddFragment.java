@@ -121,7 +121,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
+    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceeded event) {
         if (mCallback != null) {
             mCallback.onMediaAdded(event.mLocalId);
         }

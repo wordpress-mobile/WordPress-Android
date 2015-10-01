@@ -46,6 +46,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
+import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
@@ -167,6 +168,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private EditPostPreviewFragment mEditPostPreviewFragment;
     private SuggestionAutoCompleteText mTags;
 
+    private EditorMediaUploadListener mEditorMediaUploadListener;
+
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
@@ -237,6 +240,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
             mEditorFragment = (EditorFragmentAbstract) fragmentManager.getFragment(savedInstanceState, STATE_KEY_EDITOR_FRAGMENT);
+
+            if (mEditorFragment instanceof EditorMediaUploadListener) {
+                mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
+            }
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
@@ -718,6 +725,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
+                    if (mEditorFragment instanceof EditorMediaUploadListener) {
+                        mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
+                    }
                     break;
                 case 1:
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
@@ -1495,7 +1505,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * after media selection.
      */
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
+    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceeded event) {
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalId, event.mRemoteUrl);
+        }
+
         for (Long galleryId : mPendingGalleryUploads.keySet()) {
             if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalId)) {
                 SpannableStringBuilder postContent;

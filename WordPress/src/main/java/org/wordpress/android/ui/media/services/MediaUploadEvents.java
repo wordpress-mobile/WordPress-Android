@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.media.services;
 
 public class MediaUploadEvents {
-    public static class MediaUploadSucceed {
+    public static class MediaUploadSucceeded {
         public final String mLocalId;
         public final String mRemoteId;
         public final String mRemoteUrl;
-        MediaUploadSucceed(String localId, String remoteId, String remoteUrl) {
+        MediaUploadSucceeded(String localId, String remoteId, String remoteUrl) {
             mLocalId = localId;
             mRemoteId = remoteId;
             mRemoteUrl = remoteUrl;
