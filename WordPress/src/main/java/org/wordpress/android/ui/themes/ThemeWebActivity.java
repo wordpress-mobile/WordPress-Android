@@ -10,14 +10,17 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.WPMeShortlinks;
 
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
     public static final String IS_PREMIUM_THEME = "is_premium_theme";
-    private static final String THEME_URL_PREVIEW = "%s/?nomuse=1&theme=pub/%s";
+    private static final String THEME_URL_PREVIEW = "%s/?theme=pub/%s&hide_banners=true";
     private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s";
     private static final String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support";
     private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s";
@@ -35,10 +38,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
         Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
         String url = getUrl(context, currentTheme, blogId, type);
 
-        openWPCOMURL(context, url, currentTheme, AccountHelper.getDefaultAccount().getUserName(), isCurrentTheme);
+        openWPCOMURL(context, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
     }
 
-    private static void openWPCOMURL(Context context, String url, Theme currentTheme, String user, Boolean isCurrentTheme) {
+    private static void openWPCOMURL(Context context, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -51,15 +54,13 @@ public class ThemeWebActivity extends WPWebViewActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(user)) {
-            AppLog.e(AppLog.T.UTILS, "Username empty/null");
-            return;
-        }
-
+        String authURL = ThemeWebActivity.getBlogLoginUrl(blog);
         Intent intent = new Intent(context, ThemeWebActivity.class);
-        intent.putExtra(ThemeWebActivity.AUTHENTICATION_USER, user);
+        intent.putExtra(ThemeWebActivity.AUTHENTICATION_USER, blog.getUsername());
+        intent.putExtra(ThemeWebActivity.AUTHENTICATION_PASSWD, blog.getPassword());
         intent.putExtra(ThemeWebActivity.URL_TO_LOAD, url);
-        intent.putExtra(ThemeWebActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        intent.putExtra(ThemeWebActivity.AUTHENTICATION_URL, authURL);
+        intent.putExtra(ThemeWebActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
         intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
 
