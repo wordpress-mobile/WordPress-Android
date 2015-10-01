@@ -26,7 +26,7 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.List;
 import java.util.Map;
 
-public class StatsWidgetConfigureActivity2 extends AppCompatActivity
+public class StatsWidgetConfigureActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener {
 
     private SitePickerAdapter mAdapter;
@@ -140,7 +140,7 @@ public class StatsWidgetConfigureActivity2 extends AppCompatActivity
             return;
         }
 
-        final Context context = StatsWidgetConfigureActivity2.this;
+        final Context context = StatsWidgetConfigureActivity.this;
         StatsWidgetProvider.setupNewWidget(context, mAppWidgetId, localID);
         // Make sure we pass back the original appWidgetId
         Intent resultValue = new Intent();

@@ -172,7 +172,7 @@
         <activity android:name=".ui.stats.StatsSingleItemDetailsActivity"
             android:theme="@style/CalypsoTheme"/>
 
-        <activity android:name=".ui.stats.StatsWidgetConfigureActivity2"
+        <activity android:name=".ui.stats.StatsWidgetConfigureActivity"
             android:theme="@style/CalypsoTheme"
             android:label="@string/site_picker_title">
             <intent-filter>
