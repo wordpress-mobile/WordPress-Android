@@ -34,8 +34,11 @@ public class AppPrefs {
         // index of the last app-version
         LAST_APP_VERSION_INDEX,
 
-        // widgets keys stored for the Stats Widgets
+        // Keep the associations between each widget/blog_id added to the app
         STATS_WIDGET_KEYS_BLOGS,
+
+        // last data stored for the Stats Widgets
+        STATS_WIDGET_DATA,
     }
 
     private static SharedPreferences prefs() {
@@ -198,7 +201,10 @@ public class AppPrefs {
         setInt(PrefKey.MAIN_TAB_INDEX, index);
     }
 
-    public static void resetStatsWidgets() {
+
+    // Stats Widgets
+
+    public static void resetStatsWidgetsKeys() {
         remove(PrefKey.STATS_WIDGET_KEYS_BLOGS);
     }
     public static String getStatsWidgetsKeys() {
@@ -207,4 +213,14 @@ public class AppPrefs {
     public static void setStatsWidgetsKeys(String widgetData) {
         setString(PrefKey.STATS_WIDGET_KEYS_BLOGS, widgetData);
     }
+    public static String getStatsWidgetsData() {
+        return getString(PrefKey.STATS_WIDGET_DATA);
+    }
+    public static void setStatsWidgetsData(String widgetData) {
+        setString(PrefKey.STATS_WIDGET_DATA, widgetData);
+    }
+    public static void resetStatsWidgetsData() {
+        remove(PrefKey.STATS_WIDGET_DATA);
+    }
+
 }

@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -103,7 +105,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private static void updateWidgetsOnError(Context context, int remoteBlogID) {
+    private static void ShowCacheIfAvailableOrGenericError(Context context, int remoteBlogID) {
         int[] widgetIDs = getWidgetIDsFromRemoteBlogID(remoteBlogID);
         if (widgetIDs.length == 0){
             return;
@@ -116,7 +118,15 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_generic));
+        String currentDate = StatsUtils.getCurrentDateTZ(localId);
+
+        // Show cached data if available
+        JSONObject cache = getCacheDataForBlog(remoteBlogID, currentDate);
+        if (cache != null) {
+            showStatsData(context, widgetIDs, blog, cache);
+        } else {
+            showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_generic));
+        }
     }
 
     public static void updateWidgetsOnLogout(Context context) {
@@ -158,7 +168,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        updateWidgetsOnError(context, remoteBlogID);
+        ShowCacheIfAvailableOrGenericError(context, remoteBlogID);
     }
 
     // This is called by the Stats service in case of error
@@ -168,7 +178,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        updateWidgetsOnError(context, remoteBlogID);
+        ShowCacheIfAvailableOrGenericError(context, remoteBlogID);
     }
 
     // This is called by the Stats service to keep widgets updated
@@ -179,12 +189,14 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         if (widgetIDs.length == 0){
             return;
         }
+
         int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
         Blog blog = WordPress.getBlog(localId);
         if (blog == null) {
             AppLog.e(AppLog.T.STATS, "No blog found in the db!");
             return;
         }
+
         try {
             String currentDate = StatsUtils.getCurrentDateTZ(blog.getLocalTableBlogId());
             JSONObject newData = new JSONObject();
@@ -194,6 +206,28 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             newData.put("visitors", data.getVisitors());
             newData.put("comments", data.getComments());
             newData.put("likes", data.getLikes());
+
+            // Store new data in cache
+            String prevDataAsString = AppPrefs.getStatsWidgetsData();
+            JSONObject prevData = null;
+            if (!StringUtils.isEmpty(prevDataAsString)) {
+                try {
+                    prevData = new JSONObject(prevDataAsString);
+                } catch (JSONException e) {
+                    AppLog.e(AppLog.T.STATS, e);
+                }
+            }
+            try {
+                if (prevData == null) {
+                    prevData = new JSONObject();
+                }
+                prevData.put(data.getBlogID(), newData);
+                AppPrefs.setStatsWidgetsData(prevData.toString());
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+
+            // Show data on the screen now!
             showStatsData(context, widgetIDs, blog, newData);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);
@@ -215,7 +249,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
      */
     @Override
     public void onEnabled(Context context) {
-        AppPrefs.resetStatsWidgets();
+        AppLog.d(AppLog.T.STATS, "onEnabled called");
+        AppPrefs.resetStatsWidgetsKeys();
+        AppPrefs.resetStatsWidgetsData();
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_ADDED);
         AnalyticsTracker.flush();
     }
@@ -227,9 +263,11 @@ public class StatsWidgetProvider extends AppWidgetProvider {
      */
     @Override
     public void onDisabled(Context context) {
+        AppLog.d(AppLog.T.STATS, "onDisabled called");
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED);
         AnalyticsTracker.flush();
-        AppPrefs.resetStatsWidgets();
+        AppPrefs.resetStatsWidgetsKeys();
+        AppPrefs.resetStatsWidgetsData();
     }
 
     public static void enqueueStatsRequestForBlog(Context context, String remoteBlogID, String date) {
@@ -242,6 +280,34 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         context.startService(intent);
     }
 
+    public static synchronized JSONObject getCacheDataForBlog(int remoteBlogID, String date) {
+        String prevDataAsString = AppPrefs.getStatsWidgetsData();
+        if (StringUtils.isEmpty(prevDataAsString)) {
+            AppLog.i(AppLog.T.STATS, "No cache found for the widgets");
+            return null;
+        }
+
+        try {
+            JSONObject prevData = new JSONObject(prevDataAsString);
+            if (!prevData.has(String.valueOf(remoteBlogID))) {
+                AppLog.i(AppLog.T.STATS, "No cache found for the blog ID " + remoteBlogID);
+                return null;
+            }
+
+            JSONObject cache = prevData.getJSONObject(String.valueOf(remoteBlogID));
+            String dateStoredInCache = cache.optString("date");
+            if (date.equals(dateStoredInCache)) {
+                AppLog.i(AppLog.T.STATS, "Cache found for the blog ID " + remoteBlogID);
+                return cache;
+            } else {
+                AppLog.i(AppLog.T.STATS, "Cache found for the blog ID " + remoteBlogID + " but the date value doesnt match!!");
+                return null;
+            }
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.STATS, e);
+            return null;
+        }
+    }
 
     public static synchronized boolean isBlogDisplayedInWidget(int remoteBlogID) {
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
@@ -278,7 +344,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                 String currentKey = allKeys.getString(i);
                 int currentBlogID = prevKeys.getInt(currentKey);
                 if (currentBlogID == remoteBlogID) {
-                    AppLog.d(AppLog.T.STATS, "The blog with remoteID " + remoteBlogID + " is displayed in a widget");
+                    AppLog.d(AppLog.T.STATS, "The blog with remoteID " + remoteBlogID + " is displayed in the widget " + currentKey);
                     widgetIDs.add(Integer.parseInt(currentKey));
                 }
             }
@@ -312,7 +378,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        // At this point the remote ID cannot be null
+        // At this point the remote ID cannot be null. Use the utility function to retrieve the correct remote ID!!!
         String remoteBlogID = StatsUtils.getBlogId(localBlogID);
 
         // Store the widgetID+blogID into preferences
@@ -338,11 +404,19 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
         String currentDate = StatsUtils.getCurrentDateTZ(localBlogID);
 
-        // empty string in pref.
-        showMessage(context, new int[]{widgetID},
-                context.getString(R.string.stats_widget_loading_data));
-
-        enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);
+        // Show cached data if available
+        JSONObject cache = getCacheDataForBlog(Integer.parseInt(remoteBlogID), currentDate);
+        if (cache != null) {
+            showStatsData(context, new int[] {widgetID}, blog, cache);
+        } else {
+            // No cache. check internet connection.
+            if (!NetworkUtils.isNetworkAvailable(context)) {
+                showMessage(context, new int[]{widgetID},
+                        context.getString(R.string.stats_widget_loading_data));
+            } else {
+                enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);
+            }
+        }
     }
 
     private static void refreshWidgets(Context context, int[] appWidgetIds) {
@@ -352,21 +426,55 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
+        SparseArray<ArrayList<Integer>> blogsToWidgetIDs = new SparseArray<>();
         for (int widgetId : appWidgetIds) {
             int remoteBlogID = getRemoteBlogIDFromWidgetID(widgetId);
-            // This could happen on logout when prefs are erased completely
             if (remoteBlogID == 0) {
+                // This could happen on logout when prefs are erased completely
                 showMessage(context, new int[] {widgetId}, context.getString(R.string.stats_widget_error_readd_widget));
                 continue;
             }
+
+            ArrayList<Integer> widgetIDs = blogsToWidgetIDs.get(remoteBlogID, new ArrayList<Integer>());
+            widgetIDs.add(widgetId);
+            blogsToWidgetIDs.append(remoteBlogID, widgetIDs);
+        }
+
+        // we now have an optimized data structure for our needs. BlogId -> widgetIDs
+        for(int i = 0; i < blogsToWidgetIDs.size(); i++) {
+            int remoteBlogID = blogsToWidgetIDs.keyAt(i);
+            // get the object by the key.
+            ArrayList<Integer> widgetsList = blogsToWidgetIDs.get(remoteBlogID);
+            int[] currentWidgets = ArrayUtils.toPrimitive(widgetsList.toArray(new Integer[widgetsList.size()]));
+
             int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
-            if (localId == 0 || WordPress.getBlog(localId) == null) {
+            Blog blog = WordPress.getBlog(localId);
+            if (localId == 0 || blog == null) {
                 // No blog in the app
-                showMessage(context, new int[] {widgetId}, context.getString(R.string.stats_widget_error_readd_widget));
+                showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_readd_widget));
                 continue;
             }
             String currentDate = StatsUtils.getCurrentDateTZ(localId);
-            enqueueStatsRequestForBlog(context, String.valueOf(remoteBlogID), currentDate);
+
+            // Load cached data if available and show it immediately
+            JSONObject cache = getCacheDataForBlog(remoteBlogID, currentDate);
+            if (cache != null) {
+                showStatsData(context, currentWidgets, blog, cache);
+            }
+
+            // If network is not available check if NO cache, and show the generic error
+            // If network is available always start a refresh, and show prev data or the loading in progress message.
+            if (!NetworkUtils.isNetworkAvailable(context)) {
+                if (cache == null) {
+                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_generic));
+                }
+            } else {
+                if (cache == null) {
+                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_loading_data));
+                }
+                // Make sure to refresh widget data now.
+                enqueueStatsRequestForBlog(context, String.valueOf(remoteBlogID), currentDate);
+            }
         }
     }
 

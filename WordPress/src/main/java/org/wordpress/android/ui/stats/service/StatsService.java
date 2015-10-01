@@ -398,7 +398,7 @@ public class StatsService extends Service {
         }
 
         if (!StatsWidgetProvider.isBlogDisplayedInWidget(parsedBlogID)) {
-            AppLog.d(AppLog.T.STATS, "The blog with remoteID " + parsedBlogID + " is NOT displayed in a widget. Stats Service doesn't call an update of the widget.");
+            AppLog.d(AppLog.T.STATS, "The blog with remoteID " + parsedBlogID + " is NOT displayed in any widget. Stats Service doesn't call an update of the widget.");
             return;
         }
 

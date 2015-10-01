@@ -171,7 +171,7 @@ public class StatsUtils {
            UTC-0:30   ----> -1.0
         */
 
-        AppLog.d(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
+        AppLog.v(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
         String timezoneNormalized;
         if (blogTimeZoneOption.equals("0") || blogTimeZoneOption.equals("0.0")) {
             timezoneNormalized = "GMT";
@@ -192,7 +192,7 @@ public class StatsUtils {
             }
         }
 
-        AppLog.d(T.STATS, "Setting the following Timezone: " + timezoneNormalized);
+        AppLog.v(T.STATS, "Setting the following Timezone: " + timezoneNormalized);
         gmtDf.setTimeZone(TimeZone.getTimeZone(timezoneNormalized));
         return gmtDf.format(date);
     }
