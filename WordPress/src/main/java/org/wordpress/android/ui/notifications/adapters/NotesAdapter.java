@@ -32,14 +32,14 @@ import java.util.List;
 public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteViewHolder> {
 
     private final int mAvatarSz;
-    private final Query mQuery;
     private final Bucket<Note> mNotesBucket;
     private final int mColorRead;
     private final int mColorUnread;
     private final List<String> mHiddenNoteIds = new ArrayList<String>();
     private final List<String> mModeratingNoteIds = new ArrayList<String>();
-
     private final Context mContext;
+
+    private Query mQuery;
 
     private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
@@ -51,18 +51,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         mContext = context;
         mNotesBucket = bucket;
         // build a query that sorts by timestamp descending
-        mQuery = bucket.query()
-                .include(
-                        Note.Schema.TIMESTAMP_INDEX,
-                        Note.Schema.SUBJECT_INDEX,
-                        Note.Schema.SNIPPET_INDEX,
-                        Note.Schema.UNREAD_INDEX,
-                        Note.Schema.ICON_URL_INDEX,
-                        Note.Schema.NOTICON_INDEX,
-                        Note.Schema.IS_UNAPPROVED_INDEX,
-                        Note.Schema.COMMENT_SUBJECT_NOTICON,
-                        Note.Schema.LOCAL_STATUS)
-                .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
+        mQuery = new Query();
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
         mColorRead = context.getResources().getColor(R.color.white);
@@ -95,7 +84,29 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         return null;
     }
 
-    public void reloadNotes() {
+    private Query getQueryDefaults() {
+        return mNotesBucket.query()
+                .include(
+                        Note.Schema.TIMESTAMP_INDEX,
+                        Note.Schema.SUBJECT_INDEX,
+                        Note.Schema.SNIPPET_INDEX,
+                        Note.Schema.UNREAD_INDEX,
+                        Note.Schema.ICON_URL_INDEX,
+                        Note.Schema.NOTICON_INDEX,
+                        Note.Schema.IS_UNAPPROVED_INDEX,
+                        Note.Schema.COMMENT_SUBJECT_NOTICON,
+                        Note.Schema.LOCAL_STATUS)
+                .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
+    }
+
+    public void queryNotes() {
+        mQuery = getQueryDefaults();
+        changeCursor(mQuery.execute());
+    }
+
+    public void queryNotes(String columnName, Object value) {
+        mQuery = getQueryDefaults();
+        mQuery.where(columnName, Query.ComparisonType.EQUAL_TO, value);
         changeCursor(mQuery.execute());
     }
 
