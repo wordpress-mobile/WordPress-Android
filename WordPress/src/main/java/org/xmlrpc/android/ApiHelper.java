@@ -729,6 +729,7 @@ public class ApiHelper {
     public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, Map<?, ?>> {
         public interface Callback extends GenericErrorCallback {
             void onSuccess(String remoteId, String remoteUrl);
+            void onProgressUpdate(float progress);
         }
         private Callback mCallback;
         private Context mContext;
@@ -768,13 +769,29 @@ public class ApiHelper {
                     data
             };
 
+            final File tempFile = getTempFile(mContext);
+
+            if (client instanceof XMLRPCClient) {
+                ((XMLRPCClient) client).setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
+                    @Override
+                    public void onBytesUploaded(long uploadedBytes) {
+                        if (tempFile == null || tempFile.length() == 0) {
+                            return;
+                        }
+
+                        float fractionUploaded = uploadedBytes / (float) tempFile.length();
+                        mCallback.onProgressUpdate(fractionUploaded);
+                    }
+                });
+            }
+
             if (mContext == null) {
                 return null;
             }
 
             Map<?, ?> resultMap;
             try {
-                resultMap = (HashMap<?, ?>) client.call(Methods.UPLOAD_FILE, apiParams, getTempFile(mContext));
+                resultMap = (HashMap<?, ?>) client.call(Methods.UPLOAD_FILE, apiParams, tempFile);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return null;

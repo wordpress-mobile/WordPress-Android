@@ -1556,6 +1556,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    public void onEventMainThread(MediaUploadEvents.MediaUploadProgress event) {
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadProgress(event.mLocalId, event.mProgress);
+        }
+    }
+
     /**
      * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} after refreshing the blog media.
      */

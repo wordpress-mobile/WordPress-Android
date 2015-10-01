@@ -137,6 +137,11 @@ public class MediaUploadService extends Service {
                     CrashlyticsUtils.logException(throwable, ExceptionType.SPECIFIC, T.MEDIA, errorMessage);
                 }
             }
+
+            @Override
+            public void onProgressUpdate(float progress) {
+                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadProgress(mediaId, progress));
+            }
         });
 
         WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "uploading");

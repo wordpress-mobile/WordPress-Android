@@ -20,4 +20,13 @@ public class MediaUploadEvents {
             mErrorMessage = errorMessage;
         }
     }
+
+    public static class MediaUploadProgress {
+        public final String mLocalId;
+        public final float mProgress;
+        MediaUploadProgress(String localId, float progress) {
+            mLocalId = localId;
+            mProgress = progress;
+        }
+    }
 }
