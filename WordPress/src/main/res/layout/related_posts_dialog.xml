@@ -5,45 +5,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/related_posts_dialog_padding_left"
+    android:paddingStart="@dimen/related_posts_dialog_padding_left"
+    android:paddingTop="@dimen/related_posts_dialog_padding_top"
+    android:paddingRight="@dimen/related_posts_dialog_padding_right"
+    android:paddingEnd="@dimen/related_posts_dialog_padding_right"
+    android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
     android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPSwitch
         android:id="@+id/toggleRelatedPostsSwitch"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/related_posts_switch_title"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_large"
+        android:textSize="@dimen/text_sz_extra_large"
         app:fontFamily="openSans"
         app:fontVariation="normal" />
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/toggleRelatedPostsSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/related_posts_switch_summary"/>
+        android:text="@string/related_posts_switch_summary"
+        android:textColor="@color/grey_darken_10"
+        android:textSize="@dimen/text_sz_medium"
+        app:fontFamily="openSans"
+        app:fontVariation="normal" />
 
     <CheckBox
         android:id="@+id/showHeaderCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:text="@string/related_posts_show_header_title" />
 
     <CheckBox
         android:id="@+id/showImagesCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:text="@string/related_posts_show_images_title" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/grey" />
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="4dp"
+        android:background="@color/grey_lighten_20" />
 
     <org.wordpress.android.widgets.WPTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/preview" />
+        android:layout_marginBottom="24dp"
+        android:text="@string/preview"
+        android:textStyle="italic"
+        android:textColor="@color/grey_darken_10"
+        android:textSize="@dimen/text_sz_small"
+        app:fontFamily="openSans"
+        app:fontVariation="normal" />
 
     <org.wordpress.android.widgets.WPTextView
         android:layout_width="wrap_content"
