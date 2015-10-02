@@ -71,6 +71,8 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     private static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
+    private static final int NUM_TABS = 3;
+
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
     private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
@@ -83,7 +85,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         restoreState(savedInstanceState);
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(NUM_TABS - 1);
         mViewPager.setAdapter(getPageAdapter());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
