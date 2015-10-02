@@ -43,6 +43,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -973,12 +974,7 @@ public class PostUploadService extends Service {
         }
 
         private int getNotificationIdForPost(Post post) {
-            int remotePostId = 0;
-            try {
-                remotePostId = Integer.parseInt(post.getRemotePostId());
-            } catch (NumberFormatException nfe) {
-                // No op
-            }
+            int remotePostId = StringUtils.stringToInt(post.getRemotePostId());
             // We can't use the local table post id here because it can change between first post (local draft) to
             // first edit (post pulled from the server)
             return post.getLocalTableBlogId() + remotePostId;
