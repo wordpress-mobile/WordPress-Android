@@ -83,6 +83,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         restoreState(savedInstanceState);
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(getPageAdapter());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
