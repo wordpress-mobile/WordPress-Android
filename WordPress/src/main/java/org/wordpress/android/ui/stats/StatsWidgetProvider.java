@@ -410,6 +410,10 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
         Blog blog = WordPress.getBlog(localBlogID);
         if (blog == null) {
+            // it's unlikely that blog is null here.
+            // This method is called from config activity which has loaded the blog fine.
+            showMessage(context, new int[]{widgetID},
+                    context.getString(R.string.stats_widget_error_readd_widget));
             AppLog.e(AppLog.T.STATS, "setupNewWidget: No blog found in the db!");
             return;
         }
@@ -419,7 +423,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         // Add the following check just to be safe
         if (remoteBlogID == null) {
             showMessage(context, new int[]{widgetID},
-                    context.getString(R.string.stats_widget_error_jetpack_no_blogid));
+                    context.getString(R.string.stats_widget_error_readd_widget));
             return;
         }
 

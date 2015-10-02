@@ -135,6 +135,10 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
 
         final String remoteBlogID = StatsUtils.getBlogId(currentBlog);
         if (remoteBlogID == null) {
+            // The blog could be a self-hosted blog with NO Jetpack installed on it
+            // Or a Jetpack blog whose options are not yet synched in the app
+            // In both of these cases show a generic message that encourages the user to refresh
+            // the blog within the app. There are so many different paths here that's better to handle them in the app.
             Toast.makeText(this, R.string.stats_widget_error_jetpack_no_blogid, Toast.LENGTH_LONG).show();
             finish();
             return;
