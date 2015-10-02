@@ -158,6 +158,20 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             }
         });
 
+        mUsernameEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+                        || (keyCode == EditorInfo.IME_ACTION_DONE)
+                        || (event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT)
+                        || (keyCode == EditorInfo.IME_ACTION_NEXT)) {
+                    mPasswordEditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(mForgotPasswordListener);
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
