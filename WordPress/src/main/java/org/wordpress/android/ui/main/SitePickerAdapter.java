@@ -438,13 +438,13 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
      */
     public static class SiteRecord {
         public final int localId;
-        public final int blogId;
-        public final String blogName;
-        public final String homeURL;
-        public final String url;
-        public final String blavatarUrl;
-        public final boolean isDotCom;
-        public boolean isHidden;
+        final int blogId;
+        final String blogName;
+        final String homeURL;
+        final String url;
+        final String blavatarUrl;
+        final boolean isDotCom;
+        boolean isHidden;
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");

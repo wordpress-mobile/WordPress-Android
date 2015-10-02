@@ -34,7 +34,7 @@ public class AppPrefs {
         // index of the last app-version
         LAST_APP_VERSION_INDEX,
 
-        // Keep the associations between each widget/blog_id added to the app
+        // Keep the associations between each widget_id/blog_id added to the app
         STATS_WIDGET_KEYS_BLOGS,
 
         // last data stored for the Stats Widgets
@@ -203,7 +203,6 @@ public class AppPrefs {
 
 
     // Stats Widgets
-
     public static void resetStatsWidgetsKeys() {
         remove(PrefKey.STATS_WIDGET_KEYS_BLOGS);
     }
@@ -222,5 +221,4 @@ public class AppPrefs {
     public static void resetStatsWidgetsData() {
         remove(PrefKey.STATS_WIDGET_DATA);
     }
-
 }

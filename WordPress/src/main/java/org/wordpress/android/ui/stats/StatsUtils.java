@@ -347,10 +347,16 @@ public class StatsUtils {
         if (currentBlog == null) {
             return null;
         }
-        if (currentBlog.isDotcomFlag()) {
-            return String.valueOf(currentBlog.getRemoteBlogId());
+        return getBlogId(currentBlog);
+    }
+    public static String getBlogId(Blog blog) {
+        if (blog == null) {
+            return null;
+        }
+        if (blog.isDotcomFlag()) {
+            return String.valueOf(blog.getRemoteBlogId());
         } else {
-            return currentBlog.getApi_blogid();
+            return blog.getApi_blogid();
         }
     }
 

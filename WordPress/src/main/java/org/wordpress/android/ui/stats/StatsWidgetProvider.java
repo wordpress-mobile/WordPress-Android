@@ -269,6 +269,16 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         AppPrefs.resetStatsWidgetsData();
     }
 
+    /**
+     * This is called every time an App Widget is deleted from the App Widget host.
+     * @param context
+     * @param widgetIDs
+     */
+    @Override
+    public void onDeleted(Context context, int[] widgetIDs) {
+        setRemoteBlogIDForWidgetIDs(widgetIDs, null);
+    }
+
     public static void enqueueStatsRequestForBlog(Context context, String remoteBlogID, String date) {
         // start service to get stats
         Intent intent = new Intent(context, StatsService.class);
@@ -279,7 +289,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         context.startService(intent);
     }
 
-    public static synchronized JSONObject getCacheDataForBlog(int remoteBlogID, String date) {
+    private static synchronized JSONObject getCacheDataForBlog(int remoteBlogID, String date) {
         String prevDataAsString = AppPrefs.getStatsWidgetsData();
         if (StringUtils.isEmpty(prevDataAsString)) {
             AppLog.i(AppLog.T.STATS, "No cache found for the widgets");
@@ -299,7 +309,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                 AppLog.i(AppLog.T.STATS, "Cache found for the blog ID " + remoteBlogID);
                 return cache;
             } else {
-                AppLog.i(AppLog.T.STATS, "Cache found for the blog ID " + remoteBlogID + " but the date value doesnt match!!");
+                AppLog.i(AppLog.T.STATS, "Cache found for the blog ID " + remoteBlogID + " but the date value doesn't match!!");
                 return null;
             }
         } catch (JSONException e) {
@@ -367,20 +377,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         return 0;
     }
 
-    // This is called by the Widget config activity at the end if the process
-    static void setupNewWidget(Context context, int widgetID, int localBlogID) {
-        AppLog.d(AppLog.T.STATS, "setupNewWidget called");
 
-        Blog blog = WordPress.getBlog(localBlogID);
-        if (blog == null) {
-            AppLog.e(AppLog.T.STATS, "setupNewWidget: No blog found in the db!");
-            return;
-        }
-
-        // At this point the remote ID cannot be null. Use the utility function to retrieve the correct remote ID!!!
-        String remoteBlogID = StatsUtils.getBlogId(localBlogID);
-
-        // Store the widgetID+blogID into preferences
+    // Store the association between widgetIDs and the remote blog id into prefs.
+    private static void setRemoteBlogIDForWidgetIDs(int[] widgetIDs, String remoteBlogID) {
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
         JSONObject prevKeys = null;
         if (!StringUtils.isEmpty(prevWidgetKeysString)) {
@@ -391,32 +390,59 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             }
         }
 
-        try {
-            if (prevKeys == null) {
-                prevKeys = new JSONObject();
-            }
-            prevKeys.put(String.valueOf(widgetID), remoteBlogID);
-            AppPrefs.setStatsWidgetsKeys(prevKeys.toString());
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.STATS, e);
+        if (prevKeys == null) {
+            prevKeys = new JSONObject();
         }
 
-        String currentDate = StatsUtils.getCurrentDateTZ(localBlogID);
-
-        // Show cached data if available
-        JSONObject cache = getCacheDataForBlog(Integer.parseInt(remoteBlogID), currentDate);
-        if (cache != null) {
-            showStatsData(context, new int[] {widgetID}, blog, cache);
-        } else {
-            // No cache. check internet connection.
-            if (!NetworkUtils.isNetworkAvailable(context)) {
-                showMessage(context, new int[]{widgetID},
-                        context.getString(R.string.stats_widget_loading_data));
-            } else {
-                enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);
+        for (int widgetID : widgetIDs) {
+            try {
+                prevKeys.put(String.valueOf(widgetID), remoteBlogID);
+                AppPrefs.setStatsWidgetsKeys(prevKeys.toString());
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.STATS, e);
             }
         }
     }
+
+    // This is called by the Widget config activity at the end if the process
+    static void setupNewWidget(Context context, int widgetID, int localBlogID) {
+        AppLog.d(AppLog.T.STATS, "setupNewWidget called");
+
+        Blog blog = WordPress.getBlog(localBlogID);
+        if (blog == null) {
+            AppLog.e(AppLog.T.STATS, "setupNewWidget: No blog found in the db!");
+            return;
+        }
+
+        // At this point the remote ID cannot be null.
+        String remoteBlogID = StatsUtils.getBlogId(blog);
+        // Add the following check just to be safe
+        if (remoteBlogID == null) {
+            showMessage(context, new int[]{widgetID},
+                    context.getString(R.string.stats_widget_error_jetpack_no_blogid));
+            return;
+        }
+
+        // Store the association between the widget ID and the remote blog id into prefs.
+        setRemoteBlogIDForWidgetIDs(new int[] {widgetID}, remoteBlogID);
+
+        String currentDate = StatsUtils.getCurrentDateTZ(localBlogID);
+
+        // Load cached data if available and show it immediately
+        JSONObject cache = getCacheDataForBlog(Integer.parseInt(remoteBlogID), currentDate);
+        if (cache != null) {
+            showStatsData(context, new int[] {widgetID}, blog, cache);
+            return;
+        }
+
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            showMessage(context, new int[] {widgetID}, context.getString(R.string.no_network_title));
+        } else {
+            showMessage(context, new int[] {widgetID}, context.getString(R.string.stats_widget_loading_data));
+            enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);
+        }
+    }
+
 
     private static void refreshWidgets(Context context, int[] appWidgetIds) {
         // If not signed into WordPress inform the user
@@ -429,7 +455,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         for (int widgetId : appWidgetIds) {
             int remoteBlogID = getRemoteBlogIDFromWidgetID(widgetId);
             if (remoteBlogID == 0) {
-                // This could happen on logout when prefs are erased completely
+                // This could happen on logout when prefs are erased completely since we cannot remove
+                // widgets programmatically from the screen, or during the configuration of new widgets!!!
+                AppLog.e(AppLog.T.STATS, "No remote blog ID for widget ID " + widgetId);
                 showMessage(context, new int[] {widgetId}, context.getString(R.string.stats_widget_error_readd_widget));
                 continue;
             }
@@ -439,7 +467,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             blogsToWidgetIDs.append(remoteBlogID, widgetIDs);
         }
 
-        // we now have an optimized data structure for our needs. BlogId -> widgetIDs
+        // we now have an optimized data structure for our needs. BlogId -> widgetIDs list
         for(int i = 0; i < blogsToWidgetIDs.size(); i++) {
             int remoteBlogID = blogsToWidgetIDs.keyAt(i);
             // get the object by the key.

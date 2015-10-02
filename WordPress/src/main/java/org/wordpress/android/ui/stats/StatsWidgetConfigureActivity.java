@@ -133,7 +133,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
             return;
         }
 
-        final String remoteBlogID = StatsUtils.getBlogId(localID);
+        final String remoteBlogID = StatsUtils.getBlogId(currentBlog);
         if (remoteBlogID == null) {
             Toast.makeText(this, R.string.stats_widget_error_jetpack_no_blogid, Toast.LENGTH_LONG).show();
             finish();
