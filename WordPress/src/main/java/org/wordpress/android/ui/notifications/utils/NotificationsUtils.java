@@ -84,25 +84,12 @@ public class NotificationsUtils {
             return;
         }
 
-        String gcmToken = GCMRegistrar.getRegistrationId(context);
-        if (TextUtils.isEmpty(gcmToken)) {
+        if (TextUtils.isEmpty(GCMRegistrar.getRegistrationId(context))) {
             AppLog.e(T.NOTIFS, "can't get push notification settings, gcm token is null.");
-            if (errorListener != null) {
-                errorListener.onErrorResponse(new VolleyError("Notifications: Invalid gcm token."));
-            }
-            return;
         }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
-        if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "device_ID is null in preferences. Get device settings skipped.");
-            if (errorListener != null) {
-                errorListener.onErrorResponse(new VolleyError("Notifications: No device ID found."));
-            }
-            return;
-        }
-
         WordPress.getRestClientUtilsV1_1().get("/me/notifications/settings/?device_id=" + deviceID, listener, errorListener);
     }
 
