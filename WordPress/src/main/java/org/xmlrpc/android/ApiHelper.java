@@ -753,7 +753,7 @@ public class ApiHelper {
                 return null;
             }
 
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+            final XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Map<String, Object> data = new HashMap<String, Object>();
@@ -775,6 +775,11 @@ public class ApiHelper {
                 ((XMLRPCClient) client).setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
                     @Override
                     public void onBytesUploaded(long uploadedBytes) {
+                        if (isCancelled()) {
+                            // Stop the upload if the task has been cancelled
+                            ((XMLRPCClient) client).cancel();
+                        }
+
                         if (tempFile == null || tempFile.length() == 0) {
                             return;
                         }

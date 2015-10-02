@@ -31,9 +31,14 @@ public class MediaUploadService extends Service {
     // time to wait before trying to upload the next file
     private static final int UPLOAD_WAIT_TIME = 1000;
 
+    private static MediaUploadService mInstance;
+
     private Context mContext;
     private Handler mHandler = new Handler();
+
     private boolean mUploadInProgress;
+    private ApiHelper.UploadMediaTask mCurrentUploadMediaTask;
+    private String mCurrentUploadMediaId;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -44,6 +49,8 @@ public class MediaUploadService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        mInstance = this;
+
         mContext = this.getApplicationContext();
         mUploadInProgress = false;
 
@@ -53,6 +60,23 @@ public class MediaUploadService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         mHandler.post(mFetchQueueTask);
+    }
+
+    public static MediaUploadService getInstance() {
+        return mInstance;
+    }
+
+    public void cancelUpload(String mediaId) {
+        if (mediaId.equals(mCurrentUploadMediaId)) {
+            // The media item is currently uploading - abort the upload process
+            mCurrentUploadMediaTask.cancel(true);
+        } else {
+            // Remove the media item from the upload queue
+            if (WordPress.getCurrentBlog() != null) {
+                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                WordPress.wpDB.deleteMediaFile(blogId, mediaId);
+            }
+        }
     }
 
     private Runnable mFetchQueueTask = new Runnable() {
@@ -114,7 +138,9 @@ public class MediaUploadService extends Service {
         mediaFile.setFilePath(filePath);
         mediaFile.setMimeType(mimeType);
 
-        ApiHelper.UploadMediaTask task = new ApiHelper.UploadMediaTask(mContext, mediaFile,
+        mCurrentUploadMediaId = mediaId;
+
+        mCurrentUploadMediaTask = new ApiHelper.UploadMediaTask(mContext, mediaFile,
                 new ApiHelper.UploadMediaTask.Callback() {
             @Override
             public void onSuccess(String remoteId, String remoteUrl) {
@@ -129,6 +155,7 @@ public class MediaUploadService extends Service {
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
+                mCurrentUploadMediaId = "";
                 EventBus.getDefault().post(new MediaUploadEvents.MediaUploadFailed(mediaId,
                         getString(R.string.upload_failed)));
                 mHandler.post(mFetchQueueTask);
@@ -147,7 +174,7 @@ public class MediaUploadService extends Service {
         WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "uploading");
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
-        task.execute(apiArgs);
+        mCurrentUploadMediaTask.execute(apiArgs);
         mHandler.post(mFetchQueueTask);
     }
 
@@ -162,12 +189,14 @@ public class MediaUploadService extends Service {
                 String mediaId = mediaFile.getMediaId();
                 WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
                 mUploadInProgress = false;
+                mCurrentUploadMediaId = "";
                 mHandler.post(mFetchQueueTask);
             }
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 mUploadInProgress = false;
+                mCurrentUploadMediaId = "";
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {

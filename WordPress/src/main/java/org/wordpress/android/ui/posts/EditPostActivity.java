@@ -1714,6 +1714,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId) {
+        MediaUploadService mediaUploadService = MediaUploadService.getInstance();
+        if (mediaUploadService != null) {
+            mediaUploadService.cancelUpload(mediaId);
+        }
 
     }
 
