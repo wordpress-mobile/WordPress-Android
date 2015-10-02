@@ -66,6 +66,10 @@ public class MediaUploadService extends Service {
         return mInstance;
     }
 
+    public void processQueue() {
+        mHandler.post(mFetchQueueTask);
+    }
+
     public void cancelUpload(String mediaId) {
         if (mediaId.equals(mCurrentUploadMediaId)) {
             // The media item is currently uploading - abort the upload process

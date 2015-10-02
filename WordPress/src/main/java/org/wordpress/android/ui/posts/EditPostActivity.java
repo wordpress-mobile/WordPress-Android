@@ -1709,7 +1709,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
 
+        MediaUploadService mediaUploadService = MediaUploadService.getInstance();
+        if (mediaUploadService == null) {
+            startMediaUploadService();
+        } else {
+            mediaUploadService.processQueue();
+        }
     }
 
     @Override
@@ -1718,7 +1726,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaUploadService != null) {
             mediaUploadService.cancelUpload(mediaId);
         }
-
     }
 
     @Override
