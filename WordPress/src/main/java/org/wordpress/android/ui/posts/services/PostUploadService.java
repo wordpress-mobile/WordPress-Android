@@ -969,7 +969,19 @@ public class PostUploadService extends Service {
                 notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
                         pendingIntent);
             }
-            mNotificationManager.notify((new Random()).nextInt(), notificationBuilder.build());
+            mNotificationManager.notify(getNotificationIdForPost(post), notificationBuilder.build());
+        }
+
+        private int getNotificationIdForPost(Post post) {
+            int remotePostId = 0;
+            try {
+                remotePostId = Integer.parseInt(post.getRemotePostId());
+            } catch (NumberFormatException nfe) {
+                // No op
+            }
+            // We can't use the local table post id here because it can change between first post (local draft) to
+            // first edit (post pulled from the server)
+            return post.getLocalTableBlogId() + remotePostId;
         }
 
         public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage,
