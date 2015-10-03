@@ -475,7 +475,7 @@ public class ReaderPostListFragment extends Fragment
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
         final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_BLOCKED);
 
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
@@ -979,7 +979,7 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE, analyticsProperties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, analyticsProperties);
     }
 
     /*
@@ -1006,14 +1006,28 @@ public class ReaderPostListFragment extends Fragment
     public void onTagChanged(ReaderTag tag) {
         if (!isAdded() || isCurrentTag(tag)) return;
 
-        Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagName());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-        if (tag.isFreshlyPressed()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
-        }
+        trackTagLoaded(tag);
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
         setCurrentTag(tag);
+    }
+
+    public void trackTagLoaded(ReaderTag tag) {
+        AnalyticsTracker.Stat stat = null;
+
+        if (tag.isFreshlyPressed()) {
+            stat = AnalyticsTracker.Stat.READER_FRESHLY_PRESSED_LOADED;
+        } else if (tag.isTagTopic()) {
+            stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
+        } else if (tag.isListTopic()) {
+            stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
+        }
+
+        if (stat == null) return;
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("tag", tag.getTagName());
+
+        AnalyticsTracker.track(stat, properties);
     }
 
     /*
