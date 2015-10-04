@@ -27,7 +27,7 @@ Em relação ao estilo de código, optaram por usar como base as regras usadas p
 * FIXME não deve ser usado no repositório, substituindo por TODO. FIXME pode ser usado unicamente no repositório local
 Sendo existe um processo de verificação em que é gerado um relatório em html.
 
-A maneira como a equipa organiza as *branches* recorrem a um modelo bastante dinâmico e de fácil entendimento por todos os elementos da equipa, permiitindo criar mais ramos sem se tornar um projeto confuso. Este modelo intitula-se de *Github flow branching* e resume-se a no seu núcleo possuir dois ramos principais:
+A maneira como a equipa organiza as *branches* recorrem a um modelo bastante dinâmico e de fácil entendimento por todos os elementos da equipa, permitindo criar mais ramos sem se tornar um projeto confuso. Este modelo intitula-se de *Github flow branching* e resume-se a no seu núcleo possuir dois ramos principais:
 
 * master - é o ramo destinado ao código fonte que se encontra pronto e estável a ser lançado, ou seja, neste ramo são lançadas as versões finais do projeto.
 * develop - é o ramo destinado ao código fonte onde estão a ser implementadas alterações para a próxima versão, ou seja, é considerado como um ramo de integração porque quando o código se encontra estável e as alterações planeadas estejam realizadas, deve ser realizado um *merge* com o ramo master e ser-lhe atribuído uma versão de lançamento.
