@@ -1011,7 +1011,7 @@ public class ReaderPostListFragment extends Fragment
         setCurrentTag(tag);
     }
 
-    public void trackTagLoaded(ReaderTag tag) {
+    private void trackTagLoaded(ReaderTag tag) {
         AnalyticsTracker.Stat stat = null;
 
         if (tag.isFreshlyPressed()) {
@@ -1114,3 +1114,4 @@ public class ReaderPostListFragment extends Fragment
         mLastAutoUpdateDt = null;
     }
 }
+
