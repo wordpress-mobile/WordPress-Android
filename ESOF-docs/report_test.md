@@ -14,7 +14,7 @@ A aplicação está disponível no Google Play e apresenta até ao momento entre
 
 ## Processo ##
 
-TODO que técnicas usam, como está estruturado, necessário para ser colaborador etc
+Embora tenhamos tentado comunicar com vários dos contribuidores não obtivemos respostas da maior parte dos que tentámos contactar daí não termos determinado o processo. No entanto, o o modelo utilizado no desenvolvimento do projeto segue alguns princípios Agile. À medida que novos requisitos são determinados a partir do feedback dos utilizadores, programadores e colaboradores é iniciado um processo focado na correcão e evolução contínua do software, com novas versões a ser lançadas de forma constante e activa.
 
 A nível de colaboração, esta é facilitada pela página oficial para contribuidores onde possui um pequeno tutorial de como começar a usar o GitHub, realizando um fork e um clone do seu repositório, de maneira a facilitar o desenvolvimento na máquina de cada um e sem causar estragos no repositório original.
 
@@ -27,7 +27,7 @@ Em relação ao estilo de código, optaram por usar como base as regras usadas p
 * FIXME não deve ser usado no repositório, substituindo por TODO. FIXME pode ser usado unicamente no repositório local
 Sendo existe um processo de verificação em que é gerado um relatório em html.
 
-A maneira como a equipa organiza as *branches* recorrem a um modelo bastante dinâmico e de fácil entendimento por todos os elementos da equipa, permitindo criar mais ramos sem se tornar um projeto confuso. Este modelo intitula-se de *Github flow branching* e resume-se a no seu núcleo possuir dois ramos principais:
+A maneira como a equipa organiza as *branches* recorrem a um modelo bastante dinâmico e de fácil entendimento por todos os elementos da equipa, permitindo criar mais ramos sem se tornar um projeto confuso. Este modelo intitula-se de *Git flow branching* e resume-se a no seu núcleo possuir dois ramos principais:
 
 * master - é o ramo destinado ao código fonte que se encontra pronto e estável a ser lançado, ou seja, neste ramo são lançadas as versões finais do projeto.
 * develop - é o ramo destinado ao código fonte onde estão a ser implementadas alterações para a próxima versão, ou seja, é considerado como um ramo de integração porque quando o código se encontra estável e as alterações planeadas estejam realizadas, deve ser realizado um *merge* com o ramo master e ser-lhe atribuído uma versão de lançamento.
@@ -47,7 +47,7 @@ O Slack da Wordpress está dividido em múltiplos canais sendo que existe o cana
 
 ## Análise Crítica ##
 
-TODO análise crítica ao projeto: se estão a aplicar bem as técnicas, se é o melhor para o projeto, o que poderia ser melhorado etc
+Acreditamos que o modelo mais adequado ao projeto em mãos, modelo este que achamos ser o modelo utilizado pelos desenvolvedores apesar de não termos confirmação, é o Agile. Todos os aspectos de desenvolvimento são constantemente revisitados sendo que são constantemente as situações em que a equipa, ou alguns elementos da mesma, param para re-avaliar o projeto e consequentemente a sua direcção. No entanto, tendo em conta o elevado número de contribuidores é provavel que o modelo Agile não seja necessáriamente o implementado pois o conceito de processo de desenvolvimento de software pode não ser comum entre todos apesar de existir uma clara coordenação principalmente devido ao modelo de submissão de branching utilizado.
 
 ![Gráfico de commits](./images/grafico_commits.PNG)
 
@@ -57,7 +57,7 @@ Desde Setembro de 2009, data em que o repositório foi criado, que este está at
 
 ### Organização ###
 
-#### Código ####
+#### Código #####
 
 Depois de analisados alguns documentos e consultada a informação disponibilizada pelos próprios contribuidores, é possível concluir que o código está exemplarmente organizado. Como foi mencionado anteriormente as [Android Code Style Guidelines] (https://source.android.com/source/code-style.html) são a base do estilo de código do projeto.
 
@@ -70,3 +70,13 @@ Como mencionado na parte do processo, o modelo de branching utilizado é o [git 
 No momento da escrita deste relatório o principal foco dos colaboradores não é a criação de uma aplicação ou de funcionalidades mas sim a finalização de uma aplicação já criada. Como já foi referido o principal objetivo dos colaboradores é corrigir possíveis erros e actualizar a aplicação mantendo a mesma a par dos standards atuais, quer de aspeto ou organização.
 
 Assim sendo, não existem reuniões como o que acontece, por exemplo, no modelo de processo Scrum, pois a aplicação está “concluída” e todo o tipo de comunicações é feita de forma constante e em tempo real pelo Slack.
+
+### Conclusão ###
+
+De uma forma geral, o conjunto de práticas seguidas parece-nos adequado para o desenvolvimento da aplicação. Depois de alguma pesquisa e estudo dos métodos e práticas neste projeto, acreditamos que o modelo Agile seja o mais adequado, devido à sua flexibilidade e às práticas já utilizadas pelos contribuidores quer pela constante comunicação através do Slack quer pelos osbetivos do projeto em si.
+
+## Autores
+
+* Fábio Amarante
+* Luís Gonçalves
+* Ricardo Lopes
