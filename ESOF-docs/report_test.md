@@ -48,11 +48,11 @@ Desde Setembro de 2009, data em que o repositório foi criado, que este está at
 
 #### Código ####
 
-Depois de analisados alguns documentos e consultada a informação disponibilizada pelos próprios contribuidores, é possível concluir que o código está exemplarmente organizado. Como foi mencionado anteriormente as Android Code Style Guidelines são a base do estilo de código do projeto.
+Depois de analisados alguns documentos e consultada a informação disponibilizada pelos próprios contribuidores, é possível concluir que o código está exemplarmente organizado. Como foi mencionado anteriormente as [Android Code Style Guidelines] (https://source.android.com/source/code-style.html) são a base do estilo de código do projeto.
 
 #### Repositório ####
 
-Como mencionado na parte do processo, o modelo de branching utilizado é o git flow branching model que, tal como mencionado na cadeira, é um modelo apropriado. Permitindo um modelo mental elegante que é fácil de compreender e permite aos contribuidores um entendimento comum dos processos de ramificação.
+Como mencionado na parte do processo, o modelo de branching utilizado é o [git flow branching model] (http://nvie.com/posts/a-successful-git-branching-model/) que, tal como mencionado na cadeira, é um modelo apropriado. Permitindo um modelo mental elegante que é fácil de compreender e permite aos contribuidores um entendimento comum dos processos de ramificação.
 
 ### Objetivos ###
 
