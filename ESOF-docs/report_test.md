@@ -40,7 +40,7 @@ O Slack da Wordpress está dividido em múltiplos canais sendo que existe o cana
 
 TODO análise crítica ao projeto: se estão a aplicar bem as técnicas, se é o melhor para o projeto, o que poderia ser melhorado etc
 
-![Gráfico de commits](./images/grafico_commits.png)
+![Gráfico de commits](./images/grafico_commits.PNG)
 
 ### Commits ###
 
