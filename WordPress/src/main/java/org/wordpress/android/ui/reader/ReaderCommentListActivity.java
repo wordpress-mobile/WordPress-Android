@@ -429,7 +429,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return;
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON);
 
         mSubmitReplyBtn.setEnabled(false);
         mEditComment.setEnabled(false);
