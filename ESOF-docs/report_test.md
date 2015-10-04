@@ -40,6 +40,8 @@ O Slack da Wordpress está dividido em múltiplos canais sendo que existe o cana
 
 TODO análise crítica ao projeto: se estão a aplicar bem as técnicas, se é o melhor para o projeto, o que poderia ser melhorado etc
 
+![Gráfico de commits](./images/grafico_commits.png)
+
 ### Commits ###
 
 Desde Setembro de 2009, data em que o repositório foi criado, que este está ativo em termos de commits sendo que especialmente a partir de 2014 a sua atividade aumentou exponencialmente e desde então não decrementou. Apesar da aplicação se encontrar atualmente completa o elevado número de commits por semana (média de 73.45) demonstra que há sempre pormenores a melhorar e features a acrescentar bem como falhas a corrigir.
