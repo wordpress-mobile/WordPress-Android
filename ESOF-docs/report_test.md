@@ -27,11 +27,20 @@ Em relação ao estilo de código, optaram por usar como base as regras usadas p
 * FIXME não deve ser usado no repositório, substituindo por TODO. FIXME pode ser usado unicamente no repositório local
 Sendo existe um processo de verificação em que é gerado um relatório em html.
 
-TODO Organização de branches. Contém igualmente uma secção para tradução.
-Usam o modelo de GitHub flow branching…
+A maneira como a equipa organiza as *branches* recorrem a um modelo bastante dinâmico e de fácil entendimento por todos os elementos da equipa, permiitindo criar mais ramos sem se tornar um projeto confuso. Este modelo intitula-se de *Github flow branching* e resume-se a no seu núcleo possuir dois ramos principais:
+
+* master - é o ramo destinado ao código fonte que se encontra pronto e estável a ser lançado, ou seja, neste ramo são lançadas as versões finais do projeto.
+* develop - é o ramo destinado ao código fonte onde estão a ser implementadas alterações para a próxima versão, ou seja, é considerado como um ramo de integração porque quando o código se encontra estável e as alterações planeadas estejam realizadas, deve ser realizado um *merge* com o ramo master e ser-lhe atribuído uma versão de lançamento.
+
+Para além destes dois ramos principais, existem os ramos secundários destinados a apoiar o desenvolvimento paralelo entre os membros da equipa, permitindo saber que funcionalidades estão a ser implementadas, preparar para futuros lançamentos e para ajudar rapidamente a resolver problemas na linha de produção. Estes ramos, ao contrário dos principais, têm um tempo de vida limitado, uma vez que acabam por ser removidos eventualmente. Existem três tipos de ramos:
+
+* *Feature branches* - Estes ramos servem para desenvolvimento de novas funcionalidades para a aplicação ou para uma versão distante desta. Estes ramos são essencialmente criados a partir do develop e mais tarde, quando a funcionalidade está bem implementada e estável, acabam por levarem *merge* com o develop.
+* *Release branches* - Estes ramos servem para preparar a versão de lançamento final, ou seja, ajuda a aperfeiçoar o código e a eliminar qualquer tipo de problema antes da versão final ser lançada no master.
+* *Hotfix branchs* - Estes ramos são muito semelhante aos ramos do master e servem para corrigir erros minimamente preocupantes na aplicação. Permitem que a equipa continue a desenvolver o seu trabalho no develop, enquanto um ou mais membros se dedicam a corrigir o erro detetado.
+
 ### Slack ###
 
-WordPress utiliza Slack como principal plataforma de comunicação em tempo real e assim sendo juntámo-nos à página. É aberta a qualquer pessoa sendo que basta fazer o pedido e é enviado o convite sem qualquer tipo de critérios. Já foram implementados várias ferramentas por forma a melhorar o desempenho dos seus colaboradores como, por exemplo, a implementação de bots de Trac e SVN. Assim sendo, sempre que um utilizador quer aceder a um pedido ou alteração de versão basta introduzir, por exemplo, #12345 e um bot irá imprimir o URL desse ticket e outras informações. Os tickets contém informações sobre a ocurrência, sendo que esta pode ser um relatório de bug, pedido, etc, informações sobre quem é o responsável pela criação desse ticket e outras informações importantes como anexos e comentários. 
+WordPress utiliza Slack como principal plataforma de comunicação em tempo real e assim sendo juntámo-nos à página. É aberta a qualquer pessoa sendo que basta fazer o pedido e é enviado o convite sem qualquer tipo de critérios. Já foram implementados várias ferramentas por forma a melhorar o desempenho dos seus colaboradores como, por exemplo, a implementação de bots de Trac e SVN. Assim sendo, sempre que um utilizador quer aceder a um pedido ou alteração de versão basta introduzir, por exemplo, #12345 e um bot irá imprimir o URL desse ticket e outras informações. Os tickets contém informações sobre a ocorrência, sendo que esta pode ser um relatório de bug, pedido, etc, informações sobre quem é o responsável pela criação desse ticket e outras informações importantes como anexos e comentários. 
 
 O Slack da Wordpress está dividido em múltiplos canais sendo que existe o canal #core onde são tratados a maior parte dos bugs e impressas as alterações (ou pedidos de alterações) ao código, no entanto existem canais de ajuda bem como canais direcionados somente a partes especificas do código como, por exemplo, #design. São aproximadamente 7000 os membros da página sendo que, durante tempo em que observámos, houve sempre muita actividade nos diferentes canais do Slack especialmente no #core onde há muita interação entre os membros, bem como entreajuda. 
 
