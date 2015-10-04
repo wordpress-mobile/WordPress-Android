@@ -119,6 +119,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
+        ((ThemeBrowserActivity) getActivity()).setIsInSearchMode(false);
         getActivity().getFragmentManager().popBackStack();
         return true;
     }

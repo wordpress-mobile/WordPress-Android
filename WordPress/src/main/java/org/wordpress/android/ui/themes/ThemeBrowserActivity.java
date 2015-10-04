@@ -51,6 +51,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private ThemeBrowserFragment mThemeBrowserFragment;
     private ThemeSearchFragment mThemeSearchFragment;
     private Theme mCurrentTheme;
+    private boolean mIsInSearchMode;
 
     public static boolean isAccessible() {
         // themes are only accessible to admin wordpress.com users
@@ -74,7 +75,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         setContentView(R.layout.theme_browser_activity);
         configureToolbar();
-        addBrowserFragment();
+        mThemeBrowserFragment = new ThemeBrowserFragment();
+        mThemeSearchFragment = new ThemeSearchFragment();
+        addFragment();
     }
 
     @Override
@@ -87,7 +90,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     protected void onResume() {
         super.onResume();
         mIsRunning = true;
-        mThemeSearchFragment = new ThemeSearchFragment();
         ActivityId.trackLastActivity(ActivityId.THEMES);
 
         fetchThemesIfNoneAvailable();
@@ -133,6 +135,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 activateTheme(themeId);
             }
         }
+    }
+
+    public void setIsInSearchMode(boolean isInSearchMode) {
+        mIsInSearchMode = isInSearchMode;
     }
 
     public void fetchThemes() {
@@ -269,12 +275,28 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         actionBar.setTitle(R.string.themes);
     }
 
+    private void addFragment() {
+        if (mIsInSearchMode) {
+            addSearchFragment();
+        } else {
+            addBrowserFragment();
+        }
+    }
+
     private void addBrowserFragment() {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        mThemeBrowserFragment = new ThemeBrowserFragment();
         fragmentTransaction.add(R.id.theme_browser_container, mThemeBrowserFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+    private void addSearchFragment() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
 
     private void activateTheme(String themeId) {
         final String siteId = getBlogId();
@@ -353,11 +375,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onSearchClicked() {
-
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        mIsInSearchMode = true;
+        addSearchFragment();
     }
 
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
@@ -402,12 +421,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 @Override
                 public void run() {
                     mFetchingThemes = false;
-                    if (result == null) {
+                    if (mThemeBrowserFragment.isVisible()) {
                         mThemeBrowserFragment.mEmptyView.setText("No themes");
+                        mThemeBrowserFragment.setRefreshing(false);
+                    } else if (mThemeSearchFragment.isVisible()) {
                         mThemeSearchFragment.mEmptyView.setText("No themes");
+                        mThemeSearchFragment.setRefreshing(false);
                     }
-                    mThemeBrowserFragment.setRefreshing(false);
-                    mThemeSearchFragment.setRefreshing(false);
                 }
             });
         }
