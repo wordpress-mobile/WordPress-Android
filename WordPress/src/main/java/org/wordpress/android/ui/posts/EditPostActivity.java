@@ -1224,9 +1224,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 path = imageUri.toString().replace("file://", "");
             }
 
+            if (path == null) {
+                ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
+                return false;
+            }
+
+            Blog blog = WordPress.getCurrentBlog();
+            if (!blog.getMaxImageWidth().equals("Original Size")) {
+                // If the user has selected a maximum image width for uploads, rescale the image accordingly
+                path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
+            }
+
             MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
             if (mediaFile != null) {
-                mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), WordPress.imageLoader);
+                mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
             }
         } else {
             String mediaTitle;
