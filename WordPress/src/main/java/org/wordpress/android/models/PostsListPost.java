@@ -86,6 +86,15 @@ public class PostsListPost {
         return !TextUtils.isEmpty(excerpt);
     }
 
+    /*
+     * java's string.trim() doesn't handle non-breaking space chars (#160), which may appear at the
+     * end of post content - work around this by converting them to standard spaces before trimming
+     */
+    private static final String NBSP = String.valueOf((char) 160);
+    private static String trimEx(final String s) {
+        return s.replace(NBSP, " ").trim();
+    }
+
     private static String makeExcerpt(String description) {
         if (TextUtils.isEmpty(description)) {
             return null;
@@ -93,7 +102,7 @@ public class PostsListPost {
 
         String s = HtmlUtils.fastStripHtml(description);
         if (s.length() < MAX_EXCERPT_LEN) {
-            return s.trim();
+            return trimEx(s);
         }
 
         StringBuilder result = new StringBuilder();
@@ -116,7 +125,7 @@ public class PostsListPost {
         if (totalLen == 0) {
             return null;
         }
-        return result.toString().trim() + "...";
+        return trimEx(result.toString()) + "...";
     }
 
     public long getFeaturedImageId() {
