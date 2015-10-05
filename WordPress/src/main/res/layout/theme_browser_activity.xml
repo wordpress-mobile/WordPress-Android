@@ -9,4 +9,8 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <include
+        android:id="@+id/toolbar_search"
+        layout="@layout/toolbar_search" />
+
 </LinearLayout>

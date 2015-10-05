@@ -2,20 +2,14 @@ package org.wordpress.android.ui.themes;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -26,6 +20,7 @@ import org.wordpress.android.WordPress;
 public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
     public static final String TAG = ThemeSearchFragment.class.getName();
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
+    public static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
     public static ThemeSearchFragment newInstance() {
         ThemeSearchFragment fragment = new ThemeSearchFragment();
@@ -89,18 +84,10 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     public void configureSearchView() {
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-        mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);
-        mSearchView.setMaxWidth(10000);
+        mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
 
-        TextView textView = (TextView) mSearchView.findViewById(R.id.search_src_text);
-        textView.setTextColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.black));
-        textView.setHintTextColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.grey));
-
-        ImageView imageView = (ImageView) mSearchView.findViewById(R.id.search_mag_icon);
-        imageView.setVisibility(View.VISIBLE);
-        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.hs__action_search));
     }
 
     private void clearFocus(View view) {
@@ -120,6 +107,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         ((ThemeBrowserActivity) getActivity()).setIsInSearchMode(false);
+        ((ThemeBrowserActivity) getActivity()).showToolbar();
         getActivity().getFragmentManager().popBackStack();
         return true;
     }
@@ -145,13 +133,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     protected void addHeaderViews(LayoutInflater inflater) {
         // No header on Search
-    }
-
-    @Override
-    protected void setToolbarColor() {
-        ThemeBrowserActivity themeBrowserActivity = (ThemeBrowserActivity) getActivity();
-        Toolbar toolbar = (Toolbar) themeBrowserActivity.findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(ContextCompat.getColor(themeBrowserActivity.getApplicationContext(), R.color.white));
     }
 
     @Override

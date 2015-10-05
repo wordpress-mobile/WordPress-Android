@@ -83,7 +83,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
         setRetainInstance(true);
-        setToolbarColor();
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         mEmptyView = (TextView) view.findViewById(R.id.text_empty);
 
@@ -196,12 +195,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
                 refreshView(getSpinnerPosition());
             }
         }
-    }
-
-    protected void setToolbarColor() {
-        ThemeBrowserActivity themeBrowserActivity = (ThemeBrowserActivity) getActivity();
-        Toolbar toolbar = (Toolbar) themeBrowserActivity.findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(ContextCompat.getColor(themeBrowserActivity.getApplicationContext(), R.color.blue_wordpress));
     }
 
     private void configureAndAddSearchHeader(LayoutInflater inflater) {

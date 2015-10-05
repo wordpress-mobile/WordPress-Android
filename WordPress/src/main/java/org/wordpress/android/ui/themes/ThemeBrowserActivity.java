@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -74,7 +75,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         setContentView(R.layout.theme_browser_activity);
-        configureToolbar();
         mThemeBrowserFragment = new ThemeBrowserFragment();
         mThemeSearchFragment = new ThemeSearchFragment();
         addFragment();
@@ -265,7 +265,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
     }
 
-    private void configureToolbar() {
+    public void showToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -273,6 +273,16 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.themes);
+        findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+    }
+
+    public void showSearchToolbar() {
+        Toolbar toolbarSearch = (Toolbar) findViewById(R.id.toolbar_search);
+        setSupportActionBar(toolbarSearch);
+        toolbarSearch.setTitle("");
+        findViewById(R.id.toolbar).setVisibility(View.GONE);
+        findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
     }
 
     private void addFragment() {
@@ -285,12 +295,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void addBrowserFragment() {
+        showToolbar();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.theme_browser_container, mThemeBrowserFragment);
         fragmentTransaction.commit();
     }
 
     private void addSearchFragment() {
+        showSearchToolbar();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment);
         fragmentTransaction.addToBackStack(null);
