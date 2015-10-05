@@ -277,6 +277,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void addFragment() {
         if (mIsInSearchMode) {
+            addBrowserFragment();
             addSearchFragment();
         } else {
             addBrowserFragment();
@@ -286,7 +287,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private void addBrowserFragment() {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.theme_browser_container, mThemeBrowserFragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
