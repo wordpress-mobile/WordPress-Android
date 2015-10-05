@@ -50,7 +50,9 @@ public class ReaderBlogActions {
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         if (isAskingToFollow) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -166,7 +168,9 @@ public class ReaderBlogActions {
         }
 
         if (isAskingToFollow) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");

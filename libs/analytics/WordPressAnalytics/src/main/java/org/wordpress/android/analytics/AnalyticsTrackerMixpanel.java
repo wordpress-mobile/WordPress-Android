@@ -289,23 +289,73 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_reader");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_reader");
                 break;
-            case READER_OPENED_ARTICLE:
+            case READER_ARTICLE_COMMENTED_ON:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Opened Article");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_article");
-                instructions.setCurrentDateForPeopleProperty("last_time_opened_reader_article");
+                        mixpanelInstructionsForEventName("Reader - Commented on Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_commented_on_reader_article");
+                instructions.setCurrentDateForPeopleProperty("last_time_commented_on_article");
                 break;
-            case READER_LIKED_ARTICLE:
+            case READER_ARTICLE_LIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Liked Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_liked_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_liked_reader_article");
                 break;
-            case READER_REBLOGGED_ARTICLE:
+            case READER_ARTICLE_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Opened Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_article");
+                instructions.setCurrentDateForPeopleProperty("last_time_opened_reader_article");
+                break;
+            case READER_ARTICLE_REBLOGGED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Reblogged Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reblogged_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_reblogged_article");
+                break;
+            case READER_ARTICLE_UNLIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Unliked Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unliked_article");
+                instructions.setCurrentDateForPeopleProperty("last_time_unliked_reader_article");
+                break;
+            case READER_BLOG_BLOCKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Blocked Blog");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_blocked_a_blog");
+                instructions.setCurrentDateForPeopleProperty("last_time_blocked_a_blog");
+                break;
+            case READER_BLOG_FOLLOWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Followed Site");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_site");
+                instructions.setCurrentDateForPeopleProperty("last_time_followed_site");
+                break;
+            case READER_BLOG_PREVIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Blog Preview");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_blog_preview");
+                instructions.setCurrentDateForPeopleProperty("last_time_viewed_blog_preview");
+                break;
+            case READER_BLOG_UNFOLLOWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Unfollowed Site");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_site");
+                instructions.setCurrentDateForPeopleProperty("last_time_unfollowed_site");
+                break;
+            case READER_DISCOVER_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Discover Content Viewed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_discover_content_viewed");
+                instructions.setCurrentDateForPeopleProperty("last_time_discover_content_viewed");
+                break;
+            case READER_FRESHLY_PRESSED_LOADED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Loaded Freshly Pressed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_loaded_freshly_pressed");
+                instructions.setCurrentDateForPeopleProperty("last_time_loaded_freshly_pressed");
                 break;
             case READER_INFINITE_SCROLL:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -314,57 +364,53 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_reader_performed_infinite_scroll");
                 instructions.setCurrentDateForPeopleProperty("last_time_performed_reader_infinite_scroll");
                 break;
-            case READER_FOLLOWED_READER_TAG:
+            case READER_LIST_FOLLOWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Followed List");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_list");
+                instructions.setCurrentDateForPeopleProperty("last_time_followed_list");
+                break;
+            case READER_LIST_LOADED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Loaded List");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_loaded_list");
+                instructions.setCurrentDateForPeopleProperty("last_time_loaded_list");
+                break;
+            case READER_LIST_PREVIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - List Preview");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_list_preview");
+                instructions.setCurrentDateForPeopleProperty("last_time_viewed_list_preview");
+                break;
+            case READER_LIST_UNFOLLOWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Unfollowed List");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_list");
+                instructions.setCurrentDateForPeopleProperty("last_time_unfollowed_list");
+                break;
+            case READER_TAG_FOLLOWED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Followed Reader Tag");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_reader_tag");
                 instructions.setCurrentDateForPeopleProperty("last_time_followed_reader_tag");
                 break;
-            case READER_UNFOLLOWED_READER_TAG:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Unfollowed Reader Tag");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_reader_tag");
-                break;
-            case READER_LOADED_TAG:
+            case READER_TAG_LOADED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Loaded Tag");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_loaded_tag");
+                instructions.setCurrentDateForPeopleProperty("last_time_loaded_tag");
                 break;
-            case READER_LOADED_FRESHLY_PRESSED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Loaded Freshly Pressed");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_loaded_freshly_pressed");
-                instructions.setCurrentDateForPeopleProperty("last_time_loaded_freshly_pressed");
-                break;
-            case READER_COMMENTED_ON_ARTICLE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Commented on Article");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
-                        "number_of_times_commented_on_reader_article");
-                instructions.setCurrentDateForPeopleProperty("last_time_commented_on_article");
-                break;
-            case READER_FOLLOWED_SITE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Followed Site");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_site");
-                instructions.setCurrentDateForPeopleProperty("last_time_followed_site");
-                break;
-            case READER_BLOCKED_BLOG:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Blocked Blog");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_blocked_a_blog");
-                instructions.setCurrentDateForPeopleProperty("last_time_blocked_a_blog");
-                break;
-            case READER_BLOG_PREVIEW:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Blog Preview");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_blog_preview");
-                instructions.setCurrentDateForPeopleProperty("last_time_viewed_blog_preview");
-                break;
-            case READER_TAG_PREVIEW:
+            case READER_TAG_PREVIEWED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Tag Preview");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_viewed_tag_preview");
                 instructions.setCurrentDateForPeopleProperty("last_time_viewed_tag_preview");
+                break;
+            case READER_TAG_UNFOLLOWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Unfollowed Reader Tag");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_reader_tag");
+                instructions.setCurrentDateForPeopleProperty("last_time_unfollowed_reader_tag");
                 break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
