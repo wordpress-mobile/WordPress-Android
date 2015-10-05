@@ -33,7 +33,7 @@
                 android:layout_height="@dimen/theme_browser_more_button_height"
                 android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
                 android:layout_centerVertical="true"
-                android:src="@drawable/hs__action_search"
+                android:src="@drawable/ic_search"
                 android:backgroundTint="@color/transparent"
                 android:layout_alignParentRight="true" />
 
