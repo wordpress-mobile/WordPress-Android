@@ -894,6 +894,12 @@ public class ReaderPostListFragment extends Fragment
             showSwipeToRefreshProgress(false);
         }
         mIsUpdating = isUpdating;
+
+        // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
+        // doing a refresh while another update is already in progress
+        if (mSwipeToRefreshHelper != null && !mSwipeToRefreshHelper.isRefreshing()) {
+            mSwipeToRefreshHelper.setEnabled(!isUpdating);
+        }
     }
 
     /*
