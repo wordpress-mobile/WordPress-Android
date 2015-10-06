@@ -113,7 +113,7 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/nux_button_height"
+                android:layout_height="@dimen/nux_main_button_height"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp">
 
@@ -142,7 +142,7 @@
             </RelativeLayout>
 
             <org.wordpress.android.widgets.WPTextView
-                style="@style/WordPress.NUXWhiteButtonNoBg"
+                style="@style/WordPress.NUXFlatButton"
                 android:id="@+id/nux_sign_in_progress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
             android:gravity="bottom">
 
             <org.wordpress.android.widgets.WPTextView
-                style="@style/WordPress.NUXWhiteButtonNoBg"
+                style="@style/WordPress.NUXFlatButton"
                 android:id="@+id/cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
