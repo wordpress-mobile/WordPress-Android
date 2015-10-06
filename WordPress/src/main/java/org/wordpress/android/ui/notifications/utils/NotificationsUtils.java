@@ -76,6 +76,8 @@ public class NotificationsUtils {
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
 
+    private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
+
     private static boolean mSnackbarDidUndo;
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
@@ -90,7 +92,9 @@ public class NotificationsUtils {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
-        WordPress.getRestClientUtilsV1_1().get("/me/notifications/settings/?device_id=" + deviceID, listener, errorListener);
+        String settingsEndpoint = WPCOM_SETTINGS_ENDPOINT;
+        if (!TextUtils.isEmpty(deviceID)) settingsEndpoint +=  "?device_id=" + deviceID;
+        WordPress.getRestClientUtilsV1_1().get(settingsEndpoint, listener, errorListener);
     }
 
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
