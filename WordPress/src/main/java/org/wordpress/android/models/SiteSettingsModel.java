@@ -161,7 +161,7 @@ public class SiteSettingsModel {
 
         isInLocalTable = true;
     }
-    
+
     /**
      * Creates the {@link ContentValues} object to store this category data in a local database.
      */
