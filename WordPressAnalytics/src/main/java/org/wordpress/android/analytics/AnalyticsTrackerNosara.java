@@ -66,44 +66,65 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_ACCESSED:
                 eventName = "reader_accessed";
                 break;
-            case READER_OPENED_ARTICLE:
-                eventName = "reader_article_opened";
+            case READER_ARTICLE_COMMENTED_ON:
+                eventName = "reader_article_commented_on";
                 break;
-            case READER_LIKED_ARTICLE:
+            case READER_ARTICLE_LIKED:
                 eventName = "reader_article_liked";
                 break;
-            case READER_REBLOGGED_ARTICLE:
+            case READER_ARTICLE_OPENED:
+                eventName = "reader_article_opened";
+                break;
+            case READER_ARTICLE_REBLOGGED:
                 eventName = "reader_article_reblogged";
+                break;
+            case READER_ARTICLE_UNLIKED:
+                eventName = "reader_article_unliked";
+                break;
+            case READER_BLOG_BLOCKED:
+                eventName = "reader_blog_blocked";
+                break;
+            case READER_BLOG_FOLLOWED:
+                eventName = "reader_site_followed";
+                break;
+            case READER_BLOG_PREVIEWED:
+                eventName = "reader_blog_previewed";
+                break;
+            case READER_BLOG_UNFOLLOWED:
+                eventName = "reader_site_unfollowed";
+                break;
+            case READER_DISCOVER_VIEWED:
+                eventName = "reader_discover_viewed";
+                break;
+            case READER_FRESHLY_PRESSED_LOADED:
+                eventName = "reader_freshly_pressed_loaded";
                 break;
             case READER_INFINITE_SCROLL:
                 eventName = "reader_infinite_scroll_performed";
                 break;
-            case READER_FOLLOWED_READER_TAG:
+            case READER_LIST_FOLLOWED:
+                eventName = "reader_list_followed";
+                break;
+            case READER_LIST_LOADED:
+                eventName = "reader_list_loaded";
+                break;
+            case READER_LIST_PREVIEWED:
+                eventName = "reader_list_previewed";
+                break;
+            case READER_LIST_UNFOLLOWED:
+                eventName = "reader_list_unfollowed";
+                break;
+            case READER_TAG_FOLLOWED:
                 eventName = "reader_reader_tag_followed";
                 break;
-            case READER_UNFOLLOWED_READER_TAG:
-                eventName = "reader_reader_tag_unfollowed";
-                break;
-            case READER_LOADED_TAG:
+            case READER_TAG_LOADED:
                 eventName = "reader_tag_loaded";
                 break;
-            case READER_LOADED_FRESHLY_PRESSED:
-                eventName = "reader_freshly_pressed_loaded";
-                break;
-            case READER_COMMENTED_ON_ARTICLE:
-                eventName = "reader_article_commented_on";
-                break;
-            case READER_FOLLOWED_SITE:
-                eventName = "reader_site_followed";
-                break;
-            case READER_BLOCKED_BLOG:
-                eventName = "reader_blog_blocked";
-                break;
-            case READER_BLOG_PREVIEW:
-                eventName = "reader_blog_previewed";
-                break;
-            case READER_TAG_PREVIEW:
+            case READER_TAG_PREVIEWED:
                 eventName = "reader_tag_previewed";
+                break;
+            case READER_TAG_UNFOLLOWED:
+                eventName = "reader_reader_tag_unfollowed";
                 break;
             case EDITOR_CREATED_POST:
                 eventName = "editor_post_created";
