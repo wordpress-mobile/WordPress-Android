@@ -765,34 +765,42 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
-            // determine whether a gap marker exists for this tag
-            mGapMarkerPosition = -1;
-            if (getPostListType().isTagType()) {
-                ReaderBlogIdPostId gapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
-                if (gapMarkerIds != null) {
-                    // find the position of the gap marker post
-                    mGapMarkerPosition = allPosts.indexOfIds(gapMarkerIds);
-                    if (mGapMarkerPosition > -1) {
-                        // increment it because we want the gap marker to appear *below* this post
-                        mGapMarkerPosition++;
-                        // increment it again if there's a custom first item
-                        if (hasCustomFirstItem()) {
-                            mGapMarkerPosition++;
-                        }
-                        // remove the gap marker if it's on the last post (edge case but
-                        // it can happen following a purge)
-                        if (mGapMarkerPosition >= allPosts.size() - 1) {
-                            mGapMarkerPosition = -1;
-                            AppLog.w(AppLog.T.READER, "gap marker at/after last post, removed");
-                            ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
-                        } else {
-                            AppLog.d(AppLog.T.READER, "gap marker at position " + mGapMarkerPosition);
-                        }
-                    }
-                }
-            }
+            // determine whether a gap marker exists - only applies to tagged posts
+            mGapMarkerPosition = getGapMarkerPosition();
 
             return true;
+        }
+
+        private int getGapMarkerPosition() {
+            if (!getPostListType().isTagType()) {
+                return -1;
+            }
+
+            ReaderBlogIdPostId gapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
+            if (gapMarkerIds == null) {
+                return -1;
+            }
+
+            // find the position of the gap marker post
+            int gapPosition = allPosts.indexOfIds(gapMarkerIds);
+            if (gapPosition > -1) {
+                // increment it because we want the gap marker to appear *below* this post
+                gapPosition++;
+                // increment it again if there's a custom first item
+                if (hasCustomFirstItem()) {
+                    gapPosition++;
+                }
+                // remove the gap marker if it's on the last post (edge case but
+                // it can happen following a purge)
+                if (gapPosition >= allPosts.size() - 1) {
+                    gapPosition = -1;
+                    AppLog.w(AppLog.T.READER, "gap marker at/after last post, removed");
+                    ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
+                } else {
+                    AppLog.d(AppLog.T.READER, "gap marker at position " + gapPosition);
+                }
+            }
+            return gapPosition;
         }
 
         @Override
