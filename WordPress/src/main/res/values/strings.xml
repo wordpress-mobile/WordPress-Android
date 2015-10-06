@@ -1026,4 +1026,13 @@
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
 
+    <!--People Management-->
+    <string name="people">People</string>
+    <string name="role_super_admin">Super Admin</string>
+    <string name="role_admin">Admin</string>
+    <string name="role_editor">Editor</string>
+    <string name="role_author">Author</string>
+    <string name="role_contributor">Contributor</string>
+    <string name="role_unsupported">Unsupported</string>
+
 </resources>
