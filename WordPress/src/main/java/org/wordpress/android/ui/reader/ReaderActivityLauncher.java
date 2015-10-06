@@ -79,7 +79,7 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
@@ -102,7 +102,7 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
@@ -116,7 +116,7 @@ public class ReaderActivityLauncher {
         if (tag == null) {
             return;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEW);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
