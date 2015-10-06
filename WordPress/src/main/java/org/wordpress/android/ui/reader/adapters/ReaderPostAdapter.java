@@ -707,6 +707,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    public void removeGapMarker() {
+        if (mGapMarkerPosition == -1) return;
+
+        int position = mGapMarkerPosition;
+        mGapMarkerPosition = -1;
+        if (position < getItemCount()) {
+            notifyItemRemoved(position);
+        }
+    }
+
     /*
      * AsyncTask to load posts in the current tag
      */

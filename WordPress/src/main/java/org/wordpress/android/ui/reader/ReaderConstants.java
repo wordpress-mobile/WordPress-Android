@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.reader;
 
 public class ReaderConstants {
-    public static final int  READER_MAX_POSTS_TO_REQUEST       = 20;     // max # posts to request when updating posts
+    // TODO: reset READER_MAX_POSTS_TO_REQUEST to 20
+    public static final int  READER_MAX_POSTS_TO_REQUEST       = 4;     // max # posts to request when updating posts
     public static final int  READER_MAX_POSTS_TO_DISPLAY       = 200;    // max # posts to display
     public static final int  READER_MAX_COMMENTS_TO_REQUEST    = 20;     // max # top-level comments to request when updating comments
     public static final int  READER_MAX_USERS_TO_DISPLAY       = 500;    // max # users to show in ReaderUserListActivity

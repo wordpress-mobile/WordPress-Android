@@ -916,6 +916,9 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+
+        // remove the gap marker if it's showing, since it's no longer valid
+        getPostAdapter().removeGapMarker();
     }
 
     private void hideNewPostsBar() {
