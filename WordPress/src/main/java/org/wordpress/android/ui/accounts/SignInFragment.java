@@ -158,20 +158,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             }
         });
 
-        mUsernameEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
-                        || (keyCode == EditorInfo.IME_ACTION_DONE)
-                        || (event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT)
-                        || (keyCode == EditorInfo.IME_ACTION_NEXT)) {
-                    mPasswordEditText.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(mForgotPasswordListener);
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -663,17 +649,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         final String password = EditTextUtils.getText(mPasswordEditText).trim();
         boolean retValue = true;
 
+        if (password.equals("")) {
+            mPasswordEditText.setError(getString(R.string.required_field));
+            mPasswordEditText.requestFocus();
+            retValue = false;
+        }
+
         if (username.equals("")) {
             mUsernameEditText.setError(getString(R.string.required_field));
             mUsernameEditText.requestFocus();
             retValue = false;
         }
 
-        if (password.equals("")) {
-            mPasswordEditText.setError(getString(R.string.required_field));
-            mPasswordEditText.requestFocus();
-            retValue = false;
-        }
         return retValue;
     }
 
@@ -701,8 +688,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         switch (getErrorType(messageId)) {
             case USERNAME:
             case PASSWORD:
-                showUsernameError(messageId);
                 showPasswordError(messageId);
+                showUsernameError(messageId);
                 return true;
             default:
                 return false;
@@ -814,8 +801,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mUsernameEditText.setError(null);
             showInvalidUsernameOrPasswordDialog();
         } else {
-            showUsernameError(messageId);
             showPasswordError(messageId);
+            showUsernameError(messageId);
         }
         endProgress();
     }
