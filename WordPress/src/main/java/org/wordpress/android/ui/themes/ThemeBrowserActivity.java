@@ -352,12 +352,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onActivateSelected(String themeId) {
-        Theme selectedTheme = WordPress.wpDB.getTheme(getBlogId(), themeId);
-        if (selectedTheme.isPremium()) {
-
-        } else {
-            activateTheme(themeId);
-        }
+        activateTheme(themeId);
     }
 
     @Override
