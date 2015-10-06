@@ -93,7 +93,9 @@ public class NotificationsUtils {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
         String settingsEndpoint = WPCOM_SETTINGS_ENDPOINT;
-        if (!TextUtils.isEmpty(deviceID)) settingsEndpoint +=  "?device_id=" + deviceID;
+        if (!TextUtils.isEmpty(deviceID)) {
+            settingsEndpoint += "?device_id=" + deviceID;
+        }
         WordPress.getRestClientUtilsV1_1().get(settingsEndpoint, listener, errorListener);
     }
 
