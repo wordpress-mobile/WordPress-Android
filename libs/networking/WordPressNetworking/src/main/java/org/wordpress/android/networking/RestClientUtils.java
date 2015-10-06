@@ -81,6 +81,11 @@ public class RestClientUtils {
         return mRestClient;
     }
 
+    public void getCategories(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/categories", siteId);
+        get(path, null, null, listener, errorListener);
+    }
+
     /**
      * Reply to a comment
      * <p/>

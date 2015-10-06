@@ -93,6 +93,10 @@ public class ApiHelper {
         public static final String LIST_METHODS       = "system.listMethods";
     }
 
+    public static final class Params {
+        public static final String SHOW_SUPPORTED_POST_FORMATS = "show-supported";
+    }
+
     public enum ErrorType {
         NO_ERROR, UNKNOWN_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED, UNAUTHORIZED
@@ -149,7 +153,7 @@ public class ApiHelper {
                     mBlog.getHttppassword());
             Object result = null;
             Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                    mBlog.getPassword(), "show-supported" };
+                    mBlog.getPassword(), Params.SHOW_SUPPORTED_POST_FORMATS };
             try {
                 result = client.call(ApiHelper.Methods.GET_POST_FORMATS, params);
             } catch (ClassCastException cce) {

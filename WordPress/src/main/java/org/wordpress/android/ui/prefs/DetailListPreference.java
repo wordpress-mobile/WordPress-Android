@@ -175,8 +175,13 @@ public class DetailListPreference extends ListPreference
     }
 
     @Override
-    public String getHintText() {
+    public String getHint() {
         return mHint;
+    }
+
+    @Override
+    public void setHint(String hint) {
+        mHint = hint;
     }
 
     public void refreshAdapter() {
