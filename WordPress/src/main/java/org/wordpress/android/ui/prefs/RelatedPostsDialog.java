@@ -9,15 +9,12 @@ import android.view.ViewGroup;
 import org.wordpress.android.R;
 
 public class RelatedPostsDialog extends DialogFragment {
-    public RelatedPostsDialog() {
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.related_posts_dialog, container, false);
+        setStyle(STYLE_NORMAL, R.style.Calypso_SiteSettingsTheme);
+        getDialog().setTitle(R.string.site_settings_related_posts_title);
 
-        return v;
+        return inflater.inflate(R.layout.related_posts_dialog, container, false);
     }
 }

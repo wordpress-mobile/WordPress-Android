@@ -153,7 +153,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public boolean onPreferenceClick(Preference preference) {
         if (preference == mRelatedPostsPreference) {
             DialogFragment relatedPosts = new RelatedPostsDialog();
-            relatedPosts.show(getFragmentManager(), "Related Posts");
+            relatedPosts.show(getFragmentManager(), "related-posts");
             return true;
         }
 
