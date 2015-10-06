@@ -50,11 +50,12 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setAdapter(getTagAdapter());
-        getTagAdapter().refresh();
+        refresh();
     }
 
     void refresh() {
         if (hasTagAdapter()) {
+            AppLog.d(AppLog.T.READER, "reader subs > refreshing tag fragment");
             getTagAdapter().refresh();
         }
     }

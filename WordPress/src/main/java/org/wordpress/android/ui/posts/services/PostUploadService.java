@@ -43,6 +43,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -969,7 +970,14 @@ public class PostUploadService extends Service {
                 notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
                         pendingIntent);
             }
-            mNotificationManager.notify((new Random()).nextInt(), notificationBuilder.build());
+            mNotificationManager.notify(getNotificationIdForPost(post), notificationBuilder.build());
+        }
+
+        private int getNotificationIdForPost(Post post) {
+            int remotePostId = StringUtils.stringToInt(post.getRemotePostId());
+            // We can't use the local table post id here because it can change between first post (local draft) to
+            // first edit (post pulled from the server)
+            return post.getLocalTableBlogId() + remotePostId;
         }
 
         public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage,

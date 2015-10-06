@@ -652,7 +652,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (isAskingToLike) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LIKED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED);
         }
 
         // update post in array and on screen
