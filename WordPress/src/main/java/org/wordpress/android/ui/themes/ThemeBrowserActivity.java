@@ -226,6 +226,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         try {
                             mCurrentTheme = Theme.fromJSONV1_1(response);
                             if (mCurrentTheme != null) {
+                                mCurrentTheme.save();
                                 WordPress.wpDB.setCurrentTheme(siteId, mCurrentTheme.getId());
                                 mThemeBrowserFragment.setRefreshing(false);
                                 if (mThemeBrowserFragment.mCurrentThemeTextView != null) {
@@ -346,7 +347,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
-        boolean isCurrentTheme = mCurrentTheme.getId().equals(mCurrentTheme.getId());
+        boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
         ThemeWebActivity.openTheme(this, themeId, type, isCurrentTheme);
     }
 
