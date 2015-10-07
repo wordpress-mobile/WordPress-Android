@@ -47,23 +47,31 @@ class ReferrerSpamHelper {
             return;
         }
 
-        final String workingText = "Sending data...";
-        final String spamText = "Spam";
-        final String unspamText = "Remove as Spam";
-
         final PopupMenu popup = new PopupMenu(mActivityRef.get(), anchor);
         final MenuItem menuItem;
 
         if (referrerGroup.isRestCallInProgress) {
-            menuItem = popup.getMenu().add(workingText);
+            menuItem = popup.getMenu().add(
+                    referrerGroup.isMarkedAsSpam ?
+                            mActivityRef.get().getString(R.string.stats_referrers_marking_not_spam) :
+                            mActivityRef.get().getString(R.string.stats_referrers_marking_spam)
+            );
         } else {
-            menuItem = popup.getMenu().add(referrerGroup.isMarkedAsSpam ? unspamText : spamText);
+            menuItem = popup.getMenu().add(
+                    referrerGroup.isMarkedAsSpam ?
+                            mActivityRef.get().getString(R.string.stats_referrers_unspam) :
+                            mActivityRef.get().getString(R.string.stats_referrers_spam)
+            );
         }
 
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                item.setTitle(workingText);
+                item.setTitle(
+                        referrerGroup.isMarkedAsSpam ?
+                                mActivityRef.get().getString(R.string.stats_referrers_marking_not_spam) :
+                                mActivityRef.get().getString(R.string.stats_referrers_marking_spam)
+                );
                 item.setOnMenuItemClickListener(null);
 
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
@@ -76,9 +84,6 @@ class ReferrerSpamHelper {
                     restPath = String.format("/sites/%s/stats/referrers/spam/new/?domain=%s", referrerGroup.getBlogId(), getDomain(referrerGroup));
                     isMarkingAsSpamInProgress = true;
                 }
-
-                AppLog.d(AppLog.T.STATS, "path spam call "
-                        + restPath);
 
                 referrerGroup.isRestCallInProgress = true;
                 ReferrerSpamRestListener vListener = new ReferrerSpamRestListener(mActivityRef.get(), referrerGroup, isMarkingAsSpamInProgress);
@@ -127,7 +132,7 @@ class ReferrerSpamHelper {
                     }
 
                     if (TextUtils.isEmpty(errorMessage)) {
-                        errorMessage = mActivityRef.get().getString(R.string.reader_toast_err_follow_blog);
+                        errorMessage = mActivityRef.get().getString(R.string.stats_referrers_spam_generic_error);
                     }
 
                     ToastUtils.showToast(mActivityRef.get(), errorMessage, ToastUtils.Duration.LONG);
@@ -147,9 +152,8 @@ class ReferrerSpamHelper {
             }
 
             mReferrerGroup.isRestCallInProgress = false;
-            //TODO : set the correct string
             ToastUtils.showToast(mActivityRef.get(),
-                    mActivityRef.get().getString(R.string.reader_toast_err_follow_blog),
+                    mActivityRef.get().getString(R.string.stats_referrers_spam_generic_error),
                     ToastUtils.Duration.LONG);
         }
     }

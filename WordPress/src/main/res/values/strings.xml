@@ -512,6 +512,13 @@
     <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
     <string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
 
+    <!-- stats: referrers -->
+    <string name="stats_referrers_spam">Spam</string>
+    <string name="stats_referrers_unspam">Not spam</string>
+    <string name="stats_referrers_marking_spam">Marking as spam</string>
+    <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
+    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state is not changed.</string>
+
     <!-- stats: followers -->
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
     <string name="stats_followers_email_selector">Email</string>
