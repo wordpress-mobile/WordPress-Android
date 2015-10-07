@@ -20,8 +20,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static final String THEME_NAME = "theme_name";
     private static final String THEME_DOMAIN_PUBLIC = "pub";
     private static final String THEME_DOMAIN_PREMIUM = "premium";
-    private static final String THEME_URL_PREVIEW = "%s/?theme=%s/%s&hide_banners=true";
-    private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=%s/%s";
+    private static final String THEME_URL_PREVIEW = "%s/wp-admin/customize.php?theme=%s/%s";
+    private static final String THEME_URL_CUSTOMIZE = "%s/wp-admin/customize.php";
     private static final String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support";
     private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s";
 
@@ -88,7 +88,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 url = String.format(THEME_URL_SUPPORT, theme.getId());
                 break;
             case CUSTOMIZE:
-                url = String.format(THEME_URL_CUSTOMIZE, blogId, domain, theme.getId());
+                url = String.format(THEME_URL_CUSTOMIZE, homeURL);
                 break;
             default:
                 break;
