@@ -1209,54 +1209,64 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mShowNewEditor) {
-            String path = "";
-            if (imageUri.toString().contains("content:")) {
-                String[] projection = new String[]{MediaStore.Images.Media.DATA};
+            return addMediaVisualEditor(imageUri);
+        } else {
+            return addMediaLegacyEditor(imageUri);
+        }
+    }
 
-                Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
-                if (cur != null && cur.moveToFirst()) {
-                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-                    path = cur.getString(dataColumn);
-                    cur.close();
-                }
-            } else {
-                // File is not in media library
-                path = imageUri.toString().replace("file://", "");
-            }
+    private boolean addMediaVisualEditor(Uri imageUri) {
+        String path = "";
+        if (imageUri.toString().contains("content:")) {
+            String[] projection = new String[]{MediaStore.Images.Media.DATA};
 
-            if (path == null) {
-                ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
-                return false;
-            }
-
-            Blog blog = WordPress.getCurrentBlog();
-            if (!blog.getMaxImageWidth().equals("Original Size")) {
-                // If the user has selected a maximum image width for uploads, rescale the image accordingly
-                path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
-            }
-
-            MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
-            if (mediaFile != null) {
-                mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
+            Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
+            if (cur != null && cur.moveToFirst()) {
+                int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
+                path = cur.getString(dataColumn);
+                cur.close();
             }
         } else {
-            String mediaTitle;
-            if (MediaUtils.isVideo(imageUri.toString())) {
-                mediaTitle = getResources().getString(R.string.video);
-            } else {
-                mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
-            }
-
-            MediaFile mediaFile = new MediaFile();
-            mediaFile.setPostID(getPost().getLocalTablePostId());
-            mediaFile.setTitle(mediaTitle);
-            mediaFile.setFilePath(imageUri.toString());
-            if (imageUri.getEncodedPath() != null) {
-                mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
-            }
-            WordPress.wpDB.saveMediaFile(mediaFile);
-            mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+            // File is not in media library
+            path = imageUri.toString().replace("file://", "");
         }
+
+        if (path == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
+            return false;
+        }
+
+        Blog blog = WordPress.getCurrentBlog();
+        if (!blog.getMaxImageWidth().equals("Original Size")) {
+            // If the user has selected a maximum image width for uploads, rescale the image accordingly
+            path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
+        }
+
+        MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
+        if (mediaFile != null) {
+            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
+        }
+
+        return true;
+    }
+
+    private boolean addMediaLegacyEditor(Uri imageUri) {
+        String mediaTitle;
+        if (MediaUtils.isVideo(imageUri.toString())) {
+            mediaTitle = getResources().getString(R.string.video);
+        } else {
+            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
+        }
+
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setPostID(getPost().getLocalTablePostId());
+        mediaFile.setTitle(mediaTitle);
+        mediaFile.setFilePath(imageUri.toString());
+        if (imageUri.getEncodedPath() != null) {
+            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
+        }
+        WordPress.wpDB.saveMediaFile(mediaFile);
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
 
         return true;
     }
