@@ -266,6 +266,25 @@
 
             </LinearLayout>
 
+            <!--People-->
+            <RelativeLayout
+                android:id="@+id/row_people"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_people_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:contentDescription="@string/people"
+                    android:src="@drawable/my_site_icon_settings" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_people_management_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_people_icon"
+                    android:text="@string/people" />
+
+            </RelativeLayout>
+
             <!--Settings-->
             <RelativeLayout
                 android:id="@+id/row_settings"
