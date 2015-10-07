@@ -120,6 +120,7 @@ public class ReaderBlogFragment extends Fragment
 
     void refresh() {
         if (hasBlogAdapter()) {
+            AppLog.d(AppLog.T.READER, "reader subs > refreshing blog fragment " + getBlogType().name());
             getBlogAdapter().refresh();
         }
     }

@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -70,6 +71,8 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     private static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
+    private static final int NUM_TABS = 3;
+
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
     private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
@@ -82,6 +85,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         restoreState(savedInstanceState);
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+        mViewPager.setOffscreenPageLimit(NUM_TABS - 1);
         mViewPager.setAdapter(getPageAdapter());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -168,16 +172,19 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
+        AppLog.d(AppLog.T.READER, "reader subs > followed tags changed");
         getPageAdapter().refreshFollowedTagFragment();
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
+        AppLog.d(AppLog.T.READER, "reader subs > followed blogs changed");
         getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.RecommendedBlogsChanged event) {
+        AppLog.d(AppLog.T.READER, "reader subs > recommended blogs changed");
         getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
     }
 
