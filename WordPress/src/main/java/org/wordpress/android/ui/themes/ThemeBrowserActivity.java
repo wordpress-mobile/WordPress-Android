@@ -77,7 +77,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setContentView(R.layout.theme_browser_activity);
         mThemeBrowserFragment = new ThemeBrowserFragment();
         mThemeSearchFragment = new ThemeSearchFragment();
-        addFragment();
+        addBrowserFragment();
     }
 
     @Override
@@ -89,6 +89,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     protected void onResume() {
         super.onResume();
+        showCorrectToolbar();
         mIsRunning = true;
         ActivityId.trackLastActivity(ActivityId.THEMES);
 
@@ -98,6 +99,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     protected void onPause() {
         super.onPause();
+        getSupportFragmentManager().popBackStack();
         mIsRunning = false;
     }
 
@@ -273,7 +275,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
     }
 
-    public void showToolbar() {
+    private void showToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -285,21 +287,18 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         findViewById(R.id.toolbar_search).setVisibility(View.GONE);
     }
 
-    public void showSearchToolbar() {
+    private void showCorrectToolbar() {
+        if (mIsInSearchMode) {
+            showSearchToolbar();
+        }
+    }
+
+    private void showSearchToolbar() {
         Toolbar toolbarSearch = (Toolbar) findViewById(R.id.toolbar_search);
         setSupportActionBar(toolbarSearch);
         toolbarSearch.setTitle("");
         findViewById(R.id.toolbar).setVisibility(View.GONE);
         findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
-    }
-
-    private void addFragment() {
-        if (mIsInSearchMode) {
-            addBrowserFragment();
-            addSearchFragment();
-        } else {
-            addBrowserFragment();
-        }
     }
 
     private void addBrowserFragment() {
