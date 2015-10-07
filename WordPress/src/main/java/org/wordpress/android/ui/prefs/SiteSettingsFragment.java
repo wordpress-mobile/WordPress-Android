@@ -272,38 +272,17 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
     private void initPreferences() {
-        mTitlePreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_title));
-        mTaglinePreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_tagline));
-        mAddressPreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_address));
-        mPrivacyPreference =
-                (DetailListPreference) findPreference(getString(R.string.pref_key_site_visibility));
-        mLanguagePreference =
-                (DetailListPreference) findPreference(getString(R.string.pref_key_site_language));
-        mUsernamePreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_username));
-        mPasswordPreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_password));
-        mLocationPreference =
-                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_location));
-        mCategoryPreference =
-                (DetailListPreference) findPreference(getString(R.string.pref_key_site_category));
-        mFormatPreference =
-                (DetailListPreference) findPreference(getString(R.string.pref_key_site_format));
+        mTitlePreference = (EditTextPreference) getPref(R.string.pref_key_site_title);
+        mTaglinePreference = (EditTextPreference) getPref(R.string.pref_key_site_tagline);
+        mAddressPreference = (EditTextPreference) getPref(R.string.pref_key_site_address);
+        mPrivacyPreference = (DetailListPreference) getPref(R.string.pref_key_site_visibility);
+        mLanguagePreference = (DetailListPreference) getPref(R.string.pref_key_site_language);
+        mUsernamePreference = (EditTextPreference) getPref(R.string.pref_key_site_username);
+        mPasswordPreference = (EditTextPreference) getPref(R.string.pref_key_site_password);
+        mLocationPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_location);
+        mCategoryPreference = (DetailListPreference) getPref(R.string.pref_key_site_category);
+        mFormatPreference = (DetailListPreference) getPref(R.string.pref_key_site_format);
         mRelatedPostsPreference = findPreference(getString(R.string.pref_key_site_related_posts));
-
-        mTitlePreference.setOnPreferenceChangeListener(this);
-        mTaglinePreference.setOnPreferenceChangeListener(this);
-        mAddressPreference.setOnPreferenceChangeListener(this);
-        mLocationPreference.setOnPreferenceChangeListener(this);
-        mCategoryPreference.setOnPreferenceChangeListener(this);
-        mFormatPreference.setOnPreferenceChangeListener(this);
-        mPrivacyPreference.setOnPreferenceChangeListener(this);
-        mLanguagePreference.setOnPreferenceChangeListener(this);
-        mUsernamePreference.setOnPreferenceChangeListener(this);
-        mPasswordPreference.setOnPreferenceChangeListener(this);
         mRelatedPostsPreference.setOnPreferenceClickListener(this);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
@@ -476,6 +455,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             return displayLanguage + " (" + displayCountry + ")";
         }
         return displayLanguage;
+    }
+
+    /**
+     * Gets a preference and sets the {@link android.preference.Preference.OnPreferenceChangeListener}.
+     */
+    private Preference getPref(int id) {
+        Preference pref = findPreference(getString(id));
+        pref.setOnPreferenceChangeListener(this);
+        return pref;
     }
 
     /**
