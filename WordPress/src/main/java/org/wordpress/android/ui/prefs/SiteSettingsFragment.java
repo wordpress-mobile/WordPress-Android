@@ -143,19 +143,24 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (newValue == null) return false;
 
         if (preference == mTitlePreference) {
-            changeEditTextPreferenceValue(mTitlePreference, newValue.toString());
+            mSiteSettings.setTitle(newValue.toString());
+            changeEditTextPreferenceValue(mTitlePreference, mSiteSettings.getTitle());
             return true;
         } else if (preference == mTaglinePreference) {
-            changeEditTextPreferenceValue(mTaglinePreference, newValue.toString());
+            mSiteSettings.setTagline(newValue.toString());
+            changeEditTextPreferenceValue(mTaglinePreference, mSiteSettings.getTagline());
             return true;
         } else if (preference == mAddressPreference) {
-            changeEditTextPreferenceValue(mAddressPreference, newValue.toString());
+            mSiteSettings.setAddress(newValue.toString());
+            changeEditTextPreferenceValue(mAddressPreference, mSiteSettings.getAddress());
             return true;
         } else if (preference == mLanguagePreference) {
-            changeLanguageValue(newValue.toString());
+            mSiteSettings.setLanguageCode(newValue.toString());
+            changeLanguageValue(mSiteSettings.getLanguageCode());
             return true;
         } else if (preference == mPrivacyPreference) {
-            changePrivacyValue(Integer.valueOf(newValue.toString()));
+            mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
+            changePrivacyValue(mSiteSettings.getPrivacy());
             return true;
         }
 
