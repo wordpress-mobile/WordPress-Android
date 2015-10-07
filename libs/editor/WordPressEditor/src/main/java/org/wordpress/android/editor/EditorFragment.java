@@ -40,6 +40,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -717,7 +718,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                String progressString = String.format("%.1f", progress);
+                String progressString = String.format(Locale.US, "%.1f", progress);
                 mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " +
                         progressString + ");");
             }
