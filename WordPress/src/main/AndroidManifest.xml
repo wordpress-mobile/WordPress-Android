@@ -290,6 +290,10 @@
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden"/>
 
+        <activity
+            android:name="org.wordpress.android.ui.people.PeopleManagementActivity"
+            android:theme="@style/CalypsoTheme"/>
+
 		<!-- Services -->
         <service
             android:name=".ui.posts.services.PostUploadService"

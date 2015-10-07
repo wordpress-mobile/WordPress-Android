@@ -190,4 +190,7 @@
     <!--empty lists-->
     <dimen name="empty_list_button_top_margin">32dp</dimen>
 
+    <!--people management-->
+    <dimen name="people_list_row_height">84dp</dimen>
+
 </resources>
