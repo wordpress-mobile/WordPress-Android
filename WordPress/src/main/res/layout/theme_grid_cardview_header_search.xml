@@ -34,7 +34,7 @@
                 android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_search"
-                android:backgroundTint="@color/transparent"
+                android:background="?android:attr/selectableItemBackground"
                 android:layout_alignParentRight="true" />
 
         </RelativeLayout>
