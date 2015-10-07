@@ -636,6 +636,8 @@
     <string name="notifications_tab_summary">Settings for notifications that appear in the Notifications tab.</string>
     <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
+    <string name="search_sites">Search sites</string>
+    <string name="notifications_no_search_results">No sites matched \'%s\'</string>
     <string-array name="notifications_blog_settings">
         <item>Comments on my site</item>
         <item>Likes on my comments</item>

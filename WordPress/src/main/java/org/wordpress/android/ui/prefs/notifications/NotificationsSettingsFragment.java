@@ -13,10 +13,15 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -53,10 +58,15 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     // The number of notification types we support (e.g. timeline, email, mobile)
     private static final int TYPE_COUNT = 3;
 
+    private static final int SITE_SEARCH_VISIBILITY_COUNT = 15;
+
     private NotificationsSettings mNotificationsSettings;
+    private SearchView mSearchView;
+    private MenuItem mSearchMenuItem;
 
     private String mDeviceId;
     private boolean mNotificationsEnabled;
+    private int mSiteCount;
 
     private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
 
@@ -65,6 +75,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.notifications_settings);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -87,6 +98,31 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         mNotificationsEnabled = NotificationsUtils.isNotificationsEnabled(getActivity());
 
         refreshSettings();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.notifications_settings, menu);
+
+        mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+        mSearchView.setQueryHint(getString(R.string.search_sites));
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                configureBlogsSettings();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                configureBlogsSettings();
+                return true;
+            }
+        });
+
+        updateSearchMenuVisibility();
     }
 
     private void refreshSettings() {
@@ -198,15 +234,26 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     }
 
     private void configureBlogsSettings() {
+        if (!isAdded()) return;
         // Retrieve blogs (including jetpack sites) originally retrieved through FetchBlogListWPCom
         // They will have an empty (but encrypted) password
-        String args = String.format("password='%s'", WordPressDB.encryptPassword(""));
+        String args = "password='" + WordPressDB.encryptPassword("") + "'";
+
+        // Check if user has typed in a search query
+        String trimmedQuery = null;
+        if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
+            trimmedQuery = mSearchView.getQuery().toString().trim();
+            args += " AND (url LIKE '%" + trimmedQuery + "%' OR blogName LIKE '%" + trimmedQuery + "%')";
+        }
+
         List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy(args, null, 0, false);
+        mSiteCount = blogs.size();
 
         Context context = getActivity();
 
         PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_blogs));
+        blogsCategory.removeAll();
 
         for (Map blog : blogs) {
             if (context == null) return;
@@ -221,6 +268,22 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
             addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, blogId);
             blogsCategory.addPreference(prefScreen);
+        }
+
+        // Add a message in a preference if there are no matching search results
+        if (mSiteCount == 0 && !TextUtils.isEmpty(trimmedQuery)) {
+            Preference searchResultsPref = new Preference(context);
+            searchResultsPref.setSummary(String.format(getString(R.string.notifications_no_search_results), trimmedQuery));
+            blogsCategory.addPreference(searchResultsPref);
+        }
+
+        updateSearchMenuVisibility();
+    }
+
+    private void updateSearchMenuVisibility() {
+        // Show the search menu item in the toolbar if we have enough sites
+        if (mSearchMenuItem != null) {
+            mSearchMenuItem.setVisible(mSiteCount > SITE_SEARCH_VISIBILITY_COUNT);
         }
     }
 
