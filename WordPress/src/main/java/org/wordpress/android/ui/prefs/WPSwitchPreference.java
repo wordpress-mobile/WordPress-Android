@@ -57,7 +57,12 @@ public class WPSwitchPreference extends SwitchPreference implements SiteSettings
     }
 
     @Override
-    public String getHintText() {
+    public String getHint() {
         return mHint;
+    }
+
+    @Override
+    public void setHint(String hint) {
+        mHint = hint;
     }
 }

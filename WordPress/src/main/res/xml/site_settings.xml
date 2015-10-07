@@ -10,55 +10,45 @@
         android:title="@string/site_settings_general_header">
 
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
-            android:enabled="false"
             android:id="@+id/pref_site_title"
             android:key="@string/pref_key_site_title"
             android:title="@string/site_settings_title_title"
-            android:summary="@string/site_settings_title_default_summary"
             app:summaryLines="1"
             app:maxSummaryLines="2"
             app:longClickHint="@string/site_title_hint" />
 
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
-            android:enabled="false"
             android:id="@+id/pref_site_tagline"
             android:key="@string/pref_key_site_tagline"
             android:title="@string/site_settings_tagline_title"
-            android:summary="@string/site_settings_tagline_default_summary"
             app:summaryLines="1"
             app:maxSummaryLines="1"
             app:longClickHint="@string/site_tagline_hint" />
 
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
-            android:enabled="false"
             android:id="@+id/pref_site_address"
             android:key="@string/pref_key_site_address"
             android:title="@string/site_settings_address_title"
-            android:summary="@string/site_settings_address_default_summary"
             app:summaryLines="1"
             app:maxSummaryLines="1"
             app:longClickHint="@string/site_address_hint" />
 
         <org.wordpress.android.ui.prefs.DetailListPreference
-            android:enabled="false"
             android:id="@+id/pref_site_privacy"
             android:key="@string/pref_key_site_visibility"
             android:title="@string/site_settings_visibility_header"
             android:entries="@array/privacy_entries"
             android:entryValues="@array/privacy_values"
             android:defaultValue="-2"
-            android:summary="@string/site_settings_privacy_default_summary"
             app:dialogTitle="@string/site_settings_visibility_header"
             app:dialogHelpUrl="@string/privacy_settings_url"
             app:longClickHint="@string/site_privacy_hint"
             app:entryDetails="@array/privacy_details" />
 
         <org.wordpress.android.ui.prefs.DetailListPreference
-            android:enabled="false"
             android:id="@+id/pref_site_language"
             android:key="@string/pref_key_site_language"
             android:title="@string/site_settings_language_header"
-            android:summary="@string/site_settings_language_default_summary"
             android:entries="@array/available_languages"
             android:entryValues="@array/language_codes"
             app:dialogTitle="@string/site_settings_language_header"

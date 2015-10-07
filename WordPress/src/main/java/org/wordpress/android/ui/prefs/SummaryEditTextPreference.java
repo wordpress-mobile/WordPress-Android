@@ -94,6 +94,7 @@ public class SummaryEditTextPreference extends EditTextPreference
             } else {
                 summaryView.setTextColor(res.getColor(R.color.grey_lighten_10));
             }
+            summaryView.setInputType(getEditText().getInputType());
             summaryView.setTextSize(14);
             summaryView.setTypeface(font);
             summaryView.setEllipsize(TextUtils.TruncateAt.END);
@@ -126,7 +127,12 @@ public class SummaryEditTextPreference extends EditTextPreference
     }
 
     @Override
-    public String getHintText() {
+    public String getHint() {
         return mHint;
+    }
+
+    @Override
+    public void setHint(String hint) {
+        mHint = hint;
     }
 }
