@@ -91,7 +91,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onDetailsSelected(themeId);
+                mCallback.onPreviewSelected(themeId);
             }
         });
     }
