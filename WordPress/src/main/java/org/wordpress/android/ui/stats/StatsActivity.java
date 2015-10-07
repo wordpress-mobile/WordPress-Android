@@ -78,7 +78,7 @@ public class StatsActivity extends AppCompatActivity
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
-    public static final String ARG_DESIDERED_TIMEFRAME = "ARG_DESIDERED_TIMEFRAME";
+    public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
 
     public enum StatsLaunchedFrom {
         STATS_WIDGET,
@@ -164,8 +164,8 @@ public class StatsActivity extends AppCompatActivity
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
-            } else if (getIntent().hasExtra(ARG_DESIDERED_TIMEFRAME)) {
-                mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(ARG_DESIDERED_TIMEFRAME);
+            } else if (getIntent().hasExtra(ARG_DESIRED_TIMEFRAME)) {
+                mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(ARG_DESIRED_TIMEFRAME);
             } else {
                 // Read the value from app preferences here. Default to 0 - Insights
                 mCurrentTimeframe = AppPrefs.getStatsTimeframe();
