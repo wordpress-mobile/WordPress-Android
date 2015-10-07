@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -44,8 +45,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public static final int THEME_FETCH_MAX = 100;
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
-    public static final String BLOG_ID = "blog_id";
-    public static final String THEME_WEB_MODE = "theme_web_mode";
+    private static final String IS_IN_SEARCH_MODE = "is_in_search_mode";
 
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
@@ -102,8 +102,15 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mIsInSearchMode = savedInstanceState.getBoolean(IS_IN_SEARCH_MODE);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean(IS_IN_SEARCH_MODE, mIsInSearchMode);
     }
 
     @Override
