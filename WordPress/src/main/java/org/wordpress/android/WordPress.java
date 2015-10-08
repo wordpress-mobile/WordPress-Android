@@ -539,7 +539,7 @@ public class WordPress extends Application {
             super.onPreExecute();
             Context context = mWeakContext.get();
             if (context != null) {
-                mProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out));
+                mProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out), false);
             }
         }
 
