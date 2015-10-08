@@ -1817,24 +1817,24 @@ public class WordPressDB {
     }
 
     public Cursor getThemesAll(String blogId) {
-        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE};
-        String[] selection = {blogId};
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
+        String[] selection = {blogId, String.valueOf(0)};
 
-        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=?", selection, null, null, null);
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=?", selection, null, null, null);
     }
 
     public Cursor getThemesFree(String blogId) {
-        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE};
-        String[] selection = {blogId, ""};
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
+        String[] selection = {blogId, "", String.valueOf(0)};
 
-        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "=?", selection, null, null, null);
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "=? and " + Theme.IS_CURRENT + "=?", selection, null, null, null);
     }
 
     public Cursor getThemesPremium(String blogId) {
-        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE};
-        String[] selection = {blogId, ""};
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
+        String[] selection = {blogId, "", String.valueOf(0)};
 
-        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "!=?", selection, null, null, null);
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "!=? and " + Theme.IS_CURRENT + "=?", selection, null, null, null);
     }
 
     public String getCurrentThemeId(String blogId) {

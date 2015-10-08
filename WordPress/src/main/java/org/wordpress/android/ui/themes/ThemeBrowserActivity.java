@@ -234,6 +234,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         try {
                             mCurrentTheme = Theme.fromJSONV1_1(response);
                             if (mCurrentTheme != null) {
+                                mCurrentTheme.setIsCurrent(true);
                                 mCurrentTheme.save();
                                 WordPress.wpDB.setCurrentTheme(siteId, mCurrentTheme.getId());
                                 mThemeBrowserFragment.setRefreshing(false);
