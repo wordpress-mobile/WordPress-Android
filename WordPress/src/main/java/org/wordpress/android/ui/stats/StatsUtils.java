@@ -6,6 +6,7 @@ import android.content.Context;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -356,7 +357,22 @@ public class StatsUtils {
         if (blog.isDotcomFlag()) {
             return String.valueOf(blog.getRemoteBlogId());
         } else {
-            return blog.getApi_blogid();
+            String remoteID =  blog.getApi_blogid();
+            // Self-hosted blogs edge cases.
+            if (StringUtils.isEmpty(remoteID)) {
+               return null;
+            }
+            try {
+                int parsedBlogID = Integer.parseInt(remoteID);
+                // remote blogID is always > 1 for Jetpack blogs
+                if (parsedBlogID < 1) {
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                AppLog.e(T.STATS, "The remote blog ID stored in options isn't valid: " + remoteID);
+                return null;
+            }
+            return remoteID;
         }
     }
 
