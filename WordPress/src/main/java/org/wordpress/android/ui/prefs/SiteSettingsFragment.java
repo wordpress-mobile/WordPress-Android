@@ -48,12 +48,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                    SiteSettingsInterface.SiteSettingsListener {
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
-    public interface HasHint {
-        boolean hasHint();
-        String getHint();
-        void setHint(String hint);
-    }
-
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
 
@@ -222,8 +216,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (obj instanceof View.OnLongClickListener) {
                 View.OnLongClickListener longListener = (View.OnLongClickListener) obj;
                 return longListener.onLongClick(view);
-            } else if (obj instanceof HasHint && ((HasHint) obj).hasHint()) {
-                ToastUtils.showToast(getActivity(), ((HasHint)obj).getHint(), ToastUtils.Duration.SHORT);
+            } else if (obj instanceof PreferenceHint) {
+                PreferenceHint hintObj = (PreferenceHint) obj;
+                if (hintObj.hasHint()) {
+                    ToastUtils.showToast(getActivity(), hintObj.getHint(), ToastUtils.Duration.SHORT);
+                }
                 return true;
             }
         }

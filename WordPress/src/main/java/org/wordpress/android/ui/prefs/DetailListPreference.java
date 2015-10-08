@@ -28,7 +28,7 @@ import org.wordpress.android.widgets.TypefaceCache;
  */
 
 public class DetailListPreference extends ListPreference
-        implements SiteSettingsFragment.HasHint {
+        implements PreferenceHint {
     private DetailListAdapter mListAdapter;
     private String[] mDetails;
     private int mStartingIndex;
