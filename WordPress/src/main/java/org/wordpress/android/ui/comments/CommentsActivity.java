@@ -243,7 +243,7 @@ public class CommentsActivity extends AppCompatActivity
                     getListFragment().setCommentIsModerating(comment.commentID, false);
 
                     if (succeeded) {
-                        getListFragment().updateComments(false);
+                        reloadCommentList();
                     } else {
                         ToastUtils.showToast(CommentsActivity.this,
                                 R.string.error_moderate_comment,
