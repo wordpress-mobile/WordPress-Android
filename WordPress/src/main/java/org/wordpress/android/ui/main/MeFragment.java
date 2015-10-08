@@ -29,6 +29,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.lang.ref.WeakReference;
 
 public class MeFragment extends Fragment {
+    private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
 
     private ViewGroup mAvatarFrame;
     private WPNetworkImageView mAvatarImageView;
@@ -37,6 +38,7 @@ public class MeFragment extends Fragment {
     private TextView mLoginLogoutTextView;
     private View mNotificationsView;
     private View mNotificationsDividerView;
+    private ProgressDialog mDisconnectProgressDialog;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -90,10 +92,32 @@ public class MeFragment extends Fragment {
             }
         });
 
+        if (savedInstanceState != null && savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
+            showDisconnectDialog(getActivity());
+        }
+
         return rootView;
     }
 
-    /*
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mDisconnectProgressDialog != null) {
+            outState.putBoolean(IS_DISCONNECTING, true);
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mDisconnectProgressDialog != null) {
+            mDisconnectProgressDialog.dismiss();
+            mDisconnectProgressDialog = null;
+        }
+        super.onDestroy();
+    }
+
+    /**
      * adds a circular drop shadow to the avatar's parent view (Lollipop+ only)
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -165,8 +189,11 @@ public class MeFragment extends Fragment {
         (new SignOutWordPressComAsync(getActivity())).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void showDisconnectDialog(Context context) {
+        mDisconnectProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out), false);
+    }
+
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
-        ProgressDialog mProgressDialog;
         WeakReference<Context> mWeakContext;
 
         public SignOutWordPressComAsync(Context context) {
@@ -178,7 +205,7 @@ public class MeFragment extends Fragment {
             super.onPreExecute();
             Context context = mWeakContext.get();
             if (context != null) {
-                mProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out), false);
+                showDisconnectDialog(context);
             }
         }
 
@@ -194,9 +221,10 @@ public class MeFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (mProgressDialog != null) {
-                mProgressDialog.dismiss();
+            if (mDisconnectProgressDialog != null && mDisconnectProgressDialog.isShowing()) {
+                mDisconnectProgressDialog.dismiss();
             }
+            mDisconnectProgressDialog = null;
         }
     }
 }
