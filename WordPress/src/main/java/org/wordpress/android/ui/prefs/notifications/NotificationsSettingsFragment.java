@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -188,7 +189,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                 category.addPreference(disabledMessage);
             }
 
-            if (category.getPreference(TYPE_COUNT - 1) != null) {
+            if (category.getPreferenceCount() >= TYPE_COUNT &&
+                    category.getPreference(TYPE_COUNT - 1) != null) {
                 category.getPreference(TYPE_COUNT - 1).setEnabled(mNotificationsEnabled);
             }
         }
@@ -266,15 +268,19 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         emailPreference.setSummary(R.string.notifications_email_summary);
         rootCategory.addPreference(emailPreference);
 
-        NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
-                context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings, mOnSettingsChangedListener
-        );
-        devicePreference.setIcon(R.drawable.ic_phone_grey);
-        devicePreference.setTitle(R.string.app_notifications);
-        devicePreference.setDialogTitle(R.string.app_notifications);
-        devicePreference.setSummary(R.string.notifications_push_summary);
-        devicePreference.setEnabled(mNotificationsEnabled);
-        rootCategory.addPreference(devicePreference);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        String deviceID = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_SERVER_ID, null);
+        if (!TextUtils.isEmpty(deviceID)) {
+            NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
+                    context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings, mOnSettingsChangedListener
+            );
+            devicePreference.setIcon(R.drawable.ic_phone_grey);
+            devicePreference.setTitle(R.string.app_notifications);
+            devicePreference.setDialogTitle(R.string.app_notifications);
+            devicePreference.setSummary(R.string.notifications_push_summary);
+            devicePreference.setEnabled(mNotificationsEnabled);
+            rootCategory.addPreference(devicePreference);
+        }
 
         mTypePreferenceCategories.add(rootCategory);
     }

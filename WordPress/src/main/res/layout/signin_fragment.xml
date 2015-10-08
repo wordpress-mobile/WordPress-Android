@@ -97,6 +97,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/username_email"
                     android:inputType="textEmailAddress"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/nux_password"
                     app:persistenceEnabled="true" />
 
                 <ImageView
