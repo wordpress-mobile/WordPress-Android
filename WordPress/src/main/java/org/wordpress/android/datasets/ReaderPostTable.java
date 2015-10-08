@@ -133,12 +133,13 @@ public class ReaderPostTable {
         db.execSQL("CREATE INDEX idx_posts_timestamp ON tbl_posts(timestamp)");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
-                + "   post_id     INTEGER DEFAULT 0,"
-                + "   blog_id     INTEGER DEFAULT 0,"
-                + "   feed_id     INTEGER DEFAULT 0,"
-                + "   pseudo_id   TEXT NOT NULL,"
-                + "   tag_name    TEXT NOT NULL COLLATE NOCASE,"
-                + "   tag_type    INTEGER DEFAULT 0,"
+                + "   post_id           INTEGER DEFAULT 0,"
+                + "   blog_id           INTEGER DEFAULT 0,"
+                + "   feed_id           INTEGER DEFAULT 0,"
+                + "   pseudo_id         TEXT NOT NULL,"
+                + "   tag_name          TEXT NOT NULL COLLATE NOCASE,"
+                + "   tag_type          INTEGER DEFAULT 0,"
+                + "   has_gap_marker    INTEGER DEFAULT 0,"
                 + "   PRIMARY KEY (post_id, blog_id, tag_name, tag_type)"
                 + ")");
     }
@@ -174,10 +175,9 @@ public class ReaderPostTable {
     }
 
     /*
-     * purge excess posts in the passed tag - note we only keep as many posts as are returned
-     * by a single request
+     * purge excess posts in the passed tag
      */
-    private static final int MAX_POSTS_PER_TAG = ReaderConstants.READER_MAX_POSTS_TO_REQUEST;
+    private static final int MAX_POSTS_PER_TAG = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
     private static int purgePostsForTag(SQLiteDatabase db, ReaderTag tag) {
         int numPosts = getNumPostsWithTag(tag);
         if (numPosts <= MAX_POSTS_PER_TAG) {
@@ -189,10 +189,10 @@ public class ReaderPostTable {
         String where = "pseudo_id IN ("
                 + "  SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
                 + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
-                + "  AND tbl_post_tags.tag_name=?1"
-                + "  AND tbl_post_tags.tag_type=?2"
+                + "  AND tbl_post_tags.tag_name=?"
+                + "  AND tbl_post_tags.tag_type=?"
                 + "  ORDER BY tbl_posts.timestamp"
-                + "  LIMIT ?3"
+                + "  LIMIT ?"
                 + ")";
         int numDeleted = db.delete("tbl_post_tags", where, args);
         AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
@@ -289,6 +289,18 @@ public class ReaderPostTable {
     }
 
     /*
+     * returns true if any posts in the passed list exist in this list
+     */
+    public static boolean hasOverlap(ReaderPostList posts) {
+        for (ReaderPost post: posts) {
+            if (postExists(post.blogId, post.postId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
      * returns the #comments known to exist for this post (ie: #comments the server says this post has), which
      * may differ from ReaderCommentTable.getNumCommentsForPost (which returns # local comments for this post)
      */
@@ -380,20 +392,6 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns the id of the newest post with the passed tag
-     */
-    public static long getNewestPostIdWithTag(final ReaderTag tag) {
-        if (tag == null) {
-            return 0;
-        }
-        String sql = "SELECT tbl_posts.post_id FROM tbl_posts, tbl_post_tags"
-                  + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
-                  + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
-                  + " ORDER BY published DESC LIMIT 1";
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
-    }
-    /*
      * returns the iso8601 published date of the oldest post with the passed tag
      */
     public static String getOldestPubDateWithTag(final ReaderTag tag) {
@@ -424,6 +422,90 @@ public class ReaderPostTable {
                   + " WHERE feed_id = ?"
                   + " ORDER BY published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
+    }
+
+    public static void removeGapMarkerForTag(final ReaderTag tag) {
+        if (tag == null) return;
+
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String sql = "UPDATE tbl_post_tags SET has_gap_marker=0 WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
+        ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+
+    /*
+     * returns the blogId/postId of the post with the passed tag that has a gap marker, or null if none exists
+     */
+    public static ReaderBlogIdPostId getGapMarkerForTag(final ReaderTag tag) {
+        if (tag == null) {
+            return null;
+        }
+
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String sql = "SELECT blog_id, post_id FROM tbl_post_tags WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            if (cursor.moveToFirst()) {
+                long blogId = cursor.getLong(0);
+                long postId = cursor.getLong(1);
+                return new ReaderBlogIdPostId(blogId, postId);
+            } else {
+                return null;
+            }
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+    public static void setGapMarkerForTag(long blogId, long postId, ReaderTag tag) {
+        if (tag == null) return;
+
+        String[] args = {
+                Long.toString(blogId),
+                Long.toString(postId),
+                tag.getTagName(),
+                Integer.toString(tag.tagType.toInt())
+        };
+        String sql = "UPDATE tbl_post_tags SET has_gap_marker=1 WHERE blog_id=? AND post_id=? AND tag_name=? AND tag_type=?";
+        ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+
+    public static String getGapMarkerPubDateForTag(ReaderTag tag) {
+        ReaderBlogIdPostId ids = getGapMarkerForTag(tag);
+        if (ids == null) {
+            return null;
+        }
+        String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
+        String sql = "SELECT published FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    private static long getGapMarkerTimestampForTag(ReaderTag tag) {
+        ReaderBlogIdPostId ids = getGapMarkerForTag(tag);
+        if (ids == null) {
+            return 0;
+        }
+
+        String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
+        String sql = "SELECT timestamp FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    /*
+     * delete posts with the passed tag that are older than one with the gap marker for
+     * this tag - note this may leave some stray posts in tbl_posts, but these will
+     * be cleaned up by the next purge
+     */
+    public static void deletePostsOlderThanGapMarkerForTag(ReaderTag tag) {
+        long timestamp = getGapMarkerTimestampForTag(tag);
+        if (timestamp == 0) return;
+
+        String[] args = {Long.toString(timestamp), tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String where = "pseudo_id IN (SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
+                + " WHERE tbl_posts.timestamp < ?"
+                + " AND tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
+                + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?)";
+        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags", where, args);
+        AppLog.d(AppLog.T.READER, "removed " + numDeleted + " posts older than gap marker");
     }
 
     public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
@@ -514,12 +596,12 @@ public class ReaderPostTable {
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
                 stmtPosts.bindLong  (2,  post.blogId);
-                stmtPosts.bindLong  (3,  post.feedId);
+                stmtPosts.bindLong(3,  post.feedId);
                 stmtPosts.bindString(4, post.getPseudoId());
-                stmtPosts.bindString(5,  post.getAuthorName());
-                stmtPosts.bindLong  (6, post.authorId);
+                stmtPosts.bindString(5, post.getAuthorName());
+                stmtPosts.bindLong(6, post.authorId);
                 stmtPosts.bindString(7, post.getTitle());
-                stmtPosts.bindString(8,  maxText(post));
+                stmtPosts.bindString(8, maxText(post));
                 stmtPosts.bindString(9,  post.getExcerpt());
                 stmtPosts.bindString(10, post.getUrl());
                 stmtPosts.bindString(11, post.getShortUrl());
@@ -528,7 +610,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(14, post.getFeaturedImage());
                 stmtPosts.bindString(15, post.getFeaturedVideo());
                 stmtPosts.bindString(16, post.getPostAvatar());
-                stmtPosts.bindLong  (17, post.timestamp);
+                stmtPosts.bindLong(17, post.timestamp);
                 stmtPosts.bindString(18, post.getPublished());
                 stmtPosts.bindLong  (19, post.numReplies);
                 stmtPosts.bindLong  (20, post.numLikes);
@@ -538,7 +620,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isExternal));
                 stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isPrivate));
                 stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isJetpack));
+                stmtPosts.bindLong(27, SqlUtils.boolToSql(post.isJetpack));
                 stmtPosts.bindString(28, post.getPrimaryTag());
                 stmtPosts.bindString(29, post.getSecondaryTag());
                 stmtPosts.bindString(30, post.getAttachmentsJson());

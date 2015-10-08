@@ -43,6 +43,7 @@ import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdat
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -494,7 +495,7 @@ public class WordPress extends Application {
         // broadcast an event: wpcom user signed out
         EventBus.getDefault().post(new UserSignedOutWordPressCom());
 
-        // broadcast an event only if the user is completly signed out
+        // broadcast an event only if the user is completely signed out
         if (!AccountHelper.isSignedIn()) {
             EventBus.getDefault().post(new UserSignedOutCompletely());
         }
@@ -586,6 +587,7 @@ public class WordPress extends Application {
 
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
+        StatsWidgetProvider.updateWidgetsOnLogout(context);
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();

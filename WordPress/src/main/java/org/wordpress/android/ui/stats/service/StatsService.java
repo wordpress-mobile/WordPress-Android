@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.service;
 
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -13,18 +15,24 @@ import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
+import org.wordpress.android.ui.stats.models.VisitModel;
+import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -235,6 +243,7 @@ public class StatsService extends Service {
                     mResponseObjectModel = StatsUtils.parseResponse(sectionToUpdate, blogId, response);
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(sectionToUpdate, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, mResponseObjectModel));
+                    updateWidgetsUI(blogId, sectionToUpdate, timeframe, date, pageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(null);
                     return;
                 } catch (JSONException e) {
@@ -361,6 +370,55 @@ public class StatsService extends Service {
         return true;
     }
 
+    // Call an updates on the installed widgets if the blog is the primary, the endpoint is Visits
+    // the timeframe is DAY or INSIGHTS, and the date = TODAY
+    private void updateWidgetsUI(String blogId, final StatsEndpointsEnum endpointName,
+                                 StatsTimeframe timeframe, String date, int pageRequested,
+                                 Serializable responseObjectModel) {
+        if (pageRequested != -1) {
+            return;
+        }
+        if (endpointName != StatsEndpointsEnum.VISITS) {
+            return;
+        }
+        if (timeframe != StatsTimeframe.DAY && timeframe != StatsTimeframe.INSIGHTS) {
+            return;
+        }
+
+        int parsedBlogID = Integer.parseInt(blogId);
+        int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
+        // make sure the data is for the current date
+        if (!date.equals(StatsUtils.getCurrentDateTZ(localTableBlogId))) {
+            return;
+        }
+
+        if (responseObjectModel == null) {
+            // TODO What we want to do here?
+            return;
+        }
+
+        if (!StatsWidgetProvider.isBlogDisplayedInWidget(parsedBlogID)) {
+            AppLog.d(AppLog.T.STATS, "The blog with remoteID " + parsedBlogID + " is NOT displayed in any widget. Stats Service doesn't call an update of the widget.");
+            return;
+        }
+
+        if (responseObjectModel instanceof VisitsModel) {
+            VisitsModel visitsModel = (VisitsModel) responseObjectModel;
+            if (visitsModel.getVisits() == null || visitsModel.getVisits().size() == 0) {
+                return;
+            }
+            List<VisitModel> visits = visitsModel.getVisits();
+            VisitModel data = visits.get(visits.size() - 1);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, data);
+        } else if (responseObjectModel instanceof VolleyError) {
+            VolleyError error = (VolleyError) responseObjectModel;
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, error);
+        } else if (responseObjectModel instanceof StatsError) {
+            StatsError statsError = (StatsError) responseObjectModel;
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, statsError);
+        }
+    }
+
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         final String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
@@ -403,6 +461,7 @@ public class StatsService extends Service {
                     }
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
+                    updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
             });
@@ -419,17 +478,9 @@ public class StatsService extends Service {
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
                     if (volleyError instanceof com.android.volley.AuthFailureError) {
-                        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
-                        // the current wpcom account. We need to load the correct localID here, otherwise options are
-                        // blank
-                        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
-                                Integer.parseInt(mRequestBlogId),
-                                null);
-                        if (localId == 0) {
-                            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                                    Integer.parseInt(mRequestBlogId)
-                            );
-                        }
+                        int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(
+                                Integer.parseInt(mRequestBlogId)
+                        );
                         Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
                         if (blog != null && blog.isJetpackPowered()) {
                             // It's a kind of edge case, but the Jetpack site could have REST Disabled
@@ -442,6 +493,7 @@ public class StatsService extends Service {
                     mResponseObjectModel = volleyError;
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
+                    updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
             });
