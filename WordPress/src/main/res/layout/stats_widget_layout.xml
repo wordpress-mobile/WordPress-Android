@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/stats_widget_outer_container"
-    android:background="@drawable/stats_white_background"
+    android:background="@drawable/stats_widget_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:showIn="@layout/stats_widget_info">
 
-    <TextView
-        android:id="@+id/blog_title"
-        style="@style/StatsModuleTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_margin="4dip"
-        android:text="@string/stats_widget_name" >
-    </TextView>
+        android:background="@drawable/stats_widget_header_background"
+        android:gravity="start|center_vertical"
+        android:padding="2dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/stats_widget_icon_size"
+            android:layout_height="@dimen/stats_widget_icon_size"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:id="@+id/blog_title"
+            style="@style/StatsModuleTitle"
+            android:textSize="@dimen/stats_widget_text_sz_small"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:text="@string/stats_widget_name" >
+        </TextView>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,7 +72,7 @@
 
                 <TextView
                     android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/text_sz_extra_small"
+                    android:textSize="@dimen/stats_widget_text_sz_extra_small"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:text="@string/stats_views"
@@ -66,7 +83,7 @@
             <TextView
                 android:id="@+id/stats_widget_views"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/stats_widget_text_sz_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -101,7 +118,7 @@
 
                 <TextView
                     android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/text_sz_extra_small"
+                    android:textSize="@dimen/stats_widget_text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_visitors"
                     android:ellipsize="end"
@@ -112,7 +129,7 @@
             <TextView
                 android:id="@+id/stats_widget_visitors"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/stats_widget_text_sz_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -147,7 +164,7 @@
 
                 <TextView
                     android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/text_sz_extra_small"
+                    android:textSize="@dimen/stats_widget_text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_likes"
                     android:ellipsize="end"
@@ -158,7 +175,7 @@
             <TextView
                 android:id="@+id/stats_widget_likes"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/stats_widget_text_sz_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -193,7 +210,7 @@
 
                 <TextView
                     android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/text_sz_extra_small"
+                    android:textSize="@dimen/stats_widget_text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_comments"
                     android:ellipsize="end"
@@ -204,7 +221,7 @@
             <TextView
                 android:id="@+id/stats_widget_comments"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/stats_widget_text_sz_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -224,7 +241,7 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/stats_widget_error_text"
-            android:textSize="@dimen/text_sz_small"
+            android:textSize="@dimen/stats_widget_text_sz_small"
             android:textColor="@color/grey_darken_20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

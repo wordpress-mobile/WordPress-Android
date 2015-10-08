@@ -49,8 +49,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             Blog blog = WordPress.getBlog(localId);
             String name;
             if (blog != null) {
-                name =  StringEscapeUtils.unescapeHtml(blog.getNameOrHostUrl()) + " " +
-                        context.getString(R.string.stats_insights_today);
+                name = context.getString(R.string.stats_widget_name_for_blog);
+                name = String.format(name, StringEscapeUtils.unescapeHtml(blog.getNameOrHostUrl()));
             } else {
                 name = context.getString(R.string.stats_widget_name);
             }
@@ -79,8 +79,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-        String name =  StringEscapeUtils.unescapeHtml(blog.getNameOrHostUrl()) + " " +
-                context.getString(R.string.stats_insights_today);
+        String name = context.getString(R.string.stats_widget_name_for_blog);
+        name = String.format(name, StringEscapeUtils.unescapeHtml(blog.getNameOrHostUrl()));
 
         for (int widgetId : allWidgets) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);

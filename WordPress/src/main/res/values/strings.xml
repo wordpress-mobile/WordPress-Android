@@ -437,6 +437,7 @@
 
     <!-- stats: Widget labels -->
     <string name="stats_widget_name">WordPress Today\'s Stats</string>
+    <string name="stats_widget_name_for_blog">Today\'s Stats for %1$s</string>
     <string name="stats_widget_loading_data">Loading data…</string>
     <string name="stats_widget_error_generic">Stats couldn\'t be loaded</string>
     <string name="stats_widget_error_no_account">Please login into WordPress</string>
