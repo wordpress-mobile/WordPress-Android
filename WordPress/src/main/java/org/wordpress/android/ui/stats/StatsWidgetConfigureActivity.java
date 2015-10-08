@@ -20,7 +20,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
@@ -28,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 public class StatsWidgetConfigureActivity extends AppCompatActivity
-        implements SitePickerAdapter.OnSiteClickListener {
+        implements StatsWidgetConfigureAdapter.OnSiteClickListener {
 
-    private SitePickerAdapter mAdapter;
+    private StatsWidgetConfigureAdapter mAdapter;
     private RecyclerView mRecycleView;
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
@@ -80,12 +79,8 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
             return;
         }
 
-        setContentView(R.layout.site_picker_activity);
-
-        final boolean isInSearchMode = false;
-        String lastSearch = "";
-        setNewAdapter(lastSearch, isInSearchMode);
-
+        setContentView(R.layout.stats_widget_config_activity);
+        setNewAdapter();
         setupActionBar();
         setupRecycleView();
     }
@@ -116,20 +111,22 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
     }
 
-    private SitePickerAdapter getAdapter() {
+    private StatsWidgetConfigureAdapter getAdapter() {
         if (mAdapter == null) {
-            setNewAdapter("", false);
+            setNewAdapter();
         }
         return mAdapter;
     }
 
-    private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
-        mAdapter = new SitePickerAdapter(this, 0, lastSearch, isInSearchMode);
+    private void setNewAdapter() {
+        Blog blog = WordPress.getCurrentBlog();
+        int localBlogId = (blog != null ? blog.getLocalTableBlogId() : 0);
+        mAdapter = new StatsWidgetConfigureAdapter(this, localBlogId);
         mAdapter.setOnSiteClickListener(this);
     }
 
     @Override
-    public void onSiteClick(SitePickerAdapter.SiteRecord site) {
+    public void onSiteClick(StatsWidgetConfigureAdapter.SiteRecord site) {
         addWidgetToScreenAndFinish(site.localId);
     }
 
