@@ -24,7 +24,7 @@
         <TextView
             android:id="@+id/blog_title"
             style="@style/StatsModuleTitle"
-            android:textSize="@dimen/stats_widget_text_sz_small"
+            android:textSize="@dimen/text_sz_medium"
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +42,8 @@
 
     <LinearLayout
         android:id="@+id/stats_widget_values_container"
-        android:layout_height="@dimen/stats_widget_main_container_size"
+        android:minHeight="@dimen/stats_widget_main_container_size"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="horizontal">
 
@@ -72,7 +73,7 @@
 
                 <TextView
                     android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/stats_widget_text_sz_extra_small"
+                    android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:text="@string/stats_views"
@@ -83,7 +84,7 @@
             <TextView
                 android:id="@+id/stats_widget_views"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/stats_widget_text_sz_small"
+                android:textSize="@dimen/text_sz_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -118,7 +119,7 @@
 
                 <TextView
                     android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/stats_widget_text_sz_extra_small"
+                    android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_visitors"
                     android:ellipsize="end"
@@ -129,7 +130,7 @@
             <TextView
                 android:id="@+id/stats_widget_visitors"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/stats_widget_text_sz_small"
+                android:textSize="@dimen/text_sz_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -164,7 +165,7 @@
 
                 <TextView
                     android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/stats_widget_text_sz_extra_small"
+                    android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_likes"
                     android:ellipsize="end"
@@ -175,7 +176,7 @@
             <TextView
                 android:id="@+id/stats_widget_likes"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/stats_widget_text_sz_small"
+                android:textSize="@dimen/text_sz_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -210,7 +211,7 @@
 
                 <TextView
                     android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/stats_widget_text_sz_extra_small"
+                    android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_comments"
                     android:ellipsize="end"
@@ -221,7 +222,7 @@
             <TextView
                 android:id="@+id/stats_widget_comments"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/stats_widget_text_sz_small"
+                android:textSize="@dimen/text_sz_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -237,11 +238,12 @@
         android:id="@+id/stats_widget_error_container"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/stats_widget_main_container_size"
+        android:minHeight="@dimen/stats_widget_main_container_size"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/stats_widget_error_text"
-            android:textSize="@dimen/stats_widget_text_sz_small"
+            android:textSize="@dimen/text_sz_small"
             android:textColor="@color/grey_darken_20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
