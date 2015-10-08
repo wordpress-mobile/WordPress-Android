@@ -108,7 +108,7 @@
             android:entryValues="@array/post_formats_array"
             app:longClickHint="@string/site_format_hint" />
 
-        <Preference
+        <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_related_posts"
             android:key="@string/pref_key_site_related_posts"
             android:title="@string/site_settings_related_posts_title"
