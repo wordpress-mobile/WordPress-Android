@@ -3,8 +3,11 @@ package org.wordpress.android.ui.main;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Outline;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +25,8 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.lang.ref.WeakReference;
 
 public class MeFragment extends Fragment {
 
@@ -157,6 +162,41 @@ public class MeFragment extends Fragment {
     private void signOutWordPressCom() {
         // note that signing out sends a CoreEvents.UserSignedOutWordPressCom EventBus event,
         // which will cause the main activity to recreate this fragment
-        WordPress.signOutWordPressComAsyncWithProgressBar(getActivity());
+        (new SignOutWordPressComAsync(getActivity())).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
+        ProgressDialog mProgressDialog;
+        WeakReference<Context> mWeakContext;
+
+        public SignOutWordPressComAsync(Context context) {
+            mWeakContext = new WeakReference<Context>(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Context context = mWeakContext.get();
+            if (context != null) {
+                mProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out), false);
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Context context = mWeakContext.get();
+            if (context != null) {
+                WordPress.WordPressComSignOut(context);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
+            }
+        }
     }
 }
