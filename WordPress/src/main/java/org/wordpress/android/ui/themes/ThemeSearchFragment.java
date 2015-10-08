@@ -88,7 +88,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);
         mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
-
     }
 
     private void clearFocus(View view) {
