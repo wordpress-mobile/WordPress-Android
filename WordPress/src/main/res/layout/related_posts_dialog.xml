@@ -14,7 +14,7 @@
     android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPSwitch
-        android:id="@+id/toggleRelatedPostsSwitch"
+        android:id="@+id/toggle_related_posts_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/related_posts_switch_title"
@@ -34,14 +34,14 @@
         app:fontVariation="normal" />
 
     <CheckBox
-        android:id="@+id/showHeaderCheckBox"
+        android:id="@+id/show_header_checkbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="@string/related_posts_show_header_title" />
 
     <CheckBox
-        android:id="@+id/showImagesCheckBox"
+        android:id="@+id/show_images_checkbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -52,26 +52,28 @@
         android:layout_height="1dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="4dp"
-        android:background="@color/grey_lighten_20" />
+        android:background="@color/related_posts_divider" />
 
     <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/preview_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="@string/preview"
         android:textStyle="italic"
-        android:textColor="@color/grey_darken_10"
-        android:textSize="@dimen/text_sz_small"
+        android:textColor="@color/related_posts_preview_header"
+        android:textSize="@dimen/text_sz_related_post_small"
         app:fontFamily="openSans"
         app:fontVariation="normal" />
 
     <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/related_posts_list_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/related_posts_preview_header"
         android:textStyle="bold"
         android:textSize="@dimen/text_sz_related_post_small"
-        android:textColor="@color/grey_darken_20"
+        android:textColor="@color/related_posts_list_header"
         app:fontFamily="openSans"
         app:fontVariation="light" />
 
