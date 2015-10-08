@@ -243,7 +243,7 @@ public class CommentsActivity extends AppCompatActivity
                     getListFragment().setCommentIsModerating(comment.commentID, false);
 
                     if (succeeded) {
-                        getListFragment().updateComments(false);
+                        reloadCommentList();
                     } else {
                         ToastUtils.showToast(CommentsActivity.this,
                                 R.string.error_moderate_comment,
@@ -308,9 +308,15 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
-        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL
-                && changeType == CommentActions.ChangeType.EDITED) {
-            reloadCommentList();
+        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
+            switch (changeType) {
+                case EDITED:
+                    reloadCommentList();
+                    break;
+                case REPLIED:
+                    updateCommentList();
+                    break;
+            }
         }
     }
 
