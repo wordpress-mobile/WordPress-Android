@@ -1065,5 +1065,6 @@
     <string name="theme_preview_url"><![CDATA[https://wordpress.com/customize/%1$s?nomuse=1&theme=pub/%2$s]]></string>
     <string name="theme_https_prefix">https://</string>
     <string name="theme_web_activity">Theme Web Activity</string>
+    <string name="no_themes">No themes</string>
 
 </resources>
