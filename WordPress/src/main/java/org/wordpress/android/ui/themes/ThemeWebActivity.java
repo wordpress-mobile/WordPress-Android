@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.themes;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
@@ -33,29 +35,29 @@ public class ThemeWebActivity extends WPWebViewActivity {
         CUSTOMIZE,
     }
 
-    public static void openTheme(Context context, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
+    public static void openTheme(Activity activity, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
-        String url = getUrl(context, currentTheme, blogId, type, currentTheme.isPremium());
+        String url = getUrl(activity, currentTheme, type, currentTheme.isPremium());
 
-        openWPCOMURL(context, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
+        openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
     }
 
-    private static void openWPCOMURL(Context context, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
-        if (context == null) {
+    private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
+        if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
         }
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+            Toast.makeText(activity, activity.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         String authURL = ThemeWebActivity.getBlogLoginUrl(blog);
-        Intent intent = new Intent(context, ThemeWebActivity.class);
+        Intent intent = new Intent(activity, ThemeWebActivity.class);
         intent.putExtra(ThemeWebActivity.AUTHENTICATION_USER, blog.getUsername());
         intent.putExtra(ThemeWebActivity.AUTHENTICATION_PASSWD, blog.getPassword());
         intent.putExtra(ThemeWebActivity.URL_TO_LOAD, url);
@@ -64,11 +66,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
         intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
         intent.putExtra(THEME_NAME, currentTheme.getName());
+        intent.putExtra(ThemeBrowserActivity.THEME_ID, currentTheme.getId());
 
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
-    public static String getUrl(Context context, Theme theme, String blogId, ThemeWebActivityType type, boolean isPremium) {
+    public static String getUrl(Context context, Theme theme, ThemeWebActivityType type, boolean isPremium) {
         String url = "";
         String homeURL = WordPress.getCurrentBlog().getHomeURL();
         String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
@@ -111,6 +114,20 @@ public class ThemeWebActivity extends WPWebViewActivity {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_activate) {
+            Bundle bundle = getIntent().getExtras();
+            Intent returnIntent = new Intent();
+            setResult(RESULT_OK, returnIntent);
+            returnIntent.putExtra(ThemeBrowserActivity.THEME_ID, bundle.getString(ThemeBrowserActivity.THEME_ID));
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
