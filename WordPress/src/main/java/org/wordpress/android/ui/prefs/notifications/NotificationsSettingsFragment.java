@@ -55,16 +55,18 @@ import javax.annotation.Nonnull;
 import de.greenrobot.event.EventBus;
 
 public class NotificationsSettingsFragment extends PreferenceFragment {
+
+    private static final String KEY_SEARCH_QUERY = "search_query";
+    private static final int SITE_SEARCH_VISIBILITY_COUNT = 15;
     // The number of notification types we support (e.g. timeline, email, mobile)
     private static final int TYPE_COUNT = 3;
-
-    private static final int SITE_SEARCH_VISIBILITY_COUNT = 15;
 
     private NotificationsSettings mNotificationsSettings;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
 
     private String mDeviceId;
+    private String mRestoredQuery;
     private boolean mNotificationsEnabled;
     private int mSiteCount;
 
@@ -87,6 +89,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         if (hasNotificationsSettings()) {
             loadNotificationsAndUpdateUI(true);
+        }
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SEARCH_QUERY)) {
+            mRestoredQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
         }
     }
 
@@ -123,6 +129,21 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         });
 
         updateSearchMenuVisibility();
+
+        // Check for a restored search query (if device was rotated, etc)
+        if (!TextUtils.isEmpty(mRestoredQuery)) {
+            mSearchMenuItem.expandActionView();
+            mSearchView.setQuery(mRestoredQuery, true);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
+            outState.putString(KEY_SEARCH_QUERY, mSearchView.getQuery().toString());
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     private void refreshSettings() {
