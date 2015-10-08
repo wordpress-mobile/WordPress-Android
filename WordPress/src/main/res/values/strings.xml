@@ -528,7 +528,7 @@
     <string name="stats_referrers_unspam">Not spam</string>
     <string name="stats_referrers_marking_spam">Marking as spam</string>
     <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
-    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state is not changed.</string>
+    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_wpcom_selector">WordPress.com</string>

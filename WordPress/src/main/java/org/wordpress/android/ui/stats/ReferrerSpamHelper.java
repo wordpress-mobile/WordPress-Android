@@ -119,8 +119,7 @@ class ReferrerSpamHelper {
                 boolean success = response.optBoolean("success");
                 if (success) {
                     mReferrerGroup.isMarkedAsSpam = isMarkingAsSpamInProgress;
-                    // TODO: we need to use the same function used in the widget PR here ARGG!!!
-                    int localBlogID = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                    int localBlogID = StatsUtils.getLocalBlogIdFromRemoteBlogId(
                             Integer.parseInt(mReferrerGroup.getBlogId())
                     );
                     StatsTable.deleteStatsForBlog(mActivityRef.get(), localBlogID, StatsService.StatsEndpointsEnum.REFERRERS);
