@@ -172,6 +172,14 @@
         <activity android:name=".ui.stats.StatsSingleItemDetailsActivity"
             android:theme="@style/CalypsoTheme"/>
 
+        <activity android:name=".ui.stats.StatsWidgetConfigureActivity"
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/site_picker_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".ui.WPWebViewActivity"
             android:theme="@style/Calypso.NoActionBar"/>
 
@@ -258,7 +266,7 @@
 
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
-            android:label="QuickPress" >
+            android:label="WordPress QuickPress" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -345,6 +353,16 @@
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
+        </receiver>
+
+        <receiver android:name=".ui.stats.StatsWidgetProvider"
+            android:label="@string/stats_widget_name">
+            <intent-filter >
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stats_widget_info" />
         </receiver>
 
     </application>

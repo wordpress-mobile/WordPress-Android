@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="stats_widget_width">@dimen/stats_widget_five_cells</dimen>
+</resources>
