@@ -44,7 +44,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         void onSearchClicked();
     }
 
-    protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
     protected static final String BUNDLE_PAGE = "BUNDLE_PAGE";
     protected static final int THEME_FILTER_ALL_INDEX = 0;
     protected static final int THEME_FILTER_FREE_INDEX = 1;
@@ -85,16 +84,15 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
         configureGridView(inflater, view);
         configureSwipeToRefresh(view);
-        restoreState(savedInstanceState);
 
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         Cursor cursor = fetchThemes(getSpinnerPosition());
+
         if (cursor == null) {
             return;
         }
@@ -103,6 +101,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         mGridView.setSelection(mSavedScrollPosition);
+        restoreState(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         ((ThemeBrowserActivity) getActivity()).fetchCurrentTheme();
     }
@@ -111,7 +115,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mGridView != null) {
-            outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
             outState.putInt(BUNDLE_PAGE, mPage);
         }
     }
@@ -217,7 +220,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mSavedScrollPosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSTION, 0);
             mPage = savedInstanceState.getInt(BUNDLE_PAGE, 1);
         }
     }
