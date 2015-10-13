@@ -50,6 +50,7 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
@@ -1731,7 +1732,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onMediaRetryClicked(String mediaId) {
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
+        WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.QUEUED);
 
         MediaUploadService mediaUploadService = MediaUploadService.getInstance();
         if (mediaUploadService == null) {

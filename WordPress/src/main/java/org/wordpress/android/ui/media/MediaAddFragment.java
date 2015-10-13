@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.services.MediaUploadEvents;
@@ -285,7 +286,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
 
     public void addToQueue(String mediaId) {
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
+        WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.QUEUED);
         startMediaUploadService();
     }
 

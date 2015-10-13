@@ -19,6 +19,7 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -1628,13 +1629,13 @@ public class WordPressDB {
     }
 
     /** Update a media file to a new upload state **/
-    public void updateMediaUploadState(String blogId, String mediaId, String uploadState) {
-        if (blogId == null || blogId.equals(""))
+    public void updateMediaUploadState(String blogId, String mediaId, MediaUploadState uploadState) {
+        if (blogId == null || blogId.equals("")) {
             return;
+        }
 
         ContentValues values = new ContentValues();
-        if (uploadState == null) values.putNull("uploadState");
-        else values.put("uploadState", uploadState);
+        values.put("uploadState", uploadState.toString());
 
         if (mediaId == null) {
             db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[]{blogId});
@@ -1703,7 +1704,7 @@ public class WordPressDB {
     public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {
         // This is for queueing up files to delete on the server
         for (String id : ids) {
-            updateMediaUploadState(blogId, id, "delete");
+            updateMediaUploadState(blogId, id, MediaUploadState.DELETE);
         }
     }
 
@@ -1712,7 +1713,7 @@ public class WordPressDB {
         // This is for syncing our files to the server:
         // when we pull from the server, everything that is still 'deleted'
         // was not downloaded from the server and can be removed via deleteFilesMarkedForDeleted()
-        updateMediaUploadState(blogId, null, "deleted");
+        updateMediaUploadState(blogId, null, MediaUploadState.DELETED);
     }
 
     /** Delete files marked as deleted **/

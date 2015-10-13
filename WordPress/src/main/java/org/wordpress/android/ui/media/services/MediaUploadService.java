@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog.T;
@@ -157,7 +158,7 @@ public class MediaUploadService extends Service {
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
+                WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, MediaUploadState.FAILED);
                 mUploadInProgress = false;
                 mCurrentUploadMediaId = "";
                 EventBus.getDefault().post(new MediaUploadEvents.MediaUploadFailed(mediaId,
@@ -175,7 +176,7 @@ public class MediaUploadService extends Service {
             }
         });
 
-        WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "uploading");
+        WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, MediaUploadState.UPLOADING);
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         mCurrentUploadMediaTask.execute(apiArgs);
@@ -191,7 +192,7 @@ public class MediaUploadService extends Service {
             public void onSuccess(MediaFile mediaFile) {
                 String blogId = mediaFile.getBlogId();
                 String mediaId = mediaFile.getMediaId();
-                WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
+                WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.UPLOADED);
                 mUploadInProgress = false;
                 mCurrentUploadMediaId = "";
                 mHandler.post(mFetchQueueTask);
