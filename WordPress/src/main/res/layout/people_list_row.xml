@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/people_list_row_height"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="?android:selectableItemBackground">
 
     <org.wordpress.android.widgets.WPNetworkImageView
@@ -17,13 +17,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_large"
         android:layout_toRightOf="@id/people_list_row_avatar"
-        android:layout_alignTop="@id/people_list_row_avatar"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
         tools:text="display_name" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/people_list_row_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/people_list_row_display_name"
+        android:layout_below="@id/people_list_row_display_name"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/blue_medium"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="username" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/people_list_row_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/people_list_row_display_name"
+        android:layout_below="@id/people_list_row_username"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="role" />
 
     <View
         android:id="@+id/divider"

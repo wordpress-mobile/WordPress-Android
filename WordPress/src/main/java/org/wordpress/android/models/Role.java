@@ -1,6 +1,7 @@
 package org.wordpress.android.models;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 
 import org.wordpress.android.R;
 
@@ -43,5 +44,24 @@ public enum Role {
         if (value.equals("contributor"))
             return Role.CONTRIBUTOR;
         return Role.UNSUPPORTED;
+    }
+
+    public static int backgroundColor(Context context, Role role) {
+        switch (role) {
+            case SUPER_ADMIN:
+                return ContextCompat.getColor(context, R.color.orange_fire);
+            case ADMIN:
+                return ContextCompat.getColor(context, R.color.grey_dark);
+            case EDITOR:
+                return ContextCompat.getColor(context, R.color.blue_dark);
+            case AUTHOR:
+                return ContextCompat.getColor(context, R.color.blue_wordpress);
+            case CONTRIBUTOR:
+                return ContextCompat.getColor(context, R.color.blue_wordpress);
+            case UNSUPPORTED:
+                return ContextCompat.getColor(context, R.color.blue_wordpress);
+            default:
+                return ContextCompat.getColor(context, R.color.blue_wordpress);
+        }
     }
 }
