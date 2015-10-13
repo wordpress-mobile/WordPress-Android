@@ -298,8 +298,13 @@
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden"/>
 
+        <!--People Management-->
         <activity
             android:name="org.wordpress.android.ui.people.PeopleManagementActivity"
+            android:theme="@style/CalypsoTheme"/>
+
+        <activity
+            android:name="org.wordpress.android.ui.people.PersonActivity"
             android:theme="@style/CalypsoTheme"/>
 
 		<!-- Services -->
