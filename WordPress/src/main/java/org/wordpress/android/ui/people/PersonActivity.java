@@ -19,7 +19,7 @@ public class PersonActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setContentView(R.layout.activity_person);
+        setContentView(R.layout.person_activity);
     }
 
     @Override

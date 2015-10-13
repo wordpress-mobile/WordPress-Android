@@ -20,7 +20,7 @@ public class PeopleManagementActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setContentView(R.layout.people_management);
+        setContentView(R.layout.people_management_activity);
 
         setTitle(R.string.people);
 
