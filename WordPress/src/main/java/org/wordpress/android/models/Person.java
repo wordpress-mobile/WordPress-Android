@@ -1,6 +1,7 @@
 package org.wordpress.android.models;
 
 public class Person {
+    private long localTablePersonId;
     public long personID;
 
     private String username;
@@ -72,5 +73,13 @@ public class Person {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public long getLocalTablePersonId() {
+        return localTablePersonId;
+    }
+
+    public void setLocalTablePersonId(long localTablePersonId) {
+        this.localTablePersonId = localTablePersonId;
     }
 }

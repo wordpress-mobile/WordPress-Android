@@ -9,6 +9,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 
 public class PersonActivity extends AppCompatActivity {
+    public static final String EXTRA_PERSON_LOCAL_ID = "EXTRA_PERSON_LOCAL_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +21,8 @@ public class PersonActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.person_activity);
+
+        setTitle(R.string.edit_user);
     }
 
     @Override

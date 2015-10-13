@@ -1,12 +1,16 @@
 package org.wordpress.android.ui.people;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 
 public class PeopleManagementActivity extends AppCompatActivity {
@@ -26,6 +30,15 @@ public class PeopleManagementActivity extends AppCompatActivity {
 
         ListView listView = (ListView)findViewById(android.R.id.list);
         listView.setAdapter(new PeopleAdapter(this));
+
+        final Activity context = this;
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Person person = (Person) parent.getItemAtPosition(position);
+                ActivityLauncher.viewPersonDetails(context, person);
+            }
+        });
     }
 
     @Override

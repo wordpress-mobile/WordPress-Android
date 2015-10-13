@@ -1042,6 +1042,7 @@
 
     <!--People Management-->
     <string name="people">People</string>
+    <string name="edit_user">Edit User</string>
     <string name="role_super_admin">Super Admin</string>
     <string name="role_admin">Admin</string>
     <string name="role_editor">Editor</string>
