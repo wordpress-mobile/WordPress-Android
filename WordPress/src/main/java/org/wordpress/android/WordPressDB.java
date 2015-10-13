@@ -19,10 +19,12 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -1908,5 +1910,12 @@ public class WordPressDB {
 
     public boolean hasAnyJetpackBlogs() {
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
+    }
+
+    /*
+     * This is a stub method. Once implemented it'll retrive a person object for the provided local id
+     */
+    public Person getPersonForLocalTablePostId(long localTablePersonId) {
+        return new Person(4, "oguzkocer", "Oguz", "Kocer", "Oguz", "http://lorempixum.com/76/76", Role.EDITOR);
     }
 }
