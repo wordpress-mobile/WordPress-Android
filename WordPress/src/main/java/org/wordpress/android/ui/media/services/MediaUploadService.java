@@ -71,7 +71,12 @@ public class MediaUploadService extends Service {
         mHandler.post(mFetchQueueTask);
     }
 
-    public void cancelUpload(String mediaId) {
+    /**
+     * Cancel the upload with the given id, whether it's currently uploading or queued.
+     * @param mediaId the id of the media item
+     * @param delete whether to delete the item from the queue or mark it as failed so it can be retried later
+     */
+    public void cancelUpload(String mediaId, boolean delete) {
         if (mediaId.equals(mCurrentUploadMediaId)) {
             // The media item is currently uploading - abort the upload process
             mCurrentUploadMediaTask.cancel(true);
@@ -79,7 +84,11 @@ public class MediaUploadService extends Service {
             // Remove the media item from the upload queue
             if (WordPress.getCurrentBlog() != null) {
                 String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                WordPress.wpDB.deleteMediaFile(blogId, mediaId);
+                if (delete) {
+                    WordPress.wpDB.deleteMediaFile(blogId, mediaId);
+                } else {
+                    WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.FAILED);
+                }
             }
         }
     }
