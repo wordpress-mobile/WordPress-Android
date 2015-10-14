@@ -72,6 +72,18 @@ public class MediaUploadService extends Service {
     }
 
     /**
+     * Returns whether the service has any media uploads in progress or queued.
+     */
+    public boolean hasUploads() {
+        if (mUploadInProgress) {
+            return true;
+        } else {
+            Cursor queueCursor = getQueue();
+            return (queueCursor == null || queueCursor.getCount() > 0);
+        }
+    }
+
+    /**
      * Cancel the upload with the given id, whether it's currently uploading or queued.
      * @param mediaId the id of the media item
      * @param delete whether to delete the item from the queue or mark it as failed so it can be retried later
@@ -80,6 +92,7 @@ public class MediaUploadService extends Service {
         if (mediaId.equals(mCurrentUploadMediaId)) {
             // The media item is currently uploading - abort the upload process
             mCurrentUploadMediaTask.cancel(true);
+            mUploadInProgress = false;
         } else {
             // Remove the media item from the upload queue
             if (WordPress.getCurrentBlog() != null) {

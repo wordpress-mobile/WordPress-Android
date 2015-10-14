@@ -471,6 +471,30 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+
+        if (itemId == android.R.id.home) {
+            Fragment fragment = getFragmentManager().findFragmentByTag(
+                    ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+            if (fragment != null && fragment.isVisible()) {
+                return false;
+            }
+            if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+                mViewPager.setCurrentItem(PAGE_CONTENT);
+                invalidateOptionsMenu();
+            } else {
+                saveAndFinish();
+            }
+            return true;
+        }
+
+        MediaUploadService mediaUploadService = MediaUploadService.getInstance();
+
+        // Disable format bar buttons while a media upload is in progress
+        if (mediaUploadService != null && mediaUploadService.hasUploads()) {
+            ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
+            return false;
+        }
+
         if (itemId == R.id.menu_save_post) {
             // If the post is new and there are no changes, don't publish
             updatePostObject(false);
@@ -498,19 +522,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
             mViewPager.setCurrentItem(PAGE_SETTINGS);
-        } else if (itemId == android.R.id.home) {
-            Fragment fragment = getFragmentManager().findFragmentByTag(
-                    ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
-            if (fragment != null && fragment.isVisible()) {
-                return false;
-            }
-            if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
-                mViewPager.setCurrentItem(PAGE_CONTENT);
-                invalidateOptionsMenu();
-            } else {
-                saveAndFinish();
-            }
-            return true;
         }
         return false;
     }
