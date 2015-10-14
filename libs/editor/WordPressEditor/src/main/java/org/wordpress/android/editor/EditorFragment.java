@@ -207,6 +207,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onDetach() {
+        // Soft cancel (delete flag off) all media uploads currently in progress
+        for (String mediaId : mUploadingMediaIds) {
+            mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
+        }
         super.onDetach();
     }
 
@@ -749,6 +753,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 // Load title and content into ZSSEditor
                 updateVisualEditorFields();
+
+                // If there are images that are still in progress (because the editor exited before they completed),
+                // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
+                mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingImagesAsFailed();");
+
                 hideActionBarIfNeeded();
 
                 // Reset all format bar buttons (in case they remained active through activity re-creation)
