@@ -21,6 +21,9 @@ No entanto, não são mencionados requisitos, além das code style guidelines. C
 Diz-nos [Oguz Kocer](https://github.com/oguzkocer), sendo que depois acrescentou, relativamente ao método de trabalho da equipa, 
 >“following traditional software development models is mostly not applicable. Since we are working on an open source project, you can freely browse the issues and get a sense of how we work together.”
 
+Os pull request recebidos no último mês, referente à data deste relatório, somos confrontados com 60 pedidos ainda ativos sendo que 56 já foram aprovados e outros 5 que ainda aguardam aceitação. O que pode ser verificado na tabela abaixo:
+![Image from Wordpress GIT](https://i.gyazo.com/71fd93976a02335522e1296e447a59b3.png)
+
 Assim sendo, a equipa tem uma abordagem própria tanto em relação ao modelo utilizado no desenvolvimento do projeto, como na organização da equipa, em que apesar de existir uma equipa “core” é possível qualquer pessoa contribuir sendo que todas as contribuições são revistas por, pelo menos, um dos membros da equipa.
 >“Aside from Github, we use Slack and our own internal blogs, so everything is online and I think as a company we kind of created our own approach.”
 
