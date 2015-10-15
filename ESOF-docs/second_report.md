@@ -2,14 +2,10 @@
 ## Gestão de Requesitos ##
 
 ###Elicitação###
-	
->* Setup your build environment (see build instructions in our README) and start hacking the project. You must follow our code style guidelines, write good commit messages, comment your code and write automated tests.	
->* When your patch is ready, submit a pull request. Add some comments or screen shots to help us.
->* Wait for us to review your pull request. If something is wrong or if we want you to make some changes before the merge, we'll let you know through commit comments or pull request comments.
 
 Qualquer desenvolvedor ou até mesmo leigo pode ajudar ou testar o projeto. É explicado no [github oficial do projeto](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/CONTRIBUTING.md) a forma de o fazer. Numa primeira fase é indicado que se faça fork do projeto original e trabalhar nesse ramo. Nesta fase estão à espera que o contribuidor siga determinadas regras e standards cuidadosamente explicados e acessíveis aos contribuidores interessados.
 É focada a obrigatoriedade de desenvolver respeitando o estilo de código utilizado pela comunidade, escrever commits claros e oportunos à modificação, comentários ao longo do código para clarificar o seu funcionamento e por fim desenvolver e usar testes automáticos.
-Após desenvolver é necessário fazer um pull request devidamente comentado e, se necessário, com capturas de ecrã por forma a facilitar a verificação do código.
+Após desenvolver é necessário fazer um pull request devidamente comentado e, se necessário, com capturas de ecrã de forma a facilitar a verificação do código.
 Por fim, a equipa terá de avaliar o pedido, verificando se existem erros ou algo a alterar, para isso, eles entrarão em contacto através de commits de comentários e comentários de pull request antes do de efetuar o merge do projeto.
 
 ###Validação###
@@ -34,3 +30,9 @@ Assim sendo, a equipa tem uma abordagem própria tanto em relação ao modelo ut
 * Fábio Amarante
 * Luís Gonçalves
 * Ricardo Lopes
+
+
+## Contribuição
+
+Relativamente à contribuição de cada elemento para a realização deste relatório, o grupo considera que o trabalho foi igualmente dividido pelos três elementos.
+
