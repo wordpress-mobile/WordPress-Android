@@ -18,7 +18,7 @@ Qualquer pessoa é bem vinda a contribuir para o projeto sendo que existe um fic
 No entanto, não são mencionados requisitos, além das code style guidelines. Consequentemente, contactámos vários membros da equipa do Wordpress por forma a tentar perceber como é o processo de validação de contribuidores e se existem requisitos para os mesmos. Conseguimos contactar um dos Mobile Developers para a Automattic, empresa por trás do Wordpress e outros serviços conhecidos,  que nos disponibilizou algum do seu tempo para responder às nossas perguntas.
 >“We have a review process, so any code that’s committed to the main repo will be reviewed by at least one of us, the person commiting it is not relevant.”
 
-Diz-nos Oguz Kocer, sendo que depois acrescentou, relativamente ao método de trabalho da equipa, 
+Diz-nos [Oguz Kocer](https://github.com/oguzkocer), sendo que depois acrescentou, relativamente ao método de trabalho da equipa, 
 >“following traditional software development models is mostly not applicable. Since we are working on an open source project, you can freely browse the issues and get a sense of how we work together.”
 
 Assim sendo, a equipa tem uma abordagem própria tanto em relação ao modelo utilizado no desenvolvimento do projeto, como na organização da equipa, em que apesar de existir uma equipa “core” é possível qualquer pessoa contribuir sendo que todas as contribuições são revistas por, pelo menos, um dos membros da equipa.
