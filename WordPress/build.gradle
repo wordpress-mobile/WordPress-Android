@@ -35,7 +35,7 @@ android {
         versionName "4.6-rc-3"
         versionCode 211
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 22
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
     }
