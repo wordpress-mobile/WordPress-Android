@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.posts;
 
-import android.Manifest;
-import android.Manifest.permission_group;
-import android.app.Activity;
+import android.Manifest.permission;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -666,17 +664,17 @@ public class EditPostSettingsFragment extends Fragment
             return false;
         }
 
-        if (ContextCompat.checkSelfPermission(getActivity(), permission_group.LOCATION)
+        if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is missing and must be requested.
-            ActivityCompat.requestPermissions(getActivity(), new String[]{permission_group.LOCATION},
-                    PERMISSION_REQUEST_LOCATION);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{permission.ACCESS_FINE_LOCATION,
+                            permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
             return false;
         }
         return true;
     }
 
-    private void showLocationSearch() {
+    public void showLocationSearch() {
         mLocationAddSection.setVisibility(View.GONE);
         mLocationSearchSection.setVisibility(View.VISIBLE);
         mLocationViewSection.setVisibility(View.GONE);

@@ -1580,7 +1580,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (requestCode == EditPostSettingsFragment.PERMISSION_REQUEST_LOCATION) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission request was granted, show Location buttons in Settings
-                mEditPostSettingsFragment.initLocation();
+                mEditPostSettingsFragment.showLocationSearch();
                 return;
             }
             // Permission request was denied, do nothing
