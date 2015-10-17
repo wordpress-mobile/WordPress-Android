@@ -46,8 +46,6 @@ import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -430,8 +428,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
                 }
 
-                // refresh first blog
-                refreshFirstBlogContent();
+                // refresh the first 5 blogs
+                refreshFirstFiveBlogsContent();
             }
 
             trackAnalyticsSignIn();
@@ -775,24 +773,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Show a dialog
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
-            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(org.wordpress.android.R.string.username_or_password_incorrect),
-                    org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
-                            org.wordpress.android.R.string.cancel), getString(
-                            org.wordpress.android.R.string.forgot_password), getString(
-                            org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
-                    SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
-        } else {
-            // create a 2 buttons dialog ("Forget your password?" and "Cancel")
-            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(org.wordpress.android.R.string.username_or_password_incorrect),
-                    org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
-                            org.wordpress.android.R.string.cancel), getString(
-                            org.wordpress.android.R.string.forgot_password), null, SignInDialogFragment.ACTION_OPEN_URL,
-                    0);
-        }
+        // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
+        nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                getString(org.wordpress.android.R.string.username_or_password_incorrect),
+                org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
+                        org.wordpress.android.R.string.cancel), getString(
+                        org.wordpress.android.R.string.forgot_password), getString(
+                        org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
+                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
 
         // Put entered url and entered username args, that could help our support team
         Bundle bundle = nuxAlert.getArguments();
@@ -859,16 +847,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     /**
-     * Get first blog and call RefreshBlogContentTask. First blog will be autoselected when user login.
+     * Get the first five blogs and call RefreshBlogContentTask. First blog will be autoselected when user login.
      * Also when a user add a new self hosted blog, userBlogList contains only one element.
      * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
      * user selects it.
      */
-    private void refreshFirstBlogContent() {
-        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1, true);
+    private void refreshFirstFiveBlogsContent() {
+        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 5, true);
         if (visibleBlogs != null && !visibleBlogs.isEmpty()) {
-            Map<String, Object> firstBlog = visibleBlogs.get(0);
-            refreshBlogContent(firstBlog);
+            int numberOfBlogsBeingRefreshed = Math.min(5, visibleBlogs.size());
+            for (int i = 0; i < numberOfBlogsBeingRefreshed; i++) {
+                Map<String, Object> currentBlog = visibleBlogs.get(i);
+                refreshBlogContent(currentBlog);
+            }
         }
     }
 }

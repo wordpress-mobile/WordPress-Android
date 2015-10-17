@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.reader.utils;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -109,6 +112,16 @@ public class ReaderUtils {
         }
     }
 
+    public static String getShortCommentLabelText(Context context, int numComments) {
+        switch (numComments) {
+            case 1:
+                return context.getString(R.string.reader_short_comment_count_one);
+            default:
+                String count = FormatUtils.formatInt(numComments);
+                return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
+        }
+    }
+
     /*
      * returns true if the reader should provide a "logged out" experience - no likes,
      * comments, or anything else that requires a wp.com account
@@ -157,6 +170,17 @@ public class ReaderUtils {
             return tagName;
         } else {
             return "#" + tagName;
+        }
+    }
+
+    /*
+     * set the background of the passed view to the round ripple drawable - only works on
+     * Lollipop or later, does nothing on earlier Android versions
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setBackgroundToRoundRipple(View view) {
+        if (view != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setBackgroundResource(R.drawable.ripple_oval);
         }
     }
 }

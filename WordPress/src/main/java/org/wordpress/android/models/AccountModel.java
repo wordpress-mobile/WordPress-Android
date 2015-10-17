@@ -16,6 +16,7 @@ public class AccountModel {
     private int mSiteCount;
     private int mVisibleSiteCount;
     private String mAccessToken;
+    private String mEmail;
 
     public AccountModel() {
         init();
@@ -31,6 +32,7 @@ public class AccountModel {
         mSiteCount = 0;
         mVisibleSiteCount = 0;
         mAccessToken = "";
+        mEmail = "";
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -42,6 +44,7 @@ public class AccountModel {
         mPrimaryBlogId = json.optLong("primary_blog");
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
+        mEmail = json.optString("email");
     }
 
     public long getUserId() {
@@ -118,5 +121,13 @@ public class AccountModel {
 
     public void setVisibleSiteCount(int visibleSiteCount) {
         mVisibleSiteCount = visibleSiteCount;
+    }
+
+    public void setEmail(String email) {
+        mEmail = email;
+    }
+
+    public String getEmail() {
+        return StringUtils.notNullStr(mEmail);
     }
 }

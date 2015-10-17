@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_multi">%s تعليقات</string>
+	<string name="reader_short_comment_count_one">تعليق واحد</string>
+	<string name="reader_label_submit_comment">إرسال</string>
+	<string name="reader_hint_comment_on_post">رد على المقالة...</string>
+	<string name="reader_discover_visit_blog">زيارة %s</string>
+	<string name="reader_discover_attribution_blog">تم النشر في الأصل على %s</string>
+	<string name="reader_discover_attribution_author">تم النشر في الأصل بواسطة %s</string>
+	<string name="reader_discover_attribution_author_and_blog">تم النشر في الأصل بواسطة %1$s في %2$s</string>
+	<string name="reader_short_like_count_multi">%s إعجابات</string>
+	<string name="reader_short_like_count_one">إعجاب واحد</string>
+	<string name="reader_label_follow_count">%,d متابعين</string>
+	<string name="reader_short_like_count_none">أعجبني</string>
+	<string name="reader_label_reading_time_in_minutes">%,d دقيقة</string>
+	<string name="reader_menu_tags">تحرير الوسوم والمدوّنات</string>
+	<string name="reader_label_word_count">%,d كلمات</string>
+	<string name="reader_title_post_detail">مقالة القارئ</string>
+	<string name="local_draft_explainer">هذه المقالة مسودة محلية لم تُنشَر بعد</string>
+	<string name="local_changes_explainer">تشتمل هذه المقالة على تغييرات محلية لم تُنشَر بعد</string>
+	<string name="notifications_push_summary">إعدادات للتنبيهات التي تظهر على جهازك.</string>
+	<string name="notifications_email_summary">إعدادات للتنبيهات التي يتم إرسالها إلى البريد الإلكتروني المرتبط بحسابك.</string>
+	<string name="notifications_tab_summary">إعدادات للتنبيهات التي تظهر في علامة تبويب "التنبيهات".</string>
+	<string name="notifications_disabled">تم تعطيل تنبيهات التطبيق. انقر هنا لتمكينها في "الإعدادات".</string>
+	<string name="notification_types">أنواع التنبيهات</string>
+	<string name="error_loading_notifications">تعذر تحميل إعدادات التنبيهات</string>
+	<string name="replies_to_your_comments">الردود على تعليقاتك</string>
+	<string name="comment_likes">الإعجابات بتعليقك</string>
+	<string name="app_notifications">تنبيهات التطبيق</string>
+	<string name="notifications_tab">علامة تبويب التنبيهات</string>
+	<string name="email">البريد الإلكتروني</string>
+	<string name="notifications_comments_other_blogs">التعليقات على المواقع الأخرى</string>
+	<string name="notifications_wpcom_updates">تحديثات وردبرس.كوم</string>
+	<string name="notifications_other">أخرى</string>
+	<string name="notifications_account_emails">تحديثات من وردبرس.كوم</string>
+	<string name="notifications_account_emails_summary">نحن نرسل دومًا رسائل بريد إلكتروني مهمة بخصوص حسابك، ومع ذلك يمكنك الحصول على بعض الإضافات المفيدة أيضًا.</string>
+	<string name="notifications_sights_and_sounds">المناظر والأصوات</string>
+	<string name="your_sites">مواقعك</string>
+	<string name="notifications_updates_from_wordpress">تحديثات من وردبرس.كوم</string>
+	<string name="stats_insights_latest_post_trend">لم يتم نشر %2$s منذ %1$s. فيما يلي بيان لمستوى أداء المقالة حتى الآن…</string>
+	<string name="stats_insights_latest_post_summary">ملخص آخر مقالة</string>
+	<string name="button_revert">إلغاء</string>
+	<string name="days_ago">منذ %d أيام ماضية</string>
+	<string name="yesterday">أمس</string>
 	<string name="connectionbar_no_connection">لا يوجد اتصال</string>
 	<string name="page_trashed">تم إرسال الصفحة إلى سلة المهملات</string>
 	<string name="post_deleted">تم حذف المقالة</string>
@@ -216,14 +258,10 @@
 	<string name="create_new_blog_wpcom">إنشاء مدونة WordPress.com</string>
 	<string name="new_blog_wpcom_created">تم إنشاء مدونة WordPress.com!</string>
 	<string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
-	<string name="reader_likes_multi_short">%,d من الأشخاص</string>
 	<string name="reader_empty_posts_in_tag">لا توجد مقالات تحمل هذا الوسم</string>
 	<string name="reader_label_comment_count_multi">%,d من التعليقات</string>
 	<string name="reader_label_view_original">عرض المقالة الأصلية</string>
 	<string name="reader_label_like">أعجبني</string>
-	<string name="reader_label_liked_by">إعجاب بواسطة</string>
-	<string name="reader_label_liked_by_you">أُعجبت بها</string>
-	<string name="reader_likes_one_short">شخص واحد</string>
 	<string name="reader_label_comment_count_single">تعليق واحد</string>
 	<string name="reader_label_comments_closed">التعليقات مغلقة</string>
 	<string name="reader_label_comments_on">تعليقات على</string>
@@ -233,7 +271,6 @@
 	<string name="error_refresh_unauthorized_posts">ليس لديك الإذن اللازم لعرض المقالات أو تحريرها</string>
 	<string name="error_refresh_unauthorized_pages">ليس لديك الإذن اللازم لعرض الصفحات أو تحريرها</string>
 	<string name="error_refresh_unauthorized_comments">ليس لديك الإذن اللازم لعرض التعليقات أو تحريرها</string>
-	<string name="overwrite_local_changes">لقد قمت بإجراء تغييرات على مقالة لم يتم تحميلها حتى الآن. هل تريد متابعة التحديث واستبدال التغييرات المحلية؟</string>
 	<string name="older_month">أقدم من شهر</string>
 	<string name="older_two_days">أقدم من يومين</string>
 	<string name="older_last_week">أقدم من أسبوع</string>
@@ -274,8 +311,6 @@
 	<string name="reader_title_subs">الوسوم والمدونات</string>
 	<string name="reader_label_followed_blog">مدونة تمت متابعتها</string>
 	<string name="reader_toast_err_already_follow_blog">أنت متابع لهذه المدونة بالفعل</string>
-	<string name="reader_title_blog_preview">معاينة المدونة</string>
-	<string name="reader_title_tag_preview">معاينة الوسم</string>
 	<string name="reader_hint_add_tag_or_url">أدخل رسمًا أو عنوانًا للمتابعة</string>
 	<string name="reader_label_tag_preview">مقالات موسومة %s</string>
 	<string name="reader_toast_err_get_blog_info">غير قادر على إظهار هذه المدونة</string>
@@ -284,6 +319,8 @@
 	<string name="reader_empty_recommended_blogs">لا يوجد مدونات موصى بها</string>
 	<string name="reader_page_followed_blogs">مدونات تمت متابعتها</string>
 	<string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
+	<string name="reader_title_blog_preview">مدوّنة القارئ</string>
+	<string name="reader_title_tag_preview">وسم القارئ</string>
 	<string name="saving">حفظ...</string>
 	<string name="media_empty_list">لا وسائط</string>
 	<string name="ptr_tip_message">نصيحة: اسحب للأسفل من أجل التحديث</string>
@@ -500,7 +537,6 @@
 	<string name="media_add_popup_title">اضف إلى مكتبة الوسائط</string>
 	<string name="select_from_media_library">اختر من مكتبة الوسائط</string>
 	<string name="empty_list_default">هذه القائمة فارغة.</string>
-	<string name="reader_menu_tags">الوسوم</string>
 	<string name="username_invalid">اسم المستخدم غير صحيح</string>
 	<string name="connecting_wpcom">الاتصال بـ WordPress.com</string>
 	<string name="reader_likes_one">شخص واحد اعجب بهذا</string>
@@ -513,8 +549,6 @@
 	<string name="reader_empty_followed_tags">لا تتابع أي وسوم</string>
 	<string name="reader_btn_follow">تابع</string>
 	<string name="reader_btn_unfollow">متابع</string>
-	<string name="reader_hint_comment_on_post">أضف تعليقك</string>
-	<string name="reader_hint_comment_on_comment">الرد على التعليق</string>
 	<string name="reader_label_added_tag">أضيف %s</string>
 	<string name="reader_label_removed_tag">تم حذف %s</string>
 	<string name="reader_toast_err_tag_exists">أنت متابع لهذا الوسم بالفعل</string>
@@ -528,6 +562,7 @@
 	<string name="jetpack_message">مطلوب اضافة الـ Jetpack للإحصائيات , هل تريد تثبيت الـ Jetpack ؟</string>
 	<string name="limit_reached">وصلت للحد المسموح , يمكنك المحاولة مرة أخرى خلال 1 دقيقة. المحاولة مرة أخرى قبل ذلك ستؤدي لزيادة الوقت الواجب انتظاره قبل أن يتم رفع الحظر. إذا كنت تعتقد أن هذا هو الخطأ، اتصل بالدعم.</string>
 	<string name="nux_tutorial_get_started_title">ابدأ!</string>
+	<string name="reader_hint_comment_on_comment">رد على التعليق...</string>
 	<string name="all">الكل</string>
 	<string name="themes">القوالب</string>
 	<string name="images">الصور</string>
@@ -595,14 +630,7 @@
 	<string name="upload">رفع</string>
 	<string name="sign_in">تسجيل الدخول</string>
 	<string name="notifications">الإشعارات</string>
-	<string name="manage_notifications">إدارة الإشعارات</string>
-	<string name="enable_notifications">تفعيل الإشعارات</string>
-	<string name="types">الأنواع</string>
 	<string name="note_reply_successful">تم نشر الرد</string>
-	<string name="options">الخيارات</string>
-	<string name="notifications_turn_off">إيقاف</string>
-	<string name="notifications_turn_off_1hr">إيقاف لمدة ساعة</string>
-	<string name="notifications_turn_off_8hr">إيقاف لمدة 8 ساعات</string>
 	<string name="new_notifications">%d تنبيهات جديدة</string>
 	<string name="more_notifications">و %d اكثر</string>
 	<string name="loading">جاري التحميل...</string>
@@ -650,6 +678,7 @@
 	<string name="immediately">حالاً</string>
 	<string name="quickpress_add_alert_title">تعيين الاسم المختصر</string>
 	<string name="settings">الإعدادات</string>
+	<string name="today">اليوم</string>
 	<string name="share_url">رابط المشاركة</string>
 	<string name="quickpress_add_error">الاسم المختصر لايمكن أن يكون فارغًا</string>
 	<string name="quickpress_window_title">اختر مدونة لاختصار QuickPress</string>
@@ -683,11 +712,34 @@
 	<string name="add">أضف</string>
 	<string name="category_refresh_error">خطأ في تحديث القسم</string>
 	<string name="on">تشغيل</string>
+	<string name="notification_settings">إعدادات التنبيهات</string>
 	<string-array name="alignment_array">
 		<item>بدون</item>
 		<item>يسار</item>
 		<item>وسط</item>
 		<item>يمين</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>التعليقات على موقعي</item>
+		<item>الإعجابات بتعليقاتي</item>
+		<item>الإعجابات بمقالاتي</item>
+		<item>متابعات للموقع</item>
+		<item>إنجازات الموقع</item>
+		<item>الإشارات إلى اسم المستخدم</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>الردود على تعليقاتي</item>
+		<item>الإعجابات بتعليقاتي</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>اقتراحات</item>
+		<item>الأبحاث</item>
+		<item>المجتمع</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>نصائح للحصول على أكبر استفادة من وردبرس.كوم.</item>
+		<item>فرص المشاركة في أبحاث واستطلاعات وردبرس.كوم.</item>
+		<item>معلومات حول دورات ومناسبات وردبرس.كوم (عبر الإنترنت وشخصيًا).</item>
 	</string-array>
 	<string-array name="post_filters_array">
 		<item>تم النشر</item>

@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -418,12 +419,24 @@ public class StatsService extends Service {
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
                     if (volleyError instanceof com.android.volley.AuthFailureError) {
-                        int localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                                Integer.parseInt(mRequestBlogId)
-                        );
+                        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
+                        // the current wpcom account. We need to load the correct localID here, otherwise options are
+                        // blank
+                        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
+                                Integer.parseInt(mRequestBlogId),
+                                null);
+                        if (localId == 0) {
+                            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                                    Integer.parseInt(mRequestBlogId)
+                            );
+                        }
                         Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
                         if (blog != null && blog.isJetpackPowered()) {
-                            EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
+                            // It's a kind of edge case, but the Jetpack site could have REST Disabled
+                            // In that case (only used in insights for now) shows the error in the module that use the REST API
+                            if (!StatsUtils.isRESTDisabledError(volleyError)) {
+                                EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
+                            }
                         }
                     }
                     mResponseObjectModel = volleyError;

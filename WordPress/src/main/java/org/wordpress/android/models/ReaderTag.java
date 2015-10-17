@@ -14,10 +14,15 @@ public class ReaderTag implements Serializable {
     public final ReaderTagType tagType;
 
     // these are the default tag names, which aren't localized in the /read/menu/ response
-    public static final String TAG_NAME_FOLLOWING = "Blogs I Follow";
     private static final String TAG_NAME_LIKED = "Posts I Like";
     private static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
     private static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
+
+    // as of 15-Sept-2015 this is still "Blogs I Follow" but it will soon be renamed
+    // to "Followed Sites"
+    // TODO: remove TAG_NAME_FOLLOWED_SITES_OLD once backend has been updated
+    public static final String TAG_NAME_FOLLOWED_SITES = "Followed Sites";
+    public static final String TAG_NAME_FOLLOWED_SITES_OLD = "Blogs I Follow";
 
     public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {
@@ -128,9 +133,9 @@ public class ReaderTag implements Serializable {
         if (TextUtils.isEmpty(tagName)) {
             return false;
         }
-        return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWING)
-             || tagName.equalsIgnoreCase(TAG_NAME_FRESHLY_PRESSED)
-             || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
+        return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWED_SITES)
+                || tagName.equalsIgnoreCase(TAG_NAME_FRESHLY_PRESSED)
+                || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
     }
 
     private String getSanitizedTagName() {
@@ -146,12 +151,12 @@ public class ReaderTag implements Serializable {
     }
 
     public boolean isPostsILike() {
-        return getTagName().equals(TAG_NAME_LIKED);
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
     }
-    public boolean isBlogsIFollow() {
-        return getTagName().equals(TAG_NAME_FOLLOWING);
+    public boolean isFollowedSites() {
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }
     public boolean isFreshlyPressed() {
-        return getTagName().equals(TAG_NAME_FRESHLY_PRESSED);
+        return tagType == ReaderTagType.DEFAULT && getTagName().endsWith("/freshly-pressed");
     }
 }

@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,13 +9,9 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 
 import javax.annotation.Nonnull;
-
-import de.greenrobot.event.EventBus;
 
 /*
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
@@ -26,15 +20,14 @@ import de.greenrobot.event.EventBus;
 public class ReaderPostListActivity extends AppCompatActivity {
 
     private ReaderPostListType mPostListType;
-    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_list);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -95,40 +88,6 @@ public class ReaderPostListActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            // user just returned from the login dialog, need to perform initial update again
-            // since creds have changed
-            case SignInActivity.REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    removeListFragment();
-                    EventBus.getDefault().removeStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class);
-                }
-                break;
-
-            // pass reader-related results to the fragment
-            case RequestCodes.READER_SUBS:
-                ReaderPostListFragment listFragment = getListFragment();
-                if (listFragment != null) {
-                    listFragment.onActivityResult(requestCode, resultCode, data);
-                }
-                break;
-        }
-    }
-
-    private void removeListFragment() {
-        Fragment listFragment = getListFragment();
-        if (listFragment != null) {
-            getFragmentManager()
-                    .beginTransaction()
-                    .remove(listFragment)
-                    .commit();
-        }
     }
 
     /*

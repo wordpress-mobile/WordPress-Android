@@ -36,6 +36,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -161,12 +162,9 @@ public class ActivityLauncher {
         if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
         String url = post.getPermaLink();
-        if (-1 == url.indexOf('?')) {
-            url = url.concat("?preview=true");
-        } else {
-            url = url.concat("&preview=true");
-        }
-        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, url);
+        // Add the preview parameter if the post is not published yet
+        url = UrlUtils.appendUrlParameter(url, "preview", "true");
+        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
     }
 
     public static void addMedia(Activity activity) {
@@ -206,7 +204,7 @@ public class ActivityLauncher {
 
     public static void newAccountForResult(Activity activity) {
         Intent intent = new Intent(activity, NewAccountActivity.class);
-        activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void newBlogForResult(Activity activity) {
@@ -248,7 +246,7 @@ public class ActivityLauncher {
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
-        activity.startActivityForResult(intent, SignInActivity.CREATE_ACCOUNT_REQUEST);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void slideInFromRight(Context context, Intent intent) {

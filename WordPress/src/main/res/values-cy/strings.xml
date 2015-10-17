@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_multi">%s Sylw</string>
+	<string name="reader_short_comment_count_one">1 Sylw</string>
+	<string name="reader_label_submit_comment">ANFON</string>
+	<string name="reader_hint_comment_on_post">Ateb cofnod…</string>
+	<string name="reader_discover_visit_blog">Mynd i %s</string>
+	<string name="reader_discover_attribution_blog">Cofnodwyd yn wreiddiol ar %s</string>
+	<string name="reader_discover_attribution_author">Cofnodwyd yn wreiddiol gan %s</string>
+	<string name="reader_discover_attribution_author_and_blog">Cofnodwyd yn wreiddiol gan %1$s ar %2$s</string>
+	<string name="reader_short_like_count_multi">%s Hoffi</string>
+	<string name="reader_short_like_count_one">1 Hoffi</string>
+	<string name="reader_label_follow_count">%,d dilynnwr</string>
+	<string name="reader_short_like_count_none">Hoffi</string>
+	<string name="reader_label_reading_time_in_minutes">%,d mun</string>
+	<string name="reader_menu_tags">Golygu tagiau a blogiau</string>
+	<string name="reader_label_word_count">%,d gair</string>
+	<string name="reader_title_post_detail">Cofnod Darllennydd</string>
+	<string name="local_draft_explainer">Mae\'r cofnod yn ddrafft lleol sydd heb ei gyhoeddi</string>
+	<string name="local_changes_explainer">Mae gan y cofnod newidiadau lleol sydd heb eu cyhoeddi</string>
+	<string name="notifications_push_summary">Gosodiadau hysbysiadau sy\'n ymddangos ar eich dyfais.</string>
+	<string name="notifications_email_summary">Gosodiadau hysbysiadau sy\'n cael eu hanfon at e-bost sy\'n gysylltiedig â\'ch cyfrif.</string>
+	<string name="notifications_tab_summary">Gosodiadau hysbysiadau sy\'n ymddangos ar y tab Hysbysiadau.</string>
+	<string name="notifications_disabled">Mae hysbysiadau apiau wedi eu hanalluogi. Tapiwch yma i\'w galluogi yn y Gosodiadau.</string>
+	<string name="notification_types">Mathau o Hysbysiadau</string>
+	<string name="error_loading_notifications">Methu llwytho gosodiadau hysbysiadau</string>
+	<string name="replies_to_your_comments">Atebion i\'ch sylwadau</string>
+	<string name="comment_likes">Hoffi sylwadau</string>
+	<string name="app_notifications">Hysbysiadau Apiau</string>
+	<string name="notifications_tab">Tab hysbysiadau</string>
+	<string name="email">E-bost</string>
+	<string name="notifications_comments_other_blogs">Sylwadau ar wefannau eraill</string>
+	<string name="notifications_wpcom_updates">Diweddariadau WordPress.com</string>
+	<string name="notifications_other">Arall</string>
+	<string name="notifications_account_emails">Diweddariadau gan WordPress.com</string>
+	<string name="notifications_account_emails_summary">Byddwn yn anfon e-byst pwysig am eich cyfrif a hefyd cewch bethau ychwanegol a defnyddiol.</string>
+	<string name="notifications_sights_and_sounds">Golwg a Sain</string>
+	<string name="your_sites">Eich Gwefannau</string>
+	<string name="notifications_updates_from_wordpress">Diweddariadau gan WordPress.com</string>
+	<string name="stats_insights_latest_post_trend">Mae wedi bod yn %1$s ers cyhoeddi %2$s. Dyma sut mae\'r cofnod wedi performio hyd yma…</string>
+	<string name="stats_insights_latest_post_summary">Crynodeb o\'r Cofnod Diweddaraf</string>
+	<string name="button_revert">Dychwelyd</string>
+	<string name="days_ago">%d diwrnod yn ôl</string>
+	<string name="yesterday">Ddoe</string>
 	<string name="connectionbar_no_connection">Dim cysylltiad</string>
 	<string name="page_trashed">Anfonwyd y dudalen i\'r Sbwriel</string>
 	<string name="post_deleted">Dilëwyd y dudalen</string>
@@ -208,7 +250,6 @@
 	<string name="delete_sure_page">Dileu\'r dudalen</string>
 	<string name="confirm_delete_multi_media">Dileu\'r eitemau hyn?</string>
 	<string name="signing_out">Allgofnodi…</string>
-	<string name="overwrite_local_changes">Rydych wedi gwneud newidiadau i gofnod sydd heb ei lwytho eto. Parhau i\'w adnewyddu a throsysgrfennu\'r newidiadau lleol?</string>
 	<string name="reader_empty_posts_in_tag">Dim cofnod gyda\'r tag hwn</string>
 	<string name="agree_terms_of_service">Drwy greu cyfrif rydych y cytuno â\'r %1$sAmodau Gwasanaeth%2$s difyr</string>
 	<string name="posts_empty_list">Dim cofnod eto. Beth am greu un?</string>
@@ -235,13 +276,9 @@
 	<string name="reader_title_comments">Sylwadau</string>
 	<string name="reader_label_comments_closed">Mae\'r sylwadau wedi cau</string>
 	<string name="reader_label_comment_count_single">Un sylw</string>
-	<string name="reader_likes_one_short">1 person</string>
-	<string name="reader_label_liked_by_you">Hoffwyd gennych chi</string>
-	<string name="reader_label_liked_by">Hoffwyd gan</string>
 	<string name="reader_label_like">Hoffi</string>
 	<string name="reader_label_view_original">Darllen yr erthygl wreiddiol</string>
 	<string name="reader_label_comment_count_multi">%,d sylw</string>
-	<string name="reader_likes_multi_short">%,d o bobl</string>
 	<string name="reader_empty_comments">Dim sylwadau eto</string>
 	<string name="new_blog_wpcom_created">Mae\'r blog WordPress.com wedi ei greu!</string>
 	<string name="create_new_blog_wpcom">Creu blog WordPress.com</string>
@@ -282,8 +319,8 @@
 	<string name="reader_label_followed_blog">Blogiau rwy\'n eu diyn</string>
 	<string name="reader_page_followed_tags">Tagiau sy\'n cael eu dilyn</string>
 	<string name="reader_title_subs">Tagiau a Blogiau</string>
-	<string name="reader_title_tag_preview">Rhagolwg o\'r Tag</string>
-	<string name="reader_title_blog_preview">Rhagolwg o\'r Blog</string>
+	<string name="reader_title_blog_preview">Blog Darllenydd</string>
+	<string name="reader_title_tag_preview">Tag Darllenydd</string>
 	<string name="saving">Cadw…</string>
 	<string name="ptr_tip_message">Cyngor: Tynnwch i lawr i\'w adnewyddu</string>
 	<string name="media_empty_list">Dim cyfrwng</string>
@@ -513,12 +550,9 @@
 	<string name="reader_likes_one">Mae un person yn hoffi hwn</string>
 	<string name="reader_label_removed_tag">Tynnu %s</string>
 	<string name="reader_label_added_tag">Ychwanegu %s</string>
-	<string name="reader_hint_comment_on_comment">Ymateb i sylw</string>
-	<string name="reader_hint_comment_on_post">Ychwanegu eich sylw</string>
 	<string name="reader_btn_follow">Dilyn</string>
 	<string name="reader_btn_unfollow">Yn dilyn</string>
 	<string name="reader_btn_share">Rhannu</string>
-	<string name="reader_menu_tags">Tagiau</string>
 	<string name="reader_share_subject">Rhannu o %s</string>
 	<string name="reader_untitled_post">(Dideitl)</string>
 	<string name="reader_timespan_now">nawr</string>
@@ -528,6 +562,7 @@
 	<string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
 	<string name="media_add_new_media_gallery">Creu oriel</string>
 	<string name="media_add_popup_title">Ychwanegu at y llyfrgell cyfryngau</string>
+	<string name="reader_hint_comment_on_comment">Ateb sylw…</string>
 	<string name="stats_view_tags_and_categories">Tagiau a Chategorïau</string>
 	<string name="passcode_turn_on">Troi clo PIN ymlaen</string>
 	<string name="passcode_turn_off">Diffodd clo PIN</string>
@@ -595,14 +630,7 @@
 	<string name="upload">Llwytho i fyny</string>
 	<string name="more_notifications">a %d yn rhagor.</string>
 	<string name="new_notifications">%d hysbysiadau newydd</string>
-	<string name="notifications_turn_off_1hr">Diffodd am 1 awr</string>
-	<string name="notifications_turn_off_8hr">Diffodd am 8 awr</string>
 	<string name="note_reply_successful">Ateb wedi ei gyhoeddi</string>
-	<string name="notifications_turn_off">Diffodd</string>
-	<string name="options">Dewisiadau</string>
-	<string name="types">Math</string>
-	<string name="enable_notifications">Galluogi hysbysiadau</string>
-	<string name="manage_notifications">Rheoli hysbysiadau</string>
 	<string name="notifications">Hysbysiadau</string>
 	<string name="sign_in">Mewngofnodi</string>
 	<string name="loading">Llwytho…</string>
@@ -650,6 +678,7 @@
 	<string name="immediately">Ar unwaith</string>
 	<string name="quickpress_add_alert_title">Gosod enw\'r llwybr byr</string>
 	<string name="settings">Gosodiadau</string>
+	<string name="today">Heddiw</string>
 	<string name="share_url">Rhannu URL</string>
 	<string name="quickpress_window_title">Dewiswch flog ar gyfer llwybr byr QuickPress</string>
 	<string name="quickpress_add_error">Nid yw enw\'r llwybr byr yn gallu bod yn wag</string>
@@ -683,11 +712,34 @@
 	<string name="preview">Rhagolwg</string>
 	<string name="cancel">Diddymu</string>
 	<string name="error">Gwall</string>
+	<string name="notification_settings">Gosodiadau Hysbysiadau</string>
 	<string-array name="alignment_array">
 		<item>Dim</item>
 		<item>Chwith</item>
 		<item>Canol</item>
 		<item>De</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>Sylwadau ar fy ngwefan</item>
+		<item>Hoffi fy sylwadau</item>
+		<item>Hoffi fy nghofnodion</item>
+		<item>Gwefan yn dilyn</item>
+		<item>Cyraeddiadau\'r wefan</item>
+		<item>Crybwylliad enw defnyddiwr</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>Atebion i fy sylwadau</item>
+		<item>Hoffi fy sylwadau</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>Awgrymiadau</item>
+		<item>Ymchwil</item>
+		<item>Cymuned</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>Cyngor ar sut i gael y gorau o WordPress.com.</item>
+		<item>Cyfleoedd i gymryd rhan mewn ymchwil ac arolygon WordPress.com</item>
+		<item>Gwybodaeth am gyrsiau a digwyddiadau WordPress.com (ar-lein ac mewn person).</item>
 	</string-array>
 	<string-array name="post_filters_array">
 		<item>Cyhoeddwyd</item>

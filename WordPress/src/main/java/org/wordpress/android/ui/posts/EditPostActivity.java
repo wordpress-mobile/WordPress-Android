@@ -173,7 +173,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setElevation(0.0f);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -1099,7 +1098,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMedia(Uri imageUri) {
-        if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
+        if (imageUri != null && !MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
             imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
         }
 

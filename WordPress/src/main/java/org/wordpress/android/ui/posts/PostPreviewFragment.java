@@ -111,7 +111,7 @@ public class PostPreviewFragment extends Fragment {
                 ? "(" + getResources().getText(R.string.untitled) + ")"
                 : StringUtils.unescapeHTML(post.getTitle()));
 
-        String postContent = post.getDescription();
+        String postContent = PostUtils.collapseShortcodes(post.getDescription());
         if (!TextUtils.isEmpty(post.getMoreText())) {
             postContent += "\n\n" + post.getMoreText();
         }

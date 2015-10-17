@@ -68,6 +68,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mLayoutFooter;
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
+    private View mLikingUsersDivider;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -134,6 +135,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
         mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
+        mLikingUsersDivider = view.findViewById(R.id.layout_liking_users_divider);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -411,7 +413,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setSelected(mPost.isLikedByCurrentUser);
             if (mIsLoggedOutReader) {
                 countLikes.setEnabled(false);
-            } else if (mPost.isLikesEnabled) {
+            } else if (mPost.canLikePost()) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -419,10 +421,11 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 });
             }
-            // if we know refreshLikes() is going to show the liking layout, force it to take up
-            // space right now
+            // if we know refreshLikes() is going to show the liking users, force liking user
+            // views to take up space right now
             if (mPost.numLikes > 0 && mLikingUsersView.getVisibility() == View.GONE) {
                 mLikingUsersView.setVisibility(View.INVISIBLE);
+                mLikingUsersDivider.setVisibility(View.INVISIBLE);
             }
         } else {
             countLikes.setVisibility(View.INVISIBLE);
@@ -434,15 +437,14 @@ public class ReaderPostDetailFragment extends Fragment
      * show latest likes for this post
      */
     private void refreshLikes() {
-        if (!isAdded() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
+        if (!isAdded() || !hasPost() || !mPost.canLikePost()) {
             return;
         }
 
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
-            if (mLikingUsersView.getVisibility() != View.GONE) {
-                AniUtils.fadeOut(mLikingUsersView, AniUtils.Duration.SHORT);
-            }
+            mLikingUsersView.setVisibility(View.GONE);
+            mLikingUsersDivider.setVisibility(View.GONE);
             return;
         }
 
@@ -454,10 +456,8 @@ public class ReaderPostDetailFragment extends Fragment
             }
         });
 
-        if (mLikingUsersView.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mLikingUsersView, AniUtils.Duration.SHORT);
-        }
-
+        mLikingUsersDivider.setVisibility(View.VISIBLE);
+        mLikingUsersView.setVisibility(View.VISIBLE);
         mLikingUsersView.showLikingUsers(mPost);
     }
 
@@ -886,8 +886,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean canShowLikeCount() {
         return mPost != null
-                && !mPost.isDiscoverPost()
-                && mPost.isLikesEnabled;
+                && (mPost.canLikePost() || mPost.numLikes > 0);
     }
 
 }

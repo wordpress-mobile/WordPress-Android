@@ -37,7 +37,6 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
-import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -48,6 +47,7 @@ import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -64,6 +64,7 @@ public class WPMainActivity extends Activity
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
+    private int mLastReselectedTabPosition = -1;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -79,10 +80,14 @@ public class WPMainActivity extends Activity
     public void onCreate(Bundle savedInstanceState) {
         setStatusBarColor();
 
+        ProfilingUtils.split("WPMainActivity.onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
+        mViewPager.setOffscreenPageLimit(WPMainTabAdapter.NUM_TABS - 1);
+
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
@@ -118,10 +123,19 @@ public class WPMainActivity extends Activity
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                // scroll the active fragment to the top, if available
-                Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
-                if (fragment instanceof OnScrollToTopListener) {
-                    ((OnScrollToTopListener) fragment).onScrollToTop();
+                // we want to scroll the active fragment's contents to the top when the user taps the currently
+                // selected tab, but a problem in the v22 and v23.0.1 support library causes onTabReselected() to be
+                // fired for every tab change rather than just when the active tab is tapped again - the workaround
+                // below, where we check whether the  tab has already been reselected, prevents the problem.
+                //
+                // Support library ticket: https://code.google.com/p/android/issues/detail?id=177189
+                if (tab.getPosition() == mLastReselectedTabPosition) {
+                    Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
+                    if (fragment instanceof OnScrollToTopListener) {
+                        ((OnScrollToTopListener) fragment).onScrollToTop();
+                    }
+                } else {
+                    mLastReselectedTabPosition = tab.getPosition();
                 }
             }
         });
@@ -267,6 +281,10 @@ public class WPMainActivity extends Activity
         trackLastVisibleTab(mViewPager.getCurrentItem());
 
         checkConnection();
+
+        ProfilingUtils.split("WPMainActivity.onResume");
+        ProfilingUtils.dump();
+        ProfilingUtils.stop();
     }
 
     private void trackLastVisibleTab(int position) {
@@ -299,9 +317,9 @@ public class WPMainActivity extends Activity
     private void resetFragments() {
         AppLog.i(AppLog.T.MAIN, "main activity > reset fragments");
 
-        // remove the event that determines when followed tags/blogs are updated so they're
+        // reset the timestamp that determines when followed tags/blogs are updated so they're
         // updated when the fragment is recreated (necessary after signin/disconnect)
-        EventBus.getDefault().removeStickyEvent(ReaderEvents.UpdatedFollowedTagsAndBlogs.class);
+        ReaderPostListFragment.resetLastUpdateDate();
 
         // remember the current tab position, then recreate the adapter so new fragments are created
         int position = mViewPager.getCurrentItem();
@@ -333,17 +351,12 @@ public class WPMainActivity extends Activity
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
+            case RequestCodes.CREATE_BLOG:
                 if (resultCode == RESULT_OK) {
                     MySiteFragment mySiteFragment = getMySiteFragment();
                     if (mySiteFragment != null) {
                         mySiteFragment.onActivityResult(requestCode, resultCode, data);
                     }
-                }
-                break;
-            case RequestCodes.READER_SUBS:
-                ReaderPostListFragment readerFragment = getReaderListFragment();
-                if (readerFragment != null) {
-                    readerFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -390,38 +403,17 @@ public class WPMainActivity extends Activity
                     resetFragments();
                 }
                 break;
-            case RequestCodes.CREATE_BLOG:
-                if (resultCode == RESULT_OK) {
-                    MySiteFragment mySiteFragment = getMySiteFragment();
-                    if (mySiteFragment != null) {
-                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
-                    }
-                }
-                break;
         }
-    }
-
-    /*
-     * returns the reader list fragment from the reader tab
-     */
-    private ReaderPostListFragment getReaderListFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_READER, ReaderPostListFragment.class);
     }
 
     /*
      * returns the my site fragment from the sites tab
      */
-    public MySiteFragment getMySiteFragment() {
-        return getFragmentByPosition(WPMainTabAdapter.TAB_MY_SITE, MySiteFragment.class);
-    }
-
-    private <T> T getFragmentByPosition(int position, Class<T> type) {
-        Fragment fragment = mTabAdapter != null ? mTabAdapter.getFragment(position) : null;
-
-        if (fragment != null && type.isInstance(fragment)) {
-            return type.cast(fragment);
+    private MySiteFragment getMySiteFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
+        if (fragment instanceof MySiteFragment) {
+            return (MySiteFragment) fragment;
         }
-
         return null;
     }
 

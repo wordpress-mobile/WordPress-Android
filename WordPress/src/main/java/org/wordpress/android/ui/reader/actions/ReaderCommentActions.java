@@ -19,6 +19,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.VolleyUtils;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,9 +63,9 @@ public class ReaderCommentActions {
         newComment.pageNumber = pageNumber;
         newComment.setText(commentText);
 
-        String published = DateTimeUtils.nowUTC().toString();
-        newComment.setPublished(published);
-        newComment.timestamp = DateTimeUtils.iso8601ToTimestamp(published);
+        Date dtPublished = DateTimeUtils.nowUTC();
+        newComment.setPublished(DateTimeUtils.javaDateToIso8601(dtPublished));
+        newComment.timestamp = dtPublished.getTime();
 
         ReaderUser currentUser = ReaderUserTable.getCurrentUser();
         if (currentUser != null) {
