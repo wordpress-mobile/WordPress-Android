@@ -259,11 +259,15 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-
-            holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
-                    WPNetworkImageView.ImageType.BLAVATAR);
-            holder.networkImageView.setVisibility(View.VISIBLE);
+            
+            if (TextUtils.isEmpty(icon)) {
+                holder.networkImageView.setVisibility(View.GONE);
+            } else {
+                holder.networkImageView.setImageUrl(
+                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+                        WPNetworkImageView.ImageType.BLAVATAR);
+                holder.networkImageView.setVisibility(View.VISIBLE);
+            }
 
             if (children == 0) {
                 holder.showLinkIcon();
