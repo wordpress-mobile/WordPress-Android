@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -15,9 +16,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -118,6 +121,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int SELECT_LIBRARY_MENU_POSITION = 5;
     private static final int NEW_PICKER_MENU_POSITION = 6;
 
+    private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
+    private static final String[] MEDIA_PERMISSIONS = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
+
     private static final String ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED = "number_of_local_photos_added";
     private static final String ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED = "number_of_wp_library_photos_added";
 
@@ -164,6 +173,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+
+    // For opening the context menu after permissions have been granted
+    private View mMenuView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,10 +303,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onResume() {
         super.onResume();
 
-        registerReceiver(mGalleryReceiver,
-                new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
-
-        refreshBlogMedia();
         mAutoSaveTimer = new Timer();
         mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
     }
@@ -406,6 +414,52 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case EditPostSettingsFragment.PERMISSION_REQUEST_LOCATION:
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission request was granted, show Location buttons in Settings
+                    mEditPostSettingsFragment.showLocationSearch();
+                    return;
+                }
+                break;
+            case MEDIA_PERMISSION_REQUEST_CODE:
+                boolean shouldShowContextMenu = true;
+                for (int i = 0; i < grantResults.length; ++i) {
+                    switch (permissions[i]) {
+                        case Manifest.permission.CAMERA:
+                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                shouldShowContextMenu = false;
+                            }
+                            break;
+                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                shouldShowContextMenu = false;
+                            } else {
+                                registerReceiver(mGalleryReceiver,
+                                    new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
+                                refreshBlogMedia();
+                            }
+                            break;
+                    }
+                }
+                if (shouldShowContextMenu) {
+                    if (mMenuView != null) {
+                        super.openContextMenu(mMenuView);
+                        mMenuView = null;
+                    }
+                } else {
+                    ToastUtils.showToast(this, "Permissions required in order to access media");
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     private void trackSavePostAnalytics() {
         PostStatus status = mPost.getStatusEnum();
         switch (status) {
@@ -470,6 +524,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void openContextMenu(View view) {
+        if (checkMediaPermissions()) {
+            super.openContextMenu(view);
+        } else {
+            mMenuView = view;
+        }
     }
 
     @Override
@@ -1551,6 +1614,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         startMediaUploadService();
     }
 
+    // Makes sure that permissions required for adding media are granted, if not user is prompted
+    private boolean checkMediaPermissions() {
+        List<String> toRequest = new ArrayList<>();
+        for (String permission : MEDIA_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                toRequest.add(permission);
+            }
+        }
+
+        if (toRequest.size() > 0) {
+            String[] requestedPermissions = toRequest.toArray(new String[toRequest.size()]);
+            ActivityCompat.requestPermissions(this, requestedPermissions, MEDIA_PERMISSION_REQUEST_CODE);
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * EditorFragmentListener methods
      */
@@ -1573,17 +1655,5 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
         WordPress.wpDB.saveMediaFile(mediaFile);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == EditPostSettingsFragment.PERMISSION_REQUEST_LOCATION) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission request was granted, show Location buttons in Settings
-                mEditPostSettingsFragment.showLocationSearch();
-                return;
-            }
-            // Permission request was denied, do nothing
-        }
     }
 }

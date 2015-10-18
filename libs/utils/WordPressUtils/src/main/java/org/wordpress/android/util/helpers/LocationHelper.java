@@ -1,17 +1,12 @@
 //This Handy-Dandy class acquired and tweaked from http://stackoverflow.com/a/3145655/309558
 package org.wordpress.android.util.helpers;
 
-import android.Manifest.permission_group;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 
 import java.util.Timer;
 import java.util.TimerTask;
