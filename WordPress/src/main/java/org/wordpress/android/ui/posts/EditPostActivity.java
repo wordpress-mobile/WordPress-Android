@@ -459,7 +459,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         mMenuView = null;
                     }
                 } else {
-                    ToastUtils.showToast(this, "Permissions required in order to access media");
+                    ToastUtils.showToast(this, getString(R.string.media_permission_required));
                 }
                 break;
             default:

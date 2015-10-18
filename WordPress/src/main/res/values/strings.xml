@@ -1013,5 +1013,6 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
+    <string name="media_permission_required">Permissions required in order to access media</string>
 
 </resources>
