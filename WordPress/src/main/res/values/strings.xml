@@ -118,6 +118,8 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
+    <string name="access_media_permission_required">Permissions required in order to access media</string>
+    <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="loading_videos">Loading videos</string>
     <string name="loading_images">Loading images</string>
@@ -1013,6 +1015,5 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
-    <string name="media_permission_required">Permissions required in order to access media</string>
 
 </resources>

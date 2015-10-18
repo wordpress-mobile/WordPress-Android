@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -120,12 +119,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int ADD_GALLERY_MENU_POSITION = 4;
     private static final int SELECT_LIBRARY_MENU_POSITION = 5;
     private static final int NEW_PICKER_MENU_POSITION = 6;
-
-    private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
-    private static final String[] MEDIA_PERMISSIONS = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA
-    };
 
     private static final String ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED = "number_of_local_photos_added";
     private static final String ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED = "number_of_wp_library_photos_added";
@@ -433,7 +426,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     return;
                 }
                 break;
-            case MEDIA_PERMISSION_REQUEST_CODE:
+            case WordPressMediaUtils.MEDIA_PERMISSION_REQUEST_CODE:
                 boolean shouldShowContextMenu = true;
                 for (int i = 0; i < grantResults.length; ++i) {
                     switch (permissions[i]) {
@@ -459,7 +452,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         mMenuView = null;
                     }
                 } else {
-                    ToastUtils.showToast(this, getString(R.string.media_permission_required));
+                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
                 break;
             default:
@@ -535,7 +528,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        if (checkMediaPermissions()) {
+        if (WordPressMediaUtils.checkMediaPermissions(this)) {
             super.openContextMenu(view);
         } else {
             mMenuView = view;
@@ -1619,25 +1612,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         saveMediaFile(mediaFile);
         startMediaUploadService();
-    }
-
-    // Makes sure that permissions required for adding media are granted, if not user is prompted
-    private boolean checkMediaPermissions() {
-        List<String> toRequest = new ArrayList<>();
-        for (String permission : MEDIA_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                toRequest.add(permission);
-            }
-        }
-
-        if (toRequest.size() > 0) {
-            String[] requestedPermissions = toRequest.toArray(new String[toRequest.size()]);
-            ActivityCompat.requestPermissions(this, requestedPermissions, MEDIA_PERMISSION_REQUEST_CODE);
-            return false;
-        }
-
-        return true;
     }
 
     /**
