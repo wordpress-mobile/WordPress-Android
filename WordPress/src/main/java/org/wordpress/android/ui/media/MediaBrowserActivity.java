@@ -7,11 +7,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -322,23 +324,34 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case WordPressMediaUtils.MEDIA_PERMISSION_REQUEST_CODE:
+                for (int grantResult : grantResults) {
+                    if (grantResult == PackageManager.PERMISSION_DENIED) {
+                        ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
+                        return;
+                    }
+                }
+
+                showNewMediaMenu();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             onBackPressed();
             return true;
         } else if (i == R.id.menu_new_media) {
-            View view = findViewById(R.id.menu_new_media);
-            if (view != null) {
-                int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
-                int[] loc = new int[2];
-                view.getLocationOnScreen(loc);
-                mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
-                        loc[1] + view.getHeight() + y_offset);
-            } else {
-                // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
-                View gridView = findViewById(R.id.media_gridview);
-                mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
+            if (WordPressMediaUtils.checkMediaPermissions(this)) {
+                showNewMediaMenu();
             }
             return true;
         } else if (i == R.id.menu_search) {
@@ -550,6 +563,21 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaGridFragment != null) {
             mMediaGridFragment.clearSelectedItems();
             mMediaGridFragment.refreshMediaFromDB();
+        }
+    }
+
+    private void showNewMediaMenu() {
+        View view = findViewById(R.id.menu_new_media);
+        if (view != null) {
+            int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
+            int[] loc = new int[2];
+            view.getLocationOnScreen(loc);
+            mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
+                    loc[1] + view.getHeight() + y_offset);
+        } else {
+            // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
+            View gridView = findViewById(R.id.media_gridview);
+            mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
         }
     }
 }
