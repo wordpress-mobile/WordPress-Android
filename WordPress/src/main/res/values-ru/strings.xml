@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">Чтобы просмотреть статистику, включите модуль JSON API в Jetpack.</string>
+	<string name="error_open_list_from_notification">Эта запись или страница была опубликована на другом сайте</string>
+	<string name="post_uploaded">Запись загружена</string>
+	<string name="page_uploaded">Страница загружена</string>
 	<string name="reader_short_comment_count_multi">Комментариев: %s</string>
 	<string name="reader_short_comment_count_one">Один комментарий</string>
 	<string name="reader_label_submit_comment">ОТПРАВИТЬ</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Комментарии на других сайтах</string>
 	<string name="notifications_wpcom_updates">Обновления WordPress.com</string>
 	<string name="notifications_other">Другое</string>
-	<string name="notifications_account_emails">Обновления с WordPress.com</string>
+	<string name="notifications_account_emails">Письма с WordPress.com</string>
 	<string name="notifications_account_emails_summary">Важные письма, касающиеся вашей учётной записи, мы отправляем всегда, но можно также включить и другие полезные уведомления.</string>
 	<string name="your_sites">Ваши сайты</string>
 	<string name="notifications_sights_and_sounds">Визуализация и звуки</string>
-	<string name="notifications_updates_from_wordpress">Обновления с WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">С момента публикации %2$s прошло %1$s. Вот данные о популярности записи...</string>
 	<string name="stats_insights_latest_post_summary">Данные о последней записи</string>
 	<string name="button_revert">Отменить</string>
@@ -170,7 +173,6 @@
 	<string name="publisher">Автор:</string>
 	<string name="reader_empty_posts_request_failed">Не удалось загрузить записи.</string>
 	<string name="error_copy_to_clipboard">Произошла ошибка при копировании текста в буфер обмена.</string>
-	<string name="reader_page_recommended_blogs">Блоги, подобранные для вас</string>
 	<string name="stats_months_and_years">Месяцы и года</string>
 	<string name="stats_recent_weeks">Последние недели</string>
 	<string name="reader_empty_posts_in_blog">Этот блог пуст.</string>
@@ -181,6 +183,7 @@
 	<string name="stats_total">Итого</string>
 	<string name="stats_overall">Все время</string>
 	<string name="post_uploading">Идет отправка на сервер.</string>
+	<string name="reader_page_recommended_blogs">Сайты, подобранные для вас</string>
 	<string name="stats_comments_total_comments_followers">Общее число записей с подписками на комментарии: %1$s</string>
 	<string name="stats_visitors">Посетителей</string>
 	<string name="stats_timeframe_years">Годы</string>
@@ -249,7 +252,6 @@
 	<string name="confirm_delete_media">Удалить выбранный элемент?</string>
 	<string name="cab_selected">Выбрано: %d</string>
 	<string name="media_gallery_date_range">Отображаются файлы за период %1$s — %2$s</string>
-	<string name="reader_empty_followed_blogs_title">Вы еще не подписаны ни на один блог.</string>
 	<string name="reader_empty_posts_liked">Вы еще не поставили отметку «Нравится» ни одной записи.</string>
 	<string name="faq_button">Часто задаваемые вопросы</string>
 	<string name="browse_our_faq_button">Поиск в списке часто задаваемых вопросов</string>
@@ -287,6 +289,7 @@
 	<string name="posting_post">Публикуется материал "%s"</string>
 	<string name="signing_out">Выход из системы...</string>
 	<string name="sending_content">Загрузка содержимого: %s</string>
+	<string name="reader_empty_followed_blogs_title">Вы еще не подписаны ни на один сайт.</string>
 	<string name="reader_menu_block_blog">Заблокировать этот блог</string>
 	<string name="reader_toast_blog_blocked">Записи из этого блога больше не будут отображаться</string>
 	<string name="reader_toast_err_block_blog">Не удалось заблокировать этот блог</string>
@@ -308,7 +311,6 @@
 	<string name="preference_send_usage_stats_summary">Автоматически отправлять статистику использования для улучшения WordPress для Android</string>
 	<string name="update_verb">Обновить</string>
 	<string name="schedule_verb">Запланировать</string>
-	<string name="reader_page_followed_blogs">Отслеживаемые блоги</string>
 	<string name="reader_label_followed_blog">Блог отслеживается</string>
 	<string name="reader_empty_recommended_blogs">Нет рекомендованных блогов</string>
 	<string name="reader_toast_err_follow_blog">Не удалось подписаться на блог</string>
@@ -319,8 +321,9 @@
 	<string name="reader_title_subs">Метки и блоги</string>
 	<string name="reader_page_followed_tags">Отслеживаемые метки</string>
 	<string name="reader_label_tag_preview">Записи с меткой %s</string>
-	<string name="reader_hint_add_tag_or_url">Введите метку или URL для подписки</string>
 	<string name="reader_toast_err_already_follow_blog">Вы уже подписаны на этот блог</string>
+	<string name="reader_page_followed_blogs">Отслеживаемые сайты</string>
+	<string name="reader_hint_add_tag_or_url">Введите URL или метку для подписки</string>
 	<string name="saving">Сохранение...</string>
 	<string name="media_empty_list">Нет медиа</string>
 	<string name="ptr_tip_message">Потяните вниз, чтобы обновить</string>
@@ -527,7 +530,7 @@
 	<string name="validating_site_data">Проверка данных сайта</string>
 	<string name="account_two_step_auth_enabled">Включена двушаговая авторизация- зайдите в настройки безопасности на WordPress.com и сгенерируйте специальный ключ для приложения.</string>
 	<string name="reader_toast_err_get_post">Не удаётся загрузить эту запись</string>
-	<string name="reader_empty_followed_blogs_description">Выберите метку, чтобы найти публикации.</string>
+	<string name="reader_empty_followed_blogs_description">Просто нажмите на иконку справа вверху, чтобы найти что-нибудь интересное!</string>
 	<string name="password_invalid">Требуется более сложный пароль. Используйте пароль длинной 7 и более символов, содержащий прописные и строчные буквы, цифры а так же спецсимволы.</string>
 	<string name="nux_tap_continue">Продолжить</string>
 	<string name="nux_welcome_create_account">Создать аккаунт</string>
