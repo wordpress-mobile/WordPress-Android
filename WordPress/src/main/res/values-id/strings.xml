@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">Untuk menampilkan statistik Anda, aktifkan module JSON API di Jetpack.</string>
+	<string name="error_open_list_from_notification">Pos atau laman ini diterbitkan di situs lain</string>
+	<string name="post_uploaded">Pos terunggah</string>
+	<string name="page_uploaded">Laman terunggah</string>
 	<string name="reader_short_comment_count_multi">%s Komentar</string>
 	<string name="reader_short_comment_count_one">1 Komentar</string>
 	<string name="reader_label_submit_comment">KIRIM</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Komentar di situs lain</string>
 	<string name="notifications_other">Lainnya</string>
 	<string name="notifications_wpcom_updates">Berita Terbaru WordPress.com</string>
-	<string name="notifications_account_emails">Perbarui dari WordPress.com</string>
+	<string name="notifications_account_emails">Email dari WordPress.com</string>
 	<string name="notifications_account_emails_summary">Kami akan selalu mengirim email penting terkait akun Anda, namun Anda juga dapat memperoleh beberapa tambahan yang bermanfaat.</string>
 	<string name="notifications_sights_and_sounds">Penglihatan dan Suara</string>
 	<string name="your_sites">Situs Anda</string>
-	<string name="notifications_updates_from_wordpress">Perbarui dari WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Telah %1$s sejak %2$s diterbitkan. Berikut ini gambaran kinerja pos sejauh ini…</string>
 	<string name="stats_insights_latest_post_summary">Ringkasan Pos Terbaru</string>
 	<string name="button_revert">Kembalikan</string>
@@ -169,7 +172,6 @@
 	<string name="reader_empty_posts_request_failed">Gagal memuat pos-pos</string>
 	<string name="publisher">Penerbit:</string>
 	<string name="error_notification_open">Gagal membuka notifikasi</string>
-	<string name="reader_page_recommended_blogs">Blog yang mungkin Anda sukai</string>
 	<string name="post_uploading">Mengunggah</string>
 	<string name="stats_overall">Keseluruhan</string>
 	<string name="reader_empty_posts_in_blog">Blog ini kosong</string>
@@ -181,6 +183,7 @@
 	<string name="logs_copied_to_clipboard">Log aplikasi sudah disalin ke clipboard</string>
 	<string name="stats_average_per_day">Rata-Rata per Hari</string>
 	<string name="stats_months_and_years">Bulan dan Tahun</string>
+	<string name="reader_page_recommended_blogs">Situs yang mungkin Anda sukai</string>
 	<string name="stats_comments_total_comments_followers">Total pos dengan pengikut komentar: %1$s</string>
 	<string name="stats_view_publicize">Publikasikan</string>
 	<string name="stats_view_followers">Pengikut</string>
@@ -249,7 +252,6 @@
 	<string name="confirm_delete_multi_media">Hapus semua item terpilih?</string>
 	<string name="cab_selected">%d terpilih</string>
 	<string name="media_gallery_date_range">Menampilkan media dari %1$s hingga %2$s</string>
-	<string name="reader_empty_followed_blogs_title">Anda belum mengikuti blog sama sekali</string>
 	<string name="reader_empty_posts_liked">Anda belum menyukai pos sama sekali</string>
 	<string name="faq_button">Tanya Jawab Umum</string>
 	<string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
@@ -287,6 +289,7 @@
 	<string name="media_empty_list_custom_date">Tidak ada media dalam interval waktu ini</string>
 	<string name="posting_post">Mengeposkan "%s"</string>
 	<string name="signing_out">Keluar…</string>
+	<string name="reader_empty_followed_blogs_title">Anda belum mengikuti situs apapun</string>
 	<string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
 	<string name="reader_toast_err_block_blog">Tidak bisa memblokir blog ini</string>
 	<string name="reader_toast_blog_blocked">Pos-pos dari blog ini tak akan ditampilkan lagi</string>
@@ -310,8 +313,6 @@
 	<string name="schedule_verb">Jadwalkan</string>
 	<string name="reader_title_subs">Tag &amp; Blog</string>
 	<string name="reader_page_followed_tags">Tag yang diikuti</string>
-	<string name="reader_page_followed_blogs">Blog yang diikuti</string>
-	<string name="reader_hint_add_tag_or_url">Masukkan sebuah tag atau URL untuk mengikuti</string>
 	<string name="reader_label_followed_blog">Blog diikuti</string>
 	<string name="reader_label_tag_preview">Pos dengan tag %s</string>
 	<string name="reader_toast_err_get_blog_info">Tak bisa menampilkan blog ini</string>
@@ -321,6 +322,8 @@
 	<string name="reader_empty_recommended_blogs">Tak ada blog yang direkomendasikan</string>
 	<string name="reader_title_blog_preview">Blog Pembaca</string>
 	<string name="reader_title_tag_preview">Tag Pembaca</string>
+	<string name="reader_page_followed_blogs">Situs yang diikuti</string>
+	<string name="reader_hint_add_tag_or_url">Masukkan sebuah URL atau tag untuk mengikuti</string>
 	<string name="saving">Menyimpan...</string>
 	<string name="media_empty_list">Tak ada media</string>
 	<string name="ptr_tip_message">Tip: Tarik ke bawah untuk menyegarkan</string>
@@ -527,7 +530,7 @@
 	<string name="reader_toast_err_get_post">Gagal membuka pos ini</string>
 	<string name="validating_user_data">Memeriksa keabsahan data pengguna</string>
 	<string name="validating_site_data">Memeriksa keabsahan data situs</string>
-	<string name="reader_empty_followed_blogs_description">Tapi jangan khawatir, cukup ketuk ikon tag untuk mulai menjelajah!</string>
+	<string name="reader_empty_followed_blogs_description">Tapi jangan khawatir, cukup ketuk ikon di kanan atas untuk mulai menjelajah!</string>
 	<string name="password_invalid">Anda butuh password yang lebih aman. Pastikan menggunakan 7 atau lebih karakter, kombinasikan huruf kapital dan kecil, angka atau tanda baca.</string>
 	<string name="nux_tap_continue">Lanjutkan</string>
 	<string name="nux_welcome_create_account">Buat akun</string>
