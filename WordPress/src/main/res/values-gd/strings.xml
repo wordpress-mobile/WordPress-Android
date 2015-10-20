@@ -106,7 +106,6 @@
 	<string name="error_notification_open">Cha b’ urrainn dhuinn am brath fhosgladh</string>
 	<string name="reader_empty_posts_request_failed">Chan urrainn dhuinn na puist fhaighinn</string>
 	<string name="stats_months_and_years">Mìosan is bliadhnaichean</string>
-	<string name="reader_page_recommended_blogs">Blogaichean a dh’fhaodadh a bhith inntinneach dhut</string>
 	<string name="stats_recent_weeks">Na seachdainean seo chaidh</string>
 	<string name="error_copy_to_clipboard">Thachair mearachd nuair a chaidh lethbhreac dha na faidhlichean a chur air an stòr-bhòrd</string>
 	<string name="stats_average_per_day">An cuibheas làitheil</string>
@@ -222,7 +221,6 @@
 	<string name="browse_our_faq_button">Rùraich na CÀBHA agam</string>
 	<string name="faq_button">CÀBHA</string>
 	<string name="reader_empty_posts_liked">Cha duirt thu gur toil leat post sam bith fhathast</string>
-	<string name="reader_empty_followed_blogs_title">Chan eil thu a’ leantainn bloga sam bith fhathast</string>
 	<string name="reader_menu_block_blog">Bac am bloga seo</string>
 	<string name="reader_toast_blog_blocked">Cha dèid puist on bhloga seo a shealltainn tuilleadh</string>
 	<string name="reader_toast_err_block_blog">Cha ghabh am bloga seo a bhacadh</string>
@@ -248,8 +246,6 @@
 	<string name="reader_toast_err_follow_blog">Cha ghabh am bloga seo a leantainn</string>
 	<string name="reader_toast_err_unfollow_blog">Cha ghabh am bloga seo a dhì-leantainn</string>
 	<string name="reader_empty_recommended_blogs">Chan eil bloga ann a mholamaid</string>
-	<string name="reader_page_followed_blogs">Blogaichean a tha thu a’ leantainn</string>
-	<string name="reader_hint_add_tag_or_url">Cuir a-steach taga no URL gus a leantainn</string>
 	<string name="reader_label_followed_blog">A’ leantainn a’ bhloga</string>
 	<string name="reader_label_tag_preview">Puist ris a bheil taga %s</string>
 	<string name="reader_toast_err_get_blog_info">Cha ghabh am bloga seo a shealltainn</string>
@@ -461,7 +457,6 @@
 	<string name="reader_toast_err_get_post">Chan urrainn dhuinn am post seo fhaighinn dhut</string>
 	<string name="validating_user_data">A\' dearbhadh dàta a\' chleachdaiche</string>
 	<string name="validating_site_data">A\' dearbhadh dàta na làraich</string>
-	<string name="reader_empty_followed_blogs_description">Ach na gabh dragh, cha leig thu leas ach gnogag a thoirt air ìomhaigheag nan taga gus an rùrachadh!</string>
 	<string name="password_invalid">Feumaidh tu facal-faire nas tèarainte. Dèan cinnteach gun cleachd thu co-dhiù 7 caractaran, measgachadh de litrichean mòra \'s beaga, àireamhan is caractaran sònraichte.</string>
 	<string name="nux_tap_continue">Air adhart</string>
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -8,13 +9,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -95,7 +99,8 @@ import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 
-public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener {
+public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -161,6 +166,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+
+    // For opening the context menu after permissions have been granted
+    private View mMenuView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,10 +296,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onResume() {
         super.onResume();
 
-        registerReceiver(mGalleryReceiver,
-                new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
-
-        refreshBlogMedia();
         mAutoSaveTimer = new Timer();
         mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
     }
@@ -403,6 +407,59 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case EditPostSettingsFragment.PERMISSION_REQUEST_LOCATION:
+                boolean shouldShowLocation = false;
+                // Check if at least one of the location permission (coarse or fine) is granted
+                for (int grantResult : grantResults) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                        shouldShowLocation = true;
+                    }
+                }
+                if (shouldShowLocation) {
+                    // Permission request was granted, show Location buttons in Settings
+                    mEditPostSettingsFragment.showLocationSearch();
+                    return;
+                }
+                break;
+            case WordPressMediaUtils.MEDIA_PERMISSION_REQUEST_CODE:
+                boolean shouldShowContextMenu = true;
+                for (int i = 0; i < grantResults.length; ++i) {
+                    switch (permissions[i]) {
+                        case Manifest.permission.CAMERA:
+                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                shouldShowContextMenu = false;
+                            }
+                            break;
+                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                shouldShowContextMenu = false;
+                            } else {
+                                registerReceiver(mGalleryReceiver,
+                                    new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
+                                refreshBlogMedia();
+                            }
+                            break;
+                    }
+                }
+                if (shouldShowContextMenu) {
+                    if (mMenuView != null) {
+                        super.openContextMenu(mMenuView);
+                        mMenuView = null;
+                    }
+                } else {
+                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     private void trackSavePostAnalytics() {
         PostStatus status = mPost.getStatusEnum();
         switch (status) {
@@ -467,6 +524,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void openContextMenu(View view) {
+        if (WordPressMediaUtils.checkMediaPermissions(this)) {
+            super.openContextMenu(view);
+        } else {
+            mMenuView = view;
+        }
     }
 
     @Override

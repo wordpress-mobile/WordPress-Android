@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">統計情報を表示するには、Jetpack の JSON API モジュールを有効化してください。</string>
+	<string name="error_open_list_from_notification">この投稿またはページは他のサイトで公開されています</string>
+	<string name="post_uploaded">投稿を更新しました</string>
+	<string name="page_uploaded">ページを更新しました</string>
 	<string name="reader_short_comment_count_multi">%s件のコメント</string>
 	<string name="reader_short_comment_count_one">1件のコメント</string>
 	<string name="reader_label_submit_comment">送信</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">他のサイトのコメント</string>
 	<string name="notifications_wpcom_updates">WordPress.com のニュース</string>
 	<string name="notifications_other">その他</string>
-	<string name="notifications_account_emails">WordPress.com からのニュース</string>
+	<string name="notifications_account_emails">WordPress.com からのメール</string>
 	<string name="notifications_account_emails_summary">アカウントに関する重要なお知らせは常にメールでお送りしますが、役に立つ追加情報を受け取ることもできます。</string>
 	<string name="your_sites">あなたのサイト</string>
 	<string name="notifications_sights_and_sounds">視覚効果と音声</string>
-	<string name="notifications_updates_from_wordpress">WordPress.com からのニュース</string>
 	<string name="stats_insights_latest_post_trend">「%2$s」が公開されてから%1$sが経過しました。過去の投稿のパフォーマンスを次に示します…</string>
 	<string name="stats_insights_latest_post_summary">最新の投稿概要</string>
 	<string name="button_revert">戻す</string>
@@ -172,7 +175,6 @@
 	<string name="stats_months_and_years">月と年</string>
 	<string name="stats_recent_weeks">最近の週</string>
 	<string name="error_copy_to_clipboard">テキストをクリップボードにコピーする際にエラーが発生しました</string>
-	<string name="reader_page_recommended_blogs">おすすめのブログ</string>
 	<string name="stats_average_per_day">一日の平均</string>
 	<string name="reader_label_new_posts">新規投稿</string>
 	<string name="reader_empty_posts_in_blog">このブログは空です</string>
@@ -181,6 +183,7 @@
 	<string name="stats_total">合計</string>
 	<string name="stats_overall">全体</string>
 	<string name="post_uploading">アップロード中</string>
+	<string name="reader_page_recommended_blogs">おすすめのサイト</string>
 	<string name="stats_comments_total_comments_followers">コメントをフォロー中の人がいる投稿の合計数: %1$s</string>
 	<string name="stats_empty_geoviews_desc">リストから、どの国や地域からのトラフィックが多いのかを見ることができます。</string>
 	<string name="stats_empty_top_posts_desc">最も頻繁に表示されているコンテンツを発見し、各投稿やページの長期間に渡ったパフォーマンスをチェックできます。</string>
@@ -249,7 +252,6 @@
 	<string name="confirm_delete_media">選択した項目を削除しますか ?</string>
 	<string name="cab_selected">%d件選択</string>
 	<string name="media_gallery_date_range">%1$s から %2$s のメディアを表示中</string>
-	<string name="reader_empty_followed_blogs_title">フォローしているブログはまだありません。</string>
 	<string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
 	<string name="faq_button">よく聞かれる質問</string>
 	<string name="browse_our_faq_button">よく聞かれる質問を表示</string>
@@ -287,6 +289,7 @@
 	<string name="older_month">1ヶ月以上前</string>
 	<string name="older_two_days">2日以上前</string>
 	<string name="older_last_week">1週間以上前</string>
+	<string name="reader_empty_followed_blogs_title">フォローしているサイトがまだありません</string>
 	<string name="reader_toast_blog_blocked">このブログからの投稿は今後表示されません</string>
 	<string name="reader_menu_block_blog">このブログをブロック</string>
 	<string name="reader_toast_err_block_blog">ブログをブロックできませんでした</string>
@@ -313,14 +316,14 @@
 	<string name="reader_toast_err_already_follow_blog">このブログをすでにフォローしています</string>
 	<string name="reader_toast_err_unfollow_blog">このブログをフォローできませんでした</string>
 	<string name="reader_toast_err_get_blog_info">このブログを表示できません</string>
-	<string name="reader_page_followed_blogs">フォロー中のブログ</string>
-	<string name="reader_hint_add_tag_or_url">タグまたはフォローしたい URL を入力</string>
 	<string name="reader_title_subs">タグ・ブログ</string>
 	<string name="reader_toast_err_follow_blog">このブログをフォローできません</string>
 	<string name="reader_page_followed_tags">フォロー中のタグ</string>
 	<string name="reader_empty_recommended_blogs">おすすめブログはありません</string>
 	<string name="reader_title_blog_preview">Reader ブログ</string>
 	<string name="reader_title_tag_preview">Reader タグ</string>
+	<string name="reader_page_followed_blogs">フォロー中のサイト</string>
+	<string name="reader_hint_add_tag_or_url">フォローしたい URL またはタグを入力</string>
 	<string name="saving">保存中…</string>
 	<string name="media_empty_list">メディアなし</string>
 	<string name="ptr_tip_message">ヒント: 再読み込みするにはプルダウン</string>
@@ -527,7 +530,7 @@
 	<string name="reader_toast_err_get_post">この投稿を読み込みできません</string>
 	<string name="reader_likes_you_and_one">あなたと他1人が「いいね」をつけました</string>
 	<string name="account_two_step_auth_enabled">このアカウントでは2段階認証が有効化されています。WordPress.com のセキュリティ設定ページでアプリケーション用パスワードを生成してください。</string>
-	<string name="reader_empty_followed_blogs_description">タグアイコンをタップして開始してください。</string>
+	<string name="reader_empty_followed_blogs_description">右上のタグアイコンをタップし、お気に入りを発見してみてください。</string>
 	<string name="nux_add_selfhosted_blog">インストール型 WordPress ブログを追加</string>
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com にログイン</string>
 	<string name="nux_tap_continue">次へ</string>
