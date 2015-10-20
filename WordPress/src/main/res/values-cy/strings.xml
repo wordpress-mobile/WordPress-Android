@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">I weld eich ystadegau, galluogwch y modiwl  JSON API yn Jetpack.</string>
+	<string name="error_open_list_from_notification">Cafodd y cofnod neu dudalen hwn ei gyhoeddi ar wefan arall</string>
+	<string name="post_uploaded">Cofnod wedi ei lwytho i fyny</string>
+	<string name="page_uploaded">Cofnod wedi ei lwytho i fyny </string>
 	<string name="reader_short_comment_count_multi">%s Sylw</string>
 	<string name="reader_short_comment_count_one">1 Sylw</string>
 	<string name="reader_label_submit_comment">ANFON</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Sylwadau ar wefannau eraill</string>
 	<string name="notifications_wpcom_updates">Diweddariadau WordPress.com</string>
 	<string name="notifications_other">Arall</string>
-	<string name="notifications_account_emails">Diweddariadau gan WordPress.com</string>
+	<string name="notifications_account_emails">E-bost gan WordPress.com</string>
 	<string name="notifications_account_emails_summary">Byddwn yn anfon e-byst pwysig am eich cyfrif a hefyd cewch bethau ychwanegol a defnyddiol.</string>
 	<string name="notifications_sights_and_sounds">Golwg a Sain</string>
 	<string name="your_sites">Eich Gwefannau</string>
-	<string name="notifications_updates_from_wordpress">Diweddariadau gan WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Mae wedi bod yn %1$s ers cyhoeddi %2$s. Dyma sut mae\'r cofnod wedi performio hyd yma…</string>
 	<string name="stats_insights_latest_post_summary">Crynodeb o\'r Cofnod Diweddaraf</string>
 	<string name="button_revert">Dychwelyd</string>
@@ -171,7 +174,6 @@
 	<string name="reader_empty_posts_request_failed">Methu adfer cofnodion</string>
 	<string name="error_copy_to_clipboard">Digwyddodd gwall wrth gopïo testun i\'r clipfwrdd</string>
 	<string name="stats_months_and_years">Misoedd a Blynyddoedd</string>
-	<string name="reader_page_recommended_blogs">Blogiau fyddech chi\'n eu hoffi</string>
 	<string name="stats_recent_weeks">Wythnosau Diweddar</string>
 	<string name="stats_average_per_day">Cyfartaledd Diwrnod</string>
 	<string name="reader_empty_posts_in_blog">Mae\'r blog yn wag</string>
@@ -181,6 +183,7 @@
 	<string name="stats_overall">O\'r Cyfan</string>
 	<string name="stats_total">Cyfanswm</string>
 	<string name="post_uploading">Llwytho</string>
+	<string name="reader_page_recommended_blogs">Gwefannau fyddech chi\'n eu hoffi</string>
 	<string name="stats_comments_total_comments_followers">Cyfanswm cofnodion gyda sylwadau dilynwyr: %1$s</string>
 	<string name="stats_pagination_label">Tudalen %1$s o %2$s</string>
 	<string name="stats_empty_geoviews_desc">Gweld o\'r rhestr i weld pa wledydd ac ardaloedd sy\'n cynhyrchu\'r mwyaf o draffig i\'ch gwefan.</string>
@@ -286,7 +289,7 @@
 	<string name="browse_our_faq_button">Porwch ein Cwestiynnau Cyffredin</string>
 	<string name="faq_button">Cwestiynnau cyffredin</string>
 	<string name="reader_empty_posts_liked">Nid ydych wedi hoffi unrhyw gofnod</string>
-	<string name="reader_empty_followed_blogs_title">Nid ydych yn dilyn unrhyw flog hyd yn hyn</string>
+	<string name="reader_empty_followed_blogs_title">Nid ydych yn dilyn unrhyw wefan hyd yn hyn</string>
 	<string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
 	<string name="reader_toast_err_block_blog">Methu rhwystro\'r blog hwn</string>
 	<string name="reader_toast_blog_blocked">Ni fydd cofnodion o\'r blog yn cael eu dangos bellach</string>
@@ -314,13 +317,13 @@
 	<string name="reader_empty_recommended_blogs">Dim blogiau cymeradwy</string>
 	<string name="reader_label_tag_preview">Cofnodion wedi\'u tagio %s</string>
 	<string name="reader_toast_err_get_blog_info">Methu dangos y blog</string>
-	<string name="reader_page_followed_blogs">Blogiau sy\'n cael eu dilyn</string>
-	<string name="reader_hint_add_tag_or_url">Rhwch dag neu URL i\'w dilyn</string>
 	<string name="reader_label_followed_blog">Blogiau rwy\'n eu diyn</string>
 	<string name="reader_page_followed_tags">Tagiau sy\'n cael eu dilyn</string>
 	<string name="reader_title_subs">Tagiau a Blogiau</string>
 	<string name="reader_title_blog_preview">Blog Darllenydd</string>
 	<string name="reader_title_tag_preview">Tag Darllenydd</string>
+	<string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
+	<string name="reader_hint_add_tag_or_url">Rhowch URL neu dag i\'w ddilyn</string>
 	<string name="saving">Cadw…</string>
 	<string name="ptr_tip_message">Cyngor: Tynnwch i lawr i\'w adnewyddu</string>
 	<string name="media_empty_list">Dim cyfrwng</string>
@@ -527,7 +530,7 @@
 	<string name="select_date">Dewis dyddiad</string>
 	<string name="select_time">Dewis amser</string>
 	<string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
-	<string name="reader_empty_followed_blogs_description">Ond peidiwch â phoeni, tapiwch yr eicon tag i ddechrau darganfod!</string>
+	<string name="reader_empty_followed_blogs_description">Ond peidiwch â phoeni, tapiwch yr eicon tag ar y brig de i ddechrau darganfod!</string>
 	<string name="nux_oops_not_selfhosted_blog">Mewngofnodi i WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Ychwanegu gwefan hunan-letya</string>
 	<string name="nux_welcome_create_account">Creu cyfrif</string>

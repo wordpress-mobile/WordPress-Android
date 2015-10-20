@@ -137,7 +137,6 @@
 	<string name="stats_average_per_day">Gün ərzində orta hesabla</string>
 	<string name="stats_recent_weeks">Son Həftələr</string>
 	<string name="error_copy_to_clipboard">Mətn lövhəyə köçürülərkən xəta baş verdi</string>
-	<string name="reader_page_recommended_blogs">Bəyənəcəyiniz bloqlar</string>
 	<string name="stats_months_and_years">Aylar və İllər</string>
 	<string name="themes_fetching">Mövzular alınır...</string>
 	<string name="stats_for">%s üçün statistikalar</string>
@@ -225,7 +224,6 @@
 	<string name="comment">Şərh</string>
 	<string name="comment_trashed">Şərh zibil qutusuna göndərildi</string>
 	<string name="signing_out">Çıxış…</string>
-	<string name="reader_empty_followed_blogs_title">Hələki heç bir bloqu izləmirsiniz</string>
 	<string name="reader_empty_posts_liked">Hələki heç bir yazı bəyənməmisiniz</string>
 	<string name="browse_our_faq_button">SVS səhifəmizə göz atın</string>
 	<string name="nux_help_description">Sıx verilən suallara cavab almaq üçün yardım mərkəzini, yeni suallar soruşmaq üçün forumları ziyarət edin</string>
@@ -268,13 +266,11 @@
 	<string name="schedule_verb">Planla</string>
 	<string name="reader_title_subs">Etiketlər &amp; Bloqlar</string>
 	<string name="reader_page_followed_tags">İzlənilən etiketlər</string>
-	<string name="reader_page_followed_blogs">İzlənilən bloqlar</string>
 	<string name="reader_label_followed_blog">Bloq izlənilir</string>
 	<string name="reader_label_tag_preview">Yazılar %s etiketləndi</string>
 	<string name="reader_toast_err_get_blog_info">Bloqu göstərmək mümkün olmadı</string>
 	<string name="reader_toast_err_already_follow_blog">Bu bloqu artıq izləyirsiniz</string>
 	<string name="reader_toast_err_follow_blog">Bu bloqu izləmək mümkün deyil</string>
-	<string name="reader_hint_add_tag_or_url">İzləmək üçün etiket və ya URL daxil edin</string>
 	<string name="reader_toast_err_unfollow_blog">Bu bloqun izlənməsi ləğv edilə bilmir</string>
 	<string name="reader_empty_recommended_blogs">Məsləhət bilinən bloq yoxdur</string>
 	<string name="saving">Qeyd edilir…</string>
@@ -483,7 +479,6 @@
 	<string name="validating_site_data">Sayt məlumatları təsdiqlənir</string>
 	<string name="reader_likes_you_and_one">Siz və bir diğəri bunu bəyənir</string>
 	<string name="account_two_step_auth_enabled">Bu hesab iki məhələli təsdiqləməyə sahibdir. Посетите настройки безопасности на WordPress.com-da təhlükəsizlik parametrlərini ziyarət edin və konkret proqram üçün parol hazırlayın.</string>
-	<string name="reader_empty_followed_blogs_description">Dərd etməyin, kəşf etməyə başlamaq üçün etiket ikonuna toxunmağınız yetərlidir!</string>
 	<string name="nux_tap_continue">Davam et</string>
 	<string name="nux_welcome_create_account">Hesab yarat</string>
 	<string name="password_invalid">Sizə daha etibarlı parol lazımdır. 7 simvoldan artıq böyük və kiçik hərflərin, rəqəm və ya özəl simvolların qarışığından istifadə edin.</string>

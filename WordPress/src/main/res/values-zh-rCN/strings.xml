@@ -32,11 +32,9 @@
 	<string name="notifications_comments_other_blogs">其他站点上的评论</string>
 	<string name="notifications_wpcom_updates">WordPress.com 更新</string>
 	<string name="notifications_other">其他</string>
-	<string name="notifications_account_emails">来自 WordPress.com 的更新</string>
 	<string name="notifications_account_emails_summary">我们会将与您的帐户相关的重要电子邮件都发送给您，但是您还可以获得一些其他的有用信息。</string>
 	<string name="notifications_sights_and_sounds">场景和声音</string>
 	<string name="your_sites">您的站点</string>
-	<string name="notifications_updates_from_wordpress">来自 WordPress.com 的更新</string>
 	<string name="stats_insights_latest_post_trend">距 %2$s 发布已有 %1$s。以下是该文章到目前为止的效果…</string>
 	<string name="stats_insights_latest_post_summary">最新的文章摘要</string>
 	<string name="button_revert">恢复</string>
@@ -170,7 +168,6 @@
 	<string name="stats_view_authors">作者</string>
 	<string name="comments_fetching">正在提取评论…</string>
 	<string name="error_copy_to_clipboard">复制文本到剪贴板时出错</string>
-	<string name="reader_page_recommended_blogs">您可能喜欢的博客</string>
 	<string name="stats_months_and_years">月和年</string>
 	<string name="stats_average_per_day">每日平均</string>
 	<string name="stats_recent_weeks">最近几个星期</string>
@@ -249,7 +246,6 @@
 	<string name="confirm_delete_media">是否删除所选项目？</string>
 	<string name="cab_selected">已选 %d 个</string>
 	<string name="media_gallery_date_range">显示从 %1$s 到 %2$s 的媒体</string>
-	<string name="reader_empty_followed_blogs_title">您尚未关注任何博客。</string>
 	<string name="reader_empty_posts_liked">您尚未给任何文章点赞</string>
 	<string name="faq_button">常见问题解答</string>
 	<string name="browse_our_faq_button">浏览我们的常见问题解答</string>
@@ -310,8 +306,6 @@
 	<string name="schedule_verb">计划</string>
 	<string name="reader_title_subs">标签和博文</string>
 	<string name="reader_page_followed_tags">关注的标签</string>
-	<string name="reader_page_followed_blogs">关注的博客</string>
-	<string name="reader_hint_add_tag_or_url">输入要关注的标签或网址</string>
 	<string name="reader_label_followed_blog">关注的博客</string>
 	<string name="reader_label_tag_preview">标记为“%s”的博文</string>
 	<string name="reader_toast_err_get_blog_info">无法显示此博客</string>
@@ -527,7 +521,6 @@
 	<string name="reader_toast_err_get_post">无法检索这篇文章</string>
 	<string name="validating_user_data">验证用户数据</string>
 	<string name="validating_site_data">验证站点数据</string>
-	<string name="reader_empty_followed_blogs_description">别担心，只需轻点标签图标即可开始浏览！</string>
 	<string name="password_invalid">你需要一个更安全的密码。确定使用7个或更多字符，混合大、小写字母、数字或特殊字符.</string>
 	<string name="nux_tap_continue">继续</string>
 	<string name="nux_welcome_create_account">创建账户</string>
