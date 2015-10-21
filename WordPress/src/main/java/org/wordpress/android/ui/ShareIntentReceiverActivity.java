@@ -18,12 +18,12 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -226,19 +226,28 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         shareIt();
     }
 
-    private void shareIt() {
+    /**
+     * Start the correct activity if permissions are granted
+     *
+     * @return true if the activity has been started, false else.
+     */
+    private boolean shareIt() {
         Intent intent = null;
+        if (!isSharingText()) {
+            // If we're sharing media, we must check we have Storage permission (needed for media upload).
+            if (!WordPressMediaUtils.checkStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
+                return false;
+            }
+        }
         if (mActionIndex == ADD_TO_NEW_POST) {
             // new post
             intent = new Intent(this, EditPostActivity.class);
         } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
             // add to media gallery
-            if (!WordPressMediaUtils.checkStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
-                return;
-            }
             intent = new Intent(this, MediaBrowserActivity.class);
         }
         startActivityAndFinish(intent);
+        return true;
     }
 
     private boolean autoShareIfEnabled() {
@@ -255,8 +264,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         if (blogId != -1) {
             mActionIndex = ADD_TO_NEW_POST;
             if (selectBlog(blogId)) {
-                shareIt();
-                return true;
+                return shareIt();
             } else {
                 // blog is hidden or has been deleted, reset settings
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
@@ -276,8 +284,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         if (blogId != -1 && addTo != -1) {
             mActionIndex = addTo;
             if (selectBlog(blogId)) {
-                shareIt();
-                return true;
+                return shareIt();
             } else {
                 // blog is hidden or has been deleted, reset settings
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
