@@ -68,8 +68,6 @@ import java.util.Map;
 
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
-    public static final int PERMISSION_REQUEST_LOCATION = 10;
-
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
@@ -668,7 +666,7 @@ public class EditPostSettingsFragment extends Fragment
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is missing and must be requested.
             ActivityCompat.requestPermissions(getActivity(), new String[]{permission.ACCESS_FINE_LOCATION,
-                            permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+                            permission.ACCESS_COARSE_LOCATION}, EditPostActivity.LOCATION_PERMISSION_REQUEST_CODE);
             return false;
         }
         return true;

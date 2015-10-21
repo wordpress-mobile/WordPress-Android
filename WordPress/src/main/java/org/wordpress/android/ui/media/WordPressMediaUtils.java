@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -38,29 +39,35 @@ import java.util.List;
 import static org.wordpress.mediapicker.MediaUtils.fadeInImage;
 
 public class WordPressMediaUtils {
-    public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
-    public static final String[] MEDIA_PERMISSIONS = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA
-    };
-
     // Makes sure that permissions required for adding media are granted, if not user is prompted
-    public static boolean checkMediaPermissions(Activity activity) {
+    private static boolean checkMediaPermissions(Activity activity, int requestCode, String[] permissionList) {
         List<String> toRequest = new ArrayList<>();
-        for (String permission : MEDIA_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(activity, permission)
-                    != PackageManager.PERMISSION_GRANTED) {
+        for (String permission : permissionList) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
                 toRequest.add(permission);
             }
         }
 
         if (toRequest.size() > 0) {
             String[] requestedPermissions = toRequest.toArray(new String[toRequest.size()]);
-            ActivityCompat.requestPermissions(activity, requestedPermissions, MEDIA_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(activity, requestedPermissions, requestCode);
             return false;
         }
 
         return true;
+    }
+
+    public static boolean checkCameraAndStoragePermissions(Activity activity, int requestCode) {
+        return checkMediaPermissions(activity, requestCode, new String[] {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA
+        });
+    }
+
+    public static boolean checkStoragePermission(Activity activity, int requestCode) {
+        return checkMediaPermissions(activity, requestCode, new String[] {
+                permission.WRITE_EXTERNAL_STORAGE
+        });
     }
 
     public interface LaunchCameraCallback {

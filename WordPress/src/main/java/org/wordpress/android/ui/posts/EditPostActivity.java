@@ -120,6 +120,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int SELECT_LIBRARY_MENU_POSITION = 5;
     private static final int NEW_PICKER_MENU_POSITION = 6;
 
+    public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
+
     private static final String ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED = "number_of_local_photos_added";
     private static final String ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED = "number_of_wp_library_photos_added";
 
@@ -412,7 +415,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
-            case EditPostSettingsFragment.PERMISSION_REQUEST_LOCATION:
+            case LOCATION_PERMISSION_REQUEST_CODE:
                 boolean shouldShowLocation = false;
                 // Check if at least one of the location permission (coarse or fine) is granted
                 for (int grantResult : grantResults) {
@@ -426,7 +429,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     return;
                 }
                 break;
-            case WordPressMediaUtils.MEDIA_PERMISSION_REQUEST_CODE:
+            case MEDIA_PERMISSION_REQUEST_CODE:
                 boolean shouldShowContextMenu = true;
                 for (int i = 0; i < grantResults.length; ++i) {
                     switch (permissions[i]) {
@@ -528,7 +531,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        if (WordPressMediaUtils.checkMediaPermissions(this)) {
+        if (WordPressMediaUtils.checkCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
             super.openContextMenu(view);
         } else {
             mMenuView = view;
