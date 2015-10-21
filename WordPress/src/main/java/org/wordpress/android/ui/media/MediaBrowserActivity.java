@@ -64,6 +64,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
         MediaEditFragmentCallback, MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
+    public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
@@ -324,18 +325,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
-            case WordPressMediaUtils.MEDIA_PERMISSION_REQUEST_CODE:
+            case MEDIA_PERMISSION_REQUEST_CODE:
                 for (int grantResult : grantResults) {
                     if (grantResult == PackageManager.PERMISSION_DENIED) {
                         ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
                         return;
                     }
                 }
-
                 showNewMediaMenu();
                 break;
             default:
@@ -350,7 +349,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             onBackPressed();
             return true;
         } else if (i == R.id.menu_new_media) {
-            if (WordPressMediaUtils.checkMediaPermissions(this)) {
+            if (WordPressMediaUtils.checkCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                 showNewMediaMenu();
             }
             return true;

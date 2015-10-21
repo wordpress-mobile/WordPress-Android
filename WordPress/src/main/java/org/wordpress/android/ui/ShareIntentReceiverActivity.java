@@ -2,9 +2,11 @@ package org.wordpress.android.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +21,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.BlogUtils;
@@ -40,8 +43,11 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public static final String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";
     public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
+
     public static final int ADD_TO_NEW_POST = 0;
     public static final int ADD_TO_MEDIA_LIBRARY = 1;
+    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
+
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
     private CheckBox mAlwaysUseCheckBox;
@@ -227,6 +233,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             intent = new Intent(this, EditPostActivity.class);
         } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
             // add to media gallery
+            if (!WordPressMediaUtils.checkStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
+                return;
+            }
             intent = new Intent(this, MediaBrowserActivity.class);
         }
         startActivityAndFinish(intent);
@@ -304,5 +313,23 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             }
         }
         editor.commit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case SHARE_MEDIA_PERMISSION_REQUEST_CODE:
+                for (int grantResult : grantResults) {
+                    if (grantResult == PackageManager.PERMISSION_DENIED) {
+                        ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
+                        return;
+                    }
+                }
+                shareIt();
+                break;
+            default:
+                break;
+        }
     }
 }
