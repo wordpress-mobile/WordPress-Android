@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">Per visualizzare le tue statistiche, abilita il modulo JSON API di Jetpack.</string>
+	<string name="error_open_list_from_notification">Questo articolo o questa pagina sono state pubblicate su un altro sito</string>
+	<string name="post_uploaded">Articolo caricato</string>
+	<string name="page_uploaded">Pagina caricata</string>
 	<string name="reader_short_comment_count_multi">%s commenti</string>
 	<string name="reader_short_comment_count_one">1 Commento</string>
 	<string name="reader_label_submit_comment">SPEDISCI</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Commenti su altri siti</string>
 	<string name="notifications_wpcom_updates">Aggiornamenti di WordPress.com</string>
 	<string name="notifications_other">Altro</string>
-	<string name="notifications_account_emails">Aggiornamenti da WordPress.com</string>
+	<string name="notifications_account_emails">Email da WordPress.com</string>
 	<string name="notifications_account_emails_summary">Invieremo sempre e-mail importanti riguardanti il tuo account, ma potrai ricevere anche informazioni extra utili.</string>
 	<string name="notifications_sights_and_sounds">Immagini e suoni</string>
 	<string name="your_sites">I tuoi siti</string>
-	<string name="notifications_updates_from_wordpress">Aggiornamenti da WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Sono passati %1$s dalla pubblicazione di %2$s. Ecco com\'è andato finora l\'articolo...</string>
 	<string name="stats_insights_latest_post_summary">Riassunto ultimo articolo</string>
 	<string name="button_revert">Riconverti</string>
@@ -172,7 +175,6 @@
 	<string name="stats_months_and_years">Mesi ed anni</string>
 	<string name="stats_recent_weeks">Settimane recenti</string>
 	<string name="error_copy_to_clipboard">Si è verificato un errore durante la copia del testo negli appunti</string>
-	<string name="reader_page_recommended_blogs">Blog che potrebbero interessarti</string>
 	<string name="stats_total">Totale</string>
 	<string name="stats_overall">Tutto</string>
 	<string name="stats_period">Periodo</string>
@@ -181,6 +183,7 @@
 	<string name="reader_empty_posts_in_blog">Il blog è vuoto</string>
 	<string name="stats_average_per_day">Media giornaliera</string>
 	<string name="post_uploading">Caricamento</string>
+	<string name="reader_page_recommended_blogs">Siti che potrebbero piacerti</string>
 	<string name="stats_comments_total_comments_followers">Totale articoli con commento dei follower: %1$s</string>
 	<string name="stats_likes">Mi piace</string>
 	<string name="stats_views">Visite</string>
@@ -253,7 +256,6 @@
 	<string name="reader_empty_comments">Ancora nessun commento</string>
 	<string name="reader_label_comment_count_multi">%,d commenti</string>
 	<string name="reader_label_like">Like</string>
-	<string name="reader_empty_followed_blogs_title">Non stai ancora seguendo alcun blog</string>
 	<string name="reader_empty_posts_liked">Non hai ancora fatto un like ad un articolo</string>
 	<string name="browse_our_faq_button">Scorri le nostre FAQ</string>
 	<string name="nux_help_description">Visita il nostro centro assistenza per ottenere le risposte alle domande più frequenti o visita il forum per porne di nuove</string>
@@ -287,6 +289,7 @@
 	<string name="media_empty_list_custom_date">Nessun elemento media in questo intervallo di tempo</string>
 	<string name="posting_post">Pubblicazione di "%s"</string>
 	<string name="signing_out">Scollegamento...</string>
+	<string name="reader_empty_followed_blogs_title">Non stai ancora seguendo alcun sito</string>
 	<string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
 	<string name="reader_toast_err_block_blog">Impossibile bloccare questo blog</string>
 	<string name="reader_toast_blog_blocked">Gli articoli di questo blog non appariranno più</string>
@@ -310,8 +313,6 @@
 	<string name="schedule_verb">Pianifica</string>
 	<string name="reader_title_subs">Tag e blog</string>
 	<string name="reader_page_followed_tags">Tag seguiti</string>
-	<string name="reader_page_followed_blogs">Blog seguiti</string>
-	<string name="reader_hint_add_tag_or_url">Inserisci un tag o un URL da seguire</string>
 	<string name="reader_label_followed_blog">Blog seguito</string>
 	<string name="reader_toast_err_get_blog_info">Impossibile mostrare questo blog</string>
 	<string name="reader_toast_err_already_follow_blog">Segui già questo blog</string>
@@ -321,6 +322,8 @@
 	<string name="reader_label_tag_preview">Articolo con tag %s</string>
 	<string name="reader_title_blog_preview">Reader blog</string>
 	<string name="reader_title_tag_preview">Reader tag</string>
+	<string name="reader_page_followed_blogs">Siti che segui</string>
+	<string name="reader_hint_add_tag_or_url">Inserisci una URL o untag da seguire</string>
 	<string name="saving">Salvataggio in corso...</string>
 	<string name="media_empty_list">Nessun media</string>
 	<string name="ptr_tip_message">Suggerimento: scorri il dito verso il basso per aggiornare</string>
@@ -527,7 +530,7 @@
 	<string name="reader_toast_err_get_post">Impossibile recuperare questo post</string>
 	<string name="validating_user_data">Convalida dati utente in corso</string>
 	<string name="validating_site_data">Convalida dati sito in corso</string>
-	<string name="reader_empty_followed_blogs_description">Ma non preoccuparti, fai un tap sull\'icona tag per iniziare ad esplorare!</string>
+	<string name="reader_empty_followed_blogs_description">Ma non preoccuparti, fai un tap sull\'icona in alto a destra per iniziare ad esplorare!</string>
 	<string name="password_invalid">Devi impostare una password più sicura. Usa 7 o più caratteri sia minuscoli che maiuscoli, numeri o caratteri speciali.</string>
 	<string name="nux_tap_continue">Continua</string>
 	<string name="nux_welcome_create_account">Crea account</string>

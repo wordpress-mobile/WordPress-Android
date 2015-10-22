@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="stats_months_and_years">Месеци и години</string>
-	<string name="reader_page_recommended_blogs">Блогови што можеби ви се допаѓаат</string>
 	<string name="error_copy_to_clipboard">Се случи грешка при копирање на текстот во клипбордот</string>
 	<string name="stats_recent_weeks">Последни недели</string>
 	<string name="stats_average_per_day">Средна вредност на ден</string>
@@ -78,7 +77,6 @@
 	<string name="cab_selected">%d слекетирано</string>
 	<string name="media_gallery_date_range">Покажи медиа од %1$s до %2$s</string>
 	<string name="delete_sure_page">Избриши оваа страница</string>
-	<string name="reader_empty_followed_blogs_title">Сеуште не следите блог написи</string>
 	<string name="reader_empty_posts_liked">Сеуште немате допаднити написи</string>
 	<string name="faq_button">ЧПП</string>
 	<string name="nux_help_description">Посети го центарот за помош за да добиеш одговори на веќе поставени прашања или посети го форумот за да поставиш нови</string>
@@ -139,8 +137,6 @@
 	<string name="schedule_verb">Закажи</string>
 	<string name="reader_title_subs">Ознаки и Блогови</string>
 	<string name="reader_page_followed_tags">Проследени ознаки</string>
-	<string name="reader_page_followed_blogs">Проследени блогови</string>
-	<string name="reader_hint_add_tag_or_url">Внеси ознака или URL за следење</string>
 	<string name="reader_label_followed_blog">Блогот се следи</string>
 	<string name="reader_label_tag_preview">Означени написи %s</string>
 	<string name="reader_toast_err_get_blog_info">Неможе да се прикаже овој блог</string>
@@ -349,7 +345,6 @@
 	<string name="validating_user_data">Валидација на кориснички податоци</string>
 	<string name="reader_likes_you_and_one">На вас и на уште еден му се допаѓа ова</string>
 	<string name="select_time">Избери време</string>
-	<string name="reader_empty_followed_blogs_description">Не грижете се, само допрете ја иконата за означување за да започнете со истражувањето!</string>
 	<string name="select_date">Избери дата</string>
 	<string name="account_two_step_auth_enabled">Оваа корисничка сметка има вклучено автентикација во два чекори. Посетете ги вашите безбедносни подесувања на WordPress.com за да генерирате лозинка за специфичната апликација.</string>
 	<string name="signing_in">Најавување...</string>
