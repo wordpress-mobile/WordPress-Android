@@ -1045,7 +1045,7 @@ ZSSEditor.markAllUploadingImagesAsFailed = function() {
     var html = ZSSEditor.getField("zss_field_content").getHTML();
     var tmp = document.createElement( "div" );
     var tmpDom = $( tmp ).html( html );
-    var matches = tmpDom.find("img");
+    var matches = tmpDom.find("img.uploading");
 
     for(var i = 0; i < matches.size(); i++) {
         var mediaId = matches[i].getAttribute("data-wpid");
