@@ -1,18 +1,14 @@
 package org.wordpress.android.ui.posts;
 
-import android.Manifest.permission;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -54,6 +50,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.xmlrpc.android.ApiHelper;
@@ -658,18 +655,8 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private boolean checkForLocationPermission() {
-        if (!isAdded()) {
-            return false;
-        }
-
-        if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is missing and must be requested.
-            ActivityCompat.requestPermissions(getActivity(), new String[]{permission.ACCESS_FINE_LOCATION,
-                            permission.ACCESS_COARSE_LOCATION}, EditPostActivity.LOCATION_PERMISSION_REQUEST_CODE);
-            return false;
-        }
-        return true;
+        return isAdded() && PermissionUtils.checkLocationPermissions(getActivity(),
+                EditPostActivity.LOCATION_PERMISSION_REQUEST_CODE);
     }
 
     public void showLocationSearch() {

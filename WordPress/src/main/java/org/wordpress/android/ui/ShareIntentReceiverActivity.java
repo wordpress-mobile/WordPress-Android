@@ -25,6 +25,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -235,7 +236,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         Intent intent = null;
         if (!isSharingText()) {
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
-            if (!WordPressMediaUtils.checkStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
+            if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
                 return false;
             }
         }
