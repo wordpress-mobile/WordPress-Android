@@ -24,8 +24,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private static final String THEME_DOMAIN_PREMIUM = "premium";
     private static final String THEME_URL_PREVIEW = "%s/wp-admin/customize.php?theme=%s/%s";
     private static final String THEME_URL_CUSTOMIZE = "%s/wp-admin/customize.php";
-    private static final String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support";
-    private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s";
+    private static final String THEME_URL_SUPPORT = "https://wordpress.com/themes/%s/support/?preview=true&iframe=true";
+    private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s/?preview=true&iframe=true";
+    private static final String THEME_URL_DEMO_PARAMETER = "?demo=true";
 
     public enum ThemeWebActivityType {
         PREVIEW,
@@ -81,7 +82,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 url = String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getId());
                 break;
             case DEMO:
-                url = theme.getDemoURI();
+                url = theme.getDemoURI() + THEME_URL_DEMO_PARAMETER;
                 break;
             case DETAILS:
                 String currentURL = homeURL.replaceFirst(context.getString(R.string.theme_https_prefix), "");
