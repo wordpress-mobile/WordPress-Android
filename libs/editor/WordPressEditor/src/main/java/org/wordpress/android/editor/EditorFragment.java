@@ -38,6 +38,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -83,6 +84,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
     private Set<String> mUploadingMediaIds;
+    private Set<String> mFailedMediaIds;
 
     private String mJavaScriptResult = "";
 
@@ -120,6 +122,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
 
         mUploadingMediaIds = new HashSet<>();
+        mFailedMediaIds = new HashSet<>();
 
         // -- WebView configuration
 
@@ -691,6 +694,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public boolean hasFailedMediaUploads() {
+        return (mFailedMediaIds.size() > 0);
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return null;
     }
@@ -735,6 +743,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             @Override
             public void run() {
                 mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
+                mFailedMediaIds.add(mediaId);
                 mUploadingMediaIds.remove(mediaId);
             }
         });
@@ -757,6 +766,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // If there are images that are still in progress (because the editor exited before they completed),
                 // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
                 mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingImagesAsFailed();");
+
+                // Update the list of failed media uploads
+                mWebView.execJavaScriptFromString("ZSSEditor.getFailedImages();");
 
                 hideActionBarIfNeeded();
 
@@ -842,6 +854,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     public void run() {
                         mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId + ");");
                         mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " + 0 + ");");
+                        mFailedMediaIds.remove(mediaId);
                         mUploadingMediaIds.add(mediaId);
                     }
                 });
@@ -917,6 +930,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mJavaScriptResult = inputArgs.get("result");
                 mGetSelectedTextCountDownLatch.countDown();
                 break;
+            case "getFailedImages":
+                String[] mediaIds = inputArgs.get("ids").split(",");
+                mFailedMediaIds = new HashSet<>(Arrays.asList(mediaIds));
         }
     }
 

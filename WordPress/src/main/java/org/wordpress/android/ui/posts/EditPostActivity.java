@@ -495,6 +495,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
+        // Disable format bar buttons while there are failed media uploads in the post/page
+        if (mEditorFragment.hasFailedMediaUploads()) {
+            ToastUtils.showToast(this, R.string.editor_toast_failed_uploads, Duration.SHORT);
+            return false;
+        }
+
         if (itemId == R.id.menu_save_post) {
             // If the post is new and there are no changes, don't publish
             updatePostObject(false);

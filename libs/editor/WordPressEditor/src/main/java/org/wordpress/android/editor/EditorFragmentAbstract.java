@@ -18,6 +18,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
+    public abstract boolean hasFailedMediaUploads();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
 

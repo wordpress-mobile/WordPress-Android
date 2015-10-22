@@ -873,6 +873,7 @@
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_changes_saved">Changes saved</string>
     <string name="editor_toast_uploading_please_wait">Your are currently uploading media. Please wait until this completes.</string>
+    <string name="editor_toast_failed_uploads">Some media uploads have failed. Please retry them or delete them.</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
