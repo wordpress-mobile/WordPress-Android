@@ -198,11 +198,15 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
+    public void getFreeThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
+        getThemes("free", siteId, limit, offset, listener, errorListener);
+    }
+
     /**
      * Get all a site's themes
      */
-    public void getThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes/?tier=all&number=%d&offset=%d", siteId, limit, offset);
+    public void getThemes(String tier, String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/themes/?" + tier + "=all&number=%d&offset=%d", siteId, limit, offset);
         get(path, listener, errorListener);
     }
 
