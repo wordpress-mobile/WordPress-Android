@@ -26,7 +26,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private static final String THEME_URL_CUSTOMIZE = "%s/wp-admin/customize.php";
     private static final String THEME_URL_SUPPORT = "https://wordpress.com/themes/%s/support/?preview=true&iframe=true";
     private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s/?preview=true&iframe=true";
-    private static final String THEME_URL_DEMO_PARAMETER = "?demo=true";
+    private static final String THEME_URL_DEMO_PARAMETER = "?demo=true&iframe=true&theme_preview=true";
 
     public enum ThemeWebActivityType {
         PREVIEW,
