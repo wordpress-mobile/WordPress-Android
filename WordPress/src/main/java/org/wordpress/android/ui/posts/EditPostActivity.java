@@ -429,6 +429,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mEditPostSettingsFragment.showLocationSearch();
                     return;
                 }
+                // Location permission denied
+                ToastUtils.showToast(this, getString(R.string.add_location_permission_required));
                 break;
             case MEDIA_PERMISSION_REQUEST_CODE:
                 boolean shouldShowContextMenu = true;
