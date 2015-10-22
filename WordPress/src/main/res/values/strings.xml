@@ -388,6 +388,7 @@
     <string name="search_current_location">Locate</string>
     <string name="search_location">Search</string>
     <string name="edit_location">Edit</string>
+    <string name="add_location_permission_required">Permission required in order to add location</string>
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
