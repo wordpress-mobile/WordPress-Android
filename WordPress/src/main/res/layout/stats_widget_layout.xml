@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="@dimen/stats_widget_icon_size"
             android:layout_height="@dimen/stats_widget_icon_size"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/stats_widget_header_icon" />
 
         <TextView
             android:id="@+id/blog_title"
