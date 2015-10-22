@@ -47,6 +47,7 @@ import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallbac
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -64,6 +65,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
         MediaEditFragmentCallback, MediaAddFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
+    public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
@@ -324,18 +326,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
-            case WordPressMediaUtils.MEDIA_PERMISSION_REQUEST_CODE:
+            case MEDIA_PERMISSION_REQUEST_CODE:
                 for (int grantResult : grantResults) {
                     if (grantResult == PackageManager.PERMISSION_DENIED) {
                         ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
                         return;
                     }
                 }
-
                 showNewMediaMenu();
                 break;
             default:
@@ -350,7 +350,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             onBackPressed();
             return true;
         } else if (i == R.id.menu_new_media) {
-            if (WordPressMediaUtils.checkMediaPermissions(this)) {
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                 showNewMediaMenu();
             }
             return true;
