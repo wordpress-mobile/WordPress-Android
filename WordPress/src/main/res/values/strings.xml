@@ -1034,8 +1034,8 @@
     <string name="support">Support</string>
 
     <string-array name="themes_filter_array">
-        <item>All</item>
         <item>Free</item>
+        <item>All</item>
         <item>Premium</item>
     </string-array>
 

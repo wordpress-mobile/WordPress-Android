@@ -198,7 +198,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             page = mThemeSearchFragment.getPage();
         }
 
-        WordPress.getRestClientUtilsV1_2().getSearchThemes(siteId, THEME_FETCH_MAX, page, searchTerm, new Listener() {
+        WordPress.getRestClientUtilsV1_2().getFreeSearchThemes(siteId, THEME_FETCH_MAX, page, searchTerm, new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         new FetchThemesTask().execute(response);
