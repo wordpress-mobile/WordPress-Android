@@ -47,6 +47,7 @@ import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallbac
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
@@ -349,7 +350,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             onBackPressed();
             return true;
         } else if (i == R.id.menu_new_media) {
-            if (WordPressMediaUtils.checkCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                 showNewMediaMenu();
             }
             return true;

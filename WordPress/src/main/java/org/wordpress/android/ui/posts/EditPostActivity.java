@@ -72,6 +72,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -531,7 +532,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        if (WordPressMediaUtils.checkCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
             super.openContextMenu(view);
         } else {
             mMenuView = view;
