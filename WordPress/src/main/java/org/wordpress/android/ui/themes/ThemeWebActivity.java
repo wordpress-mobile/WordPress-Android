@@ -26,6 +26,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private static final String THEME_URL_SUPPORT = "https://wordpress.com/themes/%s/support/?preview=true&iframe=true";
     private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s/?preview=true&iframe=true";
     private static final String THEME_URL_DEMO_PARAMETER = "&demo=true&iframe=true&theme_preview=true";
+    private static final String THEME_HTTPS_PREFIX = "https://";
 
     public enum ThemeWebActivityType {
         PREVIEW,
@@ -83,7 +84,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 url = theme.getDemoURI() + THEME_URL_DEMO_PARAMETER;
                 break;
             case DETAILS:
-                String currentURL = homeURL.replaceFirst(context.getString(R.string.theme_https_prefix), "");
+                String currentURL = homeURL.replaceFirst(THEME_HTTPS_PREFIX, "");
                 url = String.format(THEME_URL_DETAILS, currentURL, theme.getId());
                 break;
             case SUPPORT:
