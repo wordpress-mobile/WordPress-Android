@@ -118,6 +118,8 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
+    <string name="access_media_permission_required">Permissions required in order to access media</string>
+    <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="loading_videos">Loading videos</string>
     <string name="loading_images">Loading images</string>
@@ -386,6 +388,7 @@
     <string name="search_current_location">Locate</string>
     <string name="search_location">Search</string>
     <string name="edit_location">Edit</string>
+    <string name="add_location_permission_required">Permission required in order to add location</string>
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>

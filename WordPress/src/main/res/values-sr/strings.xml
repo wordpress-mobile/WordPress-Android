@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_open_list_from_notification">Чланак или страна је објављена на другом веб месту</string>
+	<string name="post_uploaded">Чланак је отпремљен</string>
+	<string name="page_uploaded">Страна је отпремљена</string>
 	<string name="reader_short_comment_count_multi">%s коментара</string>
 	<string name="reader_short_comment_count_one">1 коментар</string>
 	<string name="reader_label_submit_comment">ПОШАЉИ</string>
@@ -32,11 +35,10 @@
 	<string name="notifications_comments_other_blogs">Коментари на другим веб местима</string>
 	<string name="notifications_wpcom_updates">WordPress.com ажурирања</string>
 	<string name="notifications_other">Друго</string>
-	<string name="notifications_account_emails">Ажурирања од WordPress.com</string>
+	<string name="notifications_account_emails">Е-пошта од WordPress.com</string>
 	<string name="notifications_account_emails_summary">Увек ћемо слати важну е-пошту везану за ваш налог, али такође можете да добијете неку додатну помоћ.</string>
 	<string name="your_sites">Ваша веб места</string>
 	<string name="notifications_sights_and_sounds">Слике и звуци</string>
-	<string name="notifications_updates_from_wordpress">Ажурирања од WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Прошло је %1$s од када је %2$s је објављен. Ево какав је учинак чланка до сада…</string>
 	<string name="stats_insights_latest_post_summary">Резиме последњег чланка</string>
 	<string name="button_revert">Врати</string>
@@ -169,7 +171,6 @@
 	<string name="stats_followers_total_email_paged">Приказано %1$d - %2$d од %3$s пратилаца преко е-поште</string>
 	<string name="error_notification_open">Није могуће отворити обавештење</string>
 	<string name="publisher">Објављивач:</string>
-	<string name="reader_page_recommended_blogs">Блогови који би вам се могли свидети</string>
 	<string name="stats_months_and_years">Месеци и године</string>
 	<string name="error_copy_to_clipboard">Дошло је до грешке приликом копирања текста у оставу</string>
 	<string name="stats_average_per_day">Дневни просек</string>
@@ -181,6 +182,7 @@
 	<string name="stats_overall">Просек</string>
 	<string name="stats_total">Укупно</string>
 	<string name="post_uploading">Отпремљујем</string>
+	<string name="reader_page_recommended_blogs">Веб места која би могла да вам се свиде</string>
 	<string name="stats_empty_referrers_desc">Сазнајте више о видљивости свог веб места пратећи веб претраживаче и друга веб места која вам шаљу највише посетилаца</string>
 	<string name="stats_empty_publicize_desc">Пратите своје пратиоце са разних друштвених мрежа користећи Publicize.</string>
 	<string name="stats_empty_publicize">Нема забележених Publicize пратилаца</string>
@@ -286,7 +288,7 @@
 	<string name="new_blog_wpcom_created">Блог на WordPress.com је направљен!</string>
 	<string name="create_new_blog_wpcom">Направите блог на WordPress.com</string>
 	<string name="nux_help_description">Посетите центар за помоћ како бисте пронашли одговоре на честа питања или посетите форум и поставите питање</string>
-	<string name="reader_empty_followed_blogs_title">Још увек не пратите ни један блог</string>
+	<string name="reader_empty_followed_blogs_title">Још увек не пратите ниједно веб место</string>
 	<string name="reader_toast_err_generic">Није могуће обавити ову радњу</string>
 	<string name="reader_menu_block_blog">Блокирај овај блог</string>
 	<string name="reader_toast_blog_blocked">Чланци са овог блога више неће бити приказивани</string>
@@ -315,12 +317,11 @@
 	<string name="reader_toast_err_get_blog_info">Није могуће приказати овај блог</string>
 	<string name="reader_label_tag_preview">Чланци означени са %s</string>
 	<string name="reader_label_followed_blog">Блог се прати</string>
-	<string name="reader_hint_add_tag_or_url">Унесите ознаку или URL који желите да пратите</string>
-	<string name="reader_page_followed_blogs">Блогови које пратите</string>
 	<string name="reader_title_subs">Ознаке и блогови</string>
 	<string name="reader_page_followed_tags">Ознаке које пратите</string>
 	<string name="reader_title_tag_preview">Ознака читача</string>
 	<string name="reader_title_blog_preview">Блог читача</string>
+	<string name="reader_page_followed_blogs">Веб места која пратите</string>
 	<string name="ptr_tip_message">Савет: Повуците надоле да бисте освежили</string>
 	<string name="saving">Чувам...</string>
 	<string name="media_empty_list">Нема медија</string>
@@ -521,13 +522,13 @@
 	<string name="validating_site_data">Проверавам исправност података веб места</string>
 	<string name="validating_user_data">Проверавам исправност корисничких података</string>
 	<string name="account_two_step_auth_enabled">Овај налог има омогућену потврду идентитета у два корака. Посетите своја подешавања сигурности на WordPress.com и направите посебну лозинку за ову апликацију.</string>
-	<string name="reader_empty_followed_blogs_description">Не брините, потребно је само да додирнете иконицу ознаке да бисте започели истраживање!</string>
 	<string name="reader_likes_you_and_one">Вама и још некоме се ово свиђа</string>
 	<string name="reader_toast_err_get_post">Није могуће добавити овај чланак</string>
 	<string name="select_time">Одаберите време</string>
 	<string name="select_date">Одаберите датум</string>
 	<string name="pick_photo">Одаберите фотографију</string>
 	<string name="pick_video">Одаберите видео снимак</string>
+	<string name="reader_empty_followed_blogs_description">Не брините, потребно је само да додирнете иконицу горе десно да бисте започели истраживање!</string>
 	<string name="nux_welcome_create_account">Направи налог</string>
 	<string name="nux_add_selfhosted_blog">Додај самостално угошћено веб место</string>
 	<string name="password_invalid">Потребна вам је сигурнија лозинка. Користите 7 или више знакова, употребите и велика и мала слова, бројеве и посебне знакове.</string>

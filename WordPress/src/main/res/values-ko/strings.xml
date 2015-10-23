@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">통계를 보기 위해서는 Jetpack에서 JSON API 모듈을 활성화하세요.</string>
+	<string name="error_open_list_from_notification">이 글이나 페이지는 다른 사이트에서 게시되었습니다.</string>
+	<string name="post_uploaded">글 업로드 완료</string>
+	<string name="page_uploaded">페이지 업로드 완료</string>
 	<string name="reader_short_comment_count_multi">%s 댓글</string>
 	<string name="reader_short_comment_count_one">1 댓글</string>
 	<string name="reader_label_submit_comment">보내기</string>
-	<string name="reader_hint_comment_on_post">보내</string>
+	<string name="reader_hint_comment_on_post">글에 답장하기...</string>
 	<string name="reader_discover_visit_blog">%s 방문</string>
 	<string name="reader_discover_attribution_blog">원래 %s에 게시됨</string>
 	<string name="reader_discover_attribution_author">원래 %s님이 게시함</string>
@@ -36,7 +40,6 @@
 	<string name="notifications_account_emails_summary">사용자 계정에 관한 중요 이메일을 항상 보내 드리며, 유용한 정보도 받으실 수 있습니다.</string>
 	<string name="notifications_sights_and_sounds">보기 및 사운드</string>
 	<string name="your_sites">내 사이트</string>
-	<string name="notifications_updates_from_wordpress">워드프레스닷컴 소식</string>
 	<string name="stats_insights_latest_post_trend">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 지금까지 글의 성과입니다.</string>
 	<string name="stats_insights_latest_post_summary">최신 글 요약</string>
 	<string name="button_revert">되돌리기</string>
