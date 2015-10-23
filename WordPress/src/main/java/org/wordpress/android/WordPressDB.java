@@ -1839,8 +1839,14 @@ public class WordPressDB {
 
     public String getCurrentThemeId(String blogId) {
         String[] selection = {blogId, String.valueOf(1)};
+        String currentThemeId;
+        try {
+            currentThemeId = DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=true", selection);
+        } catch (SQLiteException e) {
+            currentThemeId = "";
+        }
 
-        return DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=true", selection);
+        return currentThemeId;
     }
 
     public void setCurrentTheme(String blogId, String id) {
