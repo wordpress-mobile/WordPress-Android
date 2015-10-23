@@ -353,8 +353,18 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
-        boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
-        ThemeWebActivity.openTheme(this, themeId, type, isCurrentTheme);
+        String toastText = getString(R.string.no_network_message);
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            if (mCurrentTheme != null) {
+                boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
+                ThemeWebActivity.openTheme(this, themeId, type, isCurrentTheme);
+                return;
+            } else {
+                toastText = getString(R.string.could_not_load_theme);
+            }
+        }
+
+        Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
     }
 
     @Override
