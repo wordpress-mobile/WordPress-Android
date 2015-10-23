@@ -38,7 +38,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -932,7 +931,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 break;
             case "getFailedImages":
                 String[] mediaIds = inputArgs.get("ids").split(",");
-                mFailedMediaIds = new HashSet<>(Arrays.asList(mediaIds));
+                for (String mediaId : mediaIds) {
+                    if (!mediaId.equals("")) {
+                        mFailedMediaIds.add(mediaId);
+                    }
+                }
         }
     }
 
