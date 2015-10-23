@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
@@ -288,6 +289,9 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             if (!AccountHelper.isSignedIn()) {
                 EventBus.getDefault().post(new UserSignedOutCompletely());
             }
+
+            // Checks for stats widgets that were synched with a blog that could be gone now.
+            StatsWidgetProvider.updateWidgetsOnLogout(this);
 
             finish();
         } else {

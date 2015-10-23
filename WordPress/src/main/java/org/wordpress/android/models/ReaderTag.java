@@ -157,6 +157,14 @@ public class ReaderTag implements Serializable {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }
     public boolean isFreshlyPressed() {
-        return tagType == ReaderTagType.DEFAULT && getTagName().endsWith("/freshly-pressed");
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/freshly-pressed");
+    }
+    public boolean isTagTopic() {
+        String endpoint = getEndpoint();
+        return endpoint.toLowerCase().contains("/read/tags/");
+    }
+    public boolean isListTopic() {
+        String endpoint = getEndpoint();
+        return endpoint.toLowerCase().contains("/read/list/");
     }
 }

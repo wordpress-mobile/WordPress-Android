@@ -46,6 +46,7 @@ import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -441,6 +442,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     EnumSet.of(UpdateTask.TAGS));
 
             if (isWPComLogin()) {
+                //Update previous stats widgets
+                StatsWidgetProvider.updateWidgetsOnLogin(getActivity().getApplicationContext());
+
                 // Fire off a synchronous request to get the primary blog
                 WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override
@@ -649,17 +653,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         final String password = EditTextUtils.getText(mPasswordEditText).trim();
         boolean retValue = true;
 
+        if (password.equals("")) {
+            mPasswordEditText.setError(getString(R.string.required_field));
+            mPasswordEditText.requestFocus();
+            retValue = false;
+        }
+
         if (username.equals("")) {
             mUsernameEditText.setError(getString(R.string.required_field));
             mUsernameEditText.requestFocus();
             retValue = false;
         }
 
-        if (password.equals("")) {
-            mPasswordEditText.setError(getString(R.string.required_field));
-            mPasswordEditText.requestFocus();
-            retValue = false;
-        }
         return retValue;
     }
 
@@ -687,8 +692,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         switch (getErrorType(messageId)) {
             case USERNAME:
             case PASSWORD:
-                showUsernameError(messageId);
                 showPasswordError(messageId);
+                showUsernameError(messageId);
                 return true;
             default:
                 return false;
@@ -800,8 +805,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mUsernameEditText.setError(null);
             showInvalidUsernameOrPasswordDialog();
         } else {
-            showUsernameError(messageId);
             showPasswordError(messageId);
+            showUsernameError(messageId);
         }
         endProgress();
     }

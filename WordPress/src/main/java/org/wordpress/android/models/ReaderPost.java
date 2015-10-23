@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -504,6 +505,12 @@ public class ReaderPost {
                 && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
                 && post.isLikedByCurrentUser == this.isLikedByCurrentUser
                 && post.isCommentsOpen == this.isCommentsOpen;
+    }
+
+    public boolean hasIds(ReaderBlogIdPostId ids) {
+        return ids != null
+                && ids.getBlogId() == this.blogId
+                && ids.getPostId() == this.postId;
     }
 
     /*

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
-import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
 
 import org.wordpress.android.R;
@@ -32,14 +31,14 @@ import java.util.List;
 public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteViewHolder> {
 
     private final int mAvatarSz;
-    private final Query mQuery;
     private final Bucket<Note> mNotesBucket;
     private final int mColorRead;
     private final int mColorUnread;
-    private final List<String> mHiddenNoteIds = new ArrayList<String>();
-    private final List<String> mModeratingNoteIds = new ArrayList<String>();
+    private final int mTextIndentSize;
+    private final List<String> mHiddenNoteIds = new ArrayList<>();
+    private final List<String> mModeratingNoteIds = new ArrayList<>();
 
-    private final Context mContext;
+    private Query mQuery;
 
     private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
@@ -48,10 +47,25 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
 
         setHasStableIds(true);
 
-        mContext = context;
         mNotesBucket = bucket;
         // build a query that sorts by timestamp descending
-        mQuery = bucket.query()
+        mQuery = new Query();
+
+        mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
+        mColorRead = context.getResources().getColor(R.color.white);
+        mColorUnread = context.getResources().getColor(R.color.grey_light);
+        mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
+    }
+
+    public void closeCursor() {
+        Cursor cursor = getCursor();
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+
+    private Query getQueryDefaults() {
+        return mNotesBucket.query()
                 .include(
                         Note.Schema.TIMESTAMP_INDEX,
                         Note.Schema.SUBJECT_INDEX,
@@ -63,39 +77,16 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
                         Note.Schema.COMMENT_SUBJECT_NOTICON,
                         Note.Schema.LOCAL_STATUS)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
-
-        mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
-        mColorRead = context.getResources().getColor(R.color.white);
-        mColorUnread = context.getResources().getColor(R.color.grey_light);
     }
 
-    public void closeCursor() {
-        Cursor cursor = getCursor();
-        if (cursor != null) {
-            cursor.close();
-        }
+    public void queryNotes() {
+        mQuery = getQueryDefaults();
+        changeCursor(mQuery.execute());
     }
 
-    public Note getNote(int position) {
-        if (getCursor() == null) {
-            return null;
-        }
-
-        Bucket.ObjectCursor<Note> cursor = (Bucket.ObjectCursor<Note>)getCursor();
-
-        if (cursor.moveToPosition(position)) {
-            String noteId = cursor.getSimperiumKey();
-            try {
-                return mNotesBucket.get(noteId);
-            } catch (BucketObjectMissingException e) {
-                return null;
-            }
-        }
-
-        return null;
-    }
-
-    public void reloadNotes() {
+    public void queryNotes(String columnName, Object value) {
+        mQuery = getQueryDefaults();
+        mQuery.where(columnName, Query.ComparisonType.EQUAL_TO, value);
         changeCursor(mQuery.execute());
     }
 
@@ -176,15 +167,15 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             noteViewHolder.headerView.setVisibility(View.GONE);
         } else {
             if (timeGroup == Note.NoteTimeGroup.GROUP_TODAY) {
-                noteViewHolder.headerText.setText(mContext.getString(R.string.stats_timeframe_today).toUpperCase());
+                noteViewHolder.headerText.setText(R.string.stats_timeframe_today);
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_YESTERDAY) {
-                noteViewHolder.headerText.setText(mContext.getString(R.string.stats_timeframe_yesterday).toUpperCase());
+                noteViewHolder.headerText.setText(R.string.stats_timeframe_yesterday);
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_OLDER_TWO_DAYS) {
-                noteViewHolder.headerText.setText(mContext.getString(R.string.older_two_days).toUpperCase());
+                noteViewHolder.headerText.setText(R.string.older_two_days);
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_OLDER_WEEK) {
-                noteViewHolder.headerText.setText(mContext.getString(R.string.older_last_week).toUpperCase());
+                noteViewHolder.headerText.setText(R.string.older_last_week);
             } else {
-                noteViewHolder.headerText.setText(mContext.getString(R.string.older_month).toUpperCase());
+                noteViewHolder.headerText.setText(R.string.older_month);
             }
 
             noteViewHolder.headerView.setVisibility(View.VISIBLE);
@@ -222,7 +213,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
 
         String noteSubjectNoticon = getStringForColumnName(objectCursor, Note.Schema.COMMENT_SUBJECT_NOTICON);
         if (!TextUtils.isEmpty(noteSubjectNoticon)) {
-            CommentUtils.indentTextViewFirstLine(noteViewHolder.txtSubject, DisplayUtils.dpToPx(mContext, 22));
+            CommentUtils.indentTextViewFirstLine(noteViewHolder.txtSubject, mTextIndentSize);
             noteViewHolder.txtSubjectNoticon.setText(noteSubjectNoticon);
             noteViewHolder.txtSubjectNoticon.setVisibility(View.VISIBLE);
         } else {

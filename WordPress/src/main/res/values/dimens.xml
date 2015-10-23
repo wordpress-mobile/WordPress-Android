@@ -123,7 +123,9 @@
 
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
-    <dimen name="nux_button_height">50dp</dimen>
+    <dimen name="nux_main_button_height">48dp</dimen>
+    <dimen name="nux_secondary_button_height">36dp</dimen>
+
     <dimen name="nux_width">600dp</dimen>
 
     <!-- notifications -->
@@ -133,13 +135,23 @@
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
     <dimen name="notifications_content_margin">0dp</dimen>
     <dimen name="notifications_avatar_sz">48dp</dimen>
+    <dimen name="notifications_text_indent_sz">22dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
 
     <!-- stats -->
+    <dimen name="stats_widget_icon_size">18dp</dimen>
     <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
     <dimen name="stats_barchart_legend_item">12dp</dimen>
+
+    <!-- stats widget-->
+    <dimen name="stats_widget_one_cell">40dp</dimen>
+    <dimen name="stats_widget_four_cells">250dp</dimen>
+    <dimen name="stats_widget_five_cells">320dp</dimen>
+    <dimen name="stats_widget_main_container_size">48dp</dimen>
+    <dimen name="stats_widget_image_layout_size">12dp</dimen>
+    <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
     <!-- MediaPicker -->
     <dimen name="media_padding_left">2dp</dimen>
@@ -167,9 +179,6 @@
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
-    <dimen name="my_site_no_site_view_subtitle_margin_top">18dp</dimen>
-    <dimen name="my_site_no_site_view_subtitle_font">21sp</dimen>
-    <dimen name="my_site_no_site_view_button_margin_top">50dp</dimen>
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
@@ -188,5 +197,8 @@
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <!--empty lists-->
+    <dimen name="empty_list_button_top_margin">32dp</dimen>
 
 </resources>
