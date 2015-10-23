@@ -198,14 +198,14 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     private void configureAndAddSearchHeader(LayoutInflater inflater) {
         View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
-        configureFilterSpinner(headerSearch);
-        mSearchButton = (ImageButton) headerSearch.findViewById(R.id.theme_search);
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
+        headerSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCallback.onSearchClicked();
             }
         });
+        configureFilterSpinner(headerSearch);
+        mSearchButton = (ImageButton) headerSearch.findViewById(R.id.theme_search);
     }
 
     private void configureFilterSpinner(View headerSearch) {
