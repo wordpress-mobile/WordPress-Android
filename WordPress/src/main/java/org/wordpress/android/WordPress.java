@@ -3,7 +3,6 @@ package org.wordpress.android;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
-import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -43,6 +42,7 @@ import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdat
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -67,7 +67,6 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
@@ -478,10 +477,6 @@ public class WordPress extends Application {
         return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
 
-    public static void signOutWordPressComAsyncWithProgressBar(Context context) {
-        new SignOutWordPressComAsync(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     /**
      * Sign out from wpcom account
      */
@@ -494,7 +489,7 @@ public class WordPress extends Application {
         // broadcast an event: wpcom user signed out
         EventBus.getDefault().post(new UserSignedOutWordPressCom());
 
-        // broadcast an event only if the user is completly signed out
+        // broadcast an event only if the user is completely signed out
         if (!AccountHelper.isSignedIn()) {
             EventBus.getDefault().post(new UserSignedOutCompletely());
         }
@@ -526,41 +521,6 @@ public class WordPress extends Application {
         wpDB.dangerouslyDeleteAllContent();
     }
 
-    public static class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
-        ProgressDialog mProgressDialog;
-        WeakReference<Context> mWeakContext;
-
-        public SignOutWordPressComAsync(Context context) {
-            mWeakContext = new WeakReference<Context>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Context context = mWeakContext.get();
-            if (context != null) {
-                mProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out));
-            }
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Context context = mWeakContext.get();
-            if (context != null) {
-                WordPressComSignOut(context);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (mProgressDialog != null) {
-                mProgressDialog.dismiss();
-            }
-        }
-    }
-
     public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
@@ -586,6 +546,7 @@ public class WordPress extends Application {
 
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
+        StatsWidgetProvider.updateWidgetsOnLogout(context);
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();

@@ -24,19 +24,26 @@ public final class AnalyticsTracker {
         THEMES_CHANGED_THEME,
         THEMES_PREVIEWED_SITE,
         READER_ACCESSED,
-        READER_OPENED_ARTICLE,
-        READER_LIKED_ARTICLE,
-        READER_REBLOGGED_ARTICLE,
+        READER_ARTICLE_COMMENTED_ON,
+        READER_ARTICLE_LIKED,
+        READER_ARTICLE_OPENED,
+        READER_ARTICLE_REBLOGGED,
+        READER_ARTICLE_UNLIKED,
+        READER_BLOG_BLOCKED,
+        READER_BLOG_FOLLOWED,
+        READER_BLOG_PREVIEWED,
+        READER_BLOG_UNFOLLOWED,
+        READER_DISCOVER_VIEWED,
+        READER_FRESHLY_PRESSED_LOADED,
         READER_INFINITE_SCROLL,
-        READER_FOLLOWED_READER_TAG,
-        READER_UNFOLLOWED_READER_TAG,
-        READER_FOLLOWED_SITE,
-        READER_LOADED_TAG,
-        READER_LOADED_FRESHLY_PRESSED,
-        READER_COMMENTED_ON_ARTICLE,
-        READER_BLOCKED_BLOG,
-        READER_BLOG_PREVIEW,
-        READER_TAG_PREVIEW,
+        READER_LIST_FOLLOWED,
+        READER_LIST_LOADED,
+        READER_LIST_PREVIEWED,
+        READER_LIST_UNFOLLOWED,
+        READER_TAG_FOLLOWED,
+        READER_TAG_LOADED,
+        READER_TAG_PREVIEWED,
+        READER_TAG_UNFOLLOWED,
         STATS_ACCESSED,
         STATS_INSIGHTS_ACCESSED,
         STATS_PERIOD_DAYS_ACCESSED,
@@ -48,6 +55,9 @@ public final class AnalyticsTracker {
         STATS_OPENED_WEB_VERSION,
         STATS_TAPPED_BAR_CHART,
         STATS_SCROLLED_TO_BOTTOM,
+        STATS_WIDGET_ADDED,
+        STATS_WIDGET_REMOVED,
+        STATS_WIDGET_TAPPED,
         EDITOR_CREATED_POST,
         EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
@@ -149,6 +159,16 @@ public final class AnalyticsTracker {
         }
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
+        }
+    }
+
+
+    public static void flush() {
+        if (mHasUserOptedOut) {
+            return;
+        }
+        for (Tracker tracker : TRACKERS) {
+            tracker.flush();
         }
     }
 

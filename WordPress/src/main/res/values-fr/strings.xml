@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">Pour voir vos stats, vous devez d\'abord activer le module Jetpack nommé JSON API.</string>
+	<string name="error_open_list_from_notification">Cet article ou cette page à été publié sur un autre site</string>
+	<string name="post_uploaded">Article uploadé</string>
+	<string name="page_uploaded">Page uploadée</string>
 	<string name="reader_short_comment_count_multi">%s Commentaires</string>
 	<string name="reader_short_comment_count_one">1 Commentaire</string>
 	<string name="reader_label_submit_comment">ENVOYER</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Commentaires sur d\'autres sites</string>
 	<string name="notifications_wpcom_updates">Mis à jour WordPress.com</string>
 	<string name="notifications_other">Autre</string>
-	<string name="notifications_account_emails">Mis à jour de WordPress.com</string>
+	<string name="notifications_account_emails">Email de WordPress.com</string>
 	<string name="notifications_account_emails_summary">Nous vous enverrons des emails importants concernant votre compte, mais vous pouvez aussi recevoir des extras très utiles.</string>
 	<string name="your_sites">Vos Sites</string>
 	<string name="notifications_sights_and_sounds">Vues et Sons</string>
-	<string name="notifications_updates_from_wordpress">Mis à jour de WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Cela fait %1$s que %2$s a été publié. Comment l\'article a évolué jusqu\'à maintenant…</string>
 	<string name="stats_insights_latest_post_summary">Résumé du dernier article</string>
 	<string name="button_revert">Annuler modifications</string>
@@ -170,7 +173,6 @@
 	<string name="publisher">Editeur:</string>
 	<string name="reader_empty_posts_request_failed">Impossible de récupérer les articles</string>
 	<string name="stats_months_and_years">Mois et années</string>
-	<string name="reader_page_recommended_blogs">Blogs que vous aimerez</string>
 	<string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
 	<string name="stats_recent_weeks">Semaines récentes</string>
 	<string name="stats_average_per_day">Moyenne par jour</string>
@@ -181,6 +183,7 @@
 	<string name="stats_overall">Global</string>
 	<string name="stats_total">Total</string>
 	<string name="post_uploading">En cours d\'upload</string>
+	<string name="reader_page_recommended_blogs">Sites que vous aimerez</string>
 	<string name="stats_comments_total_comments_followers">Nombre d’articles commentés par les abonnés : %1$s</string>
 	<string name="stats_visitors">Visiteurs</string>
 	<string name="stats_views">Visites</string>
@@ -250,7 +253,6 @@
 	<string name="cab_selected">%d sélectionnés</string>
 	<string name="media_gallery_date_range">Affiche les médias entre %1$s et %2$s</string>
 	<string name="faq_button">FAQ</string>
-	<string name="reader_empty_followed_blogs_title">Vous ne suivez aucun blog pour le moment</string>
 	<string name="reader_empty_posts_liked">Vous n\'aimez aucun article</string>
 	<string name="browse_our_faq_button">Feuilleter notre FAQ</string>
 	<string name="nux_help_description">Visitez le centre d\'aide pour obtenir des réponses aux questions les plus communes ou bien visitez le forum pour en poser de nouvelles.</string>
@@ -287,6 +289,7 @@
 	<string name="media_empty_list_custom_date">Pas de média dans cet interval de temps</string>
 	<string name="posting_post">Publication de "%s"</string>
 	<string name="signing_out">Déconnexion…</string>
+	<string name="reader_empty_followed_blogs_title">Vous ne suivez aucun site pour le moment</string>
 	<string name="reader_menu_block_blog">Bloquer ce blog</string>
 	<string name="reader_toast_blog_blocked">Les articles de ce blog ne seront plus affichés</string>
 	<string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
@@ -310,8 +313,6 @@
 	<string name="schedule_verb">Programmer</string>
 	<string name="reader_title_subs">Tags &amp; blogs</string>
 	<string name="reader_page_followed_tags">Tags suivis</string>
-	<string name="reader_page_followed_blogs">Blogs suivis</string>
-	<string name="reader_hint_add_tag_or_url">Entrer un tag ou une URL à suivre</string>
 	<string name="reader_label_followed_blog">Abonné au blog</string>
 	<string name="reader_label_tag_preview">Posts tagués %s</string>
 	<string name="reader_toast_err_get_blog_info">Impossible d\'afficher ce blog</string>
@@ -321,6 +322,8 @@
 	<string name="reader_empty_recommended_blogs">Pas de blogs recommandés</string>
 	<string name="reader_title_blog_preview">Blog du Reader</string>
 	<string name="reader_title_tag_preview">Tag du Reader</string>
+	<string name="reader_page_followed_blogs">Sites suivis</string>
+	<string name="reader_hint_add_tag_or_url">Saisissez une étiquette ou une adresse web à suivre</string>
 	<string name="ptr_tip_message">Tip: Tirer vers le bas pour rafraichir</string>
 	<string name="media_empty_list">Pas de media</string>
 	<string name="saving">Sauvegarde...</string>
@@ -527,7 +530,7 @@
 	<string name="validating_user_data">Validation des données utilisateur</string>
 	<string name="validating_site_data">Validation des données du site</string>
 	<string name="account_two_step_auth_enabled">Ce compte a activé la vérification en deux étapes. Rendez-vous sur les réglages de sécurité sur WordPress.com et générez un mot de passe propre à cette application.</string>
-	<string name="reader_empty_followed_blogs_description">Mais ne vous inquiétez pas, appuyer sur l\'icône tag pour commencer a explorer!</string>
+	<string name="reader_empty_followed_blogs_description">Mais ne vous inquiétez pas, appuyer sur l\'icône en haut à droite pour commencer a explorer!</string>
 	<string name="nux_welcome_create_account">Créer un compte</string>
 	<string name="nux_add_selfhosted_blog">Ajouter un site auto-hébergé</string>
 	<string name="nux_oops_not_selfhosted_blog">Se connecter à WordPress.com</string>

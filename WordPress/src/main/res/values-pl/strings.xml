@@ -71,7 +71,6 @@
 	<string name="reader_empty_posts_in_blog">Ten blog jest pusty</string>
 	<string name="stats_period">Okres</string>
 	<string name="stats_overall">Ogólnie</string>
-	<string name="reader_page_recommended_blogs">Blogi, które mogą Cię zainteresować</string>
 	<string name="post_uploading">Dodawanie</string>
 	<string name="stats_views">Wyświetleń</string>
 	<string name="stats_visitors">Odwiedzających</string>
@@ -139,7 +138,6 @@
 	<string name="confirm_delete_media">Usunąć zaznaczony element?</string>
 	<string name="cab_selected">Liczba zaznaczonych: %d</string>
 	<string name="media_gallery_date_range">Wyświetlanie mediów z okresu od %1$s do %2$s</string>
-	<string name="reader_empty_followed_blogs_title">Nie obserwujesz jeszcze żadnych blogów</string>
 	<string name="reader_empty_comments">Nie ma jeszcze komentarzy</string>
 	<string name="reader_empty_posts_in_tag">Brak wpisów z tym tagiem</string>
 	<string name="reader_label_view_original">Zobacz oryginalny artykuł</string>
@@ -201,10 +199,8 @@
 	<string name="reader_title_subs">Tagi i blogi</string>
 	<string name="reader_page_followed_tags">Obserwowane tagi</string>
 	<string name="reader_toast_err_already_follow_blog">Już śledzisz ten blog</string>
-	<string name="reader_page_followed_blogs">Obserwowane blogi</string>
 	<string name="reader_label_tag_preview">Wpisy otagowane %s</string>
 	<string name="reader_empty_recommended_blogs">Brak polecanych blogów</string>
-	<string name="reader_hint_add_tag_or_url">Wpisz tag lub adres blogu, który chcesz obserwować</string>
 	<string name="reader_label_followed_blog">Blog śledzony</string>
 	<string name="reader_toast_err_get_blog_info">Nie udało się pobrać informacji o blogu</string>
 	<string name="reader_toast_err_follow_blog">Nie udało się śledzić tego bloga</string>
@@ -412,7 +408,6 @@
 	<string name="pick_video">Wybierz wideo</string>
 	<string name="validating_user_data">Sprawdzanie danych użytkownika</string>
 	<string name="validating_site_data">Sprawdzanie danych strony</string>
-	<string name="reader_empty_followed_blogs_description">Nie martw się - kliknij ikonę tagu, by zacząć przeglądać blogi!</string>
 	<string name="password_invalid">Potrzebujesz bardziej bezpiecznego hasła. Upewnij się, że użyłeś 7 lub więcej znaków, wielkich i małych liter, liczb albo znaków specjalnych.</string>
 	<string name="nux_tap_continue">Kontynuuj</string>
 	<string name="nux_welcome_create_account">Utwórz konto</string>
