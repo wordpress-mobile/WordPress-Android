@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">Para ver tus estadísticas debes activar el módulo JSON API en Jetpack.</string>
+	<string name="error_open_list_from_notification">Esta entrada o página fue publicada en otro sitio</string>
+	<string name="post_uploaded">Entrada subida</string>
+	<string name="page_uploaded">Página subida</string>
 	<string name="reader_short_comment_count_multi">%s Comentarios</string>
 	<string name="reader_short_comment_count_one">1 Comentario</string>
 	<string name="reader_label_submit_comment">ENVIAR</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Comentarios en otros sitios</string>
 	<string name="notifications_wpcom_updates">Actualizaciones de WordPress.com</string>
 	<string name="notifications_other">Otras</string>
-	<string name="notifications_account_emails">Actualizaciones de WordPress.com</string>
+	<string name="notifications_account_emails">Correo de WordPress.com</string>
 	<string name="notifications_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
 	<string name="your_sites">Tus sitios</string>
 	<string name="notifications_sights_and_sounds">Vistas y sonidos</string>
-	<string name="notifications_updates_from_wordpress">Actualizaciones de WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
 	<string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
 	<string name="button_revert">Volver</string>
@@ -171,7 +174,6 @@
 	<string name="reader_empty_posts_request_failed">No fue posible cargar las entradas</string>
 	<string name="stats_months_and_years">Meses y años</string>
 	<string name="stats_average_per_day">Media diaria</string>
-	<string name="reader_page_recommended_blogs">Blogs que te pueden gustar</string>
 	<string name="stats_overall">Global</string>
 	<string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
 	<string name="error_copy_to_clipboard">Ocurrió un error al copiar el texto en el portapapeles</string>
@@ -181,6 +183,7 @@
 	<string name="stats_period">Periodo</string>
 	<string name="reader_label_new_posts">Nuevas entradas</string>
 	<string name="post_uploading">Cargando</string>
+	<string name="reader_page_recommended_blogs">Sitios que te podrían gustar</string>
 	<string name="stats_comments_total_comments_followers">Total de entradas con comentarios de seguidores: %1$s</string>
 	<string name="stats_visitors">Visitantes</string>
 	<string name="stats_views">Vistas</string>
@@ -249,7 +252,6 @@
 	<string name="confirm_delete_media">¿Quieres eliminar el elemento seleccionado?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="media_gallery_date_range">Mostrando elementos multimedia desde %1$s a %2$s</string>
-	<string name="reader_empty_followed_blogs_title">Todavía no sigues ningún blog.</string>
 	<string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
 	<string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
 	<string name="agree_terms_of_service">Al crear una cuenta, aceptas los fascinantes %1$sTérminos de servicio%2$s.</string>
@@ -287,6 +289,7 @@
 	<string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
 	<string name="sending_content">Cargando el contenido de %s</string>
 	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
+	<string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
 	<string name="reader_toast_err_generic">No es posible realizar esta acción</string>
 	<string name="reader_toast_err_block_blog">No es posible bloquear este blog</string>
 	<string name="reader_toast_blog_blocked">Las entradas de este blog no volverán a mostrarse</string>
@@ -311,8 +314,6 @@
 	<string name="reader_title_subs">Etiquetas y blogs</string>
 	<string name="reader_toast_err_already_follow_blog">Ya estás siguiendo este blog</string>
 	<string name="reader_page_followed_tags">Etiquetas que se siguen</string>
-	<string name="reader_page_followed_blogs">Blogs que se siguen</string>
-	<string name="reader_hint_add_tag_or_url">Introduce la etiqueta o la URL que quieres seguir</string>
 	<string name="reader_label_followed_blog">Blog que se sigue</string>
 	<string name="reader_label_tag_preview">Entradas etiquetadas %s</string>
 	<string name="reader_toast_err_get_blog_info">No se puede mostrar este blog</string>
@@ -321,6 +322,8 @@
 	<string name="reader_empty_recommended_blogs">Sin blogs recomendados</string>
 	<string name="reader_title_blog_preview">Blog del lector</string>
 	<string name="reader_title_tag_preview">Etiqueta del lector</string>
+	<string name="reader_page_followed_blogs">Sitios que sigues</string>
+	<string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
 	<string name="saving">Guardando</string>
 	<string name="media_empty_list">Sin elementos multimedia</string>
 	<string name="ptr_tip_message">Consejo: Arrastra hacia abajo para recargar</string>
@@ -527,7 +530,7 @@
 	<string name="validating_site_data">Validando datos del sitio</string>
 	<string name="account_two_step_auth_enabled">Esta cuenta tiene activado el proceso de autentificación en dos pasos. Visita los ajustes de seguridad de WordPress.com y genera una contraseña específica para la aplicación.</string>
 	<string name="select_time">Elige tiempo</string>
-	<string name="reader_empty_followed_blogs_description">No te preocupes, solo toca el icono de etiqueta para empezar a explorar.</string>
+	<string name="reader_empty_followed_blogs_description">No te preocupes, ¡solo tienes que pulsar el icono para empezar a explorar!</string>
 	<string name="nux_welcome_create_account">Crear cuenta</string>
 	<string name="password_invalid">Necesitas una contraseña más segura. Asegúrate de utilizar 7 o más caracteres, mezclar letras mayúsculas y minúsculas, número y caracteres especiales.</string>
 	<string name="nux_tap_continue">Continuar</string>

@@ -32,11 +32,9 @@
 	<string name="notifications_comments_other_blogs">ความเห็นบนเว็บอื่น</string>
 	<string name="notifications_wpcom_updates">การอัปเดตของ WordPress.com</string>
 	<string name="notifications_other">อื่น ๆ</string>
-	<string name="notifications_account_emails">อัปเดตจาก WordPress.com</string>
 	<string name="notifications_account_emails_summary">เรามักจะส่งอีเมล์ที่สำคัญไปยังอีเมล์ของคุณเสมอ  แต่คุณสามารถได้อีเมล์ที่มีประโยชน์เพิ่มได้เหมือนกัน</string>
 	<string name="your_sites">เว็บของคุณ</string>
 	<string name="notifications_sights_and_sounds">แบบมองเห็นและเสียง</string>
-	<string name="notifications_updates_from_wordpress">อัปเดตจาก WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">มันเป็นเวลา %1$s ตั้งแต่ %2$s ได้เผยแพร่  นี่เป็นวิธีที่เรื่องจะถูกแสดงจนถึงตอนนี้…</string>
 	<string name="stats_insights_latest_post_summary">สรุปเรื่องล่าสุด</string>
 	<string name="button_revert">คืนกลับ</string>
@@ -171,7 +169,6 @@
 	<string name="error_notification_open">ไม่สามารถเปิดคำเตือนได้</string>
 	<string name="logs_copied_to_clipboard">ปูมแอพพลิเคชั่นถูกคัดลอกลงคลิปบอร์ด</string>
 	<string name="stats_months_and_years">เดือนและปี</string>
-	<string name="reader_page_recommended_blogs">บล็อกที่คุณอาจจะชอบ</string>
 	<string name="error_copy_to_clipboard">มีความผิดพลาดเกิดขึ้นขณะกำลังคัดลอกข้อความไปยังคลิปบอร์ด</string>
 	<string name="stats_recent_weeks">สัปดาห์ที่ผ่านมา</string>
 	<string name="stats_average_per_day">เฉลี่ยต่อวัน</string>
@@ -274,7 +271,6 @@
 	<string name="error_refresh_unauthorized_pages">คุณไม่มีสิทธิ์ดูหรือแก้ไขหน้า</string>
 	<string name="error_refresh_unauthorized_comments">คุณไม่มีสิทธิ์ดูหรือแก้ไขความเห็น</string>
 	<string name="older_month">เก่ากว่าหนึ่งเดือน</string>
-	<string name="reader_empty_followed_blogs_title">คุณยังไม่ได้ติดตามบล็อกใด ๆ</string>
 	<string name="reader_empty_posts_liked">คุณยังไม่ได้ชื่นชอบเรื่องใด ๆ</string>
 	<string name="faq_button">คำถามที่พบบ่อย</string>
 	<string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
@@ -310,8 +306,6 @@
 	<string name="schedule_verb">ตารางงาน</string>
 	<string name="reader_title_subs">ป้ายกำกับและบล็อก</string>
 	<string name="reader_page_followed_tags">ป้ายกำกับที่ติดตามแล้ว</string>
-	<string name="reader_page_followed_blogs">บล็อกที่ติดตามแล้ว</string>
-	<string name="reader_hint_add_tag_or_url">ใส่ป้ายกำกับหรือ URL เพื่อติดตาม</string>
 	<string name="reader_empty_recommended_blogs">ไม่มีบล็อกแนะนำ</string>
 	<string name="reader_label_followed_blog">ติดตามบล็อกแล้ว</string>
 	<string name="reader_label_tag_preview">ติดป้ายกำกับ %s เรื่องแล้ว</string>
@@ -527,7 +521,6 @@
 	<string name="account_two_step_auth_enabled">บัญชีนี้มีสองขั้นตอนในการเปิดใช้การยืนยัน  เยี่ยมชมการตั้งค่าความปลอดภัยของคุณบน WordPress.com และสร้างรหัสผ่านเฉพาะแอพพลิเคชั่น</string>
 	<string name="validating_user_data">ยืนยันข้อมูลผู้ใช้</string>
 	<string name="validating_site_data">ยืนยันข้อมูลเว็บไซต์</string>
-	<string name="reader_empty_followed_blogs_description">แต่ไม่ต้องเป็นห่วง เพียงแตะที่ไอคอนป้ายกำกับเพื่อเริ่มการค้นหา</string>
 	<string name="nux_oops_not_selfhosted_blog">เข้าสู่ระบบของ WordPress.com</string>
 	<string name="password_invalid">คุณต้องการรหัสผ่านที่ปลอดภัยมากขึ้น โปรดแน่ใจว่าได้ใช้ตัวอักษร 7 ตัวหรือมากกว่า  และผสมตัวอักษรตัวใหญ่ ตัวเล็ก ตัวเลข และสัญลักษณ์พิเศษในรหัสผ่าน</string>
 	<string name="nux_tap_continue">ดำเนินการต่อ</string>

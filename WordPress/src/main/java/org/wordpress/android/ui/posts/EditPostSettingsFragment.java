@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -53,6 +51,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.xmlrpc.android.ApiHelper;
@@ -68,7 +67,6 @@ import java.util.Map;
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
-
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
     private Post mPost;
@@ -77,6 +75,7 @@ public class EditPostSettingsFragment extends Fragment
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
+    private ViewGroup mRootView;
 
     private ArrayList<String> mCategories;
 
@@ -96,9 +95,9 @@ public class EditPostSettingsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mPost = ((EditPostActivity) getActivity()).getPost();
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
+        mRootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
-        if (rootView == null || mPost == null) {
+        if (mRootView == null || mPost == null) {
             return null;
         }
 
@@ -110,11 +109,11 @@ public class EditPostSettingsFragment extends Fragment
         mMinute = c.get(Calendar.MINUTE);
         mCategories = new ArrayList<String>();
 
-        mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
-        mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
-        mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
+        mExcerptEditText = (EditText) mRootView.findViewById(R.id.postExcerpt);
+        mPasswordEditText = (EditText) mRootView.findViewById(R.id.post_password);
+        mPubDateText = (TextView) mRootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
-        mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
+        mStatusSpinner = (Spinner) mRootView.findViewById(R.id.status);
         mStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -126,15 +125,15 @@ public class EditPostSettingsFragment extends Fragment
 
             }
         });
-        mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
-        mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
+        mTagsEditText = (EditText) mRootView.findViewById(R.id.tags);
+        mSectionCategories = ((ViewGroup) mRootView.findViewById(R.id.sectionCategories));
 
         if (mPost.isPage()) { // remove post specific views
             mExcerptEditText.setVisibility(View.GONE);
-            (rootView.findViewById(R.id.sectionTags)).setVisibility(View.GONE);
-            (rootView.findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
-            (rootView.findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
-            (rootView.findViewById(R.id.postFormat)).setVisibility(View.GONE);
+            mRootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
+            mRootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
+            mRootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
+            mRootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
         } else {
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
             mPostFormats =
@@ -162,7 +161,7 @@ public class EditPostSettingsFragment extends Fragment
                     AppLog.e(T.POSTS, e);
                 }
             }
-            mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
+            mPostFormatSpinner = (Spinner) mRootView.findViewById(R.id.postFormat);
             ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
                     mPostFormatTitles);
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -190,9 +189,8 @@ public class EditPostSettingsFragment extends Fragment
 
         initSettingsFields();
         populateSelectedCategories();
-        initLocation(rootView);
-
-        return rootView;
+        initLocation(mRootView);
+        return mRootView;
     }
 
     private void initSettingsFields() {
@@ -322,7 +320,11 @@ public class EditPostSettingsFragment extends Fragment
             removeLocation();
             showLocationAdd();
         } else if (id == R.id.addLocation) {
-            showLocationSearch();
+            // Init Location settings when we switch to the fragment, that could trigger the opening of
+            // a dialog asking the user to enable the Geolocation permission (starting Android 6.+).
+            if (checkForLocationPermission()) {
+                showLocationSearch();
+            }
         } else if (id == R.id.searchLocation) {
             searchLocation();
         }
@@ -615,7 +617,7 @@ public class EditPostSettingsFragment extends Fragment
         boolean settingsSupportLocation = false;
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (settingsSupportLocation && hasLocationProvider() && mPost.supportsLocation()) {
+        if (settingsSupportLocation && checkForLocationPermission() && mPost.supportsLocation()) {
             View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
             TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
@@ -646,7 +648,6 @@ public class EditPostSettingsFragment extends Fragment
             // if this post has location attached to it, look up the location address
             if (mPost.hasLocation()) {
                 showLocationView();
-
                 PostLocation location = mPost.getLocation();
                 setLocation(location.getLatitude(), location.getLongitude());
             } else {
@@ -655,25 +656,12 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    private boolean hasLocationProvider() {
-        if (!isAdded()) {
-            return false;
-        }
-        boolean hasLocationProvider = false;
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
-        if (providers != null) {
-            for (String providerName : providers) {
-                if (providerName.equals(LocationManager.GPS_PROVIDER)
-                        || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
-                    hasLocationProvider = true;
-                }
-            }
-        }
-        return hasLocationProvider;
+    private boolean checkForLocationPermission() {
+        return isAdded() && PermissionUtils.checkLocationPermissions(getActivity(),
+                EditPostActivity.LOCATION_PERMISSION_REQUEST_CODE);
     }
 
-    private void showLocationSearch() {
+    public void showLocationSearch() {
         mLocationAddSection.setVisibility(View.GONE);
         mLocationSearchSection.setVisibility(View.VISIBLE);
         mLocationViewSection.setVisibility(View.GONE);
