@@ -206,6 +206,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         });
         configureFilterSpinner(headerSearch);
         mSearchButton = (ImageButton) headerSearch.findViewById(R.id.theme_search);
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onSearchClicked();
+            }
+        });
     }
 
     private void configureFilterSpinner(View headerSearch) {
