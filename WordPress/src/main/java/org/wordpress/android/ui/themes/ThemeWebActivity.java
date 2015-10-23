@@ -25,7 +25,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private static final String THEME_URL_PREVIEW = "%s/wp-admin/customize.php?theme=%s/%s";
     private static final String THEME_URL_SUPPORT = "https://wordpress.com/themes/%s/support/?preview=true&iframe=true";
     private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s/?preview=true&iframe=true";
-    private static final String THEME_URL_DEMO_PARAMETER = "&demo=true&iframe=true&theme_preview=true";
+    private static final String THEME_URL_DEMO_PARAMETER = "demo=true&iframe=true&theme_preview=true";
     private static final String THEME_HTTPS_PREFIX = "https://";
 
     public enum ThemeWebActivityType {
@@ -81,7 +81,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 url = String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getId());
                 break;
             case DEMO:
-                url = theme.getDemoURI() + THEME_URL_DEMO_PARAMETER;
+                url = theme.getDemoURI();
+                if (url.contains("?")) {
+                    url = url + "&" + THEME_URL_DEMO_PARAMETER;
+                } else {
+                    url = url + "?" + THEME_URL_DEMO_PARAMETER;
+                }
                 break;
             case DETAILS:
                 String currentURL = homeURL.replaceFirst(THEME_HTTPS_PREFIX, "");
