@@ -91,7 +91,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onPreviewSelected(themeId);
+                mCallback.onViewSelected(themeId);
             }
         });
     }
@@ -111,11 +111,11 @@ public class ThemeBrowserAdapter extends CursorAdapter {
                             mCallback.onActivateSelected(themeId);
                         }
                         break;
-                    case R.id.menu_preview:
-                        mCallback.onPreviewSelected(themeId);
+                    case R.id.menu_try_and_customize:
+                        mCallback.onTryAndCustomizeSelected(themeId);
                         break;
-                    case R.id.menu_demo:
-                        mCallback.onDemoSelected(themeId);
+                    case R.id.menu_view:
+                        mCallback.onViewSelected(themeId);
                         break;
                     case R.id.menu_details:
                         mCallback.onDetailsSelected(themeId);

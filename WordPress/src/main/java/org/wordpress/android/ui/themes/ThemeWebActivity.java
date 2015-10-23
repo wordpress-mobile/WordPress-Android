@@ -23,17 +23,15 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private static final String THEME_DOMAIN_PUBLIC = "pub";
     private static final String THEME_DOMAIN_PREMIUM = "premium";
     private static final String THEME_URL_PREVIEW = "%s/wp-admin/customize.php?theme=%s/%s";
-    private static final String THEME_URL_CUSTOMIZE = "%s/wp-admin/customize.php";
     private static final String THEME_URL_SUPPORT = "https://wordpress.com/themes/%s/support/?preview=true&iframe=true";
     private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s/?preview=true&iframe=true";
-    private static final String THEME_URL_DEMO_PARAMETER = "?demo=true&iframe=true&theme_preview=true";
+    private static final String THEME_URL_DEMO_PARAMETER = "&demo=true&iframe=true&theme_preview=true";
 
     public enum ThemeWebActivityType {
         PREVIEW,
         DEMO,
         DETAILS,
-        SUPPORT,
-        CUSTOMIZE,
+        SUPPORT
     }
 
     public static void openTheme(Activity activity, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
@@ -90,9 +88,6 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 break;
             case SUPPORT:
                 url = String.format(THEME_URL_SUPPORT, theme.getId());
-                break;
-            case CUSTOMIZE:
-                url = String.format(THEME_URL_CUSTOMIZE, homeURL);
                 break;
             default:
                 break;

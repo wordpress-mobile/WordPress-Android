@@ -363,12 +363,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     @Override
-    public void onPreviewSelected(String themeId) {
+    public void onTryAndCustomizeSelected(String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 
     @Override
-    public void onDemoSelected(String themeId) {
+    public void onViewSelected(String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DEMO);
     }
 
@@ -380,11 +380,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     public void onSupportSelected(String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.SUPPORT);
-    }
-
-    @Override
-    public void onCustomizeSelected(String themeId) {
-        startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.CUSTOMIZE);
     }
 
     @Override

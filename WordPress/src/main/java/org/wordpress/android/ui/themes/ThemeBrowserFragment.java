@@ -36,11 +36,10 @@ import org.wordpress.android.widgets.HeaderGridView;
 public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
     public interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
-        void onPreviewSelected(String themeId);
-        void onDemoSelected(String themeId);
+        void onTryAndCustomizeSelected(String themeId);
+        void onViewSelected(String themeId);
         void onDetailsSelected(String themeId);
         void onSupportSelected(String themeId);
-        void onCustomizeSelected(String themeId);
         void onSearchClicked();
     }
 
@@ -164,7 +163,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onCustomizeSelected(mCurrentThemeId);
+                mCallback.onViewSelected(mCurrentThemeId);
             }
         });
 

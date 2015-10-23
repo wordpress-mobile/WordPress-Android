@@ -1054,8 +1054,8 @@
     <string name="activate">Activate</string>
     <string name="demo">Demo</string>
     <string name="theme_activate">Activate</string>
-    <string name="theme_preview">Preview</string>
-    <string name="theme_demo">Demo</string>
+    <string name="theme_try_and_customize">Try &amp; Customize</string>
+    <string name="theme_view">View</string>
     <string name="theme_details">Details</string>
     <string name="theme_support">Support</string>
     <string name="theme_done">DONE</string>
