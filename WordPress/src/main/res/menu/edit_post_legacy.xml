@@ -7,11 +7,6 @@
         app:showAsAction="always"
         android:title="@string/preview"/>
     <item
-        android:id="@+id/menu_post_settings"
-        android:icon="@drawable/ic_settings_white_24dp"
-        app:showAsAction="always"
-        android:title="@string/settings"/>
-    <item
         android:id="@+id/menu_save_post"
         app:showAsAction="always"
         android:title="@string/publish_post"/>

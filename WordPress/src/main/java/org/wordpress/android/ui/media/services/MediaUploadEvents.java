@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.media.services;
 
 public class MediaUploadEvents {
-    public static class MediaUploadSucceed {
+    public static class MediaUploadSucceeded {
         public final String mLocalId;
         public final String mRemoteId;
-        MediaUploadSucceed(String localId, String remoteId) {
+        public final String mRemoteUrl;
+        MediaUploadSucceeded(String localId, String remoteId, String remoteUrl) {
             mLocalId = localId;
             mRemoteId = remoteId;
+            mRemoteUrl = remoteUrl;
         }
     }
 
@@ -16,6 +18,15 @@ public class MediaUploadEvents {
         MediaUploadFailed(String localId, String errorMessage) {
             mLocalId = localId;
             mErrorMessage = errorMessage;
+        }
+    }
+
+    public static class MediaUploadProgress {
+        public final String mLocalId;
+        public final float mProgress;
+        MediaUploadProgress(String localId, float progress) {
+            mLocalId = localId;
+            mProgress = progress;
         }
     }
 }

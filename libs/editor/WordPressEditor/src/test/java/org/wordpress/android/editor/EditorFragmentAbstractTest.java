@@ -70,6 +70,11 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
+        public boolean hasFailedMediaUploads() {
+            return false;
+        }
+
+        @Override
         public void setTitlePlaceholder(CharSequence text) {
 
         }

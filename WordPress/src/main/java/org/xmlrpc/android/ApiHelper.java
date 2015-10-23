@@ -736,9 +736,10 @@ public class ApiHelper {
         }
     }
 
-    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, String> {
+    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, Map<?, ?>> {
         public interface Callback extends GenericErrorCallback {
-            public void onSuccess(String id);
+            void onSuccess(String remoteId, String remoteUrl);
+            void onProgressUpdate(float progress);
         }
         private Callback mCallback;
         private Context mContext;
@@ -752,7 +753,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected String doInBackground(List<?>... params) {
+        protected Map<?, ?> doInBackground(List<?>... params) {
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
@@ -762,7 +763,7 @@ public class ApiHelper {
                 return null;
             }
 
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+            final XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Map<String, Object> data = new HashMap<String, Object>();
@@ -778,13 +779,34 @@ public class ApiHelper {
                     data
             };
 
+            final File tempFile = getTempFile(mContext);
+
+            if (client instanceof XMLRPCClient) {
+                ((XMLRPCClient) client).setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
+                    @Override
+                    public void onBytesUploaded(long uploadedBytes) {
+                        if (isCancelled()) {
+                            // Stop the upload if the task has been cancelled
+                            ((XMLRPCClient) client).cancel();
+                        }
+
+                        if (tempFile == null || tempFile.length() == 0) {
+                            return;
+                        }
+
+                        float fractionUploaded = uploadedBytes / (float) tempFile.length();
+                        mCallback.onProgressUpdate(fractionUploaded);
+                    }
+                });
+            }
+
             if (mContext == null) {
                 return null;
             }
 
             Map<?, ?> resultMap;
             try {
-                resultMap = (HashMap<?, ?>) client.call(Methods.UPLOAD_FILE, apiParams, getTempFile(mContext));
+                resultMap = (HashMap<?, ?>) client.call(Methods.UPLOAD_FILE, apiParams, tempFile);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return null;
@@ -800,7 +822,7 @@ public class ApiHelper {
             }
 
             if (resultMap != null && resultMap.containsKey("id")) {
-                return (String) resultMap.get("id");
+                return resultMap;
             } else {
                 setError(ErrorType.INVALID_RESULT, "Invalid result");
             }
@@ -820,10 +842,12 @@ public class ApiHelper {
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Map<?, ?> result) {
             if (mCallback != null) {
                 if (result != null) {
-                    mCallback.onSuccess(result);
+                    String remoteId = (String) result.get("id");
+                    String remoteUrl = (String) result.get("url");
+                    mCallback.onSuccess(remoteId, remoteUrl);
                 } else {
                     mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }

@@ -175,6 +175,8 @@ public class JsCallbackReceiver {
                         case "getSelectedText":
                             responseIds.add("result");
                             break;
+                        case "getFailedImages":
+                            responseIds.add("ids");
                     }
 
                     responseDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, responseIds);

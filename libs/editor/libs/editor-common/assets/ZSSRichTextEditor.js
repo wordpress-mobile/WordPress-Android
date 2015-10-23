@@ -1039,6 +1039,46 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier, message) {
 };
 
 /**
+ *  @brief      Marks all in-progress images as failed to upload
+ */
+ZSSEditor.markAllUploadingImagesAsFailed = function() {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.uploading");
+
+    for(var i = 0; i < matches.size(); i++) {
+        var mediaId = matches[i].getAttribute("data-wpid");
+        if (mediaId != null) {
+            ZSSEditor.markImageUploadFailed(mediaId);
+        }
+    }
+};
+
+/**
+ *  @brief      Sends a callback with a list of failed images
+ */
+ZSSEditor.getFailedImages = function() {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.failed");
+
+    var functionArgument = "function=getFailedImages";
+    var mediaIdArray = [];
+
+    for (var i = 0; i < matches.size(); i ++) {
+        var mediaId = matches[i].getAttribute("data-wpid");
+        if (mediaId != null) {
+            mediaIdArray.push(mediaId);
+        }
+    }
+
+    var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
+    ZSSEditor.callback('callback-response-string', joinedArguments);
+};
+
+/**
  *  @brief      Remove the image from the DOM.
  *
  *  @param      imageNodeIdentifier     This is a unique ID provided by the caller.
