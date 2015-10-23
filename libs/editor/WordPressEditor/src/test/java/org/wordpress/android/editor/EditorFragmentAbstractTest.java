@@ -14,7 +14,7 @@ import org.robolectric.annotation.Config;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
-@Config(emulateSdk = 18)
+@Config(sdk = 18)
 @RunWith(RobolectricTestRunner.class)
 public class EditorFragmentAbstractTest {
     @Test

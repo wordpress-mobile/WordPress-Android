@@ -12,6 +12,7 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -127,13 +128,18 @@ public class ReaderBlogInfoView extends LinearLayout {
 
         txtFollowCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
 
-        mFollowButton.setIsFollowed(blogInfo.isFollowing);
-        mFollowButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFollowStatus();
-            }
-        });
+        if (ReaderUtils.isLoggedOutReader()) {
+            mFollowButton.setVisibility(View.GONE);
+        } else {
+            mFollowButton.setVisibility(View.VISIBLE);
+            mFollowButton.setIsFollowed(blogInfo.isFollowing);
+            mFollowButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFollowStatus();
+                }
+            });
+        }
 
         if (layoutInfo.getVisibility() != View.VISIBLE) {
             layoutInfo.setVisibility(View.VISIBLE);

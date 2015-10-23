@@ -33,13 +33,13 @@ public class Note extends Syncable {
     static private final int MAX_COMMENT_PREVIEW_LENGTH = 200;
 
     // Note types
-    private static final String NOTE_UNKNOWN_TYPE = "unknown";
-    private static final String NOTE_COMMENT_TYPE = "comment";
+    public static final String NOTE_FOLLOW_TYPE = "follow";
+    public static final String NOTE_LIKE_TYPE = "like";
+    public static final String NOTE_COMMENT_TYPE = "comment";
     private static final String NOTE_MATCHER_TYPE = "automattcher";
-    private static final String NOTE_FOLLOW_TYPE = "follow";
-    private static final String NOTE_LIKE_TYPE = "like";
     private static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
     private static final String NOTE_REBLOG_TYPE = "reblog";
+    private static final String NOTE_UNKNOWN_TYPE = "unknown";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
@@ -53,7 +53,7 @@ public class Note extends Syncable {
     private final Object mSyncLock = new Object();
     private String mLocalStatus;
 
-    public static enum EnabledActions {
+    public enum EnabledActions {
         ACTION_REPLY,
         ACTION_APPROVE,
         ACTION_UNAPPROVE,
@@ -61,7 +61,7 @@ public class Note extends Syncable {
         ACTION_LIKE
     }
 
-    public static enum NoteTimeGroup {
+    public enum NoteTimeGroup {
         GROUP_TODAY,
         GROUP_YESTERDAY,
         GROUP_OLDER_TWO_DAYS,
@@ -146,7 +146,7 @@ public class Note extends Syncable {
         return isLikeType() || isCommentLikeType() || isFollowType() || isReblogType();
     }
 
-    public String getLocalStatus() {
+    private String getLocalStatus() {
         return StringUtils.notNullStr(mLocalStatus);
     }
 
@@ -169,7 +169,7 @@ public class Note extends Syncable {
         return null;
     }
 
-    public Spannable getFormattedSubject() {
+    private Spannable getFormattedSubject() {
         return NotificationsUtils.getSpannableContentForRanges(getSubject());
     }
 
@@ -250,7 +250,7 @@ public class Note extends Syncable {
         return !isRead();
     }
 
-    Boolean isRead() {
+    private Boolean isRead() {
         return queryJSON("read", 0) == 1;
     }
 
@@ -506,12 +506,13 @@ public class Note extends Syncable {
         static public final String IS_UNAPPROVED_INDEX = "unapproved";
         static public final String COMMENT_SUBJECT_NOTICON = "comment_subject_noticon";
         static public final String LOCAL_STATUS = "local_status";
+        static public final String TYPE_INDEX = "type";
 
         private static final Indexer<Note> sNoteIndexer = new Indexer<Note>() {
 
             @Override
             public List<Index> index(Note note) {
-                List<Index> indexes = new ArrayList<Index>();
+                List<Index> indexes = new ArrayList<>();
                 try {
                     indexes.add(new Index(TIMESTAMP_INDEX, note.getTimestamp()));
                 } catch (NumberFormatException e) {
@@ -528,6 +529,7 @@ public class Note extends Syncable {
                 indexes.add(new Index(IS_UNAPPROVED_INDEX, note.getCommentStatus() == CommentStatus.UNAPPROVED));
                 indexes.add(new Index(COMMENT_SUBJECT_NOTICON, note.getCommentSubjectNoticon()));
                 indexes.add(new Index(LOCAL_STATUS, note.getLocalStatus()));
+                indexes.add(new Index(TYPE_INDEX, note.getType()));
 
                 return indexes;
             }

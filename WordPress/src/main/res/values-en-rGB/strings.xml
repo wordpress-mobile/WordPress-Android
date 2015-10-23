@@ -1,5 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
+	<string name="error_open_list_from_notification">This post or page was published on another site</string>
+	<string name="post_uploaded">Post uploaded</string>
+	<string name="page_uploaded">Page uploaded</string>
+	<string name="reader_short_comment_count_multi">%s Comments</string>
+	<string name="reader_short_comment_count_one">1 Comment</string>
+	<string name="reader_label_submit_comment">SEND</string>
+	<string name="reader_hint_comment_on_post">Reply to post…</string>
+	<string name="reader_discover_visit_blog">Visit %s</string>
+	<string name="reader_discover_attribution_blog">Originally posted on %s</string>
+	<string name="reader_discover_attribution_author">Originally posted by %s</string>
+	<string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>
+	<string name="reader_short_like_count_multi">%s Likes</string>
+	<string name="reader_short_like_count_one">1 Like</string>
+	<string name="reader_label_follow_count">%,d followers</string>
+	<string name="reader_short_like_count_none">Like</string>
+	<string name="reader_label_reading_time_in_minutes">%,d min</string>
+	<string name="reader_menu_tags">Edit tags and blogs</string>
+	<string name="reader_label_word_count">%,d words</string>
+	<string name="reader_title_post_detail">Reader Post</string>
+	<string name="local_draft_explainer">This post is a local draft which hasn\'t been published</string>
+	<string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
+	<string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
+	<string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
+	<string name="notifications_tab_summary">Settings for notifications that appear in the Notifications tab.</string>
+	<string name="notifications_disabled">App notifications have been disabled. Tap here to enable them in Settings.</string>
+	<string name="notification_types">Notification Types</string>
+	<string name="error_loading_notifications">Couldn\'t load notification settings</string>
+	<string name="replies_to_your_comments">Replies to your comments</string>
+	<string name="comment_likes">Comment likes</string>
+	<string name="app_notifications">App notifications</string>
+	<string name="notifications_tab">Notifications tab</string>
+	<string name="email">Email</string>
+	<string name="notifications_comments_other_blogs">Comments on other sites</string>
+	<string name="notifications_wpcom_updates">WordPress.com Updates</string>
+	<string name="notifications_other">Other</string>
+	<string name="notifications_account_emails">Email from WordPress.com</string>
+	<string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
+	<string name="notifications_sights_and_sounds">Sights and Sounds</string>
+	<string name="your_sites">Your Sites</string>
+	<string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
+	<string name="stats_insights_latest_post_summary">Latest Post Summary</string>
+	<string name="button_revert">Revert</string>
+	<string name="days_ago">%d days ago</string>
+	<string name="yesterday">Yesterday</string>
 	<string name="connectionbar_no_connection">No connection</string>
 	<string name="page_trashed">Page sent to bin</string>
 	<string name="post_deleted">Post deleted</string>
@@ -137,8 +182,8 @@
 	<string name="stats_average_per_day">Average per Day</string>
 	<string name="stats_recent_weeks">Recent Weeks</string>
 	<string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
-	<string name="reader_page_recommended_blogs">Blogs you may like</string>
 	<string name="stats_months_and_years">Months and Years</string>
+	<string name="reader_page_recommended_blogs">Sites you may like</string>
 	<string name="themes_fetching">Fetching themes…</string>
 	<string name="stats_for">Stats for %s</string>
 	<string name="stats_other_recent_stats_label">Other Recent Stats</string>
@@ -207,7 +252,6 @@
 	<string name="confirm_delete_media">Delete selected item?</string>
 	<string name="cab_selected">%d selected</string>
 	<string name="media_gallery_date_range">Displaying media from %1$s to %2$s</string>
-	<string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
 	<string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Browse our FAQ</string>
@@ -245,6 +289,7 @@
 	<string name="media_empty_list_custom_date">No media in this time interval</string>
 	<string name="posting_post">Posting "%s"</string>
 	<string name="signing_out">Signing out…</string>
+	<string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
 	<string name="reader_menu_block_blog">Block this blog</string>
 	<string name="reader_toast_err_generic">Unable to perform this action</string>
 	<string name="reader_toast_err_block_blog">Unable to block this blog</string>
@@ -268,8 +313,6 @@
 	<string name="schedule_verb">Schedule</string>
 	<string name="reader_title_subs">Tags &amp; Blogs</string>
 	<string name="reader_page_followed_tags">Followed tags</string>
-	<string name="reader_page_followed_blogs">Followed blogs</string>
-	<string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
 	<string name="reader_label_followed_blog">Blog followed</string>
 	<string name="reader_label_tag_preview">Posts tagged %s</string>
 	<string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
@@ -277,6 +320,10 @@
 	<string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
 	<string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
 	<string name="reader_empty_recommended_blogs">No recommended blogs</string>
+	<string name="reader_title_blog_preview">Reader Blog</string>
+	<string name="reader_title_tag_preview">Reader Tag</string>
+	<string name="reader_page_followed_blogs">Followed sites</string>
+	<string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
 	<string name="saving">Saving…</string>
 	<string name="media_empty_list">No media</string>
 	<string name="ptr_tip_message">Tip: Pull down to refresh</string>
@@ -483,7 +530,7 @@
 	<string name="reader_toast_err_get_post">Unable to retrieve this post</string>
 	<string name="validating_user_data">Validating user data</string>
 	<string name="validating_site_data">Validating site data</string>
-	<string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
+	<string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
 	<string name="nux_tap_continue">Continue</string>
 	<string name="nux_welcome_create_account">Create account</string>
 	<string name="nux_add_selfhosted_blog">Add self-hosted site</string>
@@ -518,6 +565,7 @@
 	<string name="reader_likes_only_you">You like this</string>
 	<string name="reader_empty_followed_tags">You don\'t follow any tags</string>
 	<string name="create_account_wpcom">Create an account on WordPress.com</string>
+	<string name="reader_hint_comment_on_comment">Reply to comment…</string>
 	<string name="themes">Themes</string>
 	<string name="media_edit_title_text">Title</string>
 	<string name="media_edit_caption_text">Caption</string>
@@ -633,6 +681,7 @@
 	<string name="immediately">Immediately</string>
 	<string name="quickpress_add_alert_title">Set shortcut name</string>
 	<string name="settings">Settings</string>
+	<string name="today">Today</string>
 	<string name="share_url">Share URL</string>
 	<string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
 	<string name="quickpress_add_error">Shortcut name can\'t be empty</string>
@@ -666,11 +715,34 @@
 	<string name="reply">Reply</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
+	<string name="notification_settings">Notification Settings</string>
 	<string-array name="alignment_array">
 		<item>None</item>
 		<item>Left</item>
 		<item>Center</item>
 		<item>Right</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>Comments on my site</item>
+		<item>Likes on my comments</item>
+		<item>Likes on my posts</item>
+		<item>Site follows</item>
+		<item>Site achievements</item>
+		<item>Username mentions</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>Replies to my comments</item>
+		<item>Likes on my comments</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>Suggestions</item>
+		<item>Research</item>
+		<item>Community</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>Tips for getting the most out of WordPress.com.</item>
+		<item>Opportunities to participate in WordPress.com research &amp; surveys.</item>
+		<item>Information on WordPress.com courses and events (online &amp; in-person).</item>
 	</string-array>
 	<string-array name="post_filters_array">
 		<item>Published</item>

@@ -26,8 +26,10 @@ import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
+import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
 import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
@@ -43,6 +45,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
+    private int mGapMarkerPosition = -1;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
@@ -80,6 +83,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_BLOG_INFO   = 1;
     private static final int VIEW_TYPE_TAG_INFO    = 2;
     private static final int VIEW_TYPE_TAG_TOOLBAR = 3;
+    private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
@@ -168,6 +172,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    class GapMarkerViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderGapMarkerView mGapMarkerView;
+        public GapMarkerViewHolder(View itemView) {
+            super(itemView);
+            mGapMarkerView = (ReaderGapMarkerView) itemView;
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position == 0 && mShowTagToolbar) {
@@ -179,6 +191,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (position == 0 && isTagPreview()) {
             // first item is a ReaderTagInfoView
             return VIEW_TYPE_TAG_INFO;
+        } else if (position == mGapMarkerPosition) {
+            return VIEW_TYPE_GAP_MARKER;
         }
         return VIEW_TYPE_POST;
     }
@@ -195,6 +209,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             case VIEW_TYPE_TAG_INFO:
                 return new TagInfoViewHolder(new ReaderTagInfoView(context));
+
+            case VIEW_TYPE_GAP_MARKER:
+                return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
             default:
                 View postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
@@ -216,6 +233,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 TagToolbarViewHolder toolbarHolder = (TagToolbarViewHolder) holder;
                 toolbarHolder.mTagToolbar.setCurrentTag(mCurrentTag);
                 toolbarHolder.mTagToolbar.setOnTagChangedListener(mOnTagChangedListener);
+            } else if (holder instanceof GapMarkerViewHolder) {
+                GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
+                gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
             }
             return;
         }
@@ -316,57 +336,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.txtTag.setOnClickListener(null);
         }
 
-        boolean showLikes;
-        boolean showComments;
-        if (post.isDiscoverPost()) {
-            showLikes = false;
-            showComments = false;
-        } else if (mIsLoggedOutReader) {
-            showLikes = post.numLikes > 0;
-            showComments = post.numReplies > 0;
-        } else {
-            showLikes = post.canLikePost();
-            showComments = post.isWP() && !post.isJetpack && (post.isCommentsOpen || post.numReplies > 0);
-        }
-
-        if (showLikes || showComments) {
-            showCounts(postHolder, post);
-        }
-
-        if (showLikes) {
-            postHolder.likeCount.setSelected(post.isLikedByCurrentUser);
-            postHolder.likeCount.setVisibility(View.VISIBLE);
-            // can't like when logged out
-            if (mIsLoggedOutReader) {
-                postHolder.likeCount.setEnabled(false);
-                postHolder.likeCount.setOnClickListener(null);
-            } else {
-                postHolder.likeCount.setEnabled(true);
-                postHolder.likeCount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggleLike(v.getContext(), postHolder, post);
-                    }
-                });
-            }
-        } else {
-            postHolder.likeCount.setVisibility(View.GONE);
-            postHolder.likeCount.setOnClickListener(null);
-        }
-
-        if (showComments) {
-            postHolder.commentCount.setVisibility(View.VISIBLE);
-            postHolder.commentCount.setEnabled(true);
-            postHolder.commentCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(v.getContext(), post.blogId, post.postId);
-                }
-            });
-        } else {
-            postHolder.commentCount.setVisibility(View.GONE);
-            postHolder.commentCount.setOnClickListener(null);
-        }
+        showLikes(postHolder, post);
+        showComments(postHolder, post);
 
         // more menu only shows for followed tags
         if (!mIsLoggedOutReader && postListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
@@ -573,7 +544,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * same as refresh() above but first clears the existing posts
      */
-    private void reload() {
+    public void reload() {
         clear();
         loadPosts();
     }
@@ -602,10 +573,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private ReaderPost getItem(int position) {
-        if (hasCustomFirstItem()) {
-            return position == 0 ? null : mPosts.get(position - 1);
+        if (position == 0 && hasCustomFirstItem()) {
+            return null;
         }
-        return mPosts.get(position);
+        if (position == mGapMarkerPosition) {
+            return null;
+        }
+
+        int arrayPos = hasCustomFirstItem() ? position - 1 : position;
+
+        if (mGapMarkerPosition > -1 && position > mGapMarkerPosition) {
+            arrayPos--;
+        }
+
+        return mPosts.get(arrayPos);
     }
 
     @Override
@@ -629,17 +610,57 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    /*
-     * shows like & comment count
-     */
-    private void showCounts(ReaderPostViewHolder holder, ReaderPost post) {
-        holder.likeCount.setCount(post.numLikes);
+    private void showLikes(final ReaderPostViewHolder holder, final ReaderPost post) {
+        boolean canShowLikes;
+        if (post.isDiscoverPost()) {
+            canShowLikes = false;
+        } else if (mIsLoggedOutReader) {
+            canShowLikes = post.numLikes > 0;
+        } else {
+            canShowLikes = post.canLikePost();
+        }
 
-        if (post.numReplies > 0 || post.isCommentsOpen) {
+        if (canShowLikes) {
+            holder.likeCount.setCount(post.numLikes);
+            holder.likeCount.setSelected(post.isLikedByCurrentUser);
+            holder.likeCount.setVisibility(View.VISIBLE);
+            // can't like when logged out
+            if (!mIsLoggedOutReader) {
+                holder.likeCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleLike(v.getContext(), holder, post);
+                    }
+                });
+            }
+        } else {
+            holder.likeCount.setVisibility(View.GONE);
+            holder.likeCount.setOnClickListener(null);
+        }
+    }
+
+    private void showComments(final ReaderPostViewHolder holder, final ReaderPost post) {
+        boolean canShowComments;
+        if (post.isDiscoverPost()) {
+            canShowComments = false;
+        } else if (mIsLoggedOutReader) {
+            canShowComments = post.numReplies > 0;
+        } else {
+            canShowComments = post.isWP() && !post.isJetpack && (post.isCommentsOpen || post.numReplies > 0);
+        }
+
+        if (canShowComments) {
             holder.commentCount.setCount(post.numReplies);
             holder.commentCount.setVisibility(View.VISIBLE);
+            holder.commentCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderComments(v.getContext(), post.blogId, post.postId);
+                }
+            });
         } else {
             holder.commentCount.setVisibility(View.GONE);
+            holder.commentCount.setOnClickListener(null);
         }
     }
 
@@ -661,7 +682,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (isAskingToLike) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LIKED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED);
         }
 
         // update post in array and on screen
@@ -669,8 +692,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
         if (updatedPost != null && position > -1) {
             mPosts.set(position, updatedPost);
-            holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
-            showCounts(holder, updatedPost);
+            showLikes(holder, updatedPost);
         }
     }
 
@@ -682,6 +704,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 post.isFollowedByCurrentUser = isFollowing;
                 mPosts.set(i, post);
             }
+        }
+    }
+
+    public void removeGapMarker() {
+        if (mGapMarkerPosition == -1) return;
+
+        int position = mGapMarkerPosition;
+        mGapMarkerPosition = -1;
+        if (position < getItemCount()) {
+            notifyItemRemoved(position);
         }
     }
 
@@ -733,7 +765,42 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
+            // determine whether a gap marker exists - only applies to tagged posts
+            mGapMarkerPosition = getGapMarkerPosition();
+
             return true;
+        }
+
+        private int getGapMarkerPosition() {
+            if (!getPostListType().isTagType()) {
+                return -1;
+            }
+
+            ReaderBlogIdPostId gapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
+            if (gapMarkerIds == null) {
+                return -1;
+            }
+
+            // find the position of the gap marker post
+            int gapPosition = allPosts.indexOfIds(gapMarkerIds);
+            if (gapPosition > -1) {
+                // increment it because we want the gap marker to appear *below* this post
+                gapPosition++;
+                // increment it again if there's a custom first item
+                if (hasCustomFirstItem()) {
+                    gapPosition++;
+                }
+                // remove the gap marker if it's on the last post (edge case but
+                // it can happen following a purge)
+                if (gapPosition >= allPosts.size() - 1) {
+                    gapPosition = -1;
+                    AppLog.w(AppLog.T.READER, "gap marker at/after last post, removed");
+                    ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
+                } else {
+                    AppLog.d(AppLog.T.READER, "gap marker at position " + gapPosition);
+                }
+            }
+            return gapPosition;
         }
 
         @Override

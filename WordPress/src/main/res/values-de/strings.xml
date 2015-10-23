@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">Um deine Statistik anzusehen, aktiviere das JSON API-Modul in Jetpack.</string>
+	<string name="error_open_list_from_notification">Diese(r) Seite / Beitrag wurde auf einer anderen Website veröffentlicht</string>
+	<string name="post_uploaded">Beitrag hochgeladen</string>
+	<string name="page_uploaded">Seite hochgeladen</string>
 	<string name="reader_short_comment_count_multi">%s Kommentare</string>
 	<string name="reader_short_comment_count_one">1 Kommentar</string>
 	<string name="reader_label_submit_comment">SENDEN</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Kommentare auf anderen Websites</string>
 	<string name="notifications_other">Andere</string>
 	<string name="notifications_wpcom_updates">WordPress.com-Aktualisierungen</string>
-	<string name="notifications_account_emails">Aktualisierungen von WordPress.com</string>
+	<string name="notifications_account_emails">E-Mail von WordPress.com</string>
 	<string name="notifications_account_emails_summary">Wichtige E-Mails zu deinem Konto senden wir dir auf jeden Fall, aber du kannst auch ein paar nützliche Extras dazubekommen.</string>
 	<string name="notifications_sights_and_sounds">Licht und Ton</string>
 	<string name="your_sites">Deine Websites</string>
-	<string name="notifications_updates_from_wordpress">Neues von WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Die Veröffentlichung von %2$s ist %1$s her. Hier siehst du, wie es dem Beitrag bisher ergangen ist ...</string>
 	<string name="stats_insights_latest_post_summary">Übersicht des letzten Beitrags</string>
 	<string name="button_revert">Rückgängig</string>
@@ -169,7 +172,6 @@
 	<string name="stats_view_authors">Autoren</string>
 	<string name="posts_fetching">Beiträge werden abgerufen…</string>
 	<string name="comments_fetching">Kommentare werden abgerufen…</string>
-	<string name="reader_page_recommended_blogs">Blogs, die dir gefallen könnten</string>
 	<string name="stats_months_and_years">Monate und Jahre</string>
 	<string name="stats_average_per_day">Durchschnitt pro Tag</string>
 	<string name="stats_recent_weeks">Letzte Wochen</string>
@@ -181,6 +183,7 @@
 	<string name="post_uploading">Hochladen</string>
 	<string name="error_copy_to_clipboard">Beim Kopieren von Text in die Zwischenablage ist ein Fehler aufgetreten</string>
 	<string name="reader_label_new_posts">Neue Beiträge</string>
+	<string name="reader_page_recommended_blogs">Websites, die dir gefallen könnten</string>
 	<string name="stats_comments_total_comments_followers">Summe der Beiträge mit Kommentar-Followern: %1$s</string>
 	<string name="stats_pagination_label">Seite %1$s von %2$s</string>
 	<string name="stats_timeframe_years">Jahre</string>
@@ -249,7 +252,6 @@
 	<string name="delete_sure_post">Lösche diesen Beitrag</string>
 	<string name="delete_sure">Lösche diesen Entwurf</string>
 	<string name="media_gallery_date_range">Zeige Medien von %1$s bis %2$s</string>
-	<string name="reader_empty_followed_blogs_title">Du folgst bisher noch keinem Blog</string>
 	<string name="reader_empty_posts_liked">Du hast bisher noch keine Beiträge mit „gefällt mir“ markiert.</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Die FAQ durchsuchen</string>
@@ -287,6 +289,7 @@
 	<string name="posting_post">Veröffentliche "%s"</string>
 	<string name="pages_empty_list">Keine Seiten bisher. Warum nicht jetzt Eine erstellen?</string>
 	<string name="signing_out">Abmelden…</string>
+	<string name="reader_empty_followed_blogs_title">Du folgst bisher noch keiner Website</string>
 	<string name="reader_menu_block_blog">Blockiere diesen Blog</string>
 	<string name="reader_toast_blog_blocked">Beiträge von diesem Blog werden nicht länger angezeigt</string>
 	<string name="reader_toast_err_block_blog">Konnte diesen Blog nicht blockieren</string>
@@ -308,7 +311,6 @@
 	<string name="preference_send_usage_stats_summary">Nutzungsstatistiken automatisch versenden, damit wir WordPress für Android weiter verbessern können</string>
 	<string name="update_verb">Update</string>
 	<string name="schedule_verb">Zeitplan</string>
-	<string name="reader_page_followed_blogs">Abonnierte Blogs</string>
 	<string name="reader_page_followed_tags">Abonnierte Tags</string>
 	<string name="reader_title_subs">Tags &amp; Blogs</string>
 	<string name="reader_empty_recommended_blogs">Keine empfohlenen Blogs</string>
@@ -316,11 +318,12 @@
 	<string name="reader_toast_err_follow_blog">Blog konnte nicht gefolgt werden </string>
 	<string name="reader_toast_err_already_follow_blog">Du folgst diesem Blog bereits</string>
 	<string name="reader_label_tag_preview">Beiträge getaggt mit %s</string>
-	<string name="reader_hint_add_tag_or_url">Geben Sie zum Folgen einen Tag oder eine URL ein.</string>
 	<string name="reader_label_followed_blog">Blog wird verfolgt</string>
 	<string name="reader_toast_err_get_blog_info">Dieser Blog kann nicht angezeigt werden.</string>
 	<string name="reader_title_blog_preview">Reader-Blog</string>
 	<string name="reader_title_tag_preview">Reader-Schlagwort</string>
+	<string name="reader_page_followed_blogs">Abonnierte Websites</string>
+	<string name="reader_hint_add_tag_or_url">Gib eine URL oder einen Tag zum Folgen ein</string>
 	<string name="saving">Wird gespeichert…</string>
 	<string name="media_empty_list">Keine Medien</string>
 	<string name="ptr_tip_message">Tipp: Nach unten ziehen, um die Seite neu zu laden.</string>
@@ -527,7 +530,7 @@
 	<string name="account_two_step_auth_enabled">Dieses Konto hat Zwei-Schritt-Authentifizierung aktiviert. Besuche deine Sicherheitseinstellungen auf WordPress.com und generiere ein App-spezifisches Passwort.</string>
 	<string name="validating_site_data">Validiere Webseiten-Daten</string>
 	<string name="validating_user_data">Validiere Benutzer-Daten</string>
-	<string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Tag-Icon zum Durchsuchen!</string>
+	<string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Icon rechts oben an um zu stöbern!</string>
 	<string name="nux_welcome_create_account">Konto erstellen</string>
 	<string name="nux_tap_continue">Weiter</string>
 	<string name="password_invalid">Du benötigst ein sichereres Passwort. Stelle sicher, dass Du 7 oder mehr Zeichen benutzt und Groß- und Kleinbuchstaben enthalten sind, genau so wie Zahlen und Sonderzeichen.</string>

@@ -67,6 +67,7 @@ public class WPMainActivity extends Activity
     private int mLastReselectedTabPosition = -1;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
+    private static final String KEY_LAST_RESELECTED_TAB_POSITION = "reselected_tab_position";
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -187,7 +188,15 @@ public class WPMainActivity extends Activity
             } else {
                 ActivityLauncher.showSignInForResult(this);
             }
+        } else {
+            mLastReselectedTabPosition = savedInstanceState.getInt(KEY_LAST_RESELECTED_TAB_POSITION, -1);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_LAST_RESELECTED_TAB_POSITION, mLastReselectedTabPosition);
+        super.onSaveInstanceState(outState);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -308,6 +317,12 @@ public class WPMainActivity extends Activity
             default:
                 break;
         }
+    }
+
+    public void setReaderTabActive() {
+        if (isFinishing() || mViewPager == null) return;
+
+        mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
     }
 
     /*

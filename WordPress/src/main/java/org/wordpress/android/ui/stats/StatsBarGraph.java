@@ -28,6 +28,9 @@ import java.util.List;
  * Based on BarGraph from the GraphView library.
  */
 class StatsBarGraph extends GraphView {
+
+    private static final int DEFAULT_MAX_Y = 10;
+
     // Keep tracks of every bar drawn on the graph.
     private final List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
     private int mBarPositionToHighlight = -1;
@@ -284,6 +287,18 @@ class StatsBarGraph extends GraphView {
     @Override
     protected double getMinY() {
         return 0;
+    }
+
+    // Make sure the highest number is always even, so the halfway mark is correctly balanced in the middle of the graph
+    // Also make sure to display a default value when there is no activity in the period.
+    @Override
+    protected double getMaxY() {
+        double maxY = super.getMaxY();
+        if (maxY == 0) {
+            return DEFAULT_MAX_Y;
+        }
+
+        return maxY + (maxY % 2);
     }
 
     /**
