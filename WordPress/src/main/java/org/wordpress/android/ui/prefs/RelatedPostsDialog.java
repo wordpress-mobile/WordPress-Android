@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +22,23 @@ public class RelatedPostsDialog extends DialogFragment
     /**
      * boolean
      *
-     * Sets the default state of the Show Related Posts switch.
+     * Sets the default state of the Show Related Posts switch. The switch is off by default.
      */
     public static final String SHOW_RELATED_POSTS_KEY = "related-posts";
+
+    /**
+     * boolean
+     *
+     * Sets the default state of the Show Headers checkbox. The checkbox is off by default.
+     */
+    public static final String SHOW_HEADER_KEY = "show-header";
+
+    /**
+     * boolean
+     *
+     * Sets the default state of the Show Images checkbox. The checkbox is off by default.
+     */
+    public static final String SHOW_IMAGES_KEY = "show-images";
 
     private WPSwitch mShowRelatedPosts;
     private CheckBox mShowHeader;
@@ -29,20 +47,22 @@ public class RelatedPostsDialog extends DialogFragment
     private TextView mRelatedPostsListHeader;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
         setStyle(STYLE_NORMAL, R.style.Calypso_SiteSettingsTheme);
         getDialog().setTitle(R.string.site_settings_related_posts_title);
 
-        View v = inflater.inflate(R.layout.related_posts_dialog, container, false);
+        View v = inflater.inflate(R.layout.related_posts_dialog, root, false);
         mShowRelatedPosts = (WPSwitch) v.findViewById(R.id.toggle_related_posts_switch);
         mShowHeader = (CheckBox) v.findViewById(R.id.show_header_checkbox);
         mShowImages = (CheckBox) v.findViewById(R.id.show_images_checkbox);
         mPreviewHeader = (TextView) v.findViewById(R.id.preview_header);
         mRelatedPostsListHeader = (TextView) v.findViewById(R.id.related_posts_list_header);
 
-        if (savedInstanceState != null) {
-            mShowRelatedPosts.setChecked(savedInstanceState.getBoolean(SHOW_RELATED_POSTS_KEY));
+        Bundle args = getArguments();
+        if (args != null) {
+            mShowRelatedPosts.setChecked(args.getBoolean(SHOW_RELATED_POSTS_KEY));
+            mShowHeader.setChecked(args.getBoolean(SHOW_HEADER_KEY));
+            mShowImages.setChecked(args.getBoolean(SHOW_IMAGES_KEY));
         }
 
         mShowRelatedPosts.setOnCheckedChangeListener(this);
@@ -59,8 +79,28 @@ public class RelatedPostsDialog extends DialogFragment
         if (buttonView == mShowRelatedPosts) {
             toggleViews(isChecked);
         } else if (buttonView == mShowHeader) {
+            // TODO update preview
         } else if (buttonView == mShowImages) {
+            // TODO update preview
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        Fragment target = getTargetFragment();
+        if (target != null) {
+            target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getResultIntent());
+        }
+
+        super.onDismiss(dialog);
+    }
+
+    private Intent getResultIntent() {
+        Intent intent = new Intent();
+        intent.putExtra(SHOW_RELATED_POSTS_KEY, mShowRelatedPosts.isChecked());
+        intent.putExtra(SHOW_HEADER_KEY, mShowHeader.isChecked());
+        intent.putExtra(SHOW_IMAGES_KEY, mShowImages.isChecked());
+        return intent;
     }
 
     private void toggleViews(boolean enabled) {

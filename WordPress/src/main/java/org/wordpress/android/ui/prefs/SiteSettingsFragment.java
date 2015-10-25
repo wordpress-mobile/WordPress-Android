@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -46,7 +47,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                    Preference.OnPreferenceClickListener,
                    AdapterView.OnItemLongClickListener,
                    SiteSettingsInterface.SiteSettingsListener {
+
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
+    private static final int RELATED_POSTS_REQUEST_CODE = 1;
 
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
@@ -144,10 +147,23 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RELATED_POSTS_REQUEST_CODE:
+                if (data == null) return;
+                mSiteSettings.setShowRelatedPosts(data.getBooleanExtra(RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, false));
+                mSiteSettings.setShowRelatedPostHeader(data.getBooleanExtra(RelatedPostsDialog.SHOW_HEADER_KEY, false));
+                mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(RelatedPostsDialog.SHOW_IMAGES_KEY, false));
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference == mRelatedPostsPreference) {
-            DialogFragment relatedPosts = new RelatedPostsDialog();
-            relatedPosts.show(getFragmentManager(), "related-posts");
+            showRelatedPostsDialog();
             return true;
         }
 
@@ -289,6 +305,17 @@ public class SiteSettingsFragment extends PreferenceFragment
             removePreference(R.string.pref_key_site_general, R.string.pref_key_site_visibility);
             removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
         }
+    }
+
+    private void showRelatedPostsDialog() {
+        DialogFragment relatedPosts = new RelatedPostsDialog();
+        Bundle args = new Bundle();
+        args.putBoolean(RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, mSiteSettings.getShowRelatedPosts());
+        args.putBoolean(RelatedPostsDialog.SHOW_HEADER_KEY, mSiteSettings.getShowRelatedPostHeader());
+        args.putBoolean(RelatedPostsDialog.SHOW_IMAGES_KEY, mSiteSettings.getShowRelatedPostImages());
+        relatedPosts.setArguments(args);
+        relatedPosts.setTargetFragment(this, RELATED_POSTS_REQUEST_CODE);
+        relatedPosts.show(getFragmentManager(), "related-posts");
     }
 
     private void setPreferencesFromSiteSettings() {

@@ -46,6 +46,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -614,45 +615,47 @@ public class EditPostSettingsFragment extends Fragment
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
-        boolean settingsSupportLocation = false;
+        if (mPost.supportsLocation() && checkForLocationPermission() && getActivity()
+                .getSharedPreferences(SiteSettingsInterface.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE)
+                .getBoolean(SiteSettingsInterface.LOCATION_PREF_KEY, false)) {
+            return;
+        }
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (settingsSupportLocation && checkForLocationPermission() && mPost.supportsLocation()) {
-            View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
+        View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
-            TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
-            locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
+        TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
+        locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
 
-            mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
-            mLocationText.setOnClickListener(this);
+        mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
+        mLocationText.setOnClickListener(this);
 
-            mLocationAddSection = locationRootView.findViewById(R.id.sectionLocationAdd);
-            mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
-            mLocationViewSection = locationRootView.findViewById(R.id.sectionLocationView);
+        mLocationAddSection = locationRootView.findViewById(R.id.sectionLocationAdd);
+        mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
+        mLocationViewSection = locationRootView.findViewById(R.id.sectionLocationView);
 
-            Button addLocation = (Button) locationRootView.findViewById(R.id.addLocation);
-            addLocation.setOnClickListener(this);
+        Button addLocation = (Button) locationRootView.findViewById(R.id.addLocation);
+        addLocation.setOnClickListener(this);
 
-            mButtonSearchLocation = (Button) locationRootView.findViewById(R.id.searchLocation);
-            mButtonSearchLocation.setOnClickListener(this);
+        mButtonSearchLocation = (Button) locationRootView.findViewById(R.id.searchLocation);
+        mButtonSearchLocation.setOnClickListener(this);
 
-            mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
-            mLocationEditText.setOnEditorActionListener(this);
-            mLocationEditText.addTextChangedListener(mLocationEditTextWatcher);
+        mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
+        mLocationEditText.setOnEditorActionListener(this);
+        mLocationEditText.addTextChangedListener(mLocationEditTextWatcher);
 
-            Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
-            Button removeLocation = (Button) locationRootView.findViewById(R.id.removeLocation);
-            updateLocation.setOnClickListener(this);
-            removeLocation.setOnClickListener(this);
+        Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
+        Button removeLocation = (Button) locationRootView.findViewById(R.id.removeLocation);
+        updateLocation.setOnClickListener(this);
+        removeLocation.setOnClickListener(this);
 
-            // if this post has location attached to it, look up the location address
-            if (mPost.hasLocation()) {
-                showLocationView();
-                PostLocation location = mPost.getLocation();
-                setLocation(location.getLatitude(), location.getLongitude());
-            } else {
-                showLocationAdd();
-            }
+        // if this post has location attached to it, look up the location address
+        if (mPost.hasLocation()) {
+            showLocationView();
+            PostLocation location = mPost.getLocation();
+            setLocation(location.getLatitude(), location.getLongitude());
+        } else {
+            showLocationAdd();
         }
     }
 

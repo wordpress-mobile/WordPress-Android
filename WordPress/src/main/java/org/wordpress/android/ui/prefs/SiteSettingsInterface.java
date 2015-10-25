@@ -225,6 +225,18 @@ public abstract class SiteSettingsInterface {
         return "";
     }
 
+    public boolean getShowRelatedPosts() {
+        return mSettings.showRelatedPosts;
+    }
+
+    public boolean getShowRelatedPostHeader() {
+        return mSettings.showRelatedPostHeader;
+    }
+
+    public boolean getShowRelatedPostImages() {
+        return mSettings.showRelatedPostImages;
+    }
+
     public void setAddress(String address) {
         mSettings.address = address;
     }
@@ -276,6 +288,18 @@ public abstract class SiteSettingsInterface {
 
     public String getDefaultFormat() {
         return mSettings.defaultPostFormat;
+    }
+
+    public void setShowRelatedPosts(boolean relatedPosts) {
+        mSettings.showRelatedPosts = relatedPosts;
+    }
+
+    public void setShowRelatedPostHeader(boolean showHeader) {
+        mSettings.showRelatedPostHeader = showHeader;
+    }
+
+    public void setShowRelatedPostImages(boolean showImages) {
+        mSettings.showRelatedPostImages = showImages;
     }
 
     /**
