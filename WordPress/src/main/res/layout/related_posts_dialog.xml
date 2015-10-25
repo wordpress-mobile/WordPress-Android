@@ -78,7 +78,7 @@
         app:fontVariation="light" />
 
     <ListView
-        android:id="@+id/relatedPostsList"
+        android:id="@+id/related_posts_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

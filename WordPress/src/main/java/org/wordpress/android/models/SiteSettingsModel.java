@@ -162,6 +162,11 @@ public class SiteSettingsModel {
             }
         }
 
+        int cachedRelatedPosts = getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME);
+        if (cachedRelatedPosts != -1) {
+            setRelatedPostsFlags(cachedRelatedPosts);
+        }
+
         isInLocalTable = true;
     }
 
