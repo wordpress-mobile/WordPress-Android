@@ -116,14 +116,50 @@
 
     </PreferenceCategory>
 
-    <!--<PreferenceCategory>-->
+    <!--<PreferenceScreen-->
+        <!--android:id="@+id/pref_discussion_settings"-->
+        <!--android:key="@string/pref_key_site_discussion"-->
+        <!--android:title="Discussion">-->
 
-        <!--<Preference-->
-            <!--android:id="@+id/pref_discussion_settings"-->
-            <!--android:key="@string/pref_key_site_discussion"-->
-            <!--android:title="Discussion Settings" />-->
+        <!--<PreferenceCategory-->
+            <!--android:id="@+id/pref_site_new_posts_defaults"-->
+            <!--android:title="Defaults for New Posts">-->
 
-    <!--</PreferenceCategory>-->
+            <!--<org.wordpress.android.ui.prefs.WPSwitchPreference-->
+                <!--android:id="@+id/pref_allow_comments"-->
+                <!--android:title="Allow Comments" />-->
+
+            <!--<org.wordpress.android.ui.prefs.WPSwitchPreference-->
+                <!--android:id="@+id/pref_allow_comments"-->
+                <!--android:title="Send Pingbacks" />-->
+
+            <!--<org.wordpress.android.ui.prefs.WPSwitchPreference-->
+                <!--android:id="@+id/pref_allow_comments"-->
+                <!--android:title="Receive Pingbacks" />-->
+
+        <!--</PreferenceCategory>-->
+
+        <!--<PreferenceCategory-->
+            <!--android:id="@+id/pref_site_comments"-->
+            <!--android:title="Comments">-->
+
+            <!--<org.wordpress.android.ui.prefs.WPPreference-->
+                <!--android:id="@+id/pref_close_after"-->
+                <!--android:title="Close after"-->
+                <!--android:summary="30 days" />-->
+
+            <!--<org.wordpress.android.ui.prefs.WPPreference-->
+                <!--android:id="@+id/pref_sort_by"-->
+                <!--android:title="Sort by"-->
+                <!--android:summary="Oldest first"  />-->
+
+            <!--<org.wordpress.android.ui.prefs.WPPreference-->
+                <!--android:id="@+id/pref_threading"-->
+                <!--android:title="Threading" />-->
+
+        <!--</PreferenceCategory>-->
+
+    <!--</PreferenceScreen>-->
 
     <!--<PreferenceCategory>-->
 
