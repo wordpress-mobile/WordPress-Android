@@ -439,8 +439,6 @@ public class PostUploadService extends Service {
         }
 
         private void trackUploadAnalytics() {
-            mPost.getStatusEnum();
-
             boolean isFirstTimePublishing = false;
             if (mPost.hasChangedFromDraftToPublished() ||
                     (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
