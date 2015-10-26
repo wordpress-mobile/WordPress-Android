@@ -184,6 +184,9 @@ public class PostUploadService extends Service {
         private int featuredImageID = -1;
         private XMLRPCClientInterface mClient;
 
+        // True when the post goes from draft or local draft to published status
+        boolean mIsFirstPublishing = false;
+
         // Used when the upload succeed
         private Bitmap mLatestIcon;
 
@@ -195,7 +198,7 @@ public class PostUploadService extends Service {
             if (postUploadedSuccessfully) {
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
                 mPostUploadNotifier.cancelNotification();
-                mPostUploadNotifier.updateNotificationSuccess(mPost, mLatestIcon);
+                mPostUploadNotifier.updateNotificationSuccess(mPost, mLatestIcon, mIsFirstPublishing);
             } else {
                 mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
@@ -416,12 +419,18 @@ public class PostUploadService extends Service {
                     mClient.call("metaWeblog.editPost", params);
                 }
 
-                // Track any Analytics before modifying the post
-                trackUploadAnalytics();
+                // Check if it's the first publishing before changing post status.
+                mIsFirstPublishing = mPost.hasChangedFromDraftToPublished()
+                        || (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED);
 
                 mPost.setLocalDraft(false);
                 mPost.setLocalChange(false);
                 WordPress.wpDB.updatePost(mPost);
+
+                // Track analytics only if the post is newly published
+                if (mIsFirstPublishing) {
+                    trackUploadAnalytics();
+                }
 
                 // request the new/updated post from the server to ensure local copy matches server
                 ApiHelper.updateSinglePost(mBlog.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
@@ -439,32 +448,24 @@ public class PostUploadService extends Service {
         }
 
         private void trackUploadAnalytics() {
-            boolean isFirstTimePublishing = false;
-            if (mPost.hasChangedFromDraftToPublished() ||
-                    (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
-                isFirstTimePublishing = true;
+            // Calculate the words count
+            Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+
+            if (mHasImage) {
+                properties.put("with_photos", true);
+            }
+            if (mHasVideo) {
+                properties.put("with_videos", true);
+            }
+            if (mHasCategory) {
+                properties.put("with_categories", true);
+            }
+            if (!TextUtils.isEmpty(mPost.getKeywords())) {
+                properties.put("with_tags", true);
             }
 
-            if (isFirstTimePublishing) {
-                // Calculate the words count
-                Map<String, Object> properties = new HashMap<String, Object>();
-                properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
-
-                if (mHasImage) {
-                    properties.put("with_photos", true);
-                }
-                if (mHasVideo) {
-                    properties.put("with_videos", true);
-                }
-                if (mHasCategory) {
-                    properties.put("with_categories", true);
-                }
-                if (!TextUtils.isEmpty(mPost.getKeywords())) {
-                    properties.put("with_tags", true);
-                }
-
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, properties);
-            }
+            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, properties);
         }
 
         /**
@@ -924,7 +925,7 @@ public class PostUploadService extends Service {
             mNotificationManager.cancel(mNotificationId);
         }
 
-        public void updateNotificationSuccess(Post post, Bitmap largeIcon) {
+        public void updateNotificationSuccess(Post post, Bitmap largeIcon, boolean isFirstPublishing) {
             AppLog.d(T.POSTS, "updateNotificationSuccess");
 
             // Get the sharableUrl
@@ -936,7 +937,11 @@ public class PostUploadService extends Service {
             // Notification builder
             Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
-                    .page_uploaded) : mContext.getResources().getText(R.string.post_uploaded));
+                    .page_published) : mContext.getResources().getText(R.string.post_published));
+            if (!isFirstPublishing) {
+                notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
+                        .page_updated) : mContext.getResources().getText(R.string.post_updated));
+            }
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
             if (largeIcon == null) {
                 notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
