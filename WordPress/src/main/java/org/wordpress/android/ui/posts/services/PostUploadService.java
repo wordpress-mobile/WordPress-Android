@@ -932,7 +932,6 @@ public class PostUploadService extends Service {
             // Get the sharableUrl
             String sharableUrl = WPMeShortlinks.getPostShortlink(post);
             if (sharableUrl == null && !TextUtils.isEmpty(post.getPermaLink())) {
-                    // No short link or perma link - can't share, abort
                     sharableUrl = post.getPermaLink();
             }
 
@@ -965,6 +964,7 @@ public class PostUploadService extends Service {
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
+                share.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
                 PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, share,
                         PendingIntent.FLAG_UPDATE_CURRENT);
                 notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
