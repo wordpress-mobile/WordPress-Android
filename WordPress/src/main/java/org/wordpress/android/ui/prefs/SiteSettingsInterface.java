@@ -36,6 +36,7 @@ import java.util.Map;
  */
 public abstract class SiteSettingsInterface {
     public static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
+    public static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
     public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
     public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
     public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
@@ -97,6 +98,7 @@ public abstract class SiteSettingsInterface {
 
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
+        siteSettingsPreferences(mActivity).edit().putString(LANGUAGE_PREF_KEY, mSettings.language).apply();
         siteSettingsPreferences(mActivity).edit().putBoolean(LOCATION_PREF_KEY, mSettings.location).apply();
         siteSettingsPreferences(mActivity).edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory).apply();
         siteSettingsPreferences(mActivity).edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat).apply();
