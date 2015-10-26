@@ -68,6 +68,7 @@
             android:id="@+id/pref_site_username"
             android:key="@string/pref_key_site_username"
             android:title="@string/site_settings_username_title"
+            android:enabled="false"
             app:summaryLines="1"
             app:maxSummaryLines="2"
             app:longClickHint="@string/site_username_hint" />
@@ -76,6 +77,7 @@
             android:id="@+id/pref_site_password"
             android:key="@string/pref_key_site_password"
             android:title="@string/site_settings_password_title"
+            android:enabled="false"
             android:inputType="textPassword"
             app:summaryLines="1"
             app:maxSummaryLines="2"
