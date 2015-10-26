@@ -329,7 +329,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mPasswordPreference, mSiteSettings.getPassword());
         changePrivacyValue(mSiteSettings.getPrivacy());
         changeLanguageValue(mSiteSettings.getLanguageCode());
-        changeRelatedPostsValue();
         setCategories();
         setPostFormats();
     }
@@ -427,10 +426,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             mPrivacyPreference.setSummary(mSiteSettings.getPrivacyForDisplay());
             mPrivacyPreference.refreshAdapter();
         }
-    }
-
-    private void changeRelatedPostsValue() {
-        // TODO
     }
 
     /**

@@ -84,7 +84,7 @@ public class DetailListPreference extends ListPreference
         }
 
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
-        mStartingIndex = mSelectedIndex = findIndexOfValue(getValue());
+        mStartingIndex = mSelectedIndex = Math.max(0, findIndexOfValue(getValue()));
 
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
                 new DialogInterface.OnClickListener() {
