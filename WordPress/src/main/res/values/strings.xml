@@ -468,6 +468,12 @@
     <string name="related_posts_show_header_title">Show Header</string>
     <string name="related_posts_show_images_title">Show Images</string>
     <string name="related_posts_preview_header">Related Posts</string>
+    <string name="related_post_preview1_title">Big iPhone/iPad Update Now Available</string>
+    <string name="related_post_preview1_site">in \"Mobile\"</string>
+    <string name="related_post_preview2_title">The WordPress for Android App Gets a Big Facelift</string>
+    <string name="related_post_preview2_site">in \"Apps\"</string>
+    <string name="related_post_preview3_title">Upgrade Focus: VideoPress For Weddings</string>
+    <string name="related_post_preview3_site">in \"Upgrade\"</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
@@ -932,6 +938,7 @@
     <string name="content_description_add_media">Add media</string>
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
+    <string name="cd_related_post_preview_image">Related post preview image</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>

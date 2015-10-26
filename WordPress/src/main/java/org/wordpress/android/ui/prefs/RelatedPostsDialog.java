@@ -66,6 +66,11 @@ public class RelatedPostsDialog extends DialogFragment
         mRelatedPostsListHeader = (TextView) v.findViewById(R.id.related_posts_list_header);
         mRelatedPostsList = (LinearLayout) v.findViewById(R.id.related_posts_list);
 
+        mPreviewImages = new ArrayList<>();
+        mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image1));
+        mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image2));
+        mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image3));
+
         Bundle args = getArguments();
         if (args != null) {
             mShowRelatedPosts.setChecked(args.getBoolean(SHOW_RELATED_POSTS_KEY));
@@ -73,16 +78,8 @@ public class RelatedPostsDialog extends DialogFragment
             mShowImages.setChecked(args.getBoolean(SHOW_IMAGES_KEY));
         }
 
-        mPreviewImages = new ArrayList<>();
-        mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image1));
-        mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image2));
-        mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image3));
-
-//        RelatedPostsAdapter adapter = new RelatedPostsAdapter(getActivity(), R.layout.related_post);
-//        adapter.add(new RelatedPostItem("", R.drawable.rppreview1));Big iPhone/iPad Update Now Available", "
-//        adapter.add(new RelatedPostItem("The WordPress for Android App Gets a Big Facelift", "in \"Apps\"", R.drawable.rppreview2));
-//        adapter.add(new RelatedPostItem("Upgrade Focus: VideoPress For Weddings", "in \"Upgrade\"", R.drawable.rppreview3));
-//        mRelatedPostsList.setAdapter(adapter);
+        toggleShowHeader(mShowHeader.isChecked());
+        toggleShowImages(mShowImages.isChecked());
 
         mShowRelatedPosts.setOnCheckedChangeListener(this);
         mShowHeader.setOnCheckedChangeListener(this);
@@ -142,6 +139,11 @@ public class RelatedPostsDialog extends DialogFragment
         mShowImages.setEnabled(enabled);
         mPreviewHeader.setEnabled(enabled);
         mRelatedPostsListHeader.setEnabled(enabled);
-        mRelatedPostsList.setEnabled(enabled);
+
+        if (enabled) {
+            mRelatedPostsList.setAlpha(1.0f);
+        } else {
+            mRelatedPostsList.setAlpha(0.5f);
+        }
     }
 }

@@ -196,7 +196,7 @@ public abstract class SiteSettingsInterface {
     public Map<Integer, String> getCategoryNames() {
         Map<Integer, String> categoryNames = new HashMap<>();
 
-        if (mSettings.categories != null && mSettings.categories.length == 0) {
+        if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
                 categoryNames.put(model.id, model.name);
             }
@@ -491,6 +491,7 @@ public abstract class SiteSettingsInterface {
                     }
 
                     mRemoteSettings.postFormats = new HashMap<>();
+                    mRemoteSettings.postFormats.put("standard", "Standard");
                     for (Object supportedFormat : supportedFormats) {
                         if (allFormats.containsKey(supportedFormat)) {
                             mRemoteSettings.postFormats.put(supportedFormat.toString(), allFormats.get(supportedFormat).toString());
