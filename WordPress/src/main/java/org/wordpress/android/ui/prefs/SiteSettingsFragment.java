@@ -50,6 +50,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
     private static final int RELATED_POSTS_REQUEST_CODE = 1;
+    private static final int NO_REGION_LANG_CODE_LEN = 2;
+    private static final int REGION_SUBSTRING_INDEX = 3;
 
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
@@ -440,8 +442,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         String[] displayStrings = new String[languageCodes.length];
 
         for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = firstLetterCapitalized(getLanguageString(
-                    String.valueOf(languageCodes[i]), languageLocale(languageCodes[i].toString())));
+            displayStrings[i] = capitalizeFrontOfString(getLanguageString(
+                    String.valueOf(languageCodes[i]), languageLocale(languageCodes[i].toString())), 1);
         }
 
         return displayStrings;
@@ -456,8 +458,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
-            detailStrings[i] = firstLetterCapitalized(
-                    getLanguageString(languageCodes[i].toString(), languageLocale(locale)));
+            detailStrings[i] = capitalizeFrontOfString(
+                    getLanguageString(languageCodes[i].toString(), languageLocale(locale)), 1);
         }
 
         return detailStrings;
@@ -504,15 +506,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Locale languageLocale(String languageCode) {
         if (TextUtils.isEmpty(languageCode)) return Locale.getDefault();
 
-        if (languageCode.length() > 2) {
-            return new Locale(languageCode.substring(0, 2), languageCode.substring(3));
+        if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
+            return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),
+                    languageCode.substring(REGION_SUBSTRING_INDEX));
         }
 
         return new Locale(languageCode);
     }
 
-    private String firstLetterCapitalized(String input) {
+    private String capitalizeFrontOfString(String input, int numToCap) {
         if (TextUtils.isEmpty(input)) return "";
-        return input.substring(0, 1).toUpperCase() + input.substring(1);
+        return input.substring(0, numToCap).toUpperCase() + input.substring(numToCap);
     }
 }
