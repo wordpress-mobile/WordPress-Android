@@ -193,6 +193,9 @@ public class MySiteFragment extends Fragment
             }
         });
 
+        // this temporarily removes the people feature from the app until it's ready
+        rootView.findViewById(R.id.row_people).setVisibility(View.GONE);
+
         rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
