@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -55,6 +57,8 @@ public class PersonActivity extends AppCompatActivity {
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.person_avatar);
         TextView txtDisplayName = (TextView) findViewById(R.id.person_display_name);
         TextView txtUsername = (TextView) findViewById(R.id.person_username);
+        TextView txtRole = (TextView) findViewById(R.id.person_role);
+        TextView txtRemove = (TextView) findViewById(R.id.person_remove);
 
         Person person = WordPress.wpDB.getPersonForLocalTablePostId(mLocalTablePersonId);
 
@@ -65,6 +69,15 @@ public class PersonActivity extends AppCompatActivity {
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             txtDisplayName.setText(person.getDisplayName());
             txtUsername.setText(person.getUsername());
+            txtRole.setText(Role.toString(this, person.getRole()));
+            txtRemove.setText(String.format(getString(R.string.remove_user), person.getFirstName().toUpperCase()));
+
+            txtRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // remove user
+                }
+            });
         }
     }
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/person_details"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/person_details">
+        android:layout_height="wrap_content">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/person_avatar"
@@ -43,5 +43,48 @@
             tools:text="username" />
 
     </RelativeLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/person_role_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/person_details"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/role"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="@string/role" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/person_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/person_role_label"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_small"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="@string/role" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/person_remove"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="?android:selectableItemBackground"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="@dimen/margin_extra_large"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="REMOVE USER" />
 
 </RelativeLayout>
