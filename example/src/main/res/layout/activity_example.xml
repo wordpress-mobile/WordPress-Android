@@ -1,0 +1,43 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.wordpress.android.stores.example.MainExampleActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/list_sites_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign In And Fetch Sites" />
+
+        <Button
+            android:id="@+id/account_infos_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Fetch Account" />
+
+        <Button
+            android:id="@+id/update_first_site"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Fetch first site" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/log"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"/>
+
+</LinearLayout>

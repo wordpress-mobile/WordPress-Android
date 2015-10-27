@@ -1,0 +1,18 @@
+language: android
+jdk: oraclejdk7
+
+android:
+  components:
+    - extra-android-m2repository
+    - extra-android-support
+    - build-tools-23.0.1
+    - android-23
+
+env:
+  global:
+    - GRADLE_OPTS="-XX:MaxPermSize=4g -Xmx4g"
+    - ANDROID_SDKS=android-14
+    - ANDROID_TARGET=android-14
+
+script:
+  - ./gradlew build
