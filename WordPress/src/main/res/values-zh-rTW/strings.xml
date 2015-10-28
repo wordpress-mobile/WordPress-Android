@@ -32,11 +32,9 @@
 	<string name="notifications_comments_other_blogs">其他網站上的留言</string>
 	<string name="notifications_other">其他</string>
 	<string name="notifications_wpcom_updates">WordPress.com 消息更新</string>
-	<string name="notifications_account_emails">WordPress.com 發佈的更新</string>
 	<string name="notifications_account_emails_summary">我們會隨時傳送與帳號資訊相關的重要電子郵件，除此之外，你也能獲得實用的額外內容。</string>
 	<string name="your_sites">你的網站</string>
 	<string name="notifications_sights_and_sounds">提示與音效</string>
-	<string name="notifications_updates_from_wordpress">WordPress.com 發佈的更新</string>
 	<string name="stats_insights_latest_post_trend">自從 %2$s 發表以來已經過了 %1$s。文章截至目前為止獲得的迴響如下…</string>
 	<string name="stats_insights_latest_post_summary">最新文章摘要</string>
 	<string name="button_revert">還原</string>
@@ -169,7 +167,6 @@
 	<string name="publisher">發佈者：</string>
 	<string name="error_notification_open">無法開啟通知</string>
 	<string name="reader_empty_posts_request_failed">無法擷取文章</string>
-	<string name="reader_page_recommended_blogs">你可能會喜歡的部落格</string>
 	<string name="stats_months_and_years">月份與年份</string>
 	<string name="stats_average_per_day">每天平均</string>
 	<string name="stats_recent_weeks">最近幾星期</string>
@@ -249,7 +246,6 @@
 	<string name="confirm_delete_media">要刪除選取的項目嗎？</string>
 	<string name="cab_selected">已選取：%d</string>
 	<string name="media_gallery_date_range">顯示自 %1$s 到 %2$s 的媒體</string>
-	<string name="reader_empty_followed_blogs_title">你尚未關注任何網誌</string>
 	<string name="reader_empty_posts_liked">你未對任何文章按讚</string>
 	<string name="faq_button">常見問題集</string>
 	<string name="browse_our_faq_button">瀏覽常見問題集</string>
@@ -310,8 +306,6 @@
 	<string name="schedule_verb">排程</string>
 	<string name="reader_title_subs">標籤和網誌</string>
 	<string name="reader_page_followed_tags">關注的標籤</string>
-	<string name="reader_page_followed_blogs">關注的網誌</string>
-	<string name="reader_hint_add_tag_or_url">輸入要關注的標籤或網址</string>
 	<string name="reader_label_followed_blog">網誌已關注</string>
 	<string name="reader_label_tag_preview">已下標籤的文章 %s</string>
 	<string name="reader_toast_err_get_blog_info">無法顯示此網誌</string>
@@ -527,7 +521,6 @@
 	<string name="reader_toast_err_get_post">無法擷取此文章</string>
 	<string name="validating_user_data">正在驗證使用者資料</string>
 	<string name="validating_site_data">正在驗證網站資料</string>
-	<string name="reader_empty_followed_blogs_description">但是請放心，只要點選標籤圖示即可開始探索！</string>
 	<string name="password_invalid">你需要一組更安全的密碼。請務必使用 7 個或更多字元，並混合使用大小寫字母、數字或特殊字元。</string>
 	<string name="nux_tap_continue">繼續</string>
 	<string name="nux_welcome_create_account">建立帳號</string>

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.os.Build;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -42,7 +43,9 @@ public class ReaderAnim {
                 set.play(animX).with(animY).with(animRotate);
                 // on Android 4.4.3 the rotation animation may cause the drawable to fade out unless
                 // we set the layer type - https://code.google.com/p/android/issues/detail?id=70914
-                target.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+                    target.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+                }
                 break;
             default:
                 set.play(animX).with(animY);

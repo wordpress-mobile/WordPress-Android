@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">להצגת סטטיסטיקות, הפעילו מודול JSON API בג\'טפאק.</string>
+	<string name="error_open_list_from_notification">פוסט או עמוד זה פורסם באתר אחר</string>
+	<string name="post_uploaded">הפוסט עודכן</string>
+	<string name="page_uploaded">העמוד עודכן</string>
 	<string name="reader_short_comment_count_multi">%s תגובות</string>
 	<string name="reader_short_comment_count_one">תגובה אחת</string>
 	<string name="reader_label_submit_comment">שלח</string>
@@ -36,7 +40,6 @@
 	<string name="notifications_account_emails_summary">תמיד נשלח מיילים חשובים הקשורים לאתר, אבל לפעמים תקבלו גם תוספות מועילות.</string>
 	<string name="your_sites">אתרים שלך</string>
 	<string name="notifications_sights_and_sounds">מראות וצלילים</string>
-	<string name="notifications_updates_from_wordpress">עדכונים מוורדפרס.קום</string>
 	<string name="stats_insights_latest_post_trend">עברו %1$s מאז פרסום %2$s. קצת מידע על תפקוד הפוסט עד כה...</string>
 	<string name="stats_insights_latest_post_summary">סיכום פוסטים אחרונים</string>
 	<string name="button_revert">שיחזור</string>
@@ -250,7 +253,6 @@
 	<string name="delete_sure_post">מחיקת פוסט</string>
 	<string name="delete_sure">מחיקת טיוטה</string>
 	<string name="stats_no_blog">לא ניתן לטעון את הנתונים הסטטיסטיים עבור האתר הדרוש</string>
-	<string name="reader_empty_followed_blogs_title">עדיין לא מתבצע מעקב אחר אתרים</string>
 	<string name="faq_button">שאלות נפוצות</string>
 	<string name="reader_empty_comments">אין תגובות עדיין</string>
 	<string name="reader_empty_posts_in_tag">אין פוסטים עם התגית הזו</string>
@@ -287,6 +289,7 @@
 	<string name="sending_content">מעלה תוכן של %s</string>
 	<string name="create_new_blog_wpcom">יצירת אתר וורדפרס.קום</string>
 	<string name="new_blog_wpcom_created">נוצר אתר בוורדפרס.קום</string>
+	<string name="reader_empty_followed_blogs_title">אינך עוקב אחרי שום אתר עדיין</string>
 	<string name="reader_menu_block_blog">לחסום את האתר הזה</string>
 	<string name="reader_toast_blog_blocked">הפוסטים מהאתר הזה לא יוצגו עוד</string>
 	<string name="reader_toast_err_block_blog">לא ניתן לחסום אתר זה</string>
@@ -526,8 +529,8 @@
 	<string name="reader_toast_err_get_post">לא ניתן לאחזר רשומה זו</string>
 	<string name="validating_user_data">מאמת נתוני משתמש</string>
 	<string name="validating_site_data">מאמת נתוני אתר</string>
-	<string name="reader_empty_followed_blogs_description">אך אין צורך לדאוג, פשוט צריך להקיש על סמל התגית כדי להתחיל לשוטט!</string>
 	<string name="account_two_step_auth_enabled">בחשבון זה מופעל אימות דו-שלבי. עיין בהגדרות האבטחה בוורדפרס.קום וצור סיסמה ספציפית ליישום.</string>
+	<string name="reader_empty_followed_blogs_description">אך אין צורך לדאוג, יש להקיש מימין כדי להתחיל לשוטט!</string>
 	<string name="password_invalid">נחוצה לך סיסמה בטוחה יותר. הקפד להשתמש ב-7 תווים או יותר, שלב אותיות רישיות ורגילות, מספרים או תווים מיוחדים.</string>
 	<string name="nux_tap_continue">המשך</string>
 	<string name="nux_welcome_create_account">צור חשבון</string>

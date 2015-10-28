@@ -734,6 +734,16 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
+     * same as above but clears posts before refreshing
+     */
+    private void reloadPosts() {
+        hideNewPostsBar();
+        if (hasPostAdapter()) {
+            getPostAdapter().reload();
+        }
+    }
+
+    /*
      * get posts for the current blog from the server
      */
     private void updatePostsInCurrentBlogOrFeed(final UpdateAction updateAction) {
@@ -780,6 +790,12 @@ public class ReaderPostListFragment extends Fragment
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
             setEmptyTitleAndDescription(requestFailed);
+            // if we requested posts in order to fill a gap but the request failed or didn't
+            // return any posts, reload the adapter so the gap marker is reset (hiding its
+            // progress bar)
+            if (event.getAction() == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                reloadPosts();
+            }
         }
     }
 
@@ -802,6 +818,8 @@ public class ReaderPostListFragment extends Fragment
      * get latest posts for this tag from the server
      */
     private void updatePostsWithTag(ReaderTag tag, UpdateAction updateAction) {
+        if (!isAdded()) return;
+
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
             return;
@@ -826,7 +844,7 @@ public class ReaderPostListFragment extends Fragment
         new Thread() {
             @Override
             public void run() {
-                if (isAdded() && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
+                if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -878,6 +896,12 @@ public class ReaderPostListFragment extends Fragment
             showSwipeToRefreshProgress(false);
         }
         mIsUpdating = isUpdating;
+
+        // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
+        // doing a refresh while another update is already in progress
+        if (mSwipeToRefreshHelper != null && !mSwipeToRefreshHelper.isRefreshing()) {
+            mSwipeToRefreshHelper.setEnabled(!isUpdating);
+        }
     }
 
     /*
@@ -894,6 +918,9 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+
+        // remove the gap marker if it's showing, since it's no longer valid
+        getPostAdapter().removeGapMarker();
     }
 
     private void hideNewPostsBar() {

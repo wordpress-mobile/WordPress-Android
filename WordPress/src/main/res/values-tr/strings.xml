@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">İstatistiklerinizi görmek için Jetpack içindeki JSON API modülünü etkinleştirin.</string>
+	<string name="error_open_list_from_notification"> Bu yazı ya da sayfa başka bir sitede yayınlanmış</string>
+	<string name="post_uploaded">Yazı gönderildi</string>
+	<string name="page_uploaded">Sayfa gönderildi</string>
 	<string name="reader_short_comment_count_multi">%s Yorum</string>
 	<string name="reader_short_comment_count_one">1 Yorum</string>
 	<string name="reader_label_submit_comment">GÖNDER</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Diğer sitelerdeki yorumlar</string>
 	<string name="notifications_other">Diğer</string>
 	<string name="notifications_wpcom_updates">WordPress.com güncellemeleri</string>
-	<string name="notifications_account_emails">WordPress.com Güncellemeleri</string>
+	<string name="notifications_account_emails">WordPress.com tarafından gönderilen e-posta</string>
 	<string name="notifications_account_emails_summary">Hesabınızla ilgili önemli e-postaları her zaman göndereceğiz, ayrıca bazı yardımcı içerikler de alabilirsiniz/</string>
 	<string name="your_sites">Siteleriniz</string>
 	<string name="notifications_sights_and_sounds">Görüntüler ve Sesler</string>
-	<string name="notifications_updates_from_wordpress">WordPress.com Güncellemeleri</string>
 	<string name="stats_insights_latest_post_trend">%2$s yayımlandığından beri %1$s geçti. İşte yazının bugüne kadarki performansı...</string>
 	<string name="stats_insights_latest_post_summary">Son yazılar özeti</string>
 	<string name="button_revert">Geri Çevir</string>
@@ -177,10 +180,10 @@
 	<string name="stats_average_per_day">Gün Başına Ortalama</string>
 	<string name="reader_empty_posts_in_blog">Bu blog boş</string>
 	<string name="error_copy_to_clipboard">Metin panoya kopyalanırken bir hata oluştu</string>
-	<string name="reader_page_recommended_blogs">Hoşunuza gidebilecek bloglar</string>
 	<string name="stats_period">Dönem</string>
 	<string name="logs_copied_to_clipboard">Uygulama günlükleri panoya kopyalandı</string>
 	<string name="stats_total">Toplam</string>
+	<string name="reader_page_recommended_blogs">Hoşunuza gidebilecek siteler</string>
 	<string name="stats_comments_total_comments_followers">Yorum takipçili toplam gönderi sayısı: %1$s</string>
 	<string name="stats_timeframe_years">Yıl</string>
 	<string name="stats_views">Görüntülemeler</string>
@@ -250,7 +253,6 @@
 	<string name="cab_selected">%d seçili</string>
 	<string name="media_gallery_date_range">%1$s ve %2$s arası ortam dosyaları gösteriliyor</string>
 	<string name="comment_reply_to_user">Şunu cevapla: %s</string>
-	<string name="reader_empty_followed_blogs_title">Henüz herhangi bir blog takip etmiyorsunuz.</string>
 	<string name="reader_empty_posts_liked">Henüz hiçbir yazıyı beğenmediniz</string>
 	<string name="faq_button">SSS</string>
 	<string name="browse_our_faq_button">SSS sayfamıza göz atın</string>
@@ -287,6 +289,7 @@
 	<string name="posting_post">Yazılan: "%s"</string>
 	<string name="signing_out">Çıkış yapılıyor…</string>
 	<string name="error_publish_empty_post">Boş bir yazı yayımlanamaz</string>
+	<string name="reader_empty_followed_blogs_title">Henüz herhangi bir site takip etmiyorsunuz.</string>
 	<string name="reader_toast_err_block_blog">Bu blog engellenemiyor</string>
 	<string name="reader_toast_blog_blocked">Bu blogdan yazılar artık gösterilmeyecek</string>
 	<string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
@@ -310,8 +313,6 @@
 	<string name="schedule_verb">Zamanla</string>
 	<string name="reader_title_subs">Etiketler ve Bloglar</string>
 	<string name="reader_page_followed_tags">Takip edilen etiketler</string>
-	<string name="reader_page_followed_blogs">Takip edilen bloglar</string>
-	<string name="reader_hint_add_tag_or_url">Takip etmek için etiket veya URL girin</string>
 	<string name="reader_label_followed_blog">Blog takip edildi</string>
 	<string name="reader_label_tag_preview">%s etiketli gönderiler</string>
 	<string name="reader_toast_err_get_blog_info">Bu blog gösterilemiyor</string>
@@ -321,6 +322,8 @@
 	<string name="reader_empty_recommended_blogs">Önerilen blog yok</string>
 	<string name="reader_title_blog_preview">Okuyucu Bloğu</string>
 	<string name="reader_title_tag_preview">Okuyucu Etiketi</string>
+	<string name="reader_page_followed_blogs">Takip edilen siteler</string>
+	<string name="reader_hint_add_tag_or_url">Takip etmek için etiket veya adres girin</string>
 	<string name="saving">Kaydediliyor</string>
 	<string name="media_empty_list">Medya bulunamadı</string>
 	<string name="ptr_tip_message">Püf nokta: Yenilemek için aşağı çekin</string>
@@ -527,7 +530,7 @@
 	<string name="validating_site_data">Site verisi doğrulanıyor</string>
 	<string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
 	<string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>
-	<string name="reader_empty_followed_blogs_description">Kaygılanmayın, keşfetmeye başlamak için etiket simgesine dokunmanız yeterli!</string>
+	<string name="reader_empty_followed_blogs_description">Kaygılanmayın, keşfetmeye başlamak için sağ üstteki simgeye dokunmanız yeterli!</string>
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com\'a giriş yap</string>
 	<string name="nux_tap_continue">Devam</string>
 	<string name="nux_welcome_create_account">Hesap oluştur</string>

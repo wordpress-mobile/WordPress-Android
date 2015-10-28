@@ -69,7 +69,6 @@
 	<string name="reader_label_comment_count_multi">%,d iruzkin</string>
 	<string name="reader_empty_posts_in_tag">Ez dago bidalketarik etiketa honekin</string>
 	<string name="new_blog_wpcom_created">WordPress.com bloga sortuta!</string>
-	<string name="reader_empty_followed_blogs_title">Oraindik ez duzu blogik jarraitzen</string>
 	<string name="reader_empty_posts_liked">Ez duzu gustuko bidalketarik</string>
 	<string name="create_new_blog_wpcom">Sortu WordPress.com bloga</string>
 	<string name="reader_empty_comments">Oraindik ez dago iruzkinik</string>

@@ -6,7 +6,6 @@
 	<string name="confirm_delete_multi_media">Kiválasztott sablon törlése?</string>
 	<string name="confirm_delete_media">Kiválasztott tétel törlése?</string>
 	<string name="cab_selected">%d kiválasztva</string>
-	<string name="reader_empty_followed_blogs_title">Még egy honlap sincs követve</string>
 	<string name="reader_empty_posts_liked">Még egy bejegyzés sincs tetszettként jelölve</string>
 	<string name="faq_button">GYIK</string>
 	<string name="browse_our_faq_button">GYIK tallózása</string>
@@ -44,10 +43,8 @@
 	<string name="update_verb">Frissítést</string>
 	<string name="schedule_verb">Időzítés</string>
 	<string name="reader_title_subs">Címkék és blogok</string>
-	<string name="reader_page_followed_blogs">Követett blogok</string>
 	<string name="reader_label_followed_blog">Követett blogok</string>
 	<string name="reader_page_followed_tags">Követett címkék</string>
-	<string name="reader_hint_add_tag_or_url">Adjunk meg egy címkét vagy webcímet a követéshez</string>
 	<string name="reader_toast_err_follow_blog">Nem lehetséges ezt a blogot követni</string>
 	<string name="reader_empty_recommended_blogs">Nincsenek ajánlott blogok</string>
 	<string name="reader_toast_err_already_follow_blog">Ezt a blogot már követjük</string>

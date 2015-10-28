@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_one">1 टिप्पणी</string>
+	<string name="reader_label_submit_comment">भेजें</string>
+	<string name="reader_hint_comment_on_post">लेख का उत्तर दें...</string>
+	<string name="reader_short_like_count_one">1 पसंद</string>
+	<string name="reader_short_like_count_none">पसंद</string>
+	<string name="reader_label_reading_time_in_minutes">%,d मिनट</string>
 	<string name="loading_blog_images">छवियाँ लाई जा रही है</string>
 	<string name="stats_generic_error">आवश्यक सांख्यिकी लोड करने में असफल</string>
 	<string name="error_loading_videos">वीडियो लाने में असमर्थ</string>
@@ -437,6 +443,14 @@
 		<item>बाएं</item>
 		<item>मध्य</item>
 		<item>दाहिना</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>सुझाव</item>
+		<item>अनुसंधान</item>
+		<item>समुदाय</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>WordPress.com के अनुसंधान और सर्वे में भाग लेने का मौका।</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>एसाइड</item>
