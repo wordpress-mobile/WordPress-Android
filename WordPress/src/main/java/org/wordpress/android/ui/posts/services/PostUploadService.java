@@ -23,6 +23,7 @@ import android.webkit.MimeTypeMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -335,17 +336,39 @@ public class PostUploadService extends Service {
 
             // Geolocation
             if (mPost.supportsLocation()) {
+                JSONObject remoteGeoLatitude = mPost.getCustomField("geo_latitude");
+                JSONObject remoteGeoLongitude = mPost.getCustomField("geo_longitude");
+                JSONObject remoteGeoPublic = mPost.getCustomField("geo_public");
+
                 Map<Object, Object> hLatitude = new HashMap<Object, Object>();
                 Map<Object, Object> hLongitude = new HashMap<Object, Object>();
                 Map<Object, Object> hPublic = new HashMap<Object, Object>();
 
-                PostLocation location = mPost.getLocation();
-                hLatitude.put("key", "geo_latitude");
-                hLongitude.put("key", "geo_longitude");
-                hPublic.put("key", "geo_public");
-                hLatitude.put("value", location.getLatitude());
-                hLongitude.put("value", location.getLongitude());
-                hPublic.put("value", 1);
+                try {
+                    if (remoteGeoLatitude != null) {
+                        hLatitude.put("id", remoteGeoLatitude.getInt("id"));
+                    }
+
+                    if (remoteGeoLongitude != null) {
+                        hLongitude.put("id", remoteGeoLongitude.getInt("id"));
+                    }
+
+                    if (remoteGeoPublic != null) {
+                        hPublic.put("id", remoteGeoPublic.getInt("id"));
+                    }
+
+                    if (mPost.hasLocation()) {
+                        PostLocation location = mPost.getLocation();
+                        hLatitude.put("key", "geo_latitude");
+                        hLongitude.put("key", "geo_longitude");
+                        hPublic.put("key", "geo_public");
+                        hLatitude.put("value", location.getLatitude());
+                        hLongitude.put("value", location.getLongitude());
+                        hPublic.put("value", 1);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(T.EDITOR, e);
+                }
 
                 if (!hLatitude.isEmpty() && !hLongitude.isEmpty() && !hPublic.isEmpty()) {
                     Object[] geo = {hLatitude, hLongitude, hPublic};
