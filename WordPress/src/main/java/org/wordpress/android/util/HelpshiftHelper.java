@@ -110,6 +110,10 @@ public class HelpshiftHelper {
             @Override
             public void displayAttachmentFile(File file) {
             }
+
+            @Override
+            public void didReceiveNotification(int i) {
+            }
         });
     }
 
