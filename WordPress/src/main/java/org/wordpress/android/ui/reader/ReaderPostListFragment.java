@@ -818,6 +818,8 @@ public class ReaderPostListFragment extends Fragment
      * get latest posts for this tag from the server
      */
     private void updatePostsWithTag(ReaderTag tag, UpdateAction updateAction) {
+        if (!isAdded()) return;
+
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
             return;
@@ -842,7 +844,7 @@ public class ReaderPostListFragment extends Fragment
         new Thread() {
             @Override
             public void run() {
-                if (isAdded() && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
+                if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
