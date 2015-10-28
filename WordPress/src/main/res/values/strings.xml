@@ -426,6 +426,20 @@
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
     <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
+    <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
+    <string name="pref_key_site_send_pingbacks" translatable="false">wp_pref_site_send_pingbacks</string>
+    <string name="pref_key_site_receive_pingbacks" translatable="false">wp_pref_site_receive_pingbacks</string>
+    <string name="pref_key_site_close_after" translatable="false">wp_pref_site_close_after</string>
+    <string name="pref_key_site_sort_by" translatable="false">wp_pref_site_sort_by</string>
+    <string name="pref_key_site_threading" translatable="false">wp_pref_site_threading</string>
+    <string name="pref_key_site_paging" translatable="false">wp_pref_site_paging</string>
+    <string name="pref_key_site_manual_approval" translatable="false">wp_pref_site_manual_approval</string>
+    <string name="pref_key_site_identity_required" translatable="false">wp_pref_site_identity_required</string>
+    <string name="pref_key_site_user_account_required" translatable="false">wp_pref_site_user_account_required</string>
+    <string name="pref_key_site_whitelist" translatable="false">wp_pref_site_whitelist</string>
+    <string name="pref_key_site_multiple_links" translatable="false">wp_pref_site_multiple_links</string>
+    <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
+    <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
 

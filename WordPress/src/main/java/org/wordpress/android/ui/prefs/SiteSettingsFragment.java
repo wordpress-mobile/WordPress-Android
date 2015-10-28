@@ -55,7 +55,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mAddressPreference;
     private DetailListPreference mLanguagePreference;
     private DetailListPreference mPrivacyPreference;
-
+    private WPSwitchPreference mAllowComments;
+    private WPSwitchPreference mSendPingbacks;
+    private WPSwitchPreference mReceivePingbacks;
+    private DetailListPreference mCloseAfterPreference;
+    private DetailListPreference mSortByPreference;
+    private DetailListPreference mThreadingPreference;
+    private DetailListPreference mPagingPreference;
+    private WPSwitchPreference mManualApprovalPreference;
+    private WPSwitchPreference mIdentityRequiredPreference;
+    private WPSwitchPreference mUserAccountRequiredPreference;
+    private WPSwitchPreference mWhitelistPreference;
+    private WPSwitchPreference mMultipleLinksPreference;
+    private WPSwitchPreference mModerationHoldPreference;
+    private WPSwitchPreference mBlacklistPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,6 +175,42 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
             changePrivacyValue(mSiteSettings.getPrivacy());
             return true;
+        } else if (preference == mAllowComments) {
+            mSiteSettings.setAllowComments((Boolean) newValue);
+            return true;
+        } else if (preference == mSendPingbacks) {
+            mSiteSettings.setSendPingbacks((Boolean) newValue);
+            return true;
+        } else if (preference == mReceivePingbacks) {
+            mSiteSettings.setReceivePingbacks((Boolean) newValue);
+            return true;
+        } else if (preference == mCloseAfterPreference) {
+            return true;
+        } else if (preference == mSortByPreference) {
+            return true;
+        } else if (preference == mThreadingPreference) {
+            return true;
+        } else if (preference == mPagingPreference) {
+            return true;
+        } else if (preference == mManualApprovalPreference) {
+            mSiteSettings.setManualApproval((Boolean) newValue);
+            return true;
+        } else if (preference == mIdentityRequiredPreference) {
+            mSiteSettings.setIdentityRequired((Boolean) newValue);
+            return true;
+        } else if (preference == mUserAccountRequiredPreference) {
+            mSiteSettings.setUserAccountRequired((Boolean) newValue);
+            return true;
+        } else if (preference == mWhitelistPreference) {
+            mSiteSettings.setUseCommentWhitelist((Boolean) newValue);
+            return true;
+        } else if (preference == mMultipleLinksPreference) {
+            mSiteSettings.setMultipleLinks((Boolean) newValue ? 1 : 0);
+            return true;
+        } else if (preference == mModerationHoldPreference) {
+            return true;
+        } else if (preference == mBlacklistPreference) {
+            return true;
         }
 
         return false;
@@ -264,6 +313,76 @@ public class SiteSettingsFragment extends PreferenceFragment
             } else {
                 mLanguagePreference.setOnPreferenceChangeListener(this);
             }
+        }
+
+        if (null != (mAllowComments =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_allow_comments)))) {
+            mAllowComments.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mSendPingbacks =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_send_pingbacks)))) {
+            mSendPingbacks.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mReceivePingbacks =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_receive_pingbacks)))) {
+            mReceivePingbacks.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mCloseAfterPreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_close_after)))) {
+            mCloseAfterPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mSortByPreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_sort_by)))) {
+            mSortByPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mThreadingPreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_threading)))) {
+            mThreadingPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mPagingPreference =
+                (DetailListPreference) findPreference(getString(R.string.pref_key_site_paging)))) {
+            mPagingPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mManualApprovalPreference =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_manual_approval)))) {
+            mManualApprovalPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mIdentityRequiredPreference =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_identity_required)))) {
+            mIdentityRequiredPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mUserAccountRequiredPreference =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_user_account_required)))) {
+            mUserAccountRequiredPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mWhitelistPreference =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_whitelist)))) {
+            mWhitelistPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mMultipleLinksPreference =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_multiple_links)))) {
+            mMultipleLinksPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mModerationHoldPreference =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_moderation_hold)))) {
+            mModerationHoldPreference.setOnPreferenceChangeListener(this);
+        }
+
+        if (null != (mBlacklistPreference =
+                (WPSwitchPreference) findPreference(getString(R.string.pref_key_site_blacklist)))) {
+            mBlacklistPreference.setOnPreferenceChangeListener(this);
         }
     }
 

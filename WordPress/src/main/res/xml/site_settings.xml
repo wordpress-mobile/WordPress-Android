@@ -57,52 +57,115 @@
 
     </PreferenceCategory>
 
-    <!--<PreferenceCategory-->
-        <!--android:title="Writing">-->
+    <PreferenceScreen
+        android:id="@+id/pref_discussion_settings"
+        android:key="@string/pref_key_site_discussion"
+        android:title="Discussion">
 
-        <!--<SwitchPreference-->
-            <!--android:id="@+id/pref_enable_location"-->
-            <!--android:key="@string/pref_key_site_location"-->
-            <!--android:title="Enable Location" />-->
+        <PreferenceCategory
+            android:id="@+id/pref_site_new_posts_defaults"
+            android:title="Defaults for New Posts">
 
-        <!--<MultiSelectListPreference-->
-            <!--android:id="@+id/pref_default_category"-->
-            <!--android:key="@string/pref_key_site_category"-->
-            <!--android:title="Default Category" />-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_allow_comments"
+                android:key="@string/pref_key_site_allow_comments"
+                android:title="Allow Comments" />
 
-        <!--<ListPreference-->
-            <!--android:id="@+id/pref_default_format"-->
-            <!--android:key="@string/pref_key_site_format"-->
-            <!--android:title="Default Format" />-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_allow_comments"
+                android:key="@string/pref_key_site_send_pingbacks"
+                android:title="Send Pingbacks" />
 
-        <!--<MultiSelectListPreference-->
-            <!--android:id="@+id/pref_related_posts"-->
-            <!--android:key="@string/pref_key_site_related_posts"-->
-            <!--android:title="Related Posts" />-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_allow_comments"
+                android:key="@string/pref_key_site_receive_pingbacks"
+                android:title="Receive Pingbacks" />
 
-    <!--</PreferenceCategory>-->
+        </PreferenceCategory>
 
-    <!--<PreferenceCategory>-->
+        <PreferenceCategory
+            android:id="@+id/pref_site_comments"
+            android:title="Comments">
 
-        <!--<Preference-->
-            <!--android:id="@+id/pref_discussion_settings"-->
-            <!--android:key="@string/pref_key_site_discussion"-->
-            <!--android:title="Discussion Settings" />-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_close_after"
+                android:key="@string/pref_key_site_close_after"
+                android:title="Close after"
+                android:summary="30 days" />
 
-    <!--</PreferenceCategory>-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_sort_by"
+                android:key="@string/pref_key_site_sort_by"
+                android:title="Sort by"
+                android:summary="Oldest first"  />
 
-    <!--<PreferenceCategory>-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_threading"
+                android:key="@string/pref_key_site_threading"
+                android:title="Threading" />
 
-        <!--<Preference-->
-            <!--android:id="@+id/pref_start_over"-->
-            <!--android:key="@string/pref_key_site_start_over"-->
-            <!--android:title="Start Over" />-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_paging"
+                android:key="@string/pref_key_site_paging"
+                android:title="Paging" />
 
-        <!--<Preference-->
-            <!--android:id="@+id/pref_delete_site"-->
-            <!--android:key="@string/pref_key_site_delete_site"-->
-            <!--android:title="Delete Site" />-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_manual_approval"
+                android:key="@string/pref_key_site_manual_approval"
+                android:title="Paging" />
 
-    <!--</PreferenceCategory>-->
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_identity_required"
+                android:key="@string/pref_key_site_identity_required"
+                android:title="Paging" />
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_user_account_required"
+                android:key="@string/pref_key_site_user_account_required"
+                android:title="Paging" />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:id="@+id/pref_site_comments"
+            android:title="Automatically approve comments">
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_whitelist"
+                android:key="@string/pref_key_site_whitelist"
+                android:title="From known users" />
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_multiple_links"
+                android:key="@string/pref_key_site_multiple_links"
+                android:title="With multiple links" />
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_moderation_hold"
+                android:key="@string/pref_key_site_moderation_hold"
+                android:title="Hold for Moderation" />
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_blacklist"
+                android:key="@string/pref_key_site_blacklist"
+                android:title="Blacklist" />
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
+    <PreferenceCategory>
+
+        <Preference
+            android:id="@+id/pref_start_over"
+            android:key="@string/pref_key_site_start_over"
+            android:title="Start Over" />
+
+        <Preference
+            android:id="@+id/pref_delete_site"
+            android:key="@string/pref_key_site_delete_site"
+            android:title="Delete Site" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
