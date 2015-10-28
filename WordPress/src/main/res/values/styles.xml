@@ -40,6 +40,7 @@
     <style name="SignInTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorControlActivated">@color/color_control_activated</item>
         <item name="colorControlHighlight">@color/color_control_highlight</item>
+        <item name="android:statusBarColor">@color/status_bar_tint</item>
     </style>
 
     <style name="TabBarStyle.WordPress" parent="@android:style/Widget.Holo.ActionBar.TabBar">
