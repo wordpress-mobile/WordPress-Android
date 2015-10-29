@@ -81,7 +81,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    public SitePickerAdapter(Context context, int currentLocalBlogId, String lastSearch, boolean isInSearchMode) {
+    public  SitePickerAdapter(Context context, int currentLocalBlogId, String lastSearch, boolean isInSearchMode) {
         super();
 
         setHasStableIds(true);
@@ -119,7 +119,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         mSelectedCountListener = listener;
     }
 
-    void setOnSiteClickListener(OnSiteClickListener listener) {
+    public void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
     }
 
@@ -436,7 +436,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     /**
      * SiteRecord is a simplified version of the full account (blog) record
      */
-    static class SiteRecord {
+     static class SiteRecord {
         final int localId;
         final int blogId;
         final String blogName;
@@ -465,7 +465,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    static class SiteList extends ArrayList<SiteRecord> {
+   static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
         SiteList(List<Map<String, Object>> accounts) {
             if (accounts != null) {

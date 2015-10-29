@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_open_list_from_notification">Detta inlägg eller sida har publicerats på en annan webbplats</string>
+	<string name="page_uploaded">Sida uppladdad</string>
+	<string name="post_uploaded">Inlägg uppladdat</string>
 	<string name="reader_short_comment_count_multi">%s kommentarer</string>
 	<string name="reader_short_comment_count_one">1 kommentar</string>
 	<string name="reader_label_submit_comment">SKICKA</string>
@@ -32,11 +35,10 @@
 	<string name="notifications_comments_other_blogs">Kommentarer på andra webbplatser</string>
 	<string name="notifications_other">Andra</string>
 	<string name="notifications_wpcom_updates">WordPress.com-nyheter</string>
-	<string name="notifications_account_emails">Uppdateringar från WordPress.com</string>
+	<string name="notifications_account_emails">E-post från WordPress.com</string>
 	<string name="notifications_account_emails_summary">Vi skickar dig alltid viktiga e-postmeddelanden om ditt konto, men du kan även få värdefullt extramaterial.</string>
 	<string name="your_sites">Dina webbplatser</string>
 	<string name="notifications_sights_and_sounds">Bilder och ljud</string>
-	<string name="notifications_updates_from_wordpress">Nyheter från WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Det har gått %1$s sedan %2$s publicerades. Så här har det gått för inlägget hittills…</string>
 	<string name="stats_insights_latest_post_summary">Sammanfattning av senaste inlägg</string>
 	<string name="button_revert">Återställ</string>
@@ -170,7 +172,6 @@
 	<string name="publisher">Publicerat av:</string>
 	<string name="reader_empty_posts_request_failed">Kunde inte hämta inlägg</string>
 	<string name="stats_months_and_years">Månader och år</string>
-	<string name="reader_page_recommended_blogs">Bloggar du kanske gillar</string>
 	<string name="error_copy_to_clipboard">Ett fel uppstod när text skulle kopieras till urklipp</string>
 	<string name="stats_recent_weeks">Senaste veckorna</string>
 	<string name="stats_average_per_day">Medel per dag</string>
@@ -181,6 +182,7 @@
 	<string name="stats_overall">Övergripande</string>
 	<string name="stats_total">Totalt</string>
 	<string name="post_uploading">Laddar upp</string>
+	<string name="reader_page_recommended_blogs">Webbplatser du kanske gillar</string>
 	<string name="stats_comments_total_comments_followers">Totalt antal inlägg med följare av kommentarer: %1$s</string>
 	<string name="stats_views">Visningar</string>
 	<string name="stats_visitors">Besökare</string>
@@ -249,7 +251,6 @@
 	<string name="confirm_delete_media">Radera vald post?</string>
 	<string name="cab_selected">%d valda</string>
 	<string name="media_gallery_date_range">Visa media från %1$s till %2$s</string>
-	<string name="reader_empty_followed_blogs_title">Du följer inga bloggar än</string>
 	<string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
 	<string name="faq_button">Vanliga frågor</string>
 	<string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
@@ -287,6 +288,7 @@
 	<string name="signing_out">Loggar ut...</string>
 	<string name="sending_content">Laddar upp %s innehåll</string>
 	<string name="uploading_total">Laddar upp %1$d av %2$d</string>
+	<string name="reader_empty_followed_blogs_title">Du följer inga webbplatser än</string>
 	<string name="reader_menu_block_blog">Blockera denna blogg</string>
 	<string name="reader_toast_blog_blocked">Inlägg från denna blogg kommer inte längre att visas</string>
 	<string name="reader_toast_err_generic">Kunde inte genomföra denna åtgärd</string>
@@ -310,8 +312,6 @@
 	<string name="schedule_verb">Tidinställ</string>
 	<string name="reader_title_subs">Taggar &amp; bloggar</string>
 	<string name="reader_page_followed_tags">Följda taggar</string>
-	<string name="reader_page_followed_blogs">Följda bloggar</string>
-	<string name="reader_hint_add_tag_or_url">Ange en tagg eller URL att följa</string>
 	<string name="reader_label_followed_blog">Bloggen följs</string>
 	<string name="reader_label_tag_preview">Inlägg taggade %s</string>
 	<string name="reader_toast_err_get_blog_info">Kunde inte visa denna blogg</string>
@@ -321,6 +321,8 @@
 	<string name="reader_empty_recommended_blogs">Inga rekommenderade bloggar</string>
 	<string name="reader_title_blog_preview">Läsare-blogg</string>
 	<string name="reader_title_tag_preview">Läsare-etikett</string>
+	<string name="reader_page_followed_blogs">Följda webbplatser</string>
+	<string name="reader_hint_add_tag_or_url">Ange en URL eller tagg att följa</string>
 	<string name="saving">Sparar...</string>
 	<string name="media_empty_list">Ingen media</string>
 	<string name="ptr_tip_message">Tips: Dra ned för att uppdatera</string>
@@ -527,7 +529,7 @@
 	<string name="reader_toast_err_get_post">Kunde inte hämta detta inlägg</string>
 	<string name="validating_user_data">Validerar användarinformation</string>
 	<string name="validating_site_data">Validerar webbplats</string>
-	<string name="reader_empty_followed_blogs_description">Inget att oroa sig för, peka på etikettikonen för att börja utforska!</string>
+	<string name="reader_empty_followed_blogs_description">Inget att oroa sig för, peka på ikonen uppe till höger för att börja utforska!</string>
 	<string name="nux_tap_continue">Fortsätt</string>
 	<string name="nux_welcome_create_account">Skapa konto</string>
 	<string name="nux_add_selfhosted_blog">Lägg till egen installation</string>

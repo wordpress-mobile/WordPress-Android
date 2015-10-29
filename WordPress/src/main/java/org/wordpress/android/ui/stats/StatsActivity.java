@@ -77,6 +77,13 @@ public class StatsActivity extends AppCompatActivity
     private static final int REQUEST_JETPACK = 7000;
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
+    public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
+    public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
+
+    public enum StatsLaunchedFrom {
+        STATS_WIDGET,
+        NOTIFICATIONS
+    }
 
     private int mResultCode = -1;
     private boolean mIsInFront;
@@ -157,11 +164,20 @@ public class StatsActivity extends AppCompatActivity
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
+            } else if (getIntent().hasExtra(ARG_DESIRED_TIMEFRAME)) {
+                mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(ARG_DESIRED_TIMEFRAME);
             } else {
                 // Read the value from app preferences here. Default to 0 - Insights
                 mCurrentTimeframe = AppPrefs.getStatsTimeframe();
             }
             mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+
+            if (getIntent().hasExtra(ARG_LAUNCHED_FROM)) {
+                StatsLaunchedFrom from = (StatsLaunchedFrom) getIntent().getSerializableExtra(ARG_LAUNCHED_FROM);
+                if (from == StatsLaunchedFrom.STATS_WIDGET) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED);
+                }
+            }
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
@@ -406,7 +422,7 @@ public class StatsActivity extends AppCompatActivity
 
             if (fm.findFragmentByTag(StatsInsightsLatestPostSummaryFragment.TAG) == null || forceRecreationOfFragments) {
                 fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_LATEST_POST_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-                ft.replace(R.id.stats_insights_latest_post_summary_container, fragment, StatsInsightsTodayFragment.TAG);
+                ft.replace(R.id.stats_insights_latest_post_summary_container, fragment, StatsInsightsLatestPostSummaryFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {

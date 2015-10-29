@@ -32,11 +32,9 @@
 	<string name="notifications_comments_other_blogs">Comentários em outros sites</string>
 	<string name="notifications_other">Outro</string>
 	<string name="notifications_wpcom_updates">Novidades do WordPress.com</string>
-	<string name="notifications_account_emails">Novidades do WordPress.com</string>
 	<string name="notifications_account_emails_summary">Sempre enviaremos emails importantes sobre a sua conta, mas você também pode ter acesso a conteúdo extra.</string>
 	<string name="notifications_sights_and_sounds">Aparência e sons</string>
 	<string name="your_sites">Seus Sites</string>
-	<string name="notifications_updates_from_wordpress">Novidades do WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">Faz %1$s desde que %2$s foi publicado. Este foi o desempenho do post até agora...</string>
 	<string name="stats_insights_latest_post_summary">Resumo dos posts mais recentes</string>
 	<string name="button_revert">Reverter</string>
@@ -180,7 +178,6 @@
 	<string name="stats_months_and_years">Meses e anos</string>
 	<string name="stats_overall">Geral</string>
 	<string name="stats_total">Total</string>
-	<string name="reader_page_recommended_blogs">Blogs que você talvez goste</string>
 	<string name="stats_comments_total_comments_followers">Total de posts com comentários de seguidores: %1$s</string>
 	<string name="stats_visitors">Visitantes</string>
 	<string name="stats_comments">Comentários</string>
@@ -249,7 +246,6 @@
 	<string name="confirm_delete_media">Excluir item selecionado?</string>
 	<string name="cab_selected">%d selecionados</string>
 	<string name="media_gallery_date_range">Exibindo mídias de %1$s a %2$s</string>
-	<string name="reader_empty_followed_blogs_title">Você ainda não está seguindo um blog</string>
 	<string name="faq_button">Perguntas frequentes</string>
 	<string name="agree_terms_of_service">Ao criar sua conta, você está concordando com os nossos %1$sTermos de Serviço%2$s</string>
 	<string name="create_new_blog_wpcom">Crie um blog do WordPress.com</string>
@@ -310,8 +306,6 @@
 	<string name="schedule_verb">Agendar</string>
 	<string name="reader_title_subs">Tags e Blogs</string>
 	<string name="reader_page_followed_tags">Tags seguidas</string>
-	<string name="reader_page_followed_blogs">Blogs seguidos</string>
-	<string name="reader_hint_add_tag_or_url">Digite uma tag ou URL para seguir</string>
 	<string name="reader_label_followed_blog">Seguindo o blog</string>
 	<string name="reader_label_tag_preview">Posts com tag %s</string>
 	<string name="reader_toast_err_get_blog_info">Não é possível mostrar o blog</string>
@@ -527,7 +521,6 @@
 	<string name="reader_toast_err_get_post">Não foi possível recuperar esse post</string>
 	<string name="validating_user_data">Validando dados de usuário</string>
 	<string name="validating_site_data">Validando dados do site</string>
-	<string name="reader_empty_followed_blogs_description">Não se preocupe! Toque no ícone de tag para começar a explorar.</string>
 	<string name="password_invalid">Você precisa de uma senha mais segura. Use mais de 7 caracteres, misture letras maiúsculas com minúsculas, números ou caracteres especiais.</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="nux_welcome_create_account">Criar conta</string>

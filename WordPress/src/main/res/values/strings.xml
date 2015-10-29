@@ -118,6 +118,8 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
+    <string name="access_media_permission_required">Permissions required in order to access media</string>
+    <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="loading_videos">Loading videos</string>
     <string name="loading_images">Loading images</string>
@@ -228,8 +230,10 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
-    <string name="post_uploaded">Post uploaded</string>
-    <string name="page_uploaded">Page uploaded</string>
+    <string name="post_published">Post published</string>
+    <string name="page_published">Page published</string>
+    <string name="post_updated">Post updated</string>
+    <string name="page_updated">Page updated</string>
     <string name="post_password">Password (optional)</string>
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
@@ -386,6 +390,7 @@
     <string name="search_current_location">Locate</string>
     <string name="search_location">Search</string>
     <string name="edit_location">Edit</string>
+    <string name="add_location_permission_required">Permission required in order to add location</string>
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
@@ -434,6 +439,17 @@
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
     <string name="stats_sign_in_jetpack_different_com_account">To view your stats, sign in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
+
+    <!-- stats: Widget labels -->
+    <string name="stats_widget_name">WordPress Today\'s Stats</string>
+    <string name="stats_widget_name_for_blog">Today\'s Stats for %1$s</string>
+    <string name="stats_widget_loading_data">Loading data…</string>
+    <string name="stats_widget_error_generic">Stats couldn\'t be loaded</string>
+    <string name="stats_widget_error_no_account">Please login into WordPress</string>
+    <string name="stats_widget_error_no_permissions">Your WordPress.com account can\'t access Stats on this blog</string>
+    <string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
+    <string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
+    <string name="stats_widget_error_jetpack_no_blogid">Please access the Stats in the app, and try adding the widget later</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -511,6 +527,13 @@
     <string name="stats_comments_by_authors">By Authors</string>
     <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
     <string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
+
+    <!-- stats: referrers -->
+    <string name="stats_referrers_spam">Spam</string>
+    <string name="stats_referrers_unspam">Not spam</string>
+    <string name="stats_referrers_marking_spam">Marking as spam</string>
+    <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
+    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -636,6 +659,8 @@
     <string name="notifications_tab_summary">Settings for notifications that appear in the Notifications tab.</string>
     <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
+    <string name="search_sites">Search sites</string>
+    <string name="notifications_no_search_results">No sites matched \'%s\'</string>
     <string-array name="notifications_blog_settings">
         <item>Comments on my site</item>
         <item>Likes on my comments</item>
