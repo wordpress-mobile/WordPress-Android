@@ -14,7 +14,6 @@ import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -100,10 +99,8 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
 
         // file type
         String fileExtension = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-        if  (DisplayUtils.isXLarge(context)) {
+        if (holder.fileTypeView != null) {
             holder.fileTypeView.setText(String.format(context.getString(R.string.media_file_type), fileExtension));
-        } else {
-            holder.fileTypeView.setText(fileExtension);
         }
 
         // dimensions
