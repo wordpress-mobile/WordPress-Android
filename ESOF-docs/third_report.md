@@ -6,11 +6,11 @@
 
 ### Vista de Implementação ###
 
-![Implementation view1](/images/Implementation View.bmp)
+![Implementation view1](./images/Implementation View.bmp)
 
-![Implementation view2](/images/Android.bmp)
+![Implementation view2](./images/Android.bmp)
 
-![Implementation view3](/images/source.bmp)
+![Implementation view3](./images/source.bmp)
 
 ### Vista de Processo ###
 
@@ -19,7 +19,7 @@
 
 Diagrama de deployment mostra a vista de deployment referente ao projeto WordPress para Android:
 
-![Deployment view](/images/Deployment View.png)
+![Deployment view](./images/Deployment View.png)
 
 
 ### Use Case View (+1) ####
