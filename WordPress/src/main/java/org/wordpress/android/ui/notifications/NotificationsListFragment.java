@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -82,9 +81,6 @@ public class NotificationsListFragment extends Fragment
         mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
         mFilterView = view.findViewById(R.id.notifications_filter);
 
-        RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
-        animator.setSupportsChangeAnimations(true);
-        mRecyclerView.setItemAnimator(animator);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
