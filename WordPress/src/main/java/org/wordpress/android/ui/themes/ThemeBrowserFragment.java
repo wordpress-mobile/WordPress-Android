@@ -95,14 +95,20 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        ThemeBrowserActivity themeBrowserActivity = (ThemeBrowserActivity) getActivity();
         super.onActivityCreated(savedInstanceState);
+        if (this instanceof ThemeBrowserFragment) {
+            (themeBrowserActivity).setThemeBrowserFragment(this);
+        } else if (this instanceof ThemeSearchFragment) {
+            (themeBrowserActivity).setThemeSearchFragment((ThemeSearchFragment) this);
+        }
         Cursor cursor = fetchThemes(getSpinnerPosition());
 
         if (cursor == null) {
             return;
         }
 
-        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
+        mAdapter = new ThemeBrowserAdapter(themeBrowserActivity, cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         mGridView.setSelection(mSavedScrollPosition);

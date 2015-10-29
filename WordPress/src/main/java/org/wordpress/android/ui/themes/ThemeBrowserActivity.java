@@ -263,6 +263,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         );
     }
 
+    protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {
+        mThemeBrowserFragment = themeBrowserFragment;
+    }
+
+    protected void setThemeSearchFragment(ThemeSearchFragment themeSearchFragment) {
+        mThemeSearchFragment = themeSearchFragment;
+    }
+
     private String getBlogId() {
         if (WordPress.getCurrentBlog() == null)
             return "0";
