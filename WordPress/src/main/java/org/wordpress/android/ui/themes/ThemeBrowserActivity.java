@@ -69,14 +69,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             return;
         }
 
+        setContentView(R.layout.theme_browser_activity);
+
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
+            mThemeBrowserFragment = new ThemeBrowserFragment();
+            mThemeSearchFragment = new ThemeSearchFragment();
+            addBrowserFragment();
         }
-
-        setContentView(R.layout.theme_browser_activity);
-        mThemeBrowserFragment = new ThemeBrowserFragment();
-        mThemeSearchFragment = new ThemeSearchFragment();
-        addBrowserFragment();
     }
 
     @Override
@@ -237,10 +237,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                 mCurrentTheme.setIsCurrent(true);
                                 mCurrentTheme.save();
                                 WordPress.wpDB.setCurrentTheme(siteId, mCurrentTheme.getId());
-                                mThemeBrowserFragment.setRefreshing(false);
-                                if (mThemeBrowserFragment.mCurrentThemeTextView != null) {
-                                    mThemeBrowserFragment.mCurrentThemeTextView.setText(mCurrentTheme.getName());
-                                    mThemeBrowserFragment.mCurrentThemeId = mCurrentTheme.getId();
+                                if (mThemeBrowserFragment != null) {
+                                    mThemeBrowserFragment.setRefreshing(false);
+                                    if (mThemeBrowserFragment.mCurrentThemeTextView != null) {
+                                        mThemeBrowserFragment.mCurrentThemeTextView.setText(mCurrentTheme.getName());
+                                        mThemeBrowserFragment.mCurrentThemeId = mCurrentTheme.getId();
+                                    }
                                 }
                             }
                         } catch (JSONException e) {
@@ -290,6 +292,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private void showCorrectToolbar() {
         if (mIsInSearchMode) {
             showSearchToolbar();
+        } else {
+            hideSearchToolbar();
         }
     }
 
@@ -301,7 +305,15 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
     }
 
+    private void hideSearchToolbar() {
+        findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_search).setVisibility(View.GONE);
+    }
+
     private void addBrowserFragment() {
+        if (mThemeBrowserFragment == null) {
+            mThemeBrowserFragment = new ThemeBrowserFragment();
+        }
         showToolbar();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.theme_browser_container, mThemeBrowserFragment);
@@ -309,13 +321,15 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void addSearchFragment() {
+        if (mThemeSearchFragment == null) {
+            mThemeSearchFragment = new ThemeSearchFragment();
+        }
         showSearchToolbar();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-
 
     private void activateTheme(String themeId) {
         final String siteId = getBlogId();
@@ -440,10 +454,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 @Override
                 public void run() {
                     mFetchingThemes = false;
-                    if (mThemeBrowserFragment.isVisible()) {
+                    if (mThemeBrowserFragment != null && mThemeBrowserFragment.isVisible()) {
                         mThemeBrowserFragment.mEmptyView.setText(R.string.no_themes);
                         mThemeBrowserFragment.setRefreshing(false);
-                    } else if (mThemeSearchFragment.isVisible()) {
+                    } else if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
                         mThemeSearchFragment.mEmptyView.setText(R.string.no_themes);
                         mThemeSearchFragment.setRefreshing(false);
                     }
