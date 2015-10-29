@@ -19,7 +19,7 @@
 
 Diagrama de deployment mostra a vista de deployment referente ao projeto WordPress para Android:
 
-![Deployment view](./images/Deployment View.png)
+![Deployment view](./images/Deployment view.png)
 
 
 ### Use Case View (+1) ####
