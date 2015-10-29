@@ -33,6 +33,7 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
@@ -879,7 +880,6 @@ public class PostUploadService extends Service {
     }
 
     private class PostUploadNotifier {
-
         private final NotificationManager mNotificationManager;
         private final NotificationCompat.Builder mNotificationBuilder;
 
@@ -951,6 +951,7 @@ public class PostUploadService extends Service {
             }
             notificationBuilder.setContentTitle(notificationTitle);
             notificationBuilder.setContentText(post.getTitle());
+            notificationBuilder.setAutoCancel(true);
 
             // Tap notification intent (open the post list)
             Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
@@ -963,17 +964,18 @@ public class PostUploadService extends Service {
             notificationBuilder.setContentIntent(pendingIntentPost);
 
             // Share intent - started if the user tap the share link button - only if the link exist
+            int notificationId = getNotificationIdForPost(post);
             if (sharableUrl != null && post.getStatusEnum() == PostStatus.PUBLISHED) {
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
-                share.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, share,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                Intent shareIntent = new Intent(mContext, ShareAndDismissNotificationReceiver.class);
+                shareIntent.putExtra(ShareAndDismissNotificationReceiver.NOTIFICATION_ID_KEY, notificationId);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, sharableUrl);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
                 notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
                         pendingIntent);
             }
-            mNotificationManager.notify(getNotificationIdForPost(post), notificationBuilder.build());
+            mNotificationManager.notify(notificationId, notificationBuilder.build());
         }
 
         private int getNotificationIdForPost(Post post) {
