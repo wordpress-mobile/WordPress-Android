@@ -74,6 +74,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
