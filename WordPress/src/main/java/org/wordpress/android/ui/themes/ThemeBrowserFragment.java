@@ -175,7 +175,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onViewSelected(mCurrentThemeId);
+                mCallback.onTryAndCustomizeSelected(mCurrentThemeId);
             }
         });
 
