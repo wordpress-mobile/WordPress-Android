@@ -33,11 +33,11 @@
                 android:id="@+id/theme_search"
                 android:layout_width="@dimen/theme_browser_more_button_height"
                 android:layout_height="@dimen/theme_browser_more_button_height"
-                android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
+                android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_search"
                 android:background="?android:attr/selectableItemBackground"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentLeft="true" />
 
         </RelativeLayout>
 
