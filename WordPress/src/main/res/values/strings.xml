@@ -739,6 +739,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
+    <string name="automattic_url" translatable="false">automattic.com</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -755,6 +756,7 @@
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
+    <string name="wordpress_com_url" translatable="false">.wordpress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
