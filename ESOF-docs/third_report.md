@@ -14,7 +14,7 @@
 
 Diagrama de deployment mostra a vista de deployment referente ao projeto WordPress para Android:
 
-![Deployment view](https://i.gyazo.com/fad663aed6c5da5c82a60363fc11879c.png =250x)
+![Deployment view](https://i.gyazo.com/fad663aed6c5da5c82a60363fc11879c.png =50x)
 
 
 ### Use Case View (+1) ####
