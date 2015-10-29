@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/theme_grid_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
@@ -36,6 +37,7 @@
             </FrameLayout>
 
             <RelativeLayout
+                android:id="@+id/theme_grid_item_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/theme_grid_item_image_layout"
@@ -85,7 +87,7 @@
                         android:id="@+id/divider"
                         android:layout_width="@dimen/theme_browser_separator_thickness"
                         android:layout_height="match_parent"
-                        android:background="@color/reader_divider_grey" />
+                        android:background="@color/grey_lighten_10" />
 
                     <ImageButton
                         android:id="@+id/theme_grid_item_image_button"

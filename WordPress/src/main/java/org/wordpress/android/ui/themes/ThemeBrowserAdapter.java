@@ -2,6 +2,7 @@ package org.wordpress.android.ui.themes;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,12 +11,14 @@ import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Theme;
 
 /**
  * Adapter for the {@link ThemeBrowserFragment}'s listview
@@ -32,18 +35,24 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     }
 
     private static class ThemeViewHolder {
+        private final CardView cardView;
         private final NetworkImageView imageView;
         private final TextView nameView;
+        private final TextView activeView;
         private final TextView priceView;
         private final ImageButton imageButton;
         private final FrameLayout frameLayout;
+        private final RelativeLayout detailsView;
 
         ThemeViewHolder(View view) {
+            cardView = (CardView) view.findViewById(R.id.theme_grid_card);
             imageView = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
             nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
             priceView = (TextView) view.findViewById(R.id.theme_grid_item_price);
+            activeView = (TextView) view.findViewById(R.id.theme_grid_item_active);
             imageButton = (ImageButton) view.findViewById(R.id.theme_grid_item_image_button);
             frameLayout = (FrameLayout) view.findViewById(R.id.theme_grid_item_image_layout);
+            detailsView = (RelativeLayout) view.findViewById(R.id.theme_grid_item_details);
         }
     }
 
@@ -65,6 +74,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         final String name = cursor.getString(cursor.getColumnIndex("name"));
         final String price = cursor.getString(cursor.getColumnIndex("price"));
         final String themeId = cursor.getString(cursor.getColumnIndex("id"));
+        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) == 1;
         final boolean isPremium = !price.isEmpty();
 
         themeViewHolder.nameView.setText(name);
@@ -72,6 +82,14 @@ public class ThemeBrowserAdapter extends CursorAdapter {
 
         configureImageView(themeViewHolder, screenshotURL, themeId);
         configureImageButton(context, themeViewHolder, themeId, isPremium);
+
+        if (isCurrent) {
+            themeViewHolder.detailsView.setBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
+            themeViewHolder.nameView.setTextColor(context.getResources().getColor(R.color.white));
+            themeViewHolder.frameLayout.setBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
+            themeViewHolder.activeView.setVisibility(View.VISIBLE);
+            themeViewHolder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
+        }
     }
 
     private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId) {
