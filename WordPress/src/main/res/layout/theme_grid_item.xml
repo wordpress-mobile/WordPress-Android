@@ -63,6 +63,17 @@
                         android:textColor="@color/theme_price"
                         android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
 
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/theme_grid_item_active"
+                        android:textSize="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/theme_activate"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:text="@string/active"
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
+
                 </LinearLayout>
 
                 <LinearLayout

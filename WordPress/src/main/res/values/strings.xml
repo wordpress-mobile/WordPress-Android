@@ -1078,6 +1078,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="activate">Activate</string>
+    <string name="active">ACTIVE</string>
     <string name="demo">Demo</string>
     <string name="theme_activate">Activate</string>
     <string name="theme_try_and_customize">Try &amp; Customize</string>

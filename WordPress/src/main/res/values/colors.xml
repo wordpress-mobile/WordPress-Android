@@ -152,5 +152,6 @@
 
     <!-- Themes -->
     <color name="theme_price">#4FB769</color>
+    <color name="theme_activate">#A9E9FC</color>
 
 </resources>
