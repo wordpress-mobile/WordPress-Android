@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_gap_marker"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/image_gap_marker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@drawable/reader_tear_repeat" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_gap_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@drawable/reader_gap_marker_background"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_medium"
+        android:text="@string/reader_label_gap_marker"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_large" />
+
+    <ProgressBar
+        android:id="@+id/progress_gap_marker"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>

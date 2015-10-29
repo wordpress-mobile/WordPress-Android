@@ -475,7 +475,7 @@ public class ReaderPostListFragment extends Fragment
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
         final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_BLOCKED);
 
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
@@ -734,6 +734,16 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
+     * same as above but clears posts before refreshing
+     */
+    private void reloadPosts() {
+        hideNewPostsBar();
+        if (hasPostAdapter()) {
+            getPostAdapter().reload();
+        }
+    }
+
+    /*
      * get posts for the current blog from the server
      */
     private void updatePostsInCurrentBlogOrFeed(final UpdateAction updateAction) {
@@ -780,6 +790,12 @@ public class ReaderPostListFragment extends Fragment
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
             setEmptyTitleAndDescription(requestFailed);
+            // if we requested posts in order to fill a gap but the request failed or didn't
+            // return any posts, reload the adapter so the gap marker is reset (hiding its
+            // progress bar)
+            if (event.getAction() == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                reloadPosts();
+            }
         }
     }
 
@@ -878,6 +894,12 @@ public class ReaderPostListFragment extends Fragment
             showSwipeToRefreshProgress(false);
         }
         mIsUpdating = isUpdating;
+
+        // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
+        // doing a refresh while another update is already in progress
+        if (mSwipeToRefreshHelper != null && !mSwipeToRefreshHelper.isRefreshing()) {
+            mSwipeToRefreshHelper.setEnabled(!isUpdating);
+        }
     }
 
     /*
@@ -894,6 +916,9 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+
+        // remove the gap marker if it's showing, since it's no longer valid
+        getPostAdapter().removeGapMarker();
     }
 
     private void hideNewPostsBar() {
@@ -979,7 +1004,7 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE, analyticsProperties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, analyticsProperties);
     }
 
     /*
@@ -1006,14 +1031,28 @@ public class ReaderPostListFragment extends Fragment
     public void onTagChanged(ReaderTag tag) {
         if (!isAdded() || isCurrentTag(tag)) return;
 
-        Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagName());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-        if (tag.isFreshlyPressed()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
-        }
+        trackTagLoaded(tag);
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
         setCurrentTag(tag);
+    }
+
+    private void trackTagLoaded(ReaderTag tag) {
+        AnalyticsTracker.Stat stat = null;
+
+        if (tag.isFreshlyPressed()) {
+            stat = AnalyticsTracker.Stat.READER_FRESHLY_PRESSED_LOADED;
+        } else if (tag.isTagTopic()) {
+            stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
+        } else if (tag.isListTopic()) {
+            stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
+        }
+
+        if (stat == null) return;
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("tag", tag.getTagName());
+
+        AnalyticsTracker.track(stat, properties);
     }
 
     /*
@@ -1100,3 +1139,4 @@ public class ReaderPostListFragment extends Fragment
         mLastAutoUpdateDt = null;
     }
 }
+

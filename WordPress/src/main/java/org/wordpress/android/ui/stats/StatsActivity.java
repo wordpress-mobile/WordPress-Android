@@ -329,6 +329,12 @@ public class StatsActivity extends AppCompatActivity
         if (isFinishing()) {
             return;
         }
+
+        // Make the labels invisible see: https://github.com/wordpress-mobile/WordPress-Android/issues/3279
+        findViewById(R.id.stats_other_recent_stats_label_insights).setVisibility(View.INVISIBLE);
+        findViewById(R.id.stats_other_recent_stats_label_timeline).setVisibility(View.INVISIBLE);
+        findViewById(R.id.stats_other_recent_stats_moved).setVisibility(View.INVISIBLE);
+
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
@@ -425,6 +431,20 @@ public class StatsActivity extends AppCompatActivity
         }
 
         ft.commitAllowingStateLoss();
+
+        // Slightly delayed labels setup: see https://github.com/wordpress-mobile/WordPress-Android/issues/3279
+        mOuterScrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isFinishing()) {
+                    return;
+                }
+                boolean isInsights = mCurrentTimeframe == StatsTimeframe.INSIGHTS;
+                findViewById(R.id.stats_other_recent_stats_label_insights).setVisibility(isInsights ? View.VISIBLE : View.GONE);
+                findViewById(R.id.stats_other_recent_stats_label_timeline).setVisibility(isInsights ? View.GONE : View.VISIBLE);
+                findViewById(R.id.stats_other_recent_stats_moved).setVisibility(isInsights ? View.GONE : View.VISIBLE);
+            }
+        }, StatsConstants.STATS_LABELS_SETUP_DELAY);
     }
 
     private void updateTimeframeAndDateAndStartRefreshOfFragments(boolean includeGraph) {

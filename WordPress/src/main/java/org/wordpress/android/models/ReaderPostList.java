@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 
 import java.util.ArrayList;
 
@@ -39,6 +40,18 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
                 } else if (!post.isExternal && post.blogId == this.get(i).blogId) {
                     return i;
                 }
+            }
+        }
+        return -1;
+    }
+
+    public int indexOfIds(ReaderBlogIdPostId ids) {
+        if (ids == null) {
+            return -1;
+        }
+        for (int i = 0; i < size(); i++) {
+            if (this.get(i).hasIds(ids)) {
+                return i;
             }
         }
         return -1;
