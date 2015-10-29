@@ -135,6 +135,11 @@
     <string name="no_device_videos">No videos</string>
     <string name="no_blog_images">No images</string>
     <string name="no_blog_videos">No videos</string>
+    <string name="upload_queued">Queued</string>
+    <string name="media_file_type">File type: %s</string>
+    <string name="media_file_name">File name: %s</string>
+    <string name="media_uploaded_on">Uploaded on: %s</string>
+    <string name="media_dimensions">Dimensions: %s</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
