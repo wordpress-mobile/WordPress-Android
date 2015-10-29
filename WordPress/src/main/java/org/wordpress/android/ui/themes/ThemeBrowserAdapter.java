@@ -82,13 +82,20 @@ public class ThemeBrowserAdapter extends CursorAdapter {
 
         configureImageView(themeViewHolder, screenshotURL, themeId);
         configureImageButton(context, themeViewHolder, themeId, isPremium);
+        configureCardView(context, themeViewHolder, isCurrent);
+    }
 
+    private void configureCardView(Context context, ThemeViewHolder themeViewHolder, boolean isCurrent) {
         if (isCurrent) {
             themeViewHolder.detailsView.setBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
             themeViewHolder.nameView.setTextColor(context.getResources().getColor(R.color.white));
-            themeViewHolder.frameLayout.setBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
             themeViewHolder.activeView.setVisibility(View.VISIBLE);
             themeViewHolder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
+        } else {
+            themeViewHolder.detailsView.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
+            themeViewHolder.nameView.setTextColor(context.getResources().getColor(R.color.black));
+            themeViewHolder.activeView.setVisibility(View.GONE);
+            themeViewHolder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
         }
     }
 

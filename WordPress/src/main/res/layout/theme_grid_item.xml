@@ -87,7 +87,7 @@
                         android:id="@+id/divider"
                         android:layout_width="@dimen/theme_browser_separator_thickness"
                         android:layout_height="match_parent"
-                        android:background="@color/grey_lighten_10" />
+                        android:background="@color/reader_divider_grey" />
 
                     <ImageButton
                         android:id="@+id/theme_grid_item_image_button"
