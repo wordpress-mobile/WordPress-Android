@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +83,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.priceView.setText(price);
 
         configureImageView(themeViewHolder, screenshotURL, themeId);
-        configureImageButton(context, themeViewHolder, themeId, isPremium);
+        configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
         configureCardView(context, themeViewHolder, isCurrent);
     }
 
@@ -122,10 +123,12 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         });
     }
 
-    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium) {
+    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium, boolean isCurrent) {
         final PopupMenu popupMenu = new PopupMenu(context, themeViewHolder.imageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
-        
+
+        configureMenuForTheme(popupMenu.getMenu(), isCurrent);
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -161,6 +164,26 @@ public class ThemeBrowserAdapter extends CursorAdapter {
                 popupMenu.show();
             }
         });
+    }
+
+    private void configureMenuForTheme(Menu menu, boolean isCurrent) {
+        MenuItem activate = menu.findItem(R.id.menu_activate);
+        MenuItem customize = menu.findItem(R.id.menu_try_and_customize);
+        MenuItem view = menu.findItem(R.id.menu_view);
+
+        if (activate != null) {
+            activate.setVisible(!isCurrent);
+        }
+        if (customize != null) {
+            if (isCurrent) {
+                customize.setTitle(R.string.customize);
+            } else {
+                customize.setTitle(R.string.theme_try_and_customize);
+            }
+        }
+        if (view != null) {
+            view.setVisible(!isCurrent);
+        }
     }
 
     static class ScreenshotHolder {
