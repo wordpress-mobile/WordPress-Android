@@ -188,6 +188,7 @@
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
     <string name="theme_no_search_result_found">No results found</string>
+    <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
 
     <!-- link view -->
     <string name="link_enter_url">URL</string>
@@ -1060,8 +1061,8 @@
     <string name="support">Support</string>
 
     <string-array name="themes_filter_array">
-        <item>All</item>
         <item>Free</item>
+        <item>All</item>
         <item>Premium</item>
     </string-array>
 
@@ -1078,18 +1079,19 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="activate">Activate</string>
+    <string name="active">ACTIVE</string>
     <string name="demo">Demo</string>
     <string name="theme_activate">Activate</string>
-    <string name="theme_preview">Preview</string>
-    <string name="theme_demo">Demo</string>
+    <string name="theme_try_and_customize">Try &amp; Customize</string>
+    <string name="theme_view">View</string>
     <string name="theme_details">Details</string>
     <string name="theme_support">Support</string>
     <string name="theme_done">DONE</string>
     <string name="theme_manage_site">MANAGE SITE</string>
     <string name="theme_prompt">Thanks for choosing %1$s by %2$s</string>
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
-    <string name="theme_preview_url"><![CDATA[https://wordpress.com/customize/%1$s?nomuse=1&theme=pub/%2$s]]></string>
-    <string name="theme_https_prefix">https://</string>
     <string name="theme_web_activity">Theme Web Activity</string>
+    <string name="no_themes">No themes</string>
+    <string name="could_not_load_theme">Could not load theme</string>
 
 </resources>

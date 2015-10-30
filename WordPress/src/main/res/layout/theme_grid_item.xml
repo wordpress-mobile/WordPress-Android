@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/theme_grid_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
@@ -36,6 +37,7 @@
             </FrameLayout>
 
             <RelativeLayout
+                android:id="@+id/theme_grid_item_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/theme_grid_item_image_layout"
@@ -63,6 +65,17 @@
                         android:textColor="@color/theme_price"
                         android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
 
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/theme_grid_item_active"
+                        android:textSize="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/theme_activate"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:text="@string/active"
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -81,9 +94,9 @@
                         android:layout_width="@dimen/theme_browser_more_button_width"
                         android:layout_height="@dimen/theme_browser_more_button_height"
                         android:padding="@dimen/theme_browser_more_button_padding"
-                        android:adjustViewBounds="true"
-                        android:background="?android:attr/selectableItemBackground"
                         android:src="@drawable/ic_action_more_grey"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:adjustViewBounds="true"
                         android:contentDescription="@string/button_more" />
 
                 </LinearLayout>

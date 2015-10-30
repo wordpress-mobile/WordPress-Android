@@ -1,15 +1,17 @@
 package org.wordpress.android.ui.themes;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
@@ -17,75 +19,81 @@ import org.wordpress.android.util.AppLog;
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
     public static final String IS_PREMIUM_THEME = "is_premium_theme";
-    private static final String THEME_URL_PREVIEW = "%s/?nomuse=1&theme=pub/%s";
-    private static final String THEME_URL_CUSTOMIZE = "https://wordpress.com/customize/%s?nomuse=1&theme=pub/%s";
-    private static final String THEME_URL_SUPPORT = "https://theme.wordpress.com/themes/%s/support";
-    private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s";
+    public static final String THEME_NAME = "theme_name";
+    private static final String THEME_DOMAIN_PUBLIC = "pub";
+    private static final String THEME_DOMAIN_PREMIUM = "premium";
+    private static final String THEME_URL_PREVIEW = "%s/wp-admin/customize.php?theme=%s/%s&hide_close=true";
+    private static final String THEME_URL_SUPPORT = "https://wordpress.com/themes/%s/support/?preview=true&iframe=true";
+    private static final String THEME_URL_DETAILS = "https://wordpress.com/themes/%s/%s/?preview=true&iframe=true";
+    private static final String THEME_URL_DEMO_PARAMETER = "demo=true&iframe=true&theme_preview=true";
+    private static final String THEME_HTTPS_PREFIX = "https://";
 
     public enum ThemeWebActivityType {
         PREVIEW,
         DEMO,
         DETAILS,
-        SUPPORT,
-        CUSTOMIZE,
+        SUPPORT
     }
 
-    public static void openTheme(Context context, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
+    public static void openTheme(Activity activity, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
-        String url = getUrl(context, currentTheme, blogId, type);
+        String url = getUrl(activity, currentTheme, type, currentTheme.isPremium());
 
-        openWPCOMURL(context, url, currentTheme, AccountHelper.getDefaultAccount().getUserName(), isCurrentTheme);
+        openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
     }
 
-    private static void openWPCOMURL(Context context, String url, Theme currentTheme, String user, Boolean isCurrentTheme) {
-        if (context == null) {
+    private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
+        if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
         }
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+            Toast.makeText(activity, activity.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (TextUtils.isEmpty(user)) {
-            AppLog.e(AppLog.T.UTILS, "Username empty/null");
-            return;
-        }
-
-        Intent intent = new Intent(context, ThemeWebActivity.class);
-        intent.putExtra(ThemeWebActivity.AUTHENTICATION_USER, user);
+        String authURL = ThemeWebActivity.getBlogLoginUrl(blog);
+        Intent intent = new Intent(activity, ThemeWebActivity.class);
+        intent.putExtra(ThemeWebActivity.AUTHENTICATION_USER, blog.getUsername());
+        intent.putExtra(ThemeWebActivity.AUTHENTICATION_PASSWD, blog.getPassword());
         intent.putExtra(ThemeWebActivity.URL_TO_LOAD, url);
-        intent.putExtra(ThemeWebActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        intent.putExtra(ThemeWebActivity.AUTHENTICATION_URL, authURL);
+        intent.putExtra(ThemeWebActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
         intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
+        intent.putExtra(THEME_NAME, currentTheme.getName());
+        intent.putExtra(ThemeBrowserActivity.THEME_ID, currentTheme.getId());
 
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
-    public static String getUrl(Context context, Theme theme, String blogId, ThemeWebActivityType type) {
+    public static String getUrl(Context context, Theme theme, ThemeWebActivityType type, boolean isPremium) {
         String url = "";
         String homeURL = WordPress.getCurrentBlog().getHomeURL();
+        String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
 
         switch (type) {
             case PREVIEW:
-                url = String.format(THEME_URL_PREVIEW, homeURL, theme.getId());
+                url = String.format(THEME_URL_PREVIEW, homeURL, domain, theme.getId());
                 break;
             case DEMO:
                 url = theme.getDemoURI();
+                if (url.contains("?")) {
+                    url = url + "&" + THEME_URL_DEMO_PARAMETER;
+                } else {
+                    url = url + "?" + THEME_URL_DEMO_PARAMETER;
+                }
                 break;
             case DETAILS:
-                String currentURL = homeURL.replaceFirst(context.getString(R.string.theme_https_prefix), "");
+                String currentURL = homeURL.replaceFirst(THEME_HTTPS_PREFIX, "");
                 url = String.format(THEME_URL_DETAILS, currentURL, theme.getId());
                 break;
             case SUPPORT:
                 url = String.format(THEME_URL_SUPPORT, theme.getId());
-                break;
-            case CUSTOMIZE:
-                url = String.format(THEME_URL_CUSTOMIZE, blogId, theme.getId());
                 break;
             default:
                 break;
@@ -111,7 +119,30 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_activate) {
+            Bundle bundle = getIntent().getExtras();
+            Intent returnIntent = new Intent();
+            setResult(RESULT_OK, returnIntent);
+            returnIntent.putExtra(ThemeBrowserActivity.THEME_ID, bundle.getString(ThemeBrowserActivity.THEME_ID));
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void configureView() {
         setContentView(R.layout.theme_web_activity);
+        setActionBarTitleToThemeName();
+    }
+
+    private void setActionBarTitleToThemeName() {
+        Bundle bundle = getIntent().getExtras();
+        String themeName = bundle.getString(THEME_NAME);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(themeName);
+        }
     }
 }

@@ -208,6 +208,15 @@
             android:theme="@style/Calypso.NoActionBar" >
         </activity>
 
+        <activity
+            android:name=".ui.themes.ThemeWebActivity"
+            android:label="@string/theme_web_activity"
+            android:parentActivityName=".ui.themes.ThemeBrowserActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.wordpress.android.ui.themes.ThemeBrowserActivity" />
+        </activity>
+
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"

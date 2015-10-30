@@ -16,7 +16,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground">
 
             <Spinner
                 android:id="@+id/theme_filter_spinner"
@@ -25,12 +26,18 @@
                 android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:visibility="gone"
                 android:spinnerMode="dropdown" />
 
-            <SearchView
-                android:layout_width="@dimen/theme_browser_header_button_height"
-                android:layout_height="@dimen/theme_browser_header_button_height"
-                android:layout_alignParentRight="true" />
+            <ImageButton
+                android:id="@+id/theme_search"
+                android:layout_width="@dimen/theme_browser_more_button_height"
+                android:layout_height="@dimen/theme_browser_more_button_height"
+                android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_search"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_alignParentLeft="true" />
 
         </RelativeLayout>
 

@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -18,9 +17,11 @@ import org.wordpress.android.WordPress;
 /**
  * A fragment for display the results of a theme search
  */
-public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
+public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchView.OnQueryTextListener,
+        MenuItemCompat.OnActionExpandListener {
     public static final String TAG = ThemeSearchFragment.class.getName();
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
+    public static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
     public static ThemeSearchFragment newInstance() {
         ThemeSearchFragment fragment = new ThemeSearchFragment();
@@ -79,15 +80,19 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         mSearchMenuItem.expandActionView();
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
+        configureSearchView();
+    }
+
+    public void configureSearchView() {
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-        mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);
+        mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
     }
 
     private void clearFocus(View view) {
         if (view != null) {
-            view.clearFocus();;
+            view.clearFocus();
         }
     }
 
@@ -101,6 +106,8 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
+        ((ThemeBrowserActivity) getActivity()).setIsInSearchMode(false);
+        ((ThemeBrowserActivity) getActivity()).showToolbar();
         getActivity().getFragmentManager().popBackStack();
         return true;
     }
@@ -123,21 +130,36 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         inflater.inflate(R.menu.theme_search, menu);
     }
 
+    @Override
+    protected void addHeaderViews(LayoutInflater inflater) {
+        // No header on Search
+    }
+
+    @Override
+    protected void configureSwipeToRefresh(View view) {
+        super.configureSwipeToRefresh(view);
+        mSwipeToRefreshHelper.setEnabled(false);
+    }
+
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        refreshView(getSpinnerPosition());
+    }
+
+    @Override
+    protected Cursor fetchThemes(int position) {
+        if (WordPress.getCurrentBlog() == null) {
+            return null;
+        }
+
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+
+        return WordPress.wpDB.getThemes(blogId, mLastSearch);
+    }
+
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
-        if (mAdapter == null || WordPress.getCurrentBlog() == null) {
-            return;
-        }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-        Cursor cursor = WordPress.wpDB.getThemes(blogId, searchTerm);
 
-        mAdapter.changeCursor(cursor);
-        mGridView.invalidateViews();
-
-        if (cursor == null || cursor.getCount() == 0) {
-            mNoResultText.setVisibility(View.VISIBLE);
-        } else {
-            mNoResultText.setVisibility(View.GONE);
-        }
+        ((ThemeBrowserActivity) getActivity()).searchThemes(searchTerm);
     }
 }
