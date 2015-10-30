@@ -18,11 +18,12 @@
         <item name="android:actionModeBackground">@color/color_primary_dark</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
-        <item name="windowActionModeOverlay">true</item>
+        <item name="android:statusBarColor">@color/status_bar_tint</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
+        <item name="windowActionModeOverlay">true</item>
         <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
     </style>
 
@@ -39,6 +40,7 @@
     <style name="SignInTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorControlActivated">@color/color_control_activated</item>
         <item name="colorControlHighlight">@color/color_control_highlight</item>
+        <item name="android:statusBarColor">@color/status_bar_tint</item>
     </style>
 
     <style name="TabBarStyle.WordPress" parent="@android:style/Widget.Holo.ActionBar.TabBar">
