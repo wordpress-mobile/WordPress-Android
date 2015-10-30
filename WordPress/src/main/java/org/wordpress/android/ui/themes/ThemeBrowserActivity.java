@@ -77,6 +77,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             mThemeSearchFragment = new ThemeSearchFragment();
             addBrowserFragment();
         }
+        showToolbar();
     }
 
     @Override
