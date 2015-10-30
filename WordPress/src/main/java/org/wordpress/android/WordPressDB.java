@@ -1841,7 +1841,7 @@ public class WordPressDB {
         String[] selection = {blogId, String.valueOf(1)};
         String currentThemeId;
         try {
-            currentThemeId = DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=true", selection);
+            currentThemeId = DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=?", selection);
         } catch (SQLiteException e) {
             currentThemeId = "";
         }
