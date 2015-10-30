@@ -1065,7 +1065,7 @@
 
     <!-- Special characters -->
     <string name="bullet" translatable="false">\u2022</string>
-    <string name="previous_button" translatable="false">\u2022</string>
+    <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
 
     <!-- Noticons -->
