@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.SiteSettingsTable;
@@ -40,6 +41,8 @@ public abstract class SiteSettingsInterface {
     public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
     public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
     public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
+
+    private static final String STANDARD_POST_FORMAT = "standard";
 
     /**
      * Returns a SharedPreference instance to interface with Site Settings.
@@ -205,6 +208,14 @@ public abstract class SiteSettingsInterface {
         }
 
         return categoryNames;
+    }
+
+    public String getDefaultPostFormat() {
+        if (TextUtils.isEmpty(mSettings.defaultPostFormat)) {
+            return STANDARD_POST_FORMAT;
+        }
+
+        return mSettings.defaultPostFormat;
     }
 
     public String getDefaultPostFormatDisplay() {

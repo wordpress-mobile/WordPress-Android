@@ -337,6 +337,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // Ignore if there are no changes
         if (mSiteSettings.isSameCategoryList(mCategoryPreference.getEntryValues())) {
             mCategoryPreference.setValue(String.valueOf(mSiteSettings.getDefaultCategory()));
+            mCategoryPreference.setSummary(mSiteSettings.getDefaultCategoryForDisplay());
             return;
         }
 
@@ -359,6 +360,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // Ignore if there are no changes
         if (mSiteSettings.isSameFormatList(mFormatPreference.getEntryValues())) {
             mFormatPreference.setValue(String.valueOf(mSiteSettings.getDefaultFormat()));
+            mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
             return;
         }
 
