@@ -32,8 +32,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.6-rc-3"
-        versionCode 211
+        versionName "4.7-rc-2"
+        versionCode 215
         minSdkVersion 14
         targetSdkVersion 23
 
@@ -79,7 +79,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.helpshift:android-aar:3.8.0'
+    compile 'com.helpshift:android-aar:3.12.0'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.2'
     compile 'org.wordpress:graphview:3.4.0'

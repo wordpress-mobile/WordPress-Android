@@ -55,6 +55,9 @@ public final class AnalyticsTracker {
         STATS_OPENED_WEB_VERSION,
         STATS_TAPPED_BAR_CHART,
         STATS_SCROLLED_TO_BOTTOM,
+        STATS_WIDGET_ADDED,
+        STATS_WIDGET_REMOVED,
+        STATS_WIDGET_TAPPED,
         EDITOR_CREATED_POST,
         EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
@@ -156,6 +159,16 @@ public final class AnalyticsTracker {
         }
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
+        }
+    }
+
+
+    public static void flush() {
+        if (mHasUserOptedOut) {
+            return;
+        }
+        for (Tracker tracker : TRACKERS) {
+            tracker.flush();
         }
     }
 

@@ -32,11 +32,9 @@
 	<string name="notifications_comments_other_blogs">التعليقات على المواقع الأخرى</string>
 	<string name="notifications_wpcom_updates">تحديثات وردبرس.كوم</string>
 	<string name="notifications_other">أخرى</string>
-	<string name="notifications_account_emails">تحديثات من وردبرس.كوم</string>
 	<string name="notifications_account_emails_summary">نحن نرسل دومًا رسائل بريد إلكتروني مهمة بخصوص حسابك، ومع ذلك يمكنك الحصول على بعض الإضافات المفيدة أيضًا.</string>
 	<string name="notifications_sights_and_sounds">المناظر والأصوات</string>
 	<string name="your_sites">مواقعك</string>
-	<string name="notifications_updates_from_wordpress">تحديثات من وردبرس.كوم</string>
 	<string name="stats_insights_latest_post_trend">لم يتم نشر %2$s منذ %1$s. فيما يلي بيان لمستوى أداء المقالة حتى الآن…</string>
 	<string name="stats_insights_latest_post_summary">ملخص آخر مقالة</string>
 	<string name="button_revert">إلغاء</string>
@@ -173,7 +171,6 @@
 	<string name="stats_average_per_day">المتوسط لكل يوم</string>
 	<string name="stats_recent_weeks">الأسابيع الأخيرة</string>
 	<string name="error_copy_to_clipboard">حدث خطأ أثناء نسخ النص إلى الحافظة</string>
-	<string name="reader_page_recommended_blogs">المدونات التي قد تُعجب بها</string>
 	<string name="reader_empty_posts_in_blog">هذه المدونة فارغة</string>
 	<string name="logs_copied_to_clipboard">تم نسخ سجلات التطبيق إلى الحافظة</string>
 	<string name="reader_label_new_posts">مقالات جديدة</string>
@@ -249,7 +246,6 @@
 	<string name="confirm_delete_multi_media">هل تريد حذف العناصر المحددة؟</string>
 	<string name="cab_selected">تم تحديد %d</string>
 	<string name="media_gallery_date_range">عرض الوسائط من %1$s إلى %2$s</string>
-	<string name="reader_empty_followed_blogs_title">لم تتابع أي مدونات بعد</string>
 	<string name="reader_empty_posts_liked">لم تُعجب بأي مقالات</string>
 	<string name="faq_button">الأسئلة المتكررّة</string>
 	<string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
@@ -311,13 +307,11 @@
 	<string name="reader_title_subs">الوسوم والمدونات</string>
 	<string name="reader_label_followed_blog">مدونة تمت متابعتها</string>
 	<string name="reader_toast_err_already_follow_blog">أنت متابع لهذه المدونة بالفعل</string>
-	<string name="reader_hint_add_tag_or_url">أدخل رسمًا أو عنوانًا للمتابعة</string>
 	<string name="reader_label_tag_preview">مقالات موسومة %s</string>
 	<string name="reader_toast_err_get_blog_info">غير قادر على إظهار هذه المدونة</string>
 	<string name="reader_toast_err_follow_blog">غير قادر على متابعة هذه المدونة </string>
 	<string name="reader_toast_err_unfollow_blog">غير قادر على عدم متابعة هذه المدونة </string>
 	<string name="reader_empty_recommended_blogs">لا يوجد مدونات موصى بها</string>
-	<string name="reader_page_followed_blogs">مدونات تمت متابعتها</string>
 	<string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
 	<string name="reader_title_blog_preview">مدوّنة القارئ</string>
 	<string name="reader_title_tag_preview">وسم القارئ</string>
@@ -519,7 +513,6 @@
 	<string name="reader_toast_err_get_comment">غير قادر على استعادة هذا التعليق</string>
 	<string name="always_use_these_settings_to_share">دائمًا استخدم هذه الإعدادات</string>
 	<string name="account_two_step_auth_enabled">هذا الحساب تبقى عليه اثنتان من خطوات المصادقة. قم بزيارة إعدادات الأمان على ووردبريس.كوم وإنشاء كلمة مرور خاصة بالتطبيقات.</string>
-	<string name="reader_empty_followed_blogs_description">ومع ذلك لا داعي للقلق، فما عليك سوى النقر على الأيقونة لبدء الاستكشاف!</string>
 	<string name="select_time">تحديد الوقت</string>
 	<string name="select_date">تحديد التاريخ</string>
 	<string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>
