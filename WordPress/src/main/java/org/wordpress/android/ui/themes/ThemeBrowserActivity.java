@@ -45,6 +45,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
     private static final String IS_IN_SEARCH_MODE = "is_in_search_mode";
+    private static final String ALERT_TAB = "alert";
 
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
@@ -176,14 +177,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                                 WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
                                         errorTitle);
-                                ft.add(fragment, "alert");
+                                ft.add(fragment, ALERT_TAB);
                                 ft.commitAllowingStateLoss();
                             }
-                            AppLog.d(T.THEMES, "Failed to fetch themes: failed authenticate user");
+                            AppLog.d(T.THEMES, getString(R.string.theme_auth_error_authenticate));
                         } else {
                             Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG)
                                     .show();
-                            AppLog.d(T.THEMES, "Failed to fetch themes: " + response.toString());
+                            AppLog.d(T.THEMES, getString(R.string.theme_fetch_failed) + ": " + response.toString());
                         }
                         mFetchingThemes = false;
                     }
@@ -215,10 +216,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                                 WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
                                         errorTitle);
-                                ft.add(fragment, "alert");
+                                ft.add(fragment, ALERT_TAB);
                                 ft.commitAllowingStateLoss();
                             }
-                            AppLog.d(T.THEMES, "Failed to fetch themes: failed authenticate user");
+                            AppLog.d(T.THEMES, getString(R.string.theme_auth_error_authenticate));
                         }
                         mFetchingThemes = false;
                     }
