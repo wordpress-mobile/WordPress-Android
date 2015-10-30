@@ -25,6 +25,7 @@ import org.wordpress.android.models.Theme;
  *
  */
 public class ThemeBrowserAdapter extends CursorAdapter {
+    private static final String THEME_IMAGE_PARAMETER = "?w=400";
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
 
@@ -70,10 +71,10 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
 
-        final String screenshotURL = cursor.getString(cursor.getColumnIndex("screenshot"));
-        final String name = cursor.getString(cursor.getColumnIndex("name"));
-        final String price = cursor.getString(cursor.getColumnIndex("price"));
-        final String themeId = cursor.getString(cursor.getColumnIndex("id"));
+        final String screenshotURL = cursor.getString(cursor.getColumnIndex(Theme.SCREENSHOT));
+        final String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
+        final String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
+        final String themeId = cursor.getString(cursor.getColumnIndex(Theme.ID));
         final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) == 1;
         final boolean isPremium = !price.isEmpty();
 
@@ -112,7 +113,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             urlHolder.requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(screenshotURL + "?w=" + 500, WordPress.imageLoader);
+        themeViewHolder.imageView.setImageUrl(screenshotURL + THEME_IMAGE_PARAMETER, WordPress.imageLoader);
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
