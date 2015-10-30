@@ -346,7 +346,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount)) {
+        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getContext())) {
             mPage++;
             ((ThemeBrowserActivity) getActivity()).fetchThemes();
         }
