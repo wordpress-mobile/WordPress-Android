@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.main;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -79,8 +77,6 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setStatusBarColor();
-
         ProfilingUtils.split("WPMainActivity.onCreate");
 
         super.onCreate(savedInstanceState);
@@ -197,13 +193,6 @@ public class WPMainActivity extends Activity
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_LAST_RESELECTED_TAB_POSITION, mLastReselectedTabPosition);
         super.onSaveInstanceState(outState);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
-        }
     }
 
     @Override

@@ -230,8 +230,10 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
-    <string name="post_uploaded">Post uploaded</string>
-    <string name="page_uploaded">Page uploaded</string>
+    <string name="post_published">Post published</string>
+    <string name="page_published">Page published</string>
+    <string name="post_updated">Post updated</string>
+    <string name="page_updated">Page updated</string>
     <string name="post_password">Password (optional)</string>
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
@@ -562,6 +564,13 @@
     <string name="stats_comments_by_authors">By Authors</string>
     <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
     <string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
+
+    <!-- stats: referrers -->
+    <string name="stats_referrers_spam">Spam</string>
+    <string name="stats_referrers_unspam">Not spam</string>
+    <string name="stats_referrers_marking_spam">Marking as spam</string>
+    <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
+    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_wpcom_selector">WordPress.com</string>

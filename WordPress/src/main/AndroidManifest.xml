@@ -352,6 +352,8 @@
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
 
+        <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
+
         <receiver android:name=".networking.ConnectionChangeReceiver"
                   android:enabled="false">
             <intent-filter>
