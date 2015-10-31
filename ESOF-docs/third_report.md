@@ -2,7 +2,7 @@
 ## Arquitetura de Software ##
 
 ### Vista Lógica ###
-
+![Logical view](./images/Logical View.bmp)
 
 ### Vista de Implementação
 
@@ -30,7 +30,7 @@ Diagrama de deployment mostra a vista de deployment referente ao projeto WordPre
 
 
 ### Use Case View (+1) 
-
+![Logical view](./images/Use Case View.bmp)
 
 #### Descrição
 
