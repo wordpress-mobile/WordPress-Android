@@ -1,5 +1,13 @@
 # Relatório 3 - ESOF #
 ## Arquitetura de Software ##
+### Introdução
+O presente relatório serve para apresentar os aspectos mais relevantes da arquitetura de software do projecto WordPress-Android, de acordo com o modelo de vistas 4+1. Este modelo foi projetado por Philippe Kruchten, em 1995, com o objetivo de "descrever a arqueitetura de sistemas de software, utilizando múltiplos pontos de vista simultâneos". Estes pontos de vista são os seguintes:
+
+* Vista Lógica - Mostra as principais abstrações-chave no sistema como objetos ou classes de objetos, ou os seu packages. Representado tipicamente por diagrama UML de packages.
+* Vista de Deployment - Mostra o hardware do sistema e como os componentes do software estão distribuídos pelos nós de hardware. Normalmente representado por diagrama UML de deployment.
+* Vista de Processo - Mostra, em tempo de execução, como os processos do sistema interagem. Os diagramas de atividade são os mais utilizados para representar isto.
+* Vista de Implementação - Mostra como o software é decomposto para o desenvolvimento. Normalmente representado por diagrama UML de componentes.
+* Vista de Casos de Uso (+1) - Combinando as diferentes vistas faz com que esta vista que se consegue entender as interações entre os diversos componentes do sistema. Representado por um diagrama UML de casos de uso.
 
 ### Vista Lógica
 ![Logical view](./images/Logical View.bmp)
@@ -29,7 +37,7 @@ Diagrama de componentes mostra a vista de implementação referente ao projeto W
 #### Descrição
 
 ### Vista de Processo 
-
+![Process view](./images/process.bmp)
 
 ### Vista de Deployment 
 
