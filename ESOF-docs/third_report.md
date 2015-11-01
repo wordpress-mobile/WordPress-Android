@@ -5,7 +5,8 @@
 ![Logical view](./images/Logical View.bmp)
 
 Este diagrama representa a Vista Lógica, traduzindo-se num UML de packages. Foram considerados seis packages: datasets, widgets, models, ui, networking e util. 
-  
+ 
+ #### Descrição 
 ´´Para elaborar o diagrama recorreu-se ao software Enterprise Architect, que através de reverse engineering, obtivemos vários outros diagramas que foram estudados e observados de modo a simplificar e perceber melhor como o projeto está organizado. Por outro lado, examinamos de um modo superficial todos os ficheiros de cada package para tentar decifrar as suas ligações e conceitos. Desta forma, a package datasets
   
 Relativamente ao diagrama em si, existem dois tipos de ligações: “import” e “merge”. A ligação “import” significa que um determinado package importa elementos de outro package, já a ligação “merge”, significa que importa não só elementos do package como os packages por ele importados.
