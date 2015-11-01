@@ -37,8 +37,8 @@ Um diagrama de deployment permite mostrar de que modo os artefactos de um sistem
 
 ![Deployment view](./images/Deployment view.png)
 #### Descrição
-Os nós são recursos de computação físicos com memória de processamento e serviços para executar software, neste caso telemóveis cujo sistema operativo seja Android (primeiro nó) e um segundo nó em que está representado o database server. 
-Cada artefacto corresponde a um componente de software, neste caso, distribuído em ambos os nós de hardware como a aplicação móvel que corre no dispositivo Android e a base de dados bem como o sistema de manuseamento da mesma que está incorporado na base de dados.
+Os nós são recursos de computação físicos com memória de processamento e serviços para executar software, neste caso telemóveis cujo sistema operativo seja Android (nó mais à esquerda) e um segundo nó em que está representado o database server machine. 
+Cada artefacto corresponde a um componente de software, neste caso, distribuído em ambos os nós de hardware como a aplicação móvel que corre no dispositivo Android e a base de dados bem como o sistema de manuseamento da mesma que está incorporado na base de dados. Existe uma clara distinção entre os dois nós de hardware, o cliente e o servidor, bem como aos artefactos que neles são distribuídos.
 
 ### Use Case View (+1) 
 ![Logical view](./images/Use Case View.bmp)
@@ -56,3 +56,8 @@ De uma forma geral, acreditamos que a aplicação bem como o projeto na sua gene
 * Fábio Amarante
 * Luís Gonçalves
 * Ricardo Lopes
+
+
+## Contribuição
+
+Relativamente à contribuição de cada elemento para a realização deste relatório, o grupo considera que o trabalho foi igualmente dividido pelos três elementos.
