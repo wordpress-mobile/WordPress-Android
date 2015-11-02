@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+  <!-- Following files could be saved, but they're useless and takes
+  significant space -->
+  <exclude domain="database" path="wpreader.db"/>
+  <exclude domain="database" path="simperium-store"/>
+  <exclude domain="database" path="stats.db"/>
+  <exclude domain="database" path="tracks.db"/>
+  <exclude domain="database" path="mixpanel"/>
+
+  <!-- Contains regId - must be different on each device -->
+  <exclude domain="sharedpref" path="com.google.android.gcm.xml"/>
+</full-backup-content>
