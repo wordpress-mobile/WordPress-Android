@@ -9,4 +9,5 @@
         <warning path="src/main/res/values/styles.xml" />
     </issue>
 
+    <issue id="HardcodedText" severity="error" />
 </lint>
