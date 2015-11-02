@@ -678,6 +678,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    public boolean isNewPost() {
+        return mIsNewPost;
+    }
+
     private boolean hasEmptyContentFields() {
         return TextUtils.isEmpty(mEditorFragment.getTitle()) && TextUtils.isEmpty(mEditorFragment.getContent());
     }

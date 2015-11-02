@@ -615,11 +615,7 @@ public class EditPostSettingsFragment extends Fragment
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
-        if (mPost.supportsLocation() && checkForLocationPermission() && getActivity()
-                .getSharedPreferences(SiteSettingsInterface.SITE_SETTINGS_PREFS, Context.MODE_PRIVATE)
-                .getBoolean(SiteSettingsInterface.LOCATION_PREF_KEY, false)) {
-            return;
-        }
+        if (!mPost.supportsLocation() || !checkForLocationPermission()) return;
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
@@ -655,7 +651,13 @@ public class EditPostSettingsFragment extends Fragment
             PostLocation location = mPost.getLocation();
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
-            showLocationAdd();
+            // Search for current location to geotag post if preferences allow
+            EditPostActivity activity = (EditPostActivity) getActivity();
+            if (SiteSettingsInterface.getGeotagging(activity) && activity.isNewPost()) {
+                searchLocation();
+            } else {
+                showLocationAdd();
+            }
         }
     }
 

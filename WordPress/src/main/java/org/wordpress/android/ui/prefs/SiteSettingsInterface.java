@@ -51,6 +51,10 @@ public abstract class SiteSettingsInterface {
         return context.getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
     }
 
+    public static boolean getGeotagging(Context context) {
+        return siteSettingsPreferences(context).getBoolean(LOCATION_PREF_KEY, false);
+    }
+
     public static String getDefaultCategory(Context context) {
         int id = siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 0);
 
@@ -189,9 +193,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public String[] getFormatKeys() {
-        if (mSettings.postFormats == null) return null;
-        // TODO: don't generate a new array each time
-        return mSettings.postFormats.keySet().toArray(new String[mSettings.postFormats.size()]);
+        return mSettings.postFormatKeys;
     }
 
     public CategoryModel[] getCategories() {
@@ -295,12 +297,22 @@ public abstract class SiteSettingsInterface {
         mSettings.defaultCategory = category;
     }
 
+    /**
+     * Sets the default post format.
+     *
+     * @param format
+     * if null or empty default format is set to {@link SiteSettingsInterface#STANDARD_POST_FORMAT}
+     */
     public void setDefaultFormat(String format) {
-        mSettings.defaultPostFormat = format.toLowerCase();
+        if (TextUtils.isEmpty(format)) {
+            mSettings.defaultPostFormat = STANDARD_POST_FORMAT;
+        } else {
+            mSettings.defaultPostFormat = format.toLowerCase();
+        }
     }
 
     public String getDefaultFormat() {
-        return mSettings.defaultPostFormat;
+        return TextUtils.isEmpty(mSettings.defaultPostFormat) ? STANDARD_POST_FORMAT : mSettings.defaultPostFormat;
     }
 
     public void setShowRelatedPosts(boolean relatedPosts) {
@@ -511,6 +523,9 @@ public abstract class SiteSettingsInterface {
                         }
                     }
                     mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
+                    String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
+                    mRemoteSettings.postFormatKeys = mRemoteSettings.postFormats.keySet().toArray(formatKeys);
+                    mSettings.postFormatKeys = mRemoteSettings.postFormatKeys.clone();
 
                     notifyUpdatedOnUiThread(null);
                 }
