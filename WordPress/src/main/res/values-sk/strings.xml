@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_short_comment_count_multi">%s komentárov</string>
+	<string name="reader_short_comment_count_one">1 komentár</string>
+	<string name="reader_label_submit_comment">ODOSLAŤ</string>
+	<string name="email">E-mail</string>
+	<string name="button_trash">Kôš</string>
+	<string name="button_edit">Upraviť</string>
+	<string name="button_stats">Štatistiky</string>
+	<string name="show">Zobraziť</string>
+	<string name="hide">Skryť</string>
 	<string name="select_from_new_picker">Viacnásobný výber v novej možnosti výberu</string>
 	<string name="stats_generic_error">Požadované štatistiky nemohli byť načítané</string>
 	<string name="loading_blog_images">Načítavajú sa obrázky</string>
@@ -62,7 +71,6 @@
 	<string name="error_copy_to_clipboard">Pri kopírovaní textu do schránky nastala chyba </string>
 	<string name="post_uploading">Nahráva sa</string>
 	<string name="stats_recent_weeks">Posledné týždne</string>
-	<string name="reader_page_recommended_blogs">Blogy, ktoré sa vám môžu páčiť</string>
 	<string name="stats_months_and_years">Mesiace a roky</string>
 	<string name="reader_empty_posts_in_blog">Tento blog je prázdny</string>
 	<string name="stats_average_per_day">Priemer za deň</string>
@@ -144,7 +152,6 @@
 	<string name="error_refresh_unauthorized_comments">Nemáte oprávnenie prezerať alebo upravovať komentáre</string>
 	<string name="reader_label_comments_on">Komentáre k</string>
 	<string name="comment">Komentár</string>
-	<string name="reader_empty_followed_blogs_title">Zatiaľ nesledujete žiaden blog</string>
 	<string name="sending_content">Nahrávanie obsahu %s</string>
 	<string name="media_empty_list_custom_date">Žiadne súbory v tomto časovom intervale</string>
 	<string name="posting_post">Publikuje sa "%s"</string>
@@ -198,12 +205,10 @@
 	<string name="reader_toast_err_unfollow_blog">Nie je možné sledovať tento blog</string>
 	<string name="reader_label_tag_preview">Príspevok označený: %s</string>
 	<string name="reader_label_followed_blog">Sledovaný blog</string>
-	<string name="reader_hint_add_tag_or_url">Vložte značku alebo URL pre sledovanie</string>
 	<string name="reader_page_followed_tags">Sledované značky</string>
 	<string name="reader_toast_err_already_follow_blog">Tento blog už sledujete</string>
 	<string name="reader_toast_err_get_blog_info">Tento blog nie je možné zobraziť</string>
 	<string name="reader_toast_err_follow_blog">Tento blog nie je možné sledovať</string>
-	<string name="reader_page_followed_blogs">Sledované blogy</string>
 	<string name="reader_title_subs">Značky a blogy</string>
 	<string name="reader_empty_recommended_blogs">Žiadne odporúčané blogy</string>
 	<string name="media_empty_list">Žiadne súbory</string>
@@ -402,7 +407,6 @@
 	<string name="share_preference_title">Zdieľať na WordPress</string>
 	<string name="account_two_step_auth_enabled">Tento účet má povolenú dvojkrokové overovanie. Pre vytvorenie hesla pre aplikácie si otvorte bezpečnostné nastavenia na WordPress.com.</string>
 	<string name="reader_likes_you_and_one">Lajkli ste to vy a niekto ďalší</string>
-	<string name="reader_empty_followed_blogs_description">Bez obáv, stačí ťuknúť na ikonku značky!</string>
 	<string name="reader_toast_err_get_post">Nie je možné načítať príspevok</string>
 	<string name="validating_site_data">Validujú sa údaje na stránke</string>
 	<string name="validating_user_data">Validujú sa používateľské dáta</string>
@@ -588,6 +592,7 @@
 	<string name="cancel">Zrušiť</string>
 	<string name="save">Uložiť</string>
 	<string name="add">Pridať</string>
+	<string name="notification_settings">Nastavenie upozornení</string>
 	<string name="yes">Áno</string>
 	<string name="no">Nie</string>
 	<string name="error">Chyba</string>
@@ -597,6 +602,9 @@
 		<item>Vľavo</item>
 		<item>Do stredu</item>
 		<item>Vpravo</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>Komunita</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Poznámka na okraj</item>

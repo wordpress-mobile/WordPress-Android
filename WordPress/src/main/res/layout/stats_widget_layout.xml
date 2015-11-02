@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="@dimen/stats_widget_icon_size"
             android:layout_height="@dimen/stats_widget_icon_size"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/stats_widget_header_icon" />
 
         <TextView
             android:id="@+id/blog_title"
@@ -88,7 +88,7 @@
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -134,7 +134,7 @@
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -180,7 +180,7 @@
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -226,7 +226,7 @@
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

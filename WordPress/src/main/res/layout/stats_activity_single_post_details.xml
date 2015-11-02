@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.util.widgets.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
     android:id="@+id/ptr_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -29,7 +31,7 @@
                 android:layout_marginRight="@dimen/content_margin"
                 android:textColor="@color/grey_darken_20"
                 android:gravity="center"
-                android:text="Title"/>
+                tools:text="Title"/>
 
             <!-- Graph -->
             <LinearLayout
@@ -63,7 +65,7 @@
                         style="@style/StatsInsightsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:text="@string/stats_default_number_zero"
                         android:textColor="@color/grey_dark"
                         android:layout_alignParentLeft="true" />
 
@@ -73,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/notification_status_unapproved_dark"
-                        android:text="0"
+                        android:text="@string/stats_default_number_zero"
                         android:layout_alignParentRight="true" />
 
                 </RelativeLayout>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="stats_enable_rest_api_in_jetpack">Pentru a vedea statisticile tale, validează extensia JSON API din Jetpack.</string>
+	<string name="error_open_list_from_notification">Acest articol sau pagină a fost publicat(ă) pe alt sit</string>
+	<string name="post_uploaded">Articol actualizat</string>
+	<string name="page_uploaded">Pagină actualizată</string>
 	<string name="reader_short_comment_count_multi">%s comentarii</string>
 	<string name="reader_short_comment_count_one">1 comentariu</string>
 	<string name="reader_label_submit_comment">TRIMITE</string>
@@ -32,11 +36,10 @@
 	<string name="notifications_comments_other_blogs">Comentarii pe alte situri</string>
 	<string name="notifications_other">Alte</string>
 	<string name="notifications_wpcom_updates">Actualizări WordPress.com</string>
-	<string name="notifications_account_emails">Actualizări de la WordPress.com</string>
+	<string name="notifications_account_emails">Email de la WordPress.com</string>
 	<string name="notifications_account_emails_summary">Vom trimite întotdeauna emailuri importante cu privire la contul tău, dar poți de asemenea să primești unele utile, extra.</string>
 	<string name="your_sites">Siturile tale</string>
 	<string name="notifications_sights_and_sounds">Imagini și sunete</string>
-	<string name="notifications_updates_from_wordpress">Actualizări de la WordPress.com</string>
 	<string name="stats_insights_latest_post_trend">A trecut %1$s de când %2$s a fost publicat. Iată performanțele articolului  până în prezent ...</string>
 	<string name="stats_insights_latest_post_summary">Rezumatul ultimului articol</string>
 	<string name="button_revert">Revenire</string>
@@ -170,7 +173,6 @@
 	<string name="error_notification_open">Nu pot deschide notificarea</string>
 	<string name="stats_followers_total_email_paged">Urmăritori pe email de la %1$d - %2$d din %3$s</string>
 	<string name="stats_months_and_years">Luni și ani</string>
-	<string name="reader_page_recommended_blogs">Bloguri ce s-ar putea să-ți placă</string>
 	<string name="reader_empty_posts_in_blog">Acest blog e gol</string>
 	<string name="stats_average_per_day">Media pe zi</string>
 	<string name="stats_recent_weeks">Săptămânile recente</string>
@@ -181,6 +183,7 @@
 	<string name="stats_total">Total</string>
 	<string name="reader_label_new_posts">Articol nou</string>
 	<string name="post_uploading">Încărcare</string>
+	<string name="reader_page_recommended_blogs">Situri care s-ar putea să-ți placă</string>
 	<string name="stats_comments_total_comments_followers">Total articole cu urmăritori ai comentarilor: %1$s</string>
 	<string name="stats_comments">Comentarii</string>
 	<string name="stats_views">Vizualizări</string>
@@ -286,7 +289,7 @@
 	<string name="faq_button">Î&amp;R</string>
 	<string name="reader_title_photo_viewer">%1$d din %2$d</string>
 	<string name="reader_empty_posts_liked">Nu ți-a plăcut niciun articol</string>
-	<string name="reader_empty_followed_blogs_title">Încă nu urmărești niciun blog</string>
+	<string name="reader_empty_followed_blogs_title">Încă nu urmărești niciun sit</string>
 	<string name="reader_menu_block_blog">Blochează acest blog</string>
 	<string name="reader_toast_blog_blocked">Articole de la acest blog nu vor mai fi afișate</string>
 	<string name="reader_toast_err_block_blog">Nu pot bloca acest blog</string>
@@ -314,13 +317,13 @@
 	<string name="reader_label_tag_preview">Articole etichetate %s</string>
 	<string name="reader_toast_err_get_blog_info">Nu pot să arăt acest blog</string>
 	<string name="reader_toast_err_already_follow_blog">Deja urmărești acest blog</string>
-	<string name="reader_page_followed_blogs">Bloguri urmărite</string>
-	<string name="reader_hint_add_tag_or_url">Introdu o etichetă sau un URL pentru a-l urmări</string>
 	<string name="reader_label_followed_blog">Urmărire blog</string>
 	<string name="reader_page_followed_tags">Etichete urmărite</string>
 	<string name="reader_title_subs">Etichete și bloguri</string>
 	<string name="reader_title_blog_preview">Previzualizare blog</string>
 	<string name="reader_title_tag_preview">Etichetă cititor</string>
+	<string name="reader_page_followed_blogs">Situri urmărite</string>
+	<string name="reader_hint_add_tag_or_url">Introdu un URL sau o etichetă pentru urmărire</string>
 	<string name="ptr_tip_message">Sfat: Trage în jos pentru reîmprospătare</string>
 	<string name="saving">Salvare...</string>
 	<string name="media_empty_list">Nicio media</string>
@@ -520,7 +523,6 @@
 	<string name="video">Video</string>
 	<string name="select_date">Selectare dată</string>
 	<string name="reader_likes_you_and_one">Tu și încă unul la fel</string>
-	<string name="reader_empty_followed_blogs_description">Dar nu-ți fă griji, trebuie doar să atingi iconul etichetă pentru a începe explorarea!</string>
 	<string name="select_time">Selectează timpul</string>
 	<string name="validating_site_data">Validează datele sitului</string>
 	<string name="reader_toast_err_get_post">Nu pot să aduc acest post</string>
@@ -528,6 +530,7 @@
 	<string name="pick_video">Selectează video-ul</string>
 	<string name="pick_photo">Selectează fotografia</string>
 	<string name="account_two_step_auth_enabled">Acest cont presupune autentificarea în doi pași. Intră pe setările tale de securitate la WordPress.com și generează o parolă specifică aplicației.</string>
+	<string name="reader_empty_followed_blogs_description">Dar nu-ți fă griji, trebuie doar să atingi iconul din dreapta sus pentru a începe explorarea!</string>
 	<string name="signing_in">Actualizare în...</string>
 	<string name="nux_add_selfhosted_blog">Adaugă un sit auto-găzduit</string>
 	<string name="nux_oops_not_selfhosted_blog">Autentifică-te la WordPress.com</string>

@@ -118,6 +118,8 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
+    <string name="access_media_permission_required">Permissions required in order to access media</string>
+    <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="loading_videos">Loading videos</string>
     <string name="loading_images">Loading images</string>
@@ -133,6 +135,11 @@
     <string name="no_device_videos">No videos</string>
     <string name="no_blog_images">No images</string>
     <string name="no_blog_videos">No videos</string>
+    <string name="upload_queued">Queued</string>
+    <string name="media_file_type">File type: %s</string>
+    <string name="media_file_name">File name: %s</string>
+    <string name="media_uploaded_on">Uploaded on: %s</string>
+    <string name="media_dimensions">Dimensions: %s</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -228,8 +235,10 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
-    <string name="post_uploaded">Post uploaded</string>
-    <string name="page_uploaded">Page uploaded</string>
+    <string name="post_published">Post published</string>
+    <string name="page_published">Page published</string>
+    <string name="post_updated">Post updated</string>
+    <string name="page_updated">Page updated</string>
     <string name="post_password">Password (optional)</string>
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
@@ -386,6 +395,7 @@
     <string name="search_current_location">Locate</string>
     <string name="search_location">Search</string>
     <string name="edit_location">Edit</string>
+    <string name="add_location_permission_required">Permission required in order to add location</string>
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
@@ -428,6 +438,7 @@
     <string name="stats_view">View</string>
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
+    <string name="stats_default_number_zero" translatable="false">0</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -522,6 +533,13 @@
     <string name="stats_comments_by_authors">By Authors</string>
     <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
     <string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
+
+    <!-- stats: referrers -->
+    <string name="stats_referrers_spam">Spam</string>
+    <string name="stats_referrers_unspam">Not spam</string>
+    <string name="stats_referrers_marking_spam">Marking as spam</string>
+    <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
+    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -726,6 +744,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
+    <string name="automattic_url" translatable="false">automattic.com</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -742,6 +761,7 @@
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
+    <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -1039,6 +1059,18 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
+
+    <string name="date_range_start_date">Start Date</string>
+    <string name="date_range_end_date">End Date</string>
+
+    <!-- Special characters -->
+    <string name="bullet" translatable="false">\u2022</string>
+    <string name="previous_button" translatable="false">&lt;</string>
+    <string name="next_button" translatable="false">&gt;</string>
+
+    <!-- Noticons -->
+    <string name="noticon_clock" translatable="false">\uf303</string>
+    <string name="noticon_note" translatable="false">\uf814</string>
 
     <!--People Management-->
     <string name="people">People</string>

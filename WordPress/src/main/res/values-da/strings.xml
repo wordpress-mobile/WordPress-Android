@@ -101,7 +101,6 @@
 	<string name="error_copy_to_clipboard">Der skete en fejl under kopieringen af teksten til udklipsholderen</string>
 	<string name="logs_copied_to_clipboard">Log-filerne er kopieret til udklipsholderen</string>
 	<string name="stats_total">Total</string>
-	<string name="reader_page_recommended_blogs">Blogs du måske kan lide</string>
 	<string name="stats_months_and_years">Måneder og år</string>
 	<string name="stats_recent_weeks">Seneste uger</string>
 	<string name="reader_label_new_posts">Nye indlæg</string>
@@ -192,7 +191,6 @@
 	<string name="comment_trashed">Kommentar slettet</string>
 	<string name="comment">Kommentar</string>
 	<string name="older_last_week">Ældre end en uge</string>
-	<string name="reader_empty_followed_blogs_title">Du følger ikke nogen blogs endnu</string>
 	<string name="reader_empty_posts_liked">Du har ikke synes om nogen indlæg</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Gennemse vores FAQ</string>
@@ -235,8 +233,6 @@
 	<string name="preference_privacy">Privatliv</string>
 	<string name="schedule_verb">Planlæg</string>
 	<string name="update_verb">Opdater</string>
-	<string name="reader_page_followed_blogs">Blogs du følger</string>
-	<string name="reader_hint_add_tag_or_url">Udfyld et tag eller URL for at følge</string>
 	<string name="reader_label_followed_blog">Blog fulgt</string>
 	<string name="reader_toast_err_get_blog_info">Det er ikke muligt at vise denne blog</string>
 	<string name="reader_toast_err_follow_blog">Det er ikke muligt at følge denne blog</string>
