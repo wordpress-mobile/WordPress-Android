@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-  <!-- Following files could be saved, but they're useless and takes
-  significant space -->
-  <exclude domain="database" path="wpreader.db"/>
-  <exclude domain="database" path="simperium-store"/>
-  <exclude domain="database" path="stats.db"/>
-  <exclude domain="database" path="tracks.db"/>
-  <exclude domain="database" path="mixpanel"/>
-
-  <!-- Contains regId - must be different on each device -->
-  <exclude domain="sharedpref" path="com.google.android.gcm.xml"/>
+  <include domain="database" path="wordpress"/>
+  <include domain="database" path="persistentedittext.db"/>
+  <include domain="sharedpref" path="self_signed_certs_truststore.bks"/>
+  <include domain="sharedpref" path="org.wordpress.android_preferences.xml"/>
+  <include domain="sharedpref" path="simperium.xml"/>
 </full-backup-content>
