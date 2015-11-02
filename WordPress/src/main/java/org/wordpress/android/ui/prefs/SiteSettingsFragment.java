@@ -305,7 +305,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_account);
         } else {
             removePreference(R.string.pref_key_site_general, R.string.pref_key_site_visibility);
+            removePreference(R.string.pref_key_site_general, R.string.pref_key_site_language);
             removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_category);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_format);
         }
     }
 
