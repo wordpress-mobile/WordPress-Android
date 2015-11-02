@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -50,7 +51,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     protected String mCurrentThemeId;
     protected HeaderGridView mGridView;
-    protected TextView mEmptyView;
+    protected TextView mEmptyTextView;
+    protected RelativeLayout mEmptyView;
     protected TextView mNoResultText;
     protected TextView mCurrentThemeTextView;
     protected ThemeBrowserAdapter mAdapter;
@@ -85,7 +87,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
         setRetainInstance(true);
         mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
-        mEmptyView = (TextView) view.findViewById(R.id.text_empty);
+        mEmptyTextView = (TextView) view.findViewById(R.id.text_empty);
+        mEmptyView = (RelativeLayout) view.findViewById(R.id.empty_view);
 
         configureGridView(inflater, view);
         configureSwipeToRefresh(view);
@@ -149,7 +152,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
                 }
                 if (!NetworkUtils.checkConnection(getActivity())) {
                     mSwipeToRefreshHelper.setRefreshing(false);
-                    mEmptyView.setText(R.string.no_network_title);
+                    mEmptyTextView.setText(R.string.no_network_title);
                     return;
                 }
                 if (getActivity() instanceof ThemeBrowserActivity) {
@@ -245,10 +248,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         if (getView() == null || !isAdded()) {
             return;
         }
-        mEmptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mEmptyView.setVisibility(visible ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
         mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
         if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
-            mEmptyView.setText(R.string.no_network_title);
+            mEmptyTextView.setText(R.string.no_network_title);
         }
     }
 

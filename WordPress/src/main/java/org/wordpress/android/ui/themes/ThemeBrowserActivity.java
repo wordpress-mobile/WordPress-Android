@@ -470,10 +470,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 public void run() {
                     mFetchingThemes = false;
                     if (mThemeBrowserFragment != null && mThemeBrowserFragment.isVisible()) {
-                        mThemeBrowserFragment.mEmptyView.setText(R.string.no_themes);
+                        mThemeBrowserFragment.mEmptyTextView.setText(R.string.no_themes);
                         mThemeBrowserFragment.setRefreshing(false);
                     } else if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
-                        mThemeSearchFragment.mEmptyView.setText(R.string.no_themes);
+                        mThemeSearchFragment.mEmptyTextView.setText(R.string.no_themes);
                         mThemeSearchFragment.setRefreshing(false);
                     }
                 }
