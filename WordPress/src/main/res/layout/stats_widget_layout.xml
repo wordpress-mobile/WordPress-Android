@@ -72,7 +72,7 @@
                     android:src="@drawable/stats_icon_views" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -118,7 +118,7 @@
                     android:src="@drawable/stats_icon_visitors" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_visitors"
@@ -164,7 +164,7 @@
                     android:src="@drawable/stats_icon_likes" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_likes"
@@ -210,7 +210,7 @@
                     android:src="@drawable/stats_icon_comments" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_comments"

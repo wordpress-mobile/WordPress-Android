@@ -172,8 +172,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(convertView);
-                viewHolder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
-                viewHolder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
                 convertView.setTag(viewHolder);
             }
 
@@ -188,15 +186,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(views));
-
-            if (!TextUtils.isEmpty(currentChild.icon)) {
-                holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.headerAvatarSizePx),
-                        WPNetworkImageView.ImageType.BLAVATAR);
-                holder.networkImageView.setVisibility(View.VISIBLE);
-            } else {
-                holder.networkImageView.setVisibility(View.GONE);
-            }
+            holder.networkImageView.setVisibility(View.GONE);
 
             // no more btm
             holder.imgMore.setVisibility(View.GONE);
@@ -261,11 +251,15 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-
-            holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
-                    WPNetworkImageView.ImageType.BLAVATAR);
-            holder.networkImageView.setVisibility(View.VISIBLE);
+            
+            if (TextUtils.isEmpty(icon)) {
+                holder.networkImageView.setVisibility(View.GONE);
+            } else {
+                holder.networkImageView.setImageUrl(
+                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+                        WPNetworkImageView.ImageType.BLAVATAR);
+                holder.networkImageView.setVisibility(View.VISIBLE);
+            }
 
             if (children == 0) {
                 holder.showLinkIcon();

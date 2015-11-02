@@ -63,6 +63,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private LinearLayout mRootLayout;
     private ViewGroup mFooterView;
 
+    private String mRestoredNoteId;
     private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
     private boolean mIsUnread;
@@ -85,7 +86,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
-            setNoteWithNoteId(savedInstanceState.getString(KEY_NOTE_ID));
+            // The note will be set in onResume() because Simperium will be running there
+            // See WordPress.deferredInit()
+            mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             mRestoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0);
         }
     }
@@ -120,9 +123,16 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     public void onResume() {
         super.onResume();
 
-        // start listening to bucket change events
+        // Start listening to bucket change events
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
+        }
+
+        // Set the note if we retrieved the noteId from savedInstanceState
+        if (!TextUtils.isEmpty(mRestoredNoteId)) {
+            setNoteWithNoteId(mRestoredNoteId);
+            reloadNoteBlocks();
+            mRestoredNoteId = null;
         }
     }
 
