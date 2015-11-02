@@ -135,6 +135,11 @@
     <string name="no_device_videos">No videos</string>
     <string name="no_blog_images">No images</string>
     <string name="no_blog_videos">No videos</string>
+    <string name="upload_queued">Queued</string>
+    <string name="media_file_type">File type: %s</string>
+    <string name="media_file_name">File name: %s</string>
+    <string name="media_uploaded_on">Uploaded on: %s</string>
+    <string name="media_dimensions">Dimensions: %s</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -493,6 +498,7 @@
     <string name="stats_view">View</string>
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
+    <string name="stats_default_number_zero" translatable="false">0</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -899,6 +905,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
+    <string name="automattic_url" translatable="false">automattic.com</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -915,6 +922,7 @@
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
+    <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -1222,5 +1230,17 @@
     <!-- Static URLs -->
     <string name="privacy_settings_url">https://en.support.wordpress.com/privacy-settings</string>
     <string name="language_settings_url">https://en.support.wordpress.com/language-settings</string>
+
+    <string name="date_range_start_date">Start Date</string>
+    <string name="date_range_end_date">End Date</string>
+
+    <!-- Special characters -->
+    <string name="bullet" translatable="false">\u2022</string>
+    <string name="previous_button" translatable="false">&lt;</string>
+    <string name="next_button" translatable="false">&gt;</string>
+
+    <!-- Noticons -->
+    <string name="noticon_clock" translatable="false">\uf303</string>
+    <string name="noticon_note" translatable="false">\uf814</string>
 
 </resources>
