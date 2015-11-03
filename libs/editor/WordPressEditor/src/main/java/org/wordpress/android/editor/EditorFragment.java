@@ -87,6 +87,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private Set<String> mUploadingMediaIds;
     private Set<String> mFailedMediaIds;
 
+    private int mFeaturedImageId;
+
     private String mJavaScriptResult = "";
 
     private CountDownLatch mGetTitleCountDownLatch;
@@ -538,6 +540,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
 
             final String imageMeta = extras.getString("imageMeta");
+            final int imageRemoteId = extras.getInt("imageRemoteId");
+            final boolean isFeaturedImage = extras.getBoolean("isFeatured");
 
             mWebView.post(new Runnable() {
                 @Override
@@ -545,6 +549,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     mWebView.execJavaScriptFromString("ZSSEditor.updateCurrentImageMeta('" + imageMeta + "');");
                 }
             });
+
+            if (imageRemoteId != 0) {
+                if (isFeaturedImage) {
+                    mFeaturedImageId = imageRemoteId;
+                } else {
+                    // If this image was unset as featured, clear the featured image id
+                    if (mFeaturedImageId == imageRemoteId) {
+                        mFeaturedImageId = 0;
+                    }
+                }
+            }
         }
     }
 
@@ -876,6 +891,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 dialogBundle.putString("imageMeta", meta.toString());
                 dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
+
+                String imageId = JSONUtils.getString(meta, "attachment_id");
+                if (!imageId.isEmpty()) {
+                    dialogBundle.putBoolean("isFeatured", mFeaturedImageId == Integer.parseInt(imageId));
+                }
 
                 imageSettingsDialogFragment.setArguments(dialogBundle);
 
