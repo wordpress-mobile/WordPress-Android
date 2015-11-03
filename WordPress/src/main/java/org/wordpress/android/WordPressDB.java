@@ -213,6 +213,8 @@ public class WordPressDB {
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
 
+    private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
+
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
@@ -384,7 +386,8 @@ public class WordPressDB {
     }
 
     private void deleteThemesTable() {
-        db.delete(THEMES_TABLE, null, null);
+        db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
+        db.execSQL(CREATE_TABLE_THEMES);
     }
 
     private void migratePreferencesToAccountTable(Context context) {
