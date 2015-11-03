@@ -477,7 +477,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);
             int height;
             TypedValue tv = new TypedValue();
-            if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
+            if (getActivity().getTheme().resolveAttribute(android.support.design.R.attr.actionBarSize, tv, true)) {
                 height = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
             } else{
                 height = toolbar.getHeight();
