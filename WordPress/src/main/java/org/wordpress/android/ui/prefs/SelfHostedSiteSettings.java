@@ -118,6 +118,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 AppLog.d(AppLog.T.API, "Received Categories XML-RPC response.");
                 credentialsVerified(true);
 
+                mRemoteSettings.localTableId = mBlog.getRemoteBlogId();
                 deserializeCategoriesResponse(mRemoteSettings, (Object[]) result);
                 mSettings.categories = mRemoteSettings.categories;
                 SiteSettingsTable.saveCategories(mSettings.categories);
