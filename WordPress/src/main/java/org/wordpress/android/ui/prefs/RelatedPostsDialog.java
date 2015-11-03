@@ -175,15 +175,14 @@ public class RelatedPostsDialog extends DialogFragment
     }
 
     private Intent getResultIntent() {
-        Intent intent = new Intent();
-
         if (mConfirmed) {
-            intent.putExtra(SHOW_RELATED_POSTS_KEY, mShowRelatedPosts.isChecked());
-            intent.putExtra(SHOW_HEADER_KEY, mShowHeader.isChecked());
-            intent.putExtra(SHOW_IMAGES_KEY, mShowImages.isChecked());
+            return new Intent()
+                    .putExtra(SHOW_RELATED_POSTS_KEY, mShowRelatedPosts.isChecked())
+                    .putExtra(SHOW_HEADER_KEY, mShowHeader.isChecked())
+                    .putExtra(SHOW_IMAGES_KEY, mShowImages.isChecked());
         }
 
-        return intent;
+        return null;
     }
 
     private void toggleViews(boolean enabled) {
