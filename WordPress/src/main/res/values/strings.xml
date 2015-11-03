@@ -192,7 +192,7 @@
     <string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
-    <string name="theme_no_search_result_found">No results found</string>
+    <string name="theme_no_search_result_found">Sorry, no themes found.</string>
     <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
 
     <!-- link view -->
@@ -1099,7 +1099,6 @@
     <string name="theme_prompt">Thanks for choosing %1$s by %2$s</string>
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="theme_web_activity">Theme Web Activity</string>
-    <string name="no_themes">No themes</string>
     <string name="could_not_load_theme">Could not load theme</string>
 
 </resources>
