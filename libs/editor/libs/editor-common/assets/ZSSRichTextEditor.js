@@ -958,7 +958,6 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
 
     // remove uploading style
     imageNode.removeClass("uploading");
-    imageNode.removeAttr("class");
 
     // Remove all extra formatting nodes for progress
     if (imageNode.parent().attr("id") == this.getImageContainerIdentifier(imageNodeIdentifier)) {
