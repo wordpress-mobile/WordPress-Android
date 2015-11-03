@@ -2,7 +2,7 @@
   wpandroid = //:wpandroid
 
 [android]
-  target = Google Inc.:Google APIs:22
+  target = Google Inc.:Google APIs:23
 
 [cache]
   mode = dir
