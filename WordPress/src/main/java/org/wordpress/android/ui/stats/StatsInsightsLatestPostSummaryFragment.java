@@ -171,7 +171,6 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
 
         label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
         label.setText(itemType.getLabel());
-        label.setTextColor(getResources().getColor(R.color.grey_darken_20));
         value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
         value.setText(total);
         if (total.equals("0")) {
