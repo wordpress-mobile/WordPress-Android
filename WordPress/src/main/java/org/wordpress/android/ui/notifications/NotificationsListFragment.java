@@ -295,24 +295,18 @@ public class NotificationsListFragment extends Fragment
             public void run() {
                 // Filter the list according to the RadioGroup selection
                 int checkedId = mFilterRadioGroup.getCheckedRadioButtonId();
-                switch (checkedId) {
-                    case R.id.notifications_filter_all:
-                        mNotesAdapter.queryNotes();
-                        break;
-                    case R.id.notifications_filter_unread:
-                        mNotesAdapter.queryNotes(Note.Schema.UNREAD_INDEX, 1);
-                        break;
-                    case R.id.notifications_filter_comments:
-                        mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_COMMENT_TYPE);
-                        break;
-                    case R.id.notifications_filter_follows:
-                        mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_FOLLOW_TYPE);
-                        break;
-                    case R.id.notifications_filter_likes:
-                        mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_LIKE_TYPE);
-                        break;
-                    default:
-                        mNotesAdapter.queryNotes();
+                if (checkedId == R.id.notifications_filter_all) {
+                    mNotesAdapter.queryNotes();
+                } else if (checkedId == R.id.notifications_filter_unread) {
+                    mNotesAdapter.queryNotes(Note.Schema.UNREAD_INDEX, 1);
+                } else if (checkedId == R.id.notifications_filter_comments) {
+                    mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_COMMENT_TYPE);
+                } else if (checkedId == R.id.notifications_filter_follows) {
+                    mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_FOLLOW_TYPE);
+                } else if (checkedId == R.id.notifications_filter_likes) {
+                    mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_LIKE_TYPE);
+                } else {
+                    mNotesAdapter.queryNotes();
                 }
 
                 restoreListScrollPosition();
@@ -329,49 +323,43 @@ public class NotificationsListFragment extends Fragment
     private void showEmptyViewForCurrentFilter() {
         if (!AccountHelper.isSignedInWordPressDotCom()) return;
 
-        switch (mFilterRadioGroup.getCheckedRadioButtonId()) {
-            case R.id.notifications_filter_all:
+        int i = mFilterRadioGroup.getCheckedRadioButtonId();
+        if (i == R.id.notifications_filter_all) {
+            showEmptyView(
+                    R.string.notifications_empty_all,
+                    R.string.notifications_empty_action_all,
+                    R.string.notifications_empty_view_reader
+            );
+        } else if (i == R.id.notifications_filter_unread) {// User might not have a blog, if so just show the title
+            if (WordPress.getCurrentBlog() == null) {
+                showEmptyView(R.string.notifications_empty_unread);
+            } else {
                 showEmptyView(
-                        R.string.notifications_empty_all,
-                        R.string.notifications_empty_action_all,
-                        R.string.notifications_empty_view_reader
+                        R.string.notifications_empty_unread,
+                        R.string.notifications_empty_action_unread,
+                        R.string.new_post
                 );
-                break;
-            case R.id.notifications_filter_unread:
-                // User might not have a blog, if so just show the title
-                if (WordPress.getCurrentBlog() == null) {
-                    showEmptyView(R.string.notifications_empty_unread);
-                } else {
-                    showEmptyView(
-                            R.string.notifications_empty_unread,
-                            R.string.notifications_empty_action_unread,
-                            R.string.new_post
-                    );
-                }
-                break;
-            case R.id.notifications_filter_comments:
-                showEmptyView(
-                        R.string.notifications_empty_comments,
-                        R.string.notifications_empty_action_comments,
-                        R.string.notifications_empty_view_reader
-                );
-                break;
-            case R.id.notifications_filter_follows:
-                showEmptyView(
-                        R.string.notifications_empty_followers,
-                        R.string.notifications_empty_action_followers_likes,
-                        R.string.notifications_empty_view_reader
-                );
-                break;
-            case R.id.notifications_filter_likes:
-                showEmptyView(
-                        R.string.notifications_empty_likes,
-                        R.string.notifications_empty_action_followers_likes,
-                        R.string.notifications_empty_view_reader
-                );
-                break;
-            default:
-                showEmptyView(R.string.notifications_empty_list);
+            }
+        } else if (i == R.id.notifications_filter_comments) {
+            showEmptyView(
+                    R.string.notifications_empty_comments,
+                    R.string.notifications_empty_action_comments,
+                    R.string.notifications_empty_view_reader
+            );
+        } else if (i == R.id.notifications_filter_follows) {
+            showEmptyView(
+                    R.string.notifications_empty_followers,
+                    R.string.notifications_empty_action_followers_likes,
+                    R.string.notifications_empty_view_reader
+            );
+        } else if (i == R.id.notifications_filter_likes) {
+            showEmptyView(
+                    R.string.notifications_empty_likes,
+                    R.string.notifications_empty_action_followers_likes,
+                    R.string.notifications_empty_view_reader
+            );
+        } else {
+            showEmptyView(R.string.notifications_empty_list);
         }
     }
 
@@ -383,16 +371,13 @@ public class NotificationsListFragment extends Fragment
             return;
         }
 
-        switch (mFilterRadioGroup.getCheckedRadioButtonId()) {
-            case R.id.notifications_filter_unread:
-                // Create a new post
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), false);
-                break;
-            default:
-                // Switch to Reader tab
-                if (getActivity() instanceof WPMainActivity) {
-                    ((WPMainActivity)getActivity()).setReaderTabActive();
-                }
+        int i = mFilterRadioGroup.getCheckedRadioButtonId();
+        if (i == R.id.notifications_filter_unread) {// Create a new post
+            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), false);
+        } else {// Switch to Reader tab
+            if (getActivity() instanceof WPMainActivity) {
+                ((WPMainActivity) getActivity()).setReaderTabActive();
+            }
         }
     }
 
