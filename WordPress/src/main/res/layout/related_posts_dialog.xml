@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<org.wordpress.android.widgets.WPScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/related_posts_dialog_padding_left"
+        android:paddingStart="@dimen/related_posts_dialog_padding_left"
+        android:paddingTop="@dimen/related_posts_dialog_padding_top"
+        android:paddingRight="@dimen/related_posts_dialog_padding_right"
+        android:paddingEnd="@dimen/related_posts_dialog_padding_right"
+        android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPSwitch
+            android:id="@+id/toggle_related_posts_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/related_posts_switch_title"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_extra_large"
+            app:fontFamily="openSans"
+            app:fontVariation="normal" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/toggleRelatedPostsSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/related_posts_switch_summary"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_medium"
+            app:fontFamily="openSans"
+            app:fontVariation="normal" />
+
+        <CheckBox
+            android:id="@+id/show_header_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/related_posts_show_header_title" />
+
+        <CheckBox
+            android:id="@+id/show_images_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/related_posts_show_images_title" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/related_posts_divider" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/preview_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/preview"
+            android:textStyle="italic"
+            android:textColor="@color/related_posts_preview_header"
+            android:textSize="@dimen/text_sz_related_post_small"
+            app:fontFamily="openSans"
+            app:fontVariation="normal" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/related_posts_list_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/related_posts_preview_header"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_sz_related_post_small"
+            android:textColor="@color/related_posts_list_header"
+            app:fontFamily="openSans"
+            app:fontVariation="light" />
+
+        <LinearLayout
+            android:id="@+id/related_posts_list"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/related_post_image1"
+                android:contentDescription="@string/cd_related_post_preview_image"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/rppreview1" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/related_post_title1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_sz_medium"
+                android:textColor="@color/grey_dark"
+                android:text="@string/related_post_preview1_title"
+                app:fontFamily="openSans"
+                app:fontVariation="light" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/related_post_site1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textStyle="italic"
+                android:textSize="@dimen/text_sz_related_post_small"
+                android:textColor="@color/grey_dark"
+                android:text="@string/related_post_preview1_site"
+                app:fontFamily="openSans"
+                app:fontVariation="normal" />
+
+            <ImageView
+                android:id="@+id/related_post_image2"
+                android:contentDescription="@string/cd_related_post_preview_image"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/rppreview2" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/related_post_title2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_sz_medium"
+                android:textColor="@color/grey_dark"
+                android:text="@string/related_post_preview2_title"
+                app:fontFamily="openSans"
+                app:fontVariation="light" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/related_post_site2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textStyle="italic"
+                android:textSize="@dimen/text_sz_related_post_small"
+                android:textColor="@color/grey_dark"
+                android:text="@string/related_post_preview2_site"
+                app:fontFamily="openSans"
+                app:fontVariation="normal" />
+
+            <ImageView
+                android:id="@+id/related_post_image3"
+                android:contentDescription="@string/cd_related_post_preview_image"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/rppreview3" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/related_post_title3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_sz_medium"
+                android:textColor="@color/grey_dark"
+                android:text="@string/related_post_preview3_title"
+                app:fontFamily="openSans"
+                app:fontVariation="light" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/related_post_site3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textStyle="italic"
+                android:textSize="@dimen/text_sz_related_post_small"
+                android:textColor="@color/grey_dark"
+                android:text="@string/related_post_preview3_site"
+                app:fontFamily="openSans"
+                app:fontVariation="normal" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</org.wordpress.android.widgets.WPScrollView>

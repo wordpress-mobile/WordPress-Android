@@ -15,6 +15,7 @@ import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 class SelfHostedSiteSettings extends SiteSettingsInterface {
@@ -43,6 +44,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         if (TextUtils.isEmpty(mSettings.defaultPostFormat) || mSettings.defaultPostFormat.equals("0")) {
             mSettings.defaultPostFormat = siteSettingsPreferences(mActivity).getString(DEF_FORMAT_PREF_KEY, "0");
         }
+        mSettings.language = siteSettingsPreferences(mActivity).getString(LANGUAGE_PREF_KEY, Locale.getDefault().getLanguage());
 
         return this;
     }
@@ -116,6 +118,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 AppLog.d(AppLog.T.API, "Received Categories XML-RPC response.");
                 credentialsVerified(true);
 
+                mRemoteSettings.localTableId = mBlog.getRemoteBlogId();
                 deserializeCategoriesResponse(mRemoteSettings, (Object[]) result);
                 mSettings.categories = mRemoteSettings.categories;
                 SiteSettingsTable.saveCategories(mSettings.categories);

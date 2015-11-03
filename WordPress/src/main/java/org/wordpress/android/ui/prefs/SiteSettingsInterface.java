@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.SiteSettingsTable;
@@ -36,15 +37,22 @@ import java.util.Map;
  */
 public abstract class SiteSettingsInterface {
     public static final String SITE_SETTINGS_PREFS = "site-settings-prefs";
+    public static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
     public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
     public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
     public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
+
+    private static final String STANDARD_POST_FORMAT = "standard";
 
     /**
      * Returns a SharedPreference instance to interface with Site Settings.
      */
     public static SharedPreferences siteSettingsPreferences(Context context) {
         return context.getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
+    }
+
+    public static boolean getGeotagging(Context context) {
+        return siteSettingsPreferences(context).getBoolean(LOCATION_PREF_KEY, false);
     }
 
     public static String getDefaultCategory(Context context) {
@@ -97,6 +105,7 @@ public abstract class SiteSettingsInterface {
 
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
+        siteSettingsPreferences(mActivity).edit().putString(LANGUAGE_PREF_KEY, mSettings.language).apply();
         siteSettingsPreferences(mActivity).edit().putBoolean(LOCATION_PREF_KEY, mSettings.location).apply();
         siteSettingsPreferences(mActivity).edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory).apply();
         siteSettingsPreferences(mActivity).edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat).apply();
@@ -184,9 +193,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public String[] getFormatKeys() {
-        if (mSettings.postFormats == null) return null;
-        // TODO: don't generate a new array each time
-        return mSettings.postFormats.keySet().toArray(new String[mSettings.postFormats.size()]);
+        return mSettings.postFormatKeys;
     }
 
     public CategoryModel[] getCategories() {
@@ -196,13 +203,21 @@ public abstract class SiteSettingsInterface {
     public Map<Integer, String> getCategoryNames() {
         Map<Integer, String> categoryNames = new HashMap<>();
 
-        if (mSettings.categories != null && mSettings.categories.length == 0) {
+        if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
                 categoryNames.put(model.id, model.name);
             }
         }
 
         return categoryNames;
+    }
+
+    public String getDefaultPostFormat() {
+        if (TextUtils.isEmpty(mSettings.defaultPostFormat)) {
+            return STANDARD_POST_FORMAT;
+        }
+
+        return mSettings.defaultPostFormat;
     }
 
     public String getDefaultPostFormatDisplay() {
@@ -223,6 +238,18 @@ public abstract class SiteSettingsInterface {
         }
 
         return "";
+    }
+
+    public boolean getShowRelatedPosts() {
+        return mSettings.showRelatedPosts;
+    }
+
+    public boolean getShowRelatedPostHeader() {
+        return mSettings.showRelatedPostHeader;
+    }
+
+    public boolean getShowRelatedPostImages() {
+        return mSettings.showRelatedPostImages;
     }
 
     public void setAddress(String address) {
@@ -270,12 +297,34 @@ public abstract class SiteSettingsInterface {
         mSettings.defaultCategory = category;
     }
 
+    /**
+     * Sets the default post format.
+     *
+     * @param format
+     * if null or empty default format is set to {@link SiteSettingsInterface#STANDARD_POST_FORMAT}
+     */
     public void setDefaultFormat(String format) {
-        mSettings.defaultPostFormat = format.toLowerCase();
+        if (TextUtils.isEmpty(format)) {
+            mSettings.defaultPostFormat = STANDARD_POST_FORMAT;
+        } else {
+            mSettings.defaultPostFormat = format.toLowerCase();
+        }
     }
 
     public String getDefaultFormat() {
-        return mSettings.defaultPostFormat;
+        return TextUtils.isEmpty(mSettings.defaultPostFormat) ? STANDARD_POST_FORMAT : mSettings.defaultPostFormat;
+    }
+
+    public void setShowRelatedPosts(boolean relatedPosts) {
+        mSettings.showRelatedPosts = relatedPosts;
+    }
+
+    public void setShowRelatedPostHeader(boolean showHeader) {
+        mSettings.showRelatedPostHeader = showHeader;
+    }
+
+    public void setShowRelatedPostImages(boolean showImages) {
+        mSettings.showRelatedPostImages = showImages;
     }
 
     /**
@@ -467,12 +516,16 @@ public abstract class SiteSettingsInterface {
                     }
 
                     mRemoteSettings.postFormats = new HashMap<>();
+                    mRemoteSettings.postFormats.put("standard", "Standard");
                     for (Object supportedFormat : supportedFormats) {
                         if (allFormats.containsKey(supportedFormat)) {
                             mRemoteSettings.postFormats.put(supportedFormat.toString(), allFormats.get(supportedFormat).toString());
                         }
                     }
                     mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
+                    String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
+                    mRemoteSettings.postFormatKeys = mRemoteSettings.postFormats.keySet().toArray(formatKeys);
+                    mSettings.postFormatKeys = mRemoteSettings.postFormatKeys.clone();
 
                     notifyUpdatedOnUiThread(null);
                 }

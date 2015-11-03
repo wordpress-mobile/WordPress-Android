@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,7 +10,9 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -30,6 +34,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.Locale;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -39,13 +44,14 @@ import de.greenrobot.event.EventBus;
 
 public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener,
-        AdapterView.OnItemLongClickListener,
-        SiteSettingsInterface.SiteSettingsListener {
-    public interface HasHint {
-        boolean hasHint();
-        String getHint();
-        void setHint(String hint);
-    }
+                   Preference.OnPreferenceClickListener,
+                   AdapterView.OnItemLongClickListener,
+                   SiteSettingsInterface.SiteSettingsListener {
+
+    private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
+    private static final int RELATED_POSTS_REQUEST_CODE = 1;
+    private static final int NO_REGION_LANG_CODE_LEN = 2;
+    private static final int REGION_SUBSTRING_INDEX = 3;
 
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
@@ -55,29 +61,31 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mAddressPreference;
     private DetailListPreference mLanguagePreference;
     private DetailListPreference mPrivacyPreference;
-
+    private EditTextPreference mUsernamePreference;
+    private EditTextPreference mPasswordPreference;
+    private WPSwitchPreference mLocationPreference;
+    private DetailListPreference mCategoryPreference;
+    private DetailListPreference mFormatPreference;
+    private Preference mRelatedPostsPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
-
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            getActivity().finish();
-        }
-
         // make sure we have local site data
         mBlog = WordPress.getBlog(
                 getArguments().getInt(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, -1));
-        if (mBlog == null) return;
+
+        // TODO: offline editing
+        if (!NetworkUtils.checkConnection(getActivity()) || mBlog == null) {
+            getActivity().finish();
+            return;
+        }
 
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
 
-        // inflate Site Settings preferences from XML
+        setRetainInstance(true);
         addPreferencesFromResource(R.xml.site_settings);
-
-        // set preference references, add change listeners, and setup various entries and values
         initPreferences();
     }
 
@@ -121,7 +129,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     TypefaceCache.VARIATION_LIGHT));
                             title.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                                     res.getDimensionPixelSize(R.dimen.text_sz_medium));
-                            title.setTextColor(res.getColor(R.color.orange_jazzy));
+                            title.setTextColor(ContextCompat.getColor(getActivity(),
+                                                                      R.color.orange_jazzy));
                         }
                     }
 
@@ -131,11 +140,36 @@ public class SiteSettingsFragment extends PreferenceFragment
                 });
                 prefList.setOnItemLongClickListener(this);
                 prefList.setFooterDividersEnabled(false);
+                //noinspection deprecation
                 prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
             }
         }
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RELATED_POSTS_REQUEST_CODE:
+                if (data == null) return;
+                mSiteSettings.setShowRelatedPosts(data.getBooleanExtra(RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, false));
+                mSiteSettings.setShowRelatedPostHeader(data.getBooleanExtra(RelatedPostsDialog.SHOW_HEADER_KEY, false));
+                mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(RelatedPostsDialog.SHOW_IMAGES_KEY, false));
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference == mRelatedPostsPreference) {
+            showRelatedPostsDialog();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -162,6 +196,29 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
             changePrivacyValue(mSiteSettings.getPrivacy());
             return true;
+        } else if (preference == mUsernamePreference) {
+            mSiteSettings.setUsername(newValue.toString());
+            changeEditTextPreferenceValue(mUsernamePreference, mSiteSettings.getUsername());
+            return true;
+        } else if (preference == mPasswordPreference) {
+            mSiteSettings.setPassword(newValue.toString());
+            changeEditTextPreferenceValue(mPasswordPreference, mSiteSettings.getPassword());
+            return true;
+        } else if (preference == mLocationPreference) {
+            mSiteSettings.setLocation((Boolean) newValue);
+            return true;
+        } else if (preference == mCategoryPreference) {
+            mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
+            mCategoryPreference.setValue(newValue.toString());
+            mCategoryPreference.setSummary(mSiteSettings.getDefaultCategoryForDisplay());
+            mCategoryPreference.refreshAdapter();
+            return true;
+        } else if (preference == mFormatPreference) {
+            mSiteSettings.setDefaultFormat(newValue.toString());
+            mFormatPreference.setValue(newValue.toString());
+            mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
+            mFormatPreference.refreshAdapter();
+            return true;
         }
 
         return false;
@@ -177,8 +234,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (obj instanceof View.OnLongClickListener) {
                 View.OnLongClickListener longListener = (View.OnLongClickListener) obj;
                 return longListener.onLongClick(view);
-            } else if (obj instanceof HasHint && ((HasHint) obj).hasHint()) {
-                ToastUtils.showToast(getActivity(), ((HasHint)obj).getHint(), ToastUtils.Duration.SHORT);
+            } else if (obj instanceof PreferenceHint) {
+                PreferenceHint hintObj = (PreferenceHint) obj;
+                if (hintObj.hasHint()) {
+                    ToastUtils.showToast(getActivity(), hintObj.getHint(), ToastUtils.Duration.SHORT);
+                }
                 return true;
             }
         }
@@ -215,11 +275,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     public void allowEditing(boolean allow) {
+        // Address won't be editable until the app supports domain name changes
+        if (mAddressPreference != null) mAddressPreference.setEnabled(false);
         if (mTitlePreference != null) mTitlePreference.setEnabled(allow);
         if (mTaglinePreference != null) mTaglinePreference.setEnabled(allow);
-        if (mAddressPreference != null) mAddressPreference.setEnabled(false);
         if (mPrivacyPreference != null) mPrivacyPreference.setEnabled(allow);
-        if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
         if (mLanguagePreference != null) mLanguagePreference.setEnabled(allow);
     }
 
@@ -227,52 +287,101 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
     private void initPreferences() {
-        // Title preference
-        if (null != (mTitlePreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_title)))) {
-            mTitlePreference.setOnPreferenceChangeListener(this);
-            changeEditTextPreferenceValue(mTitlePreference, StringUtils.unescapeHTML(mSiteSettings.getTitle()));
-        }
+        mTitlePreference = (EditTextPreference) getPref(R.string.pref_key_site_title);
+        mTaglinePreference = (EditTextPreference) getPref(R.string.pref_key_site_tagline);
+        mAddressPreference = (EditTextPreference) getPref(R.string.pref_key_site_address);
+        mPrivacyPreference = (DetailListPreference) getPref(R.string.pref_key_site_visibility);
+        mLanguagePreference = (DetailListPreference) getPref(R.string.pref_key_site_language);
+        mUsernamePreference = (EditTextPreference) getPref(R.string.pref_key_site_username);
+        mPasswordPreference = (EditTextPreference) getPref(R.string.pref_key_site_password);
+        mLocationPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_location);
+        mCategoryPreference = (DetailListPreference) getPref(R.string.pref_key_site_category);
+        mFormatPreference = (DetailListPreference) getPref(R.string.pref_key_site_format);
+        mRelatedPostsPreference = findPreference(getString(R.string.pref_key_site_related_posts));
+        mRelatedPostsPreference.setOnPreferenceClickListener(this);
 
-        // Tagline preference
-        if (null != (mTaglinePreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_tagline)))) {
-            mTaglinePreference.setOnPreferenceChangeListener(this);
-        }
-
-        // Address preferences
-        if (null != (mAddressPreference =
-                (EditTextPreference) findPreference(getString(R.string.pref_key_site_address)))) {
-            mAddressPreference.setOnPreferenceChangeListener(this);
-        }
-
-        // Privacy preference, removed for self-hosted sites
-        if (null != (mPrivacyPreference =
-                (DetailListPreference) findPreference(getString(R.string.pref_key_site_visibility)))) {
-            if (!mBlog.isDotcomFlag()) {
-                removePreference(R.string.pref_key_site_general, mPrivacyPreference);
-            } else {
-                mPrivacyPreference.setOnPreferenceChangeListener(this);
-            }
-        }
-
-        // Language preference, removed for self-hosted sites
-        if (null != (mLanguagePreference =
-                (DetailListPreference) findPreference(getString(R.string.pref_key_site_language)))) {
-            if (!mBlog.isDotcomFlag()) {
-                removePreference(R.string.pref_key_site_general, mLanguagePreference);
-            } else {
-                mLanguagePreference.setOnPreferenceChangeListener(this);
-            }
+        // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
+        if (mBlog.isDotcomFlag()) {
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        } else {
+            removePreference(R.string.pref_key_site_general, R.string.pref_key_site_visibility);
+            removePreference(R.string.pref_key_site_general, R.string.pref_key_site_language);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_category);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_format);
         }
     }
 
+    private void showRelatedPostsDialog() {
+        DialogFragment relatedPosts = new RelatedPostsDialog();
+        Bundle args = new Bundle();
+        args.putBoolean(RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, mSiteSettings.getShowRelatedPosts());
+        args.putBoolean(RelatedPostsDialog.SHOW_HEADER_KEY, mSiteSettings.getShowRelatedPostHeader());
+        args.putBoolean(RelatedPostsDialog.SHOW_IMAGES_KEY, mSiteSettings.getShowRelatedPostImages());
+        relatedPosts.setArguments(args);
+        relatedPosts.setTargetFragment(this, RELATED_POSTS_REQUEST_CODE);
+        relatedPosts.show(getFragmentManager(), "related-posts");
+    }
+
     private void setPreferencesFromSiteSettings() {
+        mLocationPreference.setChecked(mSiteSettings.getLocation());
         changeEditTextPreferenceValue(mTitlePreference, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePreference, mSiteSettings.getTagline());
         changeEditTextPreferenceValue(mAddressPreference, mSiteSettings.getAddress());
+        changeEditTextPreferenceValue(mUsernamePreference, mSiteSettings.getUsername());
+        changeEditTextPreferenceValue(mPasswordPreference, mSiteSettings.getPassword());
         changePrivacyValue(mSiteSettings.getPrivacy());
         changeLanguageValue(mSiteSettings.getLanguageCode());
+        setCategories();
+        setPostFormats();
+    }
+
+    private void setCategories() {
+        // Ignore if there are no changes
+        if (mSiteSettings.isSameCategoryList(mCategoryPreference.getEntryValues())) {
+            mCategoryPreference.setValue(String.valueOf(mSiteSettings.getDefaultCategory()));
+            mCategoryPreference.setSummary(mSiteSettings.getDefaultCategoryForDisplay());
+            return;
+        }
+
+        Map<Integer, String> categories = mSiteSettings.getCategoryNames();
+        CharSequence[] entries = new CharSequence[categories.size()];
+        CharSequence[] values = new CharSequence[categories.size()];
+        int i = 0;
+        for (Integer key : categories.keySet()) {
+            entries[i] = categories.get(key);
+            values[i++] = String.valueOf(key);
+        }
+
+        mCategoryPreference.setEntries(entries);
+        mCategoryPreference.setEntryValues(values);
+        mCategoryPreference.setValue(String.valueOf(mSiteSettings.getDefaultCategory()));
+        mCategoryPreference.setSummary(mSiteSettings.getDefaultCategoryForDisplay());
+    }
+
+    private void setPostFormats() {
+        // Ignore if there are no changes
+        if (mSiteSettings.isSameFormatList(mFormatPreference.getEntryValues())) {
+            mFormatPreference.setValue(String.valueOf(mSiteSettings.getDefaultFormat()));
+            mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
+            return;
+        }
+
+        Map<String, String> formats = mSiteSettings.getFormats();
+        String[] formatKeys = mSiteSettings.getFormatKeys();
+        if (formats == null || formatKeys == null) return;
+        String[] entries = new String[formatKeys.length];
+        String[] values = new String[formatKeys.length];
+
+        for (int i = 0; i < entries.length; ++i) {
+            entries[i] = formats.get(formatKeys[i]);
+            values[i] = formatKeys[i];
+        }
+
+        mFormatPreference.setEntries(entries);
+        mFormatPreference.setEntryValues(values);
+        mFormatPreference.setValue(String.valueOf(mSiteSettings.getDefaultFormat()));
+        mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
     }
 
     /**
@@ -280,46 +389,47 @@ public class SiteSettingsFragment extends PreferenceFragment
      * If newValue is equal to the current preference text no action will be taken.
      */
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
-        if (pref != null && newValue != null && !newValue.equals(pref.getSummary())) {
-            pref.setText(StringUtils.unescapeHTML(newValue));
-            pref.setSummary(StringUtils.unescapeHTML(newValue));
+        if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
+
+        if (!newValue.equals(pref.getSummary())) {
+            String formattedValue = StringUtils.unescapeHTML(newValue.replaceFirst(ADDRESS_FORMAT_REGEX, ""));
+
+            pref.setText(formattedValue);
+            pref.setSummary(formattedValue);
         }
     }
 
+    /**
+     * Detail strings for the dialog are generated in the selected language.
+     */
     private void changeLanguageValue(String newValue) {
-        if (mLanguagePreference != null && !newValue.equals(mLanguagePreference.getValue())) {
+        if (mLanguagePreference == null || newValue == null) return;
+
+        if (TextUtils.isEmpty(mLanguagePreference.getSummary()) ||
+                !newValue.equals(mLanguagePreference.getValue())) {
             mLanguagePreference.setValue(newValue);
-            mLanguagePreference.setSummary(getLanguageString(newValue, new Locale(localeInput(newValue))));
+            String summary = getLanguageString(newValue, languageLocale(newValue));
+            mLanguagePreference.setSummary(summary);
 
             // update details to display in selected locale
-            String[] languageCodes = getResources().getStringArray(R.array.language_codes);
+            CharSequence[] languageCodes = mLanguagePreference.getEntryValues();
             mLanguagePreference.setEntries(createLanguageDisplayStrings(languageCodes));
             mLanguagePreference.setDetails(createLanguageDetailDisplayStrings(languageCodes, newValue));
             mLanguagePreference.refreshAdapter();
         }
     }
 
-    private void changePrivacyValue(int newValue) {
-        if (mPrivacyPreference != null && Integer.valueOf(mPrivacyPreference.getValue()) != newValue) {
-            mPrivacyPreference.setValue(String.valueOf(newValue));
-            mPrivacyPreference.setSummary(privacyStringForValue(newValue));
-            mPrivacyPreference.refreshAdapter();
-        }
-    }
-
     /**
-     * Returns non-null String representation of WordPress.com privacy value.
+     * Updates the privacy preference summary.
      */
-    private String privacyStringForValue(int value) {
-        switch (value) {
-            case -1:
-                return getString(R.string.privacy_private);
-            case 0:
-                return getString(R.string.privacy_hidden);
-            case 1:
-                return getString(R.string.privacy_public);
-            default:
-                return "";
+    private void changePrivacyValue(int newValue) {
+        if (mPrivacyPreference == null) return;
+
+        if (TextUtils.isEmpty(mPrivacyPreference.getSummary()) ||
+                newValue != Integer.valueOf(mPrivacyPreference.getValue())) {
+            mPrivacyPreference.setValue(String.valueOf(newValue));
+            mPrivacyPreference.setSummary(mSiteSettings.getPrivacyForDisplay());
+            mPrivacyPreference.refreshAdapter();
         }
     }
 
@@ -332,8 +442,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         String[] displayStrings = new String[languageCodes.length];
 
         for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = firstLetterCapitalized(getLanguageString(
-                    String.valueOf(languageCodes[i]), new Locale(localeInput(languageCodes[i].toString()))));
+            displayStrings[i] = capitalizeFrontOfString(getLanguageString(
+                    String.valueOf(languageCodes[i]), languageLocale(languageCodes[i].toString())), 1);
         }
 
         return displayStrings;
@@ -343,13 +453,13 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Generates detail display strings in the currently selected locale. Used as detail text
      * in language preference dialog.
      */
-    public String[] createLanguageDetailDisplayStrings(String[] languageCodes, String locale) {
+    public String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes, String locale) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
-            detailStrings[i] = firstLetterCapitalized(
-                    getLanguageString(languageCodes[i], new Locale(localeInput(locale))));
+            detailStrings[i] = capitalizeFrontOfString(
+                    getLanguageString(languageCodes[i].toString(), languageLocale(locale)), 1);
         }
 
         return detailStrings;
@@ -363,32 +473,49 @@ public class SiteSettingsFragment extends PreferenceFragment
             return "";
         }
 
-        Locale languageLocale = new Locale(localeInput(languageCode));
-        return languageLocale.getDisplayLanguage(displayLocale) + languageCode.substring(2);
+        Locale languageLocale = languageLocale(languageCode);
+        String displayLanguage = languageLocale.getDisplayLanguage(displayLocale);
+        String displayCountry = languageLocale.getDisplayCountry(displayLocale);
+
+        if (!TextUtils.isEmpty(displayCountry)) {
+            return displayLanguage + " (" + displayCountry + ")";
+        }
+        return displayLanguage;
+    }
+
+    /**
+     * Gets a preference and sets the {@link android.preference.Preference.OnPreferenceChangeListener}.
+     */
+    private Preference getPref(int id) {
+        Preference pref = findPreference(getString(id));
+        pref.setOnPreferenceChangeListener(this);
+        return pref;
     }
 
     /**
      * Removes a {@link Preference} from the {@link PreferenceCategory} with the given key.
      */
-    private void removePreference(int categoryKey, Preference preference) {
-        if (preference == null) return;
+    private void removePreference(int parentKey, int preference) {
+        PreferenceGroup parent = (PreferenceGroup) findPreference(getString(parentKey));
 
-        PreferenceCategory category = (PreferenceCategory) findPreference(getString(categoryKey));
-
-        if (category != null) {
-            category.removePreference(preference);
+        if (parent != null) {
+            parent.removePreference(findPreference(getString(preference)));
         }
     }
 
-    private String localeInput(String languageCode) {
-        if (TextUtils.isEmpty(languageCode)) return "";
+    private Locale languageLocale(String languageCode) {
+        if (TextUtils.isEmpty(languageCode)) return Locale.getDefault();
 
-        return languageCode.substring(0, 2);
+        if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
+            return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),
+                    languageCode.substring(REGION_SUBSTRING_INDEX));
+        }
+
+        return new Locale(languageCode);
     }
 
-    private String firstLetterCapitalized(String input) {
+    private String capitalizeFrontOfString(String input, int numToCap) {
         if (TextUtils.isEmpty(input)) return "";
-
-        return input.substring(0, 1).toUpperCase() + input.substring(1);
+        return input.substring(0, numToCap).toUpperCase() + input.substring(numToCap);
     }
 }

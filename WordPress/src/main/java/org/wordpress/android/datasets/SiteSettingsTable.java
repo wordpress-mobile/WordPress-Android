@@ -16,15 +16,15 @@ public final class SiteSettingsTable {
 
     private static final String CREATE_CATEGORIES_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
-                    CATEGORIES_TABLE_NAME +
-                    " (" +
-                    CategoryModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-                    CategoryModel.NAME_COLUMN_NAME + " TEXT, " +
-                    CategoryModel.SLUG_COLUMN_NAME + " TEXT, " +
-                    CategoryModel.DESC_COLUMN_NAME + " TEXT, " +
-                    CategoryModel.PARENT_ID_COLUMN_NAME + " INTEGER, " +
-                    CategoryModel.POST_COUNT_COLUMN_NAME + " INTEGER" +
-                    ");";
+            CATEGORIES_TABLE_NAME +
+            " (" +
+            CategoryModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
+            CategoryModel.NAME_COLUMN_NAME + " TEXT, " +
+            CategoryModel.SLUG_COLUMN_NAME + " TEXT, " +
+            CategoryModel.DESC_COLUMN_NAME + " TEXT, " +
+            CategoryModel.PARENT_ID_COLUMN_NAME + " INTEGER, " +
+            CategoryModel.POST_COUNT_COLUMN_NAME + " INTEGER" +
+            ");";
 
     public static void createTable(SQLiteDatabase db) {
         if (db != null) {

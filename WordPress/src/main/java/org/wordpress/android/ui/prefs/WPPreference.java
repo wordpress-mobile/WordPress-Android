@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.preference.SwitchPreference;
+import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,17 +15,17 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
 
-public class WPSwitchPreference extends SwitchPreference implements PreferenceHint {
+public class WPPreference extends Preference implements PreferenceHint {
     private String mHint;
 
-    public WPSwitchPreference(Context context, AttributeSet attrs) {
+    public WPPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SummaryEditTextPreference);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.DetailListPreference);
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
             int index = array.getIndex(i);
-            if (index == R.styleable.SummaryEditTextPreference_longClickHint) {
+            if (index == R.styleable.DetailListPreference_longClickHint) {
                 mHint = array.getString(index);
             }
         }

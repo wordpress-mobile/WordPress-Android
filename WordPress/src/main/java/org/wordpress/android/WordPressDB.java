@@ -1235,7 +1235,7 @@ public class WordPressDB {
 
     public List<String> loadCategories(int id) {
         Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id",
-                "category_name" }, "blog_id=" + id, null, null, null, null);
+                "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
         List<String> returnVector = new Vector<String>();

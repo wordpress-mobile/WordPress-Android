@@ -422,12 +422,17 @@
     <string name="pref_notification_account_emails" translatable="false">wp_pref_notification_account_emails</string>
     <string name="pref_notification_sights_sounds" translatable="false">wp_pref_notification_sights_sounds</string>
     <string name="pref_key_notification_site_settings" translatable="false">wp_pref_notification_site_settings</string>
+    <string name="pref_key_site_screen" translatable="false">wp_pref_site_screen</string>
     <string name="pref_key_site_general" translatable="false">wp_pref_site_general</string>
+    <string name="pref_key_site_account" translatable="false">wp_pref_site_account</string>
+    <string name="pref_key_site_writing" translatable="false">wp_pref_site_writing</string>
     <string name="pref_key_site_title" translatable="false">wp_pref_site_title</string>
     <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
     <string name="pref_key_site_address" translatable="false">wp_pref_site_address</string>
     <string name="pref_key_site_language" translatable="false">wp_pref_site_language</string>
     <string name="pref_key_site_visibility" translatable="false">wp_pref_site_visibility</string>
+    <string name="pref_key_site_username" translatable="false">wp_pref_site_username</string>
+    <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_location" translatable="false">wp_pref_site_location</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
@@ -438,26 +443,44 @@
 
     <!-- Site Settings -->
     <string name="site_settings_general_header">General</string>
+    <string name="site_settings_account_header">Account</string>
+    <string name="site_settings_writing_header">Writing</string>
     <string name="site_settings_title_title">Site Title</string>
     <string name="site_settings_tagline_title">Tagline</string>
     <string name="site_settings_address_title">Address</string>
-    <string name="site_settings_visibility_header">Privacy</string>
-    <string name="site_settings_language_header">@string/language</string>
+    <string name="site_settings_visibility_title">Privacy</string>
+    <string name="site_settings_username_title">Username</string>
+    <string name="site_settings_password_title">Password</string>
+    <string name="site_settings_language_title">@string/language</string>
+    <string name="site_settings_location_title">Enable Location</string>
+    <string name="site_settings_category_title">Default Category</string>
+    <string name="site_settings_format_title">Default Format</string>
+    <string name="site_settings_related_posts_title">Related Posts</string>
     <string name="site_title_hint">In a few words, explain what this site is about.</string>
     <string name="site_tagline_hint">A short description or catchy phrase to describe your blog.</string>
     <string name="site_address_hint">Changing your address is not currently supported.</string>
     <string name="site_privacy_hint">Controls who can see your site.</string>
     <string name="site_language_hint">Language this blog is primarily written in.</string>
-    <string name="site_settings_related_posts_title">Related Posts</string>
-    <string name="site_settings_related_header_title">Related Posts</string>
+    <string name="site_username_hint">Current user account.</string>
+    <string name="site_password_hint">Change your password.</string>
+    <string name="site_location_hint">Automatically add location data to your posts.</string>
+    <string name="site_category_hint">Sets new post category.</string>
+    <string name="site_format_hint">Sets new post format.</string>
+    <string name="site_related_posts_hint">Show or hide related posts in reader.</string>
     <string name="site_settings_related_posts_summary">Show related content after posts</string>
-    <string name="site_settings_title_default_summary">Fetching title</string>
-    <string name="site_settings_tagline_default_summary">Fetching tagline</string>
-    <string name="site_settings_address_default_summary">Fetching address</string>
-    <string name="site_settings_privacy_default_summary">Fetching privacy</string>
-    <string name="site_settings_language_default_summary">Fetching language</string>
     <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
     <string name="site_settings_save_success">Site settings updated</string>
+    <string name="related_posts_switch_title">Show Related Posts</string>
+    <string name="related_posts_switch_summary">Related Posts displays relevant content from your site below your posts.</string>
+    <string name="related_posts_show_header_title">Show Header</string>
+    <string name="related_posts_show_images_title">Show Images</string>
+    <string name="related_posts_preview_header">Related Posts</string>
+    <string name="related_post_preview1_title">Big iPhone/iPad Update Now Available</string>
+    <string name="related_post_preview1_site">in \"Mobile\"</string>
+    <string name="related_post_preview2_title">The WordPress for Android App Gets a Big Facelift</string>
+    <string name="related_post_preview2_site">in \"Apps\"</string>
+    <string name="related_post_preview3_title">Upgrade Focus: VideoPress For Weddings</string>
+    <string name="related_post_preview3_site">in \"Upgrade\"</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
@@ -787,8 +810,8 @@
 
     <!-- Used as values to a preference in Site Settings -->
     <string-array name="language_codes">
+        <item>en_US</item>
         <item>az</item>
-        <item>en</item>
         <item>de</item>
         <item>el</item>
         <item>es</item>
@@ -800,6 +823,7 @@
         <item>it</item>
         <item>ja</item>
         <item>ko</item>
+        <item>nb</item>
         <item>nl</item>
         <item>pl</item>
         <item>ru</item>
@@ -808,14 +832,16 @@
         <item>uz</item>
         <item>zh_CN</item>
         <item>zh_TW</item>
-        <item>en-GB</item>
+        <item>zh_HK</item>
+        <item>en_GB</item>
         <item>tr</item>
         <item>eu</item>
         <item>he</item>
-        <item>pt-BR</item>
+        <item>pt_BR</item>
         <item>ar</item>
         <item>ro</item>
         <item>mk</item>
+        <item>en_AU</item>
         <item>sr</item>
         <item>sk</item>
         <item>cy</item>
@@ -824,8 +850,8 @@
 
     <!-- Language IDs for WordPress REST call -->
     <string-array name="lang_ids">
-        <item>79</item>
         <item>1</item>
+        <item>79</item>
         <item>15</item>
         <item>17</item>
         <item>19</item>
@@ -929,6 +955,7 @@
     <string name="content_description_add_media">Add media</string>
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
+    <string name="cd_related_post_preview_image">Related post preview image</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>

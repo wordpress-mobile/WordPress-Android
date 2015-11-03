@@ -26,6 +26,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String GET_URL_KEY = "URL";
     public static final String GET_DEF_CATEGORY_KEY = "default_category";
     public static final String GET_DEF_POST_FORMAT_KEY = "default_post_format";
+    public static final String RELATED_POSTS_ALLOWED_KEY = "jetpack_relatedposts_allowed";
+    public static final String RELATED_POSTS_ENABLED_KEY = "jetpack_relatedposts_enabled";
+    public static final String RELATED_POSTS_HEADER_KEY = "jetpack_relatedposts_show_headline";
+    public static final String RELATED_POSTS_IMAGES_KEY = "jetpack_relatedposts_show_thumbnails";
 
     // WP.com REST keys used to POST updates to site settings
     private static final String SET_TITLE_KEY = "blogname";
@@ -123,6 +127,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.defaultCategory = settingsObject.optInt(GET_DEF_CATEGORY_KEY, 0);
         mRemoteSettings.defaultPostFormat = settingsObject.optString(GET_DEF_POST_FORMAT_KEY, "0");
         mRemoteSettings.language = languageIdToLanguageCode(Integer.toString(mRemoteSettings.languageId));
+        if (settingsObject.optBoolean(RELATED_POSTS_ALLOWED_KEY, false)) {
+            mRemoteSettings.showRelatedPosts = settingsObject.optBoolean(RELATED_POSTS_ENABLED_KEY, false);
+            mRemoteSettings.showRelatedPostHeader = settingsObject.optBoolean(RELATED_POSTS_HEADER_KEY, false);
+            mRemoteSettings.showRelatedPostImages = settingsObject.optBoolean(RELATED_POSTS_IMAGES_KEY, false);
+        }
     }
 
     /**
@@ -151,6 +160,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat.equals(mRemoteSettings.defaultPostFormat)) {
             params.put(SET_DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
+        }
+        if (mSettings.showRelatedPosts != mRemoteSettings.showRelatedPosts ||
+                mSettings.showRelatedPostHeader != mRemoteSettings.showRelatedPostHeader ||
+                mSettings.showRelatedPostImages != mRemoteSettings.showRelatedPostImages) {
+            params.put(RELATED_POSTS_ENABLED_KEY, String.valueOf(mSettings.showRelatedPosts));
+            params.put(RELATED_POSTS_HEADER_KEY, String.valueOf(mSettings.showRelatedPostHeader));
+            params.put(RELATED_POSTS_IMAGES_KEY, String.valueOf(mSettings.showRelatedPostImages));
         }
 
         return params;
