@@ -30,8 +30,10 @@ import android.widget.ToggleButton;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -814,7 +816,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
-    public void onMediaTapped(final String mediaId, String url, final String meta, String uploadStatus) {
+    public void onMediaTapped(final String mediaId, String url, final JSONObject meta, String uploadStatus) {
         switch (uploadStatus) {
             case "uploading":
                 // Display 'cancel upload' dialog
@@ -872,7 +874,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 Bundle dialogBundle = new Bundle();
 
-                dialogBundle.putString("imageMeta", meta);
+                dialogBundle.putString("imageMeta", meta.toString());
                 dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
 
                 imageSettingsDialogFragment.setArguments(dialogBundle);
