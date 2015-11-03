@@ -730,12 +730,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onMediaUploadSucceeded(final String mediaId, final String remoteUrl) {
+    public void onMediaUploadSucceeded(final String mediaId, final String remoteId, final String remoteUrl) {
         mWebView.post(new Runnable() {
             @Override
             public void run() {
                 mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + mediaId + ", '" +
-                        remoteUrl + "');");
+                        remoteId + "', '" + remoteUrl + "');");
                 mUploadingMediaIds.remove(mediaId);
             }
         });

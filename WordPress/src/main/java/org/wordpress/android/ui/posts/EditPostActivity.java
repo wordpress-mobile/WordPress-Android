@@ -1617,7 +1617,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @SuppressWarnings("unused")
     public void onEventMainThread(MediaUploadEvents.MediaUploadSucceeded event) {
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalId, event.mRemoteUrl);
+            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalId, event.mRemoteId, event.mRemoteUrl);
         }
 
         for (Long galleryId : mPendingGalleryUploads.keySet()) {

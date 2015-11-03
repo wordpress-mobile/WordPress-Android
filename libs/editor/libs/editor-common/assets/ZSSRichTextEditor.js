@@ -882,7 +882,7 @@ ZSSEditor.getImageContainerNodeWithIdentifier = function(imageNodeIdentifier) {
  *                                      when replaceLocalImageWithRemoteImage() is called.
  *  @param      remoteImageUrl          The URL of the remote image to display.
  */
-ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remoteImageUrl) {
+ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remoteImageId, remoteImageUrl) {
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
 
     if (imageNode.length == 0) {
@@ -895,6 +895,7 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
 
     image.onload = function () {
         imageNode.attr('src', image.src);
+        imageNode.addClass("wp-image-" + remoteImageId);
         ZSSEditor.markImageUploadDone(imageNodeIdentifier);
         var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
         ZSSEditor.callback("callback-input", joinedArguments);
@@ -906,6 +907,7 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
         // blogs are currently failing to download images due to access privilege issues.
         //
         imageNode.attr('src', image.src);
+        imageNode.addClass("wp-image-" + remoteImageId);
         ZSSEditor.markImageUploadDone(imageNodeIdentifier);
         var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
         ZSSEditor.callback("callback-input", joinedArguments);
