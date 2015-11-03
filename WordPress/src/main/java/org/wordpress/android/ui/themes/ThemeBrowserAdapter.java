@@ -82,7 +82,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.nameView.setText(name);
         themeViewHolder.priceView.setText(price);
 
-        configureImageView(themeViewHolder, screenshotURL, themeId);
+        configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
         configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
         configureCardView(context, themeViewHolder, isCurrent);
     }
@@ -101,7 +101,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId) {
+    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId, final boolean isCurrent) {
         ScreenshotHolder urlHolder = (ScreenshotHolder) themeViewHolder.imageView.getTag();
         if (urlHolder == null) {
             urlHolder = new ScreenshotHolder();
@@ -118,7 +118,11 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onViewSelected(themeId);
+                if (isCurrent) {
+                    mCallback.onTryAndCustomizeSelected(themeId);
+                } else {
+                    mCallback.onViewSelected(themeId);
+                }
             }
         });
     }
