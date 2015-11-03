@@ -86,6 +86,7 @@ public class WordPressDB {
     public static final String BLOGS_TABLE = "accounts";
     private static final String DATABASE_NAME = "wordpress";
     private static final String MEDIA_TABLE = "media";
+    private static final String NOTES_TABLE = "notes";
 
     private static final String CREATE_TABLE_POSTS =
         "create table if not exists posts ("
@@ -325,7 +326,7 @@ public class WordPressDB {
                 currentVersion++;
             case 26:
                 // Drop the notes table, no longer needed with Simperium.
-                db.execSQL("DROP TABLE IF EXISTS notes;");
+                db.execSQL(DROP_TABLE_PREFIX + NOTES_TABLE);
                 currentVersion++;
             case 27:
                 // versions prior to v4.5 added an "isUploading" column here, but that's no longer used
