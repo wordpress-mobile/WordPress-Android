@@ -269,11 +269,11 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         switch (position) {
             case THEME_FILTER_PREMIUM_INDEX:
                 return WordPress.wpDB.getThemesPremium(blogId);
-            case THEME_FILTER_FREE_INDEX:
-                return WordPress.wpDB.getThemesFree(blogId);
             case THEME_FILTER_ALL_INDEX:
-            default:
                 return WordPress.wpDB.getThemesAll(blogId);
+            case THEME_FILTER_FREE_INDEX:
+            default:
+                return WordPress.wpDB.getThemesFree(blogId);
         }
     }
 
