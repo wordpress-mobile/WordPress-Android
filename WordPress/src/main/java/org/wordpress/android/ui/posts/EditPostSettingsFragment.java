@@ -615,7 +615,7 @@ public class EditPostSettingsFragment extends Fragment
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
-        if (!mPost.supportsLocation() || !checkForLocationPermission()) return;
+        if (!mPost.supportsLocation()) return;
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
@@ -644,6 +644,8 @@ public class EditPostSettingsFragment extends Fragment
         Button removeLocation = (Button) locationRootView.findViewById(R.id.removeLocation);
         updateLocation.setOnClickListener(this);
         removeLocation.setOnClickListener(this);
+
+        if (!checkForLocationPermission()) return;
 
         // if this post has location attached to it, look up the location address
         if (mPost.hasLocation()) {

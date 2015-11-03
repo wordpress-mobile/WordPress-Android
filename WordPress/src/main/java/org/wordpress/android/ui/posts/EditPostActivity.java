@@ -427,7 +427,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         shouldShowLocation = true;
                     }
                 }
-                if (mEditPostSettingsFragment.isAdded() && shouldShowLocation) {
+                if (shouldShowLocation) {
                     // Permission request was granted, show Location buttons in Settings
                     mEditPostSettingsFragment.showLocationSearch();
                     return;
