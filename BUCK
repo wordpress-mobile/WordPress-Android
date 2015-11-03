@@ -9,7 +9,7 @@ genrule(
         'tools/fetch_buck_dependencies.py',
     ],
     cmd = 'tools/fetch_buck_dependencies.py ../../../extlibs > $OUT',
-    out = '../../extlibs/dependencies.log',
+    out = '../../../extlibs/dependencies.log',
 )
 
 ### Helper functions
@@ -66,7 +66,7 @@ genrule(
 
 ### Define jar dependencies
 
-r_android_library(
+android_library(
     name = 'all-jars',
     exported_deps = get_all_jars('extlibs/*.jar'),
 )
@@ -91,6 +91,11 @@ android_prebuilt_aar(
 android_prebuilt_aar(
     name = 'cardview-v7',
     aar = 'extlibs/cardview-v7.aar',
+)
+
+android_prebuilt_aar(
+    name = 'design',
+    aar = 'extlibs/design.aar',
 )
 
 android_prebuilt_aar(
@@ -126,11 +131,6 @@ android_prebuilt_aar(
 android_prebuilt_aar(
     name = 'simperium',
     aar = 'extlibs/simperium.aar',
-)
-
-android_prebuilt_aar(
-    name = 'undobar',
-    aar = 'extlibs/undobar.aar',
 )
 
 android_prebuilt_aar(
@@ -201,7 +201,7 @@ android_resource(
     res = 'libs/utils/WordPressUtils/src/main/res',
 )
 
-r_android_library(
+android_library(
     name = 'wpandroid-utils',
     srcs = glob(['libs/utils/WordPressUtils/src/main/java/**/*.java']),
     deps = [
@@ -218,10 +218,10 @@ android_resource(
     name = 'wpandroid-editor-res',
     package = 'org.wordpress.android.editor',
     res = 'libs/editor/WordPressEditor/src/main/res',
-    assets = 'libs/editor/WordPressEditor/src/main/assets',
+    # TODO: exclude fonts assets = 'libs/editor/WordPressEditor/src/main/assets',
 )
 
-r_android_library(
+android_library(
     name = 'wpandroid-editor',
     srcs = glob(['libs/editor/WordPressEditor/src/main/java/**/*.java']),
     deps = [
@@ -236,7 +236,7 @@ r_android_library(
 
 ### WordPressAnalytics
 
-r_android_library(
+android_library(
     name = 'wpanalytics',
     srcs = glob(['libs/analytics/WordPressAnalytics/src/main/java/**/*.java']),
     deps = [
@@ -248,7 +248,7 @@ r_android_library(
 
 ### WordPressNetworking
 
-r_android_library(
+android_library(
     name = 'wpnetworking',
     srcs = glob(['libs/networking/WordPressNetworking/src/main/java/**/*.java']),
     deps = [
@@ -274,6 +274,8 @@ android_resource(
     assets = 'WordPress/src/main/assets',
     deps = [
         ':appcompat-v7',
+        ':design',
+        ':passcodelock',
         ':wpandroid-utils',
         ':wpandroid-utils-res',
         ':wpandroid-editor-res',
@@ -289,7 +291,7 @@ android_build_config(
     values = get_build_config_values('WordPress/gradle.properties'),
 )
 
-r_android_library(
+android_library(
     name = 'main-lib',
     srcs = glob(['WordPress/src/main/java/org/**/*.java']),
     deps = [
@@ -299,6 +301,7 @@ r_android_library(
         ':appcompat-v7',
         ':android-support-v13',
         ':android-support-v4',
+        ':design',
         ':recyclerview-v7',
         ':cardview-v7',
         ':persistentedittext',
@@ -311,7 +314,6 @@ r_android_library(
         ':drag-sort-listview',
         ':simperium',
         ':mediapicker',
-        ':undobar',
         ':slidinguppanel',
         ':passcodelock',
         ':wpnetworking',
@@ -331,7 +333,6 @@ android_binary(
     keystore = ':debug_keystore',
     package_type = 'debug',
     deps = [
-        ':fetch_deps',
         ':main-lib',
     ],
 )
