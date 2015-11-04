@@ -1,33 +1,6 @@
 import re
 
-### Rule to fetch dependencies, doesn't work on `android_prebuilt_aar`
-### rules (no deps)
-
-genrule(
-    name = 'fetch_deps',
-    srcs = [
-        'tools/fetch_buck_dependencies.py',
-    ],
-    cmd = 'tools/fetch_buck_dependencies.py ../../../extlibs > $OUT',
-    out = '../../../extlibs/dependencies.log',
-)
-
 ### Helper functions
-
-# Macro to add fetch_deps as default dependency
-def r_android_library(name, srcs=[], resources=[], exported_deps=[],
-                      deps=[], visibility=[]):
-    android_library(
-        name = name,
-        srcs = srcs,
-        resources = resources,
-        exported_deps = exported_deps,
-        deps = [
-          # This assumes this is where Guava is in your project.
-          ':fetch_deps',
-        ] + deps,
-        visibility = visibility,
-    )
 
 # List all jars matching globfile
 def get_all_jars(globfile):
