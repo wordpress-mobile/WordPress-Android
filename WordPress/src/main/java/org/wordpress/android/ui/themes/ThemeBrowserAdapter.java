@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.themes;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -88,16 +89,17 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     }
 
     private void configureCardView(Context context, ThemeViewHolder themeViewHolder, boolean isCurrent) {
+        Resources resources = context.getResources();
         if (isCurrent) {
-            themeViewHolder.detailsView.setBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
-            themeViewHolder.nameView.setTextColor(context.getResources().getColor(R.color.white));
+            themeViewHolder.detailsView.setBackgroundColor(resources.getColor(R.color.blue_wordpress));
+            themeViewHolder.nameView.setTextColor(resources.getColor(R.color.white));
             themeViewHolder.activeView.setVisibility(View.VISIBLE);
-            themeViewHolder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
+            themeViewHolder.cardView.setCardBackgroundColor(resources.getColor(R.color.blue_wordpress));
         } else {
-            themeViewHolder.detailsView.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
-            themeViewHolder.nameView.setTextColor(context.getResources().getColor(R.color.black));
+            themeViewHolder.detailsView.setBackgroundColor(resources.getColor(R.color.cardview_light_background));
+            themeViewHolder.nameView.setTextColor(resources.getColor(R.color.black));
             themeViewHolder.activeView.setVisibility(View.GONE);
-            themeViewHolder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
+            themeViewHolder.cardView.setCardBackgroundColor(resources.getColor(R.color.cardview_light_background));
         }
     }
 
