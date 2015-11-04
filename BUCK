@@ -342,7 +342,16 @@ prebuilt_jar(
     name = 'eventbus',
     binary_jar = ':eventbus-file',
 )
-
+remote_file(
+    name = 'androidasync-file',
+    out = 'androidasync.jar',
+    url = 'mvn:com.koushikdutta.async:androidasync:jar:2.1.3',
+    sha1 = '52aed89a155265a48984ecc06aa8dec12674edad',
+)
+prebuilt_jar(
+    name = 'androidasync',
+    binary_jar = ':androidasync-file',
+)
 
 ### WordPressUtils
 
@@ -488,6 +497,7 @@ android_library(
         ':tagsoup',
         ':play-services',
         ':gcm',
+        ':androidasync',
     ],
 )
 
