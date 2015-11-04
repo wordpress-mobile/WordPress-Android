@@ -440,7 +440,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             setWordPressComUserName(username);
             // Re-unify the user
             if (getAnonID() != null) {
-                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID());
+                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);
                 clearAnonID();
             }
         } else {
