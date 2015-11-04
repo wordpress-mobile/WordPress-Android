@@ -19,6 +19,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract boolean hasFailedMediaUploads();
+    public abstract void setFeaturedImageId(int imageId);
+    public abstract int getFeaturedImageId();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
 
@@ -107,8 +109,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddMediaClicked();
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
-        // TODO: remove saveMediaFile, it's currently needed for the legacy editor - we should have something like
-        // "EditorFragmentAbstract.getFeaturedImage()" returning the remote id
+        // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
     }
 }

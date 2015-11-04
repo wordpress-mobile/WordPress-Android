@@ -715,6 +715,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void setFeaturedImageId(int featuredImageId) {
+         mFeaturedImageId = featuredImageId;
+    }
+
+    @Override
+    public int getFeaturedImageId() {
+        return mFeaturedImageId;
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return null;
     }

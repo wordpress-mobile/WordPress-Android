@@ -712,7 +712,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 // TODO: Remove when legacy editor is dropped
                 updatePostContent(isAutosave);
             }
+
+            mPost.setFeaturedImageId(mEditorFragment.getFeaturedImageId());
         }
+
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updatePostSettings();
         }
@@ -984,6 +987,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setLocalDraft(post.isLocalDraft());
+            mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
         }
 
         // Special actions
