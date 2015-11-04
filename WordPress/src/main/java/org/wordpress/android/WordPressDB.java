@@ -84,6 +84,8 @@ public class WordPressDB {
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
     public static final String BLOGS_TABLE = "accounts";
+
+    // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
     private static final String MEDIA_TABLE = "media";
     private static final String NOTES_TABLE = "notes";
