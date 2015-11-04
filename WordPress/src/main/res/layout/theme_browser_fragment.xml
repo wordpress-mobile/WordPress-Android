@@ -42,7 +42,7 @@
 
         <ImageView
             android:id="@+id/drake_empty_results"
-            android:layout_width="400dp"
+            android:layout_width="@dimen/drake_themes_width"
             android:layout_height="wrap_content"
             android:src="@drawable/drake_empty_results"
             android:adjustViewBounds="true"
