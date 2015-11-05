@@ -385,9 +385,16 @@ public class PostUploadService extends Service {
                 }
             }
 
-            // featured image
+            // Featured images
             if (featuredImageID != -1) {
+                // Support for legacy editor - images are identified as featured as they're being uploaded
                 contentStruct.put("wp_post_thumbnail", featuredImageID);
+            } else {
+                if (mPost.getFeaturedImageId() == 0 && !mPost.isLocalDraft()) {
+                    contentStruct.put("wp_post_thumbnail", "");
+                } else if (mPost.isLocalDraft() || mPost.featuredImageHasChanged()) {
+                    contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                }
             }
 
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
