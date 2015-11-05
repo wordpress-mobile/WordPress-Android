@@ -1097,7 +1097,7 @@
     <string name="theme_done">DONE</string>
     <string name="theme_manage_site">MANAGE SITE</string>
     <string name="theme_prompt">Thanks for choosing %1$s</string>
-    <string name="theme_prompt_with_author">Thanks for choosing %1$s by %2$s</string>
+    <string name="theme_by_author_prompt_append"> by %1$s</string>
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="theme_web_activity">Theme Web Activity</string>
     <string name="could_not_load_theme">Could not load theme</string>
