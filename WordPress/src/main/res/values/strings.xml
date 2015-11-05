@@ -441,6 +441,7 @@
     <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
     <string name="pref_key_site_send_pingbacks" translatable="false">wp_pref_site_send_pingbacks</string>
     <string name="pref_key_site_receive_pingbacks" translatable="false">wp_pref_site_receive_pingbacks</string>
+    <string name="pref_key_site_learn_more" translatable="false">wp_pref_site_learn_more</string>
     <string name="pref_key_site_close_after" translatable="false">wp_pref_site_close_after</string>
     <string name="pref_key_site_sort_by" translatable="false">wp_pref_site_sort_by</string>
     <string name="pref_key_site_threading" translatable="false">wp_pref_site_threading</string>
@@ -532,23 +533,23 @@
     <string name="related_post_preview3_site">in \"Upgrade\"</string>
     <string name="hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
-    <string-array name="site_settings_close_after_details">
+    <string-array name="site_settings_close_after_options">
         <item>Never</item>
         <item>One day</item>
         <item>One week</item>
         <item>One month</item>
     </string-array>
-    <string-array name="site_settings_sort_details">
+    <string-array name="site_settings_sort_options">
         <item>Oldest first</item>
         <item>Newest first</item>
     </string-array>
-    <string-array name="site_settings_threading_details">
+    <string-array name="site_settings_threading_options">
         <item>Two levels</item>
         <item>Three levels</item>
         <item>Four levels</item>
-        <item>Five level</item>
+        <item>Five levels</item>
     </string-array>
-    <string-array name="site_settings_paging_details">
+    <string-array name="site_settings_paging_options">
         <item>None</item>
         <item>50 comments per page</item>
         <item>100 comments per page</item>

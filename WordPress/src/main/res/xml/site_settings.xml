@@ -160,27 +160,32 @@
                 android:id="@+id/pref_close_after"
                 android:key="@string/pref_key_site_close_after"
                 android:title="@string/site_settings_close_after_title"
-                android:summary="30 days"
-                app:longClickHint="@string/site_close_after_hint"
-                app:entryDetails="@string/pref_key_site_close_after" />
+                android:entries="@array/site_settings_close_after_options"
+                android:entryValues="@array/site_settings_close_after_options"
+                app:longClickHint="@string/site_close_after_hint" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_sort_by"
                 android:key="@string/pref_key_site_sort_by"
                 android:title="@string/site_settings_sort_by_title"
-                android:summary="Oldest first"
+                android:entries="@array/site_settings_sort_options"
+                android:entryValues="@array/site_settings_sort_options"
                 app:longClickHint="@string/site_sort_by_hint"  />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_threading"
                 android:key="@string/pref_key_site_threading"
                 android:title="@string/site_settings_threading_title"
+                android:entries="@array/site_settings_threading_options"
+                android:entryValues="@array/site_settings_threading_options"
                 app:longClickHint="@string/site_threading_hint" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_paging"
                 android:key="@string/pref_key_site_paging"
                 android:title="@string/site_settings_paging_title"
+                android:entries="@array/site_settings_paging_options"
+                android:entryValues="@array/site_settings_paging_options"
                 app:longClickHint="@string/site_paging_hint" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
