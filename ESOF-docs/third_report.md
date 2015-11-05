@@ -10,12 +10,13 @@ O presente relatório serve para apresentar os aspectos mais relevantes da arqui
 * Vista de Casos de Uso (+1) - Combinando as diferentes vistas faz com que esta vista que se consegue entender as interações entre os diversos componentes do sistema. Representado por um diagrama UML de casos de uso.
 
 ### Vista Lógica
+Este diagrama representa a Vista Lógica, traduzindo-se num UML de packages. Foram considerados seis packages: datasets, widgets, models, ui, networking e util. 
+
 ![Logical view](./images/Logical View.bmp)
 
-Este diagrama representa a Vista Lógica, traduzindo-se num UML de packages. Foram considerados seis packages: datasets, widgets, models, ui, networking e util. 
  
 #### Descrição
-´´Para elaborar o diagrama recorreu-se ao software Enterprise Architect, que através de reverse engineering, obtivemos vários outros diagramas que foram estudados e observados de modo a simplificar e perceber melhor como o projeto está organizado. Por outro lado, examinamos de um modo superficial todos os ficheiros de cada package para tentar decifrar as suas ligações e conceitos. Desta forma, a package datasets
+Para elaborar o diagrama recorreu-se ao software Enterprise Architect, que através de reverse engineering, obtivemos vários outros diagramas que foram estudados e observados de modo a simplificar e perceber melhor como o projeto está organizado. Por outro lado, examinamos de um modo superficial todos os ficheiros de cada package para tentar decifrar as suas ligações e conceitos. Desta forma, a package datasets
   
 Relativamente ao diagrama em si, existem dois tipos de ligações: “import” e “merge”. A ligação “import” significa que um determinado package importa elementos de outro package, já a ligação “merge”, significa que importa não só elementos do package como os packages por ele importados.
 	
@@ -28,6 +29,7 @@ Diagrama de componentes mostra a vista de implementação referente ao projeto W
 
 ![Implementation view1](./images/Implementation View.bmp)
 #### Descrição
+De acordo com a nossa interpretação, a O WordPress pode ser dividido em dois componentes essenciais. Sendo o primeiro componente incorpora as funcionalidades da biblioteca WordPress (Website) e o segundo o sistema operativo Android e as suas funcionalidades.
 
 
 ![Implementation view2](./images/Android.bmp)
@@ -37,7 +39,11 @@ Diagrama de componentes mostra a vista de implementação referente ao projeto W
 #### Descrição
 
 ### Vista de Processo 
+No seguinte diagrama de atividades, são demonstrados os processos dinâmicos da aplicação WordPress para Android 
 ![Process view](./images/process.bmp)
+
+#### Descrição
+Acreditamos que a vista demonstrada é uma boa representação das funcionalidades da Aplicação sendo que são bastante intuitivas não sendo necessária uma analise detalhada. No entanto é de realçar que existem inúmeras outras funcionalidades da aplicação que tornariam a vista bastante mais expandida especialmente em termos de definições da aplicação bem como possibilidade de integrar outras funcionalidades externas como opções de partilha em redes sociais e outras aplicações.  
 
 ### Vista de Deployment 
 
@@ -52,7 +58,7 @@ Cada artefacto corresponde a um componente de software, neste caso, distribuído
 
 Este diagrama representa a possível interação do utilizador para com a aplicação.
 
-![Logical view](./images/Use Case View.bmp)
+![Case view](./images/Use Case View.bmp)
 #### Descrição
 Um utilizador depois de instalada a aplicação poderá visitar o site e consultar estatísticas, ver publicações, fotografias e vídeos, páginas relacionadas e os comentários às mesmas, bem como alterar o tema assim como mais configurações. A aplicação possui várias funcionalidades sendo que seria possível expandir o gráfico mas achamos que ficaria desnecessariamente grande e os acrescimos seriam pouco relevantes.
 
