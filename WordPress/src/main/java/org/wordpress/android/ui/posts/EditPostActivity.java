@@ -580,6 +580,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
 
             PostUploadService.addPostToUpload(mPost);
+            PostUploadService.setLegacyMode(!mShowNewEditor);
             startService(new Intent(this, PostUploadService.class));
             setResult(RESULT_OK);
             finish();

@@ -73,6 +73,7 @@ public class PostUploadService extends Service {
     private static Context mContext;
     private static final ArrayList<Post> mPostsList = new ArrayList<Post>();
     private static Post mCurrentUploadingPost = null;
+    private static boolean mUseLegacyMode;
     private UploadPostTask mCurrentTask = null;
     private FeatureSet mFeatureSet;
 
@@ -80,6 +81,10 @@ public class PostUploadService extends Service {
         synchronized (mPostsList) {
             mPostsList.add(currentPost);
         }
+    }
+
+    public static void setLegacyMode(boolean enabled) {
+        mUseLegacyMode = enabled;
     }
 
     /*
@@ -386,13 +391,16 @@ public class PostUploadService extends Service {
             }
 
             // Featured images
-            if (featuredImageID != -1) {
-                // Support for legacy editor - images are identified as featured as they're being uploaded
-                contentStruct.put("wp_post_thumbnail", featuredImageID);
-            } else {
+            if (mUseLegacyMode) {
+                // Support for legacy editor - images are identified as featured as they're being uploaded with the post
+                if (featuredImageID != -1) {
+                    contentStruct.put("wp_post_thumbnail", featuredImageID);
+                }
+            } else if (mPost.featuredImageHasChanged()) {
                 if (mPost.getFeaturedImageId() == 0 && !mPost.isLocalDraft()) {
+                    // The featured image was removed from a live post
                     contentStruct.put("wp_post_thumbnail", "");
-                } else if (mPost.isLocalDraft() || mPost.featuredImageHasChanged()) {
+                } else {
                     contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
                 }
             }
