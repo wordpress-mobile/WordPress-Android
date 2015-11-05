@@ -1807,7 +1807,7 @@ public class WordPressDB {
         values.put(Theme.STYLESHEET, theme.getStylesheet());
         values.put(Theme.PRICE, theme.getPrice());
         values.put(Theme.BLOG_ID, theme.getBlogId());
-        values.put(Theme.IS_CURRENT, theme.getIsCurrent());
+        values.put(Theme.IS_CURRENT, theme.getIsCurrent() ? 1 : 0);
 
         synchronized (this) {
             int result = db.update(
