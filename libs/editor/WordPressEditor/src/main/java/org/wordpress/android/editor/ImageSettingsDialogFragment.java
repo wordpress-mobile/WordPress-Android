@@ -234,12 +234,14 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 if (isAdded()) {
                     final Uri localUri = Utils.downloadExternalMedia(getActivity(), Uri.parse(src));
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            thumbnailImage.setImageURI(localUri);
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                thumbnailImage.setImageURI(localUri);
+                            }
+                        });
+                    }
                 }
             }
         });
