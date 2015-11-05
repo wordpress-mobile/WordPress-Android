@@ -100,10 +100,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     public void onActivityCreated(Bundle savedInstanceState) {
         ThemeBrowserActivity themeBrowserActivity = (ThemeBrowserActivity) getActivity();
         super.onActivityCreated(savedInstanceState);
-        if (this instanceof ThemeBrowserFragment) {
-            (themeBrowserActivity).setThemeBrowserFragment(this);
-        } else if (this instanceof ThemeSearchFragment) {
+        if (this instanceof ThemeSearchFragment) {
             (themeBrowserActivity).setThemeSearchFragment((ThemeSearchFragment) this);
+        } else {
+            (themeBrowserActivity).setThemeBrowserFragment(this);
         }
         Cursor cursor = fetchThemes(getSpinnerPosition());
 
