@@ -238,9 +238,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.receivePingbacks != mRemoteSettings.receivePingbacks) {
             params.put(RECEIVE_PINGBACKS_KEY, String.valueOf(mSettings.receivePingbacks));
         }
-//        if (mSettings.commentApprovalRequired != mRemoteSettings.commentApprovalRequired) {
-//            params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
-//        }
+        if (mSettings.commentApprovalRequired != mRemoteSettings.commentApprovalRequired) {
+            params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
+        }
 //        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
 //            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
 //        }
