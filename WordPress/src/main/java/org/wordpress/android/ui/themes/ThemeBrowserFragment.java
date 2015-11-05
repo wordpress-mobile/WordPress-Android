@@ -49,20 +49,20 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     protected static final int THEME_FILTER_FREE_INDEX = 1;
     protected static final int THEME_FILTER_PREMIUM_INDEX = 2;
 
-    protected String mCurrentThemeId;
-    protected HeaderGridView mGridView;
-    protected TextView mEmptyTextView;
-    protected RelativeLayout mEmptyView;
-    protected TextView mNoResultText;
-    protected TextView mCurrentThemeTextView;
-    protected ThemeBrowserAdapter mAdapter;
-    protected Spinner mSpinner;
-    protected ThemeBrowserFragmentCallback mCallback;
-    protected int mPage = 1;
-    protected int mSavedScrollPosition = 0;
-    protected SwipeToRefreshHelper mSwipeToRefreshHelper;
-    protected boolean mShouldRefreshOnStart;
-    protected ImageButton mSearchButton;
+    private String mCurrentThemeId;
+    private HeaderGridView mGridView;
+    private RelativeLayout mEmptyView;
+    private TextView mNoResultText;
+    private TextView mCurrentThemeTextView;
+    private ThemeBrowserAdapter mAdapter;
+    private Spinner mSpinner;
+    private ThemeBrowserFragmentCallback mCallback;
+    private int mPage = 1;
+    private int mSavedScrollPosition = 0;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private boolean mShouldRefreshOnStart;
+    private ImageButton mSearchButton;
+    private TextView mEmptyTextView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -131,6 +131,18 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         if (mGridView != null) {
             outState.putInt(BUNDLE_PAGE, mPage);
         }
+    }
+
+    public TextView getEmptyTextView() {
+        return mEmptyTextView;
+    }
+
+    public TextView getCurrentThemeTextView() {
+        return mCurrentThemeTextView;
+    }
+
+    public String setCurrentThemeId(String currentThemeId) {
+        mCurrentThemeId = currentThemeId;
     }
 
     public int getPage() {
