@@ -175,7 +175,7 @@ public class StatsActivity extends AppCompatActivity
             if (getIntent().hasExtra(ARG_LAUNCHED_FROM)) {
                 StatsLaunchedFrom from = (StatsLaunchedFrom) getIntent().getSerializableExtra(ARG_LAUNCHED_FROM);
                 if (from == StatsLaunchedFrom.STATS_WIDGET) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED);
+                    AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, WordPress.getBlog(mLocalBlogID));
                 }
             }
         }
@@ -265,28 +265,29 @@ public class StatsActivity extends AppCompatActivity
 
         // Track usage here
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_ACCESSED, currentBlog);
             trackStatsAnalytics();
         }
     }
 
     private void trackStatsAnalytics() {
         // Track usage here
+        Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         switch (mCurrentTimeframe) {
             case INSIGHTS:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED, currentBlog);
                 break;
             case DAY:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED, currentBlog);
                 break;
             case WEEK:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED, currentBlog);
                 break;
             case MONTH:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED, currentBlog);
                 break;
             case YEAR:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED, currentBlog);
                 break;
         }
     }
@@ -539,9 +540,9 @@ public class StatsActivity extends AppCompatActivity
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
                                 AnalyticsUtils.refreshMetadata();
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
-                                AnalyticsTracker.track(
-                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
+                                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, currentBlog);
+                                AnalyticsUtils.trackWithBlogDetails(
+                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN, currentBlog);
                                 if (isFinishing()) {
                                     return;
                                 }
@@ -673,7 +674,10 @@ public class StatsActivity extends AppCompatActivity
             String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
 
             WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
+            AnalyticsUtils.trackWithBlogDetails(
+                    AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION,
+                    (long) mLocalBlogID
+            );
             return true;
         }
         return super.onOptionsItemSelected(item);

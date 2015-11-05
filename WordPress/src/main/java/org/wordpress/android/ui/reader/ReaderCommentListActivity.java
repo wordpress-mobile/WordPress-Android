@@ -33,6 +33,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -429,7 +430,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return;
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON);
+        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, mBlogId);
 
         mSubmitReplyBtn.setEnabled(false);
         mEditComment.setEnabled(false);

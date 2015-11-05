@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
@@ -850,7 +851,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mListener.onDateChanged(blogId, getTimeframe(), calculatedDate);
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART);
+        AnalyticsUtils.trackWithBlogDetails(
+                AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
+                WordPress.getBlog(getLocalTableBlogID())
+        );
     }
 
     public enum OverviewLabel {

@@ -29,6 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ViewSiteActivity;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -165,7 +166,7 @@ public class ThemeDetailsFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (mPreviewURL != null && hasCallback()) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE);
+                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE);
                     mCallback.onLivePreviewClicked(getThemeId(), mPreviewURL);
                 }
             }
@@ -179,7 +180,7 @@ public class ThemeDetailsFragment extends DialogFragment {
                     if (hasCallback())
                         mCallback.onActivateThemeClicked(themeId, ThemeDetailsFragment.this);
                     setIsActivatingTheme(true);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_CHANGED_THEME);
+                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME);
                 }
 
             }
