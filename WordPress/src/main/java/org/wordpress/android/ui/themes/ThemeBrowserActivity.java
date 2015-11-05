@@ -368,7 +368,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void showAlertDialogOnNewSettingNewTheme(Theme newTheme) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setMessage(String.format(getString(R.string.theme_prompt), newTheme.getName(), newTheme.getAuthor()));
+        if (newTheme.getAuthor().isEmpty()) {
+            dialogBuilder.setMessage(String.format(getString(R.string.theme_prompt), newTheme.getName()));
+        } else {
+            dialogBuilder.setMessage(String.format(getString(R.string.theme_prompt_with_author), newTheme.getName(), newTheme.getAuthor()));
+        }
         dialogBuilder.setNegativeButton(R.string.theme_done, null);
         dialogBuilder.setPositiveButton(R.string.theme_manage_site, new DialogInterface.OnClickListener() {
             @Override
