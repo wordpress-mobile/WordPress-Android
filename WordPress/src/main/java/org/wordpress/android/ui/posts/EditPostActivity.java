@@ -713,7 +713,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 updatePostContent(isAutosave);
             }
 
-            mPost.setFeaturedImageId(mEditorFragment.getFeaturedImageId());
+            mPost.updateFeaturedImageId(mEditorFragment.getFeaturedImageId());
         }
 
         if (mEditPostSettingsFragment != null) {
