@@ -138,7 +138,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         return mCurrentThemeTextView;
     }
 
-    public String setCurrentThemeId(String currentThemeId) {
+    public void setCurrentThemeId(String currentThemeId) {
         mCurrentThemeId = currentThemeId;
     }
 
