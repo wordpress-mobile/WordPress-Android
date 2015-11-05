@@ -150,6 +150,12 @@
                 android:title="@string/site_settings_receive_pingbacks_title"
                 app:longClickHint="@string/site_receive_pingbacks_hint" />
 
+            <org.wordpress.android.ui.prefs.WPPreference
+                android:id="@+id/pref_learn_more"
+                android:key="@string/pref_key_site_learn_more"
+                android:title="LEARN MORE"
+                android:summary="You can override thee settings for individual posts."/>
+
         </PreferenceCategory>
 
         <PreferenceCategory
