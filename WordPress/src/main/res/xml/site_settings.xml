@@ -125,7 +125,8 @@
     <PreferenceScreen
         android:id="@+id/pref_discussion_settings"
         android:key="@string/pref_key_site_discussion"
-        android:title="@string/site_settings_discussion_title">
+        android:title="@string/site_settings_discussion_title"
+        app:longClickHint="@string/site_discussion_hint">
 
         <PreferenceCategory
             android:id="@+id/pref_site_new_posts_defaults"
@@ -134,61 +135,71 @@
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_allow_comments"
                 android:key="@string/pref_key_site_allow_comments"
-                android:title="@string/site_settings_allow_comments_title" />
+                android:title="@string/site_settings_allow_comments_title"
+                app:longClickHint="@string/site_allow_comments_hint" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
-                android:id="@+id/pref_allow_comments"
+                android:id="@+id/pref_send_pingbacks"
                 android:key="@string/pref_key_site_send_pingbacks"
-                android:title="@string/site_settings_send_pingbacks_title" />
+                android:title="@string/site_settings_send_pingbacks_title"
+                app:longClickHint="@string/site_send_pingbacks_hint" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
-                android:id="@+id/pref_allow_comments"
+                android:id="@+id/pref_receive_pingbacks"
                 android:key="@string/pref_key_site_receive_pingbacks"
-                android:title="@string/site_settings_receive_pingbacks_title" />
+                android:title="@string/site_settings_receive_pingbacks_title"
+                app:longClickHint="@string/site_receive_pingbacks_hint" />
 
         </PreferenceCategory>
 
         <PreferenceCategory
             android:id="@+id/pref_site_comments"
-            android:title="Comments">
+            android:title="@string/site_settings_comments_header">
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_close_after"
                 android:key="@string/pref_key_site_close_after"
-                android:title="Close after"
-                android:summary="30 days" />
                 android:title="@string/site_settings_close_after_title"
+                android:summary="30 days"
+                app:longClickHint="@string/site_close_after_hint"
+                app:entryDetails="@string/pref_key_site_close_after" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_sort_by"
                 android:key="@string/pref_key_site_sort_by"
                 android:title="@string/site_settings_sort_by_title"
-                android:summary="Oldest first"  />
+                android:summary="Oldest first"
+                app:longClickHint="@string/site_sort_by_hint"  />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_threading"
                 android:key="@string/pref_key_site_threading"
-                android:title="@string/site_settings_threading_title" />
+                android:title="@string/site_settings_threading_title"
+                app:longClickHint="@string/site_threading_hint" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_paging"
                 android:key="@string/pref_key_site_paging"
-                android:title="@string/site_settings_paging_title" />
+                android:title="@string/site_settings_paging_title"
+                app:longClickHint="@string/site_paging_hint" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_manual_approval"
                 android:key="@string/pref_key_site_manual_approval"
-                android:title="@string/site_settings_manual_approval_title" />
+                android:title="@string/site_settings_manual_approval_title"
+                app:longClickHint="@string/site_manual_approval_hint" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_identity_required"
                 android:key="@string/pref_key_site_identity_required"
-                android:title="@string/site_settings_identity_title" />
+                android:title="@string/site_settings_identity_title"
+                app:longClickHint="@string/site_identity_required_hint" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_user_account_required"
                 android:key="@string/pref_key_site_user_account_required"
-                android:title="@string/site_settings_account_required_title" />
+                android:title="@string/site_settings_account_required_title"
+                app:longClickHint="@string/site_user_account_required_hint" />
 
         </PreferenceCategory>
 
@@ -199,22 +210,26 @@
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_whitelist"
                 android:key="@string/pref_key_site_whitelist"
-                android:title="@string/site_settings_whitelist_title" />
+                android:title="@string/site_settings_whitelist_title"
+                app:longClickHint="@string/site_whitelist_hint" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_multiple_links"
                 android:key="@string/pref_key_site_multiple_links"
-                android:title="@string/site_settings_multiple_links_title" />
+                android:title="@string/site_settings_multiple_links_title"
+                app:longClickHint="@string/site_multiple_links_hint" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_moderation_hold"
                 android:key="@string/pref_key_site_moderation_hold"
-                android:title="@string/site_settings_moderation_hold_title" />
+                android:title="@string/site_settings_moderation_hold_title"
+                app:longClickHint="@string/site_moderation_hold_hint" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_blacklist"
                 android:key="@string/pref_key_site_blacklist"
-                android:title="@string/site_settings_blacklist_title" />
+                android:title="@string/site_settings_blacklist_title"
+                app:longClickHint="@string/site_blacklist_hint" />
 
         </PreferenceCategory>
 
@@ -226,12 +241,12 @@
         <Preference
             android:id="@+id/pref_start_over"
             android:key="@string/pref_key_site_start_over"
-            android:title="Start Over" />
+            android:title="@string/site_settings_start_over_title" />
 
         <Preference
             android:id="@+id/pref_delete_site"
             android:key="@string/pref_key_site_delete_site"
-            android:title="Delete Site" />
+            android:title="@string/site_settings_delete_site_title" />
 
     </PreferenceCategory>
 
