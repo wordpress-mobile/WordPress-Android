@@ -303,8 +303,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
-        int numberOfColumns = mGridView.getNumColumns();
-        return lastVisibleCount >= totalItemCount - numberOfColumns;
+        if (totalItemCount < ThemeBrowserActivity.THEME_FETCH_MAX) {
+            return false;
+        } else {
+            int numberOfColumns = mGridView.getNumColumns();
+            return lastVisibleCount >= totalItemCount - numberOfColumns;
+        }
     }
 
     protected int getSpinnerPosition() {
