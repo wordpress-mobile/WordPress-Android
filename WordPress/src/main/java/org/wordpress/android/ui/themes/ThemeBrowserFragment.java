@@ -49,6 +49,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     protected static final int THEME_FILTER_FREE_INDEX = 1;
     protected static final int THEME_FILTER_PREMIUM_INDEX = 2;
 
+    protected SwipeToRefreshHelper mSwipeToRefreshHelper;
     private String mCurrentThemeId;
     private HeaderGridView mGridView;
     private RelativeLayout mEmptyView;
@@ -58,7 +59,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private Spinner mSpinner;
     private ThemeBrowserFragmentCallback mCallback;
     private int mPage = 1;
-    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
 
