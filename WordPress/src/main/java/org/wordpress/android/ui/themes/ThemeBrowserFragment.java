@@ -58,7 +58,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private Spinner mSpinner;
     private ThemeBrowserFragmentCallback mCallback;
     private int mPage = 1;
-    private int mSavedScrollPosition = 0;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
@@ -113,7 +112,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mAdapter = new ThemeBrowserAdapter(themeBrowserActivity, cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
-        mGridView.setSelection(mSavedScrollPosition);
         restoreState(savedInstanceState);
     }
 
