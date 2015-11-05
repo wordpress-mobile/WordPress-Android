@@ -12,7 +12,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
-import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -24,6 +23,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
     public static final String GET_TITLE_KEY = "name";
     public static final String GET_DESC_KEY = "description";
+
+    // WP.com REST keys used to POST updates to site settings
     private static final String SET_TITLE_KEY = "blogname";
     private static final String SET_DESC_KEY = "blogdescription";
 
@@ -32,6 +33,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String URL_KEY = "URL";
     public static final String DEF_CATEGORY_KEY = "default_category";
     public static final String DEF_POST_FORMAT_KEY = "default_post_format";
+    public static final String RELATED_POSTS_ALLOWED_KEY = "jetpack_relatedposts_allowed";
+    public static final String RELATED_POSTS_ENABLED_KEY = "jetpack_relatedposts_enabled";
+    public static final String RELATED_POSTS_HEADER_KEY = "jetpack_relatedposts_show_headline";
+    public static final String RELATED_POSTS_IMAGES_KEY = "jetpack_relatedposts_show_thumbnails";
     public static final String ALLOW_COMMENTS_KEY = "default_comment_status";
     public static final String SEND_PINGBACKS_KEY = "default_pingback_flag";
     public static final String RECEIVE_PINGBACKS_KEY = "default_ping_status";
@@ -159,22 +164,19 @@ class DotComSiteSettings extends SiteSettingsInterface {
         Collections.addAll(mRemoteSettings.blacklist,
                 settingsObject.optString(BLACKLIST_KEYS_KEY, "").split("\n"));
 
-        boolean closeComments = settingsObject.optBoolean(CLOSE_OLD_COMMENTS_KEY, false);
-        if (closeComments) {
+        if (settingsObject.optBoolean(CLOSE_OLD_COMMENTS_KEY, false)) {
             mRemoteSettings.closeCommentAfter = settingsObject.optInt(CLOSE_OLD_COMMENTS_DAYS_KEY, 0);
         } else {
             mRemoteSettings.closeCommentAfter = 0;
         }
 
-        boolean threadComments = settingsObject.optBoolean(THREAD_COMMENTS_KEY, false);
-        if (threadComments) {
+        if (settingsObject.optBoolean(THREAD_COMMENTS_KEY, false)) {
             mRemoteSettings.threadingLevels = settingsObject.optInt(THREAD_COMMENTS_DEPTH_KEY, 0);
         } else {
             mRemoteSettings.threadingLevels = 0;
         }
 
-        boolean pageComments = settingsObject.optBoolean(PAGE_COMMENTS_KEY, false);
-        if (pageComments) {
+        if (settingsObject.optBoolean(PAGE_COMMENTS_KEY, false)) {
             mRemoteSettings.commentsPerPage = settingsObject.optInt(PAGE_COMMENT_COUNT_KEY, 0);
         } else {
             mRemoteSettings.commentsPerPage = 0;
@@ -184,6 +186,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
             mRemoteSettings.sortCommentsBy = ASCENDING_SORT;
         } else {
             mRemoteSettings.sortCommentsBy = DESCENDING_SORT;
+        }
+
+        if (settingsObject.optBoolean(RELATED_POSTS_ALLOWED_KEY, false)) {
+            mRemoteSettings.showRelatedPosts = settingsObject.optBoolean(RELATED_POSTS_ENABLED_KEY, false);
+            mRemoteSettings.showRelatedPostHeader = settingsObject.optBoolean(RELATED_POSTS_HEADER_KEY, false);
+            mRemoteSettings.showRelatedPostImages = settingsObject.optBoolean(RELATED_POSTS_IMAGES_KEY, false);
         }
     }
 
@@ -214,6 +222,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat.equals(mRemoteSettings.defaultPostFormat)) {
             params.put(DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
         }
+        if (mSettings.showRelatedPosts != mRemoteSettings.showRelatedPosts ||
+                mSettings.showRelatedPostHeader != mRemoteSettings.showRelatedPostHeader ||
+                mSettings.showRelatedPostImages != mRemoteSettings.showRelatedPostImages) {
+            params.put(RELATED_POSTS_ENABLED_KEY, String.valueOf(mSettings.showRelatedPosts));
+            params.put(RELATED_POSTS_HEADER_KEY, String.valueOf(mSettings.showRelatedPostHeader));
+            params.put(RELATED_POSTS_IMAGES_KEY, String.valueOf(mSettings.showRelatedPostImages));
+        }
         if (mSettings.allowComments != mRemoteSettings.allowComments) {
             params.put(ALLOW_COMMENTS_KEY, String.valueOf(mSettings.allowComments));
         }
@@ -223,40 +238,40 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.receivePingbacks != mRemoteSettings.receivePingbacks) {
             params.put(RECEIVE_PINGBACKS_KEY, String.valueOf(mSettings.receivePingbacks));
         }
-        if (mSettings.commentApprovalRequired != mRemoteSettings.commentApprovalRequired) {
-            params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
-        }
-        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
-            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
-        }
-        if (mSettings.sortCommentsBy != mRemoteSettings.sortCommentsBy) {
-            if (mSettings.sortCommentsBy == ASCENDING_SORT) {
-                params.put(COMMENT_SORT_ORDER_KEY, "asc");
-            } else if (mSettings.sortCommentsBy == DESCENDING_SORT) {
-                params.put(COMMENT_SORT_ORDER_KEY, "desc");
-            }
-        }
-        if (mSettings.threadingLevels != mRemoteSettings.threadingLevels) {
-            params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
-        }
-        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
-            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
-        }
-        if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
-            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
-        }
-        if (mSettings.commentsRequireUserAccount != mRemoteSettings.commentsRequireUserAccount) {
-            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
-        }
-        if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
-            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
-        }
-        if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
-            params.put(MODERATION_KEYS_KEY, String.valueOf(mSettings.holdForModeration));
-        }
-        if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
-            params.put(BLACKLIST_KEYS_KEY, String.valueOf(mSettings.blacklist));
-        }
+//        if (mSettings.commentApprovalRequired != mRemoteSettings.commentApprovalRequired) {
+//            params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
+//        }
+//        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
+//            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
+//        }
+//        if (mSettings.sortCommentsBy != mRemoteSettings.sortCommentsBy) {
+//            if (mSettings.sortCommentsBy == ASCENDING_SORT) {
+//                params.put(COMMENT_SORT_ORDER_KEY, "asc");
+//            } else if (mSettings.sortCommentsBy == DESCENDING_SORT) {
+//                params.put(COMMENT_SORT_ORDER_KEY, "desc");
+//            }
+//        }
+//        if (mSettings.threadingLevels != mRemoteSettings.threadingLevels) {
+//            params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
+//        }
+//        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
+//            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
+//        }
+//        if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
+//            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
+//        }
+//        if (mSettings.commentsRequireUserAccount != mRemoteSettings.commentsRequireUserAccount) {
+//            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
+//        }
+//        if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
+//            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
+//        }
+//        if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
+//            params.put(MODERATION_KEYS_KEY, String.valueOf(mSettings.holdForModeration));
+//        }
+//        if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
+//            params.put(BLACKLIST_KEYS_KEY, String.valueOf(mSettings.blacklist));
+//        }
 
         return params;
     }

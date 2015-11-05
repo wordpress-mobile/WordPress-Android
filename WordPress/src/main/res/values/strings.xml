@@ -135,6 +135,11 @@
     <string name="no_device_videos">No videos</string>
     <string name="no_blog_images">No images</string>
     <string name="no_blog_videos">No videos</string>
+    <string name="upload_queued">Queued</string>
+    <string name="media_file_type">File type: %s</string>
+    <string name="media_file_name">File name: %s</string>
+    <string name="media_uploaded_on">Uploaded on: %s</string>
+    <string name="media_dimensions">Dimensions: %s</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -230,8 +235,10 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
-    <string name="post_uploaded">Post uploaded</string>
-    <string name="page_uploaded">Page uploaded</string>
+    <string name="post_published">Post published</string>
+    <string name="page_published">Page published</string>
+    <string name="post_updated">Post updated</string>
+    <string name="page_updated">Page updated</string>
     <string name="post_password">Password (optional)</string>
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
@@ -415,12 +422,17 @@
     <string name="pref_notification_account_emails" translatable="false">wp_pref_notification_account_emails</string>
     <string name="pref_notification_sights_sounds" translatable="false">wp_pref_notification_sights_sounds</string>
     <string name="pref_key_notification_site_settings" translatable="false">wp_pref_notification_site_settings</string>
+    <string name="pref_key_site_screen" translatable="false">wp_pref_site_screen</string>
     <string name="pref_key_site_general" translatable="false">wp_pref_site_general</string>
+    <string name="pref_key_site_account" translatable="false">wp_pref_site_account</string>
+    <string name="pref_key_site_writing" translatable="false">wp_pref_site_writing</string>
     <string name="pref_key_site_title" translatable="false">wp_pref_site_title</string>
     <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
     <string name="pref_key_site_address" translatable="false">wp_pref_site_address</string>
     <string name="pref_key_site_language" translatable="false">wp_pref_site_language</string>
     <string name="pref_key_site_visibility" translatable="false">wp_pref_site_visibility</string>
+    <string name="pref_key_site_username" translatable="false">wp_pref_site_username</string>
+    <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_location" translatable="false">wp_pref_site_location</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
@@ -445,26 +457,69 @@
 
     <!-- Site Settings -->
     <string name="site_settings_general_header">General</string>
+    <string name="site_settings_account_header">Account</string>
+    <string name="site_settings_writing_header">Writing</string>
     <string name="site_settings_title_title">Site Title</string>
     <string name="site_settings_tagline_title">Tagline</string>
     <string name="site_settings_address_title">Address</string>
-    <string name="site_settings_visibility_header">Privacy</string>
-    <string name="site_settings_language_header">@string/language</string>
+    <string name="site_settings_visibility_title">Privacy</string>
+    <string name="site_settings_username_title">Username</string>
+    <string name="site_settings_password_title">Password</string>
+    <string name="site_settings_language_title">@string/language</string>
+    <string name="site_settings_location_title">Enable Location</string>
+    <string name="site_settings_category_title">Default Category</string>
+    <string name="site_settings_format_title">Default Format</string>
+    <string name="site_settings_related_posts_title">Related Posts</string>
     <string name="site_title_hint">In a few words, explain what this site is about.</string>
     <string name="site_tagline_hint">A short description or catchy phrase to describe your blog.</string>
     <string name="site_address_hint">Changing your address is not currently supported.</string>
     <string name="site_privacy_hint">Controls who can see your site.</string>
     <string name="site_language_hint">Language this blog is primarily written in.</string>
-    <string name="site_settings_related_posts_title">Related Posts</string>
-    <string name="site_settings_related_header_title">Related Posts</string>
+    <string name="site_username_hint">Current user account.</string>
+    <string name="site_password_hint">Change your password.</string>
+    <string name="site_location_hint">Automatically add location data to your posts.</string>
+    <string name="site_category_hint">Sets new post category.</string>
+    <string name="site_format_hint">Sets new post format.</string>
+    <string name="site_related_posts_hint">Show or hide related posts in reader.</string>
     <string name="site_settings_related_posts_summary">Show related content after posts</string>
-    <string name="site_settings_title_default_summary">Fetching title</string>
-    <string name="site_settings_tagline_default_summary">Fetching tagline</string>
-    <string name="site_settings_address_default_summary">Fetching address</string>
-    <string name="site_settings_privacy_default_summary">Fetching privacy</string>
-    <string name="site_settings_language_default_summary">Fetching language</string>
     <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
     <string name="site_settings_save_success">Site settings updated</string>
+    <string name="related_posts_switch_title">Show Related Posts</string>
+    <string name="related_posts_switch_summary">Related Posts displays relevant content from your site below your posts.</string>
+    <string name="related_posts_show_header_title">Show Header</string>
+    <string name="related_posts_show_images_title">Show Images</string>
+    <string name="related_posts_preview_header">Related Posts</string>
+    <string name="related_post_preview1_title">Big iPhone/iPad Update Now Available</string>
+    <string name="related_post_preview1_site">in \"Mobile\"</string>
+    <string name="related_post_preview2_title">The WordPress for Android App Gets a Big Facelift</string>
+    <string name="related_post_preview2_site">in \"Apps\"</string>
+    <string name="related_post_preview3_title">Upgrade Focus: VideoPress For Weddings</string>
+    <string name="related_post_preview3_site">in \"Upgrade\"</string>
+    <string name="multiple_entry_pref_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="hold_for_moderation_description">@string/multiple_entry_pref_description</string>
+    <string name="blacklist_description">@string/multiple_entry_pref_description</string>
+    <string-array name="site_settings_close_after_details">
+        <item>Never</item>
+        <item>One day</item>
+        <item>One week</item>
+        <item>One month</item>
+    </string-array>
+    <string-array name="site_settings_sort_details">
+        <item>Oldest first</item>
+        <item>Newest first</item>
+    </string-array>
+    <string-array name="site_settings_threading_details">
+        <item>Two levels</item>
+        <item>Three levels</item>
+        <item>Four levels</item>
+        <item>Five level</item>
+    </string-array>
+    <string-array name="site_settings_paging_details">
+        <item>None</item>
+        <item>50 comments per page</item>
+        <item>100 comments per page</item>
+        <item>200 comments per page</item>
+    </string-array>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
@@ -482,6 +537,7 @@
     <string name="stats_view">View</string>
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
+    <string name="stats_default_number_zero" translatable="false">0</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -576,6 +632,13 @@
     <string name="stats_comments_by_authors">By Authors</string>
     <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
     <string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
+
+    <!-- stats: referrers -->
+    <string name="stats_referrers_spam">Spam</string>
+    <string name="stats_referrers_unspam">Not spam</string>
+    <string name="stats_referrers_marking_spam">Marking as spam</string>
+    <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
+    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -786,8 +849,8 @@
 
     <!-- Used as values to a preference in Site Settings -->
     <string-array name="language_codes">
+        <item>en_US</item>
         <item>az</item>
-        <item>en</item>
         <item>de</item>
         <item>el</item>
         <item>es</item>
@@ -799,6 +862,7 @@
         <item>it</item>
         <item>ja</item>
         <item>ko</item>
+        <item>nb</item>
         <item>nl</item>
         <item>pl</item>
         <item>ru</item>
@@ -807,14 +871,16 @@
         <item>uz</item>
         <item>zh_CN</item>
         <item>zh_TW</item>
-        <item>en-GB</item>
+        <item>zh_HK</item>
+        <item>en_GB</item>
         <item>tr</item>
         <item>eu</item>
         <item>he</item>
-        <item>pt-BR</item>
+        <item>pt_BR</item>
         <item>ar</item>
         <item>ro</item>
         <item>mk</item>
+        <item>en_AU</item>
         <item>sr</item>
         <item>sk</item>
         <item>cy</item>
@@ -823,8 +889,8 @@
 
     <!-- Language IDs for WordPress REST call -->
     <string-array name="lang_ids">
-        <item>79</item>
         <item>1</item>
+        <item>79</item>
         <item>15</item>
         <item>17</item>
         <item>19</item>
@@ -878,6 +944,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
+    <string name="automattic_url" translatable="false">automattic.com</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -894,6 +961,7 @@
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
+    <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -926,6 +994,7 @@
     <string name="content_description_add_media">Add media</string>
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
+    <string name="cd_related_post_preview_image">Related post preview image</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
@@ -1200,5 +1269,17 @@
     <!-- Static URLs -->
     <string name="privacy_settings_url">https://en.support.wordpress.com/privacy-settings</string>
     <string name="language_settings_url">https://en.support.wordpress.com/language-settings</string>
+
+    <string name="date_range_start_date">Start Date</string>
+    <string name="date_range_end_date">End Date</string>
+
+    <!-- Special characters -->
+    <string name="bullet" translatable="false">\u2022</string>
+    <string name="previous_button" translatable="false">&lt;</string>
+    <string name="next_button" translatable="false">&gt;</string>
+
+    <!-- Noticons -->
+    <string name="noticon_clock" translatable="false">\uf303</string>
+    <string name="noticon_note" translatable="false">\uf814</string>
 
 </resources>

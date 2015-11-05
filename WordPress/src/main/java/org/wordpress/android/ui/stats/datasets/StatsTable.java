@@ -186,6 +186,28 @@ public class StatsTable {
         }
     }
 
+    public static boolean deleteStatsForBlog(final Context ctx, final int blogId, final StatsEndpointsEnum sectionToUpdate ) {
+        if (ctx == null) {
+            AppLog.e(AppLog.T.STATS, "Cannot delete stats since the passed context is null. Context is required " +
+                    "to access the DB.");
+            return false;
+        }
+
+        SQLiteDatabase db = StatsDatabaseHelper.getWritableDb(ctx);
+        try {
+            db.beginTransaction();
+            int rowDeleted = db.delete(TABLE_NAME, "blogID=? AND type=?",
+                    new String[] {Integer.toString(blogId), Integer.toString(sectionToUpdate.ordinal())}
+            );
+            db.setTransactionSuccessful();
+            AppLog.d(AppLog.T.STATS, "Stats deleted for localBlogID " + blogId + " and type " + sectionToUpdate.getRestEndpointPath());
+            return rowDeleted > 1;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
     public static void purgeAll(Context ctx) {
         if (ctx == null) {
             AppLog.e(AppLog.T.STATS, "Cannot purgeAll stats since the passed context is null. Context is required " +

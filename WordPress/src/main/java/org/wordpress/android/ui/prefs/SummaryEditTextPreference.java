@@ -30,8 +30,7 @@ import org.wordpress.android.widgets.TypefaceCache;
  *  - app:longClickHint : sets the string to be shown in a Toast when preference is long clicked
  */
 
-public class SummaryEditTextPreference extends EditTextPreference
-        implements SiteSettingsFragment.HasHint {
+public class SummaryEditTextPreference extends EditTextPreference implements PreferenceHint {
     private int mLines;
     private int mMaxLines;
     private String mHint;

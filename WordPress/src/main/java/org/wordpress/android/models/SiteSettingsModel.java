@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,8 +99,9 @@ public class SiteSettingsModel {
     public CategoryModel[] categories;
     public String defaultPostFormat;
     public Map<String, String> postFormats;
+    public String[] postFormatKeys;
     public boolean showRelatedPosts;
-    public boolean showRelatedPostHeaders;
+    public boolean showRelatedPostHeader;
     public boolean showRelatedPostImages;
     public boolean allowComments;
     public boolean sendPingbacks;
@@ -132,6 +134,9 @@ public class SiteSettingsModel {
                 location == otherModel.location &&
                 defaultPostFormat.equals(otherModel.defaultPostFormat) &&
                 defaultCategory == otherModel.defaultCategory &&
+                showRelatedPosts == otherModel.showRelatedPosts &&
+                showRelatedPostHeader == otherModel.showRelatedPostHeader &&
+                showRelatedPostImages == otherModel.showRelatedPostImages &&
                 allowComments == otherModel.allowComments &&
                 sendPingbacks == otherModel.sendPingbacks &&
                 receivePingbacks == otherModel.receivePingbacks &&
@@ -171,7 +176,7 @@ public class SiteSettingsModel {
         defaultPostFormat = other.defaultPostFormat;
         postFormats = other.postFormats;
         showRelatedPosts = other.showRelatedPosts;
-        showRelatedPostHeaders = other.showRelatedPostHeaders;
+        showRelatedPostHeader = other.showRelatedPostHeader;
         showRelatedPostImages = other.showRelatedPostImages;
         allowComments = other.allowComments;
         sendPingbacks = other.sendPingbacks;
@@ -223,12 +228,8 @@ public class SiteSettingsModel {
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
         holdForModeration = new ArrayList<>();
         blacklist = new ArrayList<>();
-        for (String key : moderationKeys.split("\n")) {
-            holdForModeration.add(key);
-        }
-        for (String key : blacklistKeys.split("\n")) {
-            blacklist.add(key);
-        }
+        Collections.addAll(holdForModeration, moderationKeys.split("\n"));
+        Collections.addAll(blacklist, blacklistKeys.split("\n"));
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
@@ -249,6 +250,11 @@ public class SiteSettingsModel {
                 String[] kvp = format.split(",");
                 postFormats.put(kvp[0], kvp[1]);
             }
+        }
+
+        int cachedRelatedPosts = getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME);
+        if (cachedRelatedPosts != -1) {
+            setRelatedPostsFlags(cachedRelatedPosts);
         }
 
         isInLocalTable = true;
@@ -304,7 +310,7 @@ public class SiteSettingsModel {
         int flags = 0;
 
         if (showRelatedPosts) flags |= RELATED_POSTS_ENABLED_FLAG;
-        if (showRelatedPostHeaders) flags |= RELATED_POST_HEADER_FLAG;
+        if (showRelatedPostHeader) flags |= RELATED_POST_HEADER_FLAG;
         if (showRelatedPostImages) flags |= RELATED_POST_IMAGE_FLAG;
 
         return flags;
@@ -312,7 +318,7 @@ public class SiteSettingsModel {
 
     public void setRelatedPostsFlags(int flags) {
         showRelatedPosts = (flags & RELATED_POSTS_ENABLED_FLAG) > 0;
-        showRelatedPostHeaders = (flags & RELATED_POST_HEADER_FLAG) > 0;
+        showRelatedPostHeader = (flags & RELATED_POST_HEADER_FLAG) > 0;
         showRelatedPostImages = (flags & RELATED_POST_IMAGE_FLAG) > 0;
     }
 

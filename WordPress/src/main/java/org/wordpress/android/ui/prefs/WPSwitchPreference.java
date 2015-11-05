@@ -15,7 +15,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
 
-public class WPSwitchPreference extends SwitchPreference implements SiteSettingsFragment.HasHint {
+public class WPSwitchPreference extends SwitchPreference implements PreferenceHint {
     private String mHint;
 
     public WPSwitchPreference(Context context, AttributeSet attrs) {

@@ -45,7 +45,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setCustomView(R.layout.site_settings_actionbar);
         }

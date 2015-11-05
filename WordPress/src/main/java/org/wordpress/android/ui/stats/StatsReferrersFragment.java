@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import android.content.Context;
+import android.app.Activity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,12 +92,14 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
+        public final Activity act;
         private final List<ReferrerGroupModel> groups;
         private final List<List<MyChildModel>> children;
 
-        public MyExpandableListAdapter(Context context, List<ReferrerGroupModel> groups) {
+        public MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
             this.groups = groups;
-            this.inflater = LayoutInflater.from(context);
+            this.inflater = LayoutInflater.from(act);
+            this.act = act;
 
             // The code below flattens the 3-levels tree of children to a 2-levels structure
             // that will be used later to populate the UI
@@ -170,8 +172,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(convertView);
-                viewHolder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
-                viewHolder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
                 convertView.setTag(viewHolder);
             }
 
@@ -186,15 +186,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(views));
-
-            if (!TextUtils.isEmpty(currentChild.icon)) {
-                holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.headerAvatarSizePx),
-                        WPNetworkImageView.ImageType.BLAVATAR);
-                holder.networkImageView.setVisibility(View.VISIBLE);
-            } else {
-                holder.networkImageView.setVisibility(View.GONE);
-            }
+            holder.networkImageView.setVisibility(View.GONE);
 
             // no more btm
             holder.imgMore.setVisibility(View.GONE);
@@ -243,7 +235,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            ReferrerGroupModel group = (ReferrerGroupModel) getGroup(groupPosition);
+            final ReferrerGroupModel group = (ReferrerGroupModel) getGroup(groupPosition);
 
             String name = group.getName();
             int total = group.getTotal();
@@ -259,16 +251,36 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-
-            holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
-                    WPNetworkImageView.ImageType.BLAVATAR);
-            holder.networkImageView.setVisibility(View.VISIBLE);
+            
+            if (TextUtils.isEmpty(icon)) {
+                holder.networkImageView.setVisibility(View.GONE);
+            } else {
+                holder.networkImageView.setImageUrl(
+                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+                        WPNetworkImageView.ImageType.BLAVATAR);
+                holder.networkImageView.setVisibility(View.VISIBLE);
+            }
 
             if (children == 0) {
                 holder.showLinkIcon();
             } else {
                 holder.showChevronIcon();
+            }
+
+            // Setup the spam button
+            if (ReferrerSpamHelper.isSpamActionAvailable(group)) {
+                holder.imgMore.setVisibility(View.VISIBLE);
+                holder.imgMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ReferrerSpamHelper rp = new ReferrerSpamHelper(act);
+                        rp.showPopup(holder.imgMore, group);
+                    }
+                });
+
+            } else {
+                holder.imgMore.setVisibility(View.GONE);
+                holder.imgMore.setClickable(false);
             }
 
             return convertView;
