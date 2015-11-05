@@ -88,6 +88,7 @@ public class WordPressDB {
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
     private static final String MEDIA_TABLE = "media";
+    private static final String NOTES_TABLE = "notes";
 
     private static final String CREATE_TABLE_POSTS =
         "create table if not exists posts ("
@@ -215,6 +216,8 @@ public class WordPressDB {
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
 
+    private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
+
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
@@ -325,7 +328,7 @@ public class WordPressDB {
                 currentVersion++;
             case 26:
                 // Drop the notes table, no longer needed with Simperium.
-                db.execSQL("DROP TABLE IF EXISTS notes;");
+                db.execSQL(DROP_TABLE_PREFIX + NOTES_TABLE);
                 currentVersion++;
             case 27:
                 // versions prior to v4.5 added an "isUploading" column here, but that's no longer used
@@ -386,7 +389,8 @@ public class WordPressDB {
     }
 
     private void deleteThemesTable() {
-        db.delete(THEMES_TABLE, null, null);
+        db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
+        db.execSQL(CREATE_TABLE_THEMES);
     }
 
     private void migratePreferencesToAccountTable(Context context) {
@@ -1803,7 +1807,7 @@ public class WordPressDB {
         values.put(Theme.STYLESHEET, theme.getStylesheet());
         values.put(Theme.PRICE, theme.getPrice());
         values.put(Theme.BLOG_ID, theme.getBlogId());
-        values.put(Theme.IS_CURRENT, theme.getIsCurrent());
+        values.put(Theme.IS_CURRENT, theme.getIsCurrent() ? 1 : 0);
 
         synchronized (this) {
             int result = db.update(

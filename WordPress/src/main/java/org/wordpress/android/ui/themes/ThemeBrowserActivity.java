@@ -241,9 +241,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                 WordPress.wpDB.setCurrentTheme(siteId, mCurrentTheme.getId());
                                 if (mThemeBrowserFragment != null) {
                                     mThemeBrowserFragment.setRefreshing(false);
-                                    if (mThemeBrowserFragment.mCurrentThemeTextView != null) {
-                                        mThemeBrowserFragment.mCurrentThemeTextView.setText(mCurrentTheme.getName());
-                                        mThemeBrowserFragment.mCurrentThemeId = mCurrentTheme.getId();
+                                    if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
+                                        mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
+                                        mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getId());
                                     }
                                 }
                             }
@@ -258,9 +258,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         mCurrentTheme = WordPress.wpDB.getTheme(siteId, themeId);
                         if (mCurrentTheme != null) {
                             if (mThemeBrowserFragment != null) {
-                                if (mThemeBrowserFragment.mCurrentThemeTextView != null) {
-                                    mThemeBrowserFragment.mCurrentThemeTextView.setText(mCurrentTheme.getName());
-                                    mThemeBrowserFragment.mCurrentThemeId = mCurrentTheme.getId();
+                                if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
+                                    mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
+                                    mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getId());
                                 }
                             }
 
@@ -470,10 +470,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 public void run() {
                     mFetchingThemes = false;
                     if (mThemeBrowserFragment != null && mThemeBrowserFragment.isVisible()) {
-                        mThemeBrowserFragment.mEmptyView.setText(R.string.no_themes);
+                        mThemeBrowserFragment.getEmptyTextView().setText(R.string.theme_no_search_result_found);
                         mThemeBrowserFragment.setRefreshing(false);
                     } else if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
-                        mThemeSearchFragment.mEmptyView.setText(R.string.no_themes);
+                        mThemeSearchFragment.getEmptyTextView().setText(R.string.theme_no_search_result_found);
                         mThemeSearchFragment.setRefreshing(false);
                     }
                 }

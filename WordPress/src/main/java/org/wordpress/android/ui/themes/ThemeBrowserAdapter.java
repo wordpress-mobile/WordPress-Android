@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.themes;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,26 +83,27 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.nameView.setText(name);
         themeViewHolder.priceView.setText(price);
 
-        configureImageView(themeViewHolder, screenshotURL, themeId);
-        configureImageButton(context, themeViewHolder, themeId, isPremium);
+        configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
+        configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
         configureCardView(context, themeViewHolder, isCurrent);
     }
 
     private void configureCardView(Context context, ThemeViewHolder themeViewHolder, boolean isCurrent) {
+        Resources resources = context.getResources();
         if (isCurrent) {
-            themeViewHolder.detailsView.setBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
-            themeViewHolder.nameView.setTextColor(context.getResources().getColor(R.color.white));
+            themeViewHolder.detailsView.setBackgroundColor(resources.getColor(R.color.blue_wordpress));
+            themeViewHolder.nameView.setTextColor(resources.getColor(R.color.white));
             themeViewHolder.activeView.setVisibility(View.VISIBLE);
-            themeViewHolder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.blue_wordpress));
+            themeViewHolder.cardView.setCardBackgroundColor(resources.getColor(R.color.blue_wordpress));
         } else {
-            themeViewHolder.detailsView.setBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
-            themeViewHolder.nameView.setTextColor(context.getResources().getColor(R.color.black));
+            themeViewHolder.detailsView.setBackgroundColor(resources.getColor(R.color.cardview_light_background));
+            themeViewHolder.nameView.setTextColor(resources.getColor(R.color.black));
             themeViewHolder.activeView.setVisibility(View.GONE);
-            themeViewHolder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.cardview_light_background));
+            themeViewHolder.cardView.setCardBackgroundColor(resources.getColor(R.color.cardview_light_background));
         }
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId) {
+    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId, final boolean isCurrent) {
         ScreenshotHolder urlHolder = (ScreenshotHolder) themeViewHolder.imageView.getTag();
         if (urlHolder == null) {
             urlHolder = new ScreenshotHolder();
@@ -117,15 +120,21 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onViewSelected(themeId);
+                if (isCurrent) {
+                    mCallback.onTryAndCustomizeSelected(themeId);
+                } else {
+                    mCallback.onViewSelected(themeId);
+                }
             }
         });
     }
 
-    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium) {
+    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium, boolean isCurrent) {
         final PopupMenu popupMenu = new PopupMenu(context, themeViewHolder.imageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
-        
+
+        configureMenuForTheme(popupMenu.getMenu(), isCurrent);
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -161,6 +170,26 @@ public class ThemeBrowserAdapter extends CursorAdapter {
                 popupMenu.show();
             }
         });
+    }
+
+    private void configureMenuForTheme(Menu menu, boolean isCurrent) {
+        MenuItem activate = menu.findItem(R.id.menu_activate);
+        MenuItem customize = menu.findItem(R.id.menu_try_and_customize);
+        MenuItem view = menu.findItem(R.id.menu_view);
+
+        if (activate != null) {
+            activate.setVisible(!isCurrent);
+        }
+        if (customize != null) {
+            if (isCurrent) {
+                customize.setTitle(R.string.customize);
+            } else {
+                customize.setTitle(R.string.theme_try_and_customize);
+            }
+        }
+        if (view != null) {
+            view.setVisible(!isCurrent);
+        }
     }
 
     static class ScreenshotHolder {
