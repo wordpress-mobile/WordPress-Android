@@ -125,26 +125,26 @@
     <PreferenceScreen
         android:id="@+id/pref_discussion_settings"
         android:key="@string/pref_key_site_discussion"
-        android:title="Discussion">
+        android:title="@string/site_settings_discussion_title">
 
         <PreferenceCategory
             android:id="@+id/pref_site_new_posts_defaults"
-            android:title="Defaults for New Posts">
+            android:title="@string/site_settings_discussion_defaults_header">
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_allow_comments"
                 android:key="@string/pref_key_site_allow_comments"
-                android:title="Allow Comments" />
+                android:title="@string/site_settings_allow_comments_title" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_allow_comments"
                 android:key="@string/pref_key_site_send_pingbacks"
-                android:title="Send Pingbacks" />
+                android:title="@string/site_settings_send_pingbacks_title" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_allow_comments"
                 android:key="@string/pref_key_site_receive_pingbacks"
-                android:title="Receive Pingbacks" />
+                android:title="@string/site_settings_receive_pingbacks_title" />
 
         </PreferenceCategory>
 
@@ -157,63 +157,64 @@
                 android:key="@string/pref_key_site_close_after"
                 android:title="Close after"
                 android:summary="30 days" />
+                android:title="@string/site_settings_close_after_title"
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_sort_by"
                 android:key="@string/pref_key_site_sort_by"
-                android:title="Sort by"
+                android:title="@string/site_settings_sort_by_title"
                 android:summary="Oldest first"  />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_threading"
                 android:key="@string/pref_key_site_threading"
-                android:title="Threading" />
+                android:title="@string/site_settings_threading_title" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_paging"
                 android:key="@string/pref_key_site_paging"
-                android:title="Paging" />
+                android:title="@string/site_settings_paging_title" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_manual_approval"
                 android:key="@string/pref_key_site_manual_approval"
-                android:title="Must be manually approved" />
+                android:title="@string/site_settings_manual_approval_title" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_identity_required"
                 android:key="@string/pref_key_site_identity_required"
-                android:title="Must include name and email" />
+                android:title="@string/site_settings_identity_title" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_user_account_required"
                 android:key="@string/pref_key_site_user_account_required"
-                android:title="Users must be signed in" />
+                android:title="@string/site_settings_account_required_title" />
 
         </PreferenceCategory>
 
         <PreferenceCategory
             android:id="@+id/pref_site_comments"
-            android:title="Automatically approve comments">
+            android:title="@string/site_settings_auto_approve_header">
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_whitelist"
                 android:key="@string/pref_key_site_whitelist"
-                android:title="From known users" />
+                android:title="@string/site_settings_whitelist_title" />
 
             <org.wordpress.android.ui.prefs.WPSwitchPreference
                 android:id="@+id/pref_multiple_links"
                 android:key="@string/pref_key_site_multiple_links"
-                android:title="With multiple links" />
+                android:title="@string/site_settings_multiple_links_title" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_moderation_hold"
                 android:key="@string/pref_key_site_moderation_hold"
-                android:title="Hold for Moderation" />
+                android:title="@string/site_settings_moderation_hold_title" />
 
             <org.wordpress.android.ui.prefs.DetailListPreference
                 android:id="@+id/pref_blacklist"
                 android:key="@string/pref_key_site_blacklist"
-                android:title="Blacklist" />
+                android:title="@string/site_settings_blacklist_title" />
 
         </PreferenceCategory>
 
