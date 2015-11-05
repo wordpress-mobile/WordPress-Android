@@ -61,7 +61,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private int mSavedScrollPosition = 0;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private boolean mShouldRefreshOnStart;
-    private ImageButton mSearchButton;
     private TextView mEmptyTextView;
 
     @Override
@@ -232,8 +231,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             }
         });
         configureFilterSpinner(headerSearch);
-        mSearchButton = (ImageButton) headerSearch.findViewById(R.id.theme_search);
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton searchButton = (ImageButton) headerSearch.findViewById(R.id.theme_search);
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCallback.onSearchClicked();
