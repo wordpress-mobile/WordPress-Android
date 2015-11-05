@@ -19,8 +19,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract boolean hasFailedMediaUploads();
-    public abstract void setFeaturedImageId(int imageId);
-    public abstract int getFeaturedImageId();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
 
@@ -32,6 +30,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected boolean mFeaturedImageSupported;
+    protected int mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
@@ -78,6 +77,14 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     public void setBlogSettingMaxImageWidth(String blogSettingMaxImageWidth) {
         mBlogSettingMaxImageWidth = blogSettingMaxImageWidth;
+    }
+
+    public void setFeaturedImageId(int featuredImageId) {
+        mFeaturedImageId = featuredImageId;
+    }
+
+    public int getFeaturedImageId() {
+        return mFeaturedImageId;
     }
 
     public void setDebugModeEnabled(boolean debugModeEnabled) {

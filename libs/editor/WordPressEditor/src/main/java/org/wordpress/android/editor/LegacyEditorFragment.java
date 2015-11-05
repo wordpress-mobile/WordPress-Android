@@ -1136,16 +1136,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
-    public void setFeaturedImageId(int featuredImageId) {
-
-    }
-
-    @Override
-    public int getFeaturedImageId() {
-        return 0;
-    }
-
-    @Override
     public void setTitlePlaceholder(CharSequence text) {
 
     }

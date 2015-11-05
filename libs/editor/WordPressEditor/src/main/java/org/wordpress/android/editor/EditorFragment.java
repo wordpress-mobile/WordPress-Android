@@ -87,8 +87,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private Set<String> mUploadingMediaIds;
     private Set<String> mFailedMediaIds;
 
-    private int mFeaturedImageId;
-
     private String mJavaScriptResult = "";
 
     private CountDownLatch mGetTitleCountDownLatch;
@@ -712,16 +710,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public boolean hasFailedMediaUploads() {
         return (mFailedMediaIds.size() > 0);
-    }
-
-    @Override
-    public void setFeaturedImageId(int featuredImageId) {
-         mFeaturedImageId = featuredImageId;
-    }
-
-    @Override
-    public int getFeaturedImageId() {
-        return mFeaturedImageId;
     }
 
     @Override
