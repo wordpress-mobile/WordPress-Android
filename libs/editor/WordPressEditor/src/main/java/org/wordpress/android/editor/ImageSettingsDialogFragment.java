@@ -162,7 +162,11 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt("width"));
 
                 // TODO: Featured image handling
-                mFeaturedCheckBox.setChecked(bundle.getBoolean("isFeatured", false));
+                boolean featuredImageSupported = bundle.getBoolean("featuredImageSupported");
+                if (featuredImageSupported) {
+                    mFeaturedCheckBox.setVisibility(View.VISIBLE);
+                    mFeaturedCheckBox.setChecked(bundle.getBoolean("isFeatured", false));
+                }
 
             } catch (JSONException e1) {
                 AppLog.d(AppLog.T.EDITOR, "Missing JSON properties");

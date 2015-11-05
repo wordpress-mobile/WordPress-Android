@@ -148,7 +148,7 @@
             android:text="@string/featured"
             android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
             android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <CheckBox
             android:id="@+id/featuredInPost"
@@ -157,6 +157,6 @@
             android:text="@string/featured_in_post"
             android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
             android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>

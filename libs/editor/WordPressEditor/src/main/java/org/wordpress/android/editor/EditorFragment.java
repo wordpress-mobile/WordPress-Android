@@ -889,6 +889,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 dialogBundle.putString("imageMeta", meta.toString());
                 dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
+                dialogBundle.putBoolean("featuredImageSupported", mFeaturedImageSupported);
 
                 String imageId = JSONUtils.getString(meta, "attachment_id");
                 if (!imageId.isEmpty()) {
