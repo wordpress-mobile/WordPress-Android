@@ -41,7 +41,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String SEND_PINGBACKS_KEY = "default_pingback_flag";
     public static final String RECEIVE_PINGBACKS_KEY = "default_ping_status";
     public static final String COMMENT_MODERATION_KEY = "comment_moderation";
-    public static final String REQUIRE_IDENTITY_KEY = "require_name_and_email";
+    public static final String REQUIRE_IDENTITY_KEY = "require_name_email";
     public static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
     public static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
     public static final String MAX_LINKS_KEY = "comment_max_links";
@@ -257,15 +257,15 @@ class DotComSiteSettings extends SiteSettingsInterface {
 //        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
 //            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
 //        }
-//        if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
-//            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
-//        }
-//        if (mSettings.commentsRequireUserAccount != mRemoteSettings.commentsRequireUserAccount) {
-//            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
-//        }
-//        if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
-//            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
-//        }
+        if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
+            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
+        }
+        if (mSettings.commentsRequireUserAccount != mRemoteSettings.commentsRequireUserAccount) {
+            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
+        }
+        if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
+            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
+        }
 //        if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
 //            params.put(MODERATION_KEYS_KEY, String.valueOf(mSettings.holdForModeration));
 //        }
