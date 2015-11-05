@@ -31,6 +31,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE = 1112;
 
+    public static final int MEDIA_REMOTE_ID_SAMPLE = 123;
+
     private static final int SELECT_PHOTO_MENU_POSITION = 0;
     private static final int SELECT_PHOTO_FAIL_MENU_POSITION = 1;
 
@@ -175,7 +177,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                     while (count < 1.1) {
                         sleep(500);
 
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, count);
+                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId,
+                                MEDIA_REMOTE_ID_SAMPLE, count);
 
                         count += 0.1;
                     }
@@ -203,7 +206,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                     while (count < 0.6) {
                         sleep(500);
 
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, count);
+                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId,
+                                MEDIA_REMOTE_ID_SAMPLE, count);
 
                         count += 0.1;
                     }
