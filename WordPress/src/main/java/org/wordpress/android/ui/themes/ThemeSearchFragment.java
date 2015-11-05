@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.automattic.android.tracks.NetworkUtils;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
@@ -160,6 +162,10 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
 
-        ((ThemeBrowserActivity) getActivity()).searchThemes(searchTerm);
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            ((ThemeBrowserActivity) getActivity()).searchThemes(searchTerm);
+        } else {
+            refreshView(getSpinnerPosition());
+        }
     }
 }
