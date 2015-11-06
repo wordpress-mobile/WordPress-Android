@@ -50,6 +50,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     protected static final int THEME_FILTER_PREMIUM_INDEX = 2;
 
     protected SwipeToRefreshHelper mSwipeToRefreshHelper;
+    protected ThemeBrowserActivity mThemeBrowserActivity;
     private String mCurrentThemeId;
     private HeaderGridView mGridView;
     private RelativeLayout mEmptyView;
@@ -68,6 +69,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
         try {
             mCallback = (ThemeBrowserFragmentCallback) activity;
+            mThemeBrowserActivity = (ThemeBrowserActivity) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ThemeBrowserFragmentCallback");
         }
@@ -96,12 +98,11 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        ThemeBrowserActivity themeBrowserActivity = (ThemeBrowserActivity) getActivity();
         super.onActivityCreated(savedInstanceState);
         if (this instanceof ThemeSearchFragment) {
-            (themeBrowserActivity).setThemeSearchFragment((ThemeSearchFragment) this);
+            mThemeBrowserActivity.setThemeSearchFragment((ThemeSearchFragment) this);
         } else {
-            (themeBrowserActivity).setThemeBrowserFragment(this);
+            mThemeBrowserActivity.setThemeBrowserFragment(this);
         }
         Cursor cursor = fetchThemes(getSpinnerPosition());
 
@@ -109,7 +110,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             return;
         }
 
-        mAdapter = new ThemeBrowserAdapter(themeBrowserActivity, cursor, false, mCallback);
+        mAdapter = new ThemeBrowserAdapter(mThemeBrowserActivity, cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
         restoreState(savedInstanceState);
@@ -119,7 +120,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     public void onResume() {
         super.onResume();
 
-        ((ThemeBrowserActivity) getActivity()).fetchCurrentTheme();
+        mThemeBrowserActivity.fetchCurrentTheme();
     }
 
     @Override
@@ -152,21 +153,19 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     }
 
     protected void configureSwipeToRefresh(View view) {
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), (CustomSwipeRefreshLayout) view.findViewById(
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(mThemeBrowserActivity, (CustomSwipeRefreshLayout) view.findViewById(
                 R.id.ptr_layout), new RefreshListener() {
             @Override
             public void onRefreshStarted() {
                 if (!isAdded()) {
                     return;
                 }
-                if (!NetworkUtils.checkConnection(getActivity())) {
+                if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
                     mSwipeToRefreshHelper.setRefreshing(false);
                     mEmptyTextView.setText(R.string.no_network_title);
                     return;
                 }
-                if (getActivity() instanceof ThemeBrowserActivity) {
-                    ((ThemeBrowserActivity) getActivity()).fetchThemes();
-                }
+                mThemeBrowserActivity.fetchThemes();
             }
         });
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
@@ -182,7 +181,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private void addMainHeader(LayoutInflater inflater) {
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
         mCurrentThemeTextView = (TextView) header.findViewById(R.id.header_theme_text);
-        ((ThemeBrowserActivity) getActivity()).fetchCurrentTheme();
+        mThemeBrowserActivity.fetchCurrentTheme();
         LinearLayout customize = (LinearLayout) header.findViewById(R.id.customize);
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,7 +239,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     private void configureFilterSpinner(View headerSearch) {
         mSpinner = (Spinner) headerSearch.findViewById(R.id.theme_filter_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.themes_filter_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mThemeBrowserActivity, R.array.themes_filter_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
         mGridView.addHeaderView(headerSearch);
@@ -259,7 +258,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
         mEmptyView.setVisibility(visible ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
         mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
-        if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (visible && !NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
             mEmptyTextView.setText(R.string.no_network_title);
         }
     }
@@ -292,7 +291,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             return;
         }
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
+            mAdapter = new ThemeBrowserAdapter(mThemeBrowserActivity, cursor, false, mCallback);
         }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);
@@ -364,7 +363,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getActivity())) {
             mPage++;
-            ((ThemeBrowserActivity) getActivity()).fetchThemes();
+            mThemeBrowserActivity.fetchThemes();
         }
     }
 }
