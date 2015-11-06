@@ -45,6 +45,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -438,63 +439,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
         if (preference instanceof PreferenceScreen) {
-            addToolbarToPreferenceScreen((PreferenceScreen) preference);
+            Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
+            if (prefDialog != null) {
+                String title = String.valueOf(preference.getTitle());
+                WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
+            }
         }
 
         return false;
-    }
-
-    // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
-    // See: http://stackoverflow.com/a/27455363/309558
-    private void addToolbarToPreferenceScreen(PreferenceScreen preferenceScreen) {
-        final Dialog dialog = preferenceScreen.getDialog();
-        if (!isAdded() || dialog == null) {
-            return;
-        }
-
-        Toolbar toolbar;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            if (dialog.findViewById(android.R.id.list) == null) {
-                return;
-            }
-
-            LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
-            toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);
-            root.addView(toolbar, 0);
-        } else {
-            if (dialog.findViewById(android.R.id.content) == null) {
-                return;
-            }
-
-            ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.content);
-            if (!(root.getChildAt(0) instanceof ListView)) {
-                return;
-            }
-
-            ListView content = (ListView) root.getChildAt(0);
-            root.removeAllViews();
-
-            toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);
-            int height;
-            TypedValue tv = new TypedValue();
-            if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
-                height = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-            } else{
-                height = toolbar.getHeight();
-            }
-
-            content.setPadding(0, height, 0, 0);
-            root.addView(content);
-            root.addView(toolbar);
-        }
-
-        toolbar.setTitle(preferenceScreen.getTitle());
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
     }
 }

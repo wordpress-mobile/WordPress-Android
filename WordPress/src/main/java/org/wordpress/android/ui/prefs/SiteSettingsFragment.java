@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -31,6 +33,7 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.Locale;
@@ -181,6 +184,22 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (preference == mRelatedPostsPreference) {
             showRelatedPostsDialog();
             return true;
+        }
+
+        return false;
+    }
+
+     @Override
+     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        super.onPreferenceTreeClick(preferenceScreen, preference);
+
+        // If the user has clicked on a preference screen, set up the screen
+        if (preference instanceof PreferenceScreen) {
+            Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
+            if (prefDialog != null) {
+                String title = String.valueOf(preference.getTitle());
+                WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
+            }
         }
 
         return false;
