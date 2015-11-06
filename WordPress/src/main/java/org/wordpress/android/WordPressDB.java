@@ -1814,7 +1814,7 @@ public class WordPressDB {
                     THEMES_TABLE,
                     values,
                     Theme.ID + "=?",
-                    new String[]{ theme.getId() });
+                    new String[]{theme.getId()});
             if (result == 0)
                 returnValue = db.insert(THEMES_TABLE, null, values) > 0;
         }

@@ -256,14 +256,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     public void onErrorResponse(VolleyError response) {
                         String themeId = WordPress.wpDB.getCurrentThemeId(siteId);
                         mCurrentTheme = WordPress.wpDB.getTheme(siteId, themeId);
-                        if (mCurrentTheme != null) {
-                            if (mThemeBrowserFragment != null) {
-                                if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
-                                    mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
-                                    mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getId());
-                                }
+                        if (mCurrentTheme != null && mThemeBrowserFragment != null) {
+                            if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
+                                mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
+                                mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getId());
                             }
-
                         }
                     }
                 }
