@@ -484,6 +484,10 @@ public class Post implements Serializable {
     }
 
     public int getFeaturedImageId() {
+        if (featuredImageId == FEATURED_IMAGE_INIT_VALUE) {
+            return 0;
+        }
+
         return featuredImageId;
     }
 
@@ -491,6 +495,7 @@ public class Post implements Serializable {
         if (featuredImageId == FEATURED_IMAGE_INIT_VALUE) {
             lastKnownRemoteFeaturedImageId = id;
         }
+
         featuredImageId = id;
     }
 

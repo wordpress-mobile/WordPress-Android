@@ -397,7 +397,7 @@ public class PostUploadService extends Service {
                     contentStruct.put("wp_post_thumbnail", featuredImageID);
                 }
             } else if (mPost.featuredImageHasChanged()) {
-                if (mPost.getFeaturedImageId() == 0 && !mPost.isLocalDraft()) {
+                if (mPost.getFeaturedImageId() < 1 && !mPost.isLocalDraft()) {
                     // The featured image was removed from a live post
                     contentStruct.put("wp_post_thumbnail", "");
                 } else {
