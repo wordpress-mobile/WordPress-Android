@@ -26,9 +26,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
     public static ThemeSearchFragment newInstance() {
-        ThemeSearchFragment fragment = new ThemeSearchFragment();
-
-        return fragment;
+        return new ThemeSearchFragment();
     }
 
     private String mLastSearch = "";
