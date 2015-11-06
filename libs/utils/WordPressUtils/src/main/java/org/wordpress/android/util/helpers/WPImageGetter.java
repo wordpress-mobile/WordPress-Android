@@ -3,6 +3,7 @@ package org.wordpress.android.util.helpers;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.util.ArrayMap;
 import android.text.Html;
 import android.text.TextUtils;
 import android.widget.TextView;
@@ -13,14 +14,18 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 /**
  * ImageGetter for Html.fromHtml()
  * adapted from existing ImageGetter code in NoteCommentFragment
  */
 public class WPImageGetter implements Html.ImageGetter {
+    private static final String IMAGE_QUALITY = "65";
+
     private final WeakReference<TextView> mWeakView;
     private final int mMaxSize;
     private ImageLoader mImageLoader;
@@ -32,13 +37,13 @@ public class WPImageGetter implements Html.ImageGetter {
     }
 
     public WPImageGetter(TextView view, int maxSize) {
-        mWeakView = new WeakReference<TextView>(view);
+        mWeakView = new WeakReference<>(view);
         mMaxSize = maxSize;
     }
 
     public WPImageGetter(TextView view, int maxSize, ImageLoader imageLoader, Drawable loadingDrawable,
                          Drawable failedDrawable) {
-        mWeakView = new WeakReference<TextView>(view);
+        mWeakView = new WeakReference<>(view);
         mMaxSize = maxSize;
         mImageLoader = imageLoader;
         mLoadingDrawable = loadingDrawable;
@@ -64,10 +69,20 @@ public class WPImageGetter implements Html.ImageGetter {
             source = "http:" + source;
         }
 
-        // use Photon if a max size is requested (otherwise the full-sized image will be downloaded
+        // Resize to max size if requested (otherwise the full-sized image will be downloaded
         // and then resized)
         if (mMaxSize > 0) {
-            source = PhotonUtils.getPhotonImageUrl(source, mMaxSize, 0);
+            if (UrlUtils.isWPComUrl(source)) {
+                // Adjust query params for wp.com urls
+                Map<String, String> params = new ArrayMap<>();
+                params.put("w", String.valueOf(mMaxSize));
+                params.put("quality", IMAGE_QUALITY);
+
+                source = UrlUtils.appendUrlParameters(UrlUtils.removeQuery(source), params);
+            } else {
+                // Otherwise use photon
+                source = PhotonUtils.getPhotonImageUrl(source, mMaxSize, 0);
+            }
         }
 
         final RemoteDrawable remote = new RemoteDrawable(mLoadingDrawable, mFailedDrawable);

@@ -231,6 +231,14 @@ public class UrlUtils {
                 cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
     }
 
+    /**
+     * Returns true if the url is on wordpress.com
+     */
+    public static boolean isWPComUrl(String url) {
+        return !TextUtils.isEmpty(url) && url.contains("wordpress.com");
+    }
+
+
     public static String appendUrlParameter(String url, String paramName, String paramValue) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put(paramName, paramValue);
