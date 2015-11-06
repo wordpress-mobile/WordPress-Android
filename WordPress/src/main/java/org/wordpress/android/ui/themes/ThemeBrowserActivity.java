@@ -100,7 +100,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     protected void onPause() {
         super.onPause();
-        getSupportFragmentManager().popBackStack();
+        getFragmentManager().popBackStack();
         mIsRunning = false;
     }
 
