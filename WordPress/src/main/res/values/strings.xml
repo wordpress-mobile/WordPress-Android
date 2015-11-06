@@ -485,8 +485,9 @@
     <string name="site_settings_identity_title">Must include name and email</string>
     <string name="site_settings_account_required_title">Users must be signed in</string>
     <string name="site_settings_auto_approve_header">Automatically approve comments</string>
-    <string name="site_settings_whitelist_title">From known users</string>
+    <string name="site_settings_whitelist_title">Automatically approve</string>
     <string name="site_settings_multiple_links_title">With multiple links</string>
+    <string name="site_settings_multiple_links_summary">Require manual approval for more than %d links</string>
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_start_over_title">Start Over</string>
@@ -533,6 +534,16 @@
     <string name="related_post_preview3_site">in \"Upgrade\"</string>
     <string name="hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string-array name="site_settings_auto_approve_options">
+        <item>No comments</item>
+        <item>Comments from users who have a previously approved comment</item>
+        <item>Comments from all users</item>
+    </string-array>
+    <string-array name="site_settings_auto_approve_details">
+        <item>Require manual approval for everyone\'s comments.</item>
+        <item>Automatically approve if the user has a previously approved comment.</item>
+        <item>Automatically approve everyone\'s comments.</item>
+    </string-array>
     <string-array name="site_settings_close_after_options">
         <item>Never</item>
         <item>One day</item>

@@ -16,6 +16,7 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -395,6 +396,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public List<String> getModerationKeys() {
+        if (mSettings.holdForModeration == null) return new ArrayList<>();
         return mSettings.holdForModeration;
     }
 
@@ -403,6 +405,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public List<String> getBlacklistKeys() {
+        if (mSettings.blacklist == null) return new ArrayList<>();
         return mSettings.blacklist;
     }
 

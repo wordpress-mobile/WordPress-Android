@@ -73,15 +73,14 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mAllowComments;
     private WPSwitchPreference mSendPingbacks;
     private WPSwitchPreference mReceivePingbacks;
+    private WPSwitchPreference mIdentityRequiredPreference;
+    private WPSwitchPreference mUserAccountRequiredPreference;
     private DetailListPreference mCloseAfterPreference;
     private DetailListPreference mSortByPreference;
     private DetailListPreference mThreadingPreference;
     private DetailListPreference mPagingPreference;
-    private WPSwitchPreference mManualApprovalPreference;
-    private WPSwitchPreference mIdentityRequiredPreference;
-    private WPSwitchPreference mUserAccountRequiredPreference;
-    private WPSwitchPreference mWhitelistPreference;
-    private WPSwitchPreference mMultipleLinksPreference;
+    private DetailListPreference mWhitelistPreference;
+    private WPPreference mMultipleLinksPreference;
     private DetailListPreference mModerationHoldPreference;
     private DetailListPreference mBlacklistPreference;
 
@@ -246,9 +245,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mPagingPreference) {
             return true;
-        } else if (preference == mManualApprovalPreference) {
-            mSiteSettings.setManualApproval((Boolean) newValue);
-            return true;
         } else if (preference == mIdentityRequiredPreference) {
             mSiteSettings.setIdentityRequired((Boolean) newValue);
             return true;
@@ -256,14 +252,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setUserAccountRequired((Boolean) newValue);
             return true;
         } else if (preference == mWhitelistPreference) {
-            mSiteSettings.setUseCommentWhitelist((Boolean) newValue);
+//            mSiteSettings.setUseCommentWhitelist((Boolean) newValue);
             return true;
         } else if (preference == mMultipleLinksPreference) {
-            mSiteSettings.setMultipleLinks((Boolean) newValue ? 1 : 0);
+//            mSiteSettings.setMultipleLinks((Boolean) newValue ? 1 : 0);
             return true;
         } else if (preference == mModerationHoldPreference) {
             return true;
         } else if (preference == mBlacklistPreference) {
+            return true;
         } else if (preference == mUsernamePreference) {
             mSiteSettings.setUsername(newValue.toString());
             changeEditTextPreferenceValue(mUsernamePreference, mSiteSettings.getUsername());
@@ -368,15 +365,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         mAllowComments = (WPSwitchPreference) getPref(R.string.pref_key_site_allow_comments);
         mSendPingbacks = (WPSwitchPreference) getPref(R.string.pref_key_site_send_pingbacks);
         mReceivePingbacks = (WPSwitchPreference) getPref(R.string.pref_key_site_receive_pingbacks);
+        mIdentityRequiredPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_identity_required);
+        mUserAccountRequiredPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_user_account_required);
         mCloseAfterPreference = (DetailListPreference) getPref(R.string.pref_key_site_close_after);
         mSortByPreference = (DetailListPreference) getPref(R.string.pref_key_site_sort_by);
         mThreadingPreference = (DetailListPreference) getPref(R.string.pref_key_site_threading);
         mPagingPreference = (DetailListPreference) getPref(R.string.pref_key_site_paging);
-        mManualApprovalPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_manual_approval);
-        mIdentityRequiredPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_identity_required);
-        mUserAccountRequiredPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_user_account_required);
-        mWhitelistPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_whitelist);
-        mMultipleLinksPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_multiple_links);
+        mWhitelistPreference = (DetailListPreference) getPref(R.string.pref_key_site_whitelist);
+        mMultipleLinksPreference = (WPPreference) getPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPreference = (DetailListPreference) getPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPreference = (DetailListPreference) getPref(R.string.pref_key_site_blacklist);
         mRelatedPostsPreference = findPreference(getString(R.string.pref_key_site_related_posts));
@@ -419,15 +415,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         mAllowComments.setChecked(mSiteSettings.getAllowComments());
         mSendPingbacks.setChecked(mSiteSettings.getSendPingbacks());
         mReceivePingbacks.setChecked(mSiteSettings.getReceivePingbacks());
+        mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
+        mUserAccountRequiredPreference.setChecked(mSiteSettings.getUserAccountRequired());
         mCloseAfterPreference.setValue(String.valueOf(mSiteSettings.getCloseAfter()));
         mSortByPreference.setValue(String.valueOf(mSiteSettings.getCommentSorting()));
         mThreadingPreference.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
         mPagingPreference.setValue(String.valueOf(mSiteSettings.getPagingCount()));
-        mManualApprovalPreference.setChecked(mSiteSettings.getManualApproval());
-        mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
-        mUserAccountRequiredPreference.setChecked(mSiteSettings.getUserAccountRequired());
-        mWhitelistPreference.setChecked(mSiteSettings.getUseCommentWhitelist());
-        mMultipleLinksPreference.setChecked(mSiteSettings.getMultipleLinks() >= 0);
+//        mWhitelistPreference.setChecked(mSiteSettings.getUseCommentWhitelist());
+//        mMultipleLinksPreference.setChecked(mSiteSettings.getMultipleLinks() >= 0);
         mModerationHoldPreference.setValue(mSiteSettings.getModerationKeys().toString());
         mBlacklistPreference.setValue(mSiteSettings.getBlacklistKeys().toString());
     }

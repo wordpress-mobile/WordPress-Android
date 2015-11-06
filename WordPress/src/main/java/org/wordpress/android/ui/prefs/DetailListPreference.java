@@ -80,7 +80,7 @@ public class DetailListPreference extends ListPreference
         builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
 
         if (mDetails == null) {
-            mDetails = new String[getEntries().length];
+            mDetails = new String[getEntries() == null ? 1 : getEntries().length];
         }
 
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
