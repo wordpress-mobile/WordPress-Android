@@ -44,6 +44,9 @@ public abstract class SiteSettingsInterface {
     public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
     public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
+    public static final int ASCENDING_SORT = 0;
+    public static final int DESCENDING_SORT = 1;
+
     private static final String STANDARD_POST_FORMAT = "standard";
 
     /**

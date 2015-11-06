@@ -21,13 +21,6 @@ import java.util.Map;
 
 class DotComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
-    public static final String GET_TITLE_KEY = "name";
-    public static final String GET_DESC_KEY = "description";
-
-    // WP.com REST keys used to POST updates to site settings
-    private static final String SET_TITLE_KEY = "blogname";
-    private static final String SET_DESC_KEY = "blogdescription";
-
     public static final String LANGUAGE_ID_KEY = "lang_id";
     public static final String PRIVACY_KEY = "blog_public";
     public static final String URL_KEY = "URL";
@@ -48,17 +41,20 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String MODERATION_KEYS_KEY = "moderation_keys";
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
     public static final String CLOSE_OLD_COMMENTS_KEY = "close_comments_for_old_posts";
-    public static final String CLOSE_OLD_COMMENTS_DAYS_KEY = "close_comments_day_old";
+    public static final String CLOSE_OLD_COMMENTS_DAYS_KEY = "close_comments_days_old";
     public static final String THREAD_COMMENTS_KEY = "thread_comments";
     public static final String THREAD_COMMENTS_DEPTH_KEY = "thread_comments_depth";
     public static final String PAGE_COMMENTS_KEY = "page_comments";
     public static final String PAGE_COMMENT_COUNT_KEY = "comments_per_page";
     public static final String COMMENT_SORT_ORDER_KEY = "comment_order";
 
-    public static final int ASCENDING_SORT = 0;
-    public static final int DESCENDING_SORT = 1;
+    // WP.com REST keys used to GET certain site settings
+    public static final String GET_TITLE_KEY = "name";
+    public static final String GET_DESC_KEY = "description";
 
     // WP.com REST keys used to POST updates to site settings
+    private static final String SET_TITLE_KEY = "blogname";
+    private static final String SET_DESC_KEY = "blogdescription";
 
     // WP.com REST keys used in response to a categories GET request
     private static final String CAT_ID_KEY = "ID";

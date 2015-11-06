@@ -26,6 +26,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -238,8 +239,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setReceivePingbacks((Boolean) newValue);
             return true;
         } else if (preference == mCloseAfterPreference) {
+            mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
+            mCloseAfterPreference.setValue(newValue.toString());
+            mCloseAfterPreference.refreshAdapter();
             return true;
         } else if (preference == mSortByPreference) {
+            mSiteSettings.setCommentSorting(Integer.parseInt(newValue.toString()));
+            mSortByPreference.setValue(newValue.toString());
+            mSortByPreference.refreshAdapter();
             return true;
         } else if (preference == mThreadingPreference) {
             return true;
@@ -417,14 +424,79 @@ public class SiteSettingsFragment extends PreferenceFragment
         mReceivePingbacks.setChecked(mSiteSettings.getReceivePingbacks());
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPreference.setChecked(mSiteSettings.getUserAccountRequired());
-        mCloseAfterPreference.setValue(String.valueOf(mSiteSettings.getCloseAfter()));
-        mSortByPreference.setValue(String.valueOf(mSiteSettings.getCommentSorting()));
         mThreadingPreference.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
         mPagingPreference.setValue(String.valueOf(mSiteSettings.getPagingCount()));
 //        mWhitelistPreference.setChecked(mSiteSettings.getUseCommentWhitelist());
-//        mMultipleLinksPreference.setChecked(mSiteSettings.getMultipleLinks() >= 0);
         mModerationHoldPreference.setValue(mSiteSettings.getModerationKeys().toString());
         mBlacklistPreference.setValue(mSiteSettings.getBlacklistKeys().toString());
+
+        int closeAfterPeriod = mSiteSettings.getCloseAfter();
+        if (ArrayUtils.contains(mCloseAfterPreference.getEntryValues(), String.valueOf(closeAfterPeriod))) {
+            mCloseAfterPreference.setValue(String.valueOf(closeAfterPeriod));
+        } else {
+            mCloseAfterPreference.setValue(null);
+        }
+        switch (closeAfterPeriod) {
+            case 0:
+                mCloseAfterPreference.setSummary("Never");
+                break;
+            case 1:
+                mCloseAfterPreference.setSummary("1 day");
+                break;
+            default:
+                mCloseAfterPreference.setSummary(String.format("%d days", closeAfterPeriod));
+                break;
+        }
+        mCloseAfterPreference.refreshAdapter();
+
+        int threadingDepth = mSiteSettings.getThreadingLevels();
+        if (ArrayUtils.contains(mThreadingPreference.getEntryValues(), String.valueOf(threadingDepth))) {
+            mThreadingPreference.setValue(String.valueOf(threadingDepth));
+        } else {
+            mThreadingPreference.setValue(null);
+        }
+        switch (threadingDepth) {
+            case 0:
+            case 1:
+                mThreadingPreference.setSummary("None");
+                break;
+            default:
+                mThreadingPreference.setSummary(String.format("%d levels", threadingDepth));
+                break;
+        }
+        mThreadingPreference.refreshAdapter();
+
+        int pagingSize = mSiteSettings.getPagingCount();
+        if (ArrayUtils.contains(mPagingPreference.getEntryValues(), String.valueOf(pagingSize))) {
+            mPagingPreference.setValue(String.valueOf(pagingSize));
+        } else {
+            mPagingPreference.setValue(null);
+        }
+        switch (pagingSize) {
+            case 0:
+                mPagingPreference.setSummary("None");
+                break;
+            case 1:
+                mPagingPreference.setSummary("1 comment per page");
+                break;
+            default:
+                mPagingPreference.setSummary(String.format("%d comments per page", pagingSize));
+                break;
+        }
+        mPagingPreference.refreshAdapter();
+
+        int sortOrder = mSiteSettings.getCommentSorting();
+        String sortOrderString = String.valueOf(sortOrder);
+        if (!ArrayUtils.contains(mSortByPreference.getEntryValues(), sortOrderString)) {
+            sortOrderString = String.valueOf(sortOrder = SiteSettingsInterface.ASCENDING_SORT);
+        }
+        mSortByPreference.setValue(sortOrderString);
+        if (sortOrder == SiteSettingsInterface.ASCENDING_SORT) {
+            mSortByPreference.setSummary("Oldest first");
+        } else {
+            mSortByPreference.setSummary("Newest first");
+        }
+        mSortByPreference.refreshAdapter();
     }
 
     private void setCategories() {
