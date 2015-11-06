@@ -38,7 +38,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static void openTheme(Activity activity, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
-        String url = getUrl(activity, currentTheme, type, currentTheme.isPremium());
+        String url = getUrl(currentTheme, type, currentTheme.isPremium());
 
         openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
     }
@@ -71,7 +71,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
-    public static String getUrl(Context context, Theme theme, ThemeWebActivityType type, boolean isPremium) {
+    public static String getUrl(Theme theme, ThemeWebActivityType type, boolean isPremium) {
         String url = "";
         String homeURL = WordPress.getCurrentBlog().getHomeURL();
         String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
