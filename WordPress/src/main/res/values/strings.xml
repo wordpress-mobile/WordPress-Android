@@ -536,8 +536,8 @@
     <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string-array name="site_settings_auto_approve_options">
         <item>No comments</item>
-        <item>Comments from users who have a previously approved comment</item>
-        <item>Comments from all users</item>
+        <item>Known users\' comments</item>
+        <item>All users</item>
     </string-array>
     <string-array name="site_settings_auto_approve_details">
         <item>Require manual approval for everyone\'s comments.</item>
