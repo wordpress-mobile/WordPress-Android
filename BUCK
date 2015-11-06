@@ -112,8 +112,8 @@ android_prebuilt_aar(
 remote_file(
     name = 'tracks-file',
     out = 'tracks.aar',
-    url = 'mvn:com.automattic:tracks:aar:1.0.5',
-    sha1 = '3e356b0ba4286b30e290943b75c505c21043d317',
+    url = 'mvn:com.automattic:tracks:aar:1.1.0',
+    sha1 = '2dbad8d69e7d118b6930115040d284f2319be497',
 )
 android_prebuilt_aar(
     name = 'tracks',
