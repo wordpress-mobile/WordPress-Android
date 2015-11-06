@@ -237,22 +237,22 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.commentApprovalRequired != mRemoteSettings.commentApprovalRequired) {
             params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
         }
-//        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
-//            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
-//        }
-//        if (mSettings.sortCommentsBy != mRemoteSettings.sortCommentsBy) {
-//            if (mSettings.sortCommentsBy == ASCENDING_SORT) {
-//                params.put(COMMENT_SORT_ORDER_KEY, "asc");
-//            } else if (mSettings.sortCommentsBy == DESCENDING_SORT) {
-//                params.put(COMMENT_SORT_ORDER_KEY, "desc");
-//            }
-//        }
-//        if (mSettings.threadingLevels != mRemoteSettings.threadingLevels) {
-//            params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
-//        }
-//        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
-//            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
-//        }
+        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
+            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
+        }
+        if (mSettings.sortCommentsBy != mRemoteSettings.sortCommentsBy) {
+            if (mSettings.sortCommentsBy == ASCENDING_SORT) {
+                params.put(COMMENT_SORT_ORDER_KEY, "asc");
+            } else if (mSettings.sortCommentsBy == DESCENDING_SORT) {
+                params.put(COMMENT_SORT_ORDER_KEY, "desc");
+            }
+        }
+        if (mSettings.threadingLevels != mRemoteSettings.threadingLevels) {
+            params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
+        }
+        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
+            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
+        }
         if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
             params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
         }
