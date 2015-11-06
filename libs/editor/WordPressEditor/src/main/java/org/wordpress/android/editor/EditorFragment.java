@@ -691,7 +691,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             @Override
             public void run() {
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
-                    mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "');");
+                    String mediaId = mediaFile.getMediaId();
+                    mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "', '" + mediaId + "');");
                 } else {
                     String id = mediaFile.getMediaId();
                     mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl + "');");

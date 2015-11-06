@@ -801,12 +801,12 @@ ZSSEditor.updateImage = function(url, alt) {
 
 };
 
-ZSSEditor.insertImage = function(url, alt) {
+ZSSEditor.insertImage = function(url, remoteId, alt) {
     var space = '<br>';
     var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
     var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
 
-    var html = '<img src="' + url + '" alt="' + alt + '" />';
+    var html = '<img src="' + url + '" alt="' + alt + '" class="wp-image-' + remoteId + '" />';
 
     if (this.getFocusedField().getHTML().length == 0) {
         html = paragraphOpenTag + html;
