@@ -8,6 +8,10 @@ def parse_inject_manifest(filename, versionCode, versionName):
     manifest = xml.dom.minidom.parse(filename)
     manifest.documentElement.setAttribute("android:versionCode", versionCode)
     manifest.documentElement.setAttribute("android:versionName", versionName)
+    useSdk = manifest.createElement("uses-sdk")
+    useSdk.setAttribute("android:minSdkVersion", "14")
+    useSdk.setAttribute("android:targetSdkVersion", "23")
+    manifest.documentElement.appendChild(useSdk)
     return manifest.toprettyxml("    ", "")
 
 def get_version_from_build_gradle(filename):

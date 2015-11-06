@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.content.ActivityNotFoundException;
+import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
@@ -11,8 +12,6 @@ import android.widget.TextView;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
-
-import javax.annotation.Nonnull;
 
 /*
  * custom LinkMovementMethod which shows photo viewer when an image span is tapped
@@ -54,9 +53,9 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
     }
 
     @Override
-    public boolean onTouchEvent(@Nonnull TextView textView,
-                                @Nonnull Spannable buffer,
-                                @Nonnull MotionEvent event) {
+    public boolean onTouchEvent(@NonNull TextView textView,
+                                @NonNull Spannable buffer,
+                                @NonNull MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             int x = (int) event.getX();
             int y = (int) event.getY();
