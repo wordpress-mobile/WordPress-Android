@@ -50,7 +50,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         }
 
         if (TextUtils.isEmpty(url)) {
-            AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
+            AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openWPCOMURL");
             Toast.makeText(activity, activity.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
