@@ -1074,7 +1074,6 @@
     <string name="noticon_note" translatable="false">\uf814</string>
 
     <!--Theme Browser-->
-    <string name="current_theme_caps">CURRENT THEME</string>
     <string name="current_theme">Current Theme</string>
     <string name="customize">Customize</string>
     <string name="details">Details</string>
@@ -1087,8 +1086,6 @@
     </string-array>
 
     <string name="title_activity_theme_support">Themes</string>
-
-    <string name="active">ACTIVE</string>
     <string name="theme_activate">Activate</string>
     <string name="theme_try_and_customize">Try &amp; Customize</string>
     <string name="theme_view">View</string>

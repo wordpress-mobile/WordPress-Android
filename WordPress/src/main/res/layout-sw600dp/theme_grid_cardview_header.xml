@@ -31,7 +31,8 @@
                     android:textStyle="bold"
                     android:textColor="@color/grey"
                     android:textSize="12sp"
-                    android:text="@string/current_theme_caps" />
+                    android:textAllCaps="true"
+                    android:text="@string/current_theme" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/header_theme_text"
