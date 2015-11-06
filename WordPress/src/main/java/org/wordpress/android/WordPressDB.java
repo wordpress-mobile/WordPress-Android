@@ -365,7 +365,7 @@ public class WordPressDB {
                 AccountTable.migrationAddEmailAddressField(db);
                 currentVersion++;
             case 35:
-                deleteThemesTable();
+                resetThemeTable();
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -388,7 +388,7 @@ public class WordPressDB {
         }
     }
 
-    private void deleteThemesTable() {
+    private void resetThemeTable() {
         db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
         db.execSQL(CREATE_TABLE_THEMES);
     }
