@@ -67,7 +67,7 @@
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_active"
-                        android:textSize="10sp"
+                        android:textSize="@dimen/text_sz_extra_small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/theme_activate"

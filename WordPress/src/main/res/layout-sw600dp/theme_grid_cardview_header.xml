@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textColor="@color/grey"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_sz_small"
                     android:textAllCaps="true"
                     android:text="@string/current_theme" />
 
