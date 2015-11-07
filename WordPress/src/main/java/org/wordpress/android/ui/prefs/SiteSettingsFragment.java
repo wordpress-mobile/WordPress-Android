@@ -388,12 +388,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
             removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_account);
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_remove_site);
         } else {
             removePreference(R.string.pref_key_site_general, R.string.pref_key_site_visibility);
             removePreference(R.string.pref_key_site_general, R.string.pref_key_site_language);
             removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
             removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_category);
             removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_format);
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_start_over);
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_delete_site);
         }
     }
 

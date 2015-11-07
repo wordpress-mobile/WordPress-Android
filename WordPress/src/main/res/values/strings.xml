@@ -453,8 +453,10 @@
     <string name="pref_key_site_multiple_links" translatable="false">wp_pref_site_multiple_links</string>
     <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
     <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
+    <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
+    <string name="pref_key_site_remove_site" translatable="false">wp_pref_site_remove_site</string>
 
     <!-- Site Settings -->
     <string name="site_settings_general_header">General</string>
@@ -472,6 +474,7 @@
     <string name="site_settings_format_title">Default Format</string>
     <string name="site_settings_related_posts_title">Related Posts</string>
     <string name="site_settings_discussion_title">Discussion</string>
+    <string name="site_settings_danger_title">Danger!</string>
     <string name="site_settings_discussion_defaults_header">Defaults for New Posts</string>
     <string name="site_settings_allow_comments_title">Allow Comments</string>
     <string name="site_settings_send_pingbacks_title">Send Pingbacks</string>
@@ -492,6 +495,7 @@
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_start_over_title">Start Over</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
+    <string name="site_settings_remove_site_title">Remove Site</string>
     <string name="site_title_hint">In a few words, explain what this site is about</string>
     <string name="site_tagline_hint">A short description or catchy phrase to describe your blog</string>
     <string name="site_address_hint">Changing your address is not currently supported</string>

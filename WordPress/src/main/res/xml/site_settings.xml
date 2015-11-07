@@ -238,7 +238,10 @@
     </PreferenceScreen>
 
     <!-- Site options -->
-    <PreferenceCategory>
+    <PreferenceCategory
+        android:id="@+id/pref_danger_settings"
+        android:key="@string/pref_key_site_danger"
+        android:title="@string/site_settings_danger_title">
 
         <Preference
             android:id="@+id/pref_start_over"
@@ -249,6 +252,11 @@
             android:id="@+id/pref_delete_site"
             android:key="@string/pref_key_site_delete_site"
             android:title="@string/site_settings_delete_site_title" />
+
+        <Preference
+            android:id="@+id/pref_remove_site"
+            android:key="@string/pref_key_site_remove_site"
+            android:title="@string/site_settings_remove_site_title" />
 
     </PreferenceCategory>
 
