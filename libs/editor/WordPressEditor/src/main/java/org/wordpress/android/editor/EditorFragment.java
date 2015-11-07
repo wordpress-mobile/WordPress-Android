@@ -551,10 +551,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             if (imageRemoteId != 0) {
                 if (isFeaturedImage) {
                     mFeaturedImageId = imageRemoteId;
+                    mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
                 } else {
                     // If this image was unset as featured, clear the featured image id
                     if (mFeaturedImageId == imageRemoteId) {
                         mFeaturedImageId = 0;
+                        mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
                     }
                 }
             }

@@ -713,8 +713,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 // TODO: Remove when legacy editor is dropped
                 updatePostContent(isAutosave);
             }
-
-            mPost.setFeaturedImageId(mEditorFragment.getFeaturedImageId());
         }
 
         if (mEditPostSettingsFragment != null) {
@@ -988,6 +986,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setLocalDraft(post.isLocalDraft());
+
             mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
         }
 
@@ -1841,6 +1840,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaUploadService != null) {
             mediaUploadService.cancelUpload(mediaId, delete);
         }
+    }
+
+    @Override
+    public void onFeaturedImageChanged(int mediaId) {
+        mPost.setFeaturedImageId(mediaId);
     }
 
     @Override

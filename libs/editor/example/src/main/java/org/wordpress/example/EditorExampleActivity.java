@@ -146,6 +146,11 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
+    public void onFeaturedImageChanged(int mediaId) {
+
+    }
+
+    @Override
     public void onEditorFragmentInitialized() {
         // arbitrary setup
         mEditorFragment.setFeaturedImageSupported(true);

@@ -83,10 +83,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         mFeaturedImageId = featuredImageId;
     }
 
-    public int getFeaturedImageId() {
-        return mFeaturedImageId;
-    }
-
     public void setDebugModeEnabled(boolean debugModeEnabled) {
         mDebugModeEnabled = debugModeEnabled;
     }
@@ -116,6 +112,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddMediaClicked();
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
+        void onFeaturedImageChanged(int mediaId);
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
     }
