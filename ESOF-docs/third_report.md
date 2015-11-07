@@ -67,7 +67,7 @@ Este diagrama representa a possível interação do utilizador para com a aplica
 
 ![Case view](./images/Use Case View.bmp)
 #### Descrição
-Um utilizador depois de instalada a aplicação poderá visitar o site e consultar estatísticas, ver publicações, fotografias e vídeos, páginas relacionadas e os comentários às mesmas, bem como alterar o tema assim como mais configurações. A aplicação possui várias funcionalidades sendo que seria possível expandir o gráfico mas achamos que ficaria desnecessariamente grande e os acrescimos seriam pouco relevantes.
+Após instalar a aplicação o utilizador pode realizar diversas ações, das quais se destacam: visitar o site e consultar estatísticas, ver publicações, fotografias e vídeos, páginas relacionadas e os comentários às mesmas, bem como alterar o tema e outras configurações. Apesar de a aplicação possuir muitas outras funcionalidades e ser possível expandir o gráfico, este ficaria exageradamente grande, o que aumentaria a dificuldade de leitura e compreensão não acrescentando, na nossa opinião, informações relevantes.
 
 ### Conclusão e Análise
 É importante referir que todos os diagramas ao longo do relatório foram elaborados pelos elementos do grupo, sendo que não houve nenhum tipo de verificação ou ajuda por parte dos colaborados do projecto WordPress por falta de disponibilidade dos mesmo.
