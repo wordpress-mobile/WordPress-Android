@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/learn_more_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/site_settings_learn_more_desc" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/learn_more_bullets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/site_settings_learn_more_desc" />
+
+</LinearLayout>
