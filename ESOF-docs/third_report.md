@@ -3,11 +3,11 @@
 ### Introdução
 O presente relatório serve para apresentar os aspectos mais relevantes da arquitetura de software do projecto WordPress-Android, de acordo com o modelo de vistas 4+1. Este modelo foi projetado por Philippe Kruchten, em 1995, com o objetivo de "descrever a arquitetura de sistemas de software, utilizando múltiplos pontos de vista simultâneos". Estes pontos de vista são os seguintes:
 
-* Vista Lógica - Mostra as principais abstrações-chave no sistema como objetos ou classes de objetos, ou os seu packages. Representado tipicamente por diagrama UML de packages.
-* Vista de Deployment - Mostra o hardware do sistema e como os componentes do software estão distribuídos pelos nós de hardware. Normalmente representado por diagrama UML de deployment.
-* Vista de Processo - Mostra, em tempo de execução, como os processos do sistema interagem. Os diagramas de atividade são os mais utilizados para representar isto.
-* Vista de Implementação - Mostra como o software é decomposto para o desenvolvimento. Normalmente representado por diagrama UML de componentes.
-* Vista de Casos de Uso (+1) - Combinando as diferentes vistas faz com que esta vista que se consegue entender as interações entre os diversos componentes do sistema. Representado por um diagrama UML de casos de uso.
+* __Vista Lógica__ - Mostra as principais abstrações-chave no sistema como objetos ou classes de objetos, ou os seu packages. Representado tipicamente por diagrama UML de packages.
+* __Vista de Deployment__ - Mostra o hardware do sistema e como os componentes do software estão distribuídos pelos nós de hardware. Normalmente representado por diagrama UML de deployment.
+* __Vista de Processo__ - Mostra, em tempo de execução, como os processos do sistema interagem. Os diagramas de atividade são os mais utilizados para representar isto.
+* __Vista de Implementação__ - Mostra como o software é decomposto para o desenvolvimento. Normalmente representado por diagrama UML de componentes.
+* __Vista de Casos de Uso (+1)__ - Combinando as diferentes vistas faz com que esta vista que se consegue entender as interações entre os diversos componentes do sistema. Representado por um diagrama UML de casos de uso.
 
 ### Vista Lógica
 Este diagrama representa a Vista Lógica, traduzindo-se num UML de packages. Foram considerados seis packages: datasets, widgets, models, ui, networking e util. 
@@ -16,11 +16,18 @@ Este diagrama representa a Vista Lógica, traduzindo-se num UML de packages. For
 
  
 #### Descrição
-Para elaborar o diagrama recorreu-se ao software Enterprise Architect, que através de reverse engineering, obtivemos vários outros diagramas que foram estudados e observados de modo a simplificar e perceber melhor como o projeto está organizado. Por outro lado, examinamos de um modo superficial todos os ficheiros de cada package para tentar decifrar as suas ligações e conceitos. Desta forma, a package datasets
-  
-Relativamente ao diagrama em si, existem dois tipos de ligações: “import” e “merge”. A ligação “import” significa que um determinado package importa elementos de outro package, já a ligação “merge”, significa que importa não só elementos do package como os packages por ele importados.
-	
-Por observação ao diagrama resultante verifica-se que todos os packages têm uma relação próxima visto que todos acrescentam funcionalidades uns aos outros.
+Para elaborar o diagrama recorreu-se ao software Enterprise Architect, que através de reverse engineering, obtivemos vários outros diagramas que foram estudados e observados de modo a simplificar e perceber melhor como o projeto está organizado. Por outro lado, examinamos de um modo mais aprofundado todos os ficheiros de cada package para tentar decifrar as suas ligações e conceitos. Assim:
+
+* __datasets__ - tal como o nome diz, está relacionada com coleções de dados tabulares;
+* __widgets__ - contém diferentes componentes e vistas relacionadas com a interface gráfica;
+* __models__- trata de determinados modelos estruturais da aplicação como dados e ações do utilizador;
+* __ui__ - está relacionado com a interface do utilizador;
+* __networking__ - abrange as comunicações utilizador/servidor assim como certificados relacionados;
+* __util__ - contém diversas ferramentas que auxiliam os restantes packages.
+
+Relativamente ao diagrama em si, existem dois tipos de ligações: *import* e *merge*. A ligação *import* significa que um determinado package importa elementos de outro package, já a ligação *merge*, significa que importa não só elementos do package como os packages por ele importados.
+
+Por observação ao diagrama resultante verifica-se que todos os packages têm uma relação próxima visto que muitos acrescentam funcionalidades uns aos outros.
 
 
 ### Vista de Implementação
