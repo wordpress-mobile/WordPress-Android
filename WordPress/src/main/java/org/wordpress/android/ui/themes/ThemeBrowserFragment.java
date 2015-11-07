@@ -24,7 +24,6 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.themes.ThemeBrowserAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -324,10 +323,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeBrowserAdapter class
-            ScreenshotHolder tag = (ScreenshotHolder) niv.getTag();
-            if (tag != null && tag.requestURL != null) {
+            String requestUrl = (String) niv.getTag();
+            if (requestUrl != null) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.imageLoader.get(tag.requestURL, new ImageListener() {
+                ImageContainer container = WordPress.imageLoader.get(requestUrl, new ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                     }

@@ -104,19 +104,18 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     }
 
     private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId, final boolean isCurrent) {
-        ScreenshotHolder urlHolder = (ScreenshotHolder) themeViewHolder.imageView.getTag();
-        if (urlHolder == null) {
-            urlHolder = new ScreenshotHolder();
-            urlHolder.requestURL = screenshotURL;
+        String requestURL = (String) themeViewHolder.imageView.getTag();
+        if (requestURL == null) {
+            requestURL = screenshotURL;
             themeViewHolder.imageView.setDefaultImageResId(R.drawable.theme_loading);
-            themeViewHolder.imageView.setTag(urlHolder);
+            themeViewHolder.imageView.setTag(requestURL);
         }
 
-        if (!urlHolder.requestURL.equals(screenshotURL)) {
-            urlHolder.requestURL = screenshotURL;
+        if (!requestURL.equals(screenshotURL)) {
+            requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(screenshotURL + THEME_IMAGE_PARAMETER, WordPress.imageLoader);
+        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER, WordPress.imageLoader);
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,9 +189,5 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         if (view != null) {
             view.setVisible(!isCurrent);
         }
-    }
-
-    static class ScreenshotHolder {
-        String requestURL;
     }
 }
