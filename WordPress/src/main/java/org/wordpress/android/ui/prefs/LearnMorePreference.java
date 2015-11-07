@@ -44,18 +44,20 @@ public class LearnMorePreference extends Preference
         Dialog dialog = mDialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setOnDismissListener(this);
+        dialog.setContentView(R.layout.learn_more_pref_screen);
         WebView webView = new WebView(context);
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+            public void onPageFinished(WebView webView, String url) {
+                super.onPageFinished(webView, url);
+
+                if (mDialog != null) {
+                    mDialog.setContentView(webView);
+                }
             }
         });
         webView.loadUrl(WP_SUPPORT_URL);
-        dialog.setContentView(webView);
         dialog.show();
-        webView.requestFocus();
     }
 
     @Override

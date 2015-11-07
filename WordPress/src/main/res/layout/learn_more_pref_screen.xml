@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:foregroundGravity="center_horizontal"
+    android:background="@color/transparent">
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/learn_more_description"
+    <ProgressBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/site_settings_learn_more_desc" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/transparent"
+        android:indeterminate="true" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/learn_more_bullets"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/site_settings_learn_more_desc" />
-
-</LinearLayout>
+</FrameLayout>
