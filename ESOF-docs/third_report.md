@@ -36,21 +36,28 @@ Diagrama de componentes mostra a vista de implementação referente ao projeto W
 
 ![Implementation view1](./images/Implementation View.bmp)
 #### Descrição
-De acordo com a nossa interpretação, a O WordPress pode ser dividido em dois componentes essenciais. Sendo o primeiro componente incorpora as funcionalidades da biblioteca WordPress (Website) e o segundo o sistema operativo Android e as suas funcionalidades.
-
+De acordo com a nossa interpretação, a aplicação WordPress-Android pode ser dividido em dois componentes essenciais. Sendo o primeiro componente o Website do WordPress em si e no qual a aplicação criada para Android funciona como uma interface das funcionalidades que o website tem.
 
 ![Implementation view2](./images/Android.bmp)
 #### Descrição
+Para desenvolvimento da aplicação, há que realçar que existe a componente Source que vai conter o código-base do projeto, que por sua vez vai usar bibliotecas (componente libs) para auxiliarem as funcionalidades da aplicação, exemplo disto são WordPress-Analytics-Android e WordPress-Editor-Android, em que a primeira trata as estatísticas do WordPress e a segunda permite editar ou criar publicações. Além das bibliotecas, existem as ferramentas (componente tools) que são scripts que verificam se o código está de acordo com o modelo usado por eles para programar.
+Como o próprio nome indica, a componente androidTest refere-se a um conjunto de testes unitários e como tal necessita do código-base, das bibliotecas usadas e das ferramentas de verificação de código.
 
 ![Implementation view3](./images/source.bmp)
 #### Descrição
+Nesta vista é possível ver os 3 principais componentes em que o código base está estruturado, o componente java que possui todo o código-base .java referente ao projeto, o componente assets que permite à aplicação usar diferentes tipos de fonte de texto e por fim a componente res que possui todo o código XML referente ao layout da aplicação.
 
 ### Vista de Processo 
 No seguinte diagrama de atividades, são demonstrados os processos dinâmicos da aplicação WordPress para Android 
 ![Process view](./images/process.bmp)
 
 #### Descrição
-Acreditamos que a vista demonstrada é uma boa representação das funcionalidades da Aplicação sendo que são bastante intuitivas não sendo necessária uma analise detalhada. No entanto é de realçar que existem inúmeras outras funcionalidades da aplicação que tornariam a vista bastante mais expandida especialmente em termos de definições da aplicação bem como possibilidade de integrar outras funcionalidades externas como opções de partilha em redes sociais e outras aplicações.  
+Acreditamos que a vista demonstrada é uma boa representação das funcionalidades da Aplicação sendo que são bastante intuitivas não sendo necessária uma análise detalhada. No entanto é de realçar que existem inúmeras outras funcionalidades da aplicação que tornariam a vista bastante mais expandida especialmente em termos de definições da aplicação bem como possibilidade de integrar outras funcionalidades externas como opções de partilha em redes sociais e outras aplicações. Resumindo um pouco o que cada funcionalidade faz;
+
+* __Site/Blog__ - esta funcionalidade abrange o que podemos realizar no nosso Site/Blog, como publicar novos posts, inserir novas páginas ou novos comentários. Também nos deixa configurar o Site/Blog, podendo modificar as configurações deste ou a sua aparência. Por fim permite-nos ver as estatísticas do Site/Blog e visualizar o painel de administração deste;
+* __Tags & Blogs__ - esta funcionalidade é semelhante a um feed de uma rede social, onde podemos visualizar publicações de blogs/sites que seguimos ou de publicações que referiram certas tags do nosso interesse;
+* __Profile__- esta funcionalidade permite configurar as opções do nosso perfil ou a forma como somos notificados. Tem também uma parte de suporte, que permite pesquisar pela FAQ da aplicação ou contactar diretamente o WordPress;
+* __Notifications__ - como o nome explica, aqui é apresentado as novas notificações;
 
 ### Vista de Deployment 
 
