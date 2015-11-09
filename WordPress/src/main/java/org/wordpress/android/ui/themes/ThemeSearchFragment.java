@@ -10,7 +10,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
+import com.automattic.android.tracks.NetworkUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -18,18 +19,14 @@ import org.wordpress.android.WordPress;
 /**
  * A fragment for display the results of a theme search
  */
-public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
+public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchView.OnQueryTextListener,
+        MenuItemCompat.OnActionExpandListener {
     public static final String TAG = ThemeSearchFragment.class.getName();
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
+    public static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
     public static ThemeSearchFragment newInstance() {
-        ThemeSearchFragment fragment = new ThemeSearchFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(ARGS_SORT, ThemeSortType.POPULAR.ordinal());
-        fragment.setArguments(args);
-
-        return fragment;
+        return new ThemeSearchFragment();
     }
 
     private String mLastSearch = "";
@@ -83,21 +80,19 @@ public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.
         mSearchMenuItem.expandActionView();
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
-        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-        mSearchView.setIconified(false);
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setQuery(mLastSearch, true);
+        configureSearchView();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        super.onItemClick(parent, view, position, id);
-        clearFocus(mSearchView);
+    public void configureSearchView() {
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setQuery(mLastSearch, true);
+        mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
     }
 
     private void clearFocus(View view) {
         if (view != null) {
-            view.clearFocus();;
+            view.clearFocus();
         }
     }
 
@@ -111,7 +106,9 @@ public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        getActivity().getFragmentManager().popBackStack();
+        mThemeBrowserActivity.setIsInSearchMode(false);
+        mThemeBrowserActivity.showToolbar();
+        mThemeBrowserActivity.getFragmentManager().popBackStack();
         return true;
     }
 
@@ -133,21 +130,40 @@ public class ThemeSearchFragment extends ThemeTabFragment implements SearchView.
         inflater.inflate(R.menu.theme_search, menu);
     }
 
+    @Override
+    protected void addHeaderViews(LayoutInflater inflater) {
+        // No header on Search
+    }
+
+    @Override
+    protected void configureSwipeToRefresh(View view) {
+        super.configureSwipeToRefresh(view);
+        mSwipeToRefreshHelper.setEnabled(false);
+    }
+
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        refreshView(getSpinnerPosition());
+    }
+
+    @Override
+    protected Cursor fetchThemes(int position) {
+        if (WordPress.getCurrentBlog() == null) {
+            return null;
+        }
+
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+
+        return WordPress.wpDB.getThemes(blogId, mLastSearch);
+    }
+
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
-        if (mAdapter == null || WordPress.getCurrentBlog() == null) {
-            return;
-        }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-        Cursor cursor = WordPress.wpDB.getThemes(blogId, searchTerm);
 
-        mAdapter.changeCursor(cursor);
-        mGridView.invalidateViews();
-
-        if (cursor == null || cursor.getCount() == 0) {
-            mNoResultText.setVisibility(View.VISIBLE);
+        if (NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
+            mThemeBrowserActivity.searchThemes(searchTerm);
         } else {
-            mNoResultText.setVisibility(View.GONE);
+            refreshView(getSpinnerPosition());
         }
     }
 }
