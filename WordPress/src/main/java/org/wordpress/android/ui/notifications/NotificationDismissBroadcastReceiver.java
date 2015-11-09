@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationManagerCompat;
 
-import org.wordpress.android.GCMIntentService;
+import org.wordpress.android.GCMMessageService;
 
 /*
  * Clears the notification map when a user dismisses a notification
@@ -14,15 +14,15 @@ public class NotificationDismissBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int notificationId = intent.getIntExtra("notificationId", 0);
-        if (notificationId == GCMIntentService.GROUP_NOTIFICATION_ID) {
-            GCMIntentService.clearNotifications();
+        if (notificationId == GCMMessageService.GROUP_NOTIFICATION_ID) {
+            GCMMessageService.clearNotifications();
         } else {
-            GCMIntentService.removeNotification(notificationId);
+            GCMMessageService.removeNotification(notificationId);
 
             // Dismiss the grouped notification if a user dismisses all notifications from a wear device
-            if (!GCMIntentService.hasNotifications()) {
+            if (!GCMMessageService.hasNotifications()) {
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-                notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
+                notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
             }
         }
     }

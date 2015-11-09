@@ -69,7 +69,7 @@ public class GCMMessageService extends GcmListenerService {
 
     private void handleDefaultPush(String from, Bundle data) {
         // Ensure Simperium is running so that notes sync
-        SimperiumUtils.configureSimperium(getBaseContext(), AccountHelper.getDefaultAccount().getAccessToken());
+        SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
 
         long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
         String pushUserId = data.getString(PUSH_ARG_USER);
@@ -190,7 +190,7 @@ public class GCMMessageService extends GcmListenerService {
             if (noteId != null) {
                 commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
             }
-            PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(getBaseContext(), 0, commentReplyIntent,
+            PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                     commentReplyPendingIntent);
@@ -200,7 +200,7 @@ public class GCMMessageService extends GcmListenerService {
             builder.setLargeIcon(largeIconBitmap);
         }
 
-        showNotificationForBuilder(builder, getBaseContext(), pushId);
+        showNotificationForBuilder(builder, this, pushId);
 
         // Also add a group summary notification, which is required for non-wearable devices
         if (mActiveNotificationsMap.size() > 1) {
@@ -244,11 +244,11 @@ public class GCMMessageService extends GcmListenerService {
                     .setContentText(subject)
                     .setStyle(inboxStyle);
 
-            showNotificationForBuilder(groupBuilder, getBaseContext(), GROUP_NOTIFICATION_ID);
+            showNotificationForBuilder(groupBuilder, this, GROUP_NOTIFICATION_ID);
         } else {
             // Set the individual notification we've already built as the group summary
             builder.setGroupSummary(true);
-            showNotificationForBuilder(builder, getBaseContext(), GROUP_NOTIFICATION_ID);
+            showNotificationForBuilder(builder, this, GROUP_NOTIFICATION_ID);
         }
 
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
@@ -336,7 +336,7 @@ public class GCMMessageService extends GcmListenerService {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setPriority(NotificationCompat.PRIORITY_MAX);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 1, pushAuthIntent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, pushAuthIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
@@ -355,7 +355,7 @@ public class GCMMessageService extends GcmListenerService {
 
         // Handle helpshift PNs
         if (TextUtils.equals(data.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(getBaseContext(), new Intent().putExtras(data));
+            HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
             return;
         }
 
@@ -368,7 +368,7 @@ public class GCMMessageService extends GcmListenerService {
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
-            AnalyticsTrackerMixpanel.showNotification(getBaseContext(), pendingIntent,
+            AnalyticsTrackerMixpanel.showNotification(this, pendingIntent,
                     R.drawable.notification_icon, title, mpMessage);
             return;
         }
