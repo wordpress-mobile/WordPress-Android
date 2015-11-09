@@ -384,15 +384,18 @@
         </receiver>
 
         <service
-            android:name="org.wordpress.android.GCMIntentService"
+            android:name=".GCMRegistrationIntentService"
+            android:exported="false">
+        </service>
+        <service
+            android:name=".GCMMessageService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
-            android:name="org.wordpress.android.InstanceIDListenerService"
+            android:name=".InstanceIDService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID"/>
