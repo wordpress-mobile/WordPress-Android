@@ -441,6 +441,7 @@
     <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
     <string name="pref_key_site_send_pingbacks" translatable="false">wp_pref_site_send_pingbacks</string>
     <string name="pref_key_site_receive_pingbacks" translatable="false">wp_pref_site_receive_pingbacks</string>
+    <string name="pref_key_site_more_discussion" translatable="false">wp_pref_site_more_discussion</string>
     <string name="pref_key_site_learn_more" translatable="false">wp_pref_site_learn_more</string>
     <string name="pref_key_site_close_after" translatable="false">wp_pref_site_close_after</string>
     <string name="pref_key_site_sort_by" translatable="false">wp_pref_site_sort_by</string>
@@ -479,6 +480,7 @@
     <string name="site_settings_allow_comments_title">Allow Comments</string>
     <string name="site_settings_send_pingbacks_title">Send Pingbacks</string>
     <string name="site_settings_receive_pingbacks_title">Receive Pingbacks</string>
+    <string name="site_settings_more_discussion_title">More</string>
     <string name="site_settings_comments_header">Comments</string>
     <string name="site_settings_close_after_title">Close after</string>
     <string name="site_settings_sort_by_title">Sort by</string>
