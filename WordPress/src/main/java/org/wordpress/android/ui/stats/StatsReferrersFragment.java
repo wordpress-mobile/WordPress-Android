@@ -108,39 +108,32 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             for (int i = 0; i < groups.size(); i++) {
                 this.children.add(null);
             }
+
             for (int i = 0; i < groups.size(); i++) {
                 ReferrerGroupModel currentGroup = groups.get(i);
-                List<ReferrerResultModel> referrals = currentGroup.getResults();
-                if (referrals != null) {
-                    // Children available for the current group
-                    // Children could be a 2-levels or a 3-levels structure
-                    List<MyChildModel> currentGroupChildren = new ArrayList<>();
-                    for (ReferrerResultModel refResult : referrals) {
-                        List<SingleItemModel> thirdLevelChildren = refResult.getChildren();
-                        if (thirdLevelChildren != null && thirdLevelChildren.size() > 0 ) {
-                            for (SingleItemModel currentThirdLevelChild: thirdLevelChildren) {
-                                MyChildModel myChild = new MyChildModel();
-                                if (!TextUtils.isEmpty(currentThirdLevelChild.getIcon())) {
-                                    myChild.icon = currentThirdLevelChild.getIcon();
-                                } else {
-                                    myChild.icon = refResult.getIcon();
-                                }
-                                myChild.url = currentThirdLevelChild.getUrl();
-                                myChild.name = currentThirdLevelChild.getTitle();
-                                myChild.views = currentThirdLevelChild.getTotals();
-                                currentGroupChildren.add(myChild);
-                            }
-                        } else {
-                            MyChildModel myChild = new MyChildModel();
-                            myChild.icon = refResult.getIcon();
-                            myChild.url = refResult.getUrl();
-                            myChild.name = refResult.getName();
-                            myChild.views = refResult.getViews();
-                            currentGroupChildren.add(myChild);
+                List<MyChildModel> currentGroupChildren = new ArrayList<>();
+                List<ReferrerResultModel> childrenOfLevelOne = currentGroup.getResults();
+                if (childrenOfLevelOne != null) {
+                    // Children at first level could be a single item or another tree
+                    // Levels 2 children are skipped in the UI.
+                    for (ReferrerResultModel singleLevelOneChild : childrenOfLevelOne) {
+                        // Use all the info given in the first level child.
+                        MyChildModel myChild = new MyChildModel();
+                        myChild.icon = singleLevelOneChild.getIcon();
+                        myChild.url = singleLevelOneChild.getUrl();
+                        myChild.name = singleLevelOneChild.getName();
+                        myChild.views = singleLevelOneChild.getViews();
+
+                        // read the URL from the first second-level child if available.
+                        List<SingleItemModel> secondLevelChildren = singleLevelOneChild.getChildren();
+                        if (secondLevelChildren != null && secondLevelChildren.size() > 0) {
+                            SingleItemModel firstThirdLevelChild = secondLevelChildren.get(0);
+                            myChild.url = firstThirdLevelChild.getUrl();
                         }
+                        currentGroupChildren.add(myChild);
                     }
-                    this.children.set(i, currentGroupChildren);
                 }
+                this.children.set(i, currentGroupChildren);
             }
         }
 
@@ -180,13 +173,20 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             String name = currentChild.name;
             int views = currentChild.views;
 
-            // The link icon
-            holder.showLinkIcon();
+            holder.chevronImageView.setVisibility(View.GONE);
+            holder.linkImageView.setVisibility(TextUtils.isEmpty(currentChild.url) ? View.GONE : View.VISIBLE);
             holder.setEntryTextOrLink(currentChild.url, name);
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(views));
+
+            // site icon
             holder.networkImageView.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(currentChild.icon)) {
+                holder.networkImageView.setImageUrl(
+                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.headerAvatarSizePx),
+                        WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
+            }
 
             // no more btm
             holder.imgMore.setVisibility(View.GONE);
@@ -228,8 +228,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 holder = new StatsViewHolder(convertView);
-                holder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
-                holder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
                 convertView.setTag(holder);
             } else {
                 holder = (StatsViewHolder) convertView.getTag();
@@ -251,14 +249,13 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-            
-            if (TextUtils.isEmpty(icon)) {
-                holder.networkImageView.setVisibility(View.GONE);
-            } else {
+
+            // Site icon
+            holder.networkImageView.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(icon)) {
                 holder.networkImageView.setImageUrl(
                         GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
-                        WPNetworkImageView.ImageType.BLAVATAR);
-                holder.networkImageView.setVisibility(View.VISIBLE);
+                        WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
             }
 
             if (children == 0) {

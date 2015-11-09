@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,8 +11,6 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-
-import javax.annotation.Nonnull;
 
 /*
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
@@ -66,7 +65,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(@Nonnull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
