@@ -14,19 +14,20 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
-import com.google.android.gcm.GCMBaseIntentService;
+import com.google.android.gms.gcm.GcmListenerService;
+import com.koushikdutta.async.BuildConfig;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -43,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
 
-public class GCMIntentService extends GCMBaseIntentService {
+public class GCMIntentService extends GcmListenerService {
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
     private static final int PUSH_NOTIFICATION_ID = 10000;
     private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
@@ -263,7 +264,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             builder.setGroupSummary(true);
             showNotificationForBuilder(builder, context, GROUP_NOTIFICATION_ID);
         }
-        
+
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
