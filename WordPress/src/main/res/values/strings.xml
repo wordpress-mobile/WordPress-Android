@@ -439,8 +439,11 @@
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
     <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
     <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
+    <string name="pref_key_site_allow_comments_nested" translatable="false">wp_pref_site_allow_comments_nested</string>
     <string name="pref_key_site_send_pingbacks" translatable="false">wp_pref_site_send_pingbacks</string>
+    <string name="pref_key_site_send_pingbacks_nested" translatable="false">wp_pref_site_send_pingbacks_nested</string>
     <string name="pref_key_site_receive_pingbacks" translatable="false">wp_pref_site_receive_pingbacks</string>
+    <string name="pref_key_site_receive_pingbacks_nested" translatable="false">wp_pref_site_receive_pingbacks_nested</string>
     <string name="pref_key_site_more_discussion" translatable="false">wp_pref_site_more_discussion</string>
     <string name="pref_key_site_learn_more" translatable="false">wp_pref_site_learn_more</string>
     <string name="pref_key_site_close_after" translatable="false">wp_pref_site_close_after</string>

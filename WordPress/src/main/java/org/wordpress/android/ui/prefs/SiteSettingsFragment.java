@@ -71,8 +71,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mCategoryPreference;
     private DetailListPreference mFormatPreference;
     private Preference mRelatedPostsPreference;
+    private WPSwitchPreference mAllowCommentsNested;
     private WPSwitchPreference mAllowComments;
+    private WPSwitchPreference mSendPingbacksNested;
     private WPSwitchPreference mSendPingbacks;
+    private WPSwitchPreference mReceivePingbacksNested;
     private WPSwitchPreference mReceivePingbacks;
     private WPSwitchPreference mIdentityRequiredPreference;
     private WPSwitchPreference mUserAccountRequiredPreference;
@@ -229,14 +232,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
             changePrivacyValue(mSiteSettings.getPrivacy());
             return true;
-        } else if (preference == mAllowComments) {
-            mSiteSettings.setAllowComments((Boolean) newValue);
+        } else if (preference == mAllowComments || preference == mAllowCommentsNested) {
+            setAllowComments((Boolean) newValue);
             return true;
-        } else if (preference == mSendPingbacks) {
-            mSiteSettings.setSendPingbacks((Boolean) newValue);
+        } else if (preference == mSendPingbacks || preference == mSendPingbacksNested) {
+            setSendPingbacks((Boolean) newValue);
             return true;
-        } else if (preference == mReceivePingbacks) {
-            mSiteSettings.setReceivePingbacks((Boolean) newValue);
+        } else if (preference == mReceivePingbacks || preference == mReceivePingbacksNested) {
+            setReceivePingbacks((Boolean) newValue);
             return true;
         } else if (preference == mCloseAfterPreference) {
             mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
@@ -370,8 +373,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         mCategoryPreference = (DetailListPreference) getPref(R.string.pref_key_site_category);
         mFormatPreference = (DetailListPreference) getPref(R.string.pref_key_site_format);
         mAllowComments = (WPSwitchPreference) getPref(R.string.pref_key_site_allow_comments);
+        mAllowCommentsNested = (WPSwitchPreference) getPref(R.string.pref_key_site_allow_comments_nested);
         mSendPingbacks = (WPSwitchPreference) getPref(R.string.pref_key_site_send_pingbacks);
+        mSendPingbacksNested = (WPSwitchPreference) getPref(R.string.pref_key_site_send_pingbacks_nested);
         mReceivePingbacks = (WPSwitchPreference) getPref(R.string.pref_key_site_receive_pingbacks);
+        mReceivePingbacksNested = (WPSwitchPreference) getPref(R.string.pref_key_site_receive_pingbacks_nested);
         mIdentityRequiredPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_identity_required);
         mUserAccountRequiredPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_user_account_required);
         mCloseAfterPreference = (DetailListPreference) getPref(R.string.pref_key_site_close_after);
@@ -422,9 +428,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeLanguageValue(mSiteSettings.getLanguageCode());
         setCategories();
         setPostFormats();
-        mAllowComments.setChecked(mSiteSettings.getAllowComments());
-        mSendPingbacks.setChecked(mSiteSettings.getSendPingbacks());
-        mReceivePingbacks.setChecked(mSiteSettings.getReceivePingbacks());
+        setAllowComments(mSiteSettings.getAllowComments());
+        setSendPingbacks(mSiteSettings.getSendPingbacks());
+        setReceivePingbacks(mSiteSettings.getReceivePingbacks());
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPreference.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPreference.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
@@ -548,6 +554,24 @@ public class SiteSettingsFragment extends PreferenceFragment
         mFormatPreference.setEntryValues(values);
         mFormatPreference.setValue(String.valueOf(mSiteSettings.getDefaultFormat()));
         mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
+    }
+
+    private void setAllowComments(boolean newValue) {
+        mSiteSettings.setAllowComments(newValue);
+        mAllowComments.setChecked(newValue);
+        mAllowCommentsNested.setChecked(newValue);
+    }
+
+    private void setSendPingbacks(boolean newValue) {
+        mSiteSettings.setSendPingbacks(newValue);
+        if (mSendPingbacks.isChecked() != newValue) mSendPingbacks.setChecked(newValue);
+        if (mSendPingbacksNested.isChecked() != newValue) mSendPingbacksNested.setChecked(newValue);
+    }
+
+    private void setReceivePingbacks(boolean newValue) {
+        mSiteSettings.setReceivePingbacks(newValue);
+        if (mReceivePingbacks.isChecked() != newValue) mReceivePingbacks.setChecked(newValue);
+        if (mReceivePingbacksNested.isChecked() != newValue) mReceivePingbacksNested.setChecked(newValue);
     }
 
     /**
