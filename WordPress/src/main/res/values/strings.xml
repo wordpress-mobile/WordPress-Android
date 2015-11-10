@@ -548,6 +548,7 @@
     <string name="related_post_preview3_site">in \"Upgrade\"</string>
     <string name="hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="multiple_links_description">Require approval for comments that include more than this number of links.</string>
     <string name="oldest_first">Oldest first</string>
     <string name="newest_first">Newest first</string>
     <string-array name="site_settings_auto_approve_entries">
@@ -586,19 +587,21 @@
         <item>1</item>
     </string-array>
     <string-array name="site_settings_threading_entries">
+        <item>@string/none</item>
         <item>Two levels</item>
         <item>Three levels</item>
         <item>Four levels</item>
         <item>Five levels</item>
     </string-array>
     <string-array name="site_settings_threading_values">
+        <item>1</item>
         <item>2</item>
         <item>3</item>
         <item>4</item>
         <item>5</item>
     </string-array>
     <string-array name="site_settings_paging_entries">
-        <item>None</item>
+        <item>@string/none</item>
         <item>50 comments per page</item>
         <item>100 comments per page</item>
         <item>200 comments per page</item>
@@ -618,6 +621,9 @@
         <item quantity="other">%d comments per page</item>
     </plurals>
     <string name="levels_quantity">%d levels</string>
+    <string name="whitelist_summary_all_users">Comments from all users</string>
+    <string name="whitelist_summary_known_users">Comments from known users</string>
+    <string name="whitelist_summary_no_users">@string/none</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>

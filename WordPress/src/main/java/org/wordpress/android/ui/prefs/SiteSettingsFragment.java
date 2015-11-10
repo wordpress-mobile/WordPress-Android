@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -69,6 +70,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
     private View mFabView;
+    private List<String> mEditingList;
 
     private EditTextPreference mTitlePref;
     private EditTextPreference mTaglinePref;
@@ -207,7 +209,23 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private List<String> mEditingList;
+    private void showMultipleLinksDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
+        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        numberPicker.setMaxValue(100);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mSiteSettings.getMultipleLinks() != numberPicker.getValue()) {
+                    onPreferenceChange(mMultipleLinksPref, numberPicker.getValue());
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setView(view);
+        builder.create().show();
+    }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
@@ -215,6 +233,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             showRelatedPostsDialog();
             return true;
         } else if (preference == mMultipleLinksPref) {
+            showMultipleLinksDialog();
             return true;
         } else if (preference == mModerationHoldPref) {
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
@@ -317,12 +336,13 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setUserAccountRequired((Boolean) newValue);
             return true;
         } else if (preference == mWhitelistPref) {
+            setDetailListPreferenceValue(mWhitelistPref,
+                    newValue.toString(),
+                    getWhitelistSummary(Integer.parseInt(newValue.toString())));
             return true;
         } else if (preference == mMultipleLinksPref) {
-            return true;
-        } else if (preference == mModerationHoldPref) {
-            return true;
-        } else if (preference == mBlacklistPref) {
+            mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
+            mMultipleLinksPref.setSummary("Require approval for more than " + mSiteSettings.getMultipleLinks() + " links");
             return true;
         } else if (preference == mUsernamePref) {
             mSiteSettings.setUsername(newValue.toString());
@@ -449,6 +469,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlacklistPref = getPref(R.string.pref_key_site_blacklist);
         mRelatedPostsPref = findPreference(getString(R.string.pref_key_site_related_posts));
         mRelatedPostsPref.setOnPreferenceClickListener(this);
+        mMultipleLinksPref.setOnPreferenceClickListener(this);
         mModerationHoldPref.setOnPreferenceClickListener(this);
         mBlacklistPref.setOnPreferenceClickListener(this);
 
@@ -505,6 +526,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mPagingPref,
                 String.valueOf(mSiteSettings.getPagingCount()),
                 getPagingSummary(mSiteSettings.getPagingCount()));
+        int approval = mSiteSettings.getManualApproval() ?
+                mSiteSettings.getUseCommentWhitelist() ? 0
+                        : -1 : 1;
+        setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
@@ -655,6 +680,19 @@ public class SiteSettingsFragment extends PreferenceFragment
     private String getPagingSummary(int count) {
         if (count == 0) return getString(R.string.none);
         return getResources().getQuantityString(R.plurals.paging_quantity, count, count);
+    }
+
+    private String getWhitelistSummary(int value) {
+        switch (value) {
+            case -1:
+                return getString(R.string.whitelist_summary_no_users);
+            case 0:
+                return getString(R.string.whitelist_summary_known_users);
+            case 1:
+                return getString(R.string.whitelist_summary_all_users);
+            default:
+                return "";
+        }
     }
 
     private void showListEditorDialog(int titleRes, int footerRes, List<String> items) {

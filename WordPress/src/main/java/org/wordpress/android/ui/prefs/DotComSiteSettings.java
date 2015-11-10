@@ -238,7 +238,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
             params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
         }
         if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
-            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
+            if (mSettings.closeCommentAfter <= 0) {
+                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(false));
+            } else {
+                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(true));
+                params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
+            }
         }
         if (mSettings.sortCommentsBy != mRemoteSettings.sortCommentsBy) {
             if (mSettings.sortCommentsBy == ASCENDING_SORT) {
@@ -248,10 +253,20 @@ class DotComSiteSettings extends SiteSettingsInterface {
             }
         }
         if (mSettings.threadingLevels != mRemoteSettings.threadingLevels) {
-            params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
+            if (mSettings.threadingLevels <= 1) {
+                params.put(THREAD_COMMENTS_KEY, String.valueOf(false));
+            } else {
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(true));
+                params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
+            }
         }
         if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
-            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
+            if (mSettings.commentsPerPage <= 0) {
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(false));
+            } else{
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(true));
+                params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
+            }
         }
         if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
             params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
@@ -261,6 +276,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
             params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
+        }
+        if (mSettings.maxLinks != mRemoteSettings.maxLinks) {
+            params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
         }
         if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
             StringBuilder builder = new StringBuilder();
