@@ -94,9 +94,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mThreadingPref;
     private DetailListPreference mPagingPref;
     private DetailListPreference mWhitelistPref;
-    private WPPreference mMultipleLinksPref;
-    private WPPreference mModerationHoldPref;
-    private WPPreference mBlacklistPref;
+    private Preference mMultipleLinksPref;
+    private Preference mModerationHoldPref;
+    private Preference mBlacklistPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -444,9 +444,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mThreadingPref = (DetailListPreference) getPref(R.string.pref_key_site_threading);
         mPagingPref = (DetailListPreference) getPref(R.string.pref_key_site_paging);
         mWhitelistPref = (DetailListPreference) getPref(R.string.pref_key_site_whitelist);
-        mMultipleLinksPref = (WPPreference) getPref(R.string.pref_key_site_multiple_links);
-        mModerationHoldPref = (WPPreference) getPref(R.string.pref_key_site_moderation_hold);
-        mBlacklistPref = (WPPreference) getPref(R.string.pref_key_site_blacklist);
+        mMultipleLinksPref = getPref(R.string.pref_key_site_multiple_links);
+        mModerationHoldPref = getPref(R.string.pref_key_site_moderation_hold);
+        mBlacklistPref = getPref(R.string.pref_key_site_blacklist);
         mRelatedPostsPref = findPreference(getString(R.string.pref_key_site_related_posts));
         mRelatedPostsPref.setOnPreferenceClickListener(this);
         mModerationHoldPref.setOnPreferenceClickListener(this);
@@ -632,7 +632,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private String getCloseAfterSummary(int period) {
-        if (period == 0) getString(R.string.never);
+        if (period == 0) return getString(R.string.never);
         return getResources().getQuantityString(R.plurals.days_quantity, period, period);
     }
 
@@ -648,7 +648,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private String getThreadingSummary(int levels) {
-        if (levels <= 1) getString(R.string.none);
+        if (levels <= 1) return getString(R.string.none);
         return String.format(getString(R.string.levels_quantity), levels);
     }
 
