@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs.notifications;
 import android.app.ActionBar;
 import android.content.Context;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.Iterator;
-
-import javax.annotation.Nonnull;
 
 // A dialog preference that displays settings for a NotificationSettings Channel and Type
 public class NotificationsSettingsDialogPreference extends DialogPreference {
@@ -53,7 +52,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(@Nonnull View view) {
+    protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
     }
 

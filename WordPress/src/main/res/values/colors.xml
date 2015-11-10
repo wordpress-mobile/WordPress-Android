@@ -153,4 +153,8 @@
     <!-- Site Settings -->
     <color name="site_settings_pref_divider_color">#dce1e6</color>
 
+    <!-- Themes -->
+    <color name="theme_price">#4FB769</color>
+    <color name="theme_activate">#A9E9FC</color>
+
 </resources>
