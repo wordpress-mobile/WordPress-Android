@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/theme_no_search_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/theme_no_search_result_found"
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_extra_large"/>
+
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <org.wordpress.android.widgets.HeaderGridView
+            android:id="@+id/theme_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="@dimen/margin_none"
+            android:scrollbarStyle="outsideOverlay"
+            android:columnWidth="@dimen/theme_browser_default_column_width"
+            android:numColumns="auto_fit"
+            android:divider="@android:color/transparent"
+            android:stretchMode="columnWidth"
+            android:layout_below="@id/theme_no_search_result_text">
+        </org.wordpress.android.widgets.HeaderGridView>
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/drake_empty_results"
+            android:layout_width="@dimen/drake_themes_width"
+            android:layout_height="wrap_content"
+            android:src="@drawable/drake_empty_results"
+            android:adjustViewBounds="true"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/theme_no_search_result_found" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_empty"
+            style="@style/WordPress.EmptyList.Title"
+            android:layout_below="@id/drake_empty_results"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/themes_fetching"
+            app:fixWidowWords="true"/>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -165,8 +165,6 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 holder = new StatsViewHolder(convertView);
-                holder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
-                holder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
                 convertView.setTag(holder);
             } else {
                 holder = (StatsViewHolder) convertView.getTag();
@@ -189,11 +187,13 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            if (TextUtils.isEmpty(icon)) {
-                holder.networkImageView.setVisibility(View.GONE);
-            } else {
-                holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.BLAVATAR);
-                holder.networkImageView.setVisibility(View.VISIBLE);
+            // Site icon
+            holder.networkImageView.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(icon)) {
+                holder.networkImageView.setImageUrl(
+                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+                        WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE
+                );
             }
 
             if (children == 0) {

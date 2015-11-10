@@ -27,7 +27,7 @@ public class StatsViewHolder {
     public final TextView totalsTextView;
     public final WPNetworkImageView networkImageView;
     public final ImageView chevronImageView;
-    private final ImageView linkImageView;
+    public final ImageView linkImageView;
     public final ImageView imgMore;
     public final LinearLayout rowContent;
 
