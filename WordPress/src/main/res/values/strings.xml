@@ -72,6 +72,8 @@
     <string name="language">Language</string>
     <string name="signout">Disconnect</string>
     <string name="undo">Undo</string>
+    <string name="never">Never</string>
+    <string name="unknown">Unknown</string>
 
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
@@ -546,6 +548,8 @@
     <string name="related_post_preview3_site">in \"Upgrade\"</string>
     <string name="hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="oldest_first">Oldest first</string>
+    <string name="newest_first">Newest first</string>
     <string-array name="site_settings_auto_approve_entries">
         <item>No comments</item>
         <item>Known users\' comments</item>
@@ -562,7 +566,7 @@
         <item>Automatically approve everyone\'s comments.</item>
     </string-array>
     <string-array name="site_settings_close_after_entries">
-        <item>Never</item>
+        <item>@string/never</item>
         <item>One day</item>
         <item>One week</item>
         <item>One month</item>
@@ -574,8 +578,8 @@
         <item>30</item>
     </string-array>
     <string-array name="site_settings_sort_entries">
-        <item>Oldest first</item>
-        <item>Newest first</item>
+        <item>@string/oldest_first</item>
+        <item>@string/newest_first</item>
     </string-array>
     <string-array name="site_settings_sort_values">
         <item>0</item>
@@ -605,6 +609,15 @@
         <item>100</item>
         <item>200</item>
     </string-array>
+    <plurals name="days_quantity">
+        <item quantity="one">1 day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="paging_quantity">
+        <item quantity="one">1 comment per page</item>
+        <item quantity="other">%d comments per page</item>
+    </plurals>
+    <string name="levels">levels</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>

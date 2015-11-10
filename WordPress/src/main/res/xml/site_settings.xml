@@ -203,6 +203,7 @@
                     android:title="@string/site_settings_close_after_title"
                     android:entries="@array/site_settings_close_after_entries"
                     android:entryValues="@array/site_settings_close_after_values"
+                    android:defaultValue="0"
                     app:longClickHint="@string/site_close_after_hint" />
 
                 <org.wordpress.android.ui.prefs.DetailListPreference
@@ -211,6 +212,7 @@
                     android:title="@string/site_settings_sort_by_title"
                     android:entries="@array/site_settings_sort_entries"
                     android:entryValues="@array/site_settings_sort_values"
+                    android:defaultValue="0"
                     app:longClickHint="@string/site_sort_by_hint"  />
 
                 <org.wordpress.android.ui.prefs.DetailListPreference
@@ -219,6 +221,7 @@
                     android:title="@string/site_settings_threading_title"
                     android:entries="@array/site_settings_threading_entries"
                     android:entryValues="@array/site_settings_threading_values"
+                    android:defaultValue="0"
                     app:longClickHint="@string/site_threading_hint" />
 
                 <org.wordpress.android.ui.prefs.DetailListPreference
@@ -227,6 +230,7 @@
                     android:title="@string/site_settings_paging_title"
                     android:entries="@array/site_settings_paging_entries"
                     android:entryValues="@array/site_settings_paging_values"
+                    android:defaultValue="0"
                     app:longClickHint="@string/site_paging_hint" />
 
                 <org.wordpress.android.ui.prefs.DetailListPreference
@@ -245,13 +249,13 @@
                     android:summary="@string/site_settings_multiple_links_summary"
                     app:longClickHint="@string/site_multiple_links_hint" />
 
-                <org.wordpress.android.ui.prefs.DetailListPreference
+                <org.wordpress.android.ui.prefs.WPPreference
                     android:id="@+id/pref_moderation_hold"
                     android:key="@string/pref_key_site_moderation_hold"
                     android:title="@string/site_settings_moderation_hold_title"
                     app:longClickHint="@string/site_moderation_hold_hint" />
 
-                <org.wordpress.android.ui.prefs.DetailListPreference
+                <org.wordpress.android.ui.prefs.WPPreference
                     android:id="@+id/pref_blacklist"
                     android:key="@string/pref_key_site_blacklist"
                     android:title="@string/site_settings_blacklist_title"

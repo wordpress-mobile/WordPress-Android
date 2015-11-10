@@ -26,7 +26,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -85,8 +84,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mPagingPreference;
     private DetailListPreference mWhitelistPreference;
     private WPPreference mMultipleLinksPreference;
-    private DetailListPreference mModerationHoldPreference;
-    private DetailListPreference mBlacklistPreference;
+    private WPPreference mModerationHoldPreference;
+    private WPPreference mBlacklistPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -203,6 +202,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                 String title = String.valueOf(preference.getTitle());
                 WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
             }
+        } else if (preference == mMultipleLinksPreference) {
+        } else if (preference == mModerationHoldPreference) {
+            // TODO: open custom dialog to edit keys
+        } else if (preference == mBlacklistPreference) {
+            // TODO: open custom dialog to edit keys
         }
 
         return false;
@@ -230,7 +234,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mPrivacyPreference) {
             mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
-            changePrivacyValue(mSiteSettings.getPrivacy());
+            setDetailListPreferenceValue(mPrivacyPreference,
+                    String.valueOf(mSiteSettings.getPrivacy()),
+                    getPrivacySummary(mSiteSettings.getPrivacy()));
             return true;
         } else if (preference == mAllowComments || preference == mAllowCommentsNested) {
             setAllowComments((Boolean) newValue);
@@ -243,17 +249,27 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mCloseAfterPreference) {
             mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
-            mCloseAfterPreference.setValue(newValue.toString());
-            mCloseAfterPreference.refreshAdapter();
+            setDetailListPreferenceValue(mCloseAfterPreference,
+                    newValue.toString(),
+                    getCloseAfterSummary(mSiteSettings.getCloseAfter()));
             return true;
         } else if (preference == mSortByPreference) {
             mSiteSettings.setCommentSorting(Integer.parseInt(newValue.toString()));
-            mSortByPreference.setValue(newValue.toString());
-            mSortByPreference.refreshAdapter();
+            setDetailListPreferenceValue(mSortByPreference,
+                    newValue.toString(),
+                    getSortOrderSummary(mSiteSettings.getCommentSorting()));
             return true;
         } else if (preference == mThreadingPreference) {
+            mSiteSettings.setThreadingLevels(Integer.parseInt(newValue.toString()));
+            setDetailListPreferenceValue(mThreadingPreference,
+                    newValue.toString(),
+                    getThreadingSummary(mSiteSettings.getThreadingLevels()));
             return true;
         } else if (preference == mPagingPreference) {
+            mSiteSettings.setPagingCount(Integer.parseInt(newValue.toString()));
+            setDetailListPreferenceValue(mPagingPreference,
+                    newValue.toString(),
+                    getPagingSummary(mSiteSettings.getPagingCount()));
             return true;
         } else if (preference == mIdentityRequiredPreference) {
             mSiteSettings.setIdentityRequired((Boolean) newValue);
@@ -386,10 +402,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPagingPreference = (DetailListPreference) getPref(R.string.pref_key_site_paging);
         mWhitelistPreference = (DetailListPreference) getPref(R.string.pref_key_site_whitelist);
         mMultipleLinksPreference = (WPPreference) getPref(R.string.pref_key_site_multiple_links);
-        mModerationHoldPreference = (DetailListPreference) getPref(R.string.pref_key_site_moderation_hold);
-        mBlacklistPreference = (DetailListPreference) getPref(R.string.pref_key_site_blacklist);
+        mModerationHoldPreference = (WPPreference) getPref(R.string.pref_key_site_moderation_hold);
+        mBlacklistPreference = (WPPreference) getPref(R.string.pref_key_site_blacklist);
         mRelatedPostsPreference = findPreference(getString(R.string.pref_key_site_related_posts));
         mRelatedPostsPreference.setOnPreferenceClickListener(this);
+        mModerationHoldPreference.setOnPreferenceClickListener(this);
+        mBlacklistPreference.setOnPreferenceClickListener(this);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
@@ -424,88 +442,33 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mAddressPreference, mSiteSettings.getAddress());
         changeEditTextPreferenceValue(mUsernamePreference, mSiteSettings.getUsername());
         changeEditTextPreferenceValue(mPasswordPreference, mSiteSettings.getPassword());
-        changePrivacyValue(mSiteSettings.getPrivacy());
-        changeLanguageValue(mSiteSettings.getLanguageCode());
+        setDetailListPreferenceValue(mPrivacyPreference,
+                String.valueOf(mSiteSettings.getPrivacy()),
+                getPrivacySummary(mSiteSettings.getPrivacy()));
         setCategories();
         setPostFormats();
         setAllowComments(mSiteSettings.getAllowComments());
         setSendPingbacks(mSiteSettings.getSendPingbacks());
         setReceivePingbacks(mSiteSettings.getReceivePingbacks());
+        setDetailListPreferenceValue(mCloseAfterPreference,
+                String.valueOf(mSiteSettings.getCloseAfter()),
+                getCloseAfterSummary(mSiteSettings.getCloseAfter()));
+        setDetailListPreferenceValue(mSortByPreference,
+                String.valueOf(mSiteSettings.getCommentSorting()),
+                getSortOrderSummary(mSiteSettings.getCommentSorting()));
+        setDetailListPreferenceValue(mThreadingPreference,
+                String.valueOf(mSiteSettings.getThreadingLevels()),
+                getThreadingSummary(mSiteSettings.getThreadingLevels()));
+        setDetailListPreferenceValue(mPagingPreference,
+                String.valueOf(mSiteSettings.getPagingCount()),
+                getPagingSummary(mSiteSettings.getPagingCount()));
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPreference.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPreference.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
         mPagingPreference.setValue(String.valueOf(mSiteSettings.getPagingCount()));
 //        mWhitelistPreference.setChecked(mSiteSettings.getUseCommentWhitelist());
-        mModerationHoldPreference.setValue(mSiteSettings.getModerationKeys().toString());
-        mBlacklistPreference.setValue(mSiteSettings.getBlacklistKeys().toString());
-
-        int closeAfterPeriod = mSiteSettings.getCloseAfter();
-        if (ArrayUtils.contains(mCloseAfterPreference.getEntryValues(), String.valueOf(closeAfterPeriod))) {
-            mCloseAfterPreference.setValue(String.valueOf(closeAfterPeriod));
-        } else {
-            mCloseAfterPreference.setValue(null);
-        }
-        switch (closeAfterPeriod) {
-            case 0:
-                mCloseAfterPreference.setSummary("Never");
-                break;
-            case 1:
-                mCloseAfterPreference.setSummary("1 day");
-                break;
-            default:
-                mCloseAfterPreference.setSummary(String.format("%d days", closeAfterPeriod));
-                break;
-        }
-        mCloseAfterPreference.refreshAdapter();
-
-        int threadingDepth = mSiteSettings.getThreadingLevels();
-        if (ArrayUtils.contains(mThreadingPreference.getEntryValues(), String.valueOf(threadingDepth))) {
-            mThreadingPreference.setValue(String.valueOf(threadingDepth));
-        } else {
-            mThreadingPreference.setValue(null);
-        }
-        switch (threadingDepth) {
-            case 0:
-            case 1:
-                mThreadingPreference.setSummary("None");
-                break;
-            default:
-                mThreadingPreference.setSummary(String.format("%d levels", threadingDepth));
-                break;
-        }
-        mThreadingPreference.refreshAdapter();
-
-        int pagingSize = mSiteSettings.getPagingCount();
-        if (ArrayUtils.contains(mPagingPreference.getEntryValues(), String.valueOf(pagingSize))) {
-            mPagingPreference.setValue(String.valueOf(pagingSize));
-        } else {
-            mPagingPreference.setValue(null);
-        }
-        switch (pagingSize) {
-            case 0:
-                mPagingPreference.setSummary("None");
-                break;
-            case 1:
-                mPagingPreference.setSummary("1 comment per page");
-                break;
-            default:
-                mPagingPreference.setSummary(String.format("%d comments per page", pagingSize));
-                break;
-        }
-        mPagingPreference.refreshAdapter();
-
-        int sortOrder = mSiteSettings.getCommentSorting();
-        String sortOrderString = String.valueOf(sortOrder);
-        if (!ArrayUtils.contains(mSortByPreference.getEntryValues(), sortOrderString)) {
-            sortOrderString = String.valueOf(sortOrder = SiteSettingsInterface.ASCENDING_SORT);
-        }
-        mSortByPreference.setValue(sortOrderString);
-        if (sortOrder == SiteSettingsInterface.ASCENDING_SORT) {
-            mSortByPreference.setSummary("Oldest first");
-        } else {
-            mSortByPreference.setSummary("Newest first");
-        }
-        mSortByPreference.refreshAdapter();
+//        mModerationHoldPreference.setValue(mSiteSettings.getModerationKeys().toString());
+//        mBlacklistPreference.setValue(mSiteSettings.getBlacklistKeys().toString());
     }
 
     private void setCategories() {
@@ -574,6 +537,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mReceivePingbacksNested.isChecked() != newValue) mReceivePingbacksNested.setChecked(newValue);
     }
 
+    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
+        pref.setValue(value);
+        pref.setSummary(summary);
+        pref.refreshAdapter();
+    }
+
     /**
      * Helper method to perform validation and set multiple properties on an EditTextPreference.
      * If newValue is equal to the current preference text no action will be taken.
@@ -609,18 +578,43 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    /**
-     * Updates the privacy preference summary.
-     */
-    private void changePrivacyValue(int newValue) {
-        if (mPrivacyPreference == null) return;
-
-        if (TextUtils.isEmpty(mPrivacyPreference.getSummary()) ||
-                newValue != Integer.valueOf(mPrivacyPreference.getValue())) {
-            mPrivacyPreference.setValue(String.valueOf(newValue));
-            mPrivacyPreference.setSummary(mSiteSettings.getPrivacyForDisplay());
-            mPrivacyPreference.refreshAdapter();
+    private String getPrivacySummary(int privacy) {
+        switch (privacy) {
+            case -1:
+                return getString(R.string.privacy_private);
+            case 0:
+                return getString(R.string.privacy_hidden);
+            case 1:
+                return getString(R.string.privacy_public);
+            default:
+                return "";
         }
+    }
+
+    private String getCloseAfterSummary(int period) {
+        if (period == 0) getString(R.string.never);
+        return getResources().getQuantityString(R.plurals.days_quantity, period, period);
+    }
+
+    private String getSortOrderSummary(int order) {
+        switch (order) {
+            case SiteSettingsInterface.ASCENDING_SORT:
+                return getString(R.string.oldest_first);
+            case SiteSettingsInterface.DESCENDING_SORT:
+                return getString(R.string.newest_first);
+            default:
+                return getString(R.string.unknown);
+        }
+    }
+
+    private String getThreadingSummary(int levels) {
+        if (levels <= 1) getString(R.string.none);
+        return String.format(getString(R.string.levels), levels);
+    }
+
+    private String getPagingSummary(int count) {
+        if (count == 0) return getString(R.string.none);
+        return getResources().getQuantityString(R.plurals.paging_quantity, count, count);
     }
 
     /**

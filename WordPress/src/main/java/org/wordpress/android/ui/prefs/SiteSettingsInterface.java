@@ -172,19 +172,6 @@ public abstract class SiteSettingsInterface {
         return mSettings.privacy;
     }
 
-    public String getPrivacyForDisplay() {
-        switch (mSettings.privacy) {
-            case -1:
-                return mActivity.getString(R.string.privacy_private);
-            case 0:
-                return mActivity.getString(R.string.privacy_hidden);
-            case 1:
-                return mActivity.getString(R.string.privacy_public);
-            default:
-                return "";
-        }
-    }
-
     public String getLanguageCode() {
         return mSettings.language;
     }
