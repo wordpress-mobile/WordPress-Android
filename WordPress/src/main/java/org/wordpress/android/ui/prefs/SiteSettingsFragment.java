@@ -1,12 +1,15 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -21,7 +24,11 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +36,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -36,6 +44,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -49,6 +58,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener,
                    Preference.OnPreferenceClickListener,
                    AdapterView.OnItemLongClickListener,
+                   Dialog.OnDismissListener,
                    SiteSettingsInterface.SiteSettingsListener {
 
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
@@ -58,6 +68,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
+    private View mFabView;
 
     private EditTextPreference mTitlePreference;
     private EditTextPreference mTaglinePreference;
@@ -112,7 +123,22 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onResume() {
         super.onResume();
 
+        // TODO: no!
         mSiteSettings.init(true);
+    }
+
+    private void showFab() {
+        // redisplay hidden fab after a short delay
+        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()
+                        && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                    AniUtils.showFab(mFabView, true);
+                }
+            }
+        }, delayMs);
     }
 
     @Override
@@ -181,35 +207,104 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private List<String> mEditingList;
+
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference == mRelatedPostsPreference) {
             showRelatedPostsDialog();
+            return true;
+        } else if (preference == mMultipleLinksPreference) {
+            return true;
+        } else if (preference == mModerationHoldPreference) {
+            showListEditorDialog(R.string.site_settings_moderation_hold_title,
+                    R.string.hold_for_moderation_description,
+                    mSiteSettings.getModerationKeys());
+            mEditingList = mSiteSettings.getModerationKeys();
+            showFab();
+            return true;
+        } else if (preference == mBlacklistPreference) {
+            showListEditorDialog(R.string.site_settings_blacklist_title,
+                    R.string.blacklist_description,
+                    mSiteSettings.getBlacklistKeys());
+            mEditingList = mSiteSettings.getBlacklistKeys();
+            showFab();
             return true;
         }
 
         return false;
     }
 
-     @Override
-     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
-        // If the user has clicked on a preference screen, set up the screen
+        // Add Action Bar to sub-screens
         if (preference instanceof PreferenceScreen) {
-            Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
-            if (prefDialog != null) {
+            Dialog dialog = ((PreferenceScreen) preference).getDialog();
+            if (dialog != null) {
                 String title = String.valueOf(preference.getTitle());
-                WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
+                WPActivityUtils.addToolbarToDialog(this, dialog, title);
             }
-        } else if (preference == mMultipleLinksPreference) {
-        } else if (preference == mModerationHoldPreference) {
-            // TODO: open custom dialog to edit keys
-        } else if (preference == mBlacklistPreference) {
-            // TODO: open custom dialog to edit keys
         }
 
         return false;
+    }
+
+
+    private void showListEditorDialog(int titleRes, int footerRes, List<String> items) {
+        Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        dialog.setOnDismissListener(this);
+        dialog.setContentView(getListEditorView(items, getString(footerRes)));
+        dialog.show();
+        WPActivityUtils.addToolbarToDialog(this, dialog, getString(titleRes));
+    }
+
+    private void setEditorListEntries(ListView list, List<String> items) {
+        if (list == null || items == null) return;
+        list.setAdapter(new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_list_item_1,
+                items));
+    }
+
+    private View getListEditorView(List<String> items, String footerText) {
+        View view = View.inflate(getActivity(), R.layout.list_editor, null);
+        ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
+
+        final ListView list = (ListView) view.findViewById(android.R.id.list);
+        setEditorListEntries(list, items);
+        mFabView = view.findViewById(R.id.fab_button);
+        mFabView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+                LinearLayout.LayoutParams params =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                final EditText input = new EditText(getActivity());
+                input.setPadding(16, 16, 16, 16);
+                input.setLayoutParams(params);
+                input.setHint("Enter a word or phrase");
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String entry = input.getText().toString();
+                        if (!mEditingList.contains(entry)) {
+                            mEditingList.add(entry);
+                            setEditorListEntries(list, mEditingList);
+                        }
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                alertDialog.setView(input);
+                alertDialog.show();
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -278,10 +373,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setUserAccountRequired((Boolean) newValue);
             return true;
         } else if (preference == mWhitelistPreference) {
-//            mSiteSettings.setUseCommentWhitelist((Boolean) newValue);
             return true;
         } else if (preference == mMultipleLinksPreference) {
-//            mSiteSettings.setMultipleLinks((Boolean) newValue ? 1 : 0);
             return true;
         } else if (preference == mModerationHoldPreference) {
             return true;
@@ -300,15 +393,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mCategoryPreference) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
-            mCategoryPreference.setValue(newValue.toString());
-            mCategoryPreference.setSummary(mSiteSettings.getDefaultCategoryForDisplay());
-            mCategoryPreference.refreshAdapter();
+            setDetailListPreferenceValue(mCategoryPreference,
+                    newValue.toString(),
+                    mSiteSettings.getDefaultCategoryForDisplay());
             return true;
         } else if (preference == mFormatPreference) {
             mSiteSettings.setDefaultFormat(newValue.toString());
-            mFormatPreference.setValue(newValue.toString());
-            mFormatPreference.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
-            mFormatPreference.refreshAdapter();
+            setDetailListPreferenceValue(mFormatPreference,
+                    newValue.toString(),
+                    mSiteSettings.getDefaultPostFormatDisplay());
             return true;
         }
 
@@ -335,6 +428,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return false;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        mFabView = null;
+        mEditingList = null;
     }
 
     @Override
@@ -466,9 +565,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mUserAccountRequiredPreference.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPreference.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
         mPagingPreference.setValue(String.valueOf(mSiteSettings.getPagingCount()));
-//        mWhitelistPreference.setChecked(mSiteSettings.getUseCommentWhitelist());
-//        mModerationHoldPreference.setValue(mSiteSettings.getModerationKeys().toString());
-//        mBlacklistPreference.setValue(mSiteSettings.getBlacklistKeys().toString());
     }
 
     private void setCategories() {
@@ -609,7 +705,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private String getThreadingSummary(int levels) {
         if (levels <= 1) getString(R.string.none);
-        return String.format(getString(R.string.levels), levels);
+        return String.format(getString(R.string.levels_quantity), levels);
     }
 
     private String getPagingSummary(int count) {

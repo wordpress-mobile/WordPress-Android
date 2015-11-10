@@ -262,12 +262,22 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
             params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
         }
-//        if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
-//            params.put(MODERATION_KEYS_KEY, String.valueOf(mSettings.holdForModeration));
-//        }
-//        if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
-//            params.put(BLACKLIST_KEYS_KEY, String.valueOf(mSettings.blacklist));
-//        }
+        if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
+            StringBuilder builder = new StringBuilder();
+            for (String key : mSettings.holdForModeration) {
+                builder.append(key);
+                builder.append("\n");
+            }
+            params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
+        }
+        if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
+            StringBuilder builder = new StringBuilder();
+            for (String key : mSettings.blacklist) {
+                builder.append(key);
+                builder.append("\n");
+            }
+            params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+        }
 
         return params;
     }

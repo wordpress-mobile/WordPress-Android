@@ -617,7 +617,7 @@
         <item quantity="one">1 comment per page</item>
         <item quantity="other">%d comments per page</item>
     </plurals>
-    <string name="levels">levels</string>
+    <string name="levels_quantity">%d levels</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
