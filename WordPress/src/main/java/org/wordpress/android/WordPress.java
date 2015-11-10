@@ -369,7 +369,8 @@ public class WordPress extends Application {
             case ConnectionResult.SERVICE_MISSING:
             case ConnectionResult.SERVICE_DISABLED:
             case ConnectionResult.SERVICE_INVALID:
-                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: " + connectionResult);
+                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
+                        + GooglePlayServicesUtil.getErrorString(connectionResult));
         }
         return false;
     }
