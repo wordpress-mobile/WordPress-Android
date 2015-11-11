@@ -715,6 +715,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
 
         final ListView list = (ListView) view.findViewById(android.R.id.list);
+        list.setEmptyView(view.findViewById(R.id.empty_view));
         setEditorListEntries(list, items);
         view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override

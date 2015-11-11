@@ -552,6 +552,7 @@
     <string name="multiple_links_description">Require approval for comments that include more than this number of links.</string>
     <string name="oldest_first">Oldest first</string>
     <string name="newest_first">Newest first</string>
+    <string name="no_items">No items</string>
     <string-array name="site_settings_auto_approve_entries">
         <item>No comments</item>
         <item>Known users\' comments</item>

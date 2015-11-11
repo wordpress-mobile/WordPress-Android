@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_items"
+        android:textColor="@color/grey_lighten_10"
+        android:textSize="@dimen/text_sz_large"
+        android:visibility="gone" />
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
