@@ -155,10 +155,14 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
 
-        Collections.addAll(mRemoteSettings.holdForModeration,
-                settingsObject.optString(MODERATION_KEYS_KEY, "").split("\n"));
-        Collections.addAll(mRemoteSettings.blacklist,
-                settingsObject.optString(BLACKLIST_KEYS_KEY, "").split("\n"));
+        String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
+        if (modKeys.length() > 0) {
+            Collections.addAll(mRemoteSettings.holdForModeration, modKeys.split("\n"));
+        }
+        String blacklistKeys = settingsObject.optString(BLACKLIST_KEYS_KEY, "");
+        if (blacklistKeys.length() > 0) {
+            Collections.addAll(mRemoteSettings.blacklist, blacklistKeys.split("\n"));
+        }
 
         if (settingsObject.optBoolean(CLOSE_OLD_COMMENTS_KEY, false)) {
             mRemoteSettings.closeCommentAfter = settingsObject.optInt(CLOSE_OLD_COMMENTS_DAYS_KEY, 0);
