@@ -27,7 +27,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -41,6 +40,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.widgets.WPEditText;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.List;
@@ -721,12 +721,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             public void onClick(View v) {
                 AlertDialog.Builder builder =
                         new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-                LinearLayout.LayoutParams params =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
-                final EditText input = new EditText(getActivity());
-                input.setPadding(16, 16, 16, 16);
-                input.setLayoutParams(params);
+                final EditText input = new WPEditText(getActivity());
                 input.setHint("Enter a word or phrase");
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -740,8 +735,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 });
                 builder.setNegativeButton(R.string.cancel, null);
                 AlertDialog alertDialog = builder.create();
+                alertDialog.setView(input, 64, 64, 64, 0);
                 alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                alertDialog.setView(input);
                 alertDialog.show();
             }
         });
