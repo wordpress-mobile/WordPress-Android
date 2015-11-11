@@ -336,9 +336,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setUserAccountRequired((Boolean) newValue);
             return true;
         } else if (preference == mWhitelistPref) {
-            setDetailListPreferenceValue(mWhitelistPref,
-                    newValue.toString(),
-                    getWhitelistSummary(Integer.parseInt(newValue.toString())));
+            updateWhitelistSettings(Integer.parseInt(newValue.toString()));
             return true;
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
@@ -693,6 +691,26 @@ public class SiteSettingsFragment extends PreferenceFragment
             default:
                 return "";
         }
+    }
+
+    private void updateWhitelistSettings(int val) {
+        switch (val) {
+            case -1:
+                mSiteSettings.setManualApproval(true);
+                mSiteSettings.setUseCommentWhitelist(false);
+                break;
+            case 0:
+                mSiteSettings.setManualApproval(true);
+                mSiteSettings.setUseCommentWhitelist(true);
+                break;
+            case 1:
+                mSiteSettings.setManualApproval(false);
+                mSiteSettings.setUseCommentWhitelist(false);
+                break;
+        }
+        setDetailListPreferenceValue(mWhitelistPref,
+                String.valueOf(val),
+                getWhitelistSummary(val));
     }
 
     private void showListEditorDialog(int titleRes, int footerRes, List<String> items) {
