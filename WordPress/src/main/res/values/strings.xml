@@ -553,6 +553,10 @@
     <string name="oldest_first">Oldest first</string>
     <string name="newest_first">Newest first</string>
     <string name="no_items">No items</string>
+    <plurals name="multiple_links_summary">
+        <item quantity="one">Require approval for more than 1 link</item>
+        <item quantity="other">Require approval for more than %d links</item>
+    </plurals>
     <string-array name="site_settings_auto_approve_entries">
         <item>No comments</item>
         <item>Known users\' comments</item>

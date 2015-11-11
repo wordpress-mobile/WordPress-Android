@@ -305,7 +305,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
-            mMultipleLinksPref.setSummary("Require approval for more than " + mSiteSettings.getMultipleLinks() + " links");
+            mMultipleLinksPref.setSummary(getResources()
+                    .getQuantityString(R.plurals.multiple_links_summary,
+                            mSiteSettings.getMultipleLinks(),
+                            mSiteSettings.getMultipleLinks()));
             return true;
         } else if (preference == mUsernamePref) {
             mSiteSettings.setUsername(newValue.toString());
@@ -510,6 +513,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mSiteSettings.getUseCommentWhitelist() ? 0
                         : -1 : 1;
         setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
+        mMultipleLinksPref.setSummary(getResources()
+                .getQuantityString(R.plurals.multiple_links_summary,
+                mSiteSettings.getMultipleLinks(),
+                mSiteSettings.getMultipleLinks()));
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
