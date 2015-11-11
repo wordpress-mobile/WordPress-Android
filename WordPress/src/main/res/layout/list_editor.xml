@@ -15,7 +15,13 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/list_editor_footer_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:textColor="@color/grey_darken_10" />
 
     <!-- this coordinator is only here due to https://code.google.com/p/android/issues/detail?id=175330 -->
     <android.support.design.widget.CoordinatorLayout

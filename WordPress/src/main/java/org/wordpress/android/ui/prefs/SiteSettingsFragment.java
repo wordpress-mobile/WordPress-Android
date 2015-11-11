@@ -67,7 +67,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
-    private View mFabView;
     private List<String> mEditingList;
 
     private EditTextPreference mTitlePref;
@@ -202,16 +201,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             showMultipleLinksDialog();
             return true;
         } else if (preference == mModerationHoldPref) {
+            mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
                     R.string.hold_for_moderation_description,
-                    mSiteSettings.getModerationKeys());
-            mEditingList = mSiteSettings.getModerationKeys();
+                    mEditingList);
             return true;
         } else if (preference == mBlacklistPref) {
+            mEditingList = mSiteSettings.getBlacklistKeys();
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.blacklist_description,
-                    mSiteSettings.getBlacklistKeys());
-            mEditingList = mSiteSettings.getBlacklistKeys();
+                    mEditingList);
             return true;
         }
 
@@ -360,7 +359,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        mFabView = null;
         mEditingList = null;
     }
 
@@ -708,7 +706,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void setEditorListEntries(ListView list, List<String> items) {
         if (list == null || items == null) return;
         list.setAdapter(new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1,
+                R.layout.wp_simple_list_item_1,
                 items));
     }
 
@@ -718,8 +716,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         final ListView list = (ListView) view.findViewById(android.R.id.list);
         setEditorListEntries(list, items);
-        mFabView = view.findViewById(R.id.fab_button);
-        mFabView.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder =
