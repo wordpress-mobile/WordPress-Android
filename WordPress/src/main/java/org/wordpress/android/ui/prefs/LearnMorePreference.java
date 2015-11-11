@@ -31,7 +31,7 @@ public class LearnMorePreference extends Preference
         super.onCreateView(parent);
 
         View view = View.inflate(getContext(), R.layout.learn_more_pref, null);
-        view.findViewById(R.id.learnMoreButton).setOnClickListener(this);
+        view.findViewById(R.id.learn_more_button).setOnClickListener(this);
 
         return view;
     }

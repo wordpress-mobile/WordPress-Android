@@ -14,7 +14,7 @@
     android:paddingBottom="16dp">
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/learnMoreCaption"
+        android:id="@+id/learn_more_caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/site_settings_learn_more_caption"
@@ -22,7 +22,7 @@
         android:textColor="@color/grey_darken_10" />
 
     <org.wordpress.android.widgets.OpenSansButton
-        android:id="@+id/learnMoreButton"
+        android:id="@+id/learn_more_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start|center_vertical"

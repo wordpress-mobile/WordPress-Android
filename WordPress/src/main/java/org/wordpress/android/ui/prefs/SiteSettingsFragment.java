@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -37,7 +36,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -129,26 +127,26 @@ public class SiteSettingsFragment extends PreferenceFragment
         mSiteSettings.init(true);
     }
 
-    private void showFab() {
-        // redisplay hidden fab after a short delay
-        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (isAdded()
-                        && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
-                    AniUtils.showFab(mFabView, true);
-                }
-            }
-        }, delayMs);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
 
         // Assume user wanted changes propagated when they leave
         mSiteSettings.saveSettings();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RELATED_POSTS_REQUEST_CODE:
+                if (data == null) return;
+                mSiteSettings.setShowRelatedPosts(data.getBooleanExtra(RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, false));
+                mSiteSettings.setShowRelatedPostHeader(data.getBooleanExtra(RelatedPostsDialog.SHOW_HEADER_KEY, false));
+                mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(RelatedPostsDialog.SHOW_IMAGES_KEY, false));
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -196,38 +194,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case RELATED_POSTS_REQUEST_CODE:
-                if (data == null) return;
-                mSiteSettings.setShowRelatedPosts(data.getBooleanExtra(RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, false));
-                mSiteSettings.setShowRelatedPostHeader(data.getBooleanExtra(RelatedPostsDialog.SHOW_HEADER_KEY, false));
-                mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(RelatedPostsDialog.SHOW_IMAGES_KEY, false));
-                break;
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void showMultipleLinksDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        numberPicker.setMaxValue(100);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mSiteSettings.getMultipleLinks() != numberPicker.getValue()) {
-                    onPreferenceChange(mMultipleLinksPref, numberPicker.getValue());
-                }
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.setView(view);
-        builder.create().show();
-    }
-
-    @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference == mRelatedPostsPref) {
             showRelatedPostsDialog();
@@ -240,14 +206,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                     R.string.hold_for_moderation_description,
                     mSiteSettings.getModerationKeys());
             mEditingList = mSiteSettings.getModerationKeys();
-            showFab();
             return true;
         } else if (preference == mBlacklistPref) {
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.blacklist_description,
                     mSiteSettings.getBlacklistKeys());
             mEditingList = mSiteSettings.getBlacklistKeys();
-            showFab();
             return true;
         }
 
@@ -255,14 +219,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-        super.onPreferenceTreeClick(preferenceScreen, preference);
+    public boolean onPreferenceTreeClick(PreferenceScreen screen, Preference preference) {
+        super.onPreferenceTreeClick(screen, preference);
 
         // Add Action Bar to sub-screens
-        if (preference instanceof PreferenceScreen) {
+        if (preference == findPreference(getString(R.string.pref_key_site_more_discussion))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog != null) {
-                String title = String.valueOf(preference.getTitle());
+                ListView prefList = (ListView) dialog.findViewById(android.R.id.list);
+                prefList.setOnItemLongClickListener(this);
+                String title = getString(R.string.site_settings_discussion_title);
                 WPActivityUtils.addToolbarToDialog(this, dialog, title);
             }
         }
@@ -495,6 +461,24 @@ public class SiteSettingsFragment extends PreferenceFragment
         relatedPosts.setArguments(args);
         relatedPosts.setTargetFragment(this, RELATED_POSTS_REQUEST_CODE);
         relatedPosts.show(getFragmentManager(), "related-posts");
+    }
+
+    private void showMultipleLinksDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
+        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        numberPicker.setMaxValue(100);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mSiteSettings.getMultipleLinks() != numberPicker.getValue()) {
+                    onPreferenceChange(mMultipleLinksPref, numberPicker.getValue());
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setView(view);
+        builder.create().show();
     }
 
     private void setPreferencesFromSiteSettings() {

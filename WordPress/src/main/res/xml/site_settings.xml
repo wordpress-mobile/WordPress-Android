@@ -147,8 +147,8 @@
             app:longClickHint="@string/site_receive_pingbacks_hint" />
 
         <PreferenceScreen
-            android:id="@+id/pref_discussion_settings"
-            android:key="@string/pref_key_site_discussion"
+            android:id="@+id/pref_more_discussion_settings"
+            android:key="@string/pref_key_site_more_discussion"
             android:title="@string/site_settings_more_discussion_title"
             app:longClickHint="@string/site_discussion_hint">
 
