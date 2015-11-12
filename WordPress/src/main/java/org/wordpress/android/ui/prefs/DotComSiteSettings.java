@@ -33,13 +33,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String ALLOW_COMMENTS_KEY = "default_comment_status";
     public static final String SEND_PINGBACKS_KEY = "default_pingback_flag";
     public static final String RECEIVE_PINGBACKS_KEY = "default_ping_status";
-    public static final String COMMENT_MODERATION_KEY = "comment_moderation";
-    public static final String REQUIRE_IDENTITY_KEY = "require_name_email";
-    public static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
-    public static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
-    public static final String MAX_LINKS_KEY = "comment_max_links";
-    public static final String MODERATION_KEYS_KEY = "moderation_keys";
-    public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
     public static final String CLOSE_OLD_COMMENTS_KEY = "close_comments_for_old_posts";
     public static final String CLOSE_OLD_COMMENTS_DAYS_KEY = "close_comments_days_old";
     public static final String THREAD_COMMENTS_KEY = "thread_comments";
@@ -47,6 +40,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String PAGE_COMMENTS_KEY = "page_comments";
     public static final String PAGE_COMMENT_COUNT_KEY = "comments_per_page";
     public static final String COMMENT_SORT_ORDER_KEY = "comment_order";
+    public static final String COMMENT_MODERATION_KEY = "comment_moderation";
+    public static final String REQUIRE_IDENTITY_KEY = "require_name_email";
+    public static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
+    public static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
+    public static final String MAX_LINKS_KEY = "comment_max_links";
+    public static final String MODERATION_KEYS_KEY = "moderation_keys";
+    public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
 
     // WP.com REST keys used to GET certain site settings
     public static final String GET_TITLE_KEY = "name";
