@@ -402,6 +402,8 @@
             android:name=".GCMRegistrationIntentService"
             android:exported="false">
         </service>
+        <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
         <service
             android:name=".GCMMessageService"
             android:exported="false" >
