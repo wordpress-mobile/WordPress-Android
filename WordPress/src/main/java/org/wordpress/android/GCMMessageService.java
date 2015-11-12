@@ -38,6 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
@@ -153,7 +154,7 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         // Bump Analytics
-        Map<String, String> properties = new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         if (!TextUtils.isEmpty(noteType)) {
             // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
             if (noteType.equals(PUSH_TYPE_COMMENT)) {
@@ -162,7 +163,16 @@ public class GCMMessageService extends GcmListenerService {
                 properties.put("notification_type", noteType);
             }
         }
+        // copy all the info from the bundle to Tracks
+        final Set<String> keySet = data.keySet();
+        for (final String key: keySet) {
+            if (!key.equals("note_full_data")) {
+                // skip the key 'note_full_data' that contains the whole note base64 encoded
+                properties.put("push_notification_" + key, data.get(key));
+            }
+        }
         AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
+        AnalyticsTracker.flush();
 
         NotificationCompat.Builder builder;
 
