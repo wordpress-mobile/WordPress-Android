@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -465,7 +466,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        numberPicker.setMaxValue(100);
+        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
+        detailText.setTextColor(getResources().getColor(R.color.grey_darken_10));
+        detailText.setText(R.string.multiple_links_description);
+        numberPicker.setMaxValue(getResources().getInteger(R.integer.max_links_limit));
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
+        TextView titleText = ((TextView) titleView.findViewById(R.id.title));
+        titleText.setText(R.string.site_settings_multiple_links_title);
+        titleText.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT));
+        builder.setCustomTitle(titleView);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

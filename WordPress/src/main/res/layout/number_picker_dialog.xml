@@ -2,18 +2,24 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/number_picker_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_sz_medium"
+        app:fontVariation="light" />
 
-    <NumberPicker
+    <org.wordpress.android.ui.WPNumberPicker
         android:id="@+id/number_picker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:showDividers="none" />
 
 </LinearLayout>

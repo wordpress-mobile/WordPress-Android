@@ -497,7 +497,7 @@
     <string name="site_settings_account_required_title">Users must be signed in</string>
     <string name="site_settings_auto_approve_header">Automatically approve comments</string>
     <string name="site_settings_whitelist_title">Automatically approve</string>
-    <string name="site_settings_multiple_links_title">With multiple links</string>
+    <string name="site_settings_multiple_links_title">Links in comments</string>
     <string name="site_settings_multiple_links_summary">Require manual approval for more than %d links</string>
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_blacklist_title">Blacklist</string>
