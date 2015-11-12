@@ -43,6 +43,7 @@ public class GCMRegistrationIntentService extends IntentService {
 
     public void sendRegistrationToken(String gcmToken) {
         if (!TextUtils.isEmpty(gcmToken)) {
+            AppLog.i(T.NOTIFS, "Sending GCM token to our remote services: " + gcmToken);
             // Register to WordPress.com notifications
             if (AccountHelper.isSignedInWordPressDotCom()) {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
