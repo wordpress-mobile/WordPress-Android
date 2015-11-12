@@ -180,11 +180,85 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
             params.put(BLOG_TAGLINE_KEY, mSettings.tagline);
         }
+        if (mSettings.privacy != mRemoteSettings.privacy) {
+            params.put(PRIVACY_KEY, String.valueOf(mSettings.privacy));
+        }
+        if (mSettings.defaultCategory != mRemoteSettings.defaultCategory) {
+            params.put(DEF_CATEGORY_KEY, String.valueOf(mSettings.defaultCategory));
+        }
+        if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat.equals(mRemoteSettings.defaultPostFormat)) {
+            params.put(DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
+        }
+        if (mSettings.allowComments != mRemoteSettings.allowComments) {
+            params.put(ALLOW_COMMENTS_KEY, String.valueOf(mSettings.allowComments));
+        }
         if (mSettings.sendPingbacks != mRemoteSettings.sendPingbacks) {
             params.put(SEND_PINGBACKS_KEY, mSettings.sendPingbacks ? OPTION_ALLOWED : OPTION_DISALLOWED);
         }
         if (mSettings.receivePingbacks != mRemoteSettings.receivePingbacks) {
             params.put(RECEIVE_PINGBACKS_KEY, mSettings.receivePingbacks ? OPTION_ALLOWED : OPTION_DISALLOWED);
+        }
+        if (mSettings.commentApprovalRequired != mRemoteSettings.commentApprovalRequired) {
+            params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
+        }
+        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
+            if (mSettings.closeCommentAfter <= 0) {
+                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(false));
+            } else {
+                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(true));
+                params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
+            }
+        }
+        if (mSettings.sortCommentsBy != mRemoteSettings.sortCommentsBy) {
+            if (mSettings.sortCommentsBy == ASCENDING_SORT) {
+                params.put(COMMENT_SORT_ORDER_KEY, "asc");
+            } else if (mSettings.sortCommentsBy == DESCENDING_SORT) {
+                params.put(COMMENT_SORT_ORDER_KEY, "desc");
+            }
+        }
+        if (mSettings.threadingLevels != mRemoteSettings.threadingLevels) {
+            if (mSettings.threadingLevels <= 1) {
+                params.put(THREAD_COMMENTS_KEY, String.valueOf(false));
+            } else {
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(true));
+                params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
+            }
+        }
+        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
+            if (mSettings.commentsPerPage <= 0) {
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(false));
+            } else{
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(true));
+                params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
+            }
+        }
+        if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
+            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
+        }
+        if (mSettings.commentsRequireUserAccount != mRemoteSettings.commentsRequireUserAccount) {
+            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
+        }
+        if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
+            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
+        }
+        if (mSettings.maxLinks != mRemoteSettings.maxLinks) {
+            params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
+        }
+        if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
+            StringBuilder builder = new StringBuilder();
+            for (String key : mSettings.holdForModeration) {
+                builder.append(key);
+                builder.append("\n");
+            }
+            params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
+        }
+        if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
+            StringBuilder builder = new StringBuilder();
+            for (String key : mSettings.blacklist) {
+                builder.append(key);
+                builder.append("\n");
+            }
+            params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
         }
 
         return params;
