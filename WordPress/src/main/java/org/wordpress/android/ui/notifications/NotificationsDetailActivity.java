@@ -10,7 +10,7 @@ import android.view.WindowManager;
 
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMIntentService;
+import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
@@ -99,7 +99,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
-        GCMIntentService.clearNotifications();
+        GCMMessageService.clearNotifications();
     }
 
     @Override
