@@ -48,7 +48,7 @@ import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class SettingsFragment extends PreferenceFragment implements OnPreferenceClickListener {
-    public static final String SETTINGS_PREFERENCES = "settings-pref";
+    public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
     private AlertDialog mDialog;
@@ -199,7 +199,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                     conf.locale = new Locale(localString);
                 }
                 res.updateConfiguration(conf, dm);
-                mSettings.edit().putString(SETTINGS_PREFERENCES, localeMap.get(values[position])).apply();
+                mSettings.edit().putString(LANGUAGE_PREF_KEY, localeMap.get(values[position])).apply();
 
                 // Track the change only if the user selected a non default Device language. This is only used in
                 // Mixpanel, because we have both the device language and app selected language data in Tracks

@@ -5,18 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -54,7 +57,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     private String mDeviceId;
     private boolean mNotificationsEnabled;
 
-    List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
+    private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -276,7 +279,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         mTypePreferenceCategories.add(rootCategory);
     }
 
-    private NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener mOnSettingsChangedListener =
+    private final NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener mOnSettingsChangedListener =
             new NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener() {
         @SuppressWarnings("unchecked")
         @Override
@@ -344,8 +347,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, @Nonnull Preference preference) {
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
-        // PreferenceScreens don't show the toolbar, so we'll manually add one
-        // See: http://stackoverflow.com/a/27455363/309558
         if (preference instanceof PreferenceScreen) {
             addToolbarToPreferenceScreen((PreferenceScreen) preference);
         }
@@ -353,13 +354,50 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         return false;
     }
 
-    public void addToolbarToPreferenceScreen(PreferenceScreen preferenceScreen) {
-        if (!isAdded()) return;
+    // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
+    // See: http://stackoverflow.com/a/27455363/309558
+    private void addToolbarToPreferenceScreen(PreferenceScreen preferenceScreen) {
         final Dialog dialog = preferenceScreen.getDialog();
+        if (!isAdded() || dialog == null) {
+            return;
+        }
 
-        LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
-        Toolbar toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);
-        root.addView(toolbar, 0);
+        Toolbar toolbar;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (dialog.findViewById(android.R.id.list) == null) {
+                return;
+            }
+
+            LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
+            toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);
+            root.addView(toolbar, 0);
+        } else {
+            if (dialog.findViewById(android.R.id.content) == null) {
+                return;
+            }
+
+            ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.content);
+            if (!(root.getChildAt(0) instanceof ListView)) {
+                return;
+            }
+
+            ListView content = (ListView) root.getChildAt(0);
+            root.removeAllViews();
+
+            toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar, root, false);
+            int height;
+            TypedValue tv = new TypedValue();
+            if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
+                height = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+            } else{
+                height = toolbar.getHeight();
+            }
+
+            content.setPadding(0, height, 0, 0);
+            root.addView(content);
+            root.addView(toolbar);
+        }
+
         toolbar.setTitle(preferenceScreen.getTitle());
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -1,7 +1,6 @@
 
 package org.wordpress.android;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
@@ -215,10 +215,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         showNotificationForBuilder(builder, context, pushId);
 
-        // When we have multiple notifications, add an inbox style notification for non-wearable devices
+        // Also add a group summary notification, which is required for non-wearable devices
         if (mActiveNotificationsMap.size() > 1) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
             int noteCtr = 1;
             for (Bundle pushBundle : mActiveNotificationsMap.values()) {
                 // InboxStyle notification is limited to 5 lines
@@ -247,21 +246,24 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
-
             NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.notification_icon)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText(subject)
                     .setGroup(NOTIFICATION_GROUP_KEY)
                     .setGroupSummary(true)
-                    .setTicker(message)
                     .setAutoCancel(true)
+                    .setTicker(message)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText(subject)
                     .setStyle(inboxStyle);
 
             showNotificationForBuilder(groupBuilder, context, GROUP_NOTIFICATION_ID);
+        } else {
+            // Set the individual notification we've already built as the group summary
+            builder.setGroupSummary(true);
+            showNotificationForBuilder(builder, context, GROUP_NOTIFICATION_ID);
         }
-
+        
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
@@ -306,8 +308,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, notificationId, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(notificationId, builder.build());
     }
 
@@ -350,8 +351,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
     }
 
@@ -453,8 +453,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     public static void removeAllNotifications(Context context) {
         if (context == null || !hasNotifications()) return;
 
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(GCMIntentService.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         for (Integer pushId : mActiveNotificationsMap.keySet()) {
             notificationManager.cancel(pushId);
         }
