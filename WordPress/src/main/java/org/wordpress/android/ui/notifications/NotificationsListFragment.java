@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMIntentService;
+import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
@@ -478,7 +478,7 @@ public class NotificationsListFragment extends Fragment
     private void cancelNotifications() {
         new Thread(new Runnable() {
             public void run() {
-                GCMIntentService.removeAllNotifications(getActivity());
+                GCMMessageService.removeAllNotifications(getActivity());
             }
         }).start();
     }

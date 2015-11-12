@@ -96,10 +96,12 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             themeViewHolder.activeView.setVisibility(View.VISIBLE);
             themeViewHolder.cardView.setCardBackgroundColor(resources.getColor(R.color.blue_wordpress));
         } else {
-            themeViewHolder.detailsView.setBackgroundColor(resources.getColor(R.color.cardview_light_background));
+            themeViewHolder.detailsView.setBackgroundColor(resources.getColor(
+                    android.support.v7.cardview.R.color.cardview_light_background));
             themeViewHolder.nameView.setTextColor(resources.getColor(R.color.black));
             themeViewHolder.activeView.setVisibility(View.GONE);
-            themeViewHolder.cardView.setCardBackgroundColor(resources.getColor(R.color.cardview_light_background));
+            themeViewHolder.cardView.setCardBackgroundColor(resources.getColor(
+                    android.support.v7.cardview.R.color.cardview_light_background));
         }
     }
 
@@ -137,27 +139,21 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_activate:
-                        if (isPremium) {
-                            mCallback.onDetailsSelected(themeId);
-                        } else {
-                            mCallback.onActivateSelected(themeId);
-                        }
-                        break;
-                    case R.id.menu_try_and_customize:
-                        mCallback.onTryAndCustomizeSelected(themeId);
-                        break;
-                    case R.id.menu_view:
-                        mCallback.onViewSelected(themeId);
-                        break;
-                    case R.id.menu_details:
+                int i = item.getItemId();
+                if (i == R.id.menu_activate) {
+                    if (isPremium) {
                         mCallback.onDetailsSelected(themeId);
-                        break;
-                    case R.id.menu_support:
-                    default:
-                        mCallback.onSupportSelected(themeId);
-                        break;
+                    } else {
+                        mCallback.onActivateSelected(themeId);
+                    }
+                } else if (i == R.id.menu_try_and_customize) {
+                    mCallback.onTryAndCustomizeSelected(themeId);
+                } else if (i == R.id.menu_view) {
+                    mCallback.onViewSelected(themeId);
+                } else if (i == R.id.menu_details) {
+                    mCallback.onDetailsSelected(themeId);
+                } else {
+                    mCallback.onSupportSelected(themeId);
                 }
 
                 return true;

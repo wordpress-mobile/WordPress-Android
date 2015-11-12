@@ -28,6 +28,11 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- self-defined permission prevents other apps to hijack PNs -->
+    <permission android:name="org.wordpress.android.permission.C2D_MESSAGE"
+                android:protectionLevel="signature" />
+    <uses-permission android:name="org.wordpress.android.permission.C2D_MESSAGE" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -348,8 +353,6 @@
             android:label="Reader Comment Service"
             android:exported="false"/>
 
-        <service android:name="org.wordpress.android.GCMIntentService"/>
-
         <service
             android:name=".ui.suggestion.service.SuggestionService"
             android:label="Suggestion Service"
@@ -380,5 +383,40 @@
                 android:resource="@xml/stats_widget_info" />
         </receiver>
 
+        <!-- Google Cloud Messaging receiver and services -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="org.wordpress.android" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".GCMRegistrationIntentService"
+            android:exported="false">
+        </service>
+        <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+        <service
+            android:name=".GCMMessageService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".InstanceIDService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest>

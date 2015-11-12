@@ -140,14 +140,34 @@ android_prebuilt_aar(
     aar = ':photoview-file',
 )
 remote_file(
-    name = 'play-services-file',
-    out = 'play-services.aar',
-    url = 'mvn:com.google.android.gms:play-services:aar:3.2.65',
-    sha1 = '73ad64eda4f3aeae7483d4bcd436615d09faedef',
+    name = 'play-services-gcm-file',
+    out = 'play-services-gcm.aar',
+    url = 'mvn:com.google.android.gms:play-services-gcm:aar:8.1.0',
+    sha1 = 'd86d8b4c502c6169773b27496290ed5c0f294d73',
 )
 android_prebuilt_aar(
-    name = 'play-services',
-    aar = ':play-services-file',
+    name = 'play-services-gcm',
+    aar = ':play-services-gcm-file',
+)
+remote_file(
+    name = 'play-services-base-file',
+    out = 'play-services-base.aar',
+    url = 'mvn:com.google.android.gms:play-services-base:aar:8.1.0',
+    sha1 = '6ec5b3f737b28a64818b5d245d839e2290994a49',
+)
+android_prebuilt_aar(
+    name = 'play-services-basement',
+    aar = ':play-services-basement-file',
+)
+remote_file(
+    name = 'play-services-basement-file',
+    out = 'play-services-basement.aar',
+    url = 'mvn:com.google.android.gms:play-services-basement:aar:8.1.0',
+    sha1 = '997dfcce730a948ff7a59d20fa38161a7d513720',
+)
+android_prebuilt_aar(
+    name = 'play-services-base',
+    aar = ':play-services-base-file',
 )
 remote_file(
     name = 'gson-file',
@@ -228,16 +248,6 @@ remote_file(
 android_prebuilt_aar(
     name = 'emailchecker',
     aar = ':emailchecker-file',
-)
-remote_file(
-    name = 'gcm-file',
-    out = 'gcm.jar',
-    url = 'mvn:org.wordpress:gcm:jar:1.0.0',
-    sha1 = 'a6d7bce795a14c7f86111756c4ceb44b79de14aa',
-)
-prebuilt_jar(
-    name = 'gcm',
-    binary_jar = ':gcm-file',
 )
 remote_file(
     name = 'graphview-file',
@@ -495,8 +505,9 @@ android_library(
         ':eventbus',
         ':gson',
         ':tagsoup',
-        ':play-services',
-        ':gcm',
+        ':play-services-gcm',
+        ':play-services-base',
+        ':play-services-basement',
         ':androidasync',
     ],
 )
