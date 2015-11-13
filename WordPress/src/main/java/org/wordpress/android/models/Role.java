@@ -27,9 +27,8 @@ public enum Role {
                 return context.getString(R.string.role_contributor);
             case UNSUPPORTED:
                 return context.getString(R.string.role_unsupported);
-            default:
-                return "";
         }
+        return "";
     }
 
     public static Role fromString(String value) {
