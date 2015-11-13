@@ -203,9 +203,9 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
             if (mSettings.closeCommentAfter <= 0) {
-                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(false));
+                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(0));
             } else {
-                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(true));
+                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(1));
                 params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
             }
         }
@@ -218,17 +218,17 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.threadingLevels != mRemoteSettings.threadingLevels) {
             if (mSettings.threadingLevels <= 1) {
-                params.put(THREAD_COMMENTS_KEY, String.valueOf(false));
+                params.put(THREAD_COMMENTS_KEY, String.valueOf(0));
             } else {
-                params.put(PAGE_COMMENTS_KEY, String.valueOf(true));
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(1));
                 params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
             }
         }
         if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
             if (mSettings.commentsPerPage <= 0) {
-                params.put(PAGE_COMMENTS_KEY, String.valueOf(false));
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(0));
             } else{
-                params.put(PAGE_COMMENTS_KEY, String.valueOf(true));
+                params.put(PAGE_COMMENTS_KEY, String.valueOf(1));
                 params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
             }
         }
@@ -288,7 +288,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         model.commentApprovalRequired = !TextUtils.isEmpty(approvalRequired) && Integer.valueOf(approvalRequired) > 0;
         model.commentsRequireIdentity = !TextUtils.isEmpty(identityRequired) && Integer.valueOf(identityRequired) > 0;
         model.commentsRequireUserAccount = !TextUtils.isEmpty(accountRequired) && Integer.valueOf(accountRequired) > 0;
-        model.commentAutoApprovalKnownUsers = !TextUtils.isEmpty(knownUsers) && Integer.valueOf(knownUsers) > 0;
+        model.commentAutoApprovalKnownUsers = !TextUtils.isEmpty(knownUsers) && Boolean.valueOf(knownUsers);
         model.maxLinks = Integer.valueOf(getNestedMapValue(response, MAX_LINKS_KEY));
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
@@ -302,19 +302,22 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             Collections.addAll(mRemoteSettings.blacklist, blacklistKeys.split("\n"));
         }
 
-        if (Boolean.valueOf(getNestedMapValue(response, CLOSE_OLD_COMMENTS_KEY))) {
+        String close = getNestedMapValue(response, CLOSE_OLD_COMMENTS_KEY);
+        if (!TextUtils.isEmpty(close) && Boolean.valueOf(close)) {
             mRemoteSettings.closeCommentAfter = Integer.valueOf(getNestedMapValue(response, CLOSE_OLD_COMMENTS_DAYS_KEY));
         } else {
             mRemoteSettings.closeCommentAfter = 0;
         }
 
-        if (Boolean.valueOf(getNestedMapValue(response, THREAD_COMMENTS_KEY))) {
+        String thread = getNestedMapValue(response, THREAD_COMMENTS_KEY);
+        if (!TextUtils.isEmpty(thread) && Integer.valueOf(thread) > 0) {
             mRemoteSettings.threadingLevels = Integer.valueOf(getNestedMapValue(response, THREAD_COMMENTS_DEPTH_KEY));
         } else {
             mRemoteSettings.threadingLevels = 0;
         }
 
-        if (Boolean.valueOf(getNestedMapValue(response, PAGE_COMMENTS_KEY))) {
+        String page = getNestedMapValue(response, PAGE_COMMENTS_KEY);
+        if (!TextUtils.isEmpty(page) && Boolean.valueOf(page)) {
             mRemoteSettings.commentsPerPage = Integer.valueOf(getNestedMapValue(response, PAGE_COMMENT_COUNT_KEY));
         } else {
             mRemoteSettings.commentsPerPage = 0;
