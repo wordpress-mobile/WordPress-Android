@@ -357,6 +357,30 @@ public class AnalyticsTrackerNosara extends Tracker {
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
                 break;
+            case THEME_BROWSER_ACCESSED:
+                eventName = "theme_browser_accessed";
+                break;
+            case THEME_BROWSER_SEARCH_ACCESSED:
+                eventName = "theme_browser_search_accessed";
+                break;
+            case THEME_ACTIVATED:
+                eventName = "theme_activated";
+                break;
+            case THEME_DEMO_ACCESSED:
+                eventName = "theme_demo_accessed";
+                break;
+            case THEME_PREVIEW_ACCESSED:
+                eventName = "theme_preview_accessed";
+                break;
+            case THEME_CUSTOMIZE_ACCESSED:
+                eventName = "theme_customize_accessed";
+                break;
+            case THEME_DETAILS_ACCESSED:
+                eventName = "theme_details_accessed";
+                break;
+            case THEME_SUPPORT_ACCESSED:
+                eventName = "theme_support_accessed";
+                break;
             default:
                 eventName = null;
                 break;

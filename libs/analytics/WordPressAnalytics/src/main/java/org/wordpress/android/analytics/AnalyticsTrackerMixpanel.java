@@ -769,6 +769,38 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("My Site - Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_my_site");
                 break;
+            case THEME_BROWSER_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Theme Browser - Accessed");
+                break;
+            case THEME_BROWSER_SEARCH_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Theme Browser - Search Accessed");
+                break;
+            case THEME_ACTIVATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Theme Browser - Theme Activated");
+                break;
+            case THEME_DEMO_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Theme Browser - Demo Accessed");
+                break;
+            case THEME_PREVIEW_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Theme Browser - Preview Accessed");
+                break;
+            case THEME_CUSTOMIZE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Theme Browser - Customize Accessed");
+                break;
+            case THEME_DETAILS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Theme Browser - Details Accessed");
+                break;
+            case THEME_SUPPORT_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Theme Browser - Support Accessed");
+                break;
             default:
                 instructions = null;
                 break;
