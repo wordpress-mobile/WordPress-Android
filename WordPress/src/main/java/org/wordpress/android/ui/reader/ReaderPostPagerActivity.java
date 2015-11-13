@@ -107,7 +107,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_OPENED);
                 onShowHideToolbar(true);
                 bumpPageViewIfNeeded(position);
             }

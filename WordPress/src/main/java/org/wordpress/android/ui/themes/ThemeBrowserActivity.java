@@ -30,6 +30,7 @@ import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -73,7 +74,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setContentView(R.layout.theme_browser_activity);
 
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
+            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
             mThemeBrowserFragment = new ThemeBrowserFragment();
             mThemeSearchFragment = new ThemeSearchFragment();
             addBrowserFragment();
