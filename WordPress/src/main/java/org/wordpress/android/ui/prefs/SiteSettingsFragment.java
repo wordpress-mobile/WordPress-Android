@@ -105,9 +105,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mMultipleLinksPref;
     private Preference mModerationHoldPref;
     private Preference mBlacklistPref;
-    private Preference mRemoveSitePref;
     private Preference mDeleteSitePref;
-    private Preference mStartOverPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -228,8 +226,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mDeleteSitePref) {
             removeBlogWithConfirmation();
-        } else if (preference == mRemoveSitePref) {
-        } else if (preference == mStartOverPref) {
         }
 
         return false;
@@ -494,26 +490,20 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref = getPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getPref(R.string.pref_key_site_blacklist);
         mRelatedPostsPref = findPreference(getString(R.string.pref_key_site_related_posts));
-        mRemoveSitePref = findPreference(getString(R.string.pref_key_site_remove_site));
         mDeleteSitePref = findPreference(getString(R.string.pref_key_site_delete_site));
-        mStartOverPref = findPreference(getString(R.string.pref_key_site_start_over));
         mRelatedPostsPref.setOnPreferenceClickListener(this);
         mMultipleLinksPref.setOnPreferenceClickListener(this);
         mModerationHoldPref.setOnPreferenceClickListener(this);
         mBlacklistPref.setOnPreferenceClickListener(this);
-        mRemoveSitePref.setOnPreferenceClickListener(this);
         mDeleteSitePref.setOnPreferenceClickListener(this);
-        mStartOverPref.setOnPreferenceClickListener(this);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
             removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_account);
-            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_remove_site);
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_delete_site);
         } else {
             removePreference(R.string.pref_key_site_general, R.string.pref_key_site_language);
             removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
-            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_start_over);
-            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_delete_site);
         }
     }
 
