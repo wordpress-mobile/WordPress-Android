@@ -352,8 +352,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             @Override
             public void onResponse(JSONObject response) {
                 WordPress.wpDB.setCurrentTheme(siteId, newThemeId);
+                Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
+                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME);
                 if (!isFinishing()) {
-                    Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
                     showAlertDialogOnNewSettingNewTheme(newTheme);
                     fetchCurrentTheme();
                 }
@@ -392,6 +393,20 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (NetworkUtils.isNetworkAvailable(this)) {
             if (mCurrentTheme != null) {
                 boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
+                switch (type) {
+                    case PREVIEW:
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE);
+                        break;
+                    case DEMO:
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DEMO_ACCESSED);
+                        break;
+                    case DETAILS:
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DETAILS_ACCESSED);
+                        break;
+                    case SUPPORT:
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_SUPPORT_ACCESSED);
+                        break;
+                }
                 ThemeWebActivity.openTheme(this, themeId, type, isCurrentTheme);
                 return;
             } else {
@@ -430,6 +445,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     public void onSearchClicked() {
         mIsInSearchMode = true;
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH);
         addSearchFragment();
     }
 
