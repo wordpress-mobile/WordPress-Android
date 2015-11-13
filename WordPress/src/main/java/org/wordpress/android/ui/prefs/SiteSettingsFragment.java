@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -35,7 +36,11 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -61,6 +66,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                    Dialog.OnDismissListener,
                    SiteSettingsInterface.SiteSettingsListener {
 
+    public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
+
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
     private static final int RELATED_POSTS_REQUEST_CODE = 1;
     private static final int NO_REGION_LANG_CODE_LEN = 2;
@@ -69,6 +76,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
     private List<String> mEditingList;
+    private boolean mBlogDeleted;
 
     private EditTextPreference mTitlePref;
     private EditTextPreference mTaglinePref;
@@ -97,6 +105,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mMultipleLinksPref;
     private Preference mModerationHoldPref;
     private Preference mBlacklistPref;
+    private Preference mRemoveSitePref;
+    private Preference mDeleteSitePref;
+    private Preference mStartOverPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -132,7 +143,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onDestroy();
 
         // Assume user wanted changes propagated when they leave
-        mSiteSettings.saveSettings();
+        if (!mBlogDeleted) {
+            mSiteSettings.saveSettings();
+        }
     }
 
     @Override
@@ -213,9 +226,56 @@ public class SiteSettingsFragment extends PreferenceFragment
                     R.string.blacklist_description,
                     mEditingList);
             return true;
+        } else if (preference == mDeleteSitePref) {
+            removeBlogWithConfirmation();
+        } else if (preference == mRemoveSitePref) {
+        } else if (preference == mStartOverPref) {
         }
 
         return false;
+    }
+
+    private void removeBlog() {
+        if (WordPress.wpDB.deleteBlog(getActivity(), mBlog.getLocalTableBlogId())) {
+            StatsTable.deleteStatsForBlog(getActivity(), mBlog.getLocalTableBlogId()); // Remove stats data
+            AnalyticsUtils.refreshMetadata();
+            ToastUtils.showToast(getActivity(), R.string.blog_removed_successfully);
+            WordPress.wpDB.deleteLastBlogId();
+            WordPress.currentBlog = null;
+            mBlogDeleted = true;
+            getActivity().setResult(RESULT_BLOG_REMOVED);
+
+            // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
+            if (!AccountHelper.isSignedIn()) {
+                EventBus.getDefault().post(new CoreEvents.UserSignedOutCompletely());
+            }
+
+            // Checks for stats widgets that were synched with a blog that could be gone now.
+            StatsWidgetProvider.updateWidgetsOnLogout(getActivity());
+
+            getActivity().finish();
+        } else {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.error));
+            dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
+            dialogBuilder.setPositiveButton(R.string.ok, null);
+            dialogBuilder.setCancelable(true);
+            dialogBuilder.create().show();
+        }
+    }
+
+    private void removeBlogWithConfirmation() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                removeBlog();
+            }
+        });
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+        dialogBuilder.setCancelable(false);
+        dialogBuilder.create().show();
     }
 
     @Override
@@ -434,10 +494,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref = getPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getPref(R.string.pref_key_site_blacklist);
         mRelatedPostsPref = findPreference(getString(R.string.pref_key_site_related_posts));
+        mRemoveSitePref = findPreference(getString(R.string.pref_key_site_remove_site));
+        mDeleteSitePref = findPreference(getString(R.string.pref_key_site_delete_site));
+        mStartOverPref = findPreference(getString(R.string.pref_key_site_start_over));
         mRelatedPostsPref.setOnPreferenceClickListener(this);
         mMultipleLinksPref.setOnPreferenceClickListener(this);
         mModerationHoldPref.setOnPreferenceClickListener(this);
         mBlacklistPref.setOnPreferenceClickListener(this);
+        mRemoveSitePref.setOnPreferenceClickListener(this);
+        mDeleteSitePref.setOnPreferenceClickListener(this);
+        mStartOverPref.setOnPreferenceClickListener(this);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
