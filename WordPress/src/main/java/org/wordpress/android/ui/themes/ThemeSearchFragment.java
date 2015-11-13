@@ -11,10 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.automattic.android.tracks.NetworkUtils;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.NetworkUtils;
 
 /**
  * A fragment for display the results of a theme search

@@ -95,7 +95,9 @@ public class Note extends Syncable {
     }
 
     public String getId() {
-        return String.valueOf(queryJSON("id", 0));
+        if (mNoteJSON == null)
+            return "0";
+        return mNoteJSON.optString("id", "0");
     }
 
     public String getType() {
