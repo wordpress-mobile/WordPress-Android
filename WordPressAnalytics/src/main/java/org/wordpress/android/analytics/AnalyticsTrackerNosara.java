@@ -54,15 +54,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APPLICATION_UPGRADED:
                 eventName = "application_upgraded";
                 break;
-            case THEMES_ACCESSED_THEMES_BROWSER:
-                eventName = "themes_theme_browser_accessed";
-                break;
-            case THEMES_CHANGED_THEME:
-                eventName = "themes_theme_changed";
-                break;
-            case THEMES_PREVIEWED_SITE:
-                eventName = "themes_theme_for_site_previewed";
-                break;
             case READER_ACCESSED:
                 eventName = "reader_accessed";
                 break;
@@ -357,29 +348,29 @@ public class AnalyticsTrackerNosara extends Tracker {
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
                 break;
-            case THEME_BROWSER_ACCESSED:
-                eventName = "theme_browser_accessed";
+            case THEMES_ACCESSED_THEMES_BROWSER:
+                eventName = "themes_theme_browser_accessed";
                 break;
-            case THEME_BROWSER_SEARCH_ACCESSED:
-                eventName = "theme_browser_search_accessed";
+            case THEMES_ACCESSED_SEARCH:
+                eventName = "themes_search_accessed";
                 break;
-            case THEME_ACTIVATED:
-                eventName = "theme_activated";
+            case THEMES_CHANGED_THEME:
+                eventName = "themes_theme_changed";
                 break;
-            case THEME_DEMO_ACCESSED:
-                eventName = "theme_demo_accessed";
+            case THEMES_PREVIEWED_SITE:
+                eventName = "themes_theme_for_site_previewed";
                 break;
-            case THEME_PREVIEW_ACCESSED:
-                eventName = "theme_preview_accessed";
+            case THEMES_DEMO_ACCESSED:
+                eventName = "themes_demo_accessed";
                 break;
-            case THEME_CUSTOMIZE_ACCESSED:
-                eventName = "theme_customize_accessed";
+            case THEMES_CUSTOMIZE_ACCESSED:
+                eventName = "themes_customize_accessed";
                 break;
-            case THEME_DETAILS_ACCESSED:
-                eventName = "theme_details_accessed";
+            case THEMES_SUPPORT_ACCESSED:
+                eventName = "themes_support_accessed";
                 break;
-            case THEME_SUPPORT_ACCESSED:
-                eventName = "theme_support_accessed";
+            case THEMES_DETAILS_ACCESSED:
+                eventName = "themes_details_accessed";
                 break;
             default:
                 eventName = null;

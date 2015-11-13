@@ -270,24 +270,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Upgraded");
                 break;
-            case THEMES_ACCESSED_THEMES_BROWSER:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Accessed Theme Browser");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
-                instructions.setCurrentDateForPeopleProperty("last_time_accessed_theme_browser");
-                break;
-            case THEMES_CHANGED_THEME:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Changed Theme");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
-                instructions.setCurrentDateForPeopleProperty("last_time_changed_theme");
-                break;
-            case THEMES_PREVIEWED_SITE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Previewed Theme for Site");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_previewed_a_theme");
-                instructions.setCurrentDateForPeopleProperty("last_time_previewed_a_theme");
-                break;
             case READER_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Accessed");
@@ -769,37 +751,43 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("My Site - Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_my_site");
                 break;
-            case THEME_BROWSER_ACCESSED:
+            case THEMES_ACCESSED_THEMES_BROWSER:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Theme Browser - Accessed");
+                        mixpanelInstructionsForEventName("Themes - Accessed Theme Browser");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_theme_browser");
                 break;
-            case THEME_BROWSER_SEARCH_ACCESSED:
+            case THEMES_ACCESSED_SEARCH:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Theme Browser - Search Accessed");
+                        mixpanelInstructionsForEventName("Themes - Accessed Theme");
                 break;
-            case THEME_ACTIVATED:
+            case THEMES_CHANGED_THEME:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Theme Browser - Theme Activated");
+                        mixpanelInstructionsForEventName("Themes - Changed Theme");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
+                instructions.setCurrentDateForPeopleProperty("last_time_changed_theme");
                 break;
-            case THEME_DEMO_ACCESSED:
+            case THEMES_PREVIEWED_SITE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Theme Browser - Demo Accessed");
+                        mixpanelInstructionsForEventName("Themes - Previewed Theme for Site");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_previewed_a_theme");
+                instructions.setCurrentDateForPeopleProperty("last_time_previewed_a_theme");
                 break;
-            case THEME_PREVIEW_ACCESSED:
+            case THEMES_DEMO_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Theme Browser - Preview Accessed");
+                        mixpanelInstructionsForEventName("Themes - Demo Accessed");
                 break;
-            case THEME_CUSTOMIZE_ACCESSED:
+            case THEMES_CUSTOMIZE_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Theme Browser - Customize Accessed");
+                        mixpanelInstructionsForEventName("Themes - Customize Accessed");
                 break;
-            case THEME_DETAILS_ACCESSED:
+            case THEMES_SUPPORT_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Theme Browser - Details Accessed");
+                        mixpanelInstructionsForEventName("Themes - Support Accessed");
                 break;
-            case THEME_SUPPORT_ACCESSED:
+            case THEMES_DETAILS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Theme Browser - Support Accessed");
+                        mixpanelInstructionsForEventName("Themes - Details Accessed");
                 break;
             default:
                 instructions = null;
