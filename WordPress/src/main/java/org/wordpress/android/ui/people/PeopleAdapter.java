@@ -35,6 +35,9 @@ public class PeopleAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if (mPersonList == null) {
+            return 0;
+        }
         return mPersonList.size();
     }
 
@@ -48,7 +51,11 @@ public class PeopleAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).personID;
+        Person person = getItem(position);
+        if (person == null) {
+            return 0;
+        }
+        return person.personID;
     }
 
     @Override
