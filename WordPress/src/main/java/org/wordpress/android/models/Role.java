@@ -31,6 +31,7 @@ public enum Role {
         return "";
     }
 
+    // This method will be used to determine the role of the user from network request
     public static Role fromString(String value) {
         if (value == null)
             return Role.UNSUPPORTED;
