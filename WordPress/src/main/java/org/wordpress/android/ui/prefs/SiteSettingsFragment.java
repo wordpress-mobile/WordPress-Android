@@ -19,12 +19,18 @@ import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.SparseBooleanArray;
 import android.util.TypedValue;
+import android.view.ActionMode;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -770,7 +776,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showListEditorDialog(int titleRes, int footerRes, List<String> items) {
         Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
         dialog.setOnDismissListener(this);
-        dialog.setContentView(getListEditorView(items, getString(footerRes)));
+        dialog.setContentView(getListEditorView(dialog, items, getString(footerRes)));
         dialog.show();
         WPActivityUtils.addToolbarToDialog(this, dialog, getString(titleRes));
     }
@@ -782,37 +788,98 @@ public class SiteSettingsFragment extends PreferenceFragment
                 items));
     }
 
-    private View getListEditorView(List<String> items, String footerText) {
+    private ActionMode mListEditorActionMode = null;
+
+    private View getListEditorView(final Dialog dialog, List<String> items, String footerText) {
         View view = View.inflate(getActivity(), R.layout.list_editor, null);
         ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
 
         final ListView list = (ListView) view.findViewById(android.R.id.list);
         list.setEmptyView(view.findViewById(R.id.empty_view));
-        setEditorListEntries(list, items);
-        view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
+        list.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder =
-                        new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-                final EditText input = new WPEditText(getActivity());
-                input.setHint("Enter a word or phrase");
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mListEditorActionMode != null) return false;
+
+                WPActivityUtils.changeDialogToolbarVisibility(dialog, View.GONE);
+                mListEditorActionMode = list.startActionMode(new ActionMode.Callback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String entry = input.getText().toString();
-                        if (!mEditingList.contains(entry)) {
-                            mEditingList.add(entry);
+                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                        MenuInflater inflater = mode.getMenuInflater();
+                        inflater.inflate(R.menu.list_editor, menu);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                        mode.setTitle(String.valueOf(list.getCheckedItemCount()));
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                        if (item.getItemId() == R.id.menu_delete) {
+                            SparseBooleanArray checkedItems = list.getCheckedItemPositions();
+                            ListAdapter adapter = list.getAdapter();
+                            for (int i = 0; i < checkedItems.size(); i++) {
+                                final int index = checkedItems.keyAt(i);
+                                if (checkedItems.get(index) && mEditingList.size() > index) {
+                                    mEditingList.remove(adapter.getItem(index).toString());
+                                }
+                            }
+
                             setEditorListEntries(list, mEditingList);
+                            mListEditorActionMode.finish();
+                            return true;
                         }
+
+                        return false;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode mode) {
+                        mListEditorActionMode = null;
+                        WPActivityUtils.changeDialogToolbarVisibility(dialog, View.VISIBLE);
                     }
                 });
-                builder.setNegativeButton(R.string.cancel, null);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.setView(input, 64, 64, 64, 0);
-                alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                alertDialog.show();
+
+                return true;
             }
         });
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (mListEditorActionMode == null) return;
+
+                        mListEditorActionMode.invalidate();
+                    }
+                });
+        setEditorListEntries(list, items);
+                view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder =
+                                new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+                        final EditText input = new WPEditText(getActivity());
+                        input.setHint("Enter a word or phrase");
+                        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String entry = input.getText().toString();
+                                if (!mEditingList.contains(entry)) {
+                                    mEditingList.add(entry);
+                                    setEditorListEntries(list, mEditingList);
+                                }
+                            }
+                        });
+                        builder.setNegativeButton(R.string.cancel, null);
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.setView(input, 64, 64, 64, 0);
+                        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        alertDialog.show();
+                    }
+                });
 
         return view;
     }

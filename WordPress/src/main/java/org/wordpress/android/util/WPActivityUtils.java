@@ -82,6 +82,15 @@ public class WPActivityUtils {
         });
     }
 
+    public static void changeDialogToolbarVisibility(Dialog dialog, int visibility) {
+        if (dialog == null || !dialog.isShowing()) return;
+
+        View toolbar = dialog.findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setVisibility(visibility);
+        }
+    }
+
     public static void applyLocale(Activity context, boolean restart) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
