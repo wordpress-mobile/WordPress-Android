@@ -803,6 +803,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 if (mListEditorActionMode != null) return false;
 
                 WPActivityUtils.changeDialogToolbarVisibility(dialog, View.GONE);
+                list.setItemChecked(position, true);
                 mListEditorActionMode = list.startActionMode(new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -847,14 +848,14 @@ public class SiteSettingsFragment extends PreferenceFragment
                 return true;
             }
         });
-                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (mListEditorActionMode == null) return;
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mListEditorActionMode == null) return;
 
-                        mListEditorActionMode.invalidate();
-                    }
-                });
+                mListEditorActionMode.invalidate();
+            }
+        });
         setEditorListEntries(list, items);
                 view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
                     @Override
