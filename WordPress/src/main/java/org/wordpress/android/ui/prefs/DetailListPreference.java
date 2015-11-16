@@ -130,16 +130,19 @@ public class DetailListPreference extends ListPreference
         if (listView != null) {
             listView.setDividerHeight(0);
             listView.setClipToPadding(true);
+            //noinspection deprecation
             listView.setBackgroundColor(res.getColor(R.color.grey_lighten_30));
             listView.setPadding(0, 0, 0, res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         }
 
         if (positive != null) {
+            //noinspection deprecation
             positive.setTextColor(res.getColor(R.color.blue_medium));
             positive.setTypeface(typeface);
         }
 
         if (negative != null) {
+            //noinspection deprecation
             negative.setTextColor(res.getColor(R.color.blue_medium));
             negative.setTypeface(typeface);
         }
@@ -158,9 +161,10 @@ public class DetailListPreference extends ListPreference
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
+        int index = positiveResult ? mSelectedIndex : mStartingIndex;
         CharSequence[] values = getEntryValues();
-        if (values != null && mSelectedIndex < values.length && mSelectedIndex >= 0) {
-            String value = values[positiveResult ? mSelectedIndex : mStartingIndex].toString();
+        if (values != null && index >= 0 && index < values.length) {
+            String value = values[index].toString();
             callChangeListener(value);
         }
     }
@@ -204,6 +208,7 @@ public class DetailListPreference extends ListPreference
 
             view.setTypeface(typeface);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
+            //noinspection deprecation
             view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
         }
     }

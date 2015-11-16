@@ -25,6 +25,7 @@
         android:id="@+id/learn_more_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-12dp"
         android:gravity="start|center_vertical"
         android:background="@color/transparent"
         android:textStyle="bold"
