@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.widgets.HeaderGridView;
 
 /**
  * Adapter for the {@link ThemeBrowserFragment}'s listview
@@ -28,7 +31,6 @@ import org.wordpress.android.models.Theme;
  */
 public class ThemeBrowserAdapter extends CursorAdapter {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
-    private static final int THEME_IMAGE_DEFAULT_WIDTH = 400;
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
     private int mViewWidth;
@@ -37,7 +39,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         super(context, c, autoRequery);
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
-        mViewWidth = THEME_IMAGE_DEFAULT_WIDTH;
+        mViewWidth = AppPrefs.getThemeImageSizeWidth();
     }
 
     private static class ThemeViewHolder {
@@ -66,9 +68,9 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = mInflater.inflate(R.layout.theme_grid_item, parent, false);
 
+        configureThemeImageSize(parent);
         ThemeViewHolder themeViewHolder = new ThemeViewHolder(view);
         view.setTag(themeViewHolder);
-        mViewWidth = parent.getWidth();
 
         return view;
     }
@@ -188,6 +190,17 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
         if (view != null) {
             view.setVisible(!isCurrent);
+        }
+    }
+
+    private void configureThemeImageSize(ViewGroup parent) {
+        HeaderGridView gridView = (HeaderGridView) parent.findViewById(R.id.theme_listview);
+        int numColumns = gridView.getNumColumns();
+        int screenWidth = gridView.getWidth();
+        int imageWidth = screenWidth / numColumns;
+        if (imageWidth > mViewWidth) {
+            mViewWidth = imageWidth;
+            AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
     }
 }
