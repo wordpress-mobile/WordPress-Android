@@ -109,6 +109,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mBtnTrashComment;
 
     private String mRestoredReplyText;
+    private String mRestoredNoteId;
 
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
@@ -171,7 +172,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
-                setNoteWithNoteId(savedInstanceState.getString(KEY_NOTE_ID));
+                // The note will be set in onResume() because Simperium will be running there
+                // See WordPress.deferredInit()
+                mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {
                 int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
@@ -299,6 +302,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onResume() {
         super.onResume();
         ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
+
+        // Set the note if we retrieved the noteId from savedInstanceState
+        if (!TextUtils.isEmpty(mRestoredNoteId)) {
+            setNoteWithNoteId(mRestoredNoteId);
+            mRestoredNoteId = null;
+        }
     }
 
     private void setupSuggestionServiceAndAdapter() {

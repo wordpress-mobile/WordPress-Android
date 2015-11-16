@@ -23,6 +23,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -235,7 +236,10 @@ public class PostPreviewActivity extends AppCompatActivity {
     private void publishPost() {
         if (!isFinishing() && NetworkUtils.checkConnection(this)) {
             if (!mPost.isLocalDraft()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+                AnalyticsUtils.trackWithBlogDetails(
+                        AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
+                        WordPress.getBlog(mPost.getLocalTableBlogId())
+                );
             }
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));

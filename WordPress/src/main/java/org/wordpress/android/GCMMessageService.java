@@ -14,19 +14,19 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
-import com.google.android.gcm.GCMBaseIntentService;
+import com.google.android.gms.gcm.GcmListenerService;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -38,12 +38,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
 
-public class GCMIntentService extends GCMBaseIntentService {
+public class GCMMessageService extends GcmListenerService {
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
     private static final int PUSH_NOTIFICATION_ID = 10000;
     private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
@@ -68,44 +67,32 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
 
-    @Override
-    protected String[] getSenderIds(Context context) {
-        String[] senderIds = new String[1];
-        senderIds[0] = BuildConfig.GCM_ID;
-        return senderIds;
-    }
-
-    @Override
-    protected void onError(Context context, String errorId) {
-        AppLog.e(T.NOTIFS, "GCM Error: " + errorId);
-    }
-
-    private void handleDefaultPush(Context context, Bundle extras) {
+    private void handleDefaultPush(String from, Bundle data) {
         // Ensure Simperium is running so that notes sync
-        SimperiumUtils.configureSimperium(context, AccountHelper.getDefaultAccount().getAccessToken());
+        SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
 
         long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
-        String pushUserId = extras.getString(PUSH_ARG_USER);
+        String pushUserId = data.getString(PUSH_ARG_USER);
         // pushUserId is always set server side, but better to double check it here.
         if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
             AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
             return;
         }
 
-        String noteType = StringUtils.notNullStr(extras.getString(PUSH_ARG_TYPE));
+        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
         // Check for wpcom auth push, if so we will process this push differently
         if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
-            handlePushAuth(context, extras);
+            handlePushAuth(from, data);
             return;
         }
 
-        String title = StringEscapeUtils.unescapeHtml(extras.getString(PUSH_ARG_TITLE));
+        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
         if (title == null) {
             title = getString(R.string.app_name);
         }
-        String message = StringEscapeUtils.unescapeHtml(extras.getString(PUSH_ARG_MSG));
-        String noteId = extras.getString(PUSH_ARG_NOTE_ID, "");
+        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+        String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -138,22 +125,22 @@ public class GCMIntentService extends GCMBaseIntentService {
             Bundle noteBundle = mActiveNotificationsMap.get(id);
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                 pushId = id;
-                mActiveNotificationsMap.put(pushId, extras);
+                mActiveNotificationsMap.put(pushId, data);
                 break;
             }
         }
 
         if (pushId == 0) {
             pushId = PUSH_NOTIFICATION_ID + mActiveNotificationsMap.size();
-            mActiveNotificationsMap.put(pushId, extras);
+            mActiveNotificationsMap.put(pushId, data);
         }
 
-        String iconUrl = extras.getString("icon");
+        String iconUrl = data.getString("icon");
         Bitmap largeIconBitmap = null;
         if (iconUrl != null) {
             try {
                 iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
-                int largeIconSize = context.getResources().getDimensionPixelSize(
+                int largeIconSize = getResources().getDimensionPixelSize(
                         android.R.dimen.notification_large_icon_height);
                 String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
                 largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
@@ -203,9 +190,9 @@ public class GCMIntentService extends GCMBaseIntentService {
             if (noteId != null) {
                 commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
             }
-            PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
+            PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addAction(R.drawable.ic_reply_white_24dp, context.getText(R.string.reply),
+            builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                     commentReplyPendingIntent);
         }
 
@@ -213,7 +200,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             builder.setLargeIcon(largeIconBitmap);
         }
 
-        showNotificationForBuilder(builder, context, pushId);
+        showNotificationForBuilder(builder, this, pushId);
 
         // Also add a group summary notification, which is required for non-wearable devices
         if (mActiveNotificationsMap.size() > 1) {
@@ -257,13 +244,13 @@ public class GCMIntentService extends GCMBaseIntentService {
                     .setContentText(subject)
                     .setStyle(inboxStyle);
 
-            showNotificationForBuilder(groupBuilder, context, GROUP_NOTIFICATION_ID);
+            showNotificationForBuilder(groupBuilder, this, GROUP_NOTIFICATION_ID);
         } else {
             // Set the individual notification we've already built as the group summary
             builder.setGroupSummary(true);
-            showNotificationForBuilder(builder, context, GROUP_NOTIFICATION_ID);
+            showNotificationForBuilder(builder, this, GROUP_NOTIFICATION_ID);
         }
-        
+
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
@@ -313,13 +300,15 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     // Show a notification for two-step auth users who sign in from a web browser
-    private void handlePushAuth(Context context, Bundle extras) {
-        if (context == null || extras == null) return;
+    private void handlePushAuth(String from, Bundle data) {
+        if (data == null) {
+            return;
+        }
 
-        String pushAuthToken = extras.getString("push_auth_token", "");
-        String title = extras.getString("title", "");
-        String message = extras.getString("msg", "");
-        long expirationTimestamp = Long.valueOf(extras.getString("expires", "0"));
+        String pushAuthToken = data.getString("push_auth_token", "");
+        String title = data.getString("title", "");
+        String message = data.getString("msg", "");
+        long expirationTimestamp = Long.valueOf(data.getString("expires", "0"));
 
         // No strings, no service
         if (TextUtils.isEmpty(pushAuthToken) || TextUtils.isEmpty(title) || TextUtils.isEmpty(message)) {
@@ -347,7 +336,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setPriority(NotificationCompat.PRIORITY_MAX);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, pushAuthIntent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, pushAuthIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
@@ -356,32 +345,31 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     @Override
-    protected void onMessage(Context context, Intent intent) {
+    public void onMessageReceived(String from, Bundle data) {
         AppLog.v(T.NOTIFS, "Received Message");
-        Bundle extras = intent.getExtras();
 
-        if (extras == null) {
+        if (data == null) {
             AppLog.v(T.NOTIFS, "No notification message content received. Aborting.");
             return;
         }
 
         // Handle helpshift PNs
-        if (TextUtils.equals(extras.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(context, intent);
+        if (TextUtils.equals(data.getString("origin"), "helpshift")) {
+            HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
             return;
         }
 
         // Handle mixpanel PNs
-        if (extras.containsKey("mp_message")) {
-            String mpMessage = intent.getExtras().getString("mp_message");
+        if (data.containsKey("mp_message")) {
+            String mpMessage = data.getString("mp_message");
             String title = getString(R.string.app_name);
             Intent resultIntent = new Intent(this, WPMainActivity.class);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
-            AnalyticsTrackerMixpanel.showNotification(context, pendingIntent, R.drawable.notification_icon, title,
-                    mpMessage);
+            AnalyticsTrackerMixpanel.showNotification(this, pendingIntent,
+                    R.drawable.notification_icon, title, mpMessage);
             return;
         }
 
@@ -389,31 +377,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        handleDefaultPush(context, extras);
-    }
-
-    @Override
-    protected void onRegistered(Context context, String regId) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        if (!TextUtils.isEmpty(regId)) {
-            // Get or create UUID for WP.com notes api
-            String uuid = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, null);
-            if (uuid == null) {
-                uuid = UUID.randomUUID().toString();
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
-                editor.apply();
-            }
-
-            NotificationsUtils.registerDeviceForPushNotifications(context, regId);
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-            AnalyticsTracker.registerPushNotificationToken(regId);
-        }
-    }
-
-    @Override
-    protected void onUnregistered(Context context, String regId) {
-        AppLog.v(T.NOTIFS, "GCM Unregistered ID: " + regId);
+        handleDefaultPush(from, data);
     }
 
     // Returns true if the note type is known to have a gravatar
@@ -457,7 +421,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         for (Integer pushId : mActiveNotificationsMap.keySet()) {
             notificationManager.cancel(pushId);
         }
-        notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
+        notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
 
         clearNotifications();
     }

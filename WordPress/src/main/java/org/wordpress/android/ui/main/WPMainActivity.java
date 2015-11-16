@@ -15,7 +15,8 @@ import android.widget.TextView;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMIntentService;
+import org.wordpress.android.GCMMessageService;
+import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -233,14 +235,14 @@ public class WPMainActivity extends Activity
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-        if (GCMIntentService.getNotificationsCount() == 1) {
+        if (GCMMessageService.getNotificationsCount() == 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
             }
         }
 
-        GCMIntentService.clearNotifications();
+        GCMMessageService.clearNotifications();
     }
 
     @Override
@@ -289,7 +291,7 @@ public class WPMainActivity extends Activity
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
+                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
                 break;
             case WPMainTabAdapter.TAB_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
@@ -365,7 +367,8 @@ public class WPMainActivity extends Activity
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
-                    WordPress.registerForCloudMessaging(this);
+                    // Register for Cloud messaging
+                    startService(new Intent(this, GCMRegistrationIntentService.class));
                     resetFragments();
                 } else if (!AccountHelper.isSignedIn()) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
@@ -376,7 +379,8 @@ public class WPMainActivity extends Activity
                 if (resultCode == RESULT_CANCELED) {
                     ActivityLauncher.showSignInForResult(this);
                 } else {
-                    WordPress.registerForCloudMessaging(this);
+                    // Register for Cloud messaging
+                    startService(new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:

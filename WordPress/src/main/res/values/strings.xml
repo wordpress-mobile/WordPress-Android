@@ -192,7 +192,8 @@
     <string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
-    <string name="theme_no_search_result_found">No results found</string>
+    <string name="theme_no_search_result_found">Sorry, no themes found.</string>
+    <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
 
     <!-- link view -->
     <string name="link_enter_url">URL</string>
@@ -1072,6 +1073,33 @@
     <string name="noticon_clock" translatable="false">\uf303</string>
     <string name="noticon_note" translatable="false">\uf814</string>
 
+    <!--Theme Browser-->
+    <string name="current_theme">Current Theme</string>
+    <string name="customize">Customize</string>
+    <string name="details">Details</string>
+    <string name="support">Support</string>
+    <string name="active">Active</string>
+
+    <string-array name="themes_filter_array">
+        <item>Free</item>
+        <item>All</item>
+        <item>Premium</item>
+    </string-array>
+
+    <string name="title_activity_theme_support">Themes</string>
+    <string name="theme_activate">Activate</string>
+    <string name="theme_try_and_customize">Try &amp; Customize</string>
+    <string name="theme_view">View</string>
+    <string name="theme_details">Details</string>
+    <string name="theme_support">Support</string>
+    <string name="theme_done">DONE</string>
+    <string name="theme_manage_site">MANAGE SITE</string>
+    <string name="theme_prompt">Thanks for choosing %1$s</string>
+    <string name="theme_by_author_prompt_append"> by %1$s</string>
+    <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
+    <string name="theme_web_activity">Theme Web Activity</string>
+    <string name="could_not_load_theme">Could not load theme</string>
+    
     <!--People Management-->
     <string name="people">People</string>
     <string name="edit_user">Edit User</string>

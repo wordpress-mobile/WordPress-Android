@@ -83,10 +83,10 @@ Say hello on our [Slack][4] channel: `#mobile`.
 ## Alternative Build Instructions ##
 
 WordPress-Android can be compiled with [Buck][8], an alternative to Gradle,
-that makes the build process much faster. Due to current Buck limitation, you
-need to bootstrap the project by running the following command:
+that makes the build process much faster. You first need to fetch the
+dependencies by doing:
 
-    $ ./tools/fetch_buck_dependencies.py extlibs
+    $ buck fetch wpandroid
 
 This command will fetch all dependencies (`.aar` and `.jar`) needed to build
 the project. Then you can run buck to build the apk:

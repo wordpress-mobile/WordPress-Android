@@ -23,7 +23,7 @@
 
     <style name="StatsInsightsLabel">
         <item name="android:textSize">@dimen/text_sz_extra_small</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textColor">@color/grey_dark</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">bottom</item>
         <!--  item name="android:fontFamily">sans-serif-light</item -->
@@ -43,7 +43,7 @@
     <style name="StatsModuleTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_dark</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

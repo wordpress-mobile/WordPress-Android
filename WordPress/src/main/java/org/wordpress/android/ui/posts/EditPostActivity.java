@@ -42,7 +42,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.LegacyEditorFragment;
@@ -471,22 +470,35 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         switch (status) {
             case PUBLISHED:
                 if (!mPost.isLocalDraft()) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
+                            WordPress.getBlog(mPost.getLocalTableBlogId())
+                    );
                 } else {
                     // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
                 }
                 break;
             case SCHEDULED:
                 if (!mPost.isLocalDraft()) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
+                            WordPress.getBlog(mPost.getLocalTableBlogId())
+                    );
                 } else {
                     Map<String, Object> properties = new HashMap<String, Object>();
                     properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, properties);
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
+                            WordPress.getBlog(mPost.getLocalTableBlogId()),
+                            properties
+                    );
                 }
                 break;
             case DRAFT:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT);
+                AnalyticsUtils.trackWithBlogDetails(
+                        AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT,
+                        WordPress.getBlog(mPost.getLocalTableBlogId())
+                );
                 break;
             default:
                 // No-op
@@ -632,7 +644,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             normalizedSourceName = "quick-media";
         }
         properties.put("created_post_source", normalizedSourceName);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CREATED_POST, properties);
+        AnalyticsUtils.trackWithBlogDetails(
+                AnalyticsTracker.Stat.EDITOR_CREATED_POST,
+                WordPress.getBlog(mPost.getLocalTableBlogId()),
+                properties
+        );
     }
 
     private void updatePostObject(boolean isAutosave) {
@@ -1216,7 +1232,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     }
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
+                            WordPress.getBlog(mPost.getLocalTableBlogId())
+                    );
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryPickerResult(data);
                     }
@@ -1224,7 +1243,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
+                            WordPress.getBlog(mPost.getLocalTableBlogId())
+                    );
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -1236,7 +1258,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             }
                             this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
-                            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                            AnalyticsUtils.trackWithBlogDetails(
+                                    AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
+                                    WordPress.getBlog(mPost.getLocalTableBlogId())
+                            );
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
                         } catch (OutOfMemoryError e) {
@@ -1324,10 +1349,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             addMedia(source);
                         } else if (URLUtil.isNetworkUrl(sourceString)) {
                             blogMediaIds.add(id);
-                            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
+                            AnalyticsUtils.trackWithBlogDetails(
+                                    AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
+                                    WordPress.getBlog(mPost.getLocalTableBlogId())
+                            );
                         } else if (MediaUtils.isValidImage(sourceString)) {
                             queueFileForUpload(sourceString, localMediaIds);
-                            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                            AnalyticsUtils.trackWithBlogDetails(
+                                    AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
+                                    WordPress.getBlog(mPost.getLocalTableBlogId())
+                            );
                         }
                     }
                 }
@@ -1384,13 +1415,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (localMediaAdded > 0) {
                     Map<String, Object> analyticsProperties = new HashMap<>();
                     analyticsProperties.put(ANALYTIC_PROP_NUM_LOCAL_PHOTOS_ADDED, localMediaAdded);
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY, analyticsProperties);
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
+                            WordPress.getBlog(mPost.getLocalTableBlogId()),
+                            analyticsProperties
+                    );
                 }
 
                 if (libraryMediaAdded > 0) {
                     Map<String, Object> analyticsProperties = new HashMap<>();
                     analyticsProperties.put(ANALYTIC_PROP_NUM_WP_PHOTOS_ADDED, libraryMediaAdded);
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, analyticsProperties);
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
+                            WordPress.getBlog(mPost.getLocalTableBlogId()),
+                            analyticsProperties
+                    );
                 }
             }
         }
