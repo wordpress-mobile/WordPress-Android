@@ -365,7 +365,13 @@ public class WordPressDB {
                 AccountTable.migrationAddEmailAddressField(db);
                 currentVersion++;
             case 35:
-                // Delete simperium DB
+                // Delete simperium DB - from 4.6 to 4.6.1
+                // Fix an issue when note id > MAX_INT
+                ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 36:
+                // Delete simperium DB again - from 4.6.1 to 4.7
+                // Fix a sync issue happening for users who have both wpios and wpandroid active clients
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
             case 36:
