@@ -576,20 +576,19 @@ public class WordPress extends Application {
 
     /**
      * User-Agent string when making HTTP connections, for both API traffic and WebViews.
-     * Follows the format detailed at http://tools.ietf.org/html/rfc2616#section-14.43,
-     * ie: "AppName/AppVersion (OS Version; Locale; Device)"
-     *    "wp-android/2.6.4 (Android 4.3; en_US; samsung GT-I9505/jfltezh)"
-     *    "wp-android/2.6.3 (Android 4.4.2; en_US; LGE Nexus 5/hammerhead)"
+     * Appends "wp-android/version" to WebView's default User-Agent string for the webservers
+     * to get the full feature list of the browser and serve content accordingly, e.g.:
+     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     *    Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
     private static final String USER_AGENT_APPNAME = "wp-android";
     private static String mUserAgent;
     public static String getUserAgent() {
         if (mUserAgent == null) {
-            mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext())
-                       + " (Android " + Build.VERSION.RELEASE + "; "
-                       + Locale.getDefault().toString() + "; "
-                       + Build.MANUFACTURER + " " + Build.MODEL + "/" + Build.PRODUCT + ")";
+            mUserAgent = getDefaultUserAgent() + " "
+                       + USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
         }
         return mUserAgent;
     }
