@@ -6,29 +6,23 @@ import android.support.v4.content.ContextCompat;
 import org.wordpress.android.R;
 
 public enum Role {
-    SUPER_ADMIN,
-    ADMIN,
-    EDITOR,
-    AUTHOR,
-    CONTRIBUTOR,
-    UNSUPPORTED;
+    SUPER_ADMIN(R.string.role_super_admin, R.color.orange_fire),
+    ADMIN(R.string.role_admin, R.color.grey_dark),
+    EDITOR(R.string.role_editor, R.color.blue_dark),
+    AUTHOR(R.string.role_author, R.color.blue_wordpress),
+    CONTRIBUTOR(R.string.role_contributor, R.color.blue_wordpress),
+    UNSUPPORTED(R.string.role_unsupported, R.color.blue_wordpress);
+
+    private final int label;
+    private final int backgroundColor;
+
+    Role(int label, int backgroundColor) {
+        this.label = label;
+        this.backgroundColor = backgroundColor;
+    }
 
     public static String toString(Context context, Role role) {
-        switch (role) {
-            case SUPER_ADMIN:
-                return context.getString(R.string.role_super_admin);
-            case ADMIN:
-                return context.getString(R.string.role_admin);
-            case EDITOR:
-                return context.getString(R.string.role_editor);
-            case AUTHOR:
-                return context.getString(R.string.role_author);
-            case CONTRIBUTOR:
-                return context.getString(R.string.role_contributor);
-            case UNSUPPORTED:
-                return context.getString(R.string.role_unsupported);
-        }
-        return "";
+        return context.getString(role.label);
     }
 
     // This method will be used to determine the role of the user from network request
@@ -47,21 +41,6 @@ public enum Role {
     }
 
     public static int backgroundColor(Context context, Role role) {
-        switch (role) {
-            case SUPER_ADMIN:
-                return ContextCompat.getColor(context, R.color.orange_fire);
-            case ADMIN:
-                return ContextCompat.getColor(context, R.color.grey_dark);
-            case EDITOR:
-                return ContextCompat.getColor(context, R.color.blue_dark);
-            case AUTHOR:
-                return ContextCompat.getColor(context, R.color.blue_wordpress);
-            case CONTRIBUTOR:
-                return ContextCompat.getColor(context, R.color.blue_wordpress);
-            case UNSUPPORTED:
-                return ContextCompat.getColor(context, R.color.blue_wordpress);
-            default:
-                return ContextCompat.getColor(context, R.color.blue_wordpress);
-        }
+        return ContextCompat.getColor(context, role.backgroundColor);
     }
 }
