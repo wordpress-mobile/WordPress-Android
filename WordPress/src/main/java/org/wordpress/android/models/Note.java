@@ -49,6 +49,7 @@ public class Note extends Syncable {
 
     private JSONObject mActions;
     private JSONObject mNoteJSON;
+    private final String mKey;
 
     private final Object mSyncLock = new Object();
     private String mLocalStatus;
@@ -72,7 +73,8 @@ public class Note extends Syncable {
     /**
      * Create a note using JSON from Simperium
      */
-    private Note(JSONObject noteJSON) {
+    private Note(String key, JSONObject noteJSON) {
+        mKey = key;
         mNoteJSON = noteJSON;
     }
 
@@ -95,9 +97,7 @@ public class Note extends Syncable {
     }
 
     public String getId() {
-        if (mNoteJSON == null)
-            return "0";
-        return mNoteJSON.optString("id", "0");
+        return mKey;
     }
 
     public String getType() {
@@ -549,7 +549,7 @@ public class Note extends Syncable {
 
         @Override
         public Note build(String key, JSONObject properties) {
-            return new Note(properties);
+            return new Note(key, properties);
         }
 
         public void update(Note note, JSONObject properties) {
