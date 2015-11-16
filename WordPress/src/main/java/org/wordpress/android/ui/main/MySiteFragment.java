@@ -52,6 +52,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
+    private ViewGroup mSharingView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -120,6 +121,7 @@ public class MySiteFragment extends Fragment
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
+        mSharingView = (ViewGroup) rootView.findViewById(R.id.row_sharing);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +185,13 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());
+            }
+        });
+
+        mSharingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogSharing(getActivity(), mBlog);
             }
         });
 
@@ -299,6 +308,9 @@ public class MySiteFragment extends Fragment
 
         mScrollView.setVisibility(View.VISIBLE);
         mNoSiteView.setVisibility(View.GONE);
+
+        int sharingVisibility = mBlog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        mSharingView.setVisibility(sharingVisibility);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
