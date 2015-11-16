@@ -28,13 +28,16 @@ import org.wordpress.android.models.Theme;
  */
 public class ThemeBrowserAdapter extends CursorAdapter {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
+    private static final int THEME_IMAGE_DEFAULT_WIDTH = 400;
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
+    private int mViewWidth;
 
     public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, ThemeBrowserFragment.ThemeBrowserFragmentCallback callback) {
         super(context, c, autoRequery);
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
+        mViewWidth = THEME_IMAGE_DEFAULT_WIDTH;
     }
 
     private static class ThemeViewHolder {
@@ -65,6 +68,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
 
         ThemeViewHolder themeViewHolder = new ThemeViewHolder(view);
         view.setTag(themeViewHolder);
+        mViewWidth = parent.getWidth();
 
         return view;
     }
@@ -83,7 +87,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.nameView.setText(name);
         themeViewHolder.priceView.setText(price);
 
-        configureImageView(themeViewHolder, screenshotURL, view.getWidth(), themeId, isCurrent);
+        configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
         configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
         configureCardView(context, themeViewHolder, isCurrent);
     }
@@ -105,7 +109,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, int width, final String themeId, final boolean isCurrent) {
+    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId, final boolean isCurrent) {
         String requestURL = (String) themeViewHolder.imageView.getTag();
         if (requestURL == null) {
             requestURL = screenshotURL;
@@ -117,7 +121,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + width, WordPress.imageLoader);
+        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WordPress.imageLoader);
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
