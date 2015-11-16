@@ -341,6 +341,7 @@
 	<string name="sign_in">Logg inn</string>
 	<string name="notifications">Varsler</string>
 	<string name="note_reply_successful">Kommentar publisert</string>
+	<string name="follows">Følg</string>
 	<string name="new_notifications">%d nye varsler</string>
 	<string name="more_notifications">og %d flere.</string>
 	<string name="loading">Laster...</string>
