@@ -281,7 +281,6 @@
 	<string name="reader_empty_posts_liked">S\'keni pëlqyer ende ndonjë postim</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Shfletoni FAQ-en tonë</string>
-	<string name="agree_terms_of_service">Duke krijuar një llogari, pajtoheni me &lt;a href="%s">Kushtet tërheqëse të Shërbimit&lt;/a>.</string>
 	<string name="create_new_blog_wpcom">Krijoni blog WordPress.com</string>
 	<string name="new_blog_wpcom_created">Blogu WordPress.com u krijua!</string>
 	<string name="reader_empty_comments">Ende pa komente</string>
@@ -315,6 +314,7 @@
 	<string name="sending_content">Po ngarkohet lëndë %s</string>
 	<string name="mnu_comment_liked">U pëlqye</string>
 	<string name="posting_post">Po postohet "%s"</string>
+	<string name="agree_terms_of_service">Duke krijuar një llogari, pajtoheni me %1$sKushtet tërheqëse të Shërbimit%2$s</string>
 	<string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
 	<string name="reader_toast_err_block_blog">I pazoti të bllokojë këtë blog</string>
 	<string name="reader_toast_blog_blocked">Postimet prej këtij blogu s’do të shfaqen më</string>
@@ -536,7 +536,6 @@
 	<string name="creating_your_site">Po krijohet sajti juaj</string>
 	<string name="reader_empty_posts_in_tag_updating">Po sillen postime…</string>
 	<string name="error_refresh_media">Diç shkoi ters teksa rifreskohej mediateka. Riprovoni më vonë.</string>
-	<string name="reader_likes_you_and_multi">Këtë e pëlqeni ju dhe %s,d të tjerë</string>
 	<string name="reader_likes_multi">Kjo u pëlqen %,d personave</string>
 	<string name="reader_toast_err_get_comment">I pazoti ta marrë këtë koment</string>
 	<string name="reader_label_reply">Përgjigjjuni</string>
@@ -547,6 +546,7 @@
 	<string name="share_preference_title">Ndajeni me të tjerët në WordPress</string>
 	<string name="always_use_these_settings_to_share">Përdor përherë këto rregullime</string>
 	<string name="reset_auto_share_preference">Rikthe në fillimet rregullimet për vetëndarje</string>
+	<string name="reader_likes_you_and_multi">Këtë e pëlqeni ju dhe %,d të tjerë</string>
 	<string name="select_time">Përzgjidhni kohë</string>
 	<string name="reader_likes_you_and_one">Këtë e pëlqeni ju dhe një tjetër</string>
 	<string name="select_date">Përzgjidhni datë</string>
