@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="add_media_permission_required">Behörighet krävs för att lägga till media</string>
+	<string name="access_media_permission_required">Behörighet krävs för åtkomst till media</string>
+	<string name="stats_enable_rest_api_in_jetpack">Aktivera JSON API-modulen i Jetpack för att visa din statistik.</string>
 	<string name="error_open_list_from_notification">Detta inlägg eller sida har publicerats på en annan webbplats</string>
 	<string name="page_uploaded">Sida uppladdad</string>
 	<string name="post_uploaded">Inlägg uppladdat</string>
