@@ -24,7 +24,7 @@ import de.greenrobot.event.EventBus;
 /**
  * API calls to connect/disconnect/reconnect publicize services
  */
-public class PublicizeActions {
+class PublicizeActions {
 
     public static void disconnect(final PublicizeConnection connection) {
         String path = String.format(
@@ -68,7 +68,7 @@ public class PublicizeActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 int keyringConnectionId = parseServiceKeyringId(serviceId, jsonObject);
-                connectStepTwo(siteId, serviceId, keyringConnectionId);
+                connectStepTwo(siteId, keyringConnectionId);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -87,7 +87,7 @@ public class PublicizeActions {
      * step two in creating a publicize connection: now that we have the keyring connection id,
      * create the actual connection
      */
-    private static void connectStepTwo(int siteId, final String serviceId, int keyringConnectionId) {
+    private static void connectStepTwo(int siteId, int keyringConnectionId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {

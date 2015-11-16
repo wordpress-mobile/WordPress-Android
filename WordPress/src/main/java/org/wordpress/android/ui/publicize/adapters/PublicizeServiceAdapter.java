@@ -26,10 +26,10 @@ import java.util.Comparator;
 public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServiceAdapter.SharingViewHolder> {
 
     public interface OnAdapterLoadedListener {
-        public void onAdapterLoaded(boolean isEmpty);
+        void onAdapterLoaded(boolean isEmpty);
     }
     public interface OnServiceConnectionClickListener {
-        public void onServiceConnectionClicked(PublicizeService service, PublicizeConnection connection);
+        void onServiceConnectionClicked(PublicizeService service, PublicizeConnection connection);
     }
 
     private final PublicizeServiceList mServices = new PublicizeServiceList();
@@ -82,7 +82,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         return mServices.size();
     }
 
-    public boolean isEmpty() {
+    private boolean isEmpty() {
         return (getItemCount() == 0);
     }
 

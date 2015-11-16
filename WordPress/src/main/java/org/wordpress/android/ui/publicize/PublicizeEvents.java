@@ -10,8 +10,8 @@ public class PublicizeEvents {
     public static class ConnectionsChanged {}
 
     public static class ActionCompleted {
-        private boolean mSucceeded;
-        private ConnectAction mAction;
+        private final boolean mSucceeded;
+        private final ConnectAction mAction;
 
         public ActionCompleted(boolean succeeded, ConnectAction action) {
             mSucceeded = succeeded;

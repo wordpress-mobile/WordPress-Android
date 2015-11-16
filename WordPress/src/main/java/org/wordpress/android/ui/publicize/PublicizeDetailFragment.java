@@ -20,8 +20,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class PublicizeDetailFragment extends Fragment {
 
     public interface OnPublicizeActionListener {
-        public void onRequestConnect(PublicizeService service);
-        public void onRequestDisconnect(PublicizeConnection connection);
+        void onRequestConnect(PublicizeService service);
+        void onRequestDisconnect(PublicizeConnection connection);
     }
 
     private int mSiteId;
@@ -134,7 +134,6 @@ public class PublicizeDetailFragment extends Fragment {
 
         TextView txtService = (TextView) getView().findViewById(R.id.text_service);
         TextView txtDescription = (TextView) getView().findViewById(R.id.text_description);
-        TextView txtUser = (TextView) getView().findViewById(R.id.text_user);
         WPNetworkImageView imgIcon = (WPNetworkImageView) getView().findViewById(R.id.image_icon);
 
         txtService.setText(mService.getLabel());
