@@ -81,10 +81,6 @@ public class PeopleAdapter extends BaseAdapter {
             holder.txtRole.setBackgroundColor(Role.backgroundColor(mContext, person.getRole()));
         }
 
-        // hide the divider for the last item
-        boolean isLastItem = (position == getCount() - 1);
-        holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
-
         return convertView;
     }
 
@@ -93,14 +89,12 @@ public class PeopleAdapter extends BaseAdapter {
         private final TextView txtDisplayName;
         private final TextView txtUsername;
         private final TextView txtRole;
-        private final View divider;
 
         PeopleViewHolder(View row) {
             imgAvatar = (WPNetworkImageView) row.findViewById(R.id.people_list_row_avatar);
             txtDisplayName = (TextView) row.findViewById(R.id.people_list_row_display_name);
             txtUsername = (TextView) row.findViewById(R.id.people_list_row_username);
             txtRole = (TextView) row.findViewById(R.id.people_list_row_role);
-            divider = row.findViewById(R.id.divider);
         }
     }
 }

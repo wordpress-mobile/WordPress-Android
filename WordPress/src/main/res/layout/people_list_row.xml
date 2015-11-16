@@ -53,11 +53,4 @@
         android:textSize="@dimen/text_sz_medium"
         tools:text="role" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/grey_lighten_20" />
-
 </RelativeLayout>

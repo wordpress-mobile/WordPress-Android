@@ -9,6 +9,8 @@
         style="@style/WordPress.BorderedBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_extra_large"/>
+        android:layout_margin="@dimen/margin_extra_large"
+        android:divider="@color/grey_lighten_20"
+        android:dividerHeight="1dp" />
 
 </LinearLayout>
