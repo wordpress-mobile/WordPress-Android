@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">Llwytho rhagor o gofnodion</string>
+	<string name="notifications_no_search_results">Dim gwefannau\'n cydweddu â \'%s\'</string>
+	<string name="search_sites">Chwilio gwefannau</string>
+	<string name="notifications_empty_view_reader">Gweld y Darllennydd</string>
+	<string name="unread">Deb ei ddarllen</string>
+	<string name="notifications_empty_action_followers_likes">Denu sylw: rhowch sylw ar gofnod rydych wedi ei ddarllen</string>
+	<string name="notifications_empty_action_comments">Ymunwch â sgwrs: rhowch sylw ar flogiau rydych yn eu dilyn</string>
+	<string name="notifications_empty_action_unread">Ail-gynnwch sgwrs: ysgrifennwch gofnod newydd.</string>
+	<string name="notifications_empty_action_all">Byddwch egniol! Rhowch sylwadau ar flogiau rydych yn eu dilyn.</string>
+	<string name="notifications_empty_likes">Dim hoffi newydd i\'w dangos...eto.</string>
+	<string name="notifications_empty_followers">Dim dilynwyr newydd...eto.</string>
+	<string name="notifications_empty_comments">Dim sylwadau newydd...eto.</string>
+	<string name="notifications_empty_unread">Wedi dal i fyny!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Ewch i\'r Ystadegau yn yr ap a cheisio ychwanegu\'r teclyn yn hwyrach</string>
+	<string name="stats_widget_error_readd_widget">Tynnwch y teclyn a\'i ychwanegu eto.</string>
+	<string name="stats_widget_error_no_visible_blog">Nid oes modd mynd i\'r Ystadegau heb flog gweladwy</string>
+	<string name="stats_widget_error_no_permissions">Nid yw eich cyfrif WordPress.com yn cael mynediad i\'r Ystadegau ar y blog.</string>
+	<string name="stats_widget_error_no_account">Mewngofnodwch i WordPress</string>
+	<string name="stats_widget_error_generic">Methu llwytho\'r Ystadegau</string>
+	<string name="stats_widget_loading_data">Llwytho data...</string>
+	<string name="stats_widget_name_for_blog">Ystadegau %1$s Heddiw</string>
+	<string name="stats_widget_name">Ystadegau Heddiw WordPress</string>
+	<string name="add_location_permission_required">Caniatâd angenrheidiol er mwyn ychwanegu lleoliad</string>
+	<string name="add_media_permission_required">Caniatâd angenrheidiol er mwyn ychwanegu cyfrwng</string>
+	<string name="access_media_permission_required">Caniatâd angenrheidiol er mwyn cael mynediad at gyfrwng</string>
 	<string name="stats_enable_rest_api_in_jetpack">I weld eich ystadegau, galluogwch y modiwl  JSON API yn Jetpack.</string>
 	<string name="error_open_list_from_notification">Cafodd y cofnod neu dudalen hwn ei gyhoeddi ar wefan arall</string>
 	<string name="post_uploaded">Cofnod wedi ei lwytho i fyny</string>
@@ -501,6 +526,7 @@
 	<string name="select_categories">Dewis categorïau</string>
 	<string name="account_details">Manylion cyfrif</string>
 	<string name="xmlrpc_error">Methwyd cysylltu. Rhowch y llwybr llawn i xmlrpc.php ar eich gwefan a cheisiwch eto.</string>
+	<string name="notifications_empty_all">Dim hysbysiadau...eto.</string>
 	<string name="share_url_post">Rhannu cofnod</string>
 	<string name="share_url_page">Rhannu tudalen</string>
 	<string name="share_link">Rhannu dolen</string>
@@ -636,6 +662,7 @@
 	<string name="note_reply_successful">Ateb wedi ei gyhoeddi</string>
 	<string name="notifications">Hysbysiadau</string>
 	<string name="sign_in">Mewngofnodi</string>
+	<string name="follows">Yn Dilyn</string>
 	<string name="loading">Llwytho…</string>
 	<string name="httppassword">Cyfrinair HTTP</string>
 	<string name="httpuser">Enw defnyddiwr HTTP</string>

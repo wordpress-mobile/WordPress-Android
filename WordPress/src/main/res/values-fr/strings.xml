@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">Charger plus d\'artilces</string>
+	<string name="notifications_no_search_results">Aucun site ne correspond à \'%s\'</string>
+	<string name="search_sites">Rechercher les sites</string>
+	<string name="notifications_empty_view_reader">Voir le Lecteur</string>
+	<string name="unread">Non lus</string>
+	<string name="notifications_empty_action_followers_likes">Soyez remarqué : commentez les articles que vous avez lus.</string>
+	<string name="notifications_empty_action_comments">Rejoignez une conversation : commentez les articles des sites que vous suivez.</string>
+	<string name="notifications_empty_action_unread">Rallumez la conversation : écrivez un nouvel article.</string>
+	<string name="notifications_empty_action_all">Soyez actif! Commentez les articles des sites que vous suivez.</string>
+	<string name="notifications_empty_likes">Pas (encore) de nouveaux "j\'aime" à afficher.</string>
+	<string name="notifications_empty_followers">Pas (encore) de nouveaux followers.</string>
+	<string name="notifications_empty_comments">Pas (encore) de nouveaux commentaires.</string>
+	<string name="notifications_empty_unread">Vous êtes à jour!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Vous devez d\'abord aller sur l\'écran Stats dans l\'appli, réessayez d\'ajouter le Widget ensuite.</string>
+	<string name="stats_widget_error_readd_widget">Veuillez retirer le widget et le rajouter ensuite.</string>
+	<string name="stats_widget_error_no_visible_blog">Les Stats ne sont pas accessibles sans un Site visible</string>
+	<string name="stats_widget_error_no_permissions">Votre compte WordPress.com n\'a pas accès aux Stats sur ce site.</string>
+	<string name="stats_widget_error_no_account">Veuillez vous connecter à WordPress</string>
+	<string name="stats_widget_error_generic">Les Stats ne peuvent pas être chargées</string>
+	<string name="stats_widget_loading_data">Chargement des données…</string>
+	<string name="stats_widget_name_for_blog">Stats du jour pour %1$s</string>
+	<string name="stats_widget_name">Stats du jour WordPress</string>
+	<string name="add_location_permission_required">Permission nécessaire pour ajouter la Geolocalisation</string>
+	<string name="add_media_permission_required">Droits requis pour ajouter du contenu multimédia</string>
+	<string name="access_media_permission_required">Droits requis pour accéder au contenu multimédia</string>
 	<string name="stats_enable_rest_api_in_jetpack">Pour voir vos stats, vous devez d\'abord activer le module Jetpack nommé JSON API.</string>
 	<string name="error_open_list_from_notification">Cet article ou cette page à été publié sur un autre site</string>
 	<string name="post_uploaded">Article uploadé</string>
@@ -501,6 +526,7 @@
 	<string name="dlg_unapproving_comments">Désapprobation</string>
 	<string name="remove_account">Supprimer le site</string>
 	<string name="blog_removed_successfully">Site supprimé avec succès</string>
+	<string name="notifications_empty_all">Pas (encore) de notifications.</string>
 	<string name="deleting_page">Suppression de la page</string>
 	<string name="deleting_post">Suppression de l\'article</string>
 	<string name="share_url_page">Partager la page</string>
@@ -636,6 +662,7 @@
 	<string name="note_reply_successful">Réponse envoyée</string>
 	<string name="new_notifications">%d nouvelles notifications</string>
 	<string name="more_notifications">et %d autres.</string>
+	<string name="follows">Suit</string>
 	<string name="loading">Chargement…</string>
 	<string name="post_signature">Signature des articles</string>
 	<string name="add_tagline">Ajouter une signature aux articles</string>
