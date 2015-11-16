@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">Încarcă mai multe articole</string>
+	<string name="notifications_no_search_results">Niciun site nu s-a potrivit cu \'%s\'</string>
+	<string name="search_sites">Caută siturile</string>
+	<string name="notifications_empty_view_reader">Vezi Cititorul</string>
+	<string name="unread">Necitite</string>
+	<string name="notifications_empty_action_followers_likes">Remarcă-te: comentează articolele pe care le-ai citit.</string>
+	<string name="notifications_empty_action_comments">Alătură-te conversației: comentează articolele blogurilor pe care le urmărești.</string>
+	<string name="notifications_empty_action_unread">Reaprinde conversația: scrie un nou articol.</string>
+	<string name="notifications_empty_action_all">Fii activ! Comentează articolele de pe blogurile pe care le urmărești.</string>
+	<string name="notifications_empty_likes">Nicio nouă legătură de arătat... încă.</string>
+	<string name="notifications_empty_followers">Niciun nou urmăritor de raportat... încă.</string>
+	<string name="notifications_empty_comments">Niciun nou comentariu... încă.</string>
+	<string name="notifications_empty_unread">Le-ai prins pe toate!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Te rog accesează statisticile în aplicație și încearcă adăugarea piesei mai târziu</string>
+	<string name="stats_widget_error_readd_widget">Te rog îndepărtează piesa și re-atașeaz-o.</string>
+	<string name="stats_widget_error_no_visible_blog">Statisticile nu pot fi accesate fără un blog vizibil</string>
+	<string name="stats_widget_error_no_permissions">Contul tău WordPress.com nu poate accesa statisticile pe acest blog</string>
+	<string name="stats_widget_error_no_account">Te rog autentifică-te la WordPress</string>
+	<string name="stats_widget_error_generic">Statisticile n-au putut fi încărcate</string>
+	<string name="stats_widget_loading_data">Încarc date...</string>
+	<string name="stats_widget_name_for_blog">Statisticile zilei pentru %1$s</string>
+	<string name="stats_widget_name">Statisticile zilei de la WordPress</string>
+	<string name="add_location_permission_required">Ai nevoie de permisiune pentru a adăuga locația</string>
+	<string name="add_media_permission_required">Permisiuni necesare pentru a adăuga media</string>
+	<string name="access_media_permission_required">Permisiuni necesare pentru a accesa media</string>
 	<string name="stats_enable_rest_api_in_jetpack">Pentru a vedea statisticile tale, validează extensia JSON API din Jetpack.</string>
 	<string name="error_open_list_from_notification">Acest articol sau pagină a fost publicat(ă) pe alt sit</string>
 	<string name="post_uploaded">Articol actualizat</string>
@@ -501,6 +526,7 @@
 	<string name="account_details">Detaliile contului</string>
 	<string name="select_categories">Selectează categoriile</string>
 	<string name="xmlrpc_error">Nu mă pot conecta. Introdu calea completă spre xmlrpc.php de pe situl tău și mai încearcă odată.</string>
+	<string name="notifications_empty_all">Nicio notificare... încă.</string>
 	<string name="share_url_post">Partajare articol</string>
 	<string name="share_url_page">Partajare pagină</string>
 	<string name="share_link">Partajare legătură</string>
@@ -636,6 +662,7 @@
 	<string name="note_reply_successful">Răspuns publicat</string>
 	<string name="notifications">Notificări</string>
 	<string name="sign_in">Autentificare</string>
+	<string name="follows">Urmăriri</string>
 	<string name="loading">Se încarcă...</string>
 	<string name="httpuser">nume utilizator HTTP</string>
 	<string name="httppassword">parolă HTTP</string>

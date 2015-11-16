@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">Daha fazla yazı yükle</string>
+	<string name="notifications_no_search_results">\'%s\' hiçbir siteyle eşleşmedi</string>
+	<string name="search_sites">Sitelerde ara</string>
+	<string name="unread">Okunmadı</string>
+	<string name="notifications_empty_view_reader">Okuyucuyu görüntüle</string>
+	<string name="notifications_empty_action_followers_likes">Ortaya çıkın: okuduğunuz yazılara yorum yapın.</string>
+	<string name="notifications_empty_action_comments">Konuşmalara katılın: takip ettiğiniz bloglarda yorum yapın.</string>
+	<string name="notifications_empty_action_unread">Tartışmaları alevlendirin: yeni bir yazı yazın.</string>
+	<string name="notifications_empty_action_all">Etkin olun! Takip ettiğiniz bloglarda yazılara yorum yapın.</string>
+	<string name="notifications_empty_likes">Gösterilecek beğeni yok...henüz.</string>
+	<string name="notifications_empty_followers">Raporlanacak takipçi yok...henüz.</string>
+	<string name="notifications_empty_comments">Yeni yorum yok...henüz.</string>
+	<string name="notifications_empty_unread">Her şey tamam!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Lütfen önce uygulamada istatistiklere ulaşın, sonra bileşeni tekrar eklemeyi deneyin</string>
+	<string name="stats_widget_error_readd_widget">Lütfen bileşeni kaldırıp tekrar ekleyin</string>
+	<string name="stats_widget_error_no_visible_blog">Görünür bir blog olmadan istatistiklere erişilemez</string>
+	<string name="stats_widget_error_no_permissions">WordPress.com hesabınız bu blogun istatistiklerine erişemiyor</string>
+	<string name="stats_widget_error_no_account">Lütfen WordPress oturumu açın</string>
+	<string name="stats_widget_error_generic">İstatistikler yüklenemedi</string>
+	<string name="stats_widget_loading_data">Veri yükleniyor...</string>
+	<string name="stats_widget_name_for_blog">%1$s için bugünün istatistikleri</string>
+	<string name="stats_widget_name">Bugünkü WordPress istatistikleri</string>
+	<string name="add_location_permission_required">Konum eklemek için izin gerekiyor</string>
+	<string name="add_media_permission_required">Medya eklemek için izin gerekiyor</string>
+	<string name="access_media_permission_required">Medyaya erişmek için izin gerekiyor</string>
 	<string name="stats_enable_rest_api_in_jetpack">İstatistiklerinizi görmek için Jetpack içindeki JSON API modülünü etkinleştirin.</string>
 	<string name="error_open_list_from_notification"> Bu yazı ya da sayfa başka bir sitede yayınlanmış</string>
 	<string name="post_uploaded">Yazı gönderildi</string>
@@ -501,6 +526,7 @@
 	<string name="blog_name_invalid">Geçersiz ste adresi</string>
 	<string name="post_not_published">Yazı durumu yayımlanmadı</string>
 	<string name="page_not_published">Sayfa durumu yayımlanmadı</string>
+	<string name="notifications_empty_all">Bildirim yok...henüz.</string>
 	<string name="share_url_page">Sayfayı paylaş</string>
 	<string name="share_link">Bağlantıyı paylaş</string>
 	<string name="deleting_page">Sayfa siliniyor</string>
@@ -636,6 +662,7 @@
 	<string name="more_notifications">ve %d daha.</string>
 	<string name="sign_in">Oturum aç</string>
 	<string name="note_reply_successful">Yanıt yayımlandı</string>
+	<string name="follows">Takipçiler</string>
 	<string name="loading">Yükleniyor...</string>
 	<string name="post_signature">Yazı imzası</string>
 	<string name="add_tagline">Yeni yazılara imza ekle</string>
@@ -758,7 +785,7 @@
 		<item>Görsel</item>
 		<item>Bağlantı</item>
 		<item>Alıntı</item>
-		<item>Standart</item>
+		<item>Standard</item>
 		<item>Durum</item>
 		<item>Video</item>
 	</string-array>
