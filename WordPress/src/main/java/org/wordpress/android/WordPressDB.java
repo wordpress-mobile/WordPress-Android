@@ -77,7 +77,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 37;
+    private static final int DATABASE_VERSION = 38;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -374,7 +374,7 @@ public class WordPressDB {
                 // Fix a sync issue happening for users who have both wpios and wpandroid active clients
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
-            case 36:
+            case 37:
                 resetThemeTable();
                 currentVersion++;
         }
