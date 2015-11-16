@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/content_margin"
+    android:layout_marginRight="@dimen/content_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:text="@string/connections_label"
+            android:textAllCaps="true"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:text="@string/connections_description"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_medium" />
+
+        <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+            android:id="@+id/recycler_connections"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/grey_darken_20"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:visibility="gone"
+        tools:text="@string/empty_list_default"
+        tools:visibility="visible" />
+
+</RelativeLayout>

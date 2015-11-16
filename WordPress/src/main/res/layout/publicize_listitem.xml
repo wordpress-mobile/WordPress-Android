@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_large">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_icon"
+            android:layout_width="@dimen/avatar_sz_extra_small"
+            android:layout_height="@dimen/avatar_sz_extra_small"
+            android:layout_weight="0"
+            tools:src="@drawable/blavatar_placeholder" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_service" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="right|center_vertical"
+            android:maxLines="1"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_user" />
+
+    </LinearLayout>
+</FrameLayout>

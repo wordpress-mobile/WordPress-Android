@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="96dp"
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large"
+    android:paddingTop="@dimen/margin_medium"
+    tools:background="@color/blue_light">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_small"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_sz_extra_small"
+        tools:text="text_connect" />
+
+    <ProgressBar
+        android:id="@+id/progress_connect"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
+</FrameLayout>
