@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.webkit.WebSettings;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -556,6 +557,21 @@ public class WordPress extends Application {
         }
 
         return loginURL;
+    }
+
+    /**
+     * Device's default User-Agent string.
+     * E.g.:
+     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     *    Safari/537.36"
+     */
+    private static String mDefaultUserAgent;
+    public static String getDefaultUserAgent() {
+        if (mDefaultUserAgent == null) {
+            mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
+        }
+        return mDefaultUserAgent;
     }
 
     /**
