@@ -1078,6 +1078,7 @@
     <string name="customize">Customize</string>
     <string name="details">Details</string>
     <string name="support">Support</string>
+    <string name="active">Active</string>
 
     <string-array name="themes_filter_array">
         <item>Free</item>
