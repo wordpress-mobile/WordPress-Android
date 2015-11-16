@@ -27,7 +27,7 @@ import org.wordpress.android.models.Theme;
  *
  */
 public class ThemeBrowserAdapter extends CursorAdapter {
-    private static final String THEME_IMAGE_PARAMETER = "?w=400";
+    private static final String THEME_IMAGE_PARAMETER = "?w=";
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
 
@@ -83,7 +83,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.nameView.setText(name);
         themeViewHolder.priceView.setText(price);
 
-        configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
+        configureImageView(themeViewHolder, screenshotURL, view.getWidth(), themeId, isCurrent);
         configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
         configureCardView(context, themeViewHolder, isCurrent);
     }
@@ -105,7 +105,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId, final boolean isCurrent) {
+    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, int width, final String themeId, final boolean isCurrent) {
         String requestURL = (String) themeViewHolder.imageView.getTag();
         if (requestURL == null) {
             requestURL = screenshotURL;
@@ -117,7 +117,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER, WordPress.imageLoader);
+        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + width, WordPress.imageLoader);
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
