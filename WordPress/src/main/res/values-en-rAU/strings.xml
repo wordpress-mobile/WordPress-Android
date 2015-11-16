@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">Load more posts</string>
+	<string name="notifications_no_search_results">No sites matched \'%s\'</string>
+	<string name="search_sites">Search sites</string>
+	<string name="notifications_empty_view_reader">View Reader</string>
+	<string name="unread">Unread</string>
+	<string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
+	<string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
+	<string name="notifications_empty_action_unread">Reignite the conversation: write a new post.</string>
+	<string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
+	<string name="notifications_empty_likes">No new likes to show…yet.</string>
+	<string name="notifications_empty_followers">No new followers to report…yet.</string>
+	<string name="notifications_empty_comments">No new comments…yet.</string>
+	<string name="notifications_empty_unread">You\'re all caught up!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Please access the Stats in the app, and try adding the widget later</string>
+	<string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
+	<string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
+	<string name="stats_widget_error_no_permissions">Your WordPress.com account can\'t access Stats on this blog</string>
+	<string name="stats_widget_error_no_account">Please login into WordPress</string>
+	<string name="stats_widget_error_generic">Stats couldn\'t be loaded</string>
+	<string name="stats_widget_loading_data">Loading data…</string>
+	<string name="stats_widget_name_for_blog">Today\'s Stats for %1$s</string>
+	<string name="stats_widget_name">WordPress Today\'s Stats</string>
+	<string name="add_location_permission_required">Permission required in order to add location</string>
+	<string name="add_media_permission_required">Permissions required in order to add media</string>
+	<string name="access_media_permission_required">Permissions required in order to access media</string>
 	<string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
 	<string name="error_open_list_from_notification">This post or page was published on another site</string>
 	<string name="post_uploaded">Post uploaded</string>
@@ -501,6 +526,7 @@
 	<string name="blog_name_must_include_letters">Site address must have at least 1 letter (a-z)</string>
 	<string name="blog_name_invalid">Invalid site address</string>
 	<string name="blog_title_invalid">Invalid site title</string>
+	<string name="notifications_empty_all">No notifications…yet.</string>
 	<string name="deleting_page">Deleting page</string>
 	<string name="deleting_post">Deleting post</string>
 	<string name="share_url_post">Share post</string>
@@ -636,6 +662,7 @@
 	<string name="note_reply_successful">Reply published</string>
 	<string name="new_notifications">%d new notifications</string>
 	<string name="more_notifications">and %d more.</string>
+	<string name="follows">Follows</string>
 	<string name="loading">Loading…</string>
 	<string name="post_signature">Post signature</string>
 	<string name="add_tagline">Add a signature to new posts</string>

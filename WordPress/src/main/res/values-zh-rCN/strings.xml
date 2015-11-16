@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="unread">未读</string>
+	<string name="add_media_permission_required">添加媒体所需的权限</string>
+	<string name="access_media_permission_required">访问媒体所需的权限</string>
+	<string name="stats_enable_rest_api_in_jetpack">如需查看您的状态，请启用Jetpack的JSON API模块。</string>
+	<string name="error_open_list_from_notification">此文章或页面已在其它站点发布</string>
+	<string name="post_uploaded">文章已上传</string>
+	<string name="page_uploaded">页面已上传</string>
 	<string name="reader_short_comment_count_multi">%s 评论</string>
 	<string name="reader_short_comment_count_one">1评论</string>
 	<string name="reader_label_submit_comment">发送</string>
@@ -32,6 +39,7 @@
 	<string name="notifications_comments_other_blogs">其他站点上的评论</string>
 	<string name="notifications_wpcom_updates">WordPress.com 更新</string>
 	<string name="notifications_other">其他</string>
+	<string name="notifications_account_emails">来自 WordPress.com 的电子邮件</string>
 	<string name="notifications_account_emails_summary">我们会将与您的帐户相关的重要电子邮件都发送给您，但是您还可以获得一些其他的有用信息。</string>
 	<string name="notifications_sights_and_sounds">场景和声音</string>
 	<string name="your_sites">您的站点</string>
@@ -178,6 +186,7 @@
 	<string name="stats_period">时段</string>
 	<string name="logs_copied_to_clipboard">已将应用程序日志复制到剪贴板</string>
 	<string name="post_uploading">正在上传</string>
+	<string name="reader_page_recommended_blogs">您可能会喜欢的站点</string>
 	<string name="stats_comments_total_comments_followers">拥有评论粉丝的文章总数：%1$s</string>
 	<string name="stats_pagination_label">第 %1$s 页，共 %2$s 页</string>
 	<string name="stats_timeframe_years">年</string>
@@ -283,6 +292,7 @@
 	<string name="posting_post">正在发布“%s”</string>
 	<string name="signing_out">正在注销…</string>
 	<string name="sending_content">正在上传“%s”内容</string>
+	<string name="reader_empty_followed_blogs_title">您尚未关注任何站点</string>
 	<string name="reader_toast_err_generic">无法执行此操作</string>
 	<string name="reader_toast_err_block_blog">无法阻止此博客</string>
 	<string name="reader_toast_blog_blocked">此博客中的文章不会再显示</string>
@@ -315,6 +325,8 @@
 	<string name="reader_empty_recommended_blogs">没有推荐的博客</string>
 	<string name="reader_title_blog_preview">读者博客</string>
 	<string name="reader_title_tag_preview">读者标签</string>
+	<string name="reader_page_followed_blogs">关注的站点</string>
+	<string name="reader_hint_add_tag_or_url">输入要关注的 URL 或标签</string>
 	<string name="saving">正在保存...</string>
 	<string name="media_empty_list">没有媒体</string>
 	<string name="ptr_tip_message">注意:下拉以刷新</string>
@@ -521,6 +533,7 @@
 	<string name="reader_toast_err_get_post">无法检索这篇文章</string>
 	<string name="validating_user_data">验证用户数据</string>
 	<string name="validating_site_data">验证站点数据</string>
+	<string name="reader_empty_followed_blogs_description">别担心，只需轻点右上角的图标即可开始浏览！</string>
 	<string name="password_invalid">你需要一个更安全的密码。确定使用7个或更多字符，混合大、小写字母、数字或特殊字符.</string>
 	<string name="nux_tap_continue">继续</string>
 	<string name="nux_welcome_create_account">创建账户</string>

@@ -1,11 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">अधिक लेख लोड करे </string>
+	<string name="notifications_no_search_results">\'%s\' से किसी साइट का मेल नहीं हुआ </string>
+	<string name="search_sites">साइट्स खोजें</string>
+	<string name="unread">अपठित</string>
+	<string name="notifications_empty_view_reader">पाठक देखें</string>
+	<string name="notifications_empty_action_all">सक्रिय हों! जिन ब्लॉग का अनुगमन करते है उनके लेखों पर टिप्पणी करें </string>
+	<string name="notifications_empty_comments">कोई नई टिप्पणी नहीं है... अबतक।</string>
+	<string name="stats_widget_error_readd_widget">कृपया विजेट को निकाल कर दोबारा जोड़ें</string>
+	<string name="stats_widget_error_no_visible_blog">आंकड़े देखने के लिए एक ब्लॉग प्रत्यक्ष होना चाहिए</string>
+	<string name="add_media_permission_required">मीडिया डालने के लिए अनुमति जरुरी है|</string>
+	<string name="access_media_permission_required">मीडिया खोजने के लिए अनुमति जरुरी है|</string>
+	<string name="stats_enable_rest_api_in_jetpack">अपने आँकड़ों को देखने के लिए, जेटपैक में JSON API को सक्षम करें। </string>
+	<string name="error_open_list_from_notification">यह लेख किसी और साइट पर पोस्ट हो चुका है|</string>
+	<string name="post_uploaded">लेख अपलोडेड</string>
+	<string name="page_uploaded">पृष्ठ अपलोडेड</string>
+	<string name="reader_short_comment_count_multi">%s टिप्पणियाँ</string>
 	<string name="reader_short_comment_count_one">1 टिप्पणी</string>
 	<string name="reader_label_submit_comment">भेजें</string>
 	<string name="reader_hint_comment_on_post">लेख का उत्तर दें...</string>
+	<string name="reader_discover_visit_blog">यात्रा %s</string>
+	<string name="reader_short_like_count_multi">%s पसंद</string>
 	<string name="reader_short_like_count_one">1 पसंद</string>
 	<string name="reader_short_like_count_none">पसंद</string>
+	<string name="reader_label_follow_count">%,d अनुयायी</string>
 	<string name="reader_label_reading_time_in_minutes">%,d मिनट</string>
+	<string name="reader_label_word_count">%,d शब्द</string>
+	<string name="reader_title_post_detail">पाठक लेख</string>
+	<string name="local_changes_explainer">इस लेख में स्थानीय परिवर्तन हुआ है, जो प्रकाशित नहीं हुआ है।</string>
+	<string name="notifications_push_summary">अपने उपकरण में सूचना हेतु व्यवस्था।</string>
+	<string name="notification_types">अधिसूचना के प्रकार</string>
+	<string name="replies_to_your_comments">मेरी टिप्पणियों के उत्तर</string>
+	<string name="notifications_tab">अधिसूचना सूचि</string>
+	<string name="email">ईमेल</string>
+	<string name="app_notifications">एप्लिकेशन अधिसूची</string>
+	<string name="notifications_other">अन्य</string>
+	<string name="notifications_account_emails">Wordpress.com की ओर से ईमेल</string>
+	<string name="button_revert">उलट दें</string>
+	<string name="days_ago">%d दिन पहले</string>
+	<string name="yesterday">कल</string>
+	<string name="button_back">पीछे</string>
+	<string name="page_deleted">पृष्ठ हट गया</string>
+	<string name="button_preview">पूर्वावलोकन</string>
+	<string name="button_view">देखें</string>
+	<string name="button_publish">प्रकाशित करें</string>
+	<string name="button_delete">हटाएँ</string>
+	<string name="button_edit">संपादित करें</string>
+	<string name="post_trashed">पोस्ट ट्रैश में भेज दिया गया</string>
+	<string name="page_trashed">पृष्ठ ट्रैश में भेज दिया गया</string>
+	<string name="button_trash">ट्रैश</string>
+	<string name="my_site_no_sites_view_subtitle">क्या आप एक जोड़ना चाहेंगे?</string>
+	<string name="editor_toast_changes_saved">परिवर्तन सहेजा गया</string>
+	<string name="ignore">ध्यान न दें</string>
+	<string name="stats_insights_most_popular_hour">सबसे लोकप्रिय घण्टा</string>
+	<string name="stats_insights_most_popular_day">सबसे लोकप्रिय दिन</string>
+	<string name="stats_insights_popular">सबसे लोकप्रिय दिन और घण्टा</string>
+	<string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
+	<string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
+	<string name="my_site_btn_comments">टिप्पणियाँ</string>
+	<string name="my_site_header_publish">प्रकाशित</string>
+	<string name="show">दिखाएँ</string>
+	<string name="hide">छुपाएँ</string>
+	<string name="select_all">सभी चुनें</string>
 	<string name="loading_blog_images">छवियाँ लाई जा रही है</string>
 	<string name="stats_generic_error">आवश्यक सांख्यिकी लोड करने में असफल</string>
 	<string name="error_loading_videos">वीडियो लाने में असमर्थ</string>
@@ -16,10 +72,21 @@
 	<string name="no_blog_videos">कोई वीडियो नहीं</string>
 	<string name="no_device_images">कोई चित्र नहीं</string>
 	<string name="no_blog_images">कोई चित्र नहीं</string>
-	<string name="no_device_videos">कोई वीडियो नहीं\n</string>
 	<string name="loading_blog_videos">वीडियोलाये जा रहे है</string>
+	<string name="no_device_videos">कोई वीडियो नहीं</string>
 	<string name="loading_videos">वीडियो लोड हो रहे है</string>
 	<string name="loading_images">छवियाँ लोड हो रही है</string>
+	<string name="no_media">मीडिया नहीं</string>
+	<string name="device">यंत्र</string>
+	<string name="language">भाषा</string>
+	<string name="pages_fetching">पृष्ठ ला रहे है...</string>
+	<string name="publisher">प्रकाशक:</string>
+	<string name="stats_view_videos">वीडियो</string>
+	<string name="stats_empty_geoviews">कोई देश दर्ज नहीं की गई</string>
+	<string name="delete_sure_post">इस लेख को हटाओ</string>
+	<string name="reader_label_comment_count_single">एक टिप्पणी</string>
+	<string name="reader_label_comments_closed">टिप्पणियाँ बंद हैं</string>
+	<string name="signing_out">भाग रद्द करना</string>
 	<string name="reader_menu_block_blog">इस ब्लॉग को ब्लॉक करे</string>
 	<string name="reader_toast_err_block_blog">इस ब्लॉग को ब्लॉक करने में असमर्थ</string>
 	<string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
@@ -291,6 +358,7 @@
 	<string name="jetpack_message">Jetpack प्लगइन आँकड़ों के लिए आवश्यक है. आप Jetpack इनस्टॉल करना चाहते हैं?</string>
 	<string name="limit_reached">सीमा पहुँच गयी. आप 1 मिनट में फिर से कोशिश कर सकते हैं. उसके पहले कोशिश करने पर आपके प्रतिबंध हटाने के इन्तजार समय में वृद्धि होगी. आपको लगता है यह त्रुटी है तो, सहायता से संपर्क करे.</string>
 	<string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे...</string>
+	<string name="create_account_wpcom">Wordpress.com पे अकाउंट बनाये|</string>
 	<string name="all">सभी</string>
 	<string name="stats_view_comments">टिप्पणियां</string>
 	<string name="stats_totals_comments">टिप्पणियां</string>
@@ -339,7 +407,6 @@
 	<string name="passcode_enter_passcode">अपना पिन दर्ज करें</string>
 	<string name="unattached">असंबद्ध</string>
 	<string name="stats_view_visitors_and_views">दर्शक और देखें गये</string>
-	<string name="passcode_re_enter_passcode">अपना पिन फिर से दर्ज</string>
 	<string name="stats_entry_referrers">रेफ़रर</string>
 	<string name="stats_view_referrers">रेफ़ररस</string>
 	<string name="passcode_set">पिन निर्धारित करें</string>
@@ -354,6 +421,7 @@
 	<string name="passcode_manage">पिन का प्रबंधन करे</string>
 	<string name="passcode_preference_title">पिन लॉक</string>
 	<string name="media_gallery_type_tiled">टाइल किया हुआ</string>
+	<string name="passcode_re_enter_passcode">अपना पिन फिर से दर्ज करें</string>
 	<string name="upload">अपलोड</string>
 	<string name="notifications">सूचनाएं</string>
 	<string name="note_reply_successful">जवाब प्रकाशित हो गया</string>
@@ -405,6 +473,7 @@
 	<string name="immediately">तुरंत</string>
 	<string name="quickpress_add_alert_title">शॉर्टकट नाम निर्धारित करें </string>
 	<string name="settings">सेटिंग्स</string>
+	<string name="today">आज</string>
 	<string name="share_url">यूआरएल साझा करे</string>
 	<string name="quickpress_add_error">शॉर्टकट का नाम खाली नहीं हो सकता</string>
 	<string name="quickpress_window_title">QuickPress शॉर्टकट के लिए एक ब्लॉग चुने</string>
@@ -444,6 +513,15 @@
 		<item>मध्य</item>
 		<item>दाहिना</item>
 	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>मेरी साइट पर टिप्पणियाँ </item>
+		<item>साइट की उपलब्धयां</item>
+		<item>उपयोगकर्ता के नाम का उल्लेख</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>मेरी टिप्पणी के उत्तर</item>
+		<item>मेरी टिप्पणियों को पसंद किया</item>
+	</string-array>
 	<string-array name="notifications_wpcom_settings">
 		<item>सुझाव</item>
 		<item>अनुसंधान</item>
@@ -451,6 +529,10 @@
 	</string-array>
 	<string-array name="notifications_wpcom_settings_summaries">
 		<item>WordPress.com के अनुसंधान और सर्वे में भाग लेने का मौका।</item>
+		<item>पाठ्यक्रम और घटनाओं (ऑनलाइन और व्यक्तिगत रूप से ) के बारे में Wordpress.com पर जानिये</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>प्रकाशित</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>एसाइड</item>
