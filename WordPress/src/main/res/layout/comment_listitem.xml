@@ -65,7 +65,7 @@
                 style="@style/ReaderTextView.Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="date" />
+                tools:text="date" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/status"

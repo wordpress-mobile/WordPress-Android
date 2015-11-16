@@ -54,7 +54,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:textColor="@color/grey_darken_30" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
@@ -65,7 +65,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:textColor="@color/grey_darken_30" />
         </LinearLayout>
 

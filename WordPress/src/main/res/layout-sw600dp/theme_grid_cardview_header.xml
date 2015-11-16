@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginBottom="@dimen/cardview_default_radius"
+        android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        card_view:cardElevation="@dimen/card_elevation">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/theme_browser_cardview_header_margin">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_sz_small"
+                    android:textAllCaps="true"
+                    android:text="@string/current_theme" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/header_theme_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/current_theme" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
+                    android:layout_height="match_parent"
+                    android:background="@color/reader_divider_grey" />
+
+                <LinearLayout
+                    android:id="@+id/customize"
+                    android:layout_width="@dimen/theme_browser_header_button_width"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_none"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/customize"
+                        android:src="@drawable/ic_theme_customize" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/grey_dark"
+                        android:text="@string/customize" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
+                    android:layout_height="match_parent"
+                    android:background="@color/reader_divider_grey" />
+
+                <LinearLayout
+                    android:id="@+id/details"
+                    android:layout_width="@dimen/theme_browser_header_button_width"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_none"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/details"
+                        android:src="@drawable/ic_theme_details" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/grey_dark"
+                        android:text="@string/details" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
+                    android:layout_height="match_parent"
+                    android:background="@color/reader_divider_grey" />
+
+                <LinearLayout
+                    android:id="@+id/support"
+                    android:layout_width="@dimen/theme_browser_header_button_width"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_none"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/support"
+                        android:src="@drawable/ic_theme_support" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/grey_dark"
+                        android:text="@string/support" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

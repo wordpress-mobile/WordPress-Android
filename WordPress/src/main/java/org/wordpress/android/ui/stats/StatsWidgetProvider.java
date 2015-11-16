@@ -28,6 +28,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 
@@ -72,6 +73,13 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    private static void updateTabValue(Context context, RemoteViews remoteViews, int viewId, String text) {
+        remoteViews.setTextViewText(viewId, text);
+        if (text.equals("0")) {
+            remoteViews.setTextColor(viewId, context.getResources().getColor(R.color.grey));
+        }
+    }
+
     private static void showStatsData(Context context, int[] allWidgets, Blog blog, JSONObject data) {
         if (allWidgets.length == 0){
             return;
@@ -88,10 +96,18 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
             remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.GONE);
             remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.VISIBLE);
-            remoteViews.setTextViewText(R.id.stats_widget_views, data.optString("views", "0"));
-            remoteViews.setTextViewText(R.id.stats_widget_visitors, data.optString("visitors", "0"));
-            remoteViews.setTextViewText(R.id.stats_widget_comments, data.optString("comments", "0"));
-            remoteViews.setTextViewText(R.id.stats_widget_likes, data.optString("likes", "0"));
+
+            // Update Views
+            updateTabValue(context, remoteViews, R.id.stats_widget_views, data.optString("views", " 0"));
+
+            // Update Visitors
+            updateTabValue(context, remoteViews, R.id.stats_widget_visitors, data.optString("visitors", " 0"));
+
+            // Update Comments
+            updateTabValue(context, remoteViews, R.id.stats_widget_comments, data.optString("comments", " 0"));
+
+            // Update Likes
+            updateTabValue(context, remoteViews, R.id.stats_widget_likes, data.optString("likes", " 0"));
 
             Intent intent = new Intent(context, StatsActivity.class);
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
@@ -250,8 +266,6 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         AppLog.d(AppLog.T.STATS, "onEnabled called");
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_ADDED);
-        AnalyticsTracker.flush();
         // Note: don't erase prefs here, since for some reasons this method is called after the booting of the device.
     }
 
@@ -426,6 +440,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                     context.getString(R.string.stats_widget_error_readd_widget));
             return;
         }
+
+        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_ADDED, remoteBlogID);
+        AnalyticsTracker.flush();
 
         // Store the association between the widget ID and the remote blog id into prefs.
         setRemoteBlogIDForWidgetIDs(new int[] {widgetID}, remoteBlogID);

@@ -63,9 +63,11 @@ public class SettingsActivity extends AppCompatActivity {
         super.onStart();
 
         Preference togglePref =
-                mSettingsFragment.findPreference(getString(R.string.pref_key_passcode_toggle));
+                mSettingsFragment.findPreference(getString(org.wordpress.passcodelock.R.string
+                        .pref_key_passcode_toggle));
         Preference changePref =
-                mSettingsFragment.findPreference(getString(R.string.pref_key_change_passcode));
+                mSettingsFragment.findPreference(getString(org.wordpress.passcodelock.R.string
+                        .pref_key_change_passcode));
 
         if (togglePref != null && changePref != null) {
             mPasscodePreferenceFragment.setPreferences(togglePref, changePref);

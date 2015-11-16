@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,8 +26,6 @@ import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
-
-import javax.annotation.Nonnull;
 
 public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
@@ -196,7 +195,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSaveInstanceState(@Nonnull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         // https://code.google.com/p/android/issues/detail?id=19917
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);

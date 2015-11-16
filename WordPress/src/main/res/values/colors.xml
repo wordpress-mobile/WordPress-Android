@@ -150,4 +150,8 @@
     <!-- Notifications -->
     <color name="notifications_settings_divider_color">#d0d5d9</color>
 
+    <!-- Themes -->
+    <color name="theme_price">#4FB769</color>
+    <color name="theme_active">#A9E9FC</color>
+
 </resources>

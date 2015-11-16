@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="add_media_permission_required">يلزم وجود أذونات لإضافة الوسائط</string>
+	<string name="access_media_permission_required">يلزم وجود أذونات للوصول إلى الوسائط</string>
+	<string name="stats_enable_rest_api_in_jetpack">لعرض الإحصائيات الخاصة بك، قم بتمكين وحدة JSON API في Jetpack.</string>
+	<string name="error_open_list_from_notification">تم نشر هذا المنشور أو هذه الصفحة في موقع آخر</string>
+	<string name="post_uploaded">تم تحميل المنشور</string>
+	<string name="page_uploaded">تم تحميل الصفحة</string>
 	<string name="reader_short_comment_count_multi">%s تعليقات</string>
 	<string name="reader_short_comment_count_one">تعليق واحد</string>
 	<string name="reader_label_submit_comment">إرسال</string>
@@ -32,6 +38,7 @@
 	<string name="notifications_comments_other_blogs">التعليقات على المواقع الأخرى</string>
 	<string name="notifications_wpcom_updates">تحديثات وردبرس.كوم</string>
 	<string name="notifications_other">أخرى</string>
+	<string name="notifications_account_emails">بريد إلكتروني من WordPress.com</string>
 	<string name="notifications_account_emails_summary">نحن نرسل دومًا رسائل بريد إلكتروني مهمة بخصوص حسابك، ومع ذلك يمكنك الحصول على بعض الإضافات المفيدة أيضًا.</string>
 	<string name="notifications_sights_and_sounds">المناظر والأصوات</string>
 	<string name="your_sites">مواقعك</string>
@@ -178,6 +185,7 @@
 	<string name="post_uploading">جارٍ الرفع</string>
 	<string name="stats_total">الإجمالي</string>
 	<string name="stats_overall">الكلي</string>
+	<string name="reader_page_recommended_blogs">مواقع قد تحوز إعجابك</string>
 	<string name="stats_comments_total_comments_followers">إجمالي المقالات مع متابعي التعليقات: %1$s</string>
 	<string name="stats_followers_wpcom_selector">ووردبريس.كوم</string>
 	<string name="stats_followers_total_wpcom">إجمالي متابعي ووردبريس.كوم: %1$s</string>
@@ -283,6 +291,7 @@
 	<string name="media_empty_list_custom_date">لا توجد وسائط في هذا الفاصل الزمني</string>
 	<string name="posting_post">نشر "%s"</string>
 	<string name="signing_out">جارٍ تسجيل الخروج…</string>
+	<string name="reader_empty_followed_blogs_title">لم تتابع أي مواقع حتى الآن</string>
 	<string name="reader_menu_block_blog">حظر هذه المدونة</string>
 	<string name="reader_toast_err_block_blog">غير قادر على حظر المدونة</string>
 	<string name="reader_toast_blog_blocked">لن يتم عرض مقالات هذه المدونة بعد الآن</string>
@@ -315,6 +324,8 @@
 	<string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
 	<string name="reader_title_blog_preview">مدوّنة القارئ</string>
 	<string name="reader_title_tag_preview">وسم القارئ</string>
+	<string name="reader_page_followed_blogs">المواقع المتابَعة</string>
+	<string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
 	<string name="saving">حفظ...</string>
 	<string name="media_empty_list">لا وسائط</string>
 	<string name="ptr_tip_message">نصيحة: اسحب للأسفل من أجل التحديث</string>
@@ -521,6 +532,7 @@
 	<string name="reader_toast_err_get_post">غير قادر على استرجاع هذه المقالة</string>
 	<string name="validating_user_data">التحقق من صحة بيانات المستخدم</string>
 	<string name="validating_site_data">التحقق من صحة بيانات الموقع</string>
+	<string name="reader_empty_followed_blogs_description">ومع ذلك لا داعي للقلق، فما عليك سوى النقر على الأيقونة في أعلى اليمين لبدء الاستكشاف!</string>
 	<string name="nux_oops_not_selfhosted_blog">تسجيل الدخول إلى ووردبريس.كوم</string>
 	<string name="nux_welcome_create_account">انشئ حساب</string>
 	<string name="signing_in">جاري تسجيل الدخول...</string>
