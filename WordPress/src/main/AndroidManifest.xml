@@ -270,6 +270,10 @@
             android:theme="@style/ReaderPhotoViewerTheme" />
 
         <!-- Other activities -->
+        <activity
+            android:name=".ui.publicize.PublicizeListActivity"
+            android:label="@string/sharing"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <activity android:name=".ui.ShareIntentReceiverActivity" android:theme="@style/Calypso.FloatingActivity">
             <intent-filter>
