@@ -20,6 +20,7 @@ import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.me.MyProfileActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -170,6 +171,11 @@ public class ActivityLauncher {
 
     public static void addMedia(Activity activity) {
         WordPressMediaUtils.launchPictureLibrary(activity);
+    }
+
+    public static void viewMyProfile(Context context) {
+        Intent intent = new Intent(context, MyProfileActivity.class);
+        slideInFromRight(context, intent);
     }
 
     public static void viewAccountSettings(Activity activity) {

@@ -60,6 +60,13 @@ public class MeFragment extends Fragment {
         addDropShadowToAvatar();
         refreshAccountDetails();
 
+        rootView.findViewById(R.id.row_my_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewMyProfile(getActivity());
+            }
+        });
+
         rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
