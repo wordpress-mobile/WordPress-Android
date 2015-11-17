@@ -491,6 +491,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         detailText.setTextColor(getResources().getColor(R.color.grey_darken_10));
         detailText.setText(R.string.multiple_links_description);
         numberPicker.setMaxValue(getResources().getInteger(R.integer.max_links_limit));
+        numberPicker.setValue(Math.max(numberPicker.getMinValue(), Math.min(numberPicker.getMaxValue(), mSiteSettings.getMultipleLinks())));
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         @SuppressLint("InflateParams")
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
@@ -520,6 +521,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
         changeEditTextPreferenceValue(mUsernamePref, mSiteSettings.getUsername());
         changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
+        changeLanguageValue(mSiteSettings.getLanguageCode());
         setDetailListPreferenceValue(mPrivacyPref,
                 String.valueOf(mSiteSettings.getPrivacy()),
                 getPrivacySummary(mSiteSettings.getPrivacy()));
@@ -643,6 +645,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     /**
      * Detail strings for the dialog are generated in the selected language.
+     *
+     * @param newValue
+     * languageCode
      */
     private void changeLanguageValue(String newValue) {
         if (mLanguagePref == null || newValue == null) return;
