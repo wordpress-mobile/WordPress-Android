@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,10 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
+import org.wordpress.android.util.AppLog;
+
+import de.greenrobot.event.EventBus;
 
 public class PublicizeWebViewFragment extends Fragment {
 
@@ -154,13 +159,23 @@ public class PublicizeWebViewFragment extends Fragment {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
 
-            // if this url denotes that we made it past the auth stage, call the
-            // endpoint to make the actual connection
+            // TODO: remove logging from final - only here for debugging
+            AppLog.d(AppLog.T.SHARING, "onPageFinished > " + url);
+
+            // does this url denotes that we made it past the auth stage?
             if (url != null) {
                 Uri uri = Uri.parse(url);
                 if (uri.getHost().equals("public-api.wordpress.com")
                         && uri.getPath().equals("/connect/")
                         && uri.getQueryParameter("action").equals("verify")) {
+                    // "denied" param will appear on failure or cancellation
+                    String denied = uri.getQueryParameter("denied");
+                    if (!TextUtils.isEmpty(denied)) {
+                        EventBus.getDefault().post(new PublicizeEvents.ActionCompleted(false, ConnectAction.CONNECT));
+                        return;
+                    }
+
+                    // call the endpoint to make the actual connection
                     PublicizeActions.connect(mSiteId, mServiceId);
                 }
             }

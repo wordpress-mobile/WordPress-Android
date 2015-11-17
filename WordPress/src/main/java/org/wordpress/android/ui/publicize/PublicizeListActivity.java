@@ -17,7 +17,6 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
-import org.wordpress.android.ui.publicize.PublicizeEvents;
 import org.wordpress.android.util.ToastUtils;
 
 import de.greenrobot.event.EventBus;
@@ -164,6 +163,11 @@ public class PublicizeListActivity extends AppCompatActivity
         }
     }
 
+    private void closeWebViewFragment() {
+        String tag = getString(R.string.fragment_tag_publicize_webview);
+        getFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
     @Override
     public void finish() {
         super.finish();
@@ -231,6 +235,7 @@ public class PublicizeListActivity extends AppCompatActivity
         if (event.didSucceed()) {
             returnToListFragment();
         } else {
+            closeWebViewFragment();
             reloadDetailFragment();
             ToastUtils.showToast(this, R.string.error_generic);
         }
