@@ -401,7 +401,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
         String toastText = getString(R.string.no_network_message);
 
-        getBlogId()
         if (NetworkUtils.isNetworkAvailable(this)) {
             if (mCurrentTheme != null) {
                 boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
