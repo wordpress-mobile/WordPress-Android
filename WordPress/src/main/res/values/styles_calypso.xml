@@ -8,6 +8,7 @@
         <item name="android:popupMenuStyle">@style/Calypso.PopupMenu</item>
         <item name="android:textAppearanceSmallPopupMenu">@style/Calypso.TextAppearance</item>
         <item name="android:textAppearanceLargePopupMenu">@style/Calypso.TextAppearance</item>
+        <item name="android:actionModeStyle">@style/Calypso.ActionMode</item>
     </style>
 
     <style name="Calypso.SiteSettingsTheme" parent="CalypsoTheme">
@@ -18,6 +19,18 @@
         <item name="colorAccent">@color/blue_medium</item>
         <item name="android:listDivider">@drawable/preferences_divider</item>
         <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
+    </style>
+
+    <style name="Calypso.ActionMode.Text">
+        <item name="titleTextColor">@color/white</item>
+    </style>
+
+    <style name="Calypso.ActionMode" parent="CalypsoTheme">
+        <item name="colorPrimaryDark">@color/grey_darken_10</item>
+        <item name="android:statusBarColor">@color/grey_darken_10</item>
+        <item name="android:background">@color/grey_darken_10</item>
+        <item name="android:titleTextStyle">@style/Calypso.ActionMode.Text</item>
+        <item name="android:subtitleTextStyle">@style/Calypso.ActionMode.Text</item>
     </style>
 
     <style name="Calypso.AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
