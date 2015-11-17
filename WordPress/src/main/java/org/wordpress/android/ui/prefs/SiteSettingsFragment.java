@@ -22,12 +22,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
-import android.view.ActionMode;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -122,7 +118,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlog = WordPress.getBlog(
                 getArguments().getInt(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, -1));
 
-        // TODO: offline editing
         if (!NetworkUtils.checkConnection(getActivity()) || mBlog == null) {
             getActivity().finish();
             return;
@@ -222,14 +217,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mModerationHoldPref) {
             mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
-                    R.string.hold_for_moderation_description,
-                    mEditingList);
+                    R.string.hold_for_moderation_description);
             return true;
         } else if (preference == mBlacklistPref) {
             mEditingList = mSiteSettings.getBlacklistKeys();
             showListEditorDialog(R.string.site_settings_blacklist_title,
-                    R.string.blacklist_description,
-                    mEditingList);
+                    R.string.blacklist_description);
             return true;
         } else if (preference == mDeleteSitePref) {
             removeBlogWithConfirmation();
@@ -738,114 +731,79 @@ public class SiteSettingsFragment extends PreferenceFragment
                 getWhitelistSummary(val));
     }
 
-    private void showListEditorDialog(int titleRes, int footerRes, List<String> items) {
+    private void showListEditorDialog(int titleRes, int footerRes) {
         Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
         dialog.setOnDismissListener(this);
-        dialog.setContentView(getListEditorView(dialog, items, getString(footerRes)));
+        dialog.setContentView(getListEditorView(dialog, getString(footerRes)));
         dialog.show();
         WPActivityUtils.addToolbarToDialog(this, dialog, getString(titleRes));
     }
 
-    private void setEditorListEntries(ListView list, List<String> items) {
-        if (list == null || items == null) return;
-        list.setAdapter(new ArrayAdapter<>(getActivity(),
-                R.layout.wp_simple_list_item_1,
-                items));
-    }
-
-    private ActionMode mListEditorActionMode = null;
-
-    private View getListEditorView(final Dialog dialog, List<String> items, String footerText) {
+    private View getListEditorView(final Dialog dialog, String footerText) {
         View view = View.inflate(getActivity(), R.layout.list_editor, null);
         ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
 
-        final ListView list = (ListView) view.findViewById(android.R.id.list);
-        list.setEmptyView(view.findViewById(R.id.empty_view));
-        list.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        final MultiSelectListView list = (MultiSelectListView) view.findViewById(android.R.id.list);
+        list.setEnterMultiSelectListener(new MultiSelectListView.OnEnterMultiSelect() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mListEditorActionMode != null) return false;
-
+            public void onEnterMultiSelect() {
                 WPActivityUtils.changeDialogToolbarVisibility(dialog, View.GONE);
-                list.setItemChecked(position, true);
-                mListEditorActionMode = list.startActionMode(new ActionMode.Callback() {
-                    @Override
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        MenuInflater inflater = mode.getMenuInflater();
-                        inflater.inflate(R.menu.list_editor, menu);
-                        return true;
+            }
+        });
+        list.setExitMultiSelectListener(new MultiSelectListView.OnExitMultiSelect() {
+            @Override
+            public void onExitMultiSelect() {
+                WPActivityUtils.changeDialogToolbarVisibility(dialog, View.VISIBLE);
+            }
+        });
+        list.setDeleteRequestListener(new MultiSelectListView.OnDeleteRequested() {
+            @Override
+            public boolean onDeleteRequested() {
+                SparseBooleanArray checkedItems = list.getCheckedItemPositions();
+                ListAdapter adapter = list.getAdapter();
+                for (int i = 0; i < checkedItems.size(); i++) {
+                    final int index = checkedItems.keyAt(i);
+                    if (checkedItems.get(index) && mEditingList.size() > index) {
+                        mEditingList.remove(adapter.getItem(index).toString());
                     }
-
-                    @Override
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        mode.setTitle(String.valueOf(list.getCheckedItemCount()));
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        if (item.getItemId() == R.id.menu_delete) {
-                            SparseBooleanArray checkedItems = list.getCheckedItemPositions();
-                            ListAdapter adapter = list.getAdapter();
-                            for (int i = 0; i < checkedItems.size(); i++) {
-                                final int index = checkedItems.keyAt(i);
-                                if (checkedItems.get(index) && mEditingList.size() > index) {
-                                    mEditingList.remove(adapter.getItem(index).toString());
-                                }
-                            }
-
-                            setEditorListEntries(list, mEditingList);
-                            mListEditorActionMode.finish();
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                    @Override
-                    public void onDestroyActionMode(ActionMode mode) {
-                        mListEditorActionMode = null;
-                        WPActivityUtils.changeDialogToolbarVisibility(dialog, View.VISIBLE);
-                    }
-                });
-
+                }
+                list.setAdapter(new ArrayAdapter<>(getActivity(),
+                        R.layout.wp_simple_list_item_1,
+                        mEditingList));
                 return true;
             }
         });
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setEmptyView(view.findViewById(R.id.empty_view));
+        list.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        list.setAdapter(new ArrayAdapter<>(getActivity(),
+                R.layout.wp_simple_list_item_1,
+                mEditingList));
+        view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mListEditorActionMode == null) return;
-
-                mListEditorActionMode.invalidate();
-            }
-        });
-        setEditorListEntries(list, items);
-                view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+                final EditText input = new WPEditText(getActivity());
+                input.setHint("Enter a word or phrase");
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder builder =
-                                new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-                        final EditText input = new WPEditText(getActivity());
-                        input.setHint("Enter a word or phrase");
-                        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String entry = input.getText().toString();
-                                if (!mEditingList.contains(entry)) {
-                                    mEditingList.add(entry);
-                                    setEditorListEntries(list, mEditingList);
-                                }
-                            }
-                        });
-                        builder.setNegativeButton(R.string.cancel, null);
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.setView(input, 64, 64, 64, 0);
-                        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        alertDialog.show();
+                    public void onClick(DialogInterface dialog, int which) {
+                        String entry = input.getText().toString();
+                        if (!mEditingList.contains(entry)) {
+                            mEditingList.add(entry);
+                            list.setAdapter(new ArrayAdapter<>(getActivity(),
+                                    R.layout.wp_simple_list_item_1,
+                                    mEditingList));
+                        }
                     }
                 });
+                builder.setNegativeButton(R.string.cancel, null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.setView(input, 64, 64, 64, 0);
+                alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                alertDialog.show();
+            }
+        });
 
         return view;
     }
@@ -944,6 +902,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     /**
+     * Gets a locale for the given language code.
+     */
+    private Locale languageLocale(String languageCode) {
+        if (TextUtils.isEmpty(languageCode)) return Locale.getDefault();
+
+        if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
+            return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),
+                    languageCode.substring(REGION_SUBSTRING_INDEX));
+        }
+
+        return new Locale(languageCode);
+    }
+
+    /**
      * Gets a preference and sets the {@link android.preference.Preference.OnPreferenceChangeListener}.
      */
     private Preference getPref(int id) {
@@ -961,16 +933,5 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (parent != null) {
             parent.removePreference(findPreference(getString(preference)));
         }
-    }
-
-    private Locale languageLocale(String languageCode) {
-        if (TextUtils.isEmpty(languageCode)) return Locale.getDefault();
-
-        if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
-            return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),
-                    languageCode.substring(REGION_SUBSTRING_INDEX));
-        }
-
-        return new Locale(languageCode);
     }
 }
