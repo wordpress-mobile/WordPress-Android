@@ -29,7 +29,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -48,7 +47,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public static final int THEME_FETCH_MAX = 100;
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
-    public static final String BLOG_ID = "blog_id";
     private static final String IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String ALERT_TAB = "alert";
 
@@ -359,8 +357,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
 
                 Map<String, Object> themeProperties = new HashMap<>();
-                String blogId = StatsUtils.getBlogId(WordPress.getCurrentBlog());
-                themeProperties.put(BLOG_ID, blogId);
                 themeProperties.put(THEME_ID, themeId);
                 AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME, themeProperties);
 
@@ -405,8 +401,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             if (mCurrentTheme != null) {
                 boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
                 Map<String, Object> themeProperties = new HashMap<>();
-                String blogId = StatsUtils.getBlogId(WordPress.getCurrentBlog());
-                themeProperties.put(BLOG_ID, blogId);
                 themeProperties.put(THEME_ID, themeId);
 
                 switch (type) {
