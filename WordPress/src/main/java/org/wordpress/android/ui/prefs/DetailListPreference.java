@@ -31,7 +31,7 @@ public class DetailListPreference extends ListPreference
         implements PreferenceHint {
     private DetailListAdapter mListAdapter;
     private String[] mDetails;
-    private int mStartingIndex;
+    private String mStartingValue;
     private int mSelectedIndex;
     private String mHint;
     private AlertDialog mDialog;
@@ -56,7 +56,7 @@ public class DetailListPreference extends ListPreference
 
         array.recycle();
 
-        mStartingIndex = mSelectedIndex = 0;
+        mSelectedIndex = -1;
     }
 
     @Override
@@ -84,7 +84,8 @@ public class DetailListPreference extends ListPreference
         }
 
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
-        mStartingIndex = mSelectedIndex = Math.max(0, findIndexOfValue(getValue()));
+        mStartingValue = getValue();
+        mSelectedIndex = findIndexOfValue(mStartingValue);
 
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
                 new DialogInterface.OnClickListener() {
@@ -161,11 +162,13 @@ public class DetailListPreference extends ListPreference
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        int index = positiveResult ? mSelectedIndex : mStartingIndex;
+        int index = positiveResult ? mSelectedIndex : findIndexOfValue(mStartingValue);
         CharSequence[] values = getEntryValues();
         if (values != null && index >= 0 && index < values.length) {
-            String value = values[index].toString();
+            String value = String.valueOf(values[index]);
             callChangeListener(value);
+        } else {
+            callChangeListener(mStartingValue);
         }
     }
 

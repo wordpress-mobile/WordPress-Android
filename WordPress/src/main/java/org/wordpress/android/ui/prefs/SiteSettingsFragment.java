@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -235,49 +236,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return false;
-    }
-
-    private void removeBlog() {
-        if (WordPress.wpDB.deleteBlog(getActivity(), mBlog.getLocalTableBlogId())) {
-            StatsTable.deleteStatsForBlog(getActivity(), mBlog.getLocalTableBlogId()); // Remove stats data
-            AnalyticsUtils.refreshMetadata();
-            ToastUtils.showToast(getActivity(), R.string.blog_removed_successfully);
-            WordPress.wpDB.deleteLastBlogId();
-            WordPress.currentBlog = null;
-            mBlogDeleted = true;
-            getActivity().setResult(RESULT_BLOG_REMOVED);
-
-            // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
-            if (!AccountHelper.isSignedIn()) {
-                EventBus.getDefault().post(new CoreEvents.UserSignedOutCompletely());
-            }
-
-            // Checks for stats widgets that were synched with a blog that could be gone now.
-            StatsWidgetProvider.updateWidgetsOnLogout(getActivity());
-
-            getActivity().finish();
-        } else {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setTitle(getResources().getText(R.string.error));
-            dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
-            dialogBuilder.setPositiveButton(R.string.ok, null);
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        }
-    }
-
-    private void removeBlogWithConfirmation() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
-        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                removeBlog();
-            }
-        });
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
-        dialogBuilder.setCancelable(false);
-        dialogBuilder.create().show();
     }
 
     @Override
@@ -529,10 +487,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
         TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
+        //noinspection deprecation
         detailText.setTextColor(getResources().getColor(R.color.grey_darken_10));
         detailText.setText(R.string.multiple_links_description);
         numberPicker.setMaxValue(getResources().getInteger(R.integer.max_links_limit));
         LayoutInflater inflater = LayoutInflater.from(getActivity());
+        @SuppressLint("InflateParams")
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = ((TextView) titleView.findViewById(R.id.title));
         titleText.setText(R.string.site_settings_multiple_links_title);
@@ -883,6 +843,49 @@ public class SiteSettingsFragment extends PreferenceFragment
                 });
 
         return view;
+    }
+
+    private void removeBlog() {
+        if (WordPress.wpDB.deleteBlog(getActivity(), mBlog.getLocalTableBlogId())) {
+            StatsTable.deleteStatsForBlog(getActivity(), mBlog.getLocalTableBlogId()); // Remove stats data
+            AnalyticsUtils.refreshMetadata();
+            ToastUtils.showToast(getActivity(), R.string.blog_removed_successfully);
+            WordPress.wpDB.deleteLastBlogId();
+            WordPress.currentBlog = null;
+            mBlogDeleted = true;
+            getActivity().setResult(RESULT_BLOG_REMOVED);
+
+            // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
+            if (!AccountHelper.isSignedIn()) {
+                EventBus.getDefault().post(new CoreEvents.UserSignedOutCompletely());
+            }
+
+            // Checks for stats widgets that were synched with a blog that could be gone now.
+            StatsWidgetProvider.updateWidgetsOnLogout(getActivity());
+
+            getActivity().finish();
+        } else {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.error));
+            dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
+            dialogBuilder.setPositiveButton(R.string.ok, null);
+            dialogBuilder.setCancelable(true);
+            dialogBuilder.create().show();
+        }
+    }
+
+    private void removeBlogWithConfirmation() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                removeBlog();
+            }
+        });
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+        dialogBuilder.setCancelable(false);
+        dialogBuilder.create().show();
     }
 
     /**
