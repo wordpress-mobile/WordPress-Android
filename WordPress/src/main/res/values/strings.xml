@@ -1051,6 +1051,7 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--Me-->
+    <string name="my_profile">My Profile</string>
     <string name="me_btn_settings">Account Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
