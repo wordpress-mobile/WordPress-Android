@@ -51,7 +51,11 @@ public class MultiSelectListView extends ListView
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mActionMode == null) return;
 
-        mActionMode.invalidate();
+        if (getCheckedItemCount() <= 0) {
+            mActionMode.finish();
+        } else {
+            mActionMode.invalidate();
+        }
     }
 
     @Override
