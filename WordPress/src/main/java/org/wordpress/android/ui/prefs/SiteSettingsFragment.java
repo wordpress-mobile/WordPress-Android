@@ -902,8 +902,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         String[] displayStrings = new String[languageCodes.length];
 
         for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = capitalizeFrontOfString(getLanguageString(
-                    String.valueOf(languageCodes[i]), languageLocale(languageCodes[i].toString())), 1);
+            displayStrings[i] = StringUtils.capitalize(getLanguageString(
+                    String.valueOf(languageCodes[i]), languageLocale(languageCodes[i].toString())));
         }
 
         return displayStrings;
@@ -918,8 +918,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
-            detailStrings[i] = capitalizeFrontOfString(
-                    getLanguageString(languageCodes[i].toString(), languageLocale(locale)), 1);
+            detailStrings[i] = StringUtils.capitalize(
+                    getLanguageString(languageCodes[i].toString(), languageLocale(locale)));
         }
 
         return detailStrings;
@@ -972,10 +972,5 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return new Locale(languageCode);
-    }
-
-    private String capitalizeFrontOfString(String input, int numToCap) {
-        if (TextUtils.isEmpty(input)) return "";
-        return input.substring(0, numToCap).toUpperCase() + input.substring(numToCap);
     }
 }
