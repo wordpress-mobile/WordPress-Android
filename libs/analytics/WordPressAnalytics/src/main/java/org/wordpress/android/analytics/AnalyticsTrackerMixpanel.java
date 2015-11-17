@@ -270,24 +270,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Upgraded");
                 break;
-            case THEMES_ACCESSED_THEMES_BROWSER:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Accessed Theme Browser");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
-                instructions.setCurrentDateForPeopleProperty("last_time_accessed_theme_browser");
-                break;
-            case THEMES_CHANGED_THEME:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Changed Theme");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
-                instructions.setCurrentDateForPeopleProperty("last_time_changed_theme");
-                break;
-            case THEMES_PREVIEWED_SITE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Previewed Theme for Site");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_previewed_a_theme");
-                instructions.setCurrentDateForPeopleProperty("last_time_previewed_a_theme");
-                break;
             case READER_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Accessed");
@@ -768,6 +750,44 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("My Site - Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_my_site");
+                break;
+            case THEMES_ACCESSED_THEMES_BROWSER:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Accessed Theme Browser");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_theme_browser");
+                break;
+            case THEMES_ACCESSED_SEARCH:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Accessed Theme");
+                break;
+            case THEMES_CHANGED_THEME:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Changed Theme");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
+                instructions.setCurrentDateForPeopleProperty("last_time_changed_theme");
+                break;
+            case THEMES_PREVIEWED_SITE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Previewed Theme for Site");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_previewed_a_theme");
+                instructions.setCurrentDateForPeopleProperty("last_time_previewed_a_theme");
+                break;
+            case THEMES_DEMO_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Demo Accessed");
+                break;
+            case THEMES_CUSTOMIZE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Customize Accessed");
+                break;
+            case THEMES_SUPPORT_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Support Accessed");
+                break;
+            case THEMES_DETAILS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Details Accessed");
                 break;
             default:
                 instructions = null;
