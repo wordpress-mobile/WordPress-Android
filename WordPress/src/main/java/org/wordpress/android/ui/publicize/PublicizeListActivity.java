@@ -27,14 +27,15 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeServiceAdapter.OnServiceConnectionClickListener {
 
     private int mSiteId;
+    private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicize_list_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -50,6 +51,17 @@ public class PublicizeListActivity extends AppCompatActivity
         } else {
             mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
         }
+
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                // clear the nav icon and subtitle used for the webView fragment
+                if (getFragmentManager().getBackStackEntryCount() < 2) {
+                    mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+                    mToolbar.setSubtitle(null);
+                }
+            }
+        });
     }
 
     @Override
@@ -151,6 +163,9 @@ public class PublicizeListActivity extends AppCompatActivity
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(tag)
                 .commit();
+
+        mToolbar.setSubtitle(service.getLabel());
+        mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
     }
 
     private PublicizeWebViewFragment getWebViewFragment() {

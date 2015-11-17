@@ -92,20 +92,12 @@ public class PublicizeWebViewFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setSubTitle(PublicizeTable.getLabelForService(mServiceId));
-
         if (savedInstanceState == null) {
             mProgress.setVisibility(View.VISIBLE);
             loadConnectUrl();
         } else {
             mWebView.restoreState(savedInstanceState);
         }
-    }
-
-    @Override
-    public void onPause() {
-        setSubTitle(null);
-        super.onPause();
     }
 
     /*
@@ -163,7 +155,7 @@ public class PublicizeWebViewFragment extends Fragment {
             AppLog.d(AppLog.T.SHARING, "onPageFinished > " + url);
 
             // does this url denotes that we made it past the auth stage?
-            if (url != null) {
+            if (isAdded() && url != null) {
                 Uri uri = Uri.parse(url);
                 if (uri.getHost().equals("public-api.wordpress.com")
                         && uri.getPath().equals("/connect/")
@@ -192,7 +184,7 @@ public class PublicizeWebViewFragment extends Fragment {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             super.onProgressChanged(view, newProgress);
-            if (newProgress == 100) {
+            if (newProgress == 100 && isAdded()) {
                 mProgress.setVisibility(View.GONE);
             }
         }
@@ -200,7 +192,9 @@ public class PublicizeWebViewFragment extends Fragment {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-            setSubTitle(title);
+            if (isAdded()) {
+                setSubTitle(title);
+            }
         }
     }
 }
