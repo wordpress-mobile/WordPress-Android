@@ -16,7 +16,7 @@
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone" />
 
-    <ListView
+    <org.wordpress.android.ui.prefs.MultiSelectListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

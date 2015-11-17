@@ -69,6 +69,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                    Dialog.OnDismissListener,
                    SiteSettingsInterface.SiteSettingsListener {
 
+    public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
 
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
@@ -115,8 +116,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
 
         // make sure we have local site data
-        mBlog = WordPress.getBlog(
-                getArguments().getInt(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, -1));
+        mBlog = WordPress.getBlog(getArguments().getInt(ARG_LOCAL_BLOG_ID, -1));
 
         if (!NetworkUtils.checkConnection(getActivity()) || mBlog == null) {
             getActivity().finish();
