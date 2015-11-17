@@ -23,7 +23,7 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import java.util.Arrays;
 
 /**
- * Connect/disconnect/reconnect button used in sharing list
+ * Publicize connect/disconnect/reconnect button
  */
 public class ConnectButton extends FrameLayout {
 

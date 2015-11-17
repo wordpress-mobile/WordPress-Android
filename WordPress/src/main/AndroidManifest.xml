@@ -358,6 +358,11 @@
             android:exported="false"/>
 
         <service
+            android:name=".ui.publicize.services.PublicizeUpdateService"
+            android:label="Publicize Update Service"
+            android:exported="false" />
+
+        <service
             android:name=".ui.suggestion.service.SuggestionService"
             android:label="Suggestion Service"
             android:exported="false" >
