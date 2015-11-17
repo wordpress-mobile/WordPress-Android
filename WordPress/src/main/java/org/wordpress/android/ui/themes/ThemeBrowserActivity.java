@@ -37,6 +37,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The theme browser.
@@ -344,7 +346,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         fragmentTransaction.commit();
     }
 
-    private void activateTheme(String themeId) {
+    private void activateTheme(final String themeId) {
         final String siteId = getBlogId();
         final String newThemeId = themeId;
 
@@ -353,7 +355,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             public void onResponse(JSONObject response) {
                 WordPress.wpDB.setCurrentTheme(siteId, newThemeId);
                 Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
-                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME);
+
+                Map<String, Object> themeProperties = new HashMap<>();
+                themeProperties.put(THEME_ID, themeId);
+                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME, themeProperties);
+
                 if (!isFinishing()) {
                     showAlertDialogOnNewSettingNewTheme(newTheme);
                     fetchCurrentTheme();
@@ -393,18 +399,21 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (NetworkUtils.isNetworkAvailable(this)) {
             if (mCurrentTheme != null) {
                 boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
+                Map<String, Object> themeProperties = new HashMap<>();
+                themeProperties.put(THEME_ID, themeId);
+
                 switch (type) {
                     case PREVIEW:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE);
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE, themeProperties);
                         break;
                     case DEMO:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DEMO_ACCESSED);
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DEMO_ACCESSED, themeProperties);
                         break;
                     case DETAILS:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DETAILS_ACCESSED);
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DETAILS_ACCESSED, themeProperties);
                         break;
                     case SUPPORT:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_SUPPORT_ACCESSED);
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_SUPPORT_ACCESSED, themeProperties);
                         break;
                 }
                 ThemeWebActivity.openTheme(this, themeId, type, isCurrentTheme);
