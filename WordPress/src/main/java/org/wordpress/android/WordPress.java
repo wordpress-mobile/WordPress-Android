@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -569,7 +569,8 @@ public class WordPress extends Application {
     private static String mDefaultUserAgent;
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
-            mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
+            // TODO: use WebSettings.getDefaultUserAgent() after upgrade to API level 17+
+            mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
         }
         return mDefaultUserAgent;
     }
