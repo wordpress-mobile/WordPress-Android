@@ -2,7 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/alert_yellow"
     android:orientation="vertical">
+
+    <TextView
+        style="@style/MyProfileLabel"
+        android:id="@+id/first_name"
+        android:text="@string/first_name"/>
+
+    <TextView
+        style="@style/MyProfileLabel"
+        android:id="@+id/last_name"
+        android:text="@string/last_name"/>
+
+    <TextView
+        style="@style/MyProfileLabel"
+        android:id="@+id/display_name"
+        android:text="@string/public_display_name"/>
+
+    <TextView
+        style="@style/MyProfileLabel"
+        android:id="@+id/about_me"
+        android:text="@string/about_me"/>
 
 </LinearLayout>

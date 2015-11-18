@@ -1051,7 +1051,6 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--Me-->
-    <string name="my_profile">My Profile</string>
     <string name="me_btn_settings">Account Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
@@ -1099,5 +1098,12 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="theme_web_activity">Theme Web Activity</string>
     <string name="could_not_load_theme">Could not load theme</string>
+
+    <!--My profile-->
+    <string name="my_profile">My Profile</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="public_display_name">Public Display Name</string>
+    <string name="about_me">About Me</string>
 
 </resources>
