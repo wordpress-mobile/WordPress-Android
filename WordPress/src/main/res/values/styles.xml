@@ -314,7 +314,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@color/me_list_row_border</item>
+        <item name="android:background">@color/me_divider</item>
     </style>
 
     <style name="fab_menu_label_style">
@@ -330,7 +330,13 @@
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:paddingTop">@dimen/margin_medium</item>
-        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="MyProfileDividerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/me_divider</item>
     </style>
 </resources>

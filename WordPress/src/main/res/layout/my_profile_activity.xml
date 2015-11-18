@@ -5,23 +5,32 @@
     android:orientation="vertical">
 
     <TextView
-        style="@style/MyProfileLabel"
         android:id="@+id/first_name"
-        android:text="@string/first_name"/>
+        style="@style/MyProfileLabel"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="@string/first_name" />
+
+    <View style="@style/MyProfileDividerView" />
 
     <TextView
-        style="@style/MyProfileLabel"
         android:id="@+id/last_name"
-        android:text="@string/last_name"/>
+        style="@style/MyProfileLabel"
+        android:text="@string/last_name" />
+
+    <View style="@style/MyProfileDividerView" />
 
     <TextView
-        style="@style/MyProfileLabel"
         android:id="@+id/display_name"
-        android:text="@string/public_display_name"/>
+        style="@style/MyProfileLabel"
+        android:text="@string/public_display_name" />
+
+    <View style="@style/MyProfileDividerView" />
 
     <TextView
-        style="@style/MyProfileLabel"
         android:id="@+id/about_me"
-        android:text="@string/about_me"/>
+        style="@style/MyProfileLabel"
+        android:text="@string/about_me" />
+
+    <View style="@style/MyProfileDividerView" />
 
 </LinearLayout>
