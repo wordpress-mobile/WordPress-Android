@@ -59,7 +59,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
 
-    private static final int UNSPECIFIED_NOTE_ID = -1;
+    private static final long UNSPECIFIED_NOTE_ID = -1;
 
     private NotificationsListFragment mNotesList;
     private boolean mLoadingMore = false;
@@ -110,7 +110,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private void restoreSavedInstance(final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-            int noteId = savedInstanceState.getInt(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID);
+            long noteId = savedInstanceState.getLong(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID);
 
             LoadNotesCallback notesLoadedCallback = new LoadNotesCallback() {
                 @Override
@@ -143,7 +143,7 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-    private void loadNotes(final boolean launchWithNoteId, final int noteId, final LoadNotesCallback callback) {
+    private void loadNotes(final boolean launchWithNoteId, final long noteId, final LoadNotesCallback callback) {
         new Thread() {
             @Override
             public void run() {
@@ -226,11 +226,11 @@ public class NotificationsActivity extends WPActionBarActivity
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
-    private void launchWithNoteId(int noteId) {
+    private void launchWithNoteId(long noteId) {
         final Intent intent = getIntent();
         if (noteId == UNSPECIFIED_NOTE_ID) {
             if (intent.hasExtra(NOTE_ID_EXTRA)) {
-                noteId = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
+                noteId = Long.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
             }
         }
         if (noteId != UNSPECIFIED_NOTE_ID) {
@@ -240,7 +240,7 @@ public class NotificationsActivity extends WPActionBarActivity
             } else {
                 // find it/load it etc
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("ids", Integer.toString(noteId));
+                params.put("ids", Long.toString(noteId));
                 NotesResponseHandler handler = new NotesResponseHandler() {
                     @Override
                     public void onNotes(List<Note> notes) {
