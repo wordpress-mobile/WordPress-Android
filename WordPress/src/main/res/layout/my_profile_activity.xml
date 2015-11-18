@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/first_name"
         style="@style/MyProfileLabel"
         android:layout_marginTop="@dimen/margin_medium"
@@ -12,21 +12,21 @@
 
     <View style="@style/MyProfileDividerView" />
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/last_name"
         style="@style/MyProfileLabel"
         android:text="@string/last_name" />
 
     <View style="@style/MyProfileDividerView" />
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/display_name"
         style="@style/MyProfileLabel"
         android:text="@string/public_display_name" />
 
     <View style="@style/MyProfileDividerView" />
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/about_me"
         style="@style/MyProfileLabel"
         android:text="@string/about_me" />
