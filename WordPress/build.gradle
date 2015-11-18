@@ -18,6 +18,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-cq'
+apply plugin: 'io.fabric'
 
 android {
     useLibrary 'org.apache.http.legacy'
