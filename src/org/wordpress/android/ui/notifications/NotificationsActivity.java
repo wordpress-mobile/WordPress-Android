@@ -66,7 +66,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private boolean mFirstLoadComplete = false;
     private BroadcastReceiver mBroadcastReceiver;
     private boolean mDualPane;
-    private int mSelectedNoteId;
+    private long mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
     private BlogPairId mTmpSelectedComment;
     private BlogPairId mTmpSelectedReaderPost;
@@ -364,8 +364,8 @@ public class NotificationsActivity extends WPActionBarActivity
         if (note == null || isFinishing() || isActivityDestroyed()) {
             return;
         }
-        
-        mSelectedNoteId = StringUtils.stringToInt(note.getId());
+
+        mSelectedNoteId = StringUtils.stringToLong(note.getId());
         mNotesList.setNoteSelected(note, scrollToNote);
 
         // mark the note as read if it's unread
@@ -587,7 +587,7 @@ public class NotificationsActivity extends WPActionBarActivity
             outState.putBoolean("bug_19917_fix", true);
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
-        outState.putInt(NOTE_ID_EXTRA, mSelectedNoteId);
+        outState.putLong(NOTE_ID_EXTRA, mSelectedNoteId);
         if (mSelectedReaderPost != null) {
             outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedReaderPost);
         }
