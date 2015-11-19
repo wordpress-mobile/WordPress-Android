@@ -14,6 +14,9 @@ Iremos agora avaliar o quão testável o projeto WordPress para Android é, isto
 #### Controlabilidade
 
 
+#### Observabilidade
+
+
 
 #### Isolabilidade
 
@@ -30,7 +33,7 @@ Iremos agora avaliar o quão testável o projeto WordPress para Android é, isto
 
 
 
-#### Estatísticas de Teste
+### Estatísticas de Teste
 
 
 
