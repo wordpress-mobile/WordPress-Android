@@ -12,6 +12,7 @@ Iremos agora avaliar o quão testável o projeto WordPress para Android é, isto
 
 ![test_framework](http://developer.android.com/images/testing/test_framework.png)
 
+
 #### Controlabilidade
 
 A extensão [Android JUnit] (http://developer.android.com/intl/ko/tools/testing/testing_android.html#JUnit) proporciona  classes especificas para os casos de teste. Estas classes proporcionam métodos de auxilio para criar *mock objects* e métodos para controlar o ciclo de vida de um componente.
@@ -21,7 +22,8 @@ As ferramentas proporcionadas são um conjunto de métodos ou *"hooks"* do siste
 
 #### Observabilidade
 Como já foi referido anteriormente, as duas ferramentas usadas no projeto WordPRess para Android, para efeitos de teste, são o a extenção Android JUnit, para testes unitários, e o Travis, para testes de integração.
-
+A extensão Android JUnit contem um conjunto de ferramentas que facilitam os testes. Em termos de observabilidade a extensão proporciona uma class *Observable* que permite notificar alterações nas classes, ou seja qualquer alteração nas propriedades da mesma. Existem ainda a classe *TestListener* e outras classes que facilitam a observabilidade dos testes pois permitem num estado intermédio e final verificar isoladamente os resultados. Permite ainda a execução de testes em processos paralelos, o que resulta num melhor desempenho.
+Por outro lado a ferramenta Travis sujeita os pull requests a vários testes automatizados definidos, de forma a possibilitar a adição, sem conflitos das novas funcionalidades. Estes testes não são testes de aceitação, mas antes testes de integração sobre o código submetido. Na página da ferramenta, é possível ver o resultado dos testes realizados sobre os pull requests submetidos ao projeto do React.
 
 
 #### Isolabilidade
