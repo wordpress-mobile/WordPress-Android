@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -32,7 +31,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.PhotonUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +50,6 @@ public class MediaGridAdapter extends CursorAdapter {
     private final Handler mHandler;
     private final int mLocalImageWidth;
     private final LayoutInflater mInflater;
-    private boolean mIsCurrentBlogPhotonCapable;
     private ImageLoader mImageLoader;
     private Context mContext;
     // Must be an ArrayList (order is important for galleries)
@@ -81,7 +78,6 @@ public class MediaGridAdapter extends CursorAdapter {
         mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
         mHandler = new Handler();
         setImageLoader(imageLoader);
-        checkPhotonCapable();
     }
 
     void setImageLoader(ImageLoader imageLoader) {
@@ -90,11 +86,6 @@ public class MediaGridAdapter extends CursorAdapter {
         } else {
             mImageLoader = WordPress.imageLoader;
         }
-    }
-
-    private void checkPhotonCapable() {
-        mIsCurrentBlogPhotonCapable =
-                (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable());
     }
 
     public ArrayList<String> getSelectedItems() {
@@ -186,7 +177,8 @@ public class MediaGridAdapter extends CursorAdapter {
         if (isLocalFile) {
             loadLocalImage(cursor, holder.imageView);
         } else {
-            loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
+            String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, mGridItemWidth);
+            WordPressMediaUtils.loadNetworkImage(thumbUrl, (NetworkImageView) holder.imageView, mImageLoader);
         }
 
         // get the file extension from the fileURL
@@ -271,40 +263,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
     private boolean inMultiSelect() {
         return mCallback.isInMultiSelect();
-    }
-
-    private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
-
-        // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if (mIsCurrentBlogPhotonCapable) {
-            String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-            if (imageURL != null) {
-                thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, mGridItemWidth, 0);
-            }
-        }
-
-        if (thumbnailURL != null) {
-            Uri uri = Uri.parse(thumbnailURL);
-            String filepath = uri.getLastPathSegment();
-
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setImageResource(0);
-            imageView.setErrorImageResId(placeholderResId);
-
-            // no default image while downloading
-            imageView.setDefaultImageResId(0);
-
-            if (MediaUtils.isValidImage(filepath)) {
-                imageView.setTag(thumbnailURL);
-                imageView.setImageUrl(thumbnailURL, mImageLoader);
-            } else {
-                imageView.setImageResource(placeholderResId);
-            }
-        } else {
-            imageView.setImageResource(0);
-        }
-
     }
 
     private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
@@ -444,8 +402,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
     @Override
     public Cursor swapCursor(Cursor newCursor) {
-        checkPhotonCapable();
-
         if (newCursor == null) {
             mCursorDataCount = 0;
             return super.swapCursor(newCursor);

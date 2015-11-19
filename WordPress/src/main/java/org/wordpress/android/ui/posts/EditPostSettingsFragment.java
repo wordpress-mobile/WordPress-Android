@@ -46,7 +46,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
@@ -59,9 +58,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.xmlrpc.android.ApiHelper;
@@ -333,7 +330,14 @@ public class EditPostSettingsFragment extends Fragment
                 if (cursor != null && cursor.moveToFirst()) {
                     mFeaturedImageView.setVisibility(View.VISIBLE);
                     mFeaturedImageButton.setVisibility(View.GONE);
-                    loadNetworkThumbnail(cursor, mFeaturedImageView);
+
+                    // Get max width for photon thumbnail
+                    int maxWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+                    int padding = DisplayUtils.dpToPx(getContext(), 16);
+                    int imageWidth = (maxWidth - padding);
+
+                    String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, imageWidth);
+                    WordPressMediaUtils.loadNetworkImage(thumbUrl, mFeaturedImageView);
                 }
 
                 if (cursor != null) {
@@ -350,44 +354,6 @@ public class EditPostSettingsFragment extends Fragment
         Intent intent = new Intent(getContext(), MediaGalleryPickerActivity.class);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
         startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
-    }
-
-    private void loadNetworkThumbnail(Cursor cursor, NetworkImageView imageView) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
-
-        int maxWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-        int padding = DisplayUtils.dpToPx(getContext(), 16);
-        int imageWidth = (maxWidth - padding);
-
-        // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if ((WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable())) {
-            String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-            if (imageURL != null) {
-                thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, imageWidth, 0);
-            }
-        }
-
-        if (thumbnailURL != null) {
-            Uri uri = Uri.parse(thumbnailURL);
-            String filepath = uri.getLastPathSegment();
-
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setImageResource(0);
-            imageView.setErrorImageResId(placeholderResId);
-
-            // no default image while downloading
-            imageView.setDefaultImageResId(0);
-
-            if (MediaUtils.isValidImage(filepath)) {
-                imageView.setTag(thumbnailURL);
-                imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
-            } else {
-                imageView.setImageResource(placeholderResId);
-            }
-        } else {
-            imageView.setImageResource(0);
-        }
-
     }
 
     private String getPostStatusForSpinnerPosition(int position) {
