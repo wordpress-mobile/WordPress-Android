@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -23,6 +24,7 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -193,7 +195,11 @@ public class PublicizeWebViewFragment extends Fragment {
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
             if (isAdded()) {
-                setSubTitle(title);
+                if (title != null && !title.startsWith("http")) {
+                    setSubTitle(title);
+                } else {
+                    setSubTitle(null);
+                }
             }
         }
     }
