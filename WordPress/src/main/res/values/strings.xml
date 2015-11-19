@@ -704,6 +704,11 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
 
+    <!-- editor post settings -->
+    <string name="editor_post_settings_featured_image">Featured Image</string>
+    <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
+
+
     <!-- Post Formats -->
     <string-array name="post_formats_array">
         <item>Aside</item>
