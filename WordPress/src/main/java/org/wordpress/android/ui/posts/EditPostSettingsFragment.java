@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -86,6 +88,7 @@ public class EditPostSettingsFragment extends Fragment
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private ViewGroup mRootView;
+    private TextView mFeaturedImageLabel;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
@@ -103,7 +106,17 @@ public class EditPostSettingsFragment extends Fragment
     private String[] mPostFormats;
     private String[] mPostFormatTitles;
 
+    private boolean mSupportNewEditor;
+
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        PreferenceManager.setDefaultValues(getContext(), R.xml.settings, false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        mSupportNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -142,23 +155,30 @@ public class EditPostSettingsFragment extends Fragment
         mTagsEditText = (EditText) mRootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) mRootView.findViewById(R.id.sectionCategories));
 
+        mFeaturedImageLabel = (TextView) mRootView.findViewById(R.id.featuredImageLabel);
         mFeaturedImageView = (NetworkImageView) mRootView.findViewById(R.id.featuredImage);
         mFeaturedImageButton = (Button) mRootView.findViewById(R.id.addFeaturedImage);
 
-        registerForContextMenu(mFeaturedImageView);
-        mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                view.showContextMenu();
-            }
-        });
+        if (mSupportNewEditor) {
+            registerForContextMenu(mFeaturedImageView);
+            mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    view.showContextMenu();
+                }
+            });
 
-        mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchMediaGalleryActivity();
-            }
-        });
+            mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    launchMediaGalleryActivity();
+                }
+            });
+        } else {
+            mFeaturedImageLabel.setVisibility(View.GONE);
+            mFeaturedImageView.setVisibility(View.GONE);
+            mFeaturedImageButton.setVisibility(View.GONE);
+        }
 
         if (mPost.isPage()) { // remove post specific views
             mExcerptEditText.setVisibility(View.GONE);
@@ -314,7 +334,9 @@ public class EditPostSettingsFragment extends Fragment
             mTagsEditText.setText(tags);
         }
 
-        updateFeaturedImage(mPost.getFeaturedImageId());
+        if (mSupportNewEditor) {
+            updateFeaturedImage(mPost.getFeaturedImageId());
+        }
     }
 
     public int getFeaturedImageId() {
@@ -584,7 +606,9 @@ public class EditPostSettingsFragment extends Fragment
             mPost.setJSONCategories(new JSONArray(mCategories));
         }
 
-        mPost.setFeaturedImageId(mFeaturedImageId);
+        if (mSupportNewEditor) {
+            mPost.setFeaturedImageId(mFeaturedImageId);
+        }
 
         mPost.setPostExcerpt(excerpt);
         mPost.setDate_created_gmt(pubDateTimestamp);
