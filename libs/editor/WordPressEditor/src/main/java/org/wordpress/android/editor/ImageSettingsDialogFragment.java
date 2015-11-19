@@ -133,7 +133,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         SeekBar widthSeekBar = (SeekBar) view.findViewById(R.id.image_width_seekbar);
         mWidthText = (EditText) view.findViewById(R.id.image_width_text);
         mFeaturedCheckBox = (CheckBox) view.findViewById(R.id.featuredImage);
-        final CheckBox featuredInPostCheckBox = (CheckBox) view.findViewById(R.id.featuredInPost);
 
         // Populate the dialog with existing values
         Bundle bundle = getArguments();
@@ -161,7 +160,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
                 setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt("width"));
 
-                // TODO: Featured image handling
                 boolean featuredImageSupported = bundle.getBoolean("featuredImageSupported");
                 if (featuredImageSupported) {
                     mFeaturedCheckBox.setVisibility(View.VISIBLE);
