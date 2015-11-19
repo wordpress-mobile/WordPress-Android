@@ -9,19 +9,17 @@ Esta avaliação será acompanhada de exemplos e de referências que suportem a 
 ### Testabilidade do Software
 
 Iremos agora avaliar o quão testável o projeto WordPress para Android é, isto é, até que ponto é possível verificar e validar o mesmo em termos de implementação. É importante salientar que depois de analisado o código e lido algumas especificações podémos constatar que o projeto utiliza a [Android Testing Framework] (http://developer.android.com/intl/ko/tools/testing/testing_android.html) que proporciona uma arquitetura bem como um conjunto de ferramentas que permitem testar todos os aspetos da aplicação, através de testes unitários.
-
+[test_framework](http://developer.android.com/images/testing/test_framework.png)
 
 #### Controlabilidade
 
 A extensão [Android JUnit] (http://developer.android.com/intl/ko/tools/testing/testing_android.html#JUnit) proporciona  classes especificas para os casos de teste. Estas classes proporcionam métodos de auxilio para criar *mock objects* e métodos para controlar o ciclo de vida de um componente.
 As ferramentas proporcionadas são um conjunto de métodos ou *"hooks"* do sistema Android. Estes *"hooks"* controlam cada componenete independentemente do seu ciclo de vida normal bem como o *loading* de aplicações
-É ainda de salientar que é utilizada a ferramente [Travis](https://travis-ci.org/) que 
-
-
-
+É ainda de salientar que é utilizada a ferramente [Travis](https://travis-ci.org/) que permite sincronizar o projeto (existente no GitHub) com o Travis que, por sua vez, testa o codigo rápidamente. Os testes são realizados ao nível dos *packages* e permite correr testes em paralelo, bom como ver os testes em tempo real e detalhadamente.
 
 
 #### Observabilidade
+Como já foi referido anteriormente, as duas ferramentas usadas no projeto WordPRess para Android, para efeitos de teste, são o a extenção Android JUnit, para testes unitários, e o Travis, para testes de integração.
 
 
 
