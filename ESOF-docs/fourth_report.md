@@ -9,7 +9,7 @@ Esta avaliação será acompanhada de exemplos e de referências que suportem a 
 ### Testabilidade do Software
 
 Iremos agora avaliar o quão testável o projeto WordPress para Android é, isto é, até que ponto é possível verificar e validar o mesmo em termos de implementação. É importante salientar que depois de analisado o código e lido algumas especificações podémos constatar que o projeto utiliza a [Android Testing Framework] (http://developer.android.com/intl/ko/tools/testing/testing_android.html) que proporciona uma arquitetura bem como um conjunto de ferramentas que permitem testar todos os aspetos da aplicação, através de testes unitários.
-[test_framework](http://developer.android.com/images/testing/test_framework.png)
+![test_framework](http://developer.android.com/images/testing/test_framework.png)
 
 #### Controlabilidade
 
