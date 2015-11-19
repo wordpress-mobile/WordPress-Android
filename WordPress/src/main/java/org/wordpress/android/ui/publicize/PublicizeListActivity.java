@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.publicize;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -229,7 +231,25 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestDisconnect(PublicizeConnection connection) {
-        PublicizeActions.disconnect(connection);
+        confirmDisconnect(connection);
+    }
+
+    private void confirmDisconnect(final PublicizeConnection connection) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(
+                String.format(getString(R.string.dlg_confirm_publicize_disconnect), connection.getLabel()));
+        builder.setTitle(R.string.share_btn_disconnect);
+        builder.setCancelable(true);
+        builder.setPositiveButton(R.string.share_btn_disconnect, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                PublicizeActions.disconnect(connection);
+                returnToListFragment();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     /*

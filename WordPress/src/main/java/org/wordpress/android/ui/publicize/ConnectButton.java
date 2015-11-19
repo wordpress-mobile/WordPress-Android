@@ -12,9 +12,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -29,8 +27,6 @@ public class ConnectButton extends FrameLayout {
 
     private ConnectAction mConnectAction = ConnectAction.CONNECT;
     private TextView mTxtConnect;
-    private ProgressBar mProgress;
-    private boolean mIsProgressShowing;
 
     public ConnectButton(Context context){
         super(context);
@@ -49,31 +45,11 @@ public class ConnectButton extends FrameLayout {
 
     private void initView(Context context) {
         inflate(context, R.layout.publicize_connect_button, this);
-
         mTxtConnect = (TextView) findViewById(R.id.text_connect);
-        mProgress = (ProgressBar) findViewById(R.id.progress_connect);
-
-        updateView();
-    }
-
-    public void showProgress(boolean show) {
-        if (mIsProgressShowing == show) return;
-
-        mIsProgressShowing = show;
-        mProgress.setVisibility(mIsProgressShowing ? View.VISIBLE : View.INVISIBLE);
-        mTxtConnect.setVisibility(mIsProgressShowing ? View.INVISIBLE : View.VISIBLE);
-
-        setEnabled(!mIsProgressShowing);
         updateView();
     }
 
     private void updateView() {
-        if (mIsProgressShowing) {
-            int disabledColor = getContext().getResources().getColor(R.color.grey_lighten_30);
-            setBackgroundDrawable(new ColorDrawable(disabledColor));
-            return;
-        }
-
         int normalColorResId;
         int pressedColorResId;
         int textColorResId;

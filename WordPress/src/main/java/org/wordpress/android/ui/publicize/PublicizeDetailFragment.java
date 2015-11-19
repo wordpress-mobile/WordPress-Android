@@ -84,9 +84,7 @@ public class PublicizeDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
-
         mConnectButton = (ConnectButton) rootView.findViewById(R.id.button_connect);
-
         return rootView;
     }
 
@@ -130,8 +128,6 @@ public class PublicizeDetailFragment extends Fragment {
     private void showData() {
         if (!isAdded()) return;
 
-        mConnectButton.showProgress(false);
-
         TextView txtService = (TextView) getView().findViewById(R.id.text_service);
         TextView txtDescription = (TextView) getView().findViewById(R.id.text_description);
         WPNetworkImageView imgIcon = (WPNetworkImageView) getView().findViewById(R.id.image_icon);
@@ -172,7 +168,6 @@ public class PublicizeDetailFragment extends Fragment {
                 mActionListener.onRequestConnect(mService);
                 break;
             case DISCONNECT:
-                mConnectButton.showProgress(true);
                 mActionListener.onRequestDisconnect(mConnection);
                 break;
             case RECONNECT:

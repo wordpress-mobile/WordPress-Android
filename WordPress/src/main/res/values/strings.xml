@@ -1084,6 +1084,7 @@
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_reconnect">Reconnect</string>
+    <string name="dlg_confirm_publicize_disconnect">Disconnect from %s?</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>

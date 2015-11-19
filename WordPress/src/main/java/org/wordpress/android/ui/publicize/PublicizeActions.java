@@ -34,7 +34,6 @@ class PublicizeActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(AppLog.T.SHARING, "disconnect succeeded");
-                PublicizeTable.deleteConnection(connection.connectionId);
                 EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.DISCONNECT));
             }
         };
@@ -42,10 +41,13 @@ class PublicizeActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SHARING, volleyError);
+                PublicizeTable.addOrUpdateConnection(connection);
                 EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.DISCONNECT));
             }
         };
 
+        // delete connection immediately - will be restored upon failure
+        PublicizeTable.deleteConnection(connection.connectionId);
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
