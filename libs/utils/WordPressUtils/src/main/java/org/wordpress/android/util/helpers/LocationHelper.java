@@ -1,6 +1,7 @@
 //This Handy-Dandy class acquired and tweaked from http://stackoverflow.com/a/3145655/309558
 package org.wordpress.android.util.helpers;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
@@ -18,9 +19,8 @@ public class LocationHelper {
     boolean mGpsEnabled = false;
     boolean mNetworkEnabled = false;
 
+    @SuppressLint("MissingPermission")
     public boolean getLocation(Activity activity, LocationResult result) {
-
-
         mLocationResult = result;
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
@@ -55,6 +55,7 @@ public class LocationHelper {
     }
 
     LocationListener locationListenerGps = new LocationListener() {
+        @SuppressLint("MissingPermission")
         public void onLocationChanged(Location location) {
             mTimer.cancel();
             mLocationResult.gotLocation(location);
@@ -73,6 +74,7 @@ public class LocationHelper {
     };
 
     LocationListener locationListenerNetwork = new LocationListener() {
+        @SuppressLint("MissingPermission")
         public void onLocationChanged(Location location) {
             mTimer.cancel();
             mLocationResult.gotLocation(location);
@@ -92,6 +94,7 @@ public class LocationHelper {
 
     class GetLastLocation extends TimerTask {
         @Override
+        @SuppressLint("MissingPermission")
         public void run() {
             mLocationManager.removeUpdates(locationListenerGps);
             mLocationManager.removeUpdates(locationListenerNetwork);
@@ -130,6 +133,7 @@ public class LocationHelper {
         public abstract void gotLocation(Location location);
     }
 
+    @SuppressLint("MissingPermission")
     public void cancelTimer() {
         if (mTimer != null) {
             mTimer.cancel();
