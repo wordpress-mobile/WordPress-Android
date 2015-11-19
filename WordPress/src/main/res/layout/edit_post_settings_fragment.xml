@@ -3,7 +3,10 @@
     android:id="@+id/settings_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/margin_medium"
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
     android:background="@color/white">
 
     <LinearLayout
@@ -92,7 +95,7 @@
             android:id="@+id/postExcerpt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:textSize="@dimen/text_sz_large"
             android:gravity="top"
             android:hint="@string/post_excerpt"
@@ -101,7 +104,7 @@
 
         <org.wordpress.android.widgets.OpenSansEditText
             android:id="@+id/post_password"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
