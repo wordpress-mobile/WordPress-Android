@@ -660,24 +660,27 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private String getPrivacySummary(int privacy) {
-        switch (privacy) {
-            case -1:
-                return getString(R.string.privacy_private);
-            case 0:
-                return getString(R.string.privacy_hidden);
-            case 1:
-                return getString(R.string.privacy_public);
-            default:
-                return "";
+        if (isAdded()) {
+            switch (privacy) {
+                case -1:
+                    return getString(R.string.privacy_private);
+                case 0:
+                    return getString(R.string.privacy_hidden);
+                case 1:
+                    return getString(R.string.privacy_public);
+            }
         }
+        return "";
     }
 
     private String getCloseAfterSummary(int period) {
+        if (!isAdded()) return "";
         if (period == 0) return getString(R.string.never);
         return getResources().getQuantityString(R.plurals.days_quantity, period, period);
     }
 
     private String getSortOrderSummary(int order) {
+        if (!isAdded()) return "";
         switch (order) {
             case SiteSettingsInterface.ASCENDING_SORT:
                 return getString(R.string.oldest_first);
@@ -689,26 +692,29 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private String getThreadingSummary(int levels) {
+        if (!isAdded()) return "";
         if (levels <= 1) return getString(R.string.none);
         return String.format(getString(R.string.levels_quantity), levels);
     }
 
     private String getPagingSummary(int count) {
+        if (!isAdded()) return "";
         if (count == 0) return getString(R.string.none);
         return getResources().getQuantityString(R.plurals.paging_quantity, count, count);
     }
 
     private String getWhitelistSummary(int value) {
-        switch (value) {
-            case -1:
-                return getString(R.string.whitelist_summary_no_users);
-            case 0:
-                return getString(R.string.whitelist_summary_known_users);
-            case 1:
-                return getString(R.string.whitelist_summary_all_users);
-            default:
-                return "";
+        if (isAdded()) {
+            switch (value) {
+                case -1:
+                    return getString(R.string.whitelist_summary_no_users);
+                case 0:
+                    return getString(R.string.whitelist_summary_known_users);
+                case 1:
+                    return getString(R.string.whitelist_summary_all_users);
+            }
         }
+        return "";
     }
 
     private void updateWhitelistSettings(int val) {
