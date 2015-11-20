@@ -193,7 +193,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             params.put(ALLOW_COMMENTS_KEY, String.valueOf(mSettings.allowComments));
         }
         if (mSettings.sendPingbacks != mRemoteSettings.sendPingbacks) {
-            params.put(SEND_PINGBACKS_KEY, mSettings.sendPingbacks ? OPTION_ALLOWED : OPTION_DISALLOWED);
+            params.put(SEND_PINGBACKS_KEY, mSettings.sendPingbacks ? "1" : "0");
         }
         if (mSettings.receivePingbacks != mRemoteSettings.receivePingbacks) {
             params.put(RECEIVE_PINGBACKS_KEY, mSettings.receivePingbacks ? OPTION_ALLOWED : OPTION_DISALLOWED);
@@ -279,12 +279,13 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         model.defaultCategory = Integer.valueOf(getNestedMapValue(response, DEF_CATEGORY_KEY));
         model.defaultPostFormat = getNestedMapValue(response, DEF_POST_FORMAT_KEY);
         model.allowComments = OPTION_ALLOWED.equals(getNestedMapValue(response, ALLOW_COMMENTS_KEY));
-        model.sendPingbacks = Boolean.valueOf(getNestedMapValue(response, SEND_PINGBACKS_KEY));
         model.receivePingbacks = OPTION_ALLOWED.equals(getNestedMapValue(response, RECEIVE_PINGBACKS_KEY));
+        String sendPingbacks = getNestedMapValue(response, SEND_PINGBACKS_KEY);
         String approvalRequired = getNestedMapValue(response, COMMENT_MODERATION_KEY);
         String identityRequired = getNestedMapValue(response, REQUIRE_IDENTITY_KEY);
         String accountRequired = getNestedMapValue(response, REQUIRE_USER_ACCOUNT_KEY);
         String knownUsers = getNestedMapValue(response, WHITELIST_KNOWN_USERS_KEY);
+        model.sendPingbacks = !TextUtils.isEmpty(sendPingbacks) && Integer.valueOf(sendPingbacks) > 0;
         model.commentApprovalRequired = !TextUtils.isEmpty(approvalRequired) && Integer.valueOf(approvalRequired) > 0;
         model.commentsRequireIdentity = !TextUtils.isEmpty(identityRequired) && Integer.valueOf(identityRequired) > 0;
         model.commentsRequireUserAccount = !TextUtils.isEmpty(accountRequired) && Integer.valueOf(accountRequired) > 0;
