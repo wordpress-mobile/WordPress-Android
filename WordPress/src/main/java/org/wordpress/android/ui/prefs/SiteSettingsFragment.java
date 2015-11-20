@@ -81,6 +81,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private SiteSettingsInterface mSiteSettings;
     private List<String> mEditingList;
     private boolean mBlogDeleted;
+    private boolean mShouldFetch;
 
     private EditTextPreference mTitlePref;
     private EditTextPreference mTaglinePref;
@@ -123,6 +124,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
+        mShouldFetch = true;
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
 
         setRetainInstance(true);
@@ -134,8 +136,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onResume() {
         super.onResume();
 
-        // TODO: no!
-        mSiteSettings.init(true);
+        mSiteSettings.init(mShouldFetch);
+        mShouldFetch = false;
     }
 
     @Override
@@ -605,14 +607,14 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void setSendPingbacks(boolean newValue) {
         mSiteSettings.setSendPingbacks(newValue);
-        if (mSendPingbacksPref.isChecked() != newValue) mSendPingbacksPref.setChecked(newValue);
-        if (mSendPingbacksNested.isChecked() != newValue) mSendPingbacksNested.setChecked(newValue);
+        mSendPingbacksPref.setChecked(newValue);
+        mSendPingbacksNested.setChecked(newValue);
     }
 
     private void setReceivePingbacks(boolean newValue) {
         mSiteSettings.setReceivePingbacks(newValue);
-        if (mReceivePingbacksPref.isChecked() != newValue) mReceivePingbacksPref.setChecked(newValue);
-        if (mReceivePingbacksNested.isChecked() != newValue) mReceivePingbacksNested.setChecked(newValue);
+        mReceivePingbacksPref.setChecked(newValue);
+        mReceivePingbacksNested.setChecked(newValue);
     }
 
     private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
