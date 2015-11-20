@@ -113,9 +113,11 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager.setDefaultValues(getContext(), R.xml.settings, false);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        mSupportNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
+        if (getActivity() != null) {
+            PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, false);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            mSupportNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
+        }
     }
 
     @Override
@@ -354,8 +356,8 @@ public class EditPostSettingsFragment extends Fragment
                     mFeaturedImageButton.setVisibility(View.GONE);
 
                     // Get max width for photon thumbnail
-                    int maxWidth = getContext().getResources().getDisplayMetrics().widthPixels;
-                    int padding = DisplayUtils.dpToPx(getContext(), 16);
+                    int maxWidth = getResources().getDisplayMetrics().widthPixels;
+                    int padding = DisplayUtils.dpToPx(getActivity(), 16);
                     int imageWidth = (maxWidth - padding);
 
                     String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, imageWidth);
@@ -373,7 +375,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void launchMediaGalleryActivity() {
-        Intent intent = new Intent(getContext(), MediaGalleryPickerActivity.class);
+        Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
         startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
