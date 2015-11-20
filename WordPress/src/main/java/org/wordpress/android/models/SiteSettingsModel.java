@@ -293,12 +293,16 @@ public class SiteSettingsModel {
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
 
         String moderationKeys = "";
-        for (String key : holdForModeration) {
-            moderationKeys += key + "\n";
+        if (holdForModeration != null) {
+            for (String key : holdForModeration) {
+                moderationKeys += key + "\n";
+            }
         }
         String blacklistKeys = "";
-        for (String key : blacklist) {
-            blacklistKeys += key + "\n";
+        if (blacklist != null) {
+            for (String key : blacklist) {
+                blacklistKeys += key + "\n";
+            }
         }
         values.put(MODERATION_KEYS_COLUMN_NAME, moderationKeys);
         values.put(BLACKLIST_KEYS_COLUMN_NAME, blacklistKeys);
