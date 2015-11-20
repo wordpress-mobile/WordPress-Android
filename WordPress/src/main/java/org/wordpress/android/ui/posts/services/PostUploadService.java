@@ -457,7 +457,8 @@ public class PostUploadService extends Service {
                 properties.put("with_tags", true);
             }
 
-            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, properties);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
+
         }
 
         /**

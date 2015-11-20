@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">Mehr Beiträge laden</string>
+	<string name="notifications_no_search_results">Die Suche nach \'%s\' ergab keine Ergebnisse</string>
+	<string name="search_sites">Websites durchsuchen</string>
+	<string name="unread">Ungelesen</string>
+	<string name="notifications_empty_view_reader">Reader anzeigen</string>
+	<string name="notifications_empty_action_followers_likes">Mach auf dich aufmerksam: Kommentiere Beiträge, die du gelesen hast.</string>
+	<string name="notifications_empty_action_comments">Nimm an einer Diskussion teil: Kommentiere Beiträge von Blogs denen du folgst.</string>
+	<string name="notifications_empty_action_unread">Belebe eine Diskussion wieder: Schreibe einen neuen Beitrag.</string>
+	<string name="notifications_empty_action_all">Werde aktiv! Kommentiere Beiträge von Blogs denen du folgst.</string>
+	<string name="notifications_empty_likes">Noch keine neuen Likes zum Anzeigen.</string>
+	<string name="notifications_empty_followers">Noch keine neuen Follower anzuzeigen.</string>
+	<string name="notifications_empty_comments">Noch keine neuen Kommentare.</string>
+	<string name="notifications_empty_unread">Keine ungelesenen Nachrichten!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Bitte greife über die App auf die Statistik zu, und versuche das Widget später hinzuzufügen.</string>
+	<string name="stats_widget_error_readd_widget">Bitte entferne das Widget und füge es erneut hinzu</string>
+	<string name="stats_widget_error_no_visible_blog">Ohne sichtbare Blogs kann nicht auf die Statistik zugegriffen werden</string>
+	<string name="stats_widget_error_no_permissions">Dein WordPress.com-Konto kann auf diesem Blog nicht auf Statistiken zugreifen</string>
+	<string name="stats_widget_error_no_account">Bitte bei WordPress anmelden</string>
+	<string name="stats_widget_error_generic">Statistiken konnten nicht geladen werden</string>
+	<string name="stats_widget_loading_data">Lade Daten ...</string>
+	<string name="stats_widget_name_for_blog">Heutige Statistik für %1$s</string>
+	<string name="stats_widget_name">Heutige WordPress-Statistiken</string>
+	<string name="add_location_permission_required">Genehmigung benötigt, um einen Ort hinzuzufügen</string>
+	<string name="add_media_permission_required">Rechte zum Hinzufügen von Medien erforderlich</string>
+	<string name="access_media_permission_required">Rechte zum Zugreifen auf Medien erforderlich</string>
 	<string name="stats_enable_rest_api_in_jetpack">Um deine Statistik anzusehen, aktiviere das JSON API-Modul in Jetpack.</string>
 	<string name="error_open_list_from_notification">Diese(r) Seite / Beitrag wurde auf einer anderen Website veröffentlicht</string>
 	<string name="post_uploaded">Beitrag hochgeladen</string>
@@ -501,6 +526,7 @@
 	<string name="remove_account">Website entfernen</string>
 	<string name="post_settings">Beitrags-Einstellungen</string>
 	<string name="page_settings">Seiten-Einstellungen</string>
+	<string name="notifications_empty_all">Keine Benachrichtigung bisher.</string>
 	<string name="deleting_page">Lösche Seite</string>
 	<string name="share_url_post">Beitrag teilen</string>
 	<string name="share_link">Link teilen</string>
@@ -636,6 +662,7 @@
 	<string name="note_reply_successful">Antwort veröffentlicht</string>
 	<string name="new_notifications">%d neue Benachrichtigungen</string>
 	<string name="more_notifications">und %d weitere.</string>
+	<string name="follows">Folgt</string>
 	<string name="loading">Lädt...</string>
 	<string name="httpuser">HTTP-Benutzername</string>
 	<string name="httppassword">HTTP-Passwort</string>

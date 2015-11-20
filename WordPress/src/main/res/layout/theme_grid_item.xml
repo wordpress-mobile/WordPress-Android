@@ -70,11 +70,11 @@
                         android:textSize="@dimen/text_sz_extra_small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/theme_activate"
+                        android:textColor="@color/theme_active"
                         android:textStyle="bold"
                         android:visibility="gone"
                         android:textAllCaps="true"
-                        android:text="@string/theme_activate"
+                        android:text="@string/active"
                         android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
 
                 </LinearLayout>

@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">פוסטים נוספים</string>
+	<string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
+	<string name="search_sites">חיפוש אתרים</string>
+	<string name="unread">לא נקרא</string>
+	<string name="notifications_empty_action_followers_likes">קבל תשומת לב: תגובה לפוסטים שכבר קראת.</string>
+	<string name="notifications_empty_action_comments">הצטרף לדיון: תגובות לפוסטים באתרים אחריהם אתה עוקב.</string>
+	<string name="notifications_empty_action_unread">הצת מחדש את הדיון: כתוב פוסט חדש.</string>
+	<string name="notifications_empty_action_all">תהיה פעיל! תגיב לפוסטים באתרים אחריהם אתה עוקב.</string>
+	<string name="notifications_empty_likes">אין לייקים חדשים... עדיין.</string>
+	<string name="notifications_empty_followers">אין עוקבים חדשים... עדיין.</string>
+	<string name="notifications_empty_comments">אין תגובות חדשות... עדיין.</string>
+	<string name="stats_widget_error_jetpack_no_blogid">נא לגשת לסטטיסטיקות באפליקציה ולהוסיף וידג\'ט</string>
+	<string name="stats_widget_error_readd_widget">יש להסיר את הוידג\'ט ולהוסיף אותו שוב</string>
+	<string name="stats_widget_error_no_visible_blog">לא ניתן לגשת לסטטיסטיקות ללא אתר גלוי</string>
+	<string name="stats_widget_error_no_permissions">לא ניתן לגשת לסטטיסטיקות באתר זה באמצעות חשבון וורדפרס.קום זה</string>
+	<string name="stats_widget_error_no_account">נא להתחברת לוורדפרס</string>
+	<string name="stats_widget_error_generic">לא ניתן לטעון סטטיסטיקות</string>
+	<string name="stats_widget_loading_data">טוען נתונים...</string>
+	<string name="stats_widget_name_for_blog">סטטיסטיקות יומיות עבור %1$s</string>
+	<string name="stats_widget_name">סטטיסטיקות וורדפרס יומיות</string>
+	<string name="add_location_permission_required">נדרשות הרשאות מתאימות כדי להוסיף מיקומים</string>
+	<string name="add_media_permission_required">ההרשאות הדרושות כדי להוסיף מדיה</string>
+	<string name="access_media_permission_required">ההרשאות הדרושות כדי לגשת למדיה</string>
 	<string name="stats_enable_rest_api_in_jetpack">להצגת סטטיסטיקות, הפעילו מודול JSON API בג\'טפאק.</string>
 	<string name="error_open_list_from_notification">פוסט או עמוד זה פורסם באתר אחר</string>
 	<string name="post_uploaded">הפוסט עודכן</string>
@@ -335,7 +358,6 @@
 	<string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>
 	<string name="invalid_url_message">ודא שכתובת ה-URL של האתר שהוזנה תקפה</string>
 	<string name="blog_not_found">אירעה שגיאה בזמן הגישה לאתר זה</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">האתר שנבחר לפני כן אינו גלוי עוד</string>
 	<string name="could_not_remove_account">לא ניתן היה להסיר את האתר</string>
 	<string name="out_of_memory">זיכרון המכשיר מלא</string>
 	<string name="no_network_message">אין רשת זמינה</string>
@@ -399,6 +421,7 @@
 	<string name="blog_name_reserved_but_may_be_available">אתר זה שמור כעת אך עשוי להיות זמין בעוד כמה ימים</string>
 	<string name="username_or_password_incorrect">שם המשתמש או הסיסמה שהקלדת שגויים</string>
 	<string name="nux_cannot_log_in">איננו יכולים לחבר אותך</string>
+	<string name="auto_sharing_preference_reset_caused_by_error">האתר שנבחר כבר אינו גלוי</string>
 	<string name="wordpress_blog">אתר ב-WordPress</string>
 	<string name="blog_removed_successfully">האתר הוסר בהצלחה</string>
 	<string name="add_account_blog_url">כתובת האתר</string>
@@ -501,6 +524,7 @@
 	<string name="blog_name_must_include_letters">כתובת האתר חייב לכלול לפחות אות אחת (a-z)</string>
 	<string name="blog_name_invalid">כתובת אתר לא תקפה</string>
 	<string name="blog_title_invalid">כותרת אתר לא תקפה</string>
+	<string name="notifications_empty_all">אין התראות... עדיין.</string>
 	<string name="share_url_post">שתף פוסט</string>
 	<string name="share_url_page">שתף עמוד</string>
 	<string name="share_link">קישור לשיתוף</string>
@@ -636,6 +660,7 @@
 	<string name="note_reply_successful">תגובה פורסמה</string>
 	<string name="new_notifications">%d התראות חדשות</string>
 	<string name="more_notifications">הוסף %d נוספים.</string>
+	<string name="follows">עוקבים</string>
 	<string name="loading">טוען...</string>
 	<string name="post_signature">חתימה</string>
 	<string name="add_tagline">הוסף חתימה לפוסטים חדשים</string>

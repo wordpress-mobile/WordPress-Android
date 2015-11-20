@@ -12,6 +12,7 @@ notifications:
 
 android:
   components:
+    - extra-google-m2repository
     - extra-android-m2repository
     - extra-android-support
     - build-tools-23.0.1

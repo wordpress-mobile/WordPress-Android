@@ -28,6 +28,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 
@@ -265,8 +266,6 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         AppLog.d(AppLog.T.STATS, "onEnabled called");
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_ADDED);
-        AnalyticsTracker.flush();
         // Note: don't erase prefs here, since for some reasons this method is called after the booting of the device.
     }
 
@@ -441,6 +440,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                     context.getString(R.string.stats_widget_error_readd_widget));
             return;
         }
+
+        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_ADDED, remoteBlogID);
+        AnalyticsTracker.flush();
 
         // Store the association between the widget ID and the remote blog id into prefs.
         setRemoteBlogIDForWidgetIDs(new int[] {widgetID}, remoteBlogID);
