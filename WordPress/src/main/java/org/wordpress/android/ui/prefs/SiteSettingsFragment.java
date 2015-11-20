@@ -209,6 +209,24 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen screen, Preference preference) {
+        super.onPreferenceTreeClick(screen, preference);
+
+        // Add Action Bar to sub-screens
+        if (preference == findPreference(getString(R.string.pref_key_site_more_discussion))) {
+            Dialog dialog = ((PreferenceScreen) preference).getDialog();
+            if (dialog != null) {
+                ListView prefList = (ListView) dialog.findViewById(android.R.id.list);
+                prefList.setOnItemLongClickListener(this);
+                String title = getString(R.string.site_settings_discussion_title);
+                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference == mRelatedPostsPref) {
             showRelatedPostsDialog();
@@ -228,24 +246,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mDeleteSitePref) {
             removeBlogWithConfirmation();
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean onPreferenceTreeClick(PreferenceScreen screen, Preference preference) {
-        super.onPreferenceTreeClick(screen, preference);
-
-        // Add Action Bar to sub-screens
-        if (preference == findPreference(getString(R.string.pref_key_site_more_discussion))) {
-            Dialog dialog = ((PreferenceScreen) preference).getDialog();
-            if (dialog != null) {
-                ListView prefList = (ListView) dialog.findViewById(android.R.id.list);
-                prefList.setOnItemLongClickListener(this);
-                String title = getString(R.string.site_settings_discussion_title);
-                WPActivityUtils.addToolbarToDialog(this, dialog, title);
-            }
+            return true;
         }
 
         return false;
@@ -258,100 +259,81 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
-            return true;
         } else if (preference == mTaglinePref) {
             mSiteSettings.setTagline(newValue.toString());
             changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
-            return true;
         } else if (preference == mAddressPref) {
             mSiteSettings.setAddress(newValue.toString());
             changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
-            return true;
         } else if (preference == mLanguagePref) {
             mSiteSettings.setLanguageCode(newValue.toString());
             changeLanguageValue(mSiteSettings.getLanguageCode());
-            return true;
         } else if (preference == mPrivacyPref) {
             mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
             setDetailListPreferenceValue(mPrivacyPref,
                     String.valueOf(mSiteSettings.getPrivacy()),
                     getPrivacySummary(mSiteSettings.getPrivacy()));
-            return true;
         } else if (preference == mAllowCommentsPref || preference == mAllowCommentsNested) {
             setAllowComments((Boolean) newValue);
-            return true;
         } else if (preference == mSendPingbacksPref || preference == mSendPingbacksNested) {
             setSendPingbacks((Boolean) newValue);
-            return true;
         } else if (preference == mReceivePingbacksPref || preference == mReceivePingbacksNested) {
             setReceivePingbacks((Boolean) newValue);
-            return true;
         } else if (preference == mCloseAfterPref) {
             mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCloseAfterPref,
                     newValue.toString(),
                     getCloseAfterSummary(mSiteSettings.getCloseAfter()));
-            return true;
         } else if (preference == mSortByPref) {
             mSiteSettings.setCommentSorting(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mSortByPref,
                     newValue.toString(),
                     getSortOrderSummary(mSiteSettings.getCommentSorting()));
-            return true;
         } else if (preference == mThreadingPref) {
             mSiteSettings.setThreadingLevels(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mThreadingPref,
                     newValue.toString(),
                     getThreadingSummary(mSiteSettings.getThreadingLevels()));
-            return true;
         } else if (preference == mPagingPref) {
             mSiteSettings.setPagingCount(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mPagingPref,
                     newValue.toString(),
                     getPagingSummary(mSiteSettings.getPagingCount()));
-            return true;
         } else if (preference == mIdentityRequiredPreference) {
             mSiteSettings.setIdentityRequired((Boolean) newValue);
-            return true;
         } else if (preference == mUserAccountRequiredPref) {
             mSiteSettings.setUserAccountRequired((Boolean) newValue);
-            return true;
         } else if (preference == mWhitelistPref) {
             updateWhitelistSettings(Integer.parseInt(newValue.toString()));
-            return true;
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
             mMultipleLinksPref.setSummary(getResources()
                     .getQuantityString(R.plurals.multiple_links_summary,
                             mSiteSettings.getMultipleLinks(),
                             mSiteSettings.getMultipleLinks()));
-            return true;
         } else if (preference == mUsernamePref) {
             mSiteSettings.setUsername(newValue.toString());
             changeEditTextPreferenceValue(mUsernamePref, mSiteSettings.getUsername());
-            return true;
         } else if (preference == mPasswordPref) {
             mSiteSettings.setPassword(newValue.toString());
             changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
-            return true;
         } else if (preference == mLocationPref) {
             mSiteSettings.setLocation((Boolean) newValue);
-            return true;
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
                     newValue.toString(),
                     mSiteSettings.getDefaultCategoryForDisplay());
-            return true;
         } else if (preference == mFormatPref) {
             mSiteSettings.setDefaultFormat(newValue.toString());
             setDetailListPreferenceValue(mFormatPref,
                     newValue.toString(),
                     mSiteSettings.getDefaultPostFormatDisplay());
-            return true;
+        } else {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     @Override
