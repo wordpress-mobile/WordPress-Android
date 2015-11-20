@@ -135,6 +135,11 @@
     <string name="no_device_videos">No videos</string>
     <string name="no_blog_images">No images</string>
     <string name="no_blog_videos">No videos</string>
+    <string name="upload_queued">Queued</string>
+    <string name="media_file_type">File type: %s</string>
+    <string name="media_file_name">File name: %s</string>
+    <string name="media_uploaded_on">Uploaded on: %s</string>
+    <string name="media_dimensions">Dimensions: %s</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -187,7 +192,8 @@
     <string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
-    <string name="theme_no_search_result_found">No results found</string>
+    <string name="theme_no_search_result_found">Sorry, no themes found.</string>
+    <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
 
     <!-- link view -->
     <string name="link_enter_url">URL</string>
@@ -230,8 +236,10 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
-    <string name="post_uploaded">Post uploaded</string>
-    <string name="page_uploaded">Page uploaded</string>
+    <string name="post_published">Post published</string>
+    <string name="page_published">Page published</string>
+    <string name="post_updated">Post updated</string>
+    <string name="page_updated">Page updated</string>
     <string name="post_password">Password (optional)</string>
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
@@ -435,6 +443,7 @@
     <string name="stats_view">View</string>
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
+    <string name="stats_default_number_zero" translatable="false">0</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
@@ -529,6 +538,13 @@
     <string name="stats_comments_by_authors">By Authors</string>
     <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
     <string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
+
+    <!-- stats: referrers -->
+    <string name="stats_referrers_spam">Spam</string>
+    <string name="stats_referrers_unspam">Not spam</string>
+    <string name="stats_referrers_marking_spam">Marking as spam</string>
+    <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
+    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -738,6 +754,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
+    <string name="automattic_url" translatable="false">automattic.com</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -754,6 +771,7 @@
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
+    <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -913,6 +931,8 @@
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
@@ -1053,5 +1073,44 @@
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
     <string name="tabbar_accessibility_label_me">Me</string>
+
+    <string name="date_range_start_date">Start Date</string>
+    <string name="date_range_end_date">End Date</string>
+
+    <!-- Special characters -->
+    <string name="bullet" translatable="false">\u2022</string>
+    <string name="previous_button" translatable="false">&lt;</string>
+    <string name="next_button" translatable="false">&gt;</string>
+
+    <!-- Noticons -->
+    <string name="noticon_clock" translatable="false">\uf303</string>
+    <string name="noticon_note" translatable="false">\uf814</string>
+
+    <!--Theme Browser-->
+    <string name="current_theme">Current Theme</string>
+    <string name="customize">Customize</string>
+    <string name="details">Details</string>
+    <string name="support">Support</string>
+    <string name="active">Active</string>
+
+    <string-array name="themes_filter_array">
+        <item>Free</item>
+        <item>All</item>
+        <item>Premium</item>
+    </string-array>
+
+    <string name="title_activity_theme_support">Themes</string>
+    <string name="theme_activate">Activate</string>
+    <string name="theme_try_and_customize">Try &amp; Customize</string>
+    <string name="theme_view">View</string>
+    <string name="theme_details">Details</string>
+    <string name="theme_support">Support</string>
+    <string name="theme_done">DONE</string>
+    <string name="theme_manage_site">MANAGE SITE</string>
+    <string name="theme_prompt">Thanks for choosing %1$s</string>
+    <string name="theme_by_author_prompt_append"> by %1$s</string>
+    <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
+    <string name="theme_web_activity">Theme Web Activity</string>
+    <string name="could_not_load_theme">Could not load theme</string>
 
 </resources>

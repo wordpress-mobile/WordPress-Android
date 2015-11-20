@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -32,8 +33,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.HashSet;
-
-import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
@@ -108,7 +107,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_OPENED);
                 onShowHideToolbar(true);
                 bumpPageViewIfNeeded(position);
             }
@@ -174,7 +172,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@Nonnull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
 
         if (hasCurrentTag()) {

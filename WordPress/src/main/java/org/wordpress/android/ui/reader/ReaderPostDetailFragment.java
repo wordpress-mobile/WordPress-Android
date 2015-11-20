@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -278,9 +279,9 @@ public class ReaderPostDetailFragment extends Fragment
         refreshIconCounts();
 
         if (isAskingToLike) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LIKED);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mBlogId);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mBlogId);
         }
     }
 

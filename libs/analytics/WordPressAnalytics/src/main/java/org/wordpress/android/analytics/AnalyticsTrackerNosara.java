@@ -54,15 +54,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APPLICATION_UPGRADED:
                 eventName = "application_upgraded";
                 break;
-            case THEMES_ACCESSED_THEMES_BROWSER:
-                eventName = "themes_theme_browser_accessed";
-                break;
-            case THEMES_CHANGED_THEME:
-                eventName = "themes_theme_changed";
-                break;
-            case THEMES_PREVIEWED_SITE:
-                eventName = "themes_theme_for_site_previewed";
-                break;
             case READER_ACCESSED:
                 eventName = "reader_accessed";
                 break;
@@ -357,6 +348,30 @@ public class AnalyticsTrackerNosara extends Tracker {
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
                 break;
+            case THEMES_ACCESSED_THEMES_BROWSER:
+                eventName = "themes_theme_browser_accessed";
+                break;
+            case THEMES_ACCESSED_SEARCH:
+                eventName = "themes_search_accessed";
+                break;
+            case THEMES_CHANGED_THEME:
+                eventName = "themes_theme_changed";
+                break;
+            case THEMES_PREVIEWED_SITE:
+                eventName = "themes_theme_for_site_previewed";
+                break;
+            case THEMES_DEMO_ACCESSED:
+                eventName = "themes_demo_accessed";
+                break;
+            case THEMES_CUSTOMIZE_ACCESSED:
+                eventName = "themes_customize_accessed";
+                break;
+            case THEMES_SUPPORT_ACCESSED:
+                eventName = "themes_support_accessed";
+                break;
+            case THEMES_DETAILS_ACCESSED:
+                eventName = "themes_details_accessed";
+                break;
             default:
                 eventName = null;
                 break;
@@ -440,7 +455,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             setWordPressComUserName(username);
             // Re-unify the user
             if (getAnonID() != null) {
-                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID());
+                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);
                 clearAnonID();
             }
         } else {

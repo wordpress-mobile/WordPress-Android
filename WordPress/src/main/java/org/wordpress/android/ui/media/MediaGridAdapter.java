@@ -195,7 +195,7 @@ public class MediaGridAdapter extends CursorAdapter {
         fileExtension = fileExtension.toUpperCase();
         // file type
         if  (DisplayUtils.isXLarge(context) && !TextUtils.isEmpty(fileExtension)) {
-            holder.fileTypeView.setText("File type: " + fileExtension);
+            holder.fileTypeView.setText(String.format(context.getString(R.string.media_file_type), fileExtension));
         } else {
             holder.fileTypeView.setText(fileExtension);
         }
@@ -244,7 +244,7 @@ public class MediaGridAdapter extends CursorAdapter {
                         @Override
                         public void onClick(View v) {
                             if (!inMultiSelect()) {
-                                ((TextView) v).setText("queued");
+                                ((TextView) v).setText(R.string.upload_queued);
                                 v.setOnClickListener(null);
                                 mCallback.onRetryUpload(mediaId);
                             }

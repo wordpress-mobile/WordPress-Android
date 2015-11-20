@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
 import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -532,7 +533,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void clear() {
+    public void clear() {
         mPosts.clear();
         notifyDataSetChanged();
     }
@@ -682,9 +683,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (isAskingToLike) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LIKED);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId != 0 ? mCurrentBlogId : null);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId != 0 ? mCurrentBlogId : null);
         }
 
         // update post in array and on screen

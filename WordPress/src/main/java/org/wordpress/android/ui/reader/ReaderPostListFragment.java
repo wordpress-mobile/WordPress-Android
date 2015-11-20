@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -475,7 +477,11 @@ public class ReaderPostListFragment extends Fragment
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
         final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_BLOCKED);
+        // Only pass the blogID if available. Do not track feedID
+        AnalyticsUtils.trackWithBlogDetails(
+                AnalyticsTracker.Stat.READER_BLOG_BLOCKED,
+                mCurrentBlogId != 0 ? mCurrentBlogId : null
+        );
 
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
@@ -531,8 +537,13 @@ public class ReaderPostListFragment extends Fragment
             titleResId = R.string.reader_empty_posts_in_blog;
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
             if (getCurrentTag().isFollowedSites()) {
-                titleResId = R.string.reader_empty_followed_blogs_title;
-                descriptionResId = R.string.reader_empty_followed_blogs_description;
+                if (ReaderBlogTable.hasFollowedBlogs()) {
+                    titleResId = R.string.reader_empty_followed_blogs_no_recent_posts_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_no_recent_posts_description;
+                } else {
+                    titleResId = R.string.reader_empty_followed_blogs_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_description;
+                }
             } else if (getCurrentTag().isPostsILike()) {
                 titleResId = R.string.reader_empty_posts_liked;
             } else {
@@ -818,6 +829,8 @@ public class ReaderPostListFragment extends Fragment
      * get latest posts for this tag from the server
      */
     private void updatePostsWithTag(ReaderTag tag, UpdateAction updateAction) {
+        if (!isAdded()) return;
+
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
             return;
@@ -842,7 +855,7 @@ public class ReaderPostListFragment extends Fragment
         new Thread() {
             @Override
             public void run() {
-                if (isAdded() && ReaderTagTable.shouldAutoUpdateTag(getCurrentTag())) {
+                if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1004,7 +1017,12 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, analyticsProperties);
+
+        // Only pass the blogID if available. Do not track feedID
+        AnalyticsUtils.trackWithBlogDetails(
+                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
+                mCurrentBlogId != 0 ? mCurrentBlogId : null
+        );
     }
 
     /*
