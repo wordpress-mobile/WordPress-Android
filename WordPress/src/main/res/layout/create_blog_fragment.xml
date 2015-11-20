@@ -83,7 +83,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=".wordpress.com"
+                    android:text="@string/dot_wordpress_dot_com_url"
                     android:id="@+id/textView"
                     android:layout_alignParentEnd="false"
                     android:layout_marginTop="4dp"

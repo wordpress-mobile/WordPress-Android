@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
@@ -19,7 +20,10 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
@@ -228,10 +232,13 @@ public class WordPress extends Application {
      * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
      * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
      */
-    public void deferredInit() {
+    public void deferredInit(Activity activity) {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
-        registerForCloudMessaging(this);
+        if (checkPlayServices(activity)) {
+            // Register for Cloud messaging
+            startService(new Intent(this, GCMRegistrationIntentService.class));
+        }
         configureSimperium();
 
         // Refresh account informations
@@ -349,52 +356,23 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    /**
-     * Register the device to Google Cloud Messaging service or return registration id if it's already registered.
-     *
-     * @return registration id or empty string if it's not registered.
-     */
-    private static String gcmRegisterIfNot(Context context) {
-        String regId = "";
-        try {
-            GCMRegistrar.checkDevice(context);
-            GCMRegistrar.checkManifest(context);
-            regId = GCMRegistrar.getRegistrationId(context);
-            String gcmId = BuildConfig.GCM_ID;
-            if (gcmId != null && TextUtils.isEmpty(regId)) {
-                GCMRegistrar.register(context, gcmId);
-            }
-        } catch (UnsupportedOperationException e) {
-            // GCMRegistrar.checkDevice throws an UnsupportedOperationException if the device
-            // doesn't support GCM (ie. non-google Android)
-            AppLog.e(T.NOTIFS, "Device doesn't support GCM: " + e.getMessage());
-        } catch (IllegalStateException e) {
-            // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
-            // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
-            AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
-        } catch (Exception e) {
-            // SecurityException can happen on some devices without Google services (these devices probably strip
-            // the AndroidManifest.xml and remove unsupported permissions).
-            AppLog.e(T.NOTIFS, e);
+    public boolean checkPlayServices(Activity activity) {
+        int connectionResult = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+        switch (connectionResult) {
+            // Success: return true
+            case ConnectionResult.SUCCESS:
+                return true;
+            // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                GooglePlayServicesUtil.getErrorDialog(connectionResult, activity, 0);
+            default:
+            case ConnectionResult.SERVICE_MISSING:
+            case ConnectionResult.SERVICE_DISABLED:
+            case ConnectionResult.SERVICE_INVALID:
+                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
+                        + GooglePlayServicesUtil.getErrorString(connectionResult));
         }
-        return regId;
-    }
-
-    public static void registerForCloudMessaging(Context context) {
-        String regId = gcmRegisterIfNot(context);
-
-        // Register to WordPress.com notifications
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            if (!TextUtils.isEmpty(regId)) {
-                // Send the token to WP.com in case it was invalidated
-                NotificationsUtils.registerDeviceForPushNotifications(context, regId);
-                AppLog.v(T.NOTIFS, "Already registered for GCM");
-            }
-        }
-
-        // Register to Helpshift notifications
-        HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        AnalyticsTracker.registerPushNotificationToken(regId);
+        return false;
     }
 
     /**
@@ -478,7 +456,8 @@ public class WordPress extends Application {
     }
 
     /**
-     * Sign out from wpcom account
+     * Sign out from wpcom account.
+     * Note: This method must not be called on UI Thread.
      */
     public static void WordPressComSignOut(Context context) {
         // Keep the analytics tracking at the beginning, before the account data is actual removed.
@@ -521,6 +500,7 @@ public class WordPress extends Application {
         wpDB.dangerouslyDeleteAllContent();
     }
 
+
     public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
@@ -528,10 +508,12 @@ public class WordPress extends Application {
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
         try {
-            GCMRegistrar.checkDevice(context);
-            GCMRegistrar.unregister(context);
+            String gcmId = BuildConfig.GCM_ID;
+            if (!TextUtils.isEmpty(gcmId)) {
+                InstanceID.getInstance(context).deleteToken(gcmId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+            }
         } catch (Exception e) {
-            AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
+            AppLog.e(T.NOTIFS, "Could not delete GCM Token", e);
         }
 
         // delete wpcom blogs
@@ -717,22 +699,8 @@ public class WordPress extends Application {
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
             if (isPushNotificationPingNeeded() && AccountHelper.isSignedInWordPressDotCom()) {
-                String token = null;
-                try {
-                    // Register for Google Cloud Messaging
-                    GCMRegistrar.checkDevice(mContext);
-                    GCMRegistrar.checkManifest(mContext);
-                    token = GCMRegistrar.getRegistrationId(mContext);
-                    String gcmId = BuildConfig.GCM_ID;
-                    if (gcmId == null || token == null || token.equals("") ) {
-                        AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
-                    } else {
-                        // Send the token to WP.com
-                        NotificationsUtils.registerDeviceForPushNotifications(mContext, token);
-                    }
-                } catch (Exception e) {
-                    AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
-                }
+                // Register for Cloud messaging
+                startService(new Intent(getContext(), GCMRegistrationIntentService.class));
             }
         }
 
@@ -784,7 +752,7 @@ public class WordPress extends Application {
             }
             mIsInBackground = false;
             if (mFirstActivityResumed) {
-                deferredInit();
+                deferredInit(activity);
             }
             mFirstActivityResumed = false;
         }

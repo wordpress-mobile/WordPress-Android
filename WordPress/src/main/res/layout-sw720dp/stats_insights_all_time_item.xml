@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:baselineAligned="false"
-    android:padding="@dimen/margin_extra_large"
-    android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:baselineAligned="false"
+              android:padding="@dimen/margin_extra_large"
+              android:orientation="horizontal">
 
     <!-- Posts item -->
     <LinearLayout
@@ -46,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="0" />
+            android:text="@string/stats_default_number_zero" />
 
     </LinearLayout>
 
@@ -91,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="0" />
+            android:text="@string/stats_default_number_zero" />
 
     </LinearLayout>
 
@@ -136,7 +137,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="0" />
+            android:text="@string/stats_default_number_zero" />
 
     </LinearLayout>
 
@@ -182,7 +183,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="0" />
+            android:text="@string/stats_default_number_zero" />
 
         <org.wordpress.android.widgets.WPAutoResizeTextView
             android:id="@+id/stats_all_time_bestever_date"
@@ -194,7 +195,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textAllCaps="true"
-            android:text="..."/>
+            tools:text="August 11, 2012" />
 
     </LinearLayout>
 

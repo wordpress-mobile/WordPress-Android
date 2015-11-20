@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -85,11 +84,6 @@ public class NotificationsUtils {
         if (!AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
-
-        if (TextUtils.isEmpty(GCMRegistrar.getRegistrationId(context))) {
-            AppLog.e(T.NOTIFS, "can't get push notification settings, gcm token is null.");
-        }
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
         String settingsEndpoint = WPCOM_SETTINGS_ENDPOINT;
@@ -129,9 +123,9 @@ public class NotificationsUtils {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceID);
                     editor.apply();
-                    AppLog.d(T.NOTIFS, "Server response OK. The device_id : " + deviceID);
+                    AppLog.d(T.NOTIFS, "Server response OK. The device_id: " + deviceID);
                 } catch (JSONException e1) {
-                    AppLog.e(T.NOTIFS, "Server response is NOT ok. Registration skipped!!", e1);
+                    AppLog.e(T.NOTIFS, "Server response is NOT ok, registration skipped.", e1);
                 }
             }
         };

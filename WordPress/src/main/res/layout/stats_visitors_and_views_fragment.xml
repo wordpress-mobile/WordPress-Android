@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:gravity="center">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_gravity="center"
+              android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -160,5 +161,5 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_small"
         android:textColor="@color/grey_darken_20"
-        android:text="Date"/>
+        tools:text="Date"/>
 </LinearLayout>

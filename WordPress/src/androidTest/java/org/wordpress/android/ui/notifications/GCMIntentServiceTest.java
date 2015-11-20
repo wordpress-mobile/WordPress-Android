@@ -3,12 +3,12 @@ package org.wordpress.android.ui.notifications;
 
 import android.test.AndroidTestCase;
 
-import org.wordpress.android.GCMIntentService;
+import org.wordpress.android.GCMMessageService;
 
 public class GCMIntentServiceTest extends AndroidTestCase {
 
     public void testShouldCircularizeNoteIcon() {
-        GCMIntentService intentService = new GCMIntentService();
+        GCMMessageService intentService = new GCMMessageService();
 
         String type = "c";
         assertTrue(intentService.shouldCircularizeNoteIcon(type));

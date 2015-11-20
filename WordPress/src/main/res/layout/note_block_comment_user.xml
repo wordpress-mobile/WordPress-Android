@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -64,7 +65,7 @@
                     android:layout_marginLeft="@dimen/margin_small"
                     android:layout_marginRight="@dimen/margin_small"
                     android:includeFontPadding="false"
-                    android:text="\u2022"
+                    android:text="@string/bullet"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/text_sz_large"
                     android:textStyle="bold" />
@@ -90,18 +91,17 @@
         android:id="@+id/user_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_avatar"
         android:layout_marginTop="@dimen/margin_medium"
         android:paddingBottom="@dimen/margin_medium"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
+        app:fontFamily="merriweather"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />
 
     <View
         android:id="@+id/divider_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/user_comment"
         android:background="@drawable/notifications_list_divider_full_width" />
 </LinearLayout>
 

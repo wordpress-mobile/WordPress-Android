@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
@@ -173,27 +174,21 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         private Drawable getTabIcon() {
             switch (labelItem) {
                 case VISITORS:
-                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_visitors_active) :
-                            getResources().getDrawable(R.drawable.stats_icon_visitors);
+                    return getResources().getDrawable(R.drawable.stats_icon_visitors);
                 case COMMENTS:
-                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_comments_active) :
-                            getResources().getDrawable(R.drawable.stats_icon_comments);
+                    return getResources().getDrawable(R.drawable.stats_icon_comments);
                 case LIKES:
-                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_likes_active) :
-                            getResources().getDrawable(R.drawable.stats_icon_likes);
+                    return getResources().getDrawable(R.drawable.stats_icon_likes);
                 default:
                     // Views and when no prev match
-                    return isChecked ? getResources().getDrawable(R.drawable.stats_icon_views_active) :
-                            getResources().getDrawable(R.drawable.stats_icon_views);
+                    return getResources().getDrawable(R.drawable.stats_icon_views);
             }
         }
 
         public void updateBackGroundAndIcon(int currentValue) {
             if (isChecked) {
-                label.setTextColor(getResources().getColor(R.color.grey_dark));
                 value.setTextColor(getResources().getColor(R.color.orange_jazzy));
             } else {
-                label.setTextColor(getResources().getColor(R.color.grey_darken_20));
                 if (currentValue == 0) {
                     value.setTextColor(getResources().getColor(R.color.grey));
                 } else {
@@ -856,7 +851,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mListener.onDateChanged(blogId, getTimeframe(), calculatedDate);
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART);
+        AnalyticsUtils.trackWithBlogDetails(
+                AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
+                WordPress.getBlog(getLocalTableBlogID())
+        );
     }
 
     public enum OverviewLabel {
