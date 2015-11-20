@@ -18,6 +18,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'android-cq'
+apply plugin: 'io.fabric'
 
 android {
     useLibrary 'org.apache.http.legacy'
@@ -31,8 +32,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.7"
-        versionCode 218
+        versionName "4.8-rc-1"
+        versionCode 219
         minSdkVersion 14
         targetSdkVersion 23
 
