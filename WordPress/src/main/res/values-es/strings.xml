@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="search_sites">Buscar sitios</string>
+	<string name="stats_widget_loading_data">Cargando datos...</string>
+	<string name="add_media_permission_required">Permisos necesarios para añadir archivos multimedia</string>
+	<string name="access_media_permission_required">Permisos necesarios para acceder a archivos multimedia</string>
 	<string name="stats_enable_rest_api_in_jetpack">Para ver tus estadísticas debes activar el módulo JSON API en Jetpack.</string>
 	<string name="error_open_list_from_notification">Esta entrada o página fue publicada en otro sitio</string>
 	<string name="post_uploaded">Entrada subida</string>

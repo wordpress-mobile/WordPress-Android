@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">Carica altri articoli</string>
+	<string name="notifications_no_search_results">Nessun sito corrisponde a \'%s\'</string>
+	<string name="search_sites">Ricerca siti</string>
+	<string name="notifications_empty_view_reader">Visualizza nel Reader</string>
+	<string name="unread">Non letto</string>
+	<string name="notifications_empty_action_followers_likes">Ottieni notifiche: commenti ad articoli che hai letto.</string>
+	<string name="notifications_empty_action_comments">Unisciti ad una conversazione: commenti su articoli di blog che segui.</string>
+	<string name="notifications_empty_action_unread">Ravviva la conversazione: scrivi un nuovo articolo.</string>
+	<string name="notifications_empty_action_all">Sii attivo! Commenta articoli dei blog che segui.</string>
+	<string name="notifications_empty_likes">Nessun nuovo mi piace da mostrare... per ora.</string>
+	<string name="notifications_empty_followers">Nessun nuovo utente ti segue... per ora.</string>
+	<string name="notifications_empty_comments">Nessun nuovo commento... per ora.</string>
+	<string name="notifications_empty_unread">Nessun articolo non letto!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Accedi alla Statistiche nella app e quindi successivamente prova ad aggiungere il widget</string>
+	<string name="stats_widget_error_readd_widget">Rimuovi il widget e aggiungilo nuovamente</string>
+	<string name="stats_widget_error_no_visible_blog">Le statistiche non sono accessibili senza un blog visibile</string>
+	<string name="stats_widget_error_no_permissions">Il tuo account WordPress.com non può accedere alle Statistiche di questo blog</string>
+	<string name="stats_widget_error_no_account">Effettua il login su WordPress</string>
+	<string name="stats_widget_error_generic">Le Statistiche non possno essere caricate</string>
+	<string name="stats_widget_loading_data">Caricamento dati...</string>
+	<string name="stats_widget_name_for_blog">Statistiche di oggi per %1$s</string>
+	<string name="stats_widget_name">Statistiche di oggi di WordPress</string>
+	<string name="add_location_permission_required">Per aggiungere una località occorre disporre dei permessi appositi</string>
+	<string name="add_media_permission_required">Autorizzazioni richieste per aggiungere file multimediali</string>
+	<string name="access_media_permission_required">Autorizzazioni richieste per accedere a file multimediali</string>
 	<string name="stats_enable_rest_api_in_jetpack">Per visualizzare le tue statistiche, abilita il modulo JSON API di Jetpack.</string>
 	<string name="error_open_list_from_notification">Questo articolo o questa pagina sono state pubblicate su un altro sito</string>
 	<string name="post_uploaded">Articolo caricato</string>
@@ -501,6 +526,7 @@
 	<string name="blog_name_must_include_letters">L\'indirizzo del sito deve includere almeno 1 lettera (a-z)</string>
 	<string name="blog_name_invalid">Indirizzo del sito non valido</string>
 	<string name="blog_title_invalid">Titolo del sito non valido</string>
+	<string name="notifications_empty_all">Nessuna notifica... per ora.</string>
 	<string name="deleting_page">Eliminando la pagina</string>
 	<string name="deleting_post">Eliminando l\'articolo</string>
 	<string name="share_url_post">Condividi l\'articolo</string>
@@ -634,6 +660,7 @@
 	<string name="sign_in">Accedi</string>
 	<string name="notifications">Notifiche</string>
 	<string name="note_reply_successful">Risposta pubblicata</string>
+	<string name="follows">Segui</string>
 	<string name="new_notifications">%d nuove notifiche</string>
 	<string name="more_notifications">e altre %d.</string>
 	<string name="loading">Caricamento in corso…</string>

@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">โหลดเรื่องเพิ่มเติม</string>
+	<string name="notifications_no_search_results">ไม่มีเว็บใดตรงกับ \'%s\'</string>
+	<string name="search_sites">ค้นหาเว็บ</string>
+	<string name="notifications_empty_view_reader">ดูการอ่าน</string>
+	<string name="unread">ยังไม่ได้อ่าน</string>
+	<string name="notifications_empty_action_followers_likes">ได้การเตือน: ความเห็นบนเรื่องที่คุณอ่าน</string>
+	<string name="notifications_empty_action_comments">เข้าร่วมการสนทนา: ความเห็นบนเรื่องจากบล็อกที่คุณติดตาม</string>
+	<string name="notifications_empty_action_unread">จุดประกายให้การสนทนา: เขียนเรื่องใหม่</string>
+	<string name="notifications_empty_action_all">ได้การเตือนเสมอ ความเห็นบนเรื่องจากบล็อกที่คุณติดตาม</string>
+	<string name="notifications_empty_likes">ยังไม่มีการชื่นชอบใหม่ให้แสดง</string>
+	<string name="notifications_empty_followers">ยังไม่มีผู้ติดตามใหม่ให้รายงาน</string>
+	<string name="notifications_empty_comments">ยังไม่มีความเห็นใหม่</string>
+	<string name="notifications_empty_unread">คุณตามทันทั้งหมดแล้ว</string>
+	<string name="stats_widget_error_jetpack_no_blogid">โปรดเข้าดูสถิติในแอพ และลองเพิ่มวิดเจ็ตภายหลัง</string>
+	<string name="stats_widget_error_readd_widget">โปรดลบวิดเจ๊ตออกและลองเพิ่มใหม่อีกครั้ง</string>
+	<string name="stats_widget_error_no_visible_blog">สถิติไม่สามารถทำงานโดยไม่มีบล็อกที่มองเห็นได้</string>
+	<string name="stats_widget_error_no_permissions">บัญชี WordPress.com ของคุณไม่สามารถเข้าถึงสถิติของบล็อกนี้</string>
+	<string name="stats_widget_error_no_account">โปรดเข้าสู่ระบบเวิร์ดเพรส</string>
+	<string name="stats_widget_error_generic">ไม่สามารถโหลดสถิติ</string>
+	<string name="stats_widget_loading_data">กำลังโหลดข้อมูล...</string>
+	<string name="stats_widget_name_for_blog">สถิติวันนี้สำหรับ %1$s</string>
+	<string name="stats_widget_name">สถิติเวิร์ดเพรสวันนี้</string>
+	<string name="add_location_permission_required">ต้องได้การอนุญาตก่อนจะเพิ่มที่อยู่</string>
+	<string name="add_media_permission_required">ต้องได้การอนุญาตก่อนจะเพิ่มไฟล์สื่อ</string>
+	<string name="access_media_permission_required">ต้องได้การอนุญาตก่อนจะเข้าถึงไฟล์สื่อ</string>
+	<string name="stats_enable_rest_api_in_jetpack">เพื่อดูสถิติของคุณ  ให้เปิดใช้งาน JSON API module ใน Jetpack</string>
+	<string name="error_open_list_from_notification">เรื่องหรือหน้านี้เผยแพร่แล้วบนเว็บอื่น</string>
+	<string name="post_uploaded">อัปโหลดเรื่องแล้ว</string>
+	<string name="page_uploaded">อัปโหลดหน้าแล้ว</string>
 	<string name="reader_short_comment_count_multi">%s ความคิดเห็น</string>
 	<string name="reader_short_comment_count_one">1 ความคิดเห็น</string>
 	<string name="reader_label_submit_comment">ส่ง</string>
@@ -32,6 +61,7 @@
 	<string name="notifications_comments_other_blogs">ความเห็นบนเว็บอื่น</string>
 	<string name="notifications_wpcom_updates">การอัปเดตของ WordPress.com</string>
 	<string name="notifications_other">อื่น ๆ</string>
+	<string name="notifications_account_emails">อีเมลจาก WordPress.com</string>
 	<string name="notifications_account_emails_summary">เรามักจะส่งอีเมล์ที่สำคัญไปยังอีเมล์ของคุณเสมอ  แต่คุณสามารถได้อีเมล์ที่มีประโยชน์เพิ่มได้เหมือนกัน</string>
 	<string name="your_sites">เว็บของคุณ</string>
 	<string name="notifications_sights_and_sounds">แบบมองเห็นและเสียง</string>
@@ -178,6 +208,7 @@
 	<string name="stats_overall">ทั้งหมด</string>
 	<string name="stats_total">ทั้งหมด</string>
 	<string name="post_uploading">กำลังอัปโหลด</string>
+	<string name="reader_page_recommended_blogs">เว็บที่คุณอาจจะชอบ</string>
 	<string name="stats_comments_total_comments_followers">เรื่องทั้งหมดที่มีผู้ติดตามความเห็น: %1$s</string>
 	<string name="stats_empty_publicize_desc">ติดตามจำนวนผู้ติดตามจากบริการโซเชียลเน็ตเวิร์คโดยใช้การเผยแพร่</string>
 	<string name="stats_empty_followers_desc">ติดตามจำนวนผู้ติดตามทั้งหมดของคุณ  และดูว่าแต่ละคนใช้เวลานานเท่าไหร่บนเว็บของคุณ</string>
@@ -283,6 +314,7 @@
 	<string name="reader_label_comment_count_multi">%,d ความเห็น</string>
 	<string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
 	<string name="reader_label_like">ชื่นชอบ</string>
+	<string name="reader_empty_followed_blogs_title">คุณยังไม่ได้ติดตามเว็บใด ๆ</string>
 	<string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
 	<string name="reader_toast_err_block_blog">ไม่สามารถปิดกั้นบล็อกนี้</string>
 	<string name="reader_toast_blog_blocked">เรื่องจากบล็อกนี้จะไม่แสดงอีกต่อไป</string>
@@ -315,6 +347,8 @@
 	<string name="reader_toast_err_unfollow_blog">ไม่สามารถเลิกติดตามบล็อกนี้</string>
 	<string name="reader_title_blog_preview">การอ่านบล็อก</string>
 	<string name="reader_title_tag_preview">การอ่านป้ายกำกับ</string>
+	<string name="reader_page_followed_blogs">เว็บที่ติดตามแล้ว</string>
+	<string name="reader_hint_add_tag_or_url">ใส่ URL หรือ ป้ายกำกับเพื่อติดตาม</string>
 	<string name="ptr_tip_message">เคล็ดลับ: ดึงลงล่างเพื่อรีเฟรช</string>
 	<string name="saving">กำลังบันทึก</string>
 	<string name="media_empty_list">ไม่มีไฟล์สื่อ</string>
@@ -492,6 +526,7 @@
 	<string name="username_email">ชื่อผู้ใช้หรืออีเมล</string>
 	<string name="email_cant_be_used_to_signup">คุณไม่สามารถใช้อีเมลนั้นในการลงทะเบียนได้  เรากำลังมีปัญหาเรื่องการที่ผู้ให้บริการปิดกั้นอีเมลบางส่วนของเรา  กรุณาใช้ผู้ให้บริการอีเมลรายอื่น</string>
 	<string name="email_reserved">มีการใช้อีเมลนั้นแล้ว  โปรดตรวจสอบกล่องเมลเข้าของคุณสำหรับเมลเปิดการใช้งาน  ถ้าคุณไม่เปิดใช้งาน คุณสามารถลองอีกครั้งในอีกสองสามวันภายหลัง</string>
+	<string name="notifications_empty_all">ยังไม่มีคำเตือน</string>
 	<string name="deleting_page">กำลังลบหน้า</string>
 	<string name="deleting_post">กำลังลบเรื่อง</string>
 	<string name="share_url_post">แบ่งปันเรื่อง</string>
@@ -521,6 +556,7 @@
 	<string name="account_two_step_auth_enabled">บัญชีนี้มีสองขั้นตอนในการเปิดใช้การยืนยัน  เยี่ยมชมการตั้งค่าความปลอดภัยของคุณบน WordPress.com และสร้างรหัสผ่านเฉพาะแอพพลิเคชั่น</string>
 	<string name="validating_user_data">ยืนยันข้อมูลผู้ใช้</string>
 	<string name="validating_site_data">ยืนยันข้อมูลเว็บไซต์</string>
+	<string name="reader_empty_followed_blogs_description">ไม่ต้องเป็นห่วง เพียงแตะที่ไอคอนที่ด้านบนขวาเพื่อเริ่มการค้นหา</string>
 	<string name="nux_oops_not_selfhosted_blog">เข้าสู่ระบบของ WordPress.com</string>
 	<string name="password_invalid">คุณต้องการรหัสผ่านที่ปลอดภัยมากขึ้น โปรดแน่ใจว่าได้ใช้ตัวอักษร 7 ตัวหรือมากกว่า  และผสมตัวอักษรตัวใหญ่ ตัวเล็ก ตัวเลข และสัญลักษณ์พิเศษในรหัสผ่าน</string>
 	<string name="nux_tap_continue">ดำเนินการต่อ</string>
@@ -626,6 +662,7 @@
 	<string name="note_reply_successful">เผยแพร่การตอบกลับแล้ว</string>
 	<string name="new_notifications">%d คำเตือนใหม่</string>
 	<string name="more_notifications">และ %d เพิ่มเติม</string>
+	<string name="follows">ติดตาม</string>
 	<string name="loading">กำลังโหลดข้อมูล...</string>
 	<string name="post_signature">ลายเซ็นเรื่อง</string>
 	<string name="add_tagline">ใส่ลายเซ็นลงไปเรื่องใหม่</string>

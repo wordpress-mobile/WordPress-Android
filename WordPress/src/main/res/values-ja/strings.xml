@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">さらに投稿を読み込む</string>
+	<string name="notifications_no_search_results">「%s」に一致するサイトはありません</string>
+	<string name="search_sites">サイトを検索</string>
+	<string name="notifications_empty_view_reader">Reader を表示</string>
+	<string name="unread">未読</string>
+	<string name="notifications_empty_action_followers_likes">存在に気づいてもらうため、読んだ投稿にコメントしてみましょう。</string>
+	<string name="notifications_empty_action_comments">会話に参加しましょう。フォローしているブログの投稿にコメントしてみませんか。</string>
+	<string name="notifications_empty_action_unread">会話をまた活発にするため、新しい記事を書いてみましょう。</string>
+	<string name="notifications_empty_action_all">フォローしているブログの投稿にコメントしてみましょう。</string>
+	<string name="notifications_empty_likes">新しい「いいね」はまだついていません。</string>
+	<string name="notifications_empty_followers">新しいフォロワーはまだいません。</string>
+	<string name="notifications_empty_comments">コメントはまだありません。</string>
+	<string name="notifications_empty_unread">すべて既読になっています !</string>
+	<string name="stats_widget_error_jetpack_no_blogid">アプリ内で統計情報にアクセスし、後でウィジェットを追加してみてください</string>
+	<string name="stats_widget_error_readd_widget">ウィジェットを削除し、もう一度追加してみてください</string>
+	<string name="stats_widget_error_no_visible_blog">表示可能なブログを持っていない場合、統計情報にはアクセスできません</string>
+	<string name="stats_widget_error_no_permissions">あなたの WordPress.com のアカウントではこのブログの統計情報にアクセスできません。</string>
+	<string name="stats_widget_error_no_account">WordPress にログインしてください</string>
+	<string name="stats_widget_error_generic">統計情報を読み込めませんでした</string>
+	<string name="stats_widget_loading_data">データを読み込み中…</string>
+	<string name="stats_widget_name_for_blog">WordPress 統計情報 (%1$s)</string>
+	<string name="stats_widget_name">WordPress 今日の統計情報</string>
+	<string name="add_location_permission_required">位置情報を追加するために必要なアクセス権限</string>
+	<string name="add_media_permission_required">メディアを追加するには権限が必要です</string>
+	<string name="access_media_permission_required">メディアにアクセスするには権限が必要です</string>
 	<string name="stats_enable_rest_api_in_jetpack">統計情報を表示するには、Jetpack の JSON API モジュールを有効化してください。</string>
 	<string name="error_open_list_from_notification">この投稿またはページは他のサイトで公開されています</string>
 	<string name="post_uploaded">投稿を更新しました</string>
@@ -501,6 +526,7 @@
 	<string name="email_cant_be_used_to_signup">こちらから送信するメールがブロックされる問題が発生しているため、そのメールアドレスは登録の際にお使いいただけません。他のメールプロバイダをご利用ください。</string>
 	<string name="blog_removed_successfully">サイトを削除しました</string>
 	<string name="remove_account">サイトを削除</string>
+	<string name="notifications_empty_all">通知はまだありません。</string>
 	<string name="deleting_page">ページを削除中</string>
 	<string name="deleting_post">投稿を削除中</string>
 	<string name="share_link">リンクを共有</string>
@@ -634,6 +660,7 @@
 	<string name="sign_in">ログイン</string>
 	<string name="notifications">通知</string>
 	<string name="note_reply_successful">返信を公開しました</string>
+	<string name="follows">フォロー</string>
 	<string name="more_notifications">あと%d件。</string>
 	<string name="new_notifications">%d件の新しい通知</string>
 	<string name="loading">読込中…</string>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="add_media_permission_required">미디어를 추가하려면 권한이 필요합니다.</string>
+	<string name="access_media_permission_required">미디어에 액세스하려면 권한이 필요합니다.</string>
 	<string name="stats_enable_rest_api_in_jetpack">통계를 보기 위해서는 Jetpack에서 JSON API 모듈을 활성화하세요.</string>
 	<string name="error_open_list_from_notification">이 글이나 페이지는 다른 사이트에서 게시되었습니다.</string>
 	<string name="post_uploaded">글 업로드 완료</string>
@@ -633,6 +635,7 @@
 	<string name="upload">업로드</string>
 	<string name="sign_in">로그인</string>
 	<string name="notifications">알림</string>
+	<string name="follows">팔로우</string>
 	<string name="note_reply_successful">답장을 공개했습니다</string>
 	<string name="more_notifications">%d개.</string>
 	<string name="new_notifications">%d개의 새로운 알림</string>

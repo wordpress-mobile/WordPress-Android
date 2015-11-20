@@ -12,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -54,10 +56,6 @@ public class StatsViewAllActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.stats_activity_view_all);
-
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_ACCESSED);
-        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -154,6 +152,10 @@ public class StatsViewAllActivity extends AppCompatActivity {
             mFragment = getInnerFragment();
             ft.replace(R.id.stats_single_view_fragment, mFragment, "ViewAll-Fragment");
             ft.commitAllowingStateLoss();
+        }
+
+        if (savedInstanceState == null) {
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_VIEW_ALL_ACCESSED, WordPress.getBlog(mLocalBlogID));
         }
     }
 

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="add_media_permission_required">Izin diperlukan untuk menambahkan media</string>
+	<string name="access_media_permission_required">Izin diperlukan untuk mengakses media</string>
 	<string name="stats_enable_rest_api_in_jetpack">Untuk menampilkan statistik Anda, aktifkan module JSON API di Jetpack.</string>
 	<string name="error_open_list_from_notification">Pos atau laman ini diterbitkan di situs lain</string>
 	<string name="post_uploaded">Pos terunggah</string>

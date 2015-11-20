@@ -29,6 +29,7 @@ import org.wordpress.android.networking.WPDelayedHurlStack;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -304,7 +305,7 @@ public class ApiHelper {
 
                 if (mBlog.isJetpackPowered() && !alreadyTrackedAsJetpackBlog) {
                     // blog just added to the app, or the value of jetpack_client_id has just changed
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
+                    AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, mBlog);
                 }
 
                 // get theme post formats
