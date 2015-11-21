@@ -1896,6 +1896,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onFeaturedImageChanged(int mediaId) {
         mPost.setFeaturedImageId(mediaId);
+        mEditPostSettingsFragment.updateFeaturedImage(mediaId);
     }
 
     @Override
