@@ -33,8 +33,13 @@ No que diz respeito ao isolamento de cada componente aquando a criação de test
 
 Por exemplo, usando a classe de testes geral existente para o blog [(BlogTest.java)](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/WordPress/src/androidTest/java/org/wordpress/android/models/BlogTest.java) pode-se comprovar que se trata de uma suite de testes bem isolada, testando a classe Blog, havendo testes para os diversos atributos desta, assim como de todos os seus métodos de *sets* e *gets*. Pode-se referir que a maior parte das suites de testes criadas para este projeto isolam bem os seus componentes, embora não haja muita abundância de testes.
 
-#### Separação
 
+#### Separação
+Na realização de projetos com uma dimensão considerável há que ter em conta à forma como o código está estruturado, tentado torná-lo sempre o mais modular possível. O que isto quer dizer é que se isto não acontecer, pode levar a tornar o código confuso, fazendo com que este se torne mais difícil de se desenvolver em ambientes com vários colaboradores.
+
+Como tal, a separação das funcionalidades deve ser algo a ter em conta para facilitar tudo isto, ou seja, como foi referido no ponto anterior, tentar isolá-los de forma a facilitar a realização de testes unitários.
+
+No caso deste projeto em si, a separação de funcionalidades é algo que têm em conta, dado a sua [estruturação](https://github.com/wordpress-mobile/WordPress-Android/tree/develop/WordPress/src/main/java/org/wordpress/android), no entanto é de referir que no que diz respeito à separação de funcionalidades nos testes unitários esta é realizada mas não abrange todas as funcionalidades da aplicação.
 
 
 #### Inteligibilidade
