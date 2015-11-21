@@ -19,7 +19,7 @@ Iremos agora avaliar o quão testável o projeto WordPress para Android é, isto
 A extensão [Android JUnit] (http://developer.android.com/intl/ko/tools/testing/testing_android.html#JUnit) proporciona  classes especificas para os casos de teste. Estas classes proporcionam métodos de auxilio para criar *mock objects* e métodos para controlar o ciclo de vida de um componente.
 As ferramentas proporcionadas são um conjunto de métodos ou *"hooks"* do sistema Android. Estes *"hooks"* controlam cada componenete independentemente do seu ciclo de vida normal bem como o *loading* de aplicações.
 
-É ainda de salientar que é utilizada a ferramente [Travis](https://travis-ci.org/) que permite sincronizar o projeto (existente no GitHub) com o Travis que, por sua vez, testa o codigo rápidamente. Os testes são realizados ao nível dos *packages* e permite correr testes em paralelo, bom como ver os testes em tempo real e detalhadamente.
+É ainda de salientar que é utilizada a ferramente [Travis](https://travis-ci.org/) que permite sincronizar o projeto (existente no GitHub) com o Travis que, por sua vez, testa o codigo rápidamente. Os testes são realizados ao nível dos *packages* e permite correr testes em paralelo, bem como ver os testes em tempo real e detalhadamente.
 
 
 #### Observabilidade
@@ -29,8 +29,9 @@ Por outro lado a ferramenta Travis sujeita os pull requests a vários testes aut
 
 
 #### Isolabilidade
+No que diz respeito ao isolamento de cada componente aquando a criação de testes unitários, é necessário ter em conta que para diferentes componentes o isolamento pode ser diferente. Isto vem do facto de haver componentes dependentes de outros, fazendo com que o isolamento não seja o ideal. Quão mais básico o componente for, mais isolado e independente ele se torna, podendo então ter testes unitários que acabam por ser mais viáveis pois não ficam dependentes de o código de outros componentes estar bem realizado ou não. 
 
-
+Por exemplo, usando a classe de testes geral existente para o blog [(BlogTest.java)](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/WordPress/src/androidTest/java/org/wordpress/android/models/BlogTest.java) pode-se comprovar que se trata de uma suite de testes bem isolada, testando a classe Blog, havendo testes para os diversos atributos desta, assim como de todos os seus métodos de *sets* e *gets*. Pode-se referir que a maior parte das suites de testes criadas para este projeto isolam bem os seus componentes, embora não haja muita abundância de testes.
 
 #### Separação
 
