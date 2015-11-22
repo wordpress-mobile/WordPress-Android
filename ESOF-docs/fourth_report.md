@@ -69,10 +69,6 @@ Para proceder à análise estatística de testes deste projeto encontramos algum
 
 * Número de classes de testes unitários automáticos: 78
 * Número de classes: 1977
-* Percentagem de cobertura geral do projeto: 3,94%
-
-Como se pode concluir com os valores acima indicados, a cobertura do código por testes unitários é bastante baixa, fazendo com que para um projeto desta dimensão não seja o adequado. No entanto, é de referir que estes valores podem não estar totalmente corretos devido ao problema que encontramos e que foi referido acima.
-
 
 ### Análise Crítica
 
