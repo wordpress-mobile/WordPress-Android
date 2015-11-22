@@ -63,7 +63,7 @@ Ainda assim, para além da utilização do JUnit, os desenvolvedores utilizam ai
 
 ### Estatísticas de Teste
 
-Para proceder à análise estatística de testes deste projeto encontramos algumas dificuldades para compilar e correr a ferramenta que eles utilizam para criar um log dessas estatísticas. Como tal, conseguimos realizar uma cobertura, usando o (Android Studio)[https://developer.android.com/sdk/index.html], não ideal mas que dá uma ideia de como o projeto está estruturado relativamente a testes unitários. Na imagem seguinte pode-se ver a quantidade de classes de produção de código, assim como o número de classes de testes unitários.
+Para proceder à análise estatística de testes deste projeto encontramos algumas dificuldades para compilar e correr a ferramenta que eles utilizam para criar um log dessas estatísticas. Como tal, conseguimos realizar uma cobertura, usando o [Android Studio](https://developer.android.com/sdk/index.html), não ideal mas que dá uma ideia de como o projeto está estruturado relativamente a testes unitários. Na imagem seguinte pode-se ver a quantidade de classes de produção de código, assim como o número de classes de testes unitários.
 
 ![testes](./images/testes.png)
 
