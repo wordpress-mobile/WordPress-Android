@@ -61,8 +61,17 @@ Podemos perceber que o Junit facilita muito a implementação dos testes unitár
 Ainda assim, para além da utilização do JUnit, os desenvolvedores utilizam ainda o Travis, uma ferramenta de integração ao GitHub que permite verificar o código na altura de fazer commit, para isso, o travis tenta compilar e verificar os testes unitários implementados, notificando o desenvolvedor.
 
 
-
 ### Estatísticas de Teste
+
+Para proceder à análise estatística de testes deste projeto encontramos algumas dificuldades para compilar e correr a ferramenta que eles utilizam para criar um log dessas estatísticas. Como tal, conseguimos realizar uma cobertura, usando o (Android Studio)[https://developer.android.com/sdk/index.html], não ideal mas que dá uma ideia de como o projeto está estruturado relativamente a testes unitários. Na imagem seguinte pode-se ver a quantidade de classes de produção de código, assim como o número de classes de testes unitários.
+
+![testes](./images/testes.png)
+
+* Número de classes de testes unitários automáticos: 78
+* Número de classes: 1977
+* Percentagem de cobertura geral do projeto: 3,94%
+
+Como se pode concluir com os valores acima indicados, a cobertura do código por testes unitários é bastante baixa, fazendo com que para um projeto desta dimensão não seja o adequado. No entanto, é de referir que estes valores podem não estar totalmente corretos devido ao problema que encontramos e que foi referido acima.
 
 
 ### Análise Crítica
