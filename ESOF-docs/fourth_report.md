@@ -76,7 +76,7 @@ Como se pode concluir com os valores acima indicados, a cobertura do código por
 
 ### Análise Crítica
 
-De um modo geral, nota-se uma clara preocupação por parte da equipa do WordPress em ter uma biblioteca automatizada de testespor forma a validar e verificar os componentes de software através da Android Testing Frameword e do Travis. É importante ainda salientar que a equipa utiliza a framework [RoboElectric](http://robolectric.org/), uma framework de testes unitários que utiliza o jar do Android SDK para correr testes de sobre aplicações Android sendo que estes ocorrem dentro da JVM da workstation em questão e ocorrem em poucos segundos. 
+De um modo geral, nota-se uma clara preocupação por parte da equipa do WordPress em ter uma biblioteca automatizada de testes por forma a validar e verificar os componentes de software através da Android Testing Frameword e do Travis. É importante ainda salientar que a equipa utiliza a framework [RoboElectric](http://robolectric.org/), uma framework de testes unitários que utiliza o jar do Android SDK para correr testes de sobre aplicações Android sendo que estes ocorrem dentro da JVM da workstation em questão e ocorrem em poucos segundos. 
 
 A Android Testing Framework por integrar testes unitários através da API JUnit torna-se muito viável e facilmente implementável devido à [documentação fornecida pelo google para developers](http://developer.android.com/intl/ko/tools/testing/testing_android.html). Acrescentando o facto da framework RoboElectric, mencionada acima, torna os testes mais rápidos e facilmente executaveis acreditamos ser uma implementação exemplar.
 
