@@ -44,6 +44,9 @@ No caso deste projeto em si, a separação de funcionalidades é algo que têm e
 
 #### Inteligibilidade
 
+O projeto, como já foi mencionado nos relatórios anteriores apresenta uma estrutura, organização e regras bem definidas para os possíveis desenvolvedores, aplicando-se o mesmo aos testes unitários.
+Existe um package “androidTest” onde contém tudo o que é relacionado com os testes unitários. Este package contém um ficheiro readme.md onde explica como se corre os testes assim como se limpa a base de dados existente.
+A grande maioria das classes tem nomes auto explicativos estando também documentadas através de comentários e hiperligações com informações adicionais.
 
 
 #### Heterogeneidade
