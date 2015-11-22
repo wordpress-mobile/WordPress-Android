@@ -62,6 +62,14 @@ Ainda assim, para além da utilização do JUnit, os desenvolvedores utilizam ai
 ### Estatísticas de Teste
 
 
+### Análise Crítica
+
+De um modo geral, nota-se uma clara preocupação por parte da equipa do WordPress em ter uma biblioteca automatizada de testespor forma a validar e verificar os componentes de software através da Android Testing Frameword e do Travis. É importante ainda salientar que a equipa utiliza a framework [RoboElectric](http://robolectric.org/), uma framework de testes unitários que utiliza o jar do Android SDK para correr testes de sobre aplicações Android sendo que estes ocorrem dentro da JVM da workstation em questão e ocorrem em poucos segundos. 
+
+A Android Testing Framework por integrar testes unitários através da API JUnit torna-se muito viável e facilmente implementável devido à [documentação fornecida pelo google para developers](http://developer.android.com/intl/ko/tools/testing/testing_android.html). Acrescentando o facto da framework RoboElectric, mencionada acima, torna os testes mais rápidos e facilmente executaveis acreditamos ser uma implementação exemplar.
+
+A contínua integração das várias contribuições dos variados colaboradores do projeto é possibilitada pela ferramenta Travis.Esta desempenha um papel muito útil ao nível da realização de testes de integração sobre o código submetido em pull requests e facilita o trabalho à equipa WordPress.
+
 
 ### Autores
 
