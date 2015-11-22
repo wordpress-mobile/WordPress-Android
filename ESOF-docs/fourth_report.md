@@ -17,7 +17,7 @@ Iremos agora avaliar o quão testável o projeto WordPress para Android é, isto
 #### Controlabilidade
 
 A extensão [Android JUnit] (http://developer.android.com/intl/ko/tools/testing/testing_android.html#JUnit) proporciona  classes especificas para os casos de teste. Estas classes proporcionam métodos de auxilio para criar *mock objects* e métodos para controlar o ciclo de vida de um componente.
-As ferramentas proporcionadas são um conjunto de métodos ou *"hooks"* do sistema Android. Estes *"hooks"* controlam cada componenete independentemente do seu ciclo de vida normal bem como o *loading* de aplicações.
+As ferramentas proporcionadas são um conjunto de métodos ou *"hooks"* do sistema Android. Estes *"hooks"* controlam cada componente independentemente do seu ciclo de vida normal bem como o *loading* de aplicações.
 
 É ainda de salientar que é utilizada a ferramente [Travis](https://travis-ci.org/) que permite sincronizar o projeto (existente no GitHub) com o Travis que, por sua vez, testa o codigo rápidamente. Os testes são realizados ao nível dos *packages* e permite correr testes em paralelo, bem como ver os testes em tempo real e detalhadamente.
 
@@ -51,7 +51,7 @@ No caso deste projeto em si, a separação de funcionalidades é algo que têm e
 Como já foi mencionado, este projeto baseia-se no Android Testing Framework, assim, utiliza a API do JUnit para trabalhar com os testes unitários. A extensão para Android do JUnit faculta diferentes classes específicas para diferentes casos de forma a facilitar a implementação dos testes.
 Na página de explicação do Android Testing Framework é possível ler:
 
->“Test suites are contained in test packages that are similar to main application packages, so you don't need to learn a new   set of tools or techniques for designing and building tests
+>“Test suites are contained in test packages that are similar to main application packages, so you don't need to learn a new   set of tools or techniques for designing and building tests"
 
 Podemos perceber que o Junit facilita muito a implementação dos testes unitários e reduz a utilização de outros métodos e/ou ferramentas para uma possível complementação, pelo que se apresenta como uma ferramenta única mas completa de modo a centralizar e unificar os esforços ao nível da implementação dos testes unitários.
 
