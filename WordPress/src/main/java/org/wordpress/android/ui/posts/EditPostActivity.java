@@ -1203,7 +1203,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(imageUri.toString());
         if (imageUri.getEncodedPath() != null) {
-            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
+            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString())
+                    || mediaTitle.equals(getResources().getString(R.string.video)));
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
