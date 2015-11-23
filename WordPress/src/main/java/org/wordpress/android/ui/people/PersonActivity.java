@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.PersonTable;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -60,7 +60,7 @@ public class PersonActivity extends AppCompatActivity {
         TextView txtRole = (TextView) findViewById(R.id.person_role);
         TextView txtRemove = (TextView) findViewById(R.id.person_remove);
 
-        Person person = WordPress.wpDB.getPersonForLocalTablePostId(mPersonId);
+        Person person = PersonTable.getPerson(mPersonId);
 
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);

@@ -24,7 +24,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
-import org.wordpress.android.models.Role;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -1941,12 +1940,5 @@ public class WordPressDB {
 
     public boolean hasAnyJetpackBlogs() {
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
-    }
-
-    /*
-     * This is a stub method. Once implemented it'll retrieve a person object for the provided person id
-     */
-    public Person getPersonForPersonId(long personId) {
-        return new Person(4, "oguzkocer", "Oguz", "Kocer", "Oguz", "http://lorempixum.com/76/76", Role.EDITOR);
     }
 }
