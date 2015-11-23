@@ -156,9 +156,6 @@ public class ReaderTag implements Serializable {
     public boolean isFollowedSites() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }
-    public boolean isFreshlyPressed() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/freshly-pressed");
-    }
     public boolean isTagTopic() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase().contains("/read/tags/");
