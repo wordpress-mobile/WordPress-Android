@@ -45,6 +45,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private Spinner mAlignmentSpinner;
     private EditText mLinkTo;
     private EditText mWidthText;
+    private CheckBox mFeaturedCheckBox;
 
     private CharSequence mPreviousActionBarTitle;
     private boolean mPreviousHomeAsUpEnabled;
@@ -83,7 +84,10 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         actionBar.getCustomView().findViewById(R.id.menu_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String imageRemoteId = "";
                 try {
+                    imageRemoteId = mImageMeta.getString("attachment_id");
+
                     mImageMeta.put("title", mTitleText.getText().toString());
                     mImageMeta.put("caption", mCaptionText.getText().toString());
                     mImageMeta.put("alt", mAltText.getText().toString());
@@ -93,15 +97,20 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                     int newWidth = getEditTextIntegerClamped(mWidthText, 10, mMaxImageWidth);
                     mImageMeta.put("width", newWidth);
                     mImageMeta.put("height", getRelativeHeightFromWidth(newWidth));
-
-                    // TODO: Featured image handling
-
                 } catch (JSONException e) {
                     AppLog.d(AppLog.T.EDITOR, "Unable to update JSON array");
                 }
 
                 Intent intent = new Intent();
                 intent.putExtra("imageMeta", mImageMeta.toString());
+
+                boolean isFeaturedImage = mFeaturedCheckBox.isChecked();
+                intent.putExtra("isFeatured", isFeaturedImage);
+
+                if (!imageRemoteId.isEmpty()) {
+                    intent.putExtra("imageRemoteId", Integer.parseInt(imageRemoteId));
+                }
+
                 getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
 
                 restorePreviousActionBar();
@@ -123,8 +132,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         mLinkTo = (EditText) view.findViewById(R.id.image_link_to);
         SeekBar widthSeekBar = (SeekBar) view.findViewById(R.id.image_width_seekbar);
         mWidthText = (EditText) view.findViewById(R.id.image_width_text);
-        final CheckBox featuredCheckBox = (CheckBox) view.findViewById(R.id.featuredImage);
-        final CheckBox featuredInPostCheckBox = (CheckBox) view.findViewById(R.id.featuredInPost);
+        mFeaturedCheckBox = (CheckBox) view.findViewById(R.id.featuredImage);
 
         // Populate the dialog with existing values
         Bundle bundle = getArguments();
@@ -152,7 +160,11 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
                 setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt("width"));
 
-                // TODO: Featured image handling
+                boolean featuredImageSupported = bundle.getBoolean("featuredImageSupported");
+                if (featuredImageSupported) {
+                    mFeaturedCheckBox.setVisibility(View.VISIBLE);
+                    mFeaturedCheckBox.setChecked(bundle.getBoolean("isFeatured", false));
+                }
 
             } catch (JSONException e1) {
                 AppLog.d(AppLog.T.EDITOR, "Missing JSON properties");
@@ -224,12 +236,14 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 if (isAdded()) {
                     final Uri localUri = Utils.downloadExternalMedia(getActivity(), Uri.parse(src));
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            thumbnailImage.setImageURI(localUri);
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                thumbnailImage.setImageURI(localUri);
+                            }
+                        });
+                    }
                 }
             }
         });

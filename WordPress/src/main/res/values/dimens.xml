@@ -129,6 +129,10 @@
 
     <dimen name="nux_width">600dp</dimen>
 
+    <!-- editor -->
+    <dimen name="post_settings_featured_image_height_min">150dp</dimen>
+    <dimen name="post_settings_featured_image_height_max">300dp</dimen>
+
     <!-- notifications -->
     <dimen name="note_icon_sz">21dp</dimen>
     <dimen name="comment_avatar_margin_top">6dp</dimen>

@@ -15,12 +15,19 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.helpers.Version;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -270,5 +277,58 @@ public class WordPressMediaUtils {
 
     public static Cursor getWordPressMediaVideos(String blogId) {
         return WordPress.wpDB.getMediaFilesForBlog(blogId);
+    }
+
+    /**
+     * Given a media file cursor, returns the thumbnail network URL. Will use photon if available, using the specified
+     * width.
+     * @param cursor the media file cursor
+     * @param width width to use for photon request (if applicable)
+     */
+    public static String getNetworkThumbnailUrl(Cursor cursor, int width) {
+        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
+
+        // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
+        if ((WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable())) {
+            String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
+            if (imageURL != null) {
+                thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, width, 0);
+            }
+        }
+
+        return thumbnailURL;
+    }
+
+    /**
+     * Loads the given network image URL into the {@link NetworkImageView}, using the default {@link ImageLoader}.
+     */
+    public static void loadNetworkImage(String imageUrl, NetworkImageView imageView) {
+        loadNetworkImage(imageUrl, imageView, WordPress.imageLoader);
+    }
+
+    /**
+     * Loads the given network image URL into the {@link NetworkImageView}.
+     */
+    public static void loadNetworkImage(String imageUrl, NetworkImageView imageView, ImageLoader imageLoader) {
+        if (imageUrl != null) {
+            Uri uri = Uri.parse(imageUrl);
+            String filepath = uri.getLastPathSegment();
+
+            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
+            imageView.setImageResource(0);
+            imageView.setErrorImageResId(placeholderResId);
+
+            // no default image while downloading
+            imageView.setDefaultImageResId(0);
+
+            if (MediaUtils.isValidImage(filepath)) {
+                imageView.setTag(imageUrl);
+                imageView.setImageUrl(imageUrl, imageLoader);
+            } else {
+                imageView.setImageResource(placeholderResId);
+            }
+        } else {
+            imageView.setImageResource(0);
+        }
     }
 }

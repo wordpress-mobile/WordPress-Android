@@ -30,6 +30,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected boolean mFeaturedImageSupported;
+    protected int mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
@@ -78,6 +79,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
         mBlogSettingMaxImageWidth = blogSettingMaxImageWidth;
     }
 
+    public void setFeaturedImageId(int featuredImageId) {
+        mFeaturedImageId = featuredImageId;
+    }
+
     public void setDebugModeEnabled(boolean debugModeEnabled) {
         mDebugModeEnabled = debugModeEnabled;
     }
@@ -107,8 +112,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddMediaClicked();
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
-        // TODO: remove saveMediaFile, it's currently needed for the legacy editor - we should have something like
-        // "EditorFragmentAbstract.getFeaturedImage()" returning the remote id
+        void onFeaturedImageChanged(int mediaId);
+        // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
     }
 }

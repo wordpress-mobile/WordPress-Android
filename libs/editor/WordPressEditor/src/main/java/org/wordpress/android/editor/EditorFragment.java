@@ -30,8 +30,10 @@ import android.widget.ToggleButton;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -536,6 +538,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
 
             final String imageMeta = extras.getString("imageMeta");
+            final int imageRemoteId = extras.getInt("imageRemoteId");
+            final boolean isFeaturedImage = extras.getBoolean("isFeatured");
 
             mWebView.post(new Runnable() {
                 @Override
@@ -543,6 +547,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     mWebView.execJavaScriptFromString("ZSSEditor.updateCurrentImageMeta('" + imageMeta + "');");
                 }
             });
+
+            if (imageRemoteId != 0) {
+                if (isFeaturedImage) {
+                    mFeaturedImageId = imageRemoteId;
+                    mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                } else {
+                    // If this image was unset as featured, clear the featured image id
+                    if (mFeaturedImageId == imageRemoteId) {
+                        mFeaturedImageId = 0;
+                        mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                    }
+                }
+            }
         }
     }
 
@@ -676,7 +693,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             @Override
             public void run() {
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
-                    mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "');");
+                    String mediaId = mediaFile.getMediaId();
+                    mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "', '" + mediaId + "');");
                 } else {
                     String id = mediaFile.getMediaId();
                     mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl + "');");
@@ -713,12 +731,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onMediaUploadSucceeded(final String mediaId, final String remoteUrl) {
+    public void onMediaUploadSucceeded(final String mediaId, final String remoteId, final String remoteUrl) {
         mWebView.post(new Runnable() {
             @Override
             public void run() {
                 mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + mediaId + ", '" +
-                        remoteUrl + "');");
+                        remoteId + "', '" + remoteUrl + "');");
                 mUploadingMediaIds.remove(mediaId);
             }
         });
@@ -814,7 +832,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
-    public void onMediaTapped(final String mediaId, String url, final String meta, String uploadStatus) {
+    public void onMediaTapped(final String mediaId, String url, final JSONObject meta, String uploadStatus) {
         switch (uploadStatus) {
             case "uploading":
                 // Display 'cancel upload' dialog
@@ -872,8 +890,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 Bundle dialogBundle = new Bundle();
 
-                dialogBundle.putString("imageMeta", meta);
+                dialogBundle.putString("imageMeta", meta.toString());
                 dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
+                dialogBundle.putBoolean("featuredImageSupported", mFeaturedImageSupported);
+
+                String imageId = JSONUtils.getString(meta, "attachment_id");
+                if (!imageId.isEmpty()) {
+                    dialogBundle.putBoolean("isFeatured", mFeaturedImageId == Integer.parseInt(imageId));
+                }
 
                 imageSettingsDialogFragment.setArguments(dialogBundle);
 

@@ -554,6 +554,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return false;
             }
             if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+                if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
+                    mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
+                    mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
+                }
                 mViewPager.setCurrentItem(PAGE_CONTENT);
                 invalidateOptionsMenu();
             } else {
@@ -593,6 +597,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
 
             PostUploadService.addPostToUpload(mPost);
+            PostUploadService.setLegacyMode(!mShowNewEditor);
             startService(new Intent(this, PostUploadService.class));
             setResult(RESULT_OK);
             finish();
@@ -602,6 +607,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else if (itemId == R.id.menu_post_settings) {
             InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+            if (mShowNewEditor) {
+                mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
+            }
             mViewPager.setCurrentItem(PAGE_SETTINGS);
         }
         return false;
@@ -730,6 +738,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 updatePostContent(isAutosave);
             }
         }
+
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updatePostSettings();
         }
@@ -748,6 +757,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onBackPressed() {
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+            if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
+                mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
+                mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
+            }
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
             return;
@@ -1001,6 +1014,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             mEditorFragment.setLocalDraft(post.isLocalDraft());
+
+            mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
         }
 
         // Special actions
@@ -1657,7 +1672,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @SuppressWarnings("unused")
     public void onEventMainThread(MediaUploadEvents.MediaUploadSucceeded event) {
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalId, event.mRemoteUrl);
+            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalId, event.mRemoteId, event.mRemoteUrl);
         }
 
         for (Long galleryId : mPendingGalleryUploads.keySet()) {
@@ -1876,6 +1891,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaUploadService != null) {
             mediaUploadService.cancelUpload(mediaId, delete);
         }
+    }
+
+    @Override
+    public void onFeaturedImageChanged(int mediaId) {
+        mPost.setFeaturedImageId(mediaId);
+        mEditPostSettingsFragment.updateFeaturedImage(mediaId);
     }
 
     @Override
