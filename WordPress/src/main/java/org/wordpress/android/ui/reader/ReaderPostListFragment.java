@@ -1051,9 +1051,7 @@ public class ReaderPostListFragment extends Fragment
     private void trackTagLoaded(ReaderTag tag) {
         AnalyticsTracker.Stat stat = null;
 
-        if (tag.isFreshlyPressed()) {
-            stat = AnalyticsTracker.Stat.READER_FRESHLY_PRESSED_LOADED;
-        } else if (tag.isTagTopic()) {
+        if (tag.isTagTopic()) {
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
