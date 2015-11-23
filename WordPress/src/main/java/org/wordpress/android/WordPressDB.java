@@ -1944,9 +1944,9 @@ public class WordPressDB {
     }
 
     /*
-     * This is a stub method. Once implemented it'll retrive a person object for the provided local id
+     * This is a stub method. Once implemented it'll retrieve a person object for the provided person id
      */
-    public Person getPersonForLocalTablePostId(long localTablePersonId) {
+    public Person getPersonForPersonId(long personId) {
         return new Person(4, "oguzkocer", "Oguz", "Kocer", "Oguz", "http://lorempixum.com/76/76", Role.EDITOR);
     }
 }

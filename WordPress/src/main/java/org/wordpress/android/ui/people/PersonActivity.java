@@ -16,15 +16,15 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PersonActivity extends AppCompatActivity {
-    public static final String EXTRA_PERSON_LOCAL_ID = "EXTRA_PERSON_LOCAL_ID";
+    public static final String EXTRA_PERSON_ID = "EXTRA_PERSON_ID";
 
-    private int mLocalTablePersonId;
+    private int mPersonId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLocalTablePersonId = getIntent().getExtras().getInt(EXTRA_PERSON_LOCAL_ID);
+        mPersonId = getIntent().getExtras().getInt(EXTRA_PERSON_ID);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -60,7 +60,7 @@ public class PersonActivity extends AppCompatActivity {
         TextView txtRole = (TextView) findViewById(R.id.person_role);
         TextView txtRemove = (TextView) findViewById(R.id.person_remove);
 
-        Person person = WordPress.wpDB.getPersonForLocalTablePostId(mLocalTablePersonId);
+        Person person = WordPress.wpDB.getPersonForLocalTablePostId(mPersonId);
 
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
