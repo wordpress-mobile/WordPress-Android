@@ -15,8 +15,8 @@ public class ReaderTag implements Serializable {
 
     // these are the default tag names, which aren't localized in the /read/menu/ response
     private static final String TAG_NAME_LIKED = "Posts I Like";
-    private static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
-    private static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
+    private static final String TAG_NAME_DISCOVER = "Discover";
+    private static final String TAG_NAME_DEFAULT = TAG_NAME_DISCOVER;
 
     // as of 15-Sept-2015 this is still "Blogs I Follow" but it will soon be renamed
     // to "Followed Sites"
@@ -134,7 +134,7 @@ public class ReaderTag implements Serializable {
             return false;
         }
         return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWED_SITES)
-                || tagName.equalsIgnoreCase(TAG_NAME_FRESHLY_PRESSED)
+                || tagName.equalsIgnoreCase(TAG_NAME_DISCOVER)
                 || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
     }
 
