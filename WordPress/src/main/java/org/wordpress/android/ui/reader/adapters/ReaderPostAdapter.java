@@ -533,7 +533,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void clear() {
+    public void clear() {
         mPosts.clear();
         notifyDataSetChanged();
     }
