@@ -1099,5 +1099,17 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="theme_web_activity">Theme Web Activity</string>
     <string name="could_not_load_theme">Could not load theme</string>
+    
+    <!--People Management-->
+    <string name="people">People</string>
+    <string name="edit_user">Edit User</string>
+    <string name="role">Role</string>
+    <string name="role_super_admin">Super Admin</string>
+    <string name="role_admin">Admin</string>
+    <string name="role_editor">Editor</string>
+    <string name="role_author">Author</string>
+    <string name="role_contributor">Contributor</string>
+    <string name="role_unsupported">Unsupported</string>
+    <string name="remove_user">REMOVE %s</string>
 
 </resources>

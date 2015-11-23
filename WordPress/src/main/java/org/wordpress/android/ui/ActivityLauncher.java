@@ -11,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
@@ -22,6 +23,8 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.people.PeopleManagementActivity;
+import org.wordpress.android.ui.people.PersonActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -100,6 +103,12 @@ public class ActivityLauncher {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
             slideInFromRight(context, intent);
         }
+    }
+
+    public static void viewCurrentBlogPeople(Context context) {
+        Intent intent = new Intent(context, PeopleManagementActivity.class);
+        slideInFromRight(context, intent);
+        // TODO: add -> AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, Blog blog) {
@@ -248,6 +257,12 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void viewPersonDetails(Context context, Person person) {
+        Intent intent = new Intent(context, PersonActivity.class);
+        intent.putExtra(PersonActivity.EXTRA_PERSON_ID, person.personID);
+        slideInFromRight(context, intent);
     }
 
     public static void slideInFromRight(Context context, Intent intent) {

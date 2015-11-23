@@ -186,6 +186,13 @@ public class MySiteFragment extends Fragment
             }
         });
 
+        rootView.findViewById(R.id.row_people).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPeople(getActivity());
+            }
+        });
+
         rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

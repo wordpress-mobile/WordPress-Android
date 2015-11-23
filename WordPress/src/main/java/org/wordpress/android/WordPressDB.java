@@ -19,6 +19,7 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
