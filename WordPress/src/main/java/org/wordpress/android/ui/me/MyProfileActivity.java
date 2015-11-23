@@ -12,8 +12,15 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.widgets.OpenSansEditText;
+import org.wordpress.android.widgets.WPTextView;
 
 public class MyProfileActivity extends AppCompatActivity {
+
+    private WPTextView mFirstName;
+    private WPTextView mLastName;
+    private WPTextView mDisplayName;
+    private WPTextView mAboutMe;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +34,14 @@ public class MyProfileActivity extends AppCompatActivity {
 
         setTitle(R.string.my_profile);
 
-        findViewById(R.id.first_name).setOnClickListener(new View.OnClickListener() {
+        mFirstName = (WPTextView) findViewById(R.id.first_name);
+        mLastName = (WPTextView) findViewById(R.id.last_name);
+        mDisplayName = (WPTextView) findViewById(R.id.display_name);
+        mAboutMe = (WPTextView) findViewById(R.id.about_me);
+
+        refreshDetails();
+
+        findViewById(R.id.first_name_row).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showInputDialog();
@@ -56,10 +70,14 @@ public class MyProfileActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MyProfileActivity.this);
         alertDialogBuilder.setView(promptView);
 
-        final OpenSansEditText editText = (OpenSansEditText) promptView.findViewById(R.id.edittext);
+        final WPTextView textView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_label);
+        final OpenSansEditText editText = (OpenSansEditText) promptView.findViewById(R.id.my_profile_dialog_input);
+        textView.setText(R.string.first_name);
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        mFirstName.setVisibility(View.VISIBLE);
+                        mFirstName.setText(editText.getText());
                     }
                 })
                 .setNegativeButton(R.string.cancel,
@@ -71,5 +89,13 @@ public class MyProfileActivity extends AppCompatActivity {
 
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
+    }
+
+    private void refreshDetails() {
+        // TODO: check if we have user details and set them, if we don't hide all the labels
+        mFirstName.setVisibility(View.GONE);
+        mLastName.setVisibility(View.GONE);
+        mDisplayName.setVisibility(View.GONE);
+        mAboutMe.setVisibility(View.GONE);
     }
 }

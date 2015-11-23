@@ -7,21 +7,17 @@
     android:padding="@dimen/margin_extra_large">
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/textView"
+        android:id="@+id/my_profile_dialog_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/first_name"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_extra_large"
         android:textStyle="bold"
         app:fontVariation="light" />
 
     <org.wordpress.android.widgets.OpenSansEditText
-        android:id="@+id/edittext"
+        android:id="@+id/my_profile_dialog_input"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp" />
-
-    <!--android:hint="Enter text here.."-->
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
