@@ -180,8 +180,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 prefList.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
                     @Override
                     public void onChildViewAdded(View parent, View child) {
+                        Resources res = getResources();
                         if (child.getId() == android.R.id.title && child instanceof TextView) {
-                            Resources res = getResources();
                             TextView title = (TextView) child;
                             title.setTypeface(TypefaceCache.getTypeface(getActivity(),
                                     TypefaceCache.FAMILY_OPEN_SANS,
@@ -191,6 +191,15 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     res.getDimensionPixelSize(R.dimen.text_sz_medium));
                             title.setTextColor(ContextCompat.getColor(getActivity(),
                                                                       R.color.orange_jazzy));
+                        } else {
+                            Typeface typeface = TypefaceCache.getTypeface(getActivity(),
+                                    TypefaceCache.FAMILY_OPEN_SANS,
+                                    Typeface.NORMAL,
+                                    TypefaceCache.VARIATION_NORMAL);
+                            TextView title = (TextView) child.findViewById(android.R.id.title);
+                            title.setTypeface(typeface);
+                            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
+                            title.setTextColor(res.getColor(title.isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10));
                         }
                     }
 
