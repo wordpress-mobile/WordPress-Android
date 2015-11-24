@@ -105,21 +105,9 @@ public class ReaderPost {
         // parse the author section
         assignAuthorFromJson(post, json.optJSONObject("author"));
 
-        // only freshly-pressed posts have the "editorial" section
-        JSONObject jsonEditorial = json.optJSONObject("editorial");
-        if (jsonEditorial != null) {
-            post.blogId = jsonEditorial.optLong("blog_id");
-            post.blogName = JSONUtils.getStringDecoded(jsonEditorial, "blog_name");
-            post.featuredImage = ReaderImageScanner.getImageUrlFromFPFeaturedImageUrl(
-                    JSONUtils.getString(jsonEditorial, "image"));
-            post.setPrimaryTag(JSONUtils.getString(jsonEditorial, "highlight_topic_title")); //  highlight_topic?
-            // we want freshly-pressed posts to show & store the date they were chosen rather than the day they were published
-            post.published = JSONUtils.getString(jsonEditorial, "displayed_on");
-        } else {
-            post.featuredImage = JSONUtils.getString(json, "featured_image");
-            post.blogName = JSONUtils.getStringDecoded(json, "site_name");
-            post.published = JSONUtils.getString(json, "date");
-        }
+        post.featuredImage = JSONUtils.getString(json, "featured_image");
+        post.blogName = JSONUtils.getStringDecoded(json, "site_name");
+        post.published = JSONUtils.getString(json, "date");
 
         // the date a post was liked is only returned by the read/liked/ endpoint - if this exists,
         // set it as the timestamp so posts are sorted by the date they were liked rather than the
@@ -251,8 +239,7 @@ public class ReaderPost {
             }
         }
 
-        // don't set primary tag if one is already set (may have been set from the editorial
-        // section if this is a Freshly Pressed post)
+        // don't set primary tag if one is already set
         if (!post.hasPrimaryTag()) {
             post.setPrimaryTag(mostPopularTag);
         }
@@ -390,8 +377,7 @@ public class ReaderPost {
         return StringUtils.notNullStr(primaryTag);
     }
     public void setPrimaryTag(String tagName) {
-        // this is a bit of a hack to avoid setting the primary tag to one of the default
-        // tag names ("Freshly Pressed", etc.)
+        // this is a bit of a hack to avoid setting the primary tag to a default tag name
         if (!ReaderTag.isDefaultTagName(tagName)) {
             this.primaryTag = StringUtils.notNullStr(tagName);
         }
