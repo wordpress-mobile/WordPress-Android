@@ -21,7 +21,7 @@ import de.greenrobot.event.EventBus;
  * Activity for configuring blog specific settings.
  */
 public class BlogPreferencesActivity extends AppCompatActivity {
-    public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
+    public static final String ARG_LOCAL_BLOG_ID = SiteSettingsFragment.ARG_LOCAL_BLOG_ID;
     public static final int RESULT_BLOG_REMOVED = RESULT_FIRST_USER;
 
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_items"
+        android:textColor="@color/grey_lighten_10"
+        android:textSize="@dimen/text_sz_large"
+        android:visibility="gone" />
+
+    <org.wordpress.android.ui.prefs.MultiSelectListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/list_editor_footer_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:textColor="@color/grey_darken_10" />
+
+    <!-- this coordinator is only here due to https://code.google.com/p/android/issues/detail?id=175330 -->
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:src="@drawable/ic_add_white_24dp"
+            app:borderWidth="0dp"
+            app:rippleColor="@color/fab_pressed" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>

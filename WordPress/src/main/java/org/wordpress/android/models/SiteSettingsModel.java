@@ -4,7 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,27 +34,53 @@ public class SiteSettingsModel {
     public static final String POST_FORMATS_COLUMN_NAME = "postFormats";
     public static final String CREDS_VERIFIED_COLUMN_NAME = "credsVerified";
     public static final String RELATED_POSTS_COLUMN_NAME = "relatedPosts";
+    public static final String ALLOW_COMMENTS_COLUMN_NAME = "allowComments";
+    public static final String SEND_PINGBACKS_COLUMN_NAME = "sendPingbacks";
+    public static final String RECEIVE_PINGBACKS_COLUMN_NAME = "receivePingbacks";
+    public static final String CLOSE_AFTER_COLUMN_NAME = "closeAfter";
+    public static final String SORT_BY_COLUMN_NAME = "sortBy";
+    public static final String THREADING_COLUMN_NAME = "threading";
+    public static final String PAGING_COLUMN_NAME = "paging";
+    public static final String MANUAL_APPROVAL_COLUMN_NAME = "manualApproval";
+    public static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
+    public static final String USER_ACCOUNT_REQUIRED_COLUMN_NAME = "userAccountRequired";
+    public static final String WHITELIST_COLUMN_NAME = "whitelist";
+    public static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
+    public static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
                     SETTINGS_TABLE_NAME +
                     " (" +
-                    SiteSettingsModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-                    SiteSettingsModel.ADDRESS_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.USERNAME_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.PASSWORD_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.TITLE_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.TAGLINE_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.LANGUAGE_COLUMN_NAME + " INTEGER, " +
-                    SiteSettingsModel.PRIVACY_COLUMN_NAME + " INTEGER, " +
-                    SiteSettingsModel.LOCATION_COLUMN_NAME + " BOOLEAN, " +
-                    SiteSettingsModel.DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.CATEGORIES_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.POST_FORMATS_COLUMN_NAME + " TEXT, " +
-                    SiteSettingsModel.CREDS_VERIFIED_COLUMN_NAME + " BOOLEAN, " +
-                    SiteSettingsModel.RELATED_POSTS_COLUMN_NAME + " INTEGER" +
+                    ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
+                    ADDRESS_COLUMN_NAME + " TEXT, " +
+                    USERNAME_COLUMN_NAME + " TEXT, " +
+                    PASSWORD_COLUMN_NAME + " TEXT, " +
+                    TITLE_COLUMN_NAME + " TEXT, " +
+                    TAGLINE_COLUMN_NAME + " TEXT, " +
+                    LANGUAGE_COLUMN_NAME + " INTEGER, " +
+                    PRIVACY_COLUMN_NAME + " INTEGER, " +
+                    LOCATION_COLUMN_NAME + " BOOLEAN, " +
+                    DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
+                    DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
+                    CATEGORIES_COLUMN_NAME + " TEXT, " +
+                    POST_FORMATS_COLUMN_NAME + " TEXT, " +
+                    CREDS_VERIFIED_COLUMN_NAME + " BOOLEAN, " +
+                    RELATED_POSTS_COLUMN_NAME + " INTEGER, " +
+                    ALLOW_COMMENTS_COLUMN_NAME + " BOOLEAN, " +
+                    SEND_PINGBACKS_COLUMN_NAME + " BOOLEAN, " +
+                    RECEIVE_PINGBACKS_COLUMN_NAME + " BOOLEAN, " +
+                    CLOSE_AFTER_COLUMN_NAME + " INTEGER, " +
+                    SORT_BY_COLUMN_NAME + " INTEGER, " +
+                    THREADING_COLUMN_NAME + " INTEGER, " +
+                    PAGING_COLUMN_NAME + " INTEGER, " +
+                    MANUAL_APPROVAL_COLUMN_NAME + " BOOLEAN, " +
+                    IDENTITY_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
+                    USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
+                    WHITELIST_COLUMN_NAME + " BOOLEAN, " +
+                    MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
+                    BLACKLIST_KEYS_COLUMN_NAME + " TEXT" +
                     ");";
 
     public boolean isInLocalTable;
@@ -74,6 +103,20 @@ public class SiteSettingsModel {
     public boolean showRelatedPosts;
     public boolean showRelatedPostHeader;
     public boolean showRelatedPostImages;
+    public boolean allowComments;
+    public boolean sendPingbacks;
+    public boolean receivePingbacks;
+    public int closeCommentAfter;
+    public int sortCommentsBy;
+    public int threadingLevels;
+    public int commentsPerPage;
+    public boolean commentApprovalRequired;
+    public boolean commentsRequireIdentity;
+    public boolean commentsRequireUserAccount;
+    public boolean commentAutoApprovalKnownUsers;
+    public int maxLinks;
+    public List<String> holdForModeration;
+    public List<String> blacklist;
 
     @Override
     public boolean equals(Object other) {
@@ -93,7 +136,21 @@ public class SiteSettingsModel {
                 defaultCategory == otherModel.defaultCategory &&
                 showRelatedPosts == otherModel.showRelatedPosts &&
                 showRelatedPostHeader == otherModel.showRelatedPostHeader &&
-                showRelatedPostImages == otherModel.showRelatedPostImages;
+                showRelatedPostImages == otherModel.showRelatedPostImages &&
+                allowComments == otherModel.allowComments &&
+                sendPingbacks == otherModel.sendPingbacks &&
+                receivePingbacks == otherModel.receivePingbacks &&
+                closeCommentAfter == otherModel.closeCommentAfter &&
+                sortCommentsBy == otherModel.sortCommentsBy &&
+                threadingLevels == otherModel.threadingLevels &&
+                commentsPerPage == otherModel.commentsPerPage &&
+                commentApprovalRequired == otherModel.commentApprovalRequired &&
+                commentsRequireIdentity == otherModel.commentsRequireIdentity &&
+                commentsRequireUserAccount == otherModel.commentsRequireUserAccount &&
+                commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
+                maxLinks == otherModel.maxLinks &&
+                holdForModeration != null && holdForModeration.equals(otherModel.holdForModeration) &&
+                blacklist != null && blacklist.equals(otherModel.blacklist);
     }
 
     /**
@@ -121,6 +178,20 @@ public class SiteSettingsModel {
         showRelatedPosts = other.showRelatedPosts;
         showRelatedPostHeader = other.showRelatedPostHeader;
         showRelatedPostImages = other.showRelatedPostImages;
+        allowComments = other.allowComments;
+        sendPingbacks = other.sendPingbacks;
+        receivePingbacks = other.receivePingbacks;
+        closeCommentAfter = other.closeCommentAfter;
+        sortCommentsBy = other.sortCommentsBy;
+        threadingLevels = other.threadingLevels;
+        commentsPerPage = other.commentsPerPage;
+        commentApprovalRequired = other.commentApprovalRequired;
+        commentsRequireIdentity = other.commentsRequireIdentity;
+        commentsRequireUserAccount = other.commentsRequireUserAccount;
+        commentAutoApprovalKnownUsers = other.commentAutoApprovalKnownUsers;
+        maxLinks = other.maxLinks;
+        holdForModeration = new ArrayList<>(other.holdForModeration);
+        blacklist = new ArrayList<>(other.blacklist);
     }
 
     /**
@@ -141,6 +212,24 @@ public class SiteSettingsModel {
         defaultPostFormat = getStringFromCursor(cursor, DEF_POST_FORMAT_COLUMN_NAME);
         location = getBooleanFromCursor(cursor, LOCATION_COLUMN_NAME);
         hasVerifiedCredentials = getBooleanFromCursor(cursor, CREDS_VERIFIED_COLUMN_NAME);
+        allowComments = getBooleanFromCursor(cursor, ALLOW_COMMENTS_COLUMN_NAME);
+        sendPingbacks = getBooleanFromCursor(cursor, SEND_PINGBACKS_COLUMN_NAME);
+        receivePingbacks = getBooleanFromCursor(cursor, RECEIVE_PINGBACKS_COLUMN_NAME);
+        closeCommentAfter = getIntFromCursor(cursor, CLOSE_AFTER_COLUMN_NAME);
+        sortCommentsBy = getIntFromCursor(cursor, SORT_BY_COLUMN_NAME);
+        threadingLevels = getIntFromCursor(cursor, THREADING_COLUMN_NAME);
+        commentsPerPage = getIntFromCursor(cursor, PAGING_COLUMN_NAME);
+        commentApprovalRequired = getBooleanFromCursor(cursor, MANUAL_APPROVAL_COLUMN_NAME);
+        commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
+        commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
+        commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
+
+        String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
+        String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
+        holdForModeration = new ArrayList<>();
+        blacklist = new ArrayList<>();
+        Collections.addAll(holdForModeration, moderationKeys.split("\n"));
+        Collections.addAll(blacklist, blacklistKeys.split("\n"));
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
@@ -191,6 +280,32 @@ public class SiteSettingsModel {
         values.put(POST_FORMATS_COLUMN_NAME, postFormatList(postFormats));
         values.put(CREDS_VERIFIED_COLUMN_NAME, hasVerifiedCredentials);
         values.put(RELATED_POSTS_COLUMN_NAME, getRelatedPostsFlags());
+        values.put(ALLOW_COMMENTS_COLUMN_NAME, allowComments);
+        values.put(SEND_PINGBACKS_COLUMN_NAME, sendPingbacks);
+        values.put(RECEIVE_PINGBACKS_COLUMN_NAME, receivePingbacks);
+        values.put(CLOSE_AFTER_COLUMN_NAME, closeCommentAfter);
+        values.put(SORT_BY_COLUMN_NAME, sortCommentsBy);
+        values.put(THREADING_COLUMN_NAME, threadingLevels);
+        values.put(PAGING_COLUMN_NAME, commentsPerPage);
+        values.put(MANUAL_APPROVAL_COLUMN_NAME, commentApprovalRequired);
+        values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
+        values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
+        values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
+
+        String moderationKeys = "";
+        if (holdForModeration != null) {
+            for (String key : holdForModeration) {
+                moderationKeys += key + "\n";
+            }
+        }
+        String blacklistKeys = "";
+        if (blacklist != null) {
+            for (String key : blacklist) {
+                blacklistKeys += key + "\n";
+            }
+        }
+        values.put(MODERATION_KEYS_COLUMN_NAME, moderationKeys);
+        values.put(BLACKLIST_KEYS_COLUMN_NAME, blacklistKeys);
 
         return values;
     }

@@ -31,7 +31,7 @@ public class DetailListPreference extends ListPreference
         implements PreferenceHint {
     private DetailListAdapter mListAdapter;
     private String[] mDetails;
-    private int mStartingIndex;
+    private String mStartingValue;
     private int mSelectedIndex;
     private String mHint;
     private AlertDialog mDialog;
@@ -56,7 +56,7 @@ public class DetailListPreference extends ListPreference
 
         array.recycle();
 
-        mStartingIndex = mSelectedIndex = 0;
+        mSelectedIndex = -1;
     }
 
     @Override
@@ -80,11 +80,12 @@ public class DetailListPreference extends ListPreference
         builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
 
         if (mDetails == null) {
-            mDetails = new String[getEntries().length];
+            mDetails = new String[getEntries() == null ? 1 : getEntries().length];
         }
 
         mListAdapter = new DetailListAdapter(getContext(), R.layout.detail_list_preference, mDetails);
-        mStartingIndex = mSelectedIndex = Math.max(0, findIndexOfValue(getValue()));
+        mStartingValue = getValue();
+        mSelectedIndex = findIndexOfValue(mStartingValue);
 
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
                 new DialogInterface.OnClickListener() {
@@ -130,16 +131,19 @@ public class DetailListPreference extends ListPreference
         if (listView != null) {
             listView.setDividerHeight(0);
             listView.setClipToPadding(true);
+            //noinspection deprecation
             listView.setBackgroundColor(res.getColor(R.color.grey_lighten_30));
             listView.setPadding(0, 0, 0, res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         }
 
         if (positive != null) {
+            //noinspection deprecation
             positive.setTextColor(res.getColor(R.color.blue_medium));
             positive.setTypeface(typeface);
         }
 
         if (negative != null) {
+            //noinspection deprecation
             negative.setTextColor(res.getColor(R.color.blue_medium));
             negative.setTypeface(typeface);
         }
@@ -158,10 +162,13 @@ public class DetailListPreference extends ListPreference
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
+        int index = positiveResult ? mSelectedIndex : findIndexOfValue(mStartingValue);
         CharSequence[] values = getEntryValues();
-        if (values != null && mSelectedIndex < values.length && mSelectedIndex >= 0) {
-            String value = values[positiveResult ? mSelectedIndex : mStartingIndex].toString();
+        if (values != null && index >= 0 && index < values.length) {
+            String value = String.valueOf(values[index]);
             callChangeListener(value);
+        } else {
+            callChangeListener(mStartingValue);
         }
     }
 
@@ -204,6 +211,7 @@ public class DetailListPreference extends ListPreference
 
             view.setTypeface(typeface);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
+            //noinspection deprecation
             view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
         }
     }

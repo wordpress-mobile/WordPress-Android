@@ -37,17 +37,22 @@ public class WPPreference extends Preference implements PreferenceHint {
     protected void onBindView(@NonNull View view) {
         super.onBindView(view);
 
+        Resources res = getContext().getResources();
+        Typeface typeface = TypefaceCache.getTypeface(getContext(),
+                TypefaceCache.FAMILY_OPEN_SANS,
+                Typeface.NORMAL,
+                TypefaceCache.VARIATION_NORMAL);
         TextView titleView = (TextView) view.findViewById(android.R.id.title);
+        TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
         if (titleView != null) {
-            Resources res = getContext().getResources();
-            Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_OPEN_SANS,
-                    Typeface.NORMAL,
-                    TypefaceCache.VARIATION_NORMAL);
-
             titleView.setTypeface(typeface);
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
             titleView.setTextColor(res.getColor(isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10));
+        }
+        if (summaryView != null) {
+            summaryView.setTypeface(typeface);
+            summaryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_medium));
+            summaryView.setTextColor(res.getColor(isEnabled() ? R.color.grey_darken_10 : R.color.grey_lighten_10));
         }
     }
 

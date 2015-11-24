@@ -16,7 +16,9 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -41,6 +43,9 @@ public abstract class SiteSettingsInterface {
     public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
     public static final String DEF_CATEGORY_PREF_KEY = "site-settings-category-pref";
     public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
+
+    public static final int ASCENDING_SORT = 0;
+    public static final int DESCENDING_SORT = 1;
 
     private static final String STANDARD_POST_FORMAT = "standard";
 
@@ -167,19 +172,6 @@ public abstract class SiteSettingsInterface {
         return mSettings.privacy;
     }
 
-    public String getPrivacyForDisplay() {
-        switch (mSettings.privacy) {
-            case -1:
-                return mActivity.getString(R.string.privacy_private);
-            case 0:
-                return mActivity.getString(R.string.privacy_hidden);
-            case 1:
-                return mActivity.getString(R.string.privacy_public);
-            default:
-                return "";
-        }
-    }
-
     public String getLanguageCode() {
         return mSettings.language;
     }
@@ -291,6 +283,120 @@ public abstract class SiteSettingsInterface {
 
     public void setLocation(boolean location) {
         mSettings.location = location;
+    }
+
+    public void setAllowComments(boolean allowComments) {
+        mSettings.allowComments = allowComments;
+    }
+
+    public boolean getAllowComments() {
+        return mSettings.allowComments;
+    }
+
+    public void setSendPingbacks(boolean sendPingbacks) {
+        mSettings.sendPingbacks = sendPingbacks;
+    }
+
+    public boolean getSendPingbacks() {
+        return mSettings.sendPingbacks;
+    }
+
+    public void setReceivePingbacks(boolean receivePingbacks) {
+        mSettings.receivePingbacks = receivePingbacks;
+    }
+
+    public boolean getReceivePingbacks() {
+        return mSettings.receivePingbacks;
+    }
+
+    public void setCloseAfter(int period) {
+        mSettings.closeCommentAfter = period;
+    }
+
+    public int getCloseAfter() {
+        return mSettings.closeCommentAfter;
+    }
+
+    public void setCommentSorting(int method) {
+        mSettings.sortCommentsBy = method;
+    }
+
+    public int getCommentSorting() {
+        return mSettings.sortCommentsBy;
+    }
+
+    public void setThreadingLevels(int levels) {
+        mSettings.threadingLevels = levels;
+    }
+
+    public int getThreadingLevels() {
+        return mSettings.threadingLevels;
+    }
+
+    public void setPagingCount(int count) {
+        mSettings.commentsPerPage = count;
+    }
+
+    public int getPagingCount() {
+        return mSettings.commentsPerPage;
+    }
+
+    public void setManualApproval(boolean required) {
+        mSettings.commentApprovalRequired = required;
+    }
+
+    public boolean getManualApproval() {
+        return mSettings.commentApprovalRequired;
+    }
+
+    public void setIdentityRequired(boolean required) {
+        mSettings.commentsRequireIdentity = required;
+    }
+
+    public boolean getIdentityRequired() {
+        return mSettings.commentsRequireIdentity;
+    }
+
+    public void setUserAccountRequired(boolean required) {
+        mSettings.commentsRequireUserAccount = required;
+    }
+
+    public boolean getUserAccountRequired() {
+        return mSettings.commentsRequireUserAccount;
+    }
+
+    public void setUseCommentWhitelist(boolean useWhitelist) {
+        mSettings.commentAutoApprovalKnownUsers = useWhitelist;
+    }
+
+    public boolean getUseCommentWhitelist() {
+        return mSettings.commentAutoApprovalKnownUsers;
+    }
+
+    public void setMultipleLinks(int count) {
+        mSettings.maxLinks = count;
+    }
+
+    public int getMultipleLinks() {
+        return mSettings.maxLinks;
+    }
+
+    public void setModerationKeys(List<String> keys) {
+        mSettings.holdForModeration = keys;
+    }
+
+    public List<String> getModerationKeys() {
+        if (mSettings.holdForModeration == null) return new ArrayList<>();
+        return mSettings.holdForModeration;
+    }
+
+    public void setBlacklistKeys(List<String> keys) {
+        mSettings.blacklist = keys;
+    }
+
+    public List<String> getBlacklistKeys() {
+        if (mSettings.blacklist == null) return new ArrayList<>();
+        return mSettings.blacklist;
     }
 
     public void setDefaultCategory(int category) {
