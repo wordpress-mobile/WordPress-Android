@@ -145,7 +145,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onDestroy();
 
         // Assume user wanted changes propagated when they leave
-        if (!mBlogDeleted) {
+        if (!mBlogDeleted && mSiteSettings != null) {
             mSiteSettings.saveSettings();
         }
     }
