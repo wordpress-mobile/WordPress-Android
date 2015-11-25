@@ -27,7 +27,7 @@
 
     <style name="Calypso.ActionMode" parent="CalypsoTheme">
         <item name="colorPrimaryDark">@color/grey_darken_10</item>
-        <item name="android:statusBarColor">@color/grey_darken_10</item>
+        <!--<item name="statusBarColor">@color/grey_darken_10</item>-->
         <item name="android:background">@color/grey_darken_10</item>
         <item name="android:titleTextStyle">@style/Calypso.ActionMode.Text</item>
         <item name="android:subtitleTextStyle">@style/Calypso.ActionMode.Text</item>
