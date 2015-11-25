@@ -1,6 +1,7 @@
 
 package org.wordpress.android;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -87,6 +88,7 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
+
         String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
         if (title == null) {
             title = getString(R.string.app_name);
@@ -152,26 +154,28 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        // Bump Analytics
-        Map<String, Object> properties = new HashMap<>();
-        if (!TextUtils.isEmpty(noteType)) {
-            // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
-            if (noteType.equals(PUSH_TYPE_COMMENT)) {
-                properties.put("notification_type", "comment");
-            } else {
-                properties.put("notification_type", noteType);
+        // Bump Analytics only if "Show notifications" setting is checked.
+        if (NotificationsUtils.isNotificationsEnabled(this)) {
+            Map<String, Object> properties = new HashMap<>();
+            if (!TextUtils.isEmpty(noteType)) {
+                // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
+                if (noteType.equals(PUSH_TYPE_COMMENT)) {
+                    properties.put("notification_type", "comment");
+                } else {
+                    properties.put("notification_type", noteType);
+                }
             }
-        }
 
-        // Add to analytics properties only a subset of the push notification payload
-        String[] propertiesToCopy = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id" };
-        for (String currentPropertyToCopy: propertiesToCopy) {
-            if (data.containsKey(currentPropertyToCopy)) {
-                properties.put("push_notification_" + currentPropertyToCopy,  data.get(currentPropertyToCopy));
+            // Add to analytics properties only a subset of the push notification payload
+            String[] propertiesToCopy = {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id"};
+            for (String currentPropertyToCopy : propertiesToCopy) {
+                if (data.containsKey(currentPropertyToCopy)) {
+                    properties.put("push_notification_" + currentPropertyToCopy, data.get(currentPropertyToCopy));
+                }
             }
+            AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
+            AnalyticsTracker.flush();
         }
-        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
-        AnalyticsTracker.flush();
 
         NotificationCompat.Builder builder;
 
@@ -427,6 +431,8 @@ public class GCMMessageService extends GcmListenerService {
     public static void removeAllNotifications(Context context) {
         if (context == null || !hasNotifications()) return;
 
+        bumpPushNotificationsTappedAllAnalytics();
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         for (Integer pushId : mActiveNotificationsMap.keySet()) {
             notificationManager.cancel(pushId);
@@ -479,6 +485,9 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle) {
+        if (!NotificationsUtils.isNotificationsEnabled(WordPress.getContext())) {
+            return;
+        }
         String notificationID = noteBundle.getString(PUSH_ARG_NOTE_ID, "");
         if (!TextUtils.isEmpty(notificationID)) {
             Map<String, Object> properties = new HashMap<>();
