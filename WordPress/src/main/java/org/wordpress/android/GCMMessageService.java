@@ -1,7 +1,6 @@
 
 package org.wordpress.android;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -438,7 +437,7 @@ public class GCMMessageService extends GcmListenerService {
         clearNotifications();
     }
 
-    public static void bumpPushNotificationsDismissedAnalytics() {
+    public static void bumpPushNotificationsDismissedAllAnalytics() {
         boolean shouldFlush = false;
         for (int id : mActiveNotificationsMap.keySet()) {
             bumpPushNotificationsDismissedAnalytics(id, false);
@@ -452,7 +451,7 @@ public class GCMMessageService extends GcmListenerService {
     public static void bumpPushNotificationsDismissedAnalytics(int notificationId, boolean forceFlush) {
         if (mActiveNotificationsMap.containsKey(notificationId)) {
             Bundle currentNoteBundle = mActiveNotificationsMap.get(notificationId);
-            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_DISMISSED, currentNoteBundle);
+            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_DISMISSED, currentNoteBundle, null);
         }
         if (forceFlush) {
             AnalyticsTracker.flush();
@@ -464,7 +463,7 @@ public class GCMMessageService extends GcmListenerService {
         for (int id : mActiveNotificationsMap.keySet()) {
             Bundle noteBundle = mActiveNotificationsMap.get(id);
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
-                bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle);
+                bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
                 AnalyticsTracker.flush();
                 return;
             }
@@ -475,13 +474,9 @@ public class GCMMessageService extends GcmListenerService {
     public static void bumpPushNotificationsTappedAllAnalytics() {
         for (int id : mActiveNotificationsMap.keySet()) {
             Bundle noteBundle = mActiveNotificationsMap.get(id);
-            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle);
+            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
         }
         AnalyticsTracker.flush();
-    }
-
-    private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle) {
-        bumpPushNotificationsAnalytics(stat, noteBundle, null);
     }
 
     private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle,  Map<String, Object> properties) {
