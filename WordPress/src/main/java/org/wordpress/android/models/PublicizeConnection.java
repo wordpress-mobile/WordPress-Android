@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
@@ -8,7 +9,18 @@ import org.wordpress.android.util.StringUtils;
 
 public class PublicizeConnection {
 
-    public enum ConnectStatus { OK, BROKEN }
+    public enum ConnectStatus {
+        OK {
+            public String toString() {
+                return "ok";
+            }
+        },
+        BROKEN{
+            public String toString() {
+                return "broken";
+            }
+        }
+    }
 
     public int connectionId;
     public int siteId;
@@ -76,6 +88,9 @@ public class PublicizeConnection {
     public void setRefreshUrl(String url) {
         this.mRefreshUrl = StringUtils.notNullStr(url);
     }
+    public boolean hasRefreshUrl() {
+        return !TextUtils.isEmpty(mRefreshUrl);
+    }
 
     public String getExternalProfilePictureUrl() {
         return StringUtils.notNullStr(mExternalProfilePictureUrl);
@@ -90,12 +105,16 @@ public class PublicizeConnection {
     public void setStatus(String status) {
         this.mStatus = StringUtils.notNullStr(status);
     }
+
     public ConnectStatus getStatusEnum() {
-        if (getStatus().equalsIgnoreCase("broken")) {
+        if (getStatus().equalsIgnoreCase(ConnectStatus.BROKEN.toString())) {
             return ConnectStatus.BROKEN;
         } else {
             return ConnectStatus.OK;
         }
+    }
+    public void setStatusEnum(@NonNull ConnectStatus status) {
+        this.mStatus = status.toString();
     }
 
     public boolean isSameAs(PublicizeConnection other) {

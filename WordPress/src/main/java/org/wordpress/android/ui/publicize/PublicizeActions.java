@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.publicize;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -11,6 +12,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.PublicizeConnection;
+import org.wordpress.android.models.PublicizeConnection.ConnectStatus;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted;
 import org.wordpress.android.util.AppLog;
@@ -26,7 +28,10 @@ import de.greenrobot.event.EventBus;
  */
 class PublicizeActions {
 
-    public static void disconnect(final PublicizeConnection connection) {
+    /*
+     * disconnect a currently connected publicize service
+     */
+    public static void disconnect(@NonNull final PublicizeConnection connection) {
         String path = String.format(
                 "sites/%d/publicize-connections/%d/delete", connection.siteId, connection.connectionId);
 
@@ -51,6 +56,38 @@ class PublicizeActions {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
+    /*
+     * disconnect a currently broken publicize service connection
+     */
+    public static void reconnect(@NonNull final PublicizeConnection connection) {
+        if (!connection.hasRefreshUrl()) return;
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                AppLog.d(AppLog.T.SHARING, "reconnect succeeded");
+                EventBus.getDefault().post(new ActionCompleted(true, ConnectAction.RECONNECT));
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.SHARING, volleyError);
+                connection.setStatusEnum(ConnectStatus.BROKEN);
+                PublicizeTable.addOrUpdateConnection(connection);
+                EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.RECONNECT));
+            }
+        };
+
+        // set status to OK immediately - will be restored on failure
+        connection.setStatusEnum(ConnectStatus.OK);
+        PublicizeTable.addOrUpdateConnection(connection);
+        WordPress.getRestClientUtilsV1_1().post(connection.getRefreshUrl(), listener, errorListener);
+    }
+
+    /*
+     * create a new publicize service connection for a specific site
+     */
     public static void connect(int siteId, String serviceId){
         if (TextUtils.isEmpty(serviceId)) {
             AppLog.w(AppLog.T.SHARING, "cannot connect without service");
