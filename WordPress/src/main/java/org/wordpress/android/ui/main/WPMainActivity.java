@@ -238,8 +238,12 @@ public class WPMainActivity extends Activity
         if (GCMMessageService.getNotificationsCount() == 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
+                GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
                 NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
             }
+        } else {
+          // mark all tapped here
+            GCMMessageService.bumpPushNotificationsTappedAllAnalytics();
         }
 
         GCMMessageService.clearNotifications();

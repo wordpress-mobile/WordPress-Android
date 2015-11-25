@@ -153,7 +153,7 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         // Bump Analytics
-        Map<String, String> properties = new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         if (!TextUtils.isEmpty(noteType)) {
             // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
             if (noteType.equals(PUSH_TYPE_COMMENT)) {
@@ -162,7 +162,16 @@ public class GCMMessageService extends GcmListenerService {
                 properties.put("notification_type", noteType);
             }
         }
+
+        // Add to analytics properties only a subset of the push notification payload
+        String[] propertiesToCopy = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id" };
+        for (String currentPropertyToCopy: propertiesToCopy) {
+            if (data.containsKey(currentPropertyToCopy)) {
+                properties.put("push_notification_" + currentPropertyToCopy,  data.get(currentPropertyToCopy));
+            }
+        }
         AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
+        AnalyticsTracker.flush();
 
         NotificationCompat.Builder builder;
 
@@ -413,7 +422,8 @@ public class GCMMessageService extends GcmListenerService {
         mActiveNotificationsMap.remove(notificationId);
     }
 
-    // Removes all app notifications from the system bar
+    // Removes all app notifications from the system bar.
+    // This is called when the user access the Notifications screen only
     public static void removeAllNotifications(Context context) {
         if (context == null || !hasNotifications()) return;
 
@@ -424,5 +434,62 @@ public class GCMMessageService extends GcmListenerService {
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
 
         clearNotifications();
+    }
+
+    public static void bumpPushNotificationsDismissedAnalytics() {
+        boolean shouldFlush = false;
+        for (int id : mActiveNotificationsMap.keySet()) {
+            bumpPushNotificationsDismissedAnalytics(id, false);
+            shouldFlush = true;
+        }
+        if (shouldFlush) {
+            AnalyticsTracker.flush();
+        }
+    }
+
+    public static void bumpPushNotificationsDismissedAnalytics(int notificationId, boolean forceFlush) {
+        if (mActiveNotificationsMap.containsKey(notificationId)) {
+            Bundle currentNoteBundle = mActiveNotificationsMap.get(notificationId);
+            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_DISMISSED, currentNoteBundle);
+        }
+        if (forceFlush) {
+            AnalyticsTracker.flush();
+        }
+    }
+
+    //NoteID is the ID if the note in WordPress
+    public static void bumpPushNotificationsTappedAnalytics(String noteID) {
+        for (int id : mActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = mActiveNotificationsMap.get(id);
+            if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
+                bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle);
+                AnalyticsTracker.flush();
+                return;
+            }
+        }
+    }
+
+    // Mark all notifications as tapped
+    public static void bumpPushNotificationsTappedAllAnalytics() {
+        for (int id : mActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = mActiveNotificationsMap.get(id);
+            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle);
+        }
+        AnalyticsTracker.flush();
+    }
+
+    private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle) {
+        String notificationID = noteBundle.getString(PUSH_ARG_NOTE_ID, "");
+        if (!TextUtils.isEmpty(notificationID)) {
+            Map<String, Object> properties = new HashMap<>();
+            // Add to analytics properties only a subset of the push notification payload
+            String[] propertiesToCopy = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id" };
+            for (String currentPropertyToCopy: propertiesToCopy) {
+                if (noteBundle.containsKey(currentPropertyToCopy)) {
+                    properties.put("push_notification_" + currentPropertyToCopy,  noteBundle.get(currentPropertyToCopy));
+                }
+            }
+            AnalyticsTracker.track(stat, properties);
+        }
     }
 }
