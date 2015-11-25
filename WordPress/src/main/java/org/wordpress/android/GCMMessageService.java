@@ -68,6 +68,9 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
 
+    // Add to the analytics properties map a subset of the push notification payload.
+    private static String[] propertiesToCopyIntoAnalytics = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id" };
+
     private void handleDefaultPush(String from, Bundle data) {
         // Ensure Simperium is running so that notes sync
         SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
@@ -154,7 +157,7 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        // Bump Analytics only if "Show notifications" setting is checked.
+        // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
         if (NotificationsUtils.isNotificationsEnabled(this)) {
             Map<String, Object> properties = new HashMap<>();
             if (!TextUtils.isEmpty(noteType)) {
@@ -166,14 +169,7 @@ public class GCMMessageService extends GcmListenerService {
                 }
             }
 
-            // Add to analytics properties only a subset of the push notification payload
-            String[] propertiesToCopy = {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id"};
-            for (String currentPropertyToCopy : propertiesToCopy) {
-                if (data.containsKey(currentPropertyToCopy)) {
-                    properties.put("push_notification_" + currentPropertyToCopy, data.get(currentPropertyToCopy));
-                }
-            }
-            AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
+            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_RECEIVED, data, properties);
             AnalyticsTracker.flush();
         }
 
@@ -485,15 +481,21 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle) {
+        bumpPushNotificationsAnalytics(stat, noteBundle, null);
+    }
+
+    private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle,  Map<String, Object> properties) {
+        // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
         if (!NotificationsUtils.isNotificationsEnabled(WordPress.getContext())) {
             return;
         }
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+
         String notificationID = noteBundle.getString(PUSH_ARG_NOTE_ID, "");
         if (!TextUtils.isEmpty(notificationID)) {
-            Map<String, Object> properties = new HashMap<>();
-            // Add to analytics properties only a subset of the push notification payload
-            String[] propertiesToCopy = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id" };
-            for (String currentPropertyToCopy: propertiesToCopy) {
+            for (String currentPropertyToCopy: propertiesToCopyIntoAnalytics) {
                 if (noteBundle.containsKey(currentPropertyToCopy)) {
                     properties.put("push_notification_" + currentPropertyToCopy,  noteBundle.get(currentPropertyToCopy));
                 }
