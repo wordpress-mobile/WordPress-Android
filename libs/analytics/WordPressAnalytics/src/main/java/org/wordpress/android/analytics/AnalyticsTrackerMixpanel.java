@@ -356,12 +356,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_discover_content_viewed");
                 instructions.setCurrentDateForPeopleProperty("last_time_discover_content_viewed");
                 break;
-            case READER_FRESHLY_PRESSED_LOADED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Loaded Freshly Pressed");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_loaded_freshly_pressed");
-                instructions.setCurrentDateForPeopleProperty("last_time_loaded_freshly_pressed");
-                break;
             case READER_INFINITE_SCROLL:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Infinite Scroll");

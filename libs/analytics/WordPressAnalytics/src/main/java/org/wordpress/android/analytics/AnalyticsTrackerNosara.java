@@ -96,9 +96,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_DISCOVER_VIEWED:
                 eventName = "reader_discover_viewed";
                 break;
-            case READER_FRESHLY_PRESSED_LOADED:
-                eventName = "reader_freshly_pressed_loaded";
-                break;
             case READER_INFINITE_SCROLL:
                 eventName = "reader_infinite_scroll_performed";
                 break;
