@@ -81,22 +81,23 @@ public class WPNetworkImageView extends ImageView {
         mImageType = ImageType.VIDEO;
         mRequestDidFail = false;
 
+        showDefaultImage();
+
         if (TextUtils.isEmpty(videoUrl)) {
-            showDefaultImage();
             return;
         }
 
         // if we already have a cached thumbnail for this video, show it immediately
         String cachedThumbnail = ReaderThumbnailTable.getThumbnailUrl(videoUrl);
         if (!TextUtils.isEmpty(cachedThumbnail)) {
+            AppLog.d(AppLog.T.UTILS, "showing cached video thumbnail");
             setImageUrl(cachedThumbnail, ImageType.VIDEO);
             return;
         }
 
-        showDefaultImage();
-
         // vimeo videos require network request to get thumbnail
         if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
+            AppLog.d(AppLog.T.UTILS, "requesting vimeo thumbnail");
             ReaderVideoUtils.requestVimeoThumbnail(videoUrl, new ReaderVideoUtils.VideoThumbnailListener() {
                 @Override
                 public void onResponse(boolean successful, String thumbnailUrl) {
