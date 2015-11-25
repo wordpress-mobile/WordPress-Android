@@ -154,11 +154,13 @@ public class PublicizeListActivity extends AppCompatActivity
         }
     }
 
-    private void showWebViewFragment(int siteId, PublicizeService service) {
+    private void showWebViewFragment(int siteId,
+                                     PublicizeService service,
+                                     PublicizeConnection connection) {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
-        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(siteId, service);
+        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(siteId, service, connection);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, webViewFragment, tag)
@@ -223,16 +225,15 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestConnect(PublicizeService service) {
-        showWebViewFragment(mSiteId, service);
+        showWebViewFragment(mSiteId, service, null);
     }
 
     /*
      * user requested to reconnect a broken connection from the detail fragment
      */
     @Override
-    public void onRequestReconnect(PublicizeConnection connection) {
-        PublicizeActions.reconnect(connection);
-        returnToListFragment();
+    public void onRequestReconnect(PublicizeService service, PublicizeConnection connection) {
+        showWebViewFragment(mSiteId, service, connection);
     }
 
     /*

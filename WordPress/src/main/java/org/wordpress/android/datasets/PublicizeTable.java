@@ -175,6 +175,12 @@ public class PublicizeTable {
         }
     }
 
+    public static String getRefreshUrlForConnection(int connectionId) {
+        String sql = "SELECT refresh_url FROM " + CONNECTIONS_TABLE + " WHERE id=?";
+        String args[] = {Integer.toString(connectionId)};
+        return SqlUtils.stringForQuery(getReadableDb(), sql, args);
+    }
+
     public static boolean deleteConnection(int connectionId) {
         String args[] = {Integer.toString(connectionId)};
         int numDeleted = getReadableDb().delete(CONNECTIONS_TABLE, "id=?", args);

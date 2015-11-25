@@ -180,6 +180,7 @@ public class PublicizeConnection {
         connection.mExternalDisplayName = json.optString("external_display");
         connection.mExternalProfilePictureUrl = json.optString("external_profile_URL");
         connection.mStatus = json.optString("status");
+        connection.mRefreshUrl = json.optString("refresh_URL");
 
         return connection;
     }

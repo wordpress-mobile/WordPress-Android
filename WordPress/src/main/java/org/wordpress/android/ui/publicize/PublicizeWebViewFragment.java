@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
@@ -30,13 +31,24 @@ public class PublicizeWebViewFragment extends Fragment {
 
     private int mSiteId;
     private String mServiceId;
+    private int mConnectionId;
     private WebView mWebView;
     private ProgressBar mProgress;
 
-    public static PublicizeWebViewFragment newInstance(int siteId, @NonNull PublicizeService service) {
+    /*
+     * returns a new webView fragment to connect to a publicize service - if passed connection
+     * is non-null then we're reconnecting a broken connection, otherwise we're creating a
+     * new connection to the service
+     */
+    public static PublicizeWebViewFragment newInstance(int siteId,
+                                                       @NonNull PublicizeService service,
+                                                       PublicizeConnection connection) {
         Bundle args = new Bundle();
         args.putInt(PublicizeConstants.ARG_SITE_ID, siteId);
         args.putString(PublicizeConstants.ARG_SERVICE_ID, service.getId());
+        if (connection != null) {
+            args.putInt(PublicizeConstants.ARG_CONNECTION_ID, connection.connectionId);
+        }
 
         PublicizeWebViewFragment fragment = new PublicizeWebViewFragment();
         fragment.setArguments(args);
@@ -51,6 +63,7 @@ public class PublicizeWebViewFragment extends Fragment {
         if (args != null) {
             mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
             mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
+            mConnectionId = args.getInt(PublicizeConstants.ARG_CONNECTION_ID);
         }
     }
 
@@ -61,6 +74,7 @@ public class PublicizeWebViewFragment extends Fragment {
         if (savedInstanceState != null) {
             mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
             mServiceId = savedInstanceState.getString(PublicizeConstants.ARG_SERVICE_ID);
+            mConnectionId = savedInstanceState.getInt(PublicizeConstants.ARG_CONNECTION_ID);
         }
     }
 
@@ -69,6 +83,7 @@ public class PublicizeWebViewFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
+        outState.putInt(PublicizeConstants.ARG_CONNECTION_ID, mConnectionId);
         mWebView.saveState(outState);
     }
 
@@ -107,7 +122,13 @@ public class PublicizeWebViewFragment extends Fragment {
     private void loadConnectUrl() {
         if (!isAdded()) return;
 
-        String connectUrl = PublicizeTable.getConnectUrlForService(mServiceId);
+        // connect url depends on whether we're connecting or reconnecting
+        String connectUrl;
+        if (mConnectionId != 0) {
+            connectUrl = PublicizeTable.getRefreshUrlForConnection(mConnectionId);
+        } else {
+            connectUrl = PublicizeTable.getConnectUrlForService(mServiceId);
+        }
 
         // request must be authenticated with wp.com credentials
         String postData = WPWebViewActivity.getAuthenticationPostData(
