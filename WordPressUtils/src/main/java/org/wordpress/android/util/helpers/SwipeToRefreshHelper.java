@@ -28,8 +28,8 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
         mSwipeRefreshLayout.setOnRefreshListener(this);
         final TypedArray styleAttrs = obtainStyledAttrsFromThemeAttr(activity, R.attr.swipeToRefreshStyle,
                 R.styleable.RefreshIndicator);
-        int color = styleAttrs.getColor(R.styleable.RefreshIndicator_refreshIndicatorColor,
-                android.R.color.holo_blue_dark);
+        int color = styleAttrs.getColor(R.styleable.RefreshIndicator_refreshIndicatorColor, activity.getResources()
+                .getColor(android.R.color.holo_blue_dark));
         mSwipeRefreshLayout.setColorSchemeColors(color, color, color, color);
     }
 
