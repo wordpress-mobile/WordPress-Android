@@ -168,8 +168,7 @@ class PublicizeActions {
                 // make sure userId matches the current user, or is zero (shared)
                 long userId = jsonConnection.optLong("user_ID");
                 if (userId == 0 || userId == currentUserId) {
-                    int keyringId = jsonConnection.optInt("ID");
-                    return keyringId;
+                    return jsonConnection.optInt("ID");
                 }
             }
         }

@@ -230,7 +230,7 @@ public class PublicizeListActivity extends AppCompatActivity
      * user requested to reconnect a broken connection from the detail fragment
      */
     @Override
-    public void onRequestReconnect(PublicizeService service, PublicizeConnection connection) {
+    public void onRequestReconnect(PublicizeConnection connection) {
         PublicizeActions.reconnect(connection);
         returnToListFragment();
     }

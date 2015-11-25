@@ -64,22 +64,6 @@ public class PublicizeTable {
         createTables(getWritableDb());
     }
 
-    /*
-     * purge table of connections to blogs that no longer exist
-     */
-    /*protected static int purge(SQLiteDatabase db) {
-        try {
-            int numDeleted = db.delete(CONNECTIONS_TABLE,
-                    "site_id NOT IN (SELECT DISTINCT blogId FROM " + WordPressDB.BLOGS_TABLE + ")", null);
-            if (numDeleted > 0) {
-                AppLog.i(AppLog.T.SHARING, "deleted " + numDeleted + " entries from publicize connections");
-            }
-            return numDeleted;
-        } catch (SQLiteException e) {
-            AppLog.e(AppLog.T.SHARING, e);
-        }
-    }*/
-
     public static PublicizeService getService(String serviceId) {
         if (TextUtils.isEmpty(serviceId)) {
             return null;
@@ -162,15 +146,6 @@ public class PublicizeTable {
         return service;
     }
 
-    public static String getLabelForService(String serviceId) {
-        if (TextUtils.isEmpty(serviceId)) {
-            return "";
-        }
-        String sql = "SELECT label FROM " + SERVICES_TABLE + " WHERE id=?";
-        String args[] = {serviceId};
-        return SqlUtils.stringForQuery(getReadableDb(), sql, args);
-    }
-
     public static String getConnectUrlForService(String serviceId) {
         if (TextUtils.isEmpty(serviceId)) {
             return "";
@@ -180,17 +155,6 @@ public class PublicizeTable {
         return SqlUtils.stringForQuery(getReadableDb(), sql, args);
     }
 
-    public static void setConnectUrlForService(String serviceId, String connectUrl) {
-        if (TextUtils.isEmpty(serviceId) || TextUtils.isEmpty(connectUrl)) {
-            return;
-        }
-
-        ContentValues values = new ContentValues();
-        values.put("connect_url", connectUrl);
-        String args[] = {serviceId};
-        getReadableDb().update(SERVICES_TABLE, values, "id=?", args);
-    }
-
     public static long getNumServices() {
         return SqlUtils.getRowCount(getReadableDb(), SERVICES_TABLE);
     }
@@ -198,7 +162,6 @@ public class PublicizeTable {
     // ********************************************************************************************
 
     public static PublicizeConnection getConnection(int connectionId) {
-        PublicizeConnectionList connectionList= new PublicizeConnectionList();
         String args[] = {Integer.toString(connectionId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + CONNECTIONS_TABLE + " WHERE id=?", args);
         try {

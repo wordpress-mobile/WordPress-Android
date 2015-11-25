@@ -22,7 +22,7 @@ public class PublicizeDetailFragment extends Fragment {
     public interface OnPublicizeActionListener {
         void onRequestConnect(PublicizeService service);
         void onRequestDisconnect(PublicizeConnection connection);
-        void onRequestReconnect(PublicizeService service, PublicizeConnection connection);
+        void onRequestReconnect(PublicizeConnection connection);
     }
 
     private int mSiteId;
@@ -172,7 +172,7 @@ public class PublicizeDetailFragment extends Fragment {
                 mActionListener.onRequestDisconnect(mConnection);
                 break;
             case RECONNECT:
-                mActionListener.onRequestReconnect(mService, mConnection);
+                mActionListener.onRequestReconnect(mConnection);
                 break;
         }
     }

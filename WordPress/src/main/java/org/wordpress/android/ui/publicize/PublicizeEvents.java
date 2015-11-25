@@ -7,6 +7,10 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
  */
 public class PublicizeEvents {
 
+    private PublicizeEvents() {
+        throw new AssertionError();
+    }
+
     public static class ConnectionsChanged {}
 
     public static class ActionCompleted {
