@@ -15,9 +15,11 @@ import org.wordpress.android.util.helpers.WPImageGetter;
 import org.wordpress.android.util.helpers.WPQuoteSpan;
 
 public class HtmlUtils {
-    /*
-     * removes html from the passed string - relies on Html.fromHtml which handles invalid HTML,
+
+    /**
+     * Removes html from the passed string - relies on Html.fromHtml which handles invalid HTML,
      * but it's very slow, so avoid using this where performance is important
+     * @param text String containing html
      */
     public static String stripHtml(final String text) {
         if (TextUtils.isEmpty(text)) {
@@ -26,9 +28,10 @@ public class HtmlUtils {
         return Html.fromHtml(text).toString().trim();
     }
 
-    /*
-     * this is much faster than stripHtml() but should only be used when we know the html is valid
+    /**
+     * This is much faster than stripHtml() but should only be used when we know the html is valid
      * since the regex will be unpredictable with invalid html
+     * @param str String containing only valid html
      */
     public static String fastStripHtml(String str) {
         if (TextUtils.isEmpty(str)) {
@@ -65,8 +68,9 @@ public class HtmlUtils {
         return str.substring(start);
     }
 
-    /*
-     * convert html entities to actual Unicode characters - relies on commons apache lang
+    /**
+     * Convert html entities to actual Unicode characters - relies on commons apache lang
+     * @param text String to be decoded to Unicode
      */
     public static String fastUnescapeHtml(final String text) {
         if (text == null || !text.contains("&")) {
@@ -75,8 +79,10 @@ public class HtmlUtils {
         return StringEscapeUtils.unescapeHtml(text);
     }
 
-    /*
-     * converts an R.color.xxx resource to an HTML hex color
+    /**
+     * Converts an R.color.xxx resource to an HTML hex color
+     * @param context Android Context
+     * @param resId Android R.color.xxx
      */
     public static String colorResToHtmlColor(Context context, int resId) {
         try {
@@ -86,12 +92,17 @@ public class HtmlUtils {
         }
     }
 
-    /*
-     * remove <script>..</script> blocks from the passed string - added to project after noticing
-     * comments on posts that use the "Sociable" plugin ( http://wordpress.org/plugins/sociable/ )
-     * may have a script block which contains <!--//--> followed by a CDATA section followed by <!]]>,
-     * all of which will show up if we don't strip it here (example: http://cl.ly/image/0J0N3z3h1i04 )
-     * first seen at http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/
+
+
+    /**
+     * Remove "script".."/script" blocks from the passed string - added to project after noticing
+     * comments on posts that use the "Sociable" plugin
+     * may have a script block which followed by a CDATA section
+     * all of which will show up if we don't strip it here.
+     * @see <a href="http://wordpress.org/plugins/sociable/">Wordpress Sociable Plugin</a>
+     * @see <a href="http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/">First seen at</a>
+     * @return String without &lt;script&gt;..&lt;/script&gt; , &lt;!--//--&gt; , followed by a CDATA section followed by &lt;!]]&gt;
+     * @param text String containing script tags
      */
     public static String stripScript(final String text) {
         if (text == null) {
@@ -114,7 +125,11 @@ public class HtmlUtils {
     }
 
     /**
-     * an alternative to Html.fromHtml() supporting <ul>, <ol>, <blockquote> tags and replacing EmoticonsUtils with Emojis
+     * An alternative to Html.fromHtml() supporting "ul" (&lt;ul&gt;), "ol" (&lt;ol&gt;), "blockquote" (&lt;blockquote&gt;)
+     * tags and replacing EmoticonsUtils with Emojis
+     * @param  source
+     * @param  wpImageGetter
+     * @return
      */
     public static SpannableStringBuilder fromHtml(String source, WPImageGetter wpImageGetter) {
         SpannableStringBuilder html;
