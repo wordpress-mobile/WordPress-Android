@@ -86,6 +86,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private Set<String> mUploadingMediaIds;
     private Set<String> mFailedMediaIds;
+    private MediaGallery mUploadingMediaGallery;
 
     private String mJavaScriptResult = "";
 
@@ -707,8 +708,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
-        mWebView.execJavaScriptFromString("ZSSEditor.insertGallery('" + mediaGallery.getIdsStr() + "', " +
-                mediaGallery.getNumColumns() + ");");
+        if (mediaGallery.getIds().isEmpty()) {
+            mUploadingMediaGallery = mediaGallery;
+            mWebView.execJavaScriptFromString("ZSSEditor.insertLocalGallery('" + mediaGallery.getUniqueId() + "');");
+        } else {
+            mWebView.execJavaScriptFromString("ZSSEditor.insertGallery('" + mediaGallery.getIdsStr() + "', " +
+                    mediaGallery.getNumColumns() + ");");
+        }
     }
 
     @Override
@@ -765,6 +771,26 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mUploadingMediaIds.remove(mediaId);
             }
         });
+    }
+
+    @Override
+    public void onGalleryMediaUploadSucceeded(final long galleryId, String remoteMediaId, int remaining) {
+        if (galleryId == mUploadingMediaGallery.getUniqueId()) {
+            ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();
+            mediaIds.add(remoteMediaId);
+            mUploadingMediaGallery.setIds(mediaIds);
+
+            if (remaining == 0) {
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.execJavaScriptFromString("ZSSEditor.replacePlaceholderGallery('" + galleryId + "', '" +
+                                mUploadingMediaGallery.getIdsStr() + "', " +
+                                mUploadingMediaGallery.getNumColumns() + ");");
+                    }
+                });
+            }
+        }
     }
 
     public void onDomLoaded() {

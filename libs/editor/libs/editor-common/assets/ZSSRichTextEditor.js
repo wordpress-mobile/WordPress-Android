@@ -1567,6 +1567,19 @@ ZSSEditor.insertGallery = function( imageIds, columns ) {
     this.insertHTML(this.wrapInParagraphTags(shortcode));
 }
 
+ZSSEditor.insertLocalGallery = function( placeholderId ) {
+    var container = '<span id="' + placeholderId + '" class="gallery_container">[Uploading gallery...]</span>';
+
+    this.insertHTML(this.wrapInParagraphTags(container));
+}
+
+ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, columns ) {
+    var span = 'span#' + placeholderId + '.gallery_container';
+    var html = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
+
+    $(span).replaceWith(html);
+}
+
 // MARK: - Commands
 
 /**
