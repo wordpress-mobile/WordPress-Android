@@ -1558,6 +1558,19 @@ ZSSEditor.removeCaptionFormattingCallback = function( match, content ) {
     return out;
 }
 
+// MARK: - Galleries
+ZSSEditor.insertGallery = function( imageIds, columns ) {
+    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
+    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
+    var space = '<br>';
+
+    var shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
+    var html = paragraphOpenTag + shortcode + paragraphCloseTag;
+    html = html + paragraphOpenTag + space;
+
+    this.insertHTML(html + space);
+}
+
 // MARK: - Commands
 
 /**

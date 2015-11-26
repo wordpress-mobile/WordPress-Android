@@ -707,7 +707,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
-        // TODO
+        mWebView.execJavaScriptFromString("ZSSEditor.insertGallery('" + mediaGallery.getIdsStr() + "', " +
+                mediaGallery.getNumColumns() + ");");
     }
 
     @Override
