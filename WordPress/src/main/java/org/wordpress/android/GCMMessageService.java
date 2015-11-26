@@ -422,18 +422,20 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     // Removes all app notifications from the system bar.
-    // This is called when the user access the Notifications screen only
+    // This is called when the Notifications tab is resumed. EX: app started, app resumed, even if
+    // the current screen is not the Notifications.
     public static void removeAllNotifications(Context context) {
         if (context == null || !hasNotifications()) return;
 
-        bumpPushNotificationsTappedAllAnalytics();
-
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         for (Integer pushId : mActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = mActiveNotificationsMap.get(pushId);
+            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_IGNORED, noteBundle, null);
             notificationManager.cancel(pushId);
         }
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
 
+        AnalyticsTracker.flush();
         clearNotifications();
     }
 
