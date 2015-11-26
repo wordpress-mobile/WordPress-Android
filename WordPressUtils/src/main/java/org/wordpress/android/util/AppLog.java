@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * simple wrapper for Android log calls, enables recording & displaying log
+ * simple wrapper for Android log calls, enables recording and displaying log
  */
 public class AppLog {
     // T for Tag
