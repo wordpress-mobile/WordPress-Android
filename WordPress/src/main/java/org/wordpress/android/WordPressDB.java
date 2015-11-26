@@ -24,6 +24,7 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.media.services.MediaUploadEvents.MediaStateChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -53,6 +54,8 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+
+import de.greenrobot.event.EventBus;
 
 public class WordPressDB {
     public static final String COLUMN_NAME_ID                    = "_id";
@@ -1663,17 +1666,22 @@ public class WordPressDB {
 
     /** Update a media file to a new upload state **/
     public void updateMediaUploadState(String blogId, String mediaId, String uploadState) {
-        if (blogId == null || blogId.equals(""))
+        if (blogId == null || blogId.equals("")) {
             return;
+        }
 
         ContentValues values = new ContentValues();
-        if (uploadState == null) values.putNull("uploadState");
-        else values.put("uploadState", uploadState);
+        if (uploadState == null) {
+            values.putNull("uploadState");
+        } else {
+            values.put("uploadState", uploadState);
+        }
 
         if (mediaId == null) {
             db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[]{blogId});
         } else {
             db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
+            EventBus.getDefault().post(new MediaStateChanged(blogId, mediaId));
         }
     }
 

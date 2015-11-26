@@ -27,4 +27,14 @@ public class MediaUploadEvents {
             mMediaId = mediaId;
         }
     }
+
+    public static class MediaStateChanged {
+        public final String mBlogId;
+        public final String mMediaId;
+        public MediaStateChanged(String blogId, String mediaId) {
+            mBlogId = blogId;
+            mMediaId = mediaId;
+        }
+    }
+
 }

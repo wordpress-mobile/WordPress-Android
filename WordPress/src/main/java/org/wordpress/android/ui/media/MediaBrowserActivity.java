@@ -45,6 +45,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.media.services.MediaUploadEvents;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -57,6 +58,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * The main activity in which the user can browse their media.
@@ -146,10 +149,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onStart() {
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         super.onStop();
     }
@@ -501,14 +506,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    @Override
-    public void onMediaAdded(String mediaId) {
-        if (WordPress.getCurrentBlog() == null || mediaId == null) {
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaUploadEvents.MediaStateChanged event) {
+        updateOnMediaChanged(event.mBlogId, event.mMediaId);
+    }
+
+    public void updateOnMediaChanged(String blogId, String mediaId) {
+        if (mediaId == null) {
             return;
         }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-
         if (cursor == null || !cursor.moveToFirst()) {
             mMediaGridFragment.removeFromMultiSelect(mediaId);
             mMediaGridFragment.refreshMediaFromDB();
@@ -527,6 +534,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (cursor != null) {
             cursor.close();
         }
+    }
+
+    @Override
+    public void onMediaAdded(String mediaId) {
+        if (WordPress.getCurrentBlog() == null) {
+            return;
+        }
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        updateOnMediaChanged(blogId, mediaId);
     }
 
     @Override
