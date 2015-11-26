@@ -72,7 +72,7 @@
                     android:src="@drawable/stats_icon_views" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -88,7 +88,7 @@
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -118,7 +118,7 @@
                     android:src="@drawable/stats_icon_visitors" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_visitors"
@@ -134,7 +134,7 @@
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -164,7 +164,7 @@
                     android:src="@drawable/stats_icon_likes" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_likes"
@@ -180,7 +180,7 @@
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -210,7 +210,7 @@
                     android:src="@drawable/stats_icon_comments" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_extra_small"
                     android:maxLines="1"
                     android:text="@string/stats_comments"
@@ -226,7 +226,7 @@
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

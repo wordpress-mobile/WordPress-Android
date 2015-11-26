@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="top"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_gravity="top"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,7 +49,7 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_totals_label"
-                android:textColor="@color/stats_module_content_list_header"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="TITLE" />
+                        tools:text="TITLE" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_list_totals_label"
@@ -95,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="VIEWS" />
+                        tools:text="VIEWS" />
                 </RelativeLayout>
 
                 <LinearLayout
