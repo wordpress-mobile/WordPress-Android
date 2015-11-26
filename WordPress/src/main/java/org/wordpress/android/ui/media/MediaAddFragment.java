@@ -127,6 +127,13 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         }
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaUploadEvents.MediaFetched event) {
+        if (mCallback != null) {
+            mCallback.onMediaAdded(event.mMediaId);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

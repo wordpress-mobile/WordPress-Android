@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.media.services.MediaUploadEvents.MediaFetched;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog.T;
@@ -158,6 +159,7 @@ public class MediaUploadService extends Service {
                 WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
                 mUploadInProgress = false;
                 mHandler.post(mFetchQueueTask);
+                EventBus.getDefault().post(new MediaFetched(blogId, mediaId));
             }
 
             @Override

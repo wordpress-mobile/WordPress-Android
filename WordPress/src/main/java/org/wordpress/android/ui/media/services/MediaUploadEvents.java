@@ -18,4 +18,13 @@ public class MediaUploadEvents {
             mErrorMessage = errorMessage;
         }
     }
+
+    public static class MediaFetched {
+        public final String mBlogId;
+        public final String mMediaId;
+        MediaFetched(String blogId, String mediaId) {
+            mBlogId = blogId;
+            mMediaId = mediaId;
+        }
+    }
 }
