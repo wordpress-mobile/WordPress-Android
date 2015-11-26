@@ -628,6 +628,25 @@ ZSSEditor.setBackgroundColor = function(color) {
 	ZSSEditor.sendEnabledStyles();
 };
 
+/**
+ *  @brief      Wraps given HTML in paragraph tags and appends a new line
+ *  @details    This method makes sure that passed HTML is wrapped in a separate paragraph.
+ *              It also appends a new opening paragraph tag and a space. This step is necessary to keep any spans or
+ *              divs in the HTML from being read by the WebView as a style and applied to all future paragraphs.
+ */
+ZSSEditor.wrapInParagraphTags = function(html) {
+    var space = '<br>';
+    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
+    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
+
+    if (this.getFocusedField().getHTML().length == 0) {
+        html = paragraphOpenTag + html;
+    }
+    html = html + paragraphCloseTag + paragraphOpenTag + space;
+
+    return html;
+};
+
 // Needs addClass method
 
 ZSSEditor.insertLink = function(url, title) {
@@ -802,18 +821,9 @@ ZSSEditor.updateImage = function(url, alt) {
 };
 
 ZSSEditor.insertImage = function(url, remoteId, alt) {
-    var space = '<br>';
-    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
-    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
-
     var html = '<img src="' + url + '" alt="' + alt + '" class="wp-image-' + remoteId + '" />';
 
-    if (this.getFocusedField().getHTML().length == 0) {
-        html = paragraphOpenTag + html;
-    }
-    html = html + paragraphCloseTag + paragraphOpenTag + space;
-
-    this.insertHTML(html);
+    this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
 
@@ -831,9 +841,6 @@ ZSSEditor.insertImage = function(url, remoteId, alt) {
  *                                      does not check for that.  It would be a mistake.
  */
 ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
-    var space = '<br>';
-    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
-    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
     var progressIdentifier = this.getImageProgressIdentifier(imageNodeIdentifier);
     var imageContainerIdentifier = this.getImageContainerIdentifier(imageNodeIdentifier);
     var imgContainerStart = '<span id="' + imageContainerIdentifier+'" class="img_container" contenteditable="false" data-failed="Tap to try again!">';
@@ -842,12 +849,7 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var image = '<img data-wpid="' + imageNodeIdentifier + '" src="' + localImageUrl + '" alt="" />';
     var html = imgContainerStart + progress+image + imgContainerEnd;
 
-    if (this.getFocusedField().getHTML().length == 0) {
-        html = paragraphOpenTag + html;
-    }
-    html = html + paragraphCloseTag + paragraphOpenTag + space;
-
-    this.insertHTML(html);
+    this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
 
@@ -1560,15 +1562,9 @@ ZSSEditor.removeCaptionFormattingCallback = function( match, content ) {
 
 // MARK: - Galleries
 ZSSEditor.insertGallery = function( imageIds, columns ) {
-    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
-    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
-    var space = '<br>';
-
     var shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
-    var html = paragraphOpenTag + shortcode + paragraphCloseTag;
-    html = html + paragraphOpenTag + space;
 
-    this.insertHTML(html + space);
+    this.insertHTML(this.wrapInParagraphTags(shortcode));
 }
 
 // MARK: - Commands
