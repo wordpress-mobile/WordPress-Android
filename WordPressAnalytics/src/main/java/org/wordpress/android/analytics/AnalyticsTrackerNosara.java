@@ -309,6 +309,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case PUSH_NOTIFICATION_DISMISSED:
                 eventName = "push_notification_dismissed";
                 break;
+            case PUSH_NOTIFICATION_IGNORED:
+                eventName = "push_notification_ignored";
+                break;
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 eventName = "support_helpshift_screen_opened";
                 break;
