@@ -19,6 +19,8 @@ import org.wordpress.android.util.HelpshiftHelper;
 import java.util.UUID;
 
 public class GCMRegistrationIntentService extends IntentService {
+    private static String lastRegisteredGCMToken = null;
+
     public GCMRegistrationIntentService() {
         super("GCMRegistrationIntentService");
     }
@@ -51,8 +53,9 @@ public class GCMRegistrationIntentService extends IntentService {
                 String uuid = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, null);
                 if (uuid == null) {
                     uuid = UUID.randomUUID().toString();
-                    preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid).apply();
+                    preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
                 }
+                preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, gcmToken).apply();
                 NotificationsUtils.registerDeviceForPushNotifications(this, gcmToken);
             }
 
@@ -62,5 +65,23 @@ public class GCMRegistrationIntentService extends IntentService {
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
         }
+    }
+
+
+    public static String getCurrentToken() {
+        try {
+            InstanceID instanceID = InstanceID.getInstance(WordPress.getContext());
+            String gcmId = BuildConfig.GCM_ID;
+            if (TextUtils.isEmpty(gcmId)) {
+                AppLog.e(T.NOTIFS, "GCM_ID must be configured in gradle.properties");
+                return null;
+            }
+            return instanceID.getToken(gcmId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+        } catch (Exception e) {
+            // SecurityException can happen on some devices without Google services (these devices probably strip
+            // the AndroidManifest.xml and remove unsupported permissions).
+            AppLog.e(T.NOTIFS, "Google Play Services unavailable: ", e);
+        }
+        return null;
     }
 }

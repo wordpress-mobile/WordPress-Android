@@ -497,6 +497,9 @@ public class GCMMessageService extends GcmListenerService {
                     properties.put("push_notification_" + currentPropertyToCopy,  noteBundle.get(currentPropertyToCopy));
                 }
             }
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+            String lastRegisteredGCMToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null);
+            properties.put("push_notification_token", lastRegisteredGCMToken);
             AnalyticsTracker.track(stat, properties);
         }
     }
