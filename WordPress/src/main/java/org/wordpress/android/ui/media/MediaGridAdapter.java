@@ -17,6 +17,7 @@ import android.view.ViewStub;
 import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -436,8 +437,7 @@ public class MediaGridAdapter extends CursorAdapter {
         int columnCount = getColumnCount(context);
 
         if (columnCount > 1) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
-            params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
             view.setLayoutParams(params);
         }
     }
