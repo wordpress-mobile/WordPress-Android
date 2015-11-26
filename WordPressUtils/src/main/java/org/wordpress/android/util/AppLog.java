@@ -11,13 +11,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * A simple wrapper for Android log calls, enables recording and displaying log.
+ * simple wrapper for Android log calls, enables recording & displaying log
  */
 public class AppLog {
     // T for Tag
     public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING,
-        SIMPERIUM, SUGGESTION}
-
+        SIMPERIUM, SUGGESTION, MAIN}
     public static final String TAG = "WordPress";
     public static final int HEADER_LINE_COUNT = 2;
 
