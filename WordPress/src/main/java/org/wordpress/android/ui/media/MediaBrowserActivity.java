@@ -39,13 +39,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.media.services.MediaUploadEvents;
+import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -66,7 +65,7 @@ import de.greenrobot.event.EventBus;
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, MediaAddFragmentCallback {
+        MediaEditFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
@@ -507,8 +506,28 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaStateChanged event) {
-        updateOnMediaChanged(event.mBlogId, event.mMediaId);
+    public void onEventMainThread(MediaEvents.MediaStateChanged event) {
+        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaAdded event) {
+        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaUploadSucceed event) {
+        updateOnMediaChanged(event.mLocalBlogId, event.mLocalMediaId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaFetched event) {
+        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
+        ToastUtils.showToast(this, event.mErrorMessage, ToastUtils.Duration.SHORT);
     }
 
     public void updateOnMediaChanged(String blogId, String mediaId) {
@@ -534,15 +553,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (cursor != null) {
             cursor.close();
         }
-    }
-
-    @Override
-    public void onMediaAdded(String mediaId) {
-        if (WordPress.getCurrentBlog() == null) {
-            return;
-        }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        updateOnMediaChanged(blogId, mediaId);
     }
 
     @Override

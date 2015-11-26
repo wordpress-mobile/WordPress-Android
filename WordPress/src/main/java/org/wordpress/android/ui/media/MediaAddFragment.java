@@ -25,11 +25,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
-import org.wordpress.android.ui.media.services.MediaUploadEvents;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaAdded;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -44,11 +43,6 @@ import de.greenrobot.event.EventBus;
 public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
     private String mMediaCapturePath = "";
-    private MediaAddFragmentCallback mCallback;
-
-    public interface MediaAddFragmentCallback {
-        void onMediaAdded(String mediaId);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,19 +55,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (activity instanceof MediaAddFragmentCallback) {
-            try {
-                mCallback = (MediaAddFragmentCallback) activity;
-            } catch (ClassCastException e) {
-                throw new ClassCastException(activity.toString() + " must implement " + MediaAddFragmentCallback.class.getSimpleName());
-            }
-        }
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mMediaCapturePath != null && !mMediaCapturePath.equals(""))
@@ -83,14 +64,12 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         // register context for change in connection status
         getActivity().registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         getActivity().unregisterReceiver(mReceiver);
         super.onStop();
     }
@@ -112,27 +91,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             }
         }
     };
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaUploadFailed event) {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), event.mErrorMessage, ToastUtils.Duration.SHORT);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
-        if (mCallback != null) {
-            mCallback.onMediaAdded(event.mLocalId);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaFetched event) {
-        if (mCallback != null) {
-            mCallback.onMediaAdded(event.mMediaId);
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -252,10 +210,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setMimeType(mimeType);
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-        if (mCallback != null) {
-            mCallback.onMediaAdded(mediaFile.getMediaId());
-        }
-
+        EventBus.getDefault().post(new MediaAdded(String.valueOf(blog.getLocalTableBlogId()), mediaFile.getMediaId()));
         startMediaUploadService();
     }
 

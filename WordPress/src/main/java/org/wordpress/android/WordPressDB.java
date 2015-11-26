@@ -24,7 +24,7 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.media.services.MediaUploadEvents.MediaStateChanged;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaStateChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
