@@ -1677,6 +1677,12 @@ public class WordPressDB {
         }
     }
 
+    public void updateMediaLocalToRemoteId(String blogId, String localMediaId, String remoteMediaId) {
+        ContentValues values = new ContentValues();
+        values.put("mediaId", remoteMediaId);
+        db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, localMediaId});
+    }
+
     public void updateMediaFile(String blogId, String mediaId, String title, String description, String caption) {
         if (blogId == null || blogId.equals("")) {
             return;

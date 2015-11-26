@@ -121,7 +121,7 @@ public class MediaUploadService extends Service {
             public void onSuccess(String id) {
                 // once the file has been uploaded, delete the local database entry and
                 // download the new one so that we are up-to-date and so that users can edit it.
-                WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
+                WordPress.wpDB.updateMediaLocalToRemoteId(blogIdStr, mediaId, id);
                 EventBus.getDefault().post(new MediaUploadEvents.MediaUploadSucceed(mediaId, id));
                 fetchMediaFile(id);
             }
