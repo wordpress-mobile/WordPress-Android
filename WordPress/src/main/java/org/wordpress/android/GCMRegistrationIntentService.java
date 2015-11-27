@@ -64,6 +64,7 @@ public class GCMRegistrationIntentService extends IntentService {
             AnalyticsTracker.registerPushNotificationToken(gcmToken);
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
+            PreferenceManager.getDefaultSharedPreferences(this).edit().remove(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN).apply();
         }
     }
 }
