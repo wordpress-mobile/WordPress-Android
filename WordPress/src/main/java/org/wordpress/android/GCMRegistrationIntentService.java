@@ -66,22 +66,4 @@ public class GCMRegistrationIntentService extends IntentService {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
         }
     }
-
-
-    public static String getCurrentToken() {
-        try {
-            InstanceID instanceID = InstanceID.getInstance(WordPress.getContext());
-            String gcmId = BuildConfig.GCM_ID;
-            if (TextUtils.isEmpty(gcmId)) {
-                AppLog.e(T.NOTIFS, "GCM_ID must be configured in gradle.properties");
-                return null;
-            }
-            return instanceID.getToken(gcmId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-        } catch (Exception e) {
-            // SecurityException can happen on some devices without Google services (these devices probably strip
-            // the AndroidManifest.xml and remove unsupported permissions).
-            AppLog.e(T.NOTIFS, "Google Play Services unavailable: ", e);
-        }
-        return null;
-    }
 }
