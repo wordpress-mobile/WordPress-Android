@@ -25,7 +25,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
-import org.wordpress.android.ui.media.services.MediaEvents.MediaAdded;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -210,7 +210,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setMimeType(mimeType);
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-        EventBus.getDefault().post(new MediaAdded(String.valueOf(blog.getLocalTableBlogId()), mediaFile.getMediaId()));
+        EventBus.getDefault().post(new MediaChanged(String.valueOf(blog.getLocalTableBlogId()), mediaFile.getMediaId()));
         startMediaUploadService();
     }
 

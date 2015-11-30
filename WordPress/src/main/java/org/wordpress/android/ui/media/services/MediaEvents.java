@@ -21,31 +21,12 @@ public class MediaEvents {
         }
     }
 
-    public static class MediaAdded {
+    public static class MediaChanged {
         public final String mLocalBlogId;
         public final String mMediaId;
-        public MediaAdded(String localBlogId, String mediaId) {
+        public MediaChanged(String localBlogId, String mediaId) {
             mLocalBlogId = localBlogId;
             mMediaId = mediaId;
         }
     }
-
-    public static class MediaFetched {
-        public final String mLocalBlogId;
-        public final String mMediaId;
-        MediaFetched(String localBlogId, String mediaId) {
-            mLocalBlogId = localBlogId;
-            mMediaId = mediaId;
-        }
-    }
-
-    public static class MediaStateChanged {
-        public final String mLocalBlogId;
-        public final String mMediaId;
-        public MediaStateChanged(String localBlogId, String mediaId) {
-            mLocalBlogId = localBlogId;
-            mMediaId = mediaId;
-        }
-    }
-
 }

@@ -24,7 +24,7 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
-import org.wordpress.android.ui.media.services.MediaEvents.MediaStateChanged;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -1678,10 +1678,11 @@ public class WordPressDB {
         }
 
         if (mediaId == null) {
-            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[]{blogId});
+            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')",
+                    new String[]{blogId});
         } else {
             db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
-            EventBus.getDefault().post(new MediaStateChanged(blogId, mediaId));
+            EventBus.getDefault().post(new MediaChanged(blogId, mediaId));
         }
     }
 

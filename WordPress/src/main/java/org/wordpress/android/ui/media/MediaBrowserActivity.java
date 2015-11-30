@@ -506,23 +506,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaStateChanged event) {
-        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaAdded event) {
+    public void onEventMainThread(MediaEvents.MediaChanged event) {
         updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(MediaEvents.MediaUploadSucceed event) {
         updateOnMediaChanged(event.mLocalBlogId, event.mLocalMediaId);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaFetched event) {
-        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
     }
 
     @SuppressWarnings("unused")
