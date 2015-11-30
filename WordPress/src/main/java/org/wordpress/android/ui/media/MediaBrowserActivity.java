@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -517,15 +516,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @SuppressWarnings("unused")
     public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
-        ToastUtils.showToast(this, event.mErrorMessage, ToastUtils.Duration.SHORT);
+        ToastUtils.showToast(this, event.mErrorMessage, ToastUtils.Duration.LONG);
     }
 
     public void updateOnMediaChanged(String blogId, String mediaId) {
         if (mediaId == null) {
             return;
         }
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-        if (cursor == null || !cursor.moveToFirst()) {
+        if (WordPress.wpDB.mediaFileExists(blogId, mediaId)) {
             mMediaGridFragment.removeFromMultiSelect(mediaId);
             mMediaGridFragment.refreshMediaFromDB();
             // Update spinner
@@ -542,9 +540,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
         } else {
             mMediaGridFragment.refreshMediaFromDB();
-        }
-        if (cursor != null) {
-            cursor.close();
         }
     }
 

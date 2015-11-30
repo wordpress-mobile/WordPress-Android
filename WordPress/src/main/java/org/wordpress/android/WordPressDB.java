@@ -1565,6 +1565,10 @@ public class WordPressDB {
         return count;
     }
 
+    public boolean mediaFileExists(String blogId, String mediaId) {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?",
+                new String[]{blogId, mediaId});
+    }
 
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
@@ -1747,6 +1751,7 @@ public class WordPressDB {
     public void deleteMediaFile(String blogId, String mediaId) {
         db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
+
 
     /** Mark media files for deletion without actually deleting them. **/
     public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {
