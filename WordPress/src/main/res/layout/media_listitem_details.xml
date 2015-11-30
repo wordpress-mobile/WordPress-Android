@@ -23,12 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ProgressBar
-                android:id="@+id/media_listitem_details_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-
             <ViewStub
                 android:id="@+id/media_listitem_details_stub"
                 android:layout_width="match_parent"
@@ -36,6 +30,12 @@
                 android:layout_marginBottom="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_small"
                 android:inflatedId="@+id/media_listitem_details_image" />
+
+            <ProgressBar
+                android:id="@+id/media_listitem_details_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
 

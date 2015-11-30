@@ -296,7 +296,7 @@ public class MediaItemFragment extends Fragment {
 
         // add a background color so something appears while image is downloaded
         mProgressView.setVisibility(View.VISIBLE);
-        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.transparent)));
+        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.grey_lighten_20)));
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
