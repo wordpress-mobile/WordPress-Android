@@ -2,14 +2,20 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -34,6 +40,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     private int mLines;
     private int mMaxLines;
     private String mHint;
+    private AlertDialog mDialog;
 
     public SummaryEditTextPreference(Context context) {
         super(context);
@@ -103,15 +110,87 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     }
 
     @Override
+    protected void showDialog(Bundle state) {
+        Context context = getContext();
+        Resources res = context.getResources();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
+        View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
+
+        builder.setPositiveButton(R.string.ok, this);
+        builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
+        if (titleView != null) {
+            TextView titleText = (TextView) titleView.findViewById(R.id.title);
+            if (titleText != null) {
+                titleText.setText(getTitle());
+            }
+
+            builder.setCustomTitle(titleView);
+        } else {
+            builder.setTitle(getTitle());
+        }
+
+        View view = View.inflate(getContext(), getDialogLayoutResource(), null);
+        if (view != null) {
+            onBindDialogView(view);
+            builder.setView(view);
+        }
+
+        if ((mDialog = builder.create()) == null) return;
+
+        if (state != null) {
+            mDialog.onRestoreInstanceState(state);
+        }
+        mDialog.setOnDismissListener(this);
+        mDialog.show();
+
+        Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        Typeface typeface = TypefaceCache.getTypeface(getContext(),
+                TypefaceCache.FAMILY_OPEN_SANS,
+                Typeface.BOLD,
+                TypefaceCache.VARIATION_LIGHT);
+
+        if (positive != null) {
+            //noinspection deprecation
+            positive.setTextColor(res.getColor(R.color.blue_medium));
+            positive.setTypeface(typeface);
+        }
+
+        if (negative != null) {
+            //noinspection deprecation
+            negative.setTextColor(res.getColor(R.color.blue_medium));
+            negative.setTypeface(typeface);
+        }
+    }
+
+    @Override
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
         if (view != null) {
-            EditText text = (EditText) view.findViewById(android.R.id.edit);
-            if (text != null) {
-                text.setSelection(text.getText().length());
+            Typeface typeface = TypefaceCache.getTypeface(getContext(),
+                    TypefaceCache.FAMILY_OPEN_SANS,
+                    Typeface.NORMAL,
+                    TypefaceCache.VARIATION_NORMAL);
+            EditText editText = getEditText();
+            ViewParent oldParent = editText.getParent();
+            if (oldParent != view) {
+                if (oldParent != null) {
+                    ((ViewGroup) oldParent).removeView(editText);
+                }
+                ((View) oldParent).setPadding(((View) oldParent).getPaddingLeft(), 0, ((View) oldParent).getPaddingRight(), ((View) oldParent).getPaddingBottom());
+                onAddEditTextToDialogView(view, editText);
             }
+            editText.setSelection(editText.getText().length());
+            editText.setTypeface(typeface);
+            editText.setTextColor(getContext().getResources().getColor(R.color.grey_dark));
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        mDialog = null;
+        onDialogClosed(false);
     }
 
     @Override
