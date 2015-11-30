@@ -11,13 +11,22 @@
         android:padding="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_listitem_details_title"
+            android:id="@+id/media_listitem_details_caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
             android:textSize="@dimen/text_sz_extra_large"
-            tools:text="media_listitem_details_title" />
+            tools:text="media_listitem_details_caption" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_listitem_details_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="media_listitem_details_description" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,22 +49,13 @@
         </RelativeLayout>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_listitem_details_caption"
+            android:id="@+id/media_listitem_details_file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
-            android:textSize="@dimen/text_sz_extra_large"
-            tools:text="media_listitem_details_caption" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_listitem_details_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="media_listitem_details_description" />
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="media_listitem_details_file_name" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_date"
@@ -67,15 +67,6 @@
             tools:text="media_listitem_details_date" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_listitem_details_file_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="media_listitem_details_file_name" />
-
-        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_file_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,16 +75,6 @@
             android:textSize="@dimen/text_sz_medium"
             tools:text="media_listitem_details_file_type" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_listitem_details_file_url"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:autoLink="web"
-            android:textIsSelectable="true"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="media_listitem_details_file_url" />
     </LinearLayout>
 
 </ScrollView>

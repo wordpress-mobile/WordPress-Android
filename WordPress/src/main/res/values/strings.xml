@@ -169,9 +169,6 @@
     <!-- Media details -->
     <string name="media_details_added_on">Added on:</string>
     <string name="media_details_uploaded_on">Uploaded on:</string>
-    <string name="media_details_file_name">File name:</string>
-    <string name="media_details_file_type">File type:</string>
-    <string name="media_details_file_url">File URL:</string>
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>

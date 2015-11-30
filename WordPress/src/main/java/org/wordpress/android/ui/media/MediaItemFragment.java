@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +33,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
@@ -50,13 +52,11 @@ public class MediaItemFragment extends Fragment {
     private View mView;
 
     private ImageView mImageView;
-    private TextView mTitleView;
     private TextView mCaptionView;
     private TextView mDescriptionView;
     private TextView mDateView;
     private TextView mFileNameView;
     private TextView mFileTypeView;
-    private TextView mFileUrlView;
     private MediaItemFragmentCallback mCallback;
     private ImageLoader mImageLoader;
     private ProgressBar mProgressView;
@@ -119,13 +119,11 @@ public class MediaItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.media_listitem_details, container, false);
 
-        mTitleView = (TextView) mView.findViewById(R.id.media_listitem_details_title);
         mCaptionView = (TextView) mView.findViewById(R.id.media_listitem_details_caption);
         mDescriptionView = (TextView) mView.findViewById(R.id.media_listitem_details_description);
         mDateView = (TextView) mView.findViewById(R.id.media_listitem_details_date);
         mFileNameView = (TextView) mView.findViewById(R.id.media_listitem_details_file_name);
         mFileTypeView = (TextView) mView.findViewById(R.id.media_listitem_details_file_type);
-        mFileUrlView = (TextView) mView.findViewById(R.id.media_listitem_details_file_url);
         mProgressView = (ProgressBar) mView.findViewById(R.id.media_listitem_details_progress);
 
         loadMedia(getMediaId());
@@ -159,8 +157,9 @@ public class MediaItemFragment extends Fragment {
     }
 
     private void refreshViews(Cursor cursor) {
-        if (!cursor.moveToFirst())
+        if (!isAdded() || !cursor.moveToFirst()) {
             return;
+        }
 
         // check whether or not to show the edit button
         String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
@@ -168,8 +167,6 @@ public class MediaItemFragment extends Fragment {
         if (mIsLocal && getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
-
-        mTitleView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
 
         String caption = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION));
         if (TextUtils.isEmpty(caption)) {
@@ -194,43 +191,39 @@ public class MediaItemFragment extends Fragment {
             mDateView.setText(getResources().getString(R.string.media_details_uploaded_on) + " " + date);
         }
 
+        // hyperlink to image url unless local
+        final String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
         String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
-        mFileNameView.setText(getResources().getString(R.string.media_details_file_name) + " " + fileName);
-
-        // get the file extension from the fileURL
-        String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-        String fileExt;
-        if (!TextUtils.isEmpty(fileURL)) {
-            fileExt = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-            // set the file URL
-            mFileUrlView.setText(getResources().getString(R.string.media_details_file_url) + " " + fileURL);
-            mFileUrlView.setVisibility(View.VISIBLE);
+        if (mIsLocal || TextUtils.isEmpty(fileURL)) {
+            mFileNameView.setText(fileName);
         } else {
-            fileExt = null;
-        }
-
-        String imageUri = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-        if (TextUtils.isEmpty(imageUri)) {
-            imageUri = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
+            String link = String.format("<a href='%1$s'>%2$s</a>", fileURL, fileName);
+            mFileNameView.setText(Html.fromHtml(link));
+            mFileNameView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.openUrl(v.getContext(), fileURL);
+                }
+            });
         }
 
         inflateImageView();
 
         // image and dimensions
         String dimensions = null;
+        String imageUri = TextUtils.isEmpty(fileURL)
+                ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
+                : fileURL;
         if (MediaUtils.isValidImage(imageUri)) {
             int mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
             int mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
             if (mediaWidth > 0 && mediaHeight > 0) {
-                dimensions = mediaWidth + "x" + mediaHeight;
+                dimensions = mediaWidth + " x " + mediaHeight;
             }
 
             float screenWidth;
-
-            View parentView = (View) mImageView.getParent();
-
             if (this.isInLayout()) {
-                screenWidth =  parentView.getMeasuredWidth();
+                screenWidth =  ((View) mImageView.getParent()).getMeasuredWidth();
             } else {
                 screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
             }
@@ -257,15 +250,14 @@ public class MediaItemFragment extends Fragment {
                 }
             }
             mImageView.setVisibility(View.VISIBLE);
-
             mImageView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, mediaHeight));
-
         } else {
             mImageView.setVisibility(View.GONE);
             mProgressView.setVisibility(View.GONE);
         }
 
         // show dimens & file ext together
+        String fileExt = TextUtils.isEmpty(fileURL) ? null : fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
         boolean hasDimens = !TextUtils.isEmpty(dimensions);
         boolean hasExt = !TextUtils.isEmpty(fileExt);
         if (hasDimens & hasExt) {
