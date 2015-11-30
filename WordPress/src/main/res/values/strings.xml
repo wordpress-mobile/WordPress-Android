@@ -172,7 +172,6 @@
     <string name="media_details_file_name">File name:</string>
     <string name="media_details_file_type">File type:</string>
     <string name="media_details_file_url">File URL:</string>
-    <string name="media_details_dimensions">Dimensions:</string>
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
