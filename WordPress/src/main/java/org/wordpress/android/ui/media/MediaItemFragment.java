@@ -42,7 +42,6 @@ import java.util.ArrayList;
 
 /**
  * A fragment display a media item's details.
- * Only appears on phone.
  */
 public class MediaItemFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";

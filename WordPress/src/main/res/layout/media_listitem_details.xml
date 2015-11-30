@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/margin_extra_large" >
+        android:padding="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_title"
@@ -15,7 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
-            android:textSize="@dimen/text_sz_extra_large" />
+            android:textSize="@dimen/text_sz_extra_large"
+            tools:text="media_listitem_details_title" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,9 +25,9 @@
 
             <ProgressBar
                 android:id="@+id/media_listitem_details_progress"
-                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
 
             <ViewStub
                 android:id="@+id/media_listitem_details_stub"
@@ -43,35 +45,40 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small" />
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="media_listitem_details_caption" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small" />
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="media_listitem_details_description" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small" />
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="media_listitem_details_date" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small" />
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="media_listitem_details_file_name" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_file_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small" />
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="media_listitem_details_file_type" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_file_url"
@@ -80,14 +87,16 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
             android:autoLink="web"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"
+            tools:text="media_listitem_details_file_url" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_dimensions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small" />
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="media_listitem_details_dimensions" />
     </LinearLayout>
 
 </ScrollView>
