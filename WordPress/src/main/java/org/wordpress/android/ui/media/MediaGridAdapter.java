@@ -289,7 +289,6 @@ public class MediaGridAdapter extends CursorAdapter {
             String filepath = uri.getLastPathSegment();
 
             int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setImageResource(0);
             imageView.setErrorImageResId(placeholderResId);
 
             // no default image while downloading
