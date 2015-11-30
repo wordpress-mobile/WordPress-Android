@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
@@ -10,10 +11,35 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
 
+import java.lang.reflect.Field;
+
 public class WPNumberPicker extends NumberPicker {
+    private static final String DIVIDER_FIELD = "mSelectionDivider";
+
     public WPNumberPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWrapSelectorWheel(false);
+
+        Class<?> numberPickerClass = null;
+        try {
+            numberPickerClass = Class.forName("android.widget.NumberPicker");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Field selectionDivider = null;
+        try {
+            selectionDivider = numberPickerClass.getDeclaredField(DIVIDER_FIELD);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            selectionDivider.setAccessible(true);
+            selectionDivider.set(this, null);
+        } catch (IllegalArgumentException | IllegalAccessException | Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
