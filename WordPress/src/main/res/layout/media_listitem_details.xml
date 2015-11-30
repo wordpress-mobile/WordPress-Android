@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_extra_large"
             tools:text="media_listitem_details_caption" />
 
@@ -25,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="media_listitem_details_description" />
 
@@ -54,7 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
-            android:textSize="@dimen/text_sz_medium"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
             tools:text="media_listitem_details_file_name" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -63,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
             tools:text="media_listitem_details_date" />
 
@@ -72,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
             tools:text="media_listitem_details_file_type" />
 
