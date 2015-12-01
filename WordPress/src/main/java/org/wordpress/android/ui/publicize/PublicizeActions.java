@@ -12,6 +12,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.PublicizeConnection;
+import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted;
 import org.wordpress.android.util.AppLog;
@@ -26,6 +27,12 @@ import de.greenrobot.event.EventBus;
  * API calls to connect/disconnect publicize services
  */
 class PublicizeActions {
+
+    public interface OnPublicizeActionListener {
+        void onRequestConnect(PublicizeService service);
+        void onRequestDisconnect(PublicizeConnection connection);
+        void onRequestReconnect(PublicizeService service, PublicizeConnection connection);
+    }
 
     /*
      * disconnect a currently connected publicize service

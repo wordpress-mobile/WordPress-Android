@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.publicize;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +16,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class PublicizeDetailFragment extends Fragment {
-
-    public interface OnPublicizeActionListener {
-        void onRequestConnect(PublicizeService service);
-        void onRequestDisconnect(PublicizeConnection connection);
-        void onRequestReconnect(PublicizeService service, PublicizeConnection connection);
-    }
+public class PublicizeDetailFragment extends PublicizeBaseFragment {
 
     private int mSiteId;
     private int mConnectionId;
@@ -33,7 +26,7 @@ public class PublicizeDetailFragment extends Fragment {
     private PublicizeConnection mConnection;
 
     private ConnectButton mConnectButton;
-    private OnPublicizeActionListener mActionListener;
+    private PublicizeActions.OnPublicizeActionListener mActionListener;
 
     public static PublicizeDetailFragment newInstance(
             int siteId,
@@ -92,8 +85,8 @@ public class PublicizeDetailFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof OnPublicizeActionListener) {
-            mActionListener = (OnPublicizeActionListener) activity;
+        if (activity instanceof PublicizeActions.OnPublicizeActionListener) {
+            mActionListener = (PublicizeActions.OnPublicizeActionListener) activity;
         }
     }
 
@@ -101,6 +94,7 @@ public class PublicizeDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getData();
+        setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
     }
 
     void getData() {
@@ -155,6 +149,8 @@ public class PublicizeDetailFragment extends Fragment {
                 doConnectBtnClick();
             }
         });
+
+        setTitle(mService.getLabel());
     }
 
     private void doConnectBtnClick() {

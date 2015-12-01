@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +15,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
-public class PublicizeListFragment extends Fragment {
+public class PublicizeListFragment extends PublicizeBaseFragment {
     private int mSiteId;
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
@@ -56,6 +55,8 @@ public class PublicizeListFragment extends Fragment {
             mRecycler.setAdapter(getAdapter());
         }
         getAdapter().refresh();
+        setTitle(R.string.sharing);
+        setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
     }
 
     @Override

@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +24,7 @@ import org.wordpress.android.util.AppLog;
 
 import de.greenrobot.event.EventBus;
 
-public class PublicizeWebViewFragment extends Fragment {
+public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
     private int mSiteId;
     private String mServiceId;
@@ -115,10 +112,16 @@ public class PublicizeWebViewFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setNavigationIcon(R.drawable.ic_close_white_24dp);
+    }
+
     /*
-     * display the current connect URL for this service - this will ask the user to
-     * authorize the connection via the external service
-     */
+         * display the current connect URL for this service - this will ask the user to
+         * authorize the connection via the external service
+         */
     private void loadConnectUrl() {
         if (!isAdded()) return;
 
@@ -139,25 +142,6 @@ public class PublicizeWebViewFragment extends Fragment {
                 AccountHelper.getDefaultAccount().getAccessToken());
 
         mWebView.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, postData.getBytes());
-    }
-
-    private ActionBar getActionBar() {
-        if (getActivity() instanceof AppCompatActivity) {
-            return ((AppCompatActivity) getActivity()).getSupportActionBar();
-        } else {
-            return null;
-        }
-    }
-
-    private void setSubTitle(String title) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            if (title != null && !title.equals(actionBar.getTitle())) {
-                actionBar.setSubtitle(title);
-            } else {
-                actionBar.setSubtitle(null);
-            }
-        }
     }
 
     // ********************************************************************************************
@@ -212,12 +196,8 @@ public class PublicizeWebViewFragment extends Fragment {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-            if (isAdded()) {
-                if (title != null && !title.startsWith("http")) {
-                    setSubTitle(title);
-                } else {
-                    setSubTitle(null);
-                }
+            if (title != null && !title.startsWith("http")) {
+                setTitle(title);
             }
         }
     }
