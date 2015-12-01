@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:text="@string/related_posts_switch_summary"
             android:textColor="@color/grey_darken_10"
-            android:textSize="@dimen/text_sz_medium"
+            android:textSize="@dimen/text_sz_small"
             app:fontFamily="openSans"
             app:fontVariation="normal" />
 
@@ -43,6 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium"
             android:text="@string/related_posts_show_header_title" />
 
         <CheckBox
@@ -50,6 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium"
             android:text="@string/related_posts_show_images_title" />
 
         <View
@@ -65,11 +69,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="@string/preview"
-            android:textStyle="italic"
+            android:textStyle="italic|bold"
             android:textColor="@color/related_posts_preview_header"
-            android:textSize="@dimen/text_sz_related_post_small"
+            android:textSize="@dimen/text_sz_medium"
             app:fontFamily="openSans"
-            app:fontVariation="normal" />
+            app:fontVariation="light" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/related_posts_list_header"
