@@ -645,41 +645,13 @@ public class StatsActivity extends AppCompatActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.stats, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (i == R.id.menu_view_stats_full_site) {
-            final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-            if (blogId == null) {
-                showJetpackMissingAlert();
-                return true;
-            }
-
-            String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
-            if (statsAuthenticatedUser == null) {
-                Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
-                return true;
-            }
-
-            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
-
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
-            AnalyticsUtils.trackWithBlogDetails(
-                    AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION,
-                    (long) mLocalBlogID
-            );
-            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

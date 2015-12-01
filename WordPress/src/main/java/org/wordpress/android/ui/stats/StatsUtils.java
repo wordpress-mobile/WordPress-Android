@@ -291,34 +291,6 @@ public class StatsUtils {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 
-    /**
-     * Return the credentials for the  blog or null if not available.
-     *
-     * 1. Read the credentials at blog level (Jetpack connected with a wpcom account != main account)
-     * 2. If credentials are empty read the global wpcom credentials
-     * 3. Check that credentials are not empty before launching the activity
-     *
-     */
-    public static String getBlogStatsUsername(int localTableBlogID) {
-        Blog currentBlog = WordPress.getBlog(localTableBlogID);
-        if (currentBlog == null) {
-            return null;
-        }
-        String statsAuthenticatedUser = currentBlog.getDotcom_username();
-
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-            // Let's try the global wpcom credentials
-            statsAuthenticatedUser = AccountHelper.getDefaultAccount().getUserName();
-        }
-
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-            AppLog.e(AppLog.T.STATS, "WPCOM Credentials for the current blog are null!");
-            return null;
-        }
-
-        return statsAuthenticatedUser;
-    }
-
     public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
         // workaround: There are 2 entries in the DB for each Jetpack blog linked with
         // the current wpcom account. We need to load the correct localID here, otherwise options are
