@@ -68,11 +68,13 @@
                 tools:text="media_listitem_details_file_name" />
 
             <ImageView
+                android:id="@+id/image_copy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:background="@drawable/selector"
-                android:src="@drawable/ic_action_copy_white_24dp" />
+                android:background="@drawable/selectable_background_wordpress"
+                android:contentDescription="@string/media_details_copy_url_description"
+                android:src="@drawable/ic_content_copy_black_24dp" />
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView

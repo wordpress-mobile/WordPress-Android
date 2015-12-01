@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
@@ -34,10 +37,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -57,6 +62,7 @@ public class MediaItemFragment extends Fragment {
     private TextView mDateView;
     private TextView mFileNameView;
     private TextView mFileTypeView;
+    private ImageView mImageCopy;
     private MediaItemFragmentCallback mCallback;
     private ImageLoader mImageLoader;
     private ProgressBar mProgressView;
@@ -125,6 +131,7 @@ public class MediaItemFragment extends Fragment {
         mFileNameView = (TextView) mView.findViewById(R.id.media_listitem_details_file_name);
         mFileTypeView = (TextView) mView.findViewById(R.id.media_listitem_details_file_type);
         mProgressView = (ProgressBar) mView.findViewById(R.id.media_listitem_details_progress);
+        mImageCopy = (ImageView) mView.findViewById(R.id.image_copy);
 
         loadMedia(getMediaId());
 
@@ -193,7 +200,7 @@ public class MediaItemFragment extends Fragment {
 
         final String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
         String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
-        String imageUri = TextUtils.isEmpty(fileURL)
+        final String imageUri = TextUtils.isEmpty(fileURL)
                 ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
                 : fileURL;
 
@@ -272,6 +279,30 @@ public class MediaItemFragment extends Fragment {
             mFileTypeView.setVisibility(View.VISIBLE);
         } else {
             mFileTypeView.setVisibility(View.GONE);
+        }
+
+        // copy url to clipboard
+        if (!mIsLocal && !TextUtils.isEmpty(imageUri)) {
+            mImageCopy.setVisibility(View.VISIBLE);
+            mImageCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    copyUrlToClipboard(imageUri);
+                }
+            });
+        } else {
+            mImageCopy.setVisibility(View.GONE);
+        }
+    }
+
+    private void copyUrlToClipboard(String imageUri) {
+        try {
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText(imageUri, imageUri));
+            ToastUtils.showToast(getActivity(), R.string.media_details_copy_url_toast);
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.UTILS, e);
+            ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
         }
     }
 
