@@ -41,6 +41,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -68,8 +69,8 @@ public class MediaItemFragment extends Fragment {
     private boolean mIsLocal;
 
     public interface MediaItemFragmentCallback {
-        public void onResume(Fragment fragment);
-        public void onPause(Fragment fragment);
+        void onResume(Fragment fragment);
+        void onPause(Fragment fragment);
     }
 
     public static MediaItemFragment newInstance(String mediaId) {
@@ -147,17 +148,18 @@ public class MediaItemFragment extends Fragment {
         if (blog != null) {
             String blogId = String.valueOf(blog.getLocalTableBlogId());
 
-            Cursor cursor;
-
-            // if the id is null, get the first media item in the database
-            if (mediaId == null) {
-                cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
-            } else {
-                cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+            Cursor cursor = null;
+            try {
+                // if the id is null, get the first media item in the database
+                if (mediaId == null) {
+                    cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
+                } else {
+                    cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+                }
+                refreshViews(cursor);
+            } finally {
+                SqlUtils.closeCursor(cursor);
             }
-
-            refreshViews(cursor);
-            cursor.close();
         }
     }
 
@@ -197,7 +199,7 @@ public class MediaItemFragment extends Fragment {
         }
 
         final String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        final String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
         final String imageUri = TextUtils.isEmpty(fileURL)
                 ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
                 : fileURL;
@@ -306,10 +308,7 @@ public class MediaItemFragment extends Fragment {
     private void inflateImageView() {
         ViewStub viewStub = (ViewStub) getView().findViewById(R.id.media_listitem_details_stub);
         if (viewStub != null) {
-            if (mIsLocal)
-                viewStub.setLayoutResource(R.layout.media_grid_image_local);
-            else
-                viewStub.setLayoutResource(R.layout.media_grid_image_network);
+            viewStub.setLayoutResource(mIsLocal ? R.layout.media_grid_image_local : R.layout.media_grid_image_network);
             viewStub.inflate();
         }
 
@@ -373,7 +372,7 @@ public class MediaItemFragment extends Fragment {
                             R.string.delete, new OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ArrayList<String> ids = new ArrayList<String>(1);
+                                    ArrayList<String> ids = new ArrayList<>(1);
                                     ids.add(getMediaId());
                                     if (getActivity() instanceof MediaBrowserActivity) {
                                         ((MediaBrowserActivity) getActivity()).deleteMedia(ids);
