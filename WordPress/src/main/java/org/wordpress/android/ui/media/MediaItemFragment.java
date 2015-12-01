@@ -12,7 +12,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -198,19 +197,7 @@ public class MediaItemFragment extends Fragment {
                 ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
                 : fileURL;
 
-        // hyperlink to image url unless local
-        if (mIsLocal || TextUtils.isEmpty(fileURL)) {
-            mFileNameView.setText(fileName);
-        } else {
-            String link = String.format("<a href='%1$s'>%2$s</a>", fileURL, fileName);
-            mFileNameView.setText(Html.fromHtml(link));
-            mFileNameView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(v.getContext(), fileURL);
-                }
-            });
-        }
+        mFileNameView.setText(fileName);
 
         float mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
         float mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
@@ -291,13 +278,17 @@ public class MediaItemFragment extends Fragment {
                             v.getContext(), imageUri, isPrivate);
                 }
             });
-            mImgBtnCopy.setVisibility(View.VISIBLE);
-            mImgBtnCopy.setOnClickListener(new View.OnClickListener() {
+
+            View layoutFileName = getView().findViewById(R.id.layout_file_name);
+            layoutFileName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     copyUrlToClipboard(v.getContext(), imageUri);
                 }
             });
+
+            mFileNameView.setTextColor(getActivity().getResources().getColor(R.color.blue_medium));
+            mImgBtnCopy.setVisibility(View.VISIBLE);
         } else {
             mImgBtnCopy.setVisibility(View.GONE);
             mImageView.setOnClickListener(null);
