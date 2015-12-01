@@ -85,7 +85,12 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        AppLog.d(AppLog.T.COMMENTS, String.valueOf(getFragmentManager().getBackStackEntryCount()));
         if (getFragmentManager().getBackStackEntryCount() > 0) {
+            if (getDetailFragment().getUpdateCommentsList()) {
+                reloadCommentList();
+                updateCommentList();
+            }
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
@@ -97,7 +102,6 @@ public class CommentsActivity extends AppCompatActivity
         super.onNewIntent(intent);
         AppLog.d(AppLog.T.COMMENTS, "comment activity new intent");
     }
-
 
     private CommentDetailFragment getDetailFragment() {
         Fragment fragment = getFragmentManager().findFragmentByTag(getString(

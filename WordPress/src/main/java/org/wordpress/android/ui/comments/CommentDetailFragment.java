@@ -83,6 +83,7 @@ import de.greenrobot.event.EventBus;
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private int mLocalBlogId;
     private int mRemoteBlogId;
+    private boolean mUpdateCommentsList = false;
 
     private Comment mComment;
     private Note mNote;
@@ -802,6 +803,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
                         mEditReply.setText(null);
                         mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
+                        mUpdateCommentsList = true;
                     } else {
                         ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
                         // refocus editor on failure and show soft keyboard
@@ -1098,6 +1100,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mEditReply == null) return null;
 
         return mEditReply.getText().toString();
+    }
+
+    public boolean getUpdateCommentsList() {
+        return mUpdateCommentsList;
     }
 
     /*
