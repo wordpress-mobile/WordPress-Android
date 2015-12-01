@@ -523,13 +523,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mediaId == null) {
             return;
         }
-        if (WordPress.wpDB.mediaFileExists(blogId, mediaId)) {
-            mMediaGridFragment.removeFromMultiSelect(mediaId);
-            mMediaGridFragment.refreshMediaFromDB();
-            // Update spinner
-            mMediaGridFragment.updateFilterText();
-            mMediaGridFragment.updateSpinnerAdapter();
 
+        // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
+        // view (if it was the one displayed)
+        if (!WordPress.wpDB.mediaFileExists(blogId, mediaId)) {
+            mMediaGridFragment.removeFromMultiSelect(mediaId);
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                     && mediaId.equals(mMediaEditFragment.getMediaId())) {
                 if (mMediaEditFragment.isInLayout()) {
@@ -538,9 +536,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     getFragmentManager().popBackStack();
                 }
             }
-        } else {
-            mMediaGridFragment.refreshMediaFromDB();
         }
+
+        // Update Grid view
+        mMediaGridFragment.refreshMediaFromDB();
+
+        // Update Spinner views
+        mMediaGridFragment.updateFilterText();
+        mMediaGridFragment.updateSpinnerAdapter();
     }
 
     @Override
