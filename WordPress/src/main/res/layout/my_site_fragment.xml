@@ -275,7 +275,7 @@
                     android:id="@+id/my_site_sharing_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/my_site_btn_sharing"
-                    android:src="@drawable/my_site_icon_settings" />
+                    android:src="@drawable/my_site_icon_sharing" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_sharing_text_view"
