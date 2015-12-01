@@ -54,8 +54,6 @@ public class MediaItemFragment extends Fragment {
 
     public static final String TAG = MediaItemFragment.class.getName();
 
-    private View mView;
-
     private ImageView mImageView;
     private TextView mCaptionView;
     private TextView mDescriptionView;
@@ -106,6 +104,7 @@ public class MediaItemFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mCallback.onResume(this);
+        loadMedia(getMediaId());
     }
 
     @Override
@@ -115,27 +114,26 @@ public class MediaItemFragment extends Fragment {
     }
 
     public String getMediaId() {
-        if (getArguments() != null)
+        if (getArguments() != null) {
             return getArguments().getString(ARGS_MEDIA_ID);
-        else
+        } else {
             return null;
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.media_listitem_details, container, false);
+        View view = inflater.inflate(R.layout.media_listitem_details, container, false);
 
-        mCaptionView = (TextView) mView.findViewById(R.id.media_listitem_details_caption);
-        mDescriptionView = (TextView) mView.findViewById(R.id.media_listitem_details_description);
-        mDateView = (TextView) mView.findViewById(R.id.media_listitem_details_date);
-        mFileNameView = (TextView) mView.findViewById(R.id.media_listitem_details_file_name);
-        mFileTypeView = (TextView) mView.findViewById(R.id.media_listitem_details_file_type);
-        mProgressView = (ProgressBar) mView.findViewById(R.id.media_listitem_details_progress);
-        mImageCopy = (ImageView) mView.findViewById(R.id.image_copy);
+        mCaptionView = (TextView) view.findViewById(R.id.media_listitem_details_caption);
+        mDescriptionView = (TextView) view.findViewById(R.id.media_listitem_details_description);
+        mDateView = (TextView) view.findViewById(R.id.media_listitem_details_date);
+        mFileNameView = (TextView) view.findViewById(R.id.media_listitem_details_file_name);
+        mFileTypeView = (TextView) view.findViewById(R.id.media_listitem_details_file_type);
+        mProgressView = (ProgressBar) view.findViewById(R.id.media_listitem_details_progress);
+        mImageCopy = (ImageView) view.findViewById(R.id.image_copy);
 
-        loadMedia(getMediaId());
-
-        return mView;
+        return view;
     }
 
     /** Loads the first media item for the current blog from the database **/
@@ -286,15 +284,17 @@ public class MediaItemFragment extends Fragment {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Blog blog = WordPress.getCurrentBlog();
+                    boolean isPrivate = blog != null && blog.isPrivate();
                     ReaderActivityLauncher.showReaderPhotoViewer(
-                            v.getContext(), imageUri, WordPress.getCurrentBlog().isPrivate());
+                            v.getContext(), imageUri, isPrivate);
                 }
             });
             mImageCopy.setVisibility(View.VISIBLE);
             mImageCopy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    copyUrlToClipboard(imageUri);
+                    copyUrlToClipboard(v.getContext(), imageUri);
                 }
             });
         } else {
@@ -303,19 +303,8 @@ public class MediaItemFragment extends Fragment {
         }
     }
 
-    private void copyUrlToClipboard(String imageUri) {
-        try {
-            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText(imageUri, imageUri));
-            ToastUtils.showToast(getActivity(), R.string.media_details_copy_url_toast);
-        } catch (Exception e) {
-            AppLog.e(AppLog.T.UTILS, e);
-            ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
-        }
-    }
-
     private void inflateImageView() {
-        ViewStub viewStub = (ViewStub) mView.findViewById(R.id.media_listitem_details_stub);
+        ViewStub viewStub = (ViewStub) getView().findViewById(R.id.media_listitem_details_stub);
         if (viewStub != null) {
             if (mIsLocal)
                 viewStub.setLayoutResource(R.layout.media_grid_image_local);
@@ -324,7 +313,7 @@ public class MediaItemFragment extends Fragment {
             viewStub.inflate();
         }
 
-        mImageView = (ImageView) mView.findViewById(R.id.media_listitem_details_image);
+        mImageView = (ImageView) getView().findViewById(R.id.media_listitem_details_image);
 
         // add a background color so something appears while image is downloaded - note that this
         // must be translucent so progress bar appears beneath it
@@ -397,5 +386,16 @@ public class MediaItemFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static void copyUrlToClipboard(Context context, String imageUri) {
+        try {
+            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText(imageUri, imageUri));
+            ToastUtils.showToast(context, R.string.media_details_copy_url_toast);
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.UTILS, e);
+            ToastUtils.showToast(context, R.string.error_copy_to_clipboard);
+        }
     }
 }
