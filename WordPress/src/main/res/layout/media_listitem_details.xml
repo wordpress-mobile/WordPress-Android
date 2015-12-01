@@ -37,18 +37,12 @@
             android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium">
 
-            <ProgressBar
-                android:id="@+id/media_listitem_details_progress"
+            <org.wordpress.android.widgets.WPNetworkImageView
+                android:id="@+id/media_listitem_details_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-
-            <ViewStub
-                android:id="@+id/media_listitem_details_stub"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inflatedId="@+id/media_listitem_details_image" />
-
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY" />
         </RelativeLayout>
 
         <LinearLayout
@@ -63,6 +57,7 @@
                 android:layout_marginBottom="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_weight="1"
+                android:background="?android:selectableItemBackground"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="media_listitem_details_file_name" />
@@ -72,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:background="@drawable/selectable_background_wordpress"
+                android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/media_details_copy_url_description"
                 android:src="@drawable/ic_content_copy_black_24dp" />
         </LinearLayout>

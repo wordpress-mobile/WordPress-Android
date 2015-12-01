@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -21,16 +20,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -38,12 +31,14 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
@@ -55,16 +50,14 @@ public class MediaItemFragment extends Fragment {
 
     public static final String TAG = MediaItemFragment.class.getName();
 
-    private ImageView mImageView;
+    private WPNetworkImageView mImageView;
     private TextView mCaptionView;
     private TextView mDescriptionView;
     private TextView mDateView;
     private TextView mFileNameView;
     private TextView mFileTypeView;
-    private ImageView mImageCopy;
+    private ImageView mImgBtnCopy;
     private MediaItemFragmentCallback mCallback;
-    private ImageLoader mImageLoader;
-    private ProgressBar mProgressView;
 
     private boolean mIsLocal;
 
@@ -86,7 +79,6 @@ public class MediaItemFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageLoader = MediaImageLoader.getInstance();
         setHasOptionsMenu(true);
     }
 
@@ -131,8 +123,8 @@ public class MediaItemFragment extends Fragment {
         mDateView = (TextView) view.findViewById(R.id.media_listitem_details_date);
         mFileNameView = (TextView) view.findViewById(R.id.media_listitem_details_file_name);
         mFileTypeView = (TextView) view.findViewById(R.id.media_listitem_details_file_type);
-        mProgressView = (ProgressBar) view.findViewById(R.id.media_listitem_details_progress);
-        mImageCopy = (ImageView) view.findViewById(R.id.image_copy);
+        mImgBtnCopy = (ImageView) view.findViewById(R.id.image_copy);
+        mImageView = (WPNetworkImageView) view.findViewById(R.id.media_listitem_details_image);
 
         return view;
     }
@@ -218,61 +210,61 @@ public class MediaItemFragment extends Fragment {
             });
         }
 
-        inflateImageView();
+        float mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
+        float mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
 
         // image and dimensions
-        String dimensions = null;
         if (MediaUtils.isValidImage(imageUri)) {
-            int mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
-            int mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
-            if (mediaWidth > 0 && mediaHeight > 0) {
-                dimensions = mediaWidth + " x " + mediaHeight;
-            }
+            int screenWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+            int screenHeight = DisplayUtils.getDisplayPixelHeight(getActivity());
 
-            float screenWidth;
-            if (this.isInLayout()) {
-                screenWidth =  ((View) mImageView.getParent()).getMeasuredWidth();
+            // size imageView to match media h/w ratio
+            int imageWidth;
+            int imageHeight;
+            if (mediaWidth == 0 || mediaHeight == 0) {
+                imageWidth = screenWidth;
+                imageHeight = screenHeight / 2;
+            } else if (mediaWidth > mediaHeight) {
+                float ratio = mediaHeight / mediaWidth;
+                imageWidth = screenWidth;
+                imageHeight = (int) (imageWidth * ratio);
             } else {
-                screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
+                float ratio = mediaWidth / mediaHeight;
+                imageHeight = screenHeight / 2;
+                imageWidth = (int) (imageHeight * ratio);
             }
-            float screenHeight = getActivity().getResources().getDisplayMetrics().heightPixels;
-
-            if (mediaWidth > screenWidth) {
-                mediaHeight = (int) (mediaHeight / (mediaWidth/screenWidth));
-                mediaWidth = (int) screenWidth;
-            } else if (mediaHeight > screenHeight) {
-                mediaWidth = (int) (mediaWidth / (mediaHeight/screenHeight));
-                mediaHeight = (int) screenHeight;
-            }
+            mImageView.setLayoutParams(new RelativeLayout.LayoutParams(imageWidth, imageHeight));
 
             if (mIsLocal) {
                 final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
-                loadLocalImage(mImageView, filePath, mediaWidth, mediaHeight);
+                loadLocalImage(mImageView, filePath, imageWidth, imageHeight);
             } else {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
+                String thumbnailURL;
                 if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
-                    String thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int) screenWidth);
-                    ((NetworkImageView) mImageView).setImageUrl(thumbnailURL, mImageLoader);
+                    thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int) screenWidth);
                 } else {
-                    ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, mImageLoader);
+                    thumbnailURL = imageUri + "?w=" + imageWidth;
                 }
+                mImageView.setImageUrl(thumbnailURL, WPNetworkImageView.ImageType.PHOTO);
             }
             mImageView.setVisibility(View.VISIBLE);
-            mImageView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, mediaHeight));
         } else {
             mImageView.setVisibility(View.GONE);
-            mProgressView.setVisibility(View.GONE);
         }
 
         // show dimens & file ext together
-        String fileExt = TextUtils.isEmpty(fileURL) ? null : fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-        boolean hasDimens = !TextUtils.isEmpty(dimensions);
+        String dimens =
+                (mediaWidth > 0 && mediaHeight > 0) ? (int) mediaWidth + " x " + (int) mediaHeight : null;
+        String fileExt =
+                TextUtils.isEmpty(fileURL) ? null : fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
+        boolean hasDimens = !TextUtils.isEmpty(dimens);
         boolean hasExt = !TextUtils.isEmpty(fileExt);
         if (hasDimens & hasExt) {
-            mFileTypeView.setText(dimensions + " " + fileExt);
+            mFileTypeView.setText(dimens + " " + fileExt);
             mFileTypeView.setVisibility(View.VISIBLE);
         } else if (hasDimens) {
-            mFileTypeView.setText(dimensions);
+            mFileTypeView.setText(dimens);
             mFileTypeView.setVisibility(View.VISIBLE);
         } else if (hasExt) {
             mFileTypeView.setText(fileExt);
@@ -292,32 +284,17 @@ public class MediaItemFragment extends Fragment {
                             v.getContext(), imageUri, isPrivate);
                 }
             });
-            mImageCopy.setVisibility(View.VISIBLE);
-            mImageCopy.setOnClickListener(new View.OnClickListener() {
+            mImgBtnCopy.setVisibility(View.VISIBLE);
+            mImgBtnCopy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     copyUrlToClipboard(v.getContext(), imageUri);
                 }
             });
         } else {
-            mImageCopy.setVisibility(View.GONE);
+            mImgBtnCopy.setVisibility(View.GONE);
             mImageView.setOnClickListener(null);
         }
-    }
-
-    private void inflateImageView() {
-        ViewStub viewStub = (ViewStub) getView().findViewById(R.id.media_listitem_details_stub);
-        if (viewStub != null) {
-            viewStub.setLayoutResource(mIsLocal ? R.layout.media_grid_image_local : R.layout.media_grid_image_network);
-            viewStub.inflate();
-        }
-
-        mImageView = (ImageView) getView().findViewById(R.id.media_listitem_details_image);
-
-        // add a background color so something appears while image is downloaded - note that this
-        // must be translucent so progress bar appears beneath it
-        mProgressView.setVisibility(View.VISIBLE);
-        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.translucent_grey_lighten_20)));
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
