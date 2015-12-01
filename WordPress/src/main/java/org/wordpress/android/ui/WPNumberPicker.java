@@ -2,14 +2,13 @@ package org.wordpress.android.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import org.wordpress.android.R;
-import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.util.WPPrefUtils;
 
 import java.lang.reflect.Field;
 
@@ -18,14 +17,39 @@ public class WPNumberPicker extends NumberPicker {
 
     public WPNumberPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setWrapSelectorWheel(false);
+        removeDividers();
+    }
 
+    @Override
+    public void addView(View child, int index, android.view.ViewGroup.LayoutParams params) {
+        super.addView(child, index, params);
+        updateView(child);
+    }
+
+    @Override
+    public void setValue(int value) {
+        super.setValue(value);
+        EditText view = (EditText) getChildAt(0);
+        WPPrefUtils.layoutAsNumberPickerSelected(view);
+    }
+
+    private void updateView(final View view) {
+        if (view instanceof TextView) {
+            WPPrefUtils.layoutAsNumberPickerPeek((TextView) view);
+        }
+    }
+
+    /**
+     * From https://www.snip2code.com/Snippet/67740/NumberPicker-with-transparent-selection-
+     */
+    private void removeDividers() {
         Class<?> numberPickerClass = null;
         try {
-            numberPickerClass = Class.forName("android.widget.NumberPicker");
+            numberPickerClass = Class.forName(NumberPicker.class.getName());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        if (numberPickerClass == null) return;
 
         Field selectionDivider = null;
         try {
@@ -33,43 +57,13 @@ public class WPNumberPicker extends NumberPicker {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+        if (selectionDivider == null) return;
 
         try {
             selectionDivider.setAccessible(true);
             selectionDivider.set(this, null);
         } catch (IllegalArgumentException | IllegalAccessException | Resources.NotFoundException e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void addView(View child) {
-        super.addView(child);
-        updateView(child);
-    }
-
-    @Override
-    public void addView(View child, int index,
-                        android.view.ViewGroup.LayoutParams params) {
-        super.addView(child, index, params);
-        updateView(child);
-    }
-
-    @Override
-    public void addView(View child, android.view.ViewGroup.LayoutParams params) {
-        super.addView(child, params);
-        updateView(child);
-    }
-
-    private void updateView(View view) {
-        if (view instanceof TextView) {
-            Typeface type = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_OPEN_SANS,
-                    Typeface.NORMAL,
-                    TypefaceCache.VARIATION_NORMAL);
-            ((TextView) view).setTypeface(type);
-            ((TextView) view).setTextSize(24);
-            ((TextView) view).setTextColor(getResources().getColor(R.color.wp_blue));
         }
     }
 }

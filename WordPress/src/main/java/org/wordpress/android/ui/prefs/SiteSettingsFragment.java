@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -18,10 +17,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
-import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,8 +46,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.widgets.WPEditText;
-import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.List;
 import java.util.Locale;
@@ -180,26 +177,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                 prefList.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
                     @Override
                     public void onChildViewAdded(View parent, View child) {
-                        Resources res = getResources();
                         if (child.getId() == android.R.id.title && child instanceof TextView) {
                             TextView title = (TextView) child;
-                            title.setTypeface(TypefaceCache.getTypeface(getActivity(),
-                                    TypefaceCache.FAMILY_OPEN_SANS,
-                                    Typeface.BOLD,
-                                    TypefaceCache.VARIATION_LIGHT));
-                            title.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                                    res.getDimensionPixelSize(R.dimen.text_sz_medium));
-                            title.setTextColor(ContextCompat.getColor(getActivity(),
-                                                                      R.color.orange_jazzy));
+                            WPPrefUtils.layoutAsBody2(title);
                         } else {
-                            Typeface typeface = TypefaceCache.getTypeface(getActivity(),
-                                    TypefaceCache.FAMILY_OPEN_SANS,
-                                    Typeface.NORMAL,
-                                    TypefaceCache.VARIATION_NORMAL);
                             TextView title = (TextView) child.findViewById(android.R.id.title);
-                            title.setTypeface(typeface);
-                            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-                            title.setTextColor(res.getColor(title.isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10));
+                            WPPrefUtils.layoutAsSubhead(title);
                         }
                     }
 
