@@ -5,7 +5,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:paddingTop="1dp"
+    android:paddingBottom="1dp"
+    android:orientation="vertical"
+    android:background="@color/grey_lighten_30">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +19,8 @@
         android:paddingRight="@dimen/related_posts_dialog_padding_right"
         android:paddingEnd="@dimen/related_posts_dialog_padding_right"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/white">
 
         <org.wordpress.android.widgets.WPSwitch
             android:id="@+id/toggle_related_posts_switch"
@@ -24,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="@string/related_posts_switch_title"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_extra_large"
+            android:textSize="@dimen/text_sz_large"
             app:fontFamily="openSans"
             app:fontVariation="normal" />
 
