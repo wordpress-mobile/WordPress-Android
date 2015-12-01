@@ -281,8 +281,15 @@ public class MediaItemFragment extends Fragment {
             mFileTypeView.setVisibility(View.GONE);
         }
 
-        // copy url to clipboard
+        // enable fullscreen photo and copy url to clipboard for non-local
         if (!mIsLocal && !TextUtils.isEmpty(imageUri)) {
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderPhotoViewer(
+                            v.getContext(), imageUri, WordPress.getCurrentBlog().isPrivate());
+                }
+            });
             mImageCopy.setVisibility(View.VISIBLE);
             mImageCopy.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -292,6 +299,7 @@ public class MediaItemFragment extends Fragment {
             });
         } else {
             mImageCopy.setVisibility(View.GONE);
+            mImageView.setOnClickListener(null);
         }
     }
 
