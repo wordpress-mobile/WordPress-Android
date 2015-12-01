@@ -20,8 +20,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -185,9 +187,9 @@ public class MediaItemFragment extends Fragment {
 
         String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
         if (mIsLocal) {
-            mDateView.setText(getResources().getString(R.string.media_details_added_on) + " " + date);
+            mDateView.setText(String.format(getString(R.string.media_details_date_added), date));
         } else {
-            mDateView.setText(getResources().getString(R.string.media_details_uploaded_on) + " " + date);
+            mDateView.setText(String.format(getString(R.string.media_details_date_uploaded), date));
         }
 
         final String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
@@ -218,7 +220,7 @@ public class MediaItemFragment extends Fragment {
             int screenWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
             int screenHeight = DisplayUtils.getDisplayPixelHeight(getActivity());
 
-            // size imageView to match media h/w ratio
+            // determine size for display
             int imageWidth;
             int imageHeight;
             if (mediaWidth == 0 || mediaHeight == 0) {
@@ -233,7 +235,12 @@ public class MediaItemFragment extends Fragment {
                 imageHeight = screenHeight / 2;
                 imageWidth = (int) (imageHeight * ratio);
             }
-            mImageView.setLayoutParams(new RelativeLayout.LayoutParams(imageWidth, imageHeight));
+
+            // set the imageView's parent height to match the image so it takes up space while
+            // the image is loading
+            FrameLayout frameImage = (FrameLayout) getView().findViewById(R.id.frame_image);
+            frameImage.setLayoutParams(
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, imageHeight));
 
             if (mIsLocal) {
                 final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
@@ -242,9 +249,9 @@ public class MediaItemFragment extends Fragment {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 String thumbnailURL;
                 if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
-                    thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int) screenWidth);
+                    thumbnailURL = StringUtils.getPhotonUrl(imageUri, screenWidth);
                 } else {
-                    thumbnailURL = imageUri + "?w=" + imageWidth;
+                    thumbnailURL = UrlUtils.removeQuery(imageUri) + "?w=" + imageWidth;
                 }
                 mImageView.setImageUrl(thumbnailURL, WPNetworkImageView.ImageType.PHOTO);
             }
