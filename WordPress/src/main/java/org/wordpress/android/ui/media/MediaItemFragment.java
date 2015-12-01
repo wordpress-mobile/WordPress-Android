@@ -191,9 +191,13 @@ public class MediaItemFragment extends Fragment {
             mDateView.setText(getResources().getString(R.string.media_details_uploaded_on) + " " + date);
         }
 
-        // hyperlink to image url unless local
         final String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
         String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        String imageUri = TextUtils.isEmpty(fileURL)
+                ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
+                : fileURL;
+
+        // hyperlink to image url unless local
         if (mIsLocal || TextUtils.isEmpty(fileURL)) {
             mFileNameView.setText(fileName);
         } else {
@@ -211,9 +215,6 @@ public class MediaItemFragment extends Fragment {
 
         // image and dimensions
         String dimensions = null;
-        String imageUri = TextUtils.isEmpty(fileURL)
-                ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
-                : fileURL;
         if (MediaUtils.isValidImage(imageUri)) {
             int mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
             int mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
@@ -286,9 +287,10 @@ public class MediaItemFragment extends Fragment {
 
         mImageView = (ImageView) mView.findViewById(R.id.media_listitem_details_image);
 
-        // add a background color so something appears while image is downloaded
+        // add a background color so something appears while image is downloaded - note that this
+        // must be translucent so progress bar appears beneath it
         mProgressView.setVisibility(View.VISIBLE);
-        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.grey_lighten_20)));
+        mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.translucent_grey_lighten_20)));
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {

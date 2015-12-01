@@ -7,8 +7,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/content_margin"
+        android:layout_marginRight="@dimen/content_margin"
         android:orientation="vertical"
-        android:padding="@dimen/margin_extra_large">
+        android:padding="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_caption"
@@ -25,22 +27,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="media_listitem_details_description" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ViewStub
-                android:id="@+id/media_listitem_details_stub"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:layout_marginTop="@dimen/margin_small"
-                android:inflatedId="@+id/media_listitem_details_image" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium">
 
             <ProgressBar
                 android:id="@+id/media_listitem_details_progress"
@@ -48,17 +43,37 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />
 
+            <ViewStub
+                android:id="@+id/media_listitem_details_stub"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inflatedId="@+id/media_listitem_details_image" />
+
         </RelativeLayout>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_listitem_details_file_name"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="media_listitem_details_file_name" />
+            android:orientation="horizontal">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/media_listitem_details_file_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_weight="1"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="media_listitem_details_file_name" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/selector"
+                android:src="@drawable/ic_action_copy_white_24dp" />
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_date"
