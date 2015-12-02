@@ -1785,7 +1785,7 @@ public class WordPressDB {
         }
     }
 
-    public Note getNoteById(int id) {
+    public Note getNoteById(long id) {
         Cursor cursor = db.query(NOTES_TABLE, new String[] {"raw_note_data"},  "id=" + id, null, null, null, null);
         cursor.moveToFirst();
 

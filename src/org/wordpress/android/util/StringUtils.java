@@ -277,4 +277,17 @@ public class StringUtils {
             return defaultValue;
         }
     }
+
+    public static long stringToLong(String s) {
+        return stringToLong(s, 0);
+    }
+    public static long stringToLong(String s, long defaultValue) {
+        if (s == null)
+            return defaultValue;
+        try {
+            return Long.valueOf(s);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
 }

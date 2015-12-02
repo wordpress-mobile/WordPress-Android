@@ -59,14 +59,14 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
 
-    private static final int UNSPECIFIED_NOTE_ID = -1;
+    private static final long UNSPECIFIED_NOTE_ID = -1;
 
     private NotificationsListFragment mNotesList;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
     private BroadcastReceiver mBroadcastReceiver;
     private boolean mDualPane;
-    private int mSelectedNoteId;
+    private long mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
     private BlogPairId mTmpSelectedComment;
     private BlogPairId mTmpSelectedReaderPost;
@@ -110,7 +110,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private void restoreSavedInstance(final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-            int noteId = savedInstanceState.getInt(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID);
+            long noteId = savedInstanceState.getLong(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID);
 
             LoadNotesCallback notesLoadedCallback = new LoadNotesCallback() {
                 @Override
@@ -143,7 +143,7 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-    private void loadNotes(final boolean launchWithNoteId, final int noteId, final LoadNotesCallback callback) {
+    private void loadNotes(final boolean launchWithNoteId, final long noteId, final LoadNotesCallback callback) {
         new Thread() {
             @Override
             public void run() {
@@ -226,11 +226,11 @@ public class NotificationsActivity extends WPActionBarActivity
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
-    private void launchWithNoteId(int noteId) {
+    private void launchWithNoteId(long noteId) {
         final Intent intent = getIntent();
         if (noteId == UNSPECIFIED_NOTE_ID) {
             if (intent.hasExtra(NOTE_ID_EXTRA)) {
-                noteId = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
+                noteId = Long.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
             }
         }
         if (noteId != UNSPECIFIED_NOTE_ID) {
@@ -240,7 +240,7 @@ public class NotificationsActivity extends WPActionBarActivity
             } else {
                 // find it/load it etc
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("ids", Integer.toString(noteId));
+                params.put("ids", Long.toString(noteId));
                 NotesResponseHandler handler = new NotesResponseHandler() {
                     @Override
                     public void onNotes(List<Note> notes) {
@@ -364,8 +364,8 @@ public class NotificationsActivity extends WPActionBarActivity
         if (note == null || isFinishing() || isActivityDestroyed()) {
             return;
         }
-        
-        mSelectedNoteId = StringUtils.stringToInt(note.getId());
+
+        mSelectedNoteId = StringUtils.stringToLong(note.getId());
         mNotesList.setNoteSelected(note, scrollToNote);
 
         // mark the note as read if it's unread
@@ -587,7 +587,7 @@ public class NotificationsActivity extends WPActionBarActivity
             outState.putBoolean("bug_19917_fix", true);
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
-        outState.putInt(NOTE_ID_EXTRA, mSelectedNoteId);
+        outState.putLong(NOTE_ID_EXTRA, mSelectedNoteId);
         if (mSelectedReaderPost != null) {
             outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedReaderPost);
         }
