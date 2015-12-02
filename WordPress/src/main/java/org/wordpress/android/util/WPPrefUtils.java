@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.TypedValue;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.widgets.TypefaceCache;
@@ -103,9 +104,10 @@ public class WPPrefUtils {
     /**
      * Styles a {@link TextView} to display text in an editable text field.
      */
-    public static void layoutAsInput(TextView view) {
+    public static void layoutAsInput(EditText view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, R.color.grey_dark, getNormalTypeface(view.getContext()));
+        view.setHintTextColor(view.getResources().getColor(R.color.grey_lighten_10));
     }
 
     /**
@@ -122,15 +124,6 @@ public class WPPrefUtils {
     public static void layoutAsNumberPickerPeek(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, R.color.grey_dark, getNormalTypeface(view.getContext()));
-    }
-
-    public static void setTextViewAttributes(TextView textView, int size, int colorRes, int family, int style, int variation) {
-        if (textView == null) return;
-        Context context = textView.getContext();
-        if (context == null) return;
-
-        Typeface typeface = TypefaceCache.getTypeface(context, family, style, variation);
-        setTextViewAttributes(textView, size, colorRes, typeface);
     }
 
     public static void setTextViewAttributes(TextView textView, int size, int colorRes, Typeface typeface) {

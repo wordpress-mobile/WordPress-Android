@@ -24,9 +24,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -47,7 +49,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
-import org.wordpress.android.util.widgets.WPEditText;
 
 import java.util.List;
 import java.util.Locale;
@@ -765,8 +766,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             public void onClick(View v) {
                 AlertDialog.Builder builder =
                         new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-                final EditText input = new WPEditText(getActivity());
-                input.setHint("Enter a word or phrase");
+                final EditText input = new EditText(getActivity());
+                WPPrefUtils.layoutAsInput(input);
+                input.setHint(R.string.list_editor_input_hint);
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -781,9 +783,15 @@ public class SiteSettingsFragment extends PreferenceFragment
                 });
                 builder.setNegativeButton(R.string.cancel, null);
                 AlertDialog alertDialog = builder.create();
-                alertDialog.setView(input, 64, 64, 64, 0);
+                int spacing = getResources().getDimensionPixelSize(R.dimen.dlp_padding_start);
+                alertDialog.setView(input, spacing, spacing, spacing, 0);
                 alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 alertDialog.show();
+                alertDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                Button positive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
+                if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
             }
         });
 

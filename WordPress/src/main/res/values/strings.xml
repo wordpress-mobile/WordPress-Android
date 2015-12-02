@@ -547,6 +547,7 @@
     <string name="related_post_preview2_site">in \"Apps\"</string>
     <string name="related_post_preview3_title">Upgrade Focus: VideoPress For Weddings</string>
     <string name="related_post_preview3_site">in \"Upgrade\"</string>
+    <string name="list_editor_input_hint">Enter a word or phrase</string>
     <string name="hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="multiple_links_description">Require approval for comments that include more than this number of links.</string>
