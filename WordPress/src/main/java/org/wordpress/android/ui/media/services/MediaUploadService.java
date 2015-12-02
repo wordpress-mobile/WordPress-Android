@@ -172,8 +172,8 @@ public class MediaUploadService extends Service {
                 new ApiHelper.UploadMediaTask.Callback() {
             @Override
             public void onSuccess(String remoteId, String remoteUrl) {
-                // once the file has been uploaded, delete the local database entry and
-                // download the new one so that we are up-to-date and so that users can edit it.
+                // once the file has been uploaded, update the local database entry (swap the id with the remote id)
+                // and download the new one
                 WordPress.wpDB.updateMediaLocalToRemoteId(blogIdStr, mediaId, remoteId);
                 EventBus.getDefault().post(new MediaEvents.MediaUploadSucceeded(blogIdStr, mediaId,
                         remoteId, remoteUrl));
