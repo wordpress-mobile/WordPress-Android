@@ -57,8 +57,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends Activity
-    implements MediaAddFragment.MediaAddFragmentCallback, Bucket.Listener<Note> {
+public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -539,9 +538,5 @@ public class WPMainActivity extends Activity
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
-    }
-
-    @Override
-    public void onMediaAdded(String mediaId) {
     }
 }
