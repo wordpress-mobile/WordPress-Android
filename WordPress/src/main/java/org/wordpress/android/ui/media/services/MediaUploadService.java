@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.WordPressDB;
@@ -173,8 +174,9 @@ public class MediaUploadService extends Service {
             public void onSuccess(String remoteId, String remoteUrl) {
                 // once the file has been uploaded, delete the local database entry and
                 // download the new one so that we are up-to-date and so that users can edit it.
-                WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
-                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadSucceeded(mediaId, remoteId, remoteUrl));
+                WordPress.wpDB.updateMediaLocalToRemoteId(blogIdStr, mediaId, remoteId);
+                EventBus.getDefault().post(new MediaEvents.MediaUploadSucceeded(blogIdStr, mediaId,
+                        remoteId, remoteUrl));
                 fetchMediaFile(remoteId);
             }
 
@@ -183,7 +185,7 @@ public class MediaUploadService extends Service {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, MediaUploadState.FAILED);
                 mUploadInProgress = false;
                 mCurrentUploadMediaId = "";
-                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadFailed(mediaId,
+                EventBus.getDefault().post(new MediaEvents.MediaUploadFailed(mediaId,
                         getString(R.string.upload_failed)));
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
@@ -194,7 +196,7 @@ public class MediaUploadService extends Service {
 
             @Override
             public void onProgressUpdate(float progress) {
-                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadProgress(mediaId, progress));
+                EventBus.getDefault().post(new MediaEvents.MediaUploadProgress(mediaId, progress));
             }
         });
 
@@ -218,6 +220,7 @@ public class MediaUploadService extends Service {
                 mUploadInProgress = false;
                 mCurrentUploadMediaId = "";
                 mHandler.post(mFetchQueueTask);
+                EventBus.getDefault().post(new MediaChanged(blogId, mediaId));
             }
 
             @Override
