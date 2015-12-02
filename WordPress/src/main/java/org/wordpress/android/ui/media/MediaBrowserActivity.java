@@ -8,13 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
@@ -23,7 +23,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,12 +38,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -58,12 +57,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * The main activity in which the user can browse their media.
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, MediaAddFragmentCallback {
+        MediaEditFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
@@ -146,10 +147,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onStart() {
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         super.onStop();
     }
@@ -501,18 +504,30 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    @Override
-    public void onMediaAdded(String mediaId) {
-        if (WordPress.getCurrentBlog() == null || mediaId == null) {
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaChanged event) {
+        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaUploadSucceed event) {
+        updateOnMediaChanged(event.mLocalBlogId, event.mLocalMediaId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
+        ToastUtils.showToast(this, event.mErrorMessage, ToastUtils.Duration.LONG);
+    }
+
+    public void updateOnMediaChanged(String blogId, String mediaId) {
+        if (mediaId == null) {
             return;
         }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
 
-        if (cursor == null || !cursor.moveToFirst()) {
+        // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
+        // view (if it was the one displayed)
+        if (!WordPress.wpDB.mediaFileExists(blogId, mediaId)) {
             mMediaGridFragment.removeFromMultiSelect(mediaId);
-            mMediaGridFragment.refreshMediaFromDB();
-
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                     && mediaId.equals(mMediaEditFragment.getMediaId())) {
                 if (mMediaEditFragment.isInLayout()) {
@@ -521,12 +536,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     getFragmentManager().popBackStack();
                 }
             }
-        } else {
-            mMediaGridFragment.refreshMediaFromDB();
         }
-        if (cursor != null) {
-            cursor.close();
-        }
+
+        // Update Grid view
+        mMediaGridFragment.refreshMediaFromDB();
+
+        // Update Spinner views
+        mMediaGridFragment.updateFilterText();
+        mMediaGridFragment.updateSpinnerAdapter();
     }
 
     @Override

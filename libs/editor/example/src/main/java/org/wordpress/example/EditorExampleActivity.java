@@ -12,6 +12,7 @@ import android.view.View;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -31,7 +32,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE = 1112;
 
-    public static final int MEDIA_REMOTE_ID_SAMPLE = 123;
+    public static final String MEDIA_REMOTE_ID_SAMPLE = "123";
 
     private static final int SELECT_PHOTO_MENU_POSITION = 0;
     private static final int SELECT_PHOTO_FAIL_MENU_POSITION = 1;
@@ -59,6 +60,17 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         super.onAttachFragment(fragment);
         if (fragment instanceof EditorFragmentAbstract) {
             mEditorFragment = (EditorFragmentAbstract) fragment;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment =  getFragmentManager()
+                .findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+        if (fragment != null && fragment.isVisible()) {
+            ((ImageSettingsDialogFragment) fragment).dismissFragment();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -188,7 +200,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                         count += 0.1;
                     }
 
-                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaUrl);
+                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId,
+                            MEDIA_REMOTE_ID_SAMPLE, mediaUrl);
 
                     if (mFailedUploads.containsKey(mediaId)) {
                         mFailedUploads.remove(mediaId);
