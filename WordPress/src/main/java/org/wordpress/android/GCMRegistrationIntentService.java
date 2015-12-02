@@ -19,7 +19,6 @@ import org.wordpress.android.util.HelpshiftHelper;
 import java.util.UUID;
 
 public class GCMRegistrationIntentService extends IntentService {
-    private static String lastRegisteredGCMToken = null;
 
     public GCMRegistrationIntentService() {
         super("GCMRegistrationIntentService");
@@ -53,7 +52,7 @@ public class GCMRegistrationIntentService extends IntentService {
                 String uuid = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, null);
                 if (uuid == null) {
                     uuid = UUID.randomUUID().toString();
-                    preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
+                    preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid).apply();
                 }
                 preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, gcmToken).apply();
                 NotificationsUtils.registerDeviceForPushNotifications(this, gcmToken);
