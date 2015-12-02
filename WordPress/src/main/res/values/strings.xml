@@ -434,7 +434,6 @@
     <string name="stats_for">Stats for %s</string>
     <string name="stats_other_recent_stats_label">Other Recent Stats</string>
     <string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
-    <string name="view_stats_full_site">View full site</string>
     <string name="stats_view_all">View all</string>
     <string name="stats_view">View</string>
     <string name="stats_pagination_label">Page %1$s of %2$s</string>
