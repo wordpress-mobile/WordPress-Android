@@ -10,7 +10,7 @@ import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.R;
 
 /**
- * Design guidelines for Calypso-styled Site Settings (and likely
+ * Design guidelines for Calypso-styled Site Settings (and likely other screens)
  */
 
 public class WPPrefUtils {
