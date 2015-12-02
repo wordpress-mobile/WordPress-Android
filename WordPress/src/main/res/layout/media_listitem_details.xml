@@ -40,7 +40,7 @@
                 android:id="@+id/media_listitem_details_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center_horizontal"
                 tools:src="@drawable/drake_empty_results" />
         </FrameLayout>
 

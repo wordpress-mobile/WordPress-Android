@@ -215,11 +215,11 @@ public class MediaItemFragment extends Fragment {
                 imageHeight = screenHeight / 2;
             } else if (mediaWidth > mediaHeight) {
                 float ratio = mediaHeight / mediaWidth;
-                imageWidth = screenWidth;
+                imageWidth = Math.min(screenWidth, (int) mediaWidth);
                 imageHeight = (int) (imageWidth * ratio);
             } else {
                 float ratio = mediaWidth / mediaHeight;
-                imageHeight = screenHeight / 2;
+                imageHeight = Math.min(screenHeight / 2, (int) mediaHeight);
                 imageWidth = (int) (imageHeight * ratio);
             }
 
@@ -236,7 +236,7 @@ public class MediaItemFragment extends Fragment {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 String thumbnailURL;
                 if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
-                    thumbnailURL = StringUtils.getPhotonUrl(imageUri, screenWidth);
+                    thumbnailURL = StringUtils.getPhotonUrl(imageUri, imageWidth);
                 } else {
                     thumbnailURL = UrlUtils.removeQuery(imageUri) + "?w=" + imageWidth;
                 }
