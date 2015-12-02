@@ -20,6 +20,7 @@ public class HtmlUtils {
      * Removes html from the passed string - relies on Html.fromHtml which handles invalid HTML,
      * but it's very slow, so avoid using this where performance is important
      * @param text String containing html
+     * @return String without HTML
      */
     public static String stripHtml(final String text) {
         if (TextUtils.isEmpty(text)) {
@@ -32,6 +33,7 @@ public class HtmlUtils {
      * This is much faster than stripHtml() but should only be used when we know the html is valid
      * since the regex will be unpredictable with invalid html
      * @param str String containing only valid html
+     * @return String without HTML
      */
     public static String fastStripHtml(String str) {
         if (TextUtils.isEmpty(str)) {
@@ -53,7 +55,7 @@ public class HtmlUtils {
     }
 
     /*
-     * same as apache.commons.lang.StringUtils.stripStart() but also removes non-breaking
+     * Same as apache.commons.lang.StringUtils.stripStart() but also removes non-breaking
      * space (160) chars
      */
     private static String trimStart(final String str) {
@@ -71,6 +73,7 @@ public class HtmlUtils {
     /**
      * Convert html entities to actual Unicode characters - relies on commons apache lang
      * @param text String to be decoded to Unicode
+     * @return String containing unicode characters
      */
     public static String fastUnescapeHtml(final String text) {
         if (text == null || !text.contains("&")) {
@@ -83,6 +86,7 @@ public class HtmlUtils {
      * Converts an R.color.xxx resource to an HTML hex color
      * @param context Android Context
      * @param resId Android R.color.xxx
+     * @return A String HTML hex color code
      */
     public static String colorResToHtmlColor(Context context, int resId) {
         try {
@@ -92,16 +96,15 @@ public class HtmlUtils {
         }
     }
 
-
-
     /**
-     * Remove "script".."/script" blocks from the passed string - added to project after noticing
-     * comments on posts that use the "Sociable" plugin
-     * may have a script block which followed by a CDATA section
-     * all of which will show up if we don't strip it here.
+     * Remove {@code <script>..</script>} blocks from the passed string - added to project after noticing
+     * comments on posts that use the "Sociable" plugin ( http://wordpress.org/plugins/sociable/ )
+     * may have a script block which contains {@code <!--//-->} followed by a CDATA section followed by {@code <!]]>,}
+     * all of which will show up if we don't strip it here (example: http://cl.ly/image/0J0N3z3h1i04 )
+     * first seen at http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/
      * @see <a href="http://wordpress.org/plugins/sociable/">Wordpress Sociable Plugin</a>
      * @see <a href="http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/">First seen at</a>
-     * @return String without &lt;script&gt;..&lt;/script&gt; , &lt;!--//--&gt; , followed by a CDATA section followed by &lt;!]]&gt;
+     * @return String without {@code <script>..</script>},  {@code <!--//-->} blocks followed by a CDATA section followed by {@code <!]]>,}
      * @param text String containing script tags
      */
     public static String stripScript(final String text) {
@@ -125,11 +128,10 @@ public class HtmlUtils {
     }
 
     /**
-     * An alternative to Html.fromHtml() supporting "ul" (&lt;ul&gt;), "ol" (&lt;ol&gt;), "blockquote" (&lt;blockquote&gt;)
+     * An alternative to Html.fromHtml() supporting {@code <ul>}, {@code <ol>}, {@code <blockquote>}
      * tags and replacing EmoticonsUtils with Emojis
      * @param  source
      * @param  wpImageGetter
-     * @return
      */
     public static SpannableStringBuilder fromHtml(String source, WPImageGetter wpImageGetter) {
         SpannableStringBuilder html;
