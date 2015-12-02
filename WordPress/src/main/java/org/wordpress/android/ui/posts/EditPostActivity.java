@@ -756,6 +756,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onBackPressed() {
+        Fragment imageSettingsFragment = getFragmentManager().findFragmentByTag(
+                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+        if (imageSettingsFragment != null && imageSettingsFragment.isVisible()) {
+            ((ImageSettingsDialogFragment) imageSettingsFragment).dismissFragment();
+            return;
+        }
+
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
