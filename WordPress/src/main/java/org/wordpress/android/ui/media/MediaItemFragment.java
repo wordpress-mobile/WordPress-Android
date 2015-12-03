@@ -202,32 +202,47 @@ public class MediaItemFragment extends Fragment {
         float mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
         float mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
 
+        boolean isValidImage = MediaUtils.isValidImage(imageUri);
+        ViewGroup containerView = (ViewGroup) getView().findViewById(R.id.layout_image_container);
+        containerView.setVisibility(isValidImage ? View.VISIBLE : View.GONE);
+
         // image and dimensions
-        if (MediaUtils.isValidImage(imageUri)) {
+        if (isValidImage) {
             int screenWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
             int screenHeight = DisplayUtils.getDisplayPixelHeight(getActivity());
 
             // determine size for display
             int imageWidth;
             int imageHeight;
+            boolean isFullWidth;
             if (mediaWidth == 0 || mediaHeight == 0) {
                 imageWidth = screenWidth;
                 imageHeight = screenHeight / 2;
+                isFullWidth = true;
             } else if (mediaWidth > mediaHeight) {
                 float ratio = mediaHeight / mediaWidth;
                 imageWidth = Math.min(screenWidth, (int) mediaWidth);
                 imageHeight = (int) (imageWidth * ratio);
+                isFullWidth = (imageWidth == screenWidth);
             } else {
                 float ratio = mediaWidth / mediaHeight;
                 imageHeight = Math.min(screenHeight / 2, (int) mediaHeight);
                 imageWidth = (int) (imageHeight * ratio);
+                isFullWidth = false;
             }
 
             // set the imageView's parent height to match the image so it takes up space while
             // the image is loading
-            FrameLayout frameImage = (FrameLayout) getView().findViewById(R.id.frame_image);
-            frameImage.setLayoutParams(
+            FrameLayout frameView = (FrameLayout) getView().findViewById(R.id.layout_image_frame);
+            frameView.setLayoutParams(
                     new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, imageHeight));
+
+            // add padding to the frame if the image isn't full-width
+            if (!isFullWidth) {
+                int hpadding = getResources().getDimensionPixelSize(R.dimen.content_margin);
+                int vpadding = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
+                frameView.setPadding(hpadding, vpadding, hpadding, vpadding);
+            }
 
             if (mIsLocal) {
                 final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
@@ -242,9 +257,6 @@ public class MediaItemFragment extends Fragment {
                 }
                 mImageView.setImageUrl(thumbnailURL, WPNetworkImageView.ImageType.PHOTO);
             }
-            mImageView.setVisibility(View.VISIBLE);
-        } else {
-            mImageView.setVisibility(View.GONE);
         }
 
         // show dimens & file ext together
