@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/media_filter_spinner_container"
@@ -48,7 +49,9 @@
             android:paddingRight="@dimen/margin_small"
             android:scrollbarStyle="outsideOverlay"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="@dimen/margin_small" />
+            android:verticalSpacing="@dimen/margin_small"
+            tools:listitem="@layout/media_grid_item"/>
+
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <LinearLayout
@@ -58,8 +61,7 @@
         android:layout_below="@+id/media_filter_spinner_container"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:visibility="gone">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/empty_view_title"
@@ -73,4 +75,4 @@
             app:fixWidowWords="true" />
 
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -45,6 +45,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -80,10 +81,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private String mTitlePlaceholder = "";
     private String mContentPlaceholder = "";
 
+    private boolean mDomHasLoaded = false;
     private boolean mIsKeyboardOpen = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
+    private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles;
     private Set<String> mUploadingMediaIds;
     private Set<String> mFailedMediaIds;
     private MediaGallery mUploadingMediaGallery;
@@ -123,6 +126,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mHideActionBarOnSoftKeyboardUp = true;
         }
 
+        mWaitingMediaFiles = new ConcurrentHashMap<>();
         mUploadingMediaIds = new HashSet<>();
         mFailedMediaIds = new HashSet<>();
 
@@ -620,7 +624,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return "";
         }
 
-        if (mSourceView.getVisibility() == View.VISIBLE) {
+        if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
             mTitle = mSourceViewTitle.getText().toString();
             return StringUtils.notNullStr(mTitle);
         }
@@ -659,7 +663,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return "";
         }
 
-        if (mSourceView.getVisibility() == View.VISIBLE) {
+        if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
             mContentHtml = mSourceViewContent.getText().toString();
             return StringUtils.notNullStr(mContentHtml);
         }
@@ -690,6 +694,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
+        if (!mDomHasLoaded) {
+            // If the DOM hasn't loaded yet, we won't be able to add media to the ZSSEditor
+            // Place them in a queue to be handled when the DOM loaded callback is received
+            mWaitingMediaFiles.put(mediaUrl, mediaFile);
+            return;
+        }
+
         mWebView.post(new Runnable() {
             @Override
             public void run() {
@@ -796,6 +807,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onDomLoaded() {
         mWebView.post(new Runnable() {
             public void run() {
+                mDomHasLoaded = true;
+
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
 
                 // Set title and content placeholder text
@@ -821,6 +834,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 htmlButton.setChecked(false);
                 for (ToggleButton button : mTagToggleButtonMap.values()) {
                     button.setChecked(false);
+                }
+
+                // Add any media files that were placed in a queue due to the DOM not having loaded yet
+                if (mWaitingMediaFiles.size() > 0) {
+                    // Image insertion will only work if the content field is in focus
+                    // (for a new post, no field is in focus until user action)
+                    mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+
+                    for (Map.Entry<String, MediaFile> entry : mWaitingMediaFiles.entrySet()) {
+                        appendMediaFile(entry.getValue(), entry.getKey(), null);
+                    }
+                    mWaitingMediaFiles.clear();
                 }
             }
         });

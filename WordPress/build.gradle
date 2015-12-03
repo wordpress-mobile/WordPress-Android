@@ -32,8 +32,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.8-rc-1"
-        versionCode 219
+        versionName "4.8-rc-3"
+        versionCode 224
         minSdkVersion 14
         targetSdkVersion 23
 
@@ -93,7 +93,7 @@ dependencies {
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:passcodelock:1.0.0'
+    compile 'org.wordpress:passcodelock:1.1.0'
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium

@@ -25,6 +25,7 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -54,6 +55,8 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+
+import de.greenrobot.event.EventBus;
 
 public class WordPressDB {
     public static final String COLUMN_NAME_ID                    = "_id";
@@ -1563,6 +1566,10 @@ public class WordPressDB {
         return count;
     }
 
+    public boolean mediaFileExists(String blogId, String mediaId) {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?",
+                new String[]{blogId, mediaId});
+    }
 
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
@@ -1669,13 +1676,25 @@ public class WordPressDB {
         }
 
         ContentValues values = new ContentValues();
-        values.put("uploadState", uploadState.toString());
+        if (uploadState == null) {
+            values.putNull("uploadState");
+        } else {
+            values.put("uploadState", uploadState.toString());
+        }
 
         if (mediaId == null) {
-            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[]{blogId});
+            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')",
+                    new String[]{blogId});
         } else {
             db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
+            EventBus.getDefault().post(new MediaChanged(blogId, mediaId));
         }
+    }
+
+    public void updateMediaLocalToRemoteId(String blogId, String localMediaId, String remoteMediaId) {
+        ContentValues values = new ContentValues();
+        values.put("mediaId", remoteMediaId);
+        db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, localMediaId});
     }
 
     public void updateMediaFile(String blogId, String mediaId, String title, String description, String caption) {

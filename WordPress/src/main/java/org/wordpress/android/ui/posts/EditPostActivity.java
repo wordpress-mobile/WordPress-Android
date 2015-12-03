@@ -66,7 +66,7 @@ import org.wordpress.android.ui.media.MediaPickerActivity;
 import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.services.MediaUploadEvents;
+import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
@@ -756,6 +756,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onBackPressed() {
+        Fragment imageSettingsFragment = getFragmentManager().findFragmentByTag(
+                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+        if (imageSettingsFragment != null && imageSettingsFragment.isVisible()) {
+            ((ImageSettingsDialogFragment) imageSettingsFragment).dismissFragment();
+            return;
+        }
+
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
@@ -1670,18 +1677,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * the visual and the legacy editor to create a gallery after media selection from local media.
      */
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceeded event) {
+    public void onEventMainThread(MediaEvents.MediaUploadSucceeded event) {
         for (Long galleryId : mPendingGalleryUploads.keySet()) {
-            if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalId)) {
+            if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalMediaId)) {
                 if (mEditorMediaUploadListener != null) {
                     // Notify the visual editor of gallery image upload
                     int remaining = mPendingGalleryUploads.get(galleryId).size() - 1;
-                    mEditorMediaUploadListener.onGalleryMediaUploadSucceeded(galleryId, event.mRemoteId, remaining);
+                    mEditorMediaUploadListener.onGalleryMediaUploadSucceeded(galleryId, event.mRemoteMediaId, remaining);
                 } else {
-                    handleGalleryImageUploadedLegacyEditor(galleryId, event.mLocalId, event.mRemoteId);
+                    handleGalleryImageUploadedLegacyEditor(galleryId, event.mLocalMediaId, event.mRemoteMediaId);
                 }
 
-                mPendingGalleryUploads.get(galleryId).remove(event.mLocalId);
+                mPendingGalleryUploads.get(galleryId).remove(event.mLocalMediaId);
                 if (mPendingGalleryUploads.get(galleryId).size() == 0) {
                     mPendingGalleryUploads.remove(galleryId);
                 }
@@ -1699,19 +1706,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Notify visual editor that a normal image has finished uploading (not part of a gallery)
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalId, event.mRemoteId, event.mRemoteUrl);
+            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, event.mRemoteMediaId,
+                    event.mRemoteMediaUrl);
         }
     }
 
-    public void onEventMainThread(MediaUploadEvents.MediaUploadFailed event) {
+    public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadFailed(event.mLocalId);
+            mEditorMediaUploadListener.onMediaUploadFailed(event.mLocalMediaId);
         }
     }
 
-    public void onEventMainThread(MediaUploadEvents.MediaUploadProgress event) {
+    public void onEventMainThread(MediaEvents.MediaUploadProgress event) {
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadProgress(event.mLocalId, event.mProgress);
+            mEditorMediaUploadListener.onMediaUploadProgress(event.mLocalMediaId, event.mProgress);
         }
     }
 

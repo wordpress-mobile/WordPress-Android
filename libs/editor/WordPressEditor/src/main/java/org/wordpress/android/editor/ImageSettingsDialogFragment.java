@@ -2,11 +2,13 @@ package org.wordpress.android.editor;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,9 +28,17 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
+import java.util.Locale;
 
+/**
+ * A full-screen DialogFragment with image settings.
+ *
+ * Modifies the action bar - host activity must call {@link ImageSettingsDialogFragment#dismissFragment()}
+ * when the fragment is dismissed to restore it.
+ */
 public class ImageSettingsDialogFragment extends DialogFragment {
 
     public static final int IMAGE_SETTINGS_DIALOG_REQUEST_CODE = 5;
@@ -46,6 +56,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private EditText mLinkTo;
     private EditText mWidthText;
     private CheckBox mFeaturedCheckBox;
+
+    private boolean mIsFeatured;
 
     private CharSequence mPreviousActionBarTitle;
     private boolean mPreviousHomeAsUpEnabled;
@@ -84,28 +96,20 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         actionBar.getCustomView().findViewById(R.id.menu_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mImageMeta = extractMetaDataFromFields(mImageMeta);
+
                 String imageRemoteId = "";
                 try {
                     imageRemoteId = mImageMeta.getString("attachment_id");
-
-                    mImageMeta.put("title", mTitleText.getText().toString());
-                    mImageMeta.put("caption", mCaptionText.getText().toString());
-                    mImageMeta.put("alt", mAltText.getText().toString());
-                    mImageMeta.put("align", mAlignmentSpinner.getSelectedItem().toString());
-                    mImageMeta.put("linkUrl", mLinkTo.getText().toString());
-
-                    int newWidth = getEditTextIntegerClamped(mWidthText, 10, mMaxImageWidth);
-                    mImageMeta.put("width", newWidth);
-                    mImageMeta.put("height", getRelativeHeightFromWidth(newWidth));
                 } catch (JSONException e) {
-                    AppLog.d(AppLog.T.EDITOR, "Unable to update JSON array");
+                    AppLog.e(AppLog.T.EDITOR, "Unable to retrieve featured image id from meta data");
                 }
 
                 Intent intent = new Intent();
                 intent.putExtra("imageMeta", mImageMeta.toString());
 
-                boolean isFeaturedImage = mFeaturedCheckBox.isChecked();
-                intent.putExtra("isFeatured", isFeaturedImage);
+                mIsFeatured = mFeaturedCheckBox.isChecked();
+                intent.putExtra("isFeatured", mIsFeatured);
 
                 if (!imageRemoteId.isEmpty()) {
                     intent.putExtra("imageRemoteId", Integer.parseInt(imageRemoteId));
@@ -115,6 +119,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
                 restorePreviousActionBar();
                 getFragmentManager().popBackStack();
+                ToastUtils.showToast(getActivity(), R.string.image_settings_save_toast);
             }
         });
     }
@@ -151,6 +156,10 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 mAltText.setText(mImageMeta.getString("alt"));
 
                 String alignment = mImageMeta.getString("align");
+
+                // Capitalize the alignment value to match the spinner entries
+                alignment = alignment.substring(0, 1).toUpperCase(Locale.US) + alignment.substring(1);
+
                 String[] alignmentArray = getResources().getStringArray(R.array.alignment_array);
                 mAlignmentSpinner.setSelection(Arrays.asList(alignmentArray).indexOf(alignment));
 
@@ -163,7 +172,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 boolean featuredImageSupported = bundle.getBoolean("featuredImageSupported");
                 if (featuredImageSupported) {
                     mFeaturedCheckBox.setVisibility(View.VISIBLE);
-                    mFeaturedCheckBox.setChecked(bundle.getBoolean("isFeatured", false));
+                    mIsFeatured = bundle.getBoolean("isFeatured", false);
+                    mFeaturedCheckBox.setChecked(mIsFeatured);
                 }
 
             } catch (JSONException e1) {
@@ -196,8 +206,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            restorePreviousActionBar();
-            getFragmentManager().popBackStack();
+            dismissFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -215,6 +224,37 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * To be called when the fragment is being dismissed, either by ActionBar navigation or by pressing back in the
+     * navigation bar.
+     * Displays a confirmation dialog if there are unsaved changes, otherwise undoes the fragment's modifications to
+     * the ActionBar and restores the last visible fragment.
+     */
+    public void dismissFragment() {
+        try {
+            JSONObject newImageMeta = extractMetaDataFromFields(new JSONObject());
+
+            for (int i = 0; i < newImageMeta.names().length(); i++) {
+                String name = newImageMeta.names().getString(i);
+                if (!newImageMeta.getString(name).equals(mImageMeta.getString(name))) {
+                    showDiscardChangesDialog();
+                    return;
+                }
+            }
+
+            if (mFeaturedCheckBox.isChecked() != mIsFeatured) {
+                // Featured image status has changed
+                showDiscardChangesDialog();
+                return;
+            }
+        } catch (JSONException e) {
+            AppLog.d(AppLog.T.EDITOR, "Unable to update JSON array");
+        }
+
+        restorePreviousActionBar();
+        getFragmentManager().popBackStack();
+    }
+
     private void restorePreviousActionBar() {
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -227,6 +267,50 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 actionBar.setDisplayShowCustomEnabled(false);
             }
         }
+    }
+
+    /**
+     * Displays a dialog asking the user to confirm that they want to exit, discarding unsaved changes.
+     */
+    private void showDiscardChangesDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.image_settings_dismiss_dialog_title));
+        builder.setPositiveButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                restorePreviousActionBar();
+                getFragmentManager().popBackStack();
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Extracts the meta data from the dialog fields and updates the entries in the given JSONObject.
+     */
+    private JSONObject extractMetaDataFromFields(JSONObject metaData) {
+        try {
+            metaData.put("title", mTitleText.getText().toString());
+            metaData.put("caption", mCaptionText.getText().toString());
+            metaData.put("alt", mAltText.getText().toString());
+            metaData.put("align", mAlignmentSpinner.getSelectedItem().toString().toLowerCase(Locale.US));
+            metaData.put("linkUrl", mLinkTo.getText().toString());
+
+            int newWidth = getEditTextIntegerClamped(mWidthText, 10, mMaxImageWidth);
+            metaData.put("width", newWidth);
+            metaData.put("height", getRelativeHeightFromWidth(newWidth));
+        } catch (JSONException e) {
+            AppLog.d(AppLog.T.EDITOR, "Unable to build JSON object from new meta data");
+        }
+
+        return metaData;
     }
 
     private void loadThumbnail(final String src, final ImageView thumbnailImage) {
