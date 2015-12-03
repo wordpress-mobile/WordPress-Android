@@ -184,26 +184,22 @@ public class MediaItemFragment extends Fragment {
         }
 
         String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
-        if (mIsLocal) {
-            mDateView.setText(String.format(getString(R.string.media_details_date_added), date));
-        } else {
-            mDateView.setText(String.format(getString(R.string.media_details_date_uploaded), date));
-        }
+        mDateView.setText(date);
+        TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
+        txtDateLabel.setText(
+                mIsLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
 
-        final String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-        final String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
+        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
         mImageUri = TextUtils.isEmpty(fileURL)
                 ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
                 : fileURL;
+        boolean isValidImage = MediaUtils.isValidImage(mImageUri);
 
         mFileNameView.setText(fileName);
 
         float mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
         float mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
-
-        boolean isValidImage = MediaUtils.isValidImage(mImageUri);
-        ViewGroup containerView = (ViewGroup) getView().findViewById(R.id.layout_image_container);
-        //containerView.setVisibility(isValidImage ? View.VISIBLE : View.GONE);
 
         // image and dimensions
         if (isValidImage) {
@@ -271,10 +267,7 @@ public class MediaItemFragment extends Fragment {
         boolean hasDimens = !TextUtils.isEmpty(dimens);
         boolean hasExt = !TextUtils.isEmpty(fileExt);
         if (hasDimens & hasExt) {
-            mFileTypeView.setText(dimens + " " + fileExt);
-            mFileTypeView.setVisibility(View.VISIBLE);
-        } else if (hasDimens) {
-            mFileTypeView.setText(dimens);
+            mFileTypeView.setText(fileExt + ", " + dimens);
             mFileTypeView.setVisibility(View.VISIBLE);
         } else if (hasExt) {
             mFileTypeView.setText(fileExt);

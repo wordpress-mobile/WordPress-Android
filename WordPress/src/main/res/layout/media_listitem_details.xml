@@ -13,7 +13,7 @@
             android:id="@+id/layout_image_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/grey_dark"
+            android:background="@color/grey_darken_20"
             android:orientation="vertical">
 
             <FrameLayout
@@ -33,10 +33,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginLeft="@dimen/content_margin"
             android:layout_marginRight="@dimen/content_margin"
-            android:layout_marginTop="@dimen/margin_extra_large"
             android:orientation="vertical"
             android:paddingLeft="@dimen/margin_large"
             android:paddingRight="@dimen/margin_large">
@@ -45,6 +43,7 @@
                 android:id="@+id/media_listitem_details_caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_large"
                 android:textStyle="bold"
@@ -56,6 +55,7 @@
                 android:id="@+id/media_listitem_details_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_large"
@@ -64,13 +64,28 @@
                 tools:visibility="visible" />
 
             <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:text="@string/media_details_label_file_name"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_large" />
+
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_listitem_details_file_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_extra_large"
+                android:textSize="@dimen/text_sz_large"
                 tools:text="media_listitem_details_file_name" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:text="@string/media_details_label_file_type"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_large" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_listitem_details_file_type"
@@ -79,6 +94,15 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="media_listitem_details_file_type" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/media_listitem_details_date_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:text="@string/media_details_label_date_uploaded"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_large" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_listitem_details_date"

@@ -167,8 +167,10 @@
     <string name="delete">Delete</string>
 
     <!-- Media details -->
-    <string name="media_details_date_added">Added %s</string>
-    <string name="media_details_date_uploaded">Uploaded %s</string>
+    <string name="media_details_label_date_added">Added</string>
+    <string name="media_details_label_date_uploaded">Uploaded</string>
+    <string name="media_details_label_file_name">File name</string>
+    <string name="media_details_label_file_type">File type</string>
     <string name="media_details_copy_url">Copy URL</string>
     <string name="media_details_copy_url_toast">URL copied to clipboard</string>
 
