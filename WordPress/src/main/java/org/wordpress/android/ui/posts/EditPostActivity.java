@@ -1679,7 +1679,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String mediaId) {
+    public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
+
+    }
+
+    @Override
+    public void onFeaturedImageChanged(int mediaId) {
 
     }
 
