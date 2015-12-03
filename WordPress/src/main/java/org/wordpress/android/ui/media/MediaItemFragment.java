@@ -203,7 +203,7 @@ public class MediaItemFragment extends Fragment {
 
         boolean isValidImage = MediaUtils.isValidImage(mImageUri);
         ViewGroup containerView = (ViewGroup) getView().findViewById(R.id.layout_image_container);
-        containerView.setVisibility(isValidImage ? View.VISIBLE : View.GONE);
+        //containerView.setVisibility(isValidImage ? View.VISIBLE : View.GONE);
 
         // image and dimensions
         if (isValidImage) {
@@ -256,6 +256,11 @@ public class MediaItemFragment extends Fragment {
                 }
                 mImageView.setImageUrl(thumbnailURL, WPNetworkImageView.ImageType.PHOTO);
             }
+        } else {
+            // not an image so show placeholder icon
+            int placeholderResId = WordPressMediaUtils.getPlaceholder(mImageUri);
+            mImageView.setDefaultImageResId(placeholderResId);
+            mImageView.showDefaultImage();
         }
 
         // show dimens & file ext together
