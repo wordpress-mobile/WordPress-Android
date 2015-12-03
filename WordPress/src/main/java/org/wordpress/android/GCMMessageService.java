@@ -429,35 +429,11 @@ public class GCMMessageService extends GcmListenerService {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         for (Integer pushId : mActiveNotificationsMap.keySet()) {
-            Bundle noteBundle = mActiveNotificationsMap.get(pushId);
-            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_IGNORED, noteBundle, null);
             notificationManager.cancel(pushId);
         }
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
 
-        AnalyticsTracker.flush();
         clearNotifications();
-    }
-
-    public static void bumpPushNotificationsDismissedAllAnalytics() {
-        boolean shouldFlush = false;
-        for (int id : mActiveNotificationsMap.keySet()) {
-            bumpPushNotificationsDismissedAnalytics(id, false);
-            shouldFlush = true;
-        }
-        if (shouldFlush) {
-            AnalyticsTracker.flush();
-        }
-    }
-
-    public static void bumpPushNotificationsDismissedAnalytics(int notificationId, boolean forceFlush) {
-        if (mActiveNotificationsMap.containsKey(notificationId)) {
-            Bundle currentNoteBundle = mActiveNotificationsMap.get(notificationId);
-            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_DISMISSED, currentNoteBundle, null);
-        }
-        if (forceFlush) {
-            AnalyticsTracker.flush();
-        }
     }
 
     //NoteID is the ID if the note in WordPress
@@ -489,6 +465,8 @@ public class GCMMessageService extends GcmListenerService {
         if (properties == null) {
             properties = new HashMap<>();
         }
+
+        properties.put("push_notification_device_type" , "android");
 
         String notificationID = noteBundle.getString(PUSH_ARG_NOTE_ID, "");
         if (!TextUtils.isEmpty(notificationID)) {

@@ -99,8 +99,6 @@ public final class AnalyticsTracker {
         STATS_SELECTED_INSTALL_JETPACK,
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
-        PUSH_NOTIFICATION_DISMISSED, // Dismissed by the user
-        PUSH_NOTIFICATION_IGNORED, // The user opened the app without interacting with the notification(s)
         SUPPORT_OPENED_HELPSHIFT_SCREEN,
         SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE,
         LOGIN_FAILED,

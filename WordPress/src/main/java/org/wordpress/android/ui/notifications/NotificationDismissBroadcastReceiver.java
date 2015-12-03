@@ -15,10 +15,8 @@ public class NotificationDismissBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int notificationId = intent.getIntExtra("notificationId", 0);
         if (notificationId == GCMMessageService.GROUP_NOTIFICATION_ID) {
-            GCMMessageService.bumpPushNotificationsDismissedAllAnalytics();
             GCMMessageService.clearNotifications();
         } else {
-            GCMMessageService.bumpPushNotificationsDismissedAnalytics(notificationId, true);
             GCMMessageService.removeNotification(notificationId);
             // Dismiss the grouped notification if a user dismisses all notifications from a wear device
             if (!GCMMessageService.hasNotifications()) {
