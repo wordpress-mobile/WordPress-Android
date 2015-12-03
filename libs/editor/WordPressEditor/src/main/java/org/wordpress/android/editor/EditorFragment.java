@@ -723,6 +723,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mUploadingMediaGallery = mediaGallery;
             mWebView.execJavaScriptFromString("ZSSEditor.insertLocalGallery('" + mediaGallery.getUniqueId() + "');");
         } else {
+            // Ensure that the content field is in focus (it may not be if we're adding a gallery to a new post by a
+            // share action and not via the format bar button)
+            mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+
             mWebView.execJavaScriptFromString("ZSSEditor.insertGallery('" + mediaGallery.getIdsStr() + "', " +
                     mediaGallery.getNumColumns() + ");");
         }
