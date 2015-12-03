@@ -17,6 +17,9 @@ public class AccountModel {
     private int mVisibleSiteCount;
     private String mAccessToken;
     private String mEmail;
+    private String mFirstName;
+    private String mLastName;
+    private String mAboutMe;
 
     public AccountModel() {
         init();
@@ -33,6 +36,9 @@ public class AccountModel {
         mVisibleSiteCount = 0;
         mAccessToken = "";
         mEmail = "";
+        mFirstName = "";
+        mLastName = "";
+        mAboutMe = "";
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -45,6 +51,9 @@ public class AccountModel {
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
         mEmail = json.optString("email");
+        mFirstName = json.optString("first_name");
+        mLastName = json.optString("last_name");
+        mAboutMe = json.optString("description");
     }
 
     public long getUserId() {
@@ -129,5 +138,29 @@ public class AccountModel {
 
     public String getEmail() {
         return StringUtils.notNullStr(mEmail);
+    }
+
+    public String getFirstName() {
+        return mFirstName;
+    }
+
+    public void setFirstName(String mFirstName) {
+        this.mFirstName = mFirstName;
+    }
+
+    public String getLastName() {
+        return mLastName;
+    }
+
+    public void setLastName(String mLastName) {
+        this.mLastName = mLastName;
+    }
+
+    public String getAboutMe() {
+        return mAboutMe;
+    }
+
+    public void setAboutMe(String mAboutMe) {
+        this.mAboutMe = mAboutMe;
     }
 }
