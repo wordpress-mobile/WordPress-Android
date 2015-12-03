@@ -1561,8 +1561,13 @@ ZSSEditor.removeCaptionFormattingCallback = function( match, content ) {
 }
 
 // MARK: - Galleries
-ZSSEditor.insertGallery = function( imageIds, columns ) {
-    var shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
+ZSSEditor.insertGallery = function( imageIds, type, columns ) {
+    var shortcode;
+    if (type) {
+        shortcode = '[gallery type="' + type + '" ids="' + imageIds + '"]';
+    } else {
+        shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
+    }
 
     this.insertHTML(this.wrapInParagraphTags(shortcode));
 }
@@ -1573,11 +1578,17 @@ ZSSEditor.insertLocalGallery = function( placeholderId ) {
     this.insertHTML(this.wrapInParagraphTags(container));
 }
 
-ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, columns ) {
+ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, type, columns ) {
     var span = 'span#' + placeholderId + '.gallery_container';
-    var html = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
 
-    $(span).replaceWith(html);
+    var shortcode;
+    if (type) {
+        shortcode = '[gallery type="' + type + '" ids="' + imageIds + '"]';
+    } else {
+        shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
+    }
+
+    $(span).replaceWith(shortcode);
 }
 
 // MARK: - Commands

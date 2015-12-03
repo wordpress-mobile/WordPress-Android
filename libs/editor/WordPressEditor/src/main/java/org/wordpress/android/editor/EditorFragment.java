@@ -737,8 +737,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             // share action and not via the format bar button)
             mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
 
-            mWebView.execJavaScriptFromString("ZSSEditor.insertGallery('" + mediaGallery.getIdsStr() + "', " +
-                    mediaGallery.getNumColumns() + ");");
+            mWebView.execJavaScriptFromString("ZSSEditor.insertGallery('" + mediaGallery.getIdsStr() + "', '" +
+                    mediaGallery.getType() + "', " + mediaGallery.getNumColumns() + ");");
         }
     }
 
@@ -810,7 +810,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     @Override
                     public void run() {
                         mWebView.execJavaScriptFromString("ZSSEditor.replacePlaceholderGallery('" + galleryId + "', '" +
-                                mUploadingMediaGallery.getIdsStr() + "', " +
+                                mUploadingMediaGallery.getIdsStr() + "', '" +
+                                mUploadingMediaGallery.getType() + "', " +
                                 mUploadingMediaGallery.getNumColumns() + ");");
                     }
                 });
