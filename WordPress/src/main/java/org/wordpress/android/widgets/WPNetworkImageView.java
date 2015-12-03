@@ -25,6 +25,7 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashSet;
@@ -75,6 +76,16 @@ public class WPNetworkImageView extends ImageView {
     }
 
     /*
+     * determine whether we can show a thumbnail image for the passed video - currently
+     * we support YouTube, Vimeo & standard images
+     */
+    public static boolean canShowVideoThumbnail(String videoUrl) {
+        return ReaderVideoUtils.isVimeoLink(videoUrl)
+                || ReaderVideoUtils.isYouTubeVideoLink(videoUrl)
+                || MediaUtils.isValidImage(videoUrl);
+    }
+
+    /*
      * retrieves and displays the thumbnail for the passed video
      */
     public void setVideoUrl(final long postId, final String videoUrl) {
@@ -82,21 +93,28 @@ public class WPNetworkImageView extends ImageView {
         mRequestDidFail = false;
 
         if (TextUtils.isEmpty(videoUrl)) {
+            showErrorImage();
+            return;
+        }
+
+        // if this is a YouTube video we can determine the thumbnail url from the passed url,
+        // otherwise check if we've already cached the thumbnail url for this video
+        String thumbnailUrl;
+        if (ReaderVideoUtils.isYouTubeVideoLink(videoUrl)) {
+            thumbnailUrl = ReaderVideoUtils.getYouTubeThumbnailUrl(videoUrl);
+        } else {
+            thumbnailUrl = ReaderThumbnailTable.getThumbnailUrl(videoUrl);
+        }
+        if (!TextUtils.isEmpty(thumbnailUrl)) {
+            setImageUrl(thumbnailUrl, ImageType.VIDEO);
+            return;
+        }
+
+        if (MediaUtils.isValidImage(videoUrl)) {
+            setImageUrl(videoUrl, ImageType.VIDEO);
+        } else if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
+            // vimeo videos require network request to get thumbnail
             showDefaultImage();
-            return;
-        }
-
-        // if we already have a cached thumbnail for this video, show it immediately
-        String cachedThumbnail = ReaderThumbnailTable.getThumbnailUrl(videoUrl);
-        if (!TextUtils.isEmpty(cachedThumbnail)) {
-            setImageUrl(cachedThumbnail, ImageType.VIDEO);
-            return;
-        }
-
-        showDefaultImage();
-
-        // vimeo videos require network request to get thumbnail
-        if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
             ReaderVideoUtils.requestVimeoThumbnail(videoUrl, new ReaderVideoUtils.VideoThumbnailListener() {
                 @Override
                 public void onResponse(boolean successful, String thumbnailUrl) {
@@ -106,6 +124,9 @@ public class WPNetworkImageView extends ImageView {
                     }
                 }
             });
+        } else {
+            AppLog.d(AppLog.T.UTILS, "no video thumbnail for " + videoUrl);
+            showErrorImage();
         }
     }
 
