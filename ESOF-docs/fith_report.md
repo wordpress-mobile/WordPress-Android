@@ -9,6 +9,7 @@ No âmbito da unidade curricular de ESOF foi-nos proposto identificar e evoluir 
 
 ### Feature 
 
+Depois de analisadas várias sugestões pelos elementos do grupo e depois de falar com o professor, chegámos à decisão que a feature que a feature que iriamos implementar seria um simples botão "*About*". Pareceu-nos uma decisão obvia pois é comum, em outras aplicações móveis do mesmo tipo, a existência de um *about* na página inicial e a aplicação não o tem. Assim sendo, a feature a implementada é um botão *about* na página inicial para o utiliador, caso este não esteja logado ou não tenha conta, sendo que ao carregado é aberta uma nova página que contém links e informações sobre o WordPress e da empresa "mãe" [Automattic](https://automattic.com/).
 
 
 ### Identificação de componentes que implementam a feature
