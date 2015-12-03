@@ -57,10 +57,10 @@ public class MediaItemFragment extends Fragment {
     private TextView mDateView;
     private TextView mFileNameView;
     private TextView mFileTypeView;
-    private ImageView mImgBtnCopy;
     private MediaItemFragmentCallback mCallback;
 
     private boolean mIsLocal;
+    private String mImageUri;
 
     public interface MediaItemFragmentCallback {
         void onResume(Fragment fragment);
@@ -124,7 +124,6 @@ public class MediaItemFragment extends Fragment {
         mDateView = (TextView) view.findViewById(R.id.media_listitem_details_date);
         mFileNameView = (TextView) view.findViewById(R.id.media_listitem_details_file_name);
         mFileTypeView = (TextView) view.findViewById(R.id.media_listitem_details_file_type);
-        mImgBtnCopy = (ImageView) view.findViewById(R.id.image_copy);
         mImageView = (WPNetworkImageView) view.findViewById(R.id.media_listitem_details_image);
 
         return view;
@@ -193,7 +192,7 @@ public class MediaItemFragment extends Fragment {
 
         final String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
         final String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
-        final String imageUri = TextUtils.isEmpty(fileURL)
+        mImageUri = TextUtils.isEmpty(fileURL)
                 ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
                 : fileURL;
 
@@ -202,7 +201,7 @@ public class MediaItemFragment extends Fragment {
         float mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
         float mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
 
-        boolean isValidImage = MediaUtils.isValidImage(imageUri);
+        boolean isValidImage = MediaUtils.isValidImage(mImageUri);
         ViewGroup containerView = (ViewGroup) getView().findViewById(R.id.layout_image_container);
         containerView.setVisibility(isValidImage ? View.VISIBLE : View.GONE);
 
@@ -251,9 +250,9 @@ public class MediaItemFragment extends Fragment {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 String thumbnailURL;
                 if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
-                    thumbnailURL = StringUtils.getPhotonUrl(imageUri, imageWidth);
+                    thumbnailURL = StringUtils.getPhotonUrl(mImageUri, imageWidth);
                 } else {
-                    thumbnailURL = UrlUtils.removeQuery(imageUri) + "?w=" + imageWidth;
+                    thumbnailURL = UrlUtils.removeQuery(mImageUri) + "?w=" + imageWidth;
                 }
                 mImageView.setImageUrl(thumbnailURL, WPNetworkImageView.ImageType.PHOTO);
             }
@@ -279,31 +278,17 @@ public class MediaItemFragment extends Fragment {
             mFileTypeView.setVisibility(View.GONE);
         }
 
-        // enable fullscreen photo and copy url to clipboard for non-local
-        if (!mIsLocal && !TextUtils.isEmpty(imageUri)) {
+        // enable fullscreen photo for non-local
+        if (!mIsLocal && isValidImage) {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Blog blog = WordPress.getCurrentBlog();
                     boolean isPrivate = blog != null && blog.isPrivate();
                     ReaderActivityLauncher.showReaderPhotoViewer(
-                            v.getContext(), imageUri, isPrivate);
+                            v.getContext(), mImageUri, isPrivate);
                 }
             });
-
-            View layoutFileName = getView().findViewById(R.id.layout_file_name);
-            layoutFileName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    copyUrlToClipboard(v.getContext(), imageUri);
-                }
-            });
-
-            mFileNameView.setTextColor(getActivity().getResources().getColor(R.color.blue_medium));
-            mImgBtnCopy.setVisibility(View.VISIBLE);
-        } else {
-            mImgBtnCopy.setVisibility(View.GONE);
-            mImageView.setOnClickListener(null);
         }
     }
 
@@ -337,9 +322,10 @@ public class MediaItemFragment extends Fragment {
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
 
-        if (mIsLocal || !WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
-            menu.findItem(R.id.menu_edit_media).setVisible(false);
-        }
+        menu.findItem(R.id.menu_edit_media).setVisible(
+                !mIsLocal && WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities());
+
+        menu.findItem(R.id.menu_copy_media_url).setVisible(!mIsLocal && !TextUtils.isEmpty(mImageUri));
     }
 
     @Override
@@ -369,19 +355,22 @@ public class MediaItemFragment extends Fragment {
             AlertDialog dialog = builder.create();
             dialog.show();
             return true;
+        } else if (itemId == R.id.menu_copy_media_url) {
+            copyUrlToClipboard();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private static void copyUrlToClipboard(Context context, String imageUri) {
+    private void copyUrlToClipboard() {
         try {
-            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText(imageUri, imageUri));
-            ToastUtils.showToast(context, R.string.media_details_copy_url_toast);
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText(mImageUri, mImageUri));
+            ToastUtils.showToast(getActivity(), R.string.media_details_copy_url_toast);
         } catch (Exception e) {
             AppLog.e(AppLog.T.UTILS, e);
-            ToastUtils.showToast(context, R.string.error_copy_to_clipboard);
+            ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
         }
     }
 }
