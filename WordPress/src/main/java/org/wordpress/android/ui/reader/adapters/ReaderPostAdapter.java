@@ -293,7 +293,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             postHolder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
             postHolder.imgFeatured.setVisibility(View.VISIBLE);
             titleMargin = mMarginLarge;
-        } else if (post.hasFeaturedVideo()) {
+        } else if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
             postHolder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
             postHolder.imgFeatured.setVisibility(View.VISIBLE);
             titleMargin = mMarginLarge;
@@ -533,7 +533,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void clear() {
+    public void clear() {
         mPosts.clear();
         notifyDataSetChanged();
     }

@@ -57,7 +57,7 @@ import org.wordpress.android.ui.media.MediaPickerActivity;
 import org.wordpress.android.ui.media.MediaSourceWPImages;
 import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.services.MediaUploadEvents;
+import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
@@ -1489,9 +1489,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * after media selection.
      */
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaUploadEvents.MediaUploadSucceed event) {
+    public void onEventMainThread(MediaEvents.MediaUploadSucceed event) {
         for (Long galleryId : mPendingGalleryUploads.keySet()) {
-            if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalId)) {
+            if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalMediaId)) {
                 SpannableStringBuilder postContent;
                 if (mEditorFragment.getSpannedContent() != null) {
                     // needed by the legacy editor to save local drafts
@@ -1510,7 +1510,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         MediaGallery gallery = gallerySpan.getMediaGallery();
                         if (gallery.getUniqueId() == galleryId) {
                             ArrayList<String> galleryIds = gallery.getIds();
-                            galleryIds.add(event.mRemoteId);
+                            galleryIds.add(event.mRemoteMediaId);
                             gallery.setIds(galleryIds);
                             gallerySpan.setMediaGallery(gallery);
                             int spanStart = postContent.getSpanStart(gallerySpan);
@@ -1521,7 +1521,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     }
                 }
 
-                mPendingGalleryUploads.get(galleryId).remove(event.mLocalId);
+                mPendingGalleryUploads.get(galleryId).remove(event.mLocalMediaId);
                 if (mPendingGalleryUploads.get(galleryId).size() == 0) {
                     mPendingGalleryUploads.remove(galleryId);
                 }
@@ -1679,7 +1679,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String mediaId) {
+    public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
+
+    }
+
+    @Override
+    public void onFeaturedImageChanged(int mediaId) {
 
     }
 

@@ -801,12 +801,12 @@ ZSSEditor.updateImage = function(url, alt) {
 
 };
 
-ZSSEditor.insertImage = function(url, alt) {
+ZSSEditor.insertImage = function(url, remoteId, alt) {
     var space = '<br>';
     var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
     var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
 
-    var html = '<img src="' + url + '" alt="' + alt + '" />';
+    var html = '<img src="' + url + '" alt="' + alt + '" class="wp-image-' + remoteId + '" />';
 
     if (this.getFocusedField().getHTML().length == 0) {
         html = paragraphOpenTag + html;
@@ -882,7 +882,7 @@ ZSSEditor.getImageContainerNodeWithIdentifier = function(imageNodeIdentifier) {
  *                                      when replaceLocalImageWithRemoteImage() is called.
  *  @param      remoteImageUrl          The URL of the remote image to display.
  */
-ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remoteImageUrl) {
+ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remoteImageId, remoteImageUrl) {
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
 
     if (imageNode.length == 0) {
@@ -895,6 +895,7 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
 
     image.onload = function () {
         imageNode.attr('src', image.src);
+        imageNode.addClass("wp-image-" + remoteImageId);
         ZSSEditor.markImageUploadDone(imageNodeIdentifier);
         var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
         ZSSEditor.callback("callback-input", joinedArguments);
@@ -906,6 +907,7 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
         // blogs are currently failing to download images due to access privilege issues.
         //
         imageNode.attr('src', image.src);
+        imageNode.addClass("wp-image-" + remoteImageId);
         ZSSEditor.markImageUploadDone(imageNodeIdentifier);
         var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
         ZSSEditor.callback("callback-input", joinedArguments);
@@ -956,7 +958,6 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
 
     // remove uploading style
     imageNode.removeClass("uploading");
-    imageNode.removeAttr("class");
 
     // Remove all extra formatting nodes for progress
     if (imageNode.parent().attr("id") == this.getImageContainerIdentifier(imageNodeIdentifier)) {
@@ -1036,6 +1037,46 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier, message) {
     if (imageProgressNode.length != 0){
         imageProgressNode.removeClass('failed');
     }
+};
+
+/**
+ *  @brief      Marks all in-progress images as failed to upload
+ */
+ZSSEditor.markAllUploadingImagesAsFailed = function() {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.uploading");
+
+    for(var i = 0; i < matches.size(); i++) {
+        var mediaId = matches[i].getAttribute("data-wpid");
+        if (mediaId != null) {
+            ZSSEditor.markImageUploadFailed(mediaId);
+        }
+    }
+};
+
+/**
+ *  @brief      Sends a callback with a list of failed images
+ */
+ZSSEditor.getFailedImages = function() {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.failed");
+
+    var functionArgument = "function=getFailedImages";
+    var mediaIdArray = [];
+
+    for (var i = 0; i < matches.size(); i ++) {
+        var mediaId = matches[i].getAttribute("data-wpid");
+        if (mediaId != null) {
+            mediaIdArray.push(mediaId);
+        }
+    }
+
+    var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
+    ZSSEditor.callback('callback-response-string', joinedArguments);
 };
 
 /**
