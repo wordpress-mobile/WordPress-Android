@@ -314,8 +314,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void initInfoButton(View rootView) {
-        ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
-        infoBUtton.setOnClickListener(new OnClickListener() {
+        ImageView infoButton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);

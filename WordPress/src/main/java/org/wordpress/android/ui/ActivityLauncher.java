@@ -25,6 +25,7 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.prefs.AboutActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
@@ -206,6 +207,11 @@ public class ActivityLauncher {
     public static void newAccountForResult(Activity activity) {
         Intent intent = new Intent(activity, NewAccountActivity.class);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void aboutPage(Activity activity) {
+        Intent intent = new Intent(activity, AboutActivity.class);
+        activity.startActivity(intent);
     }
 
     public static void newBlogForResult(Activity activity) {
