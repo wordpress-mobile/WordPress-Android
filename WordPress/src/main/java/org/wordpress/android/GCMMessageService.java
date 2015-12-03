@@ -466,8 +466,6 @@ public class GCMMessageService extends GcmListenerService {
             properties = new HashMap<>();
         }
 
-        properties.put("push_notification_device_type" , "android");
-
         String notificationID = noteBundle.getString(PUSH_ARG_NOTE_ID, "");
         if (!TextUtils.isEmpty(notificationID)) {
             for (String currentPropertyToCopy: propertiesToCopyIntoAnalytics) {
