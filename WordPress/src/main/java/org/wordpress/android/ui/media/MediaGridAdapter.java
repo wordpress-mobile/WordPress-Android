@@ -266,39 +266,6 @@ public class MediaGridAdapter extends CursorAdapter {
         return mCallback.isInMultiSelect();
     }
 
-    private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
-
-        // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if (mIsCurrentBlogPhotonCapable) {
-            String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-            if (imageURL != null) {
-                thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, mGridItemWidth, 0);
-            }
-        }
-
-        if (thumbnailURL != null) {
-            Uri uri = Uri.parse(thumbnailURL);
-            String filepath = uri.getLastPathSegment();
-
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setErrorImageResId(placeholderResId);
-
-            // no default image while downloading
-            imageView.setDefaultImageResId(0);
-
-            if (MediaUtils.isValidImage(filepath)) {
-                imageView.setTag(thumbnailURL);
-                imageView.setImageUrl(thumbnailURL, mImageLoader);
-            } else {
-                imageView.setImageResource(placeholderResId);
-            }
-        } else {
-            imageView.setImageResource(0);
-        }
-
-    }
-
     private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
         final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
 

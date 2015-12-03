@@ -1670,7 +1670,7 @@ public class WordPressDB {
     }
 
     /** Update a media file to a new upload state **/
-    public void updateMediaUploadState(String blogId, String mediaId, String uploadState) {
+    public void updateMediaUploadState(String blogId, String mediaId, MediaUploadState uploadState) {
         if (blogId == null || blogId.equals("")) {
             return;
         }
@@ -1679,7 +1679,7 @@ public class WordPressDB {
         if (uploadState == null) {
             values.putNull("uploadState");
         } else {
-            values.put("uploadState", uploadState);
+            values.put("uploadState", uploadState.toString());
         }
 
         if (mediaId == null) {
@@ -1752,7 +1752,6 @@ public class WordPressDB {
     public void deleteMediaFile(String blogId, String mediaId) {
         db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
-
 
     /** Mark media files for deletion without actually deleting them. **/
     public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {

@@ -10,6 +10,7 @@ import android.os.IBinder;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog.T;
@@ -170,18 +171,20 @@ public class MediaUploadService extends Service {
         mCurrentUploadMediaTask = new ApiHelper.UploadMediaTask(mContext, mediaFile,
                 new ApiHelper.UploadMediaTask.Callback() {
             @Override
-            public void onSuccess(String id) {
+            public void onSuccess(String remoteId, String remoteUrl) {
                 // once the file has been uploaded, update the local database entry (swap the id with the remote id)
                 // and download the new one
-                WordPress.wpDB.updateMediaLocalToRemoteId(blogIdStr, mediaId, id);
-                EventBus.getDefault().post(new MediaEvents.MediaUploadSucceed(blogIdStr, mediaId, id));
-                fetchMediaFile(id);
+                WordPress.wpDB.updateMediaLocalToRemoteId(blogIdStr, mediaId, remoteId);
+                EventBus.getDefault().post(new MediaEvents.MediaUploadSucceeded(blogIdStr, mediaId,
+                        remoteId, remoteUrl));
+                fetchMediaFile(remoteId);
             }
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, MediaUploadState.FAILED);
                 mUploadInProgress = false;
+                mCurrentUploadMediaId = "";
                 EventBus.getDefault().post(new MediaEvents.MediaUploadFailed(mediaId,
                         getString(R.string.upload_failed)));
                 mHandler.post(mFetchQueueTask);
@@ -193,7 +196,7 @@ public class MediaUploadService extends Service {
 
             @Override
             public void onProgressUpdate(float progress) {
-                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadProgress(mediaId, progress));
+                EventBus.getDefault().post(new MediaEvents.MediaUploadProgress(mediaId, progress));
             }
         });
 

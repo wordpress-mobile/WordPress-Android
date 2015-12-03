@@ -756,6 +756,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onBackPressed() {
+        Fragment imageSettingsFragment = getFragmentManager().findFragmentByTag(
+                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+        if (imageSettingsFragment != null && imageSettingsFragment.isVisible()) {
+            ((ImageSettingsDialogFragment) imageSettingsFragment).dismissFragment();
+            return;
+        }
+
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
@@ -1670,7 +1677,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * after media selection.
      */
     @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaUploadSucceed event) {
+    public void onEventMainThread(MediaEvents.MediaUploadSucceeded event) {
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, event.mRemoteMediaId,
+                    event.mRemoteMediaUrl);
+        }
+
         for (Long galleryId : mPendingGalleryUploads.keySet()) {
             if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalMediaId)) {
                 SpannableStringBuilder postContent;
@@ -1717,15 +1729,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    public void onEventMainThread(MediaUploadEvents.MediaUploadFailed event) {
+    public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadFailed(event.mLocalId);
+            mEditorMediaUploadListener.onMediaUploadFailed(event.mLocalMediaId);
         }
     }
 
-    public void onEventMainThread(MediaUploadEvents.MediaUploadProgress event) {
+    public void onEventMainThread(MediaEvents.MediaUploadProgress event) {
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadProgress(event.mLocalId, event.mProgress);
+            mEditorMediaUploadListener.onMediaUploadProgress(event.mLocalMediaId, event.mProgress);
         }
     }
 
@@ -1883,11 +1895,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
-
+        MediaUploadService mediaUploadService = MediaUploadService.getInstance();
+        if (mediaUploadService != null) {
+            mediaUploadService.cancelUpload(mediaId, delete);
+        }
     }
-
-    @Override
-    public void onFeaturedImageChanged(int mediaId) {
 
     @Override
     public void onFeaturedImageChanged(int mediaId) {
