@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_gap_marker">Загрузить другие записи</string>
+	<string name="notifications_no_search_results">Сайтов по запросу «%s» не найдено</string>
+	<string name="search_sites">Поиск сайтов</string>
+	<string name="unread">Непрочитанное</string>
+	<string name="notifications_empty_view_reader">Просмотреть Чтиво</string>
+	<string name="notifications_empty_action_followers_likes">Заявите о себе: комментируйте записи, которые вы прочитали.</string>
+	<string name="notifications_empty_action_comments">Вступите в разговор: комментируйте записи из блогов, на которые вы подписаны.</string>
+	<string name="notifications_empty_action_unread">Предоставьте тему для обсуждения: напишите новую запись.</string>
+	<string name="notifications_empty_action_all">Будьте активнее! Комментируйте записи из блогов, на которые вы подписаны.</string>
+	<string name="notifications_empty_likes">Новых оценок пока нет.</string>
+	<string name="notifications_empty_followers">Новых подписчиков пока нет.</string>
+	<string name="notifications_empty_comments">Новых комментариев пока нет.</string>
+	<string name="notifications_empty_unread">Вы всё прочитали!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Откройте статистику в приложении и попробуйте добавить виджет позже</string>
+	<string name="stats_widget_error_readd_widget">Пожалуйста, удалите виджет и добавьте его заново</string>
+	<string name="stats_widget_error_no_visible_blog">Без публичного блога доступа к статистике нет</string>
+	<string name="stats_widget_error_no_permissions">Статистика этого блога недоступна для вашей учётной записи WordPress.com</string>
+	<string name="stats_widget_error_no_account">Пожалуйста, войдите в WordPress</string>
+	<string name="stats_widget_error_generic">Не удалось загрузить статистику</string>
+	<string name="stats_widget_loading_data">Загрузка данных…</string>
+	<string name="stats_widget_name_for_blog">Сегодняшняя статистика %1$s</string>
+	<string name="stats_widget_name">Сегодняшняя статистика WordPress</string>
+	<string name="add_location_permission_required">Чтобы добавить местоположение, требуется подтверждение</string>
+	<string name="add_media_permission_required">Для добавления медиафайлов необходимы права доступа</string>
+	<string name="access_media_permission_required">Для доступа к медиафайлам необходимы права доступа</string>
 	<string name="stats_enable_rest_api_in_jetpack">Чтобы просмотреть статистику, включите модуль JSON API в Jetpack.</string>
 	<string name="error_open_list_from_notification">Эта запись или страница была опубликована на другом сайте</string>
 	<string name="post_uploaded">Запись загружена</string>
@@ -477,8 +502,6 @@
 	<string name="jetpack_message_not_admin">Для статистики нужен плагин Jetpack- свяжитесь с администрацией сайта.</string>
 	<string name="reader_title_applog">Лог приложения</string>
 	<string name="reader_share_link">Поделиться ссылкой</string>
-	<string name="reader_toast_err_add_tag">Не удается добавить этот тег</string>
-	<string name="reader_toast_err_remove_tag">Не удается удалить этот тег</string>
 	<string name="required_field">Обязательное поле</string>
 	<string name="email_hint">Email адрес</string>
 	<string name="username_email">Имя пользователя или email</string>
@@ -501,6 +524,9 @@
 	<string name="author_url">URL автора</string>
 	<string name="content_required">Требуется комментарий</string>
 	<string name="post_settings">Настройки записи</string>
+	<string name="notifications_empty_all">Уведомлений пока нет.</string>
+	<string name="reader_toast_err_add_tag">Не удается добавить эту метку</string>
+	<string name="reader_toast_err_remove_tag">Не удается удалить эту метку</string>
 	<string name="deleting_page">Удаление страницы</string>
 	<string name="deleting_post">Удаление записи</string>
 	<string name="share_url_post">Поделиться записью</string>
@@ -553,8 +579,6 @@
 	<string name="reader_likes_only_you">Вам нравится это</string>
 	<string name="nux_tutorial_get_started_title">Начать работу!</string>
 	<string name="reader_toast_err_comment_failed">Не удалось оставить комментарий</string>
-	<string name="reader_toast_err_tag_exists">Вы подписались на этот тэг</string>
-	<string name="reader_toast_err_tag_invalid">Это неверный тэг</string>
 	<string name="reader_toast_err_share_intent">Не в состоянии поделиться</string>
 	<string name="reader_toast_err_view_image">Не удаётся просмотреть изображение</string>
 	<string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
@@ -566,6 +590,8 @@
 	<string name="reader_empty_followed_tags">Вы не подписаны ни на одну метку.</string>
 	<string name="create_account_wpcom">Создайте учетную запись WordPress.com</string>
 	<string name="reader_hint_comment_on_comment">Ответить на комментарий…</string>
+	<string name="reader_toast_err_tag_invalid">Это неверная метка</string>
+	<string name="reader_toast_err_tag_exists">Вы уже подписаны на эту метку</string>
 	<string name="themes">Темы</string>
 	<string name="menu_search">Поиск</string>
 	<string name="media_gallery_type">Тип</string>
@@ -636,6 +662,7 @@
 	<string name="note_reply_successful">Ответ опубликован</string>
 	<string name="more_notifications">и %d ещё.</string>
 	<string name="new_notifications">Новые уведомления: %d</string>
+	<string name="follows">Подписки</string>
 	<string name="loading">Загрузка…</string>
 	<string name="add_tagline">Добавлять подпись к новым записям</string>
 	<string name="httpuser">Имя для HTTP-авторизации</string>

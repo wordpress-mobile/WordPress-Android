@@ -24,6 +24,7 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -54,6 +55,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
+import de.greenrobot.event.EventBus;
+
 public class WordPressDB {
     public static final String COLUMN_NAME_ID                    = "_id";
     public static final String COLUMN_NAME_POST_ID               = "postID";
@@ -77,7 +80,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 37;
+    private static final int DATABASE_VERSION = 38;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -365,10 +368,16 @@ public class WordPressDB {
                 AccountTable.migrationAddEmailAddressField(db);
                 currentVersion++;
             case 35:
-                // Delete simperium DB
+                // Delete simperium DB - from 4.6 to 4.6.1
+                // Fix an issue when note id > MAX_INT
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
             case 36:
+                // Delete simperium DB again - from 4.6.1 to 4.7
+                // Fix a sync issue happening for users who have both wpios and wpandroid active clients
+                ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 37:
                 resetThemeTable();
                 currentVersion++;
         }
@@ -1556,6 +1565,10 @@ public class WordPressDB {
         return count;
     }
 
+    public boolean mediaFileExists(String blogId, String mediaId) {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?",
+                new String[]{blogId, mediaId});
+    }
 
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
@@ -1657,18 +1670,30 @@ public class WordPressDB {
 
     /** Update a media file to a new upload state **/
     public void updateMediaUploadState(String blogId, String mediaId, String uploadState) {
-        if (blogId == null || blogId.equals(""))
+        if (blogId == null || blogId.equals("")) {
             return;
+        }
 
         ContentValues values = new ContentValues();
-        if (uploadState == null) values.putNull("uploadState");
-        else values.put("uploadState", uploadState);
+        if (uploadState == null) {
+            values.putNull("uploadState");
+        } else {
+            values.put("uploadState", uploadState);
+        }
 
         if (mediaId == null) {
-            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[]{blogId});
+            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')",
+                    new String[]{blogId});
         } else {
             db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
+            EventBus.getDefault().post(new MediaChanged(blogId, mediaId));
         }
+    }
+
+    public void updateMediaLocalToRemoteId(String blogId, String localMediaId, String remoteMediaId) {
+        ContentValues values = new ContentValues();
+        values.put("mediaId", remoteMediaId);
+        db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, localMediaId});
     }
 
     public void updateMediaFile(String blogId, String mediaId, String title, String description, String caption) {
@@ -1726,6 +1751,7 @@ public class WordPressDB {
     public void deleteMediaFile(String blogId, String mediaId) {
         db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
+
 
     /** Mark media files for deletion without actually deleting them. **/
     public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {

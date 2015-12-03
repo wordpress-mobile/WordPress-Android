@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="add_media_permission_required">Toestemming vereist om media toe te voegen</string>
+	<string name="access_media_permission_required">Toestemming vereist om media toe te voegen</string>
 	<string name="stats_enable_rest_api_in_jetpack">Om je statistieken te bekijken moet je de JSON API module in Jetpack activeren.</string>
 	<string name="error_open_list_from_notification">Dit bericht of deze pagina is gepubliceerd op een andere site</string>
 	<string name="post_uploaded">Bericht geüpload</string>
