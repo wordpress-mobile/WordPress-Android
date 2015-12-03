@@ -363,18 +363,9 @@ public class PostUploadService extends Service {
 
                     if (mPost.hasLocation()) {
                         PostLocation location = mPost.getLocation();
-                        if (!hLatitude.containsKey("id")) {
-                            hLatitude.put("key", "geo_latitude");
-                        }
-
-                        if (!hLongitude.containsKey("id")) {
-                            hLongitude.put("key", "geo_longitude");
-                        }
-
-                        if (!hPublic.containsKey("id")) {
-                            hPublic.put("key", "geo_public");
-                        }
-
+                        hLatitude.put("key", "geo_latitude");
+                        hLongitude.put("key", "geo_longitude");
+                        hPublic.put("key", "geo_public");
                         hLatitude.put("value", location.getLatitude());
                         hLongitude.put("value", location.getLongitude());
                         hPublic.put("value", 1);
@@ -466,7 +457,8 @@ public class PostUploadService extends Service {
                 properties.put("with_tags", true);
             }
 
-            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, properties);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
+
         }
 
         /**

@@ -1,49 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/theme_grid_card_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/theme_grid_image_container"
+    <android.support.v7.widget.CardView
+        android:id="@+id/theme_grid_card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        android:background="@drawable/media_gallery_grid_cell" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        card_view:cardElevation="@dimen/card_elevation">
 
         <RelativeLayout
-            android:id="@+id/theme_label_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/media_gallery_grid_label_bg" >
+            android:layout_margin="@dimen/cardview_default_radius">
 
-            <TextView
-                android:id="@+id/theme_grid_item_name"
+            <FrameLayout
+                android:id="@+id/theme_grid_item_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:padding="4dp"
-                android:singleLine="true"
-                android:textColor="@color/media_gallery_grid_label"
-                android:textSize="12sp" />
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <org.wordpress.android.ui.FadeInNetworkImageView
+                    android:id="@+id/theme_grid_item_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter" />
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/theme_grid_item_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/theme_grid_item_image_layout"
+                android:layout_marginTop="@dimen/cardview_default_radius">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true">
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/theme_grid_item_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_header_margin" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/theme_grid_item_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/theme_price"
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/theme_grid_item_active"
+                        android:textSize="@dimen/text_sz_extra_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/theme_active"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:textAllCaps="true"
+                        android:text="@string/active"
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="@dimen/theme_browser_separator_thickness"
+                        android:layout_height="match_parent"
+                        android:background="@color/reader_divider_grey" />
+
+                    <ImageButton
+                        android:id="@+id/theme_grid_item_image_button"
+                        android:layout_width="@dimen/theme_browser_more_button_width"
+                        android:layout_height="@dimen/theme_browser_more_button_height"
+                        android:padding="@dimen/theme_browser_more_button_padding"
+                        android:src="@drawable/ic_action_more_grey"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/button_more" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
-        <org.wordpress.android.ui.FadeInNetworkImageView
-            android:id="@+id/theme_grid_item_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/theme_label_container"
-            android:layout_alignParentTop="true"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/theme_grid_attributes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/theme_icon_tag_current"
-            android:visibility="gone" />
-    </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

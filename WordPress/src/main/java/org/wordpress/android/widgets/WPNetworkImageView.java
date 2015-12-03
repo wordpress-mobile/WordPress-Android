@@ -41,7 +41,8 @@ public class WPNetworkImageView extends ImageView {
         PHOTO,
         VIDEO,
         AVATAR,
-        BLAVATAR
+        BLAVATAR,
+        GONE_UNTIL_AVAILABLE,
     }
 
     private ImageType mImageType = ImageType.NONE;
@@ -126,7 +127,7 @@ public class WPNetworkImageView extends ImageView {
                 && getLayoutParams().width == LayoutParams.WRAP_CONTENT;
         // if the view's bounds aren't known yet, and this is not a wrap-content/wrap-content
         // view, hold off on loading the image.
-        if (width == 0 && height == 0 && !isFullyWrapContent) {
+        if (width == 0 && height == 0 && !isFullyWrapContent && mImageType != ImageType.GONE_UNTIL_AVAILABLE) {
             return;
         }
 
@@ -144,8 +145,12 @@ public class WPNetworkImageView extends ImageView {
         // if there was an old request in this view, check if it needs to be canceled.
         if (mImageContainer != null && mImageContainer.getRequestUrl() != null) {
             if (mImageContainer.getRequestUrl().equals(mUrl)) {
-                // if the request is from the same URL, return.
-                return;
+                // if the request is from the same URL and it's not GONE_UNTIL_AVAILABLE, return.
+                if (mImageType != ImageType.GONE_UNTIL_AVAILABLE) {
+                    // GONE_UNTIL_AVAILABLE image type will make a new request if the previous response wasn't a 404 response,
+                    // Volley usually returns it from cache.
+                    return;
+                }
             } else {
                 // if there is a pre-existing request, cancel it if it's fetching a different URL.
                 mImageContainer.cancelRequest();
@@ -155,7 +160,7 @@ public class WPNetworkImageView extends ImageView {
 
         // skip this URL if a previous request for it returned a 404
         if (mUrlSkipList.contains(mUrl)) {
-            AppLog.d(AppLog.T.READER, "skipping image request " + mUrl);
+            AppLog.d(AppLog.T.UTILS, "skipping image request " + mUrl);
             mRequestDidFail = true;
             showErrorImage();
             return;
@@ -212,6 +217,10 @@ public class WPNetworkImageView extends ImageView {
         if (response.getBitmap() != null) {
             Bitmap bitmap = response.getBitmap();
 
+            if (mImageType == ImageType.GONE_UNTIL_AVAILABLE) {
+                setVisibility(View.VISIBLE);
+            }
+
             // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
                 new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
@@ -225,6 +234,7 @@ public class WPNetworkImageView extends ImageView {
                 fadeIn();
             }
         } else {
+            mRequestDidFail = true;
             showDefaultImage();
         }
     }
@@ -277,6 +287,9 @@ public class WPNetworkImageView extends ImageView {
 
         // ... otherwise use built-in default
         switch (mImageType) {
+            case GONE_UNTIL_AVAILABLE:
+                this.setVisibility(View.GONE);
+                break;
             case NONE:
                 // do nothing
                 break;
@@ -298,6 +311,9 @@ public class WPNetworkImageView extends ImageView {
         }
 
         switch (mImageType) {
+            case GONE_UNTIL_AVAILABLE:
+                this.setVisibility(View.GONE);
+                break;
             case NONE:
                 // do nothing
                 break;

@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_sz_small"
             android:textStyle="bold" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -50,14 +50,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_sz_small" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_filename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_sz_small" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_filetype"
@@ -65,14 +65,14 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_sz_small" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_dimension"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_sz_small" />
     </LinearLayout>
 
 </RelativeLayout>

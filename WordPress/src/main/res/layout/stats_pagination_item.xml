@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="?android:selectableItemBackground"
-        android:text="&lt;"
+        android:text="@string/previous_button"
         android:textColor="@color/stats_link_text_color" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="?android:selectableItemBackground"
-        android:text="&gt;"
+        android:text="@string/next_button"
         android:textColor="@color/stats_link_text_color" />
 
 </LinearLayout>

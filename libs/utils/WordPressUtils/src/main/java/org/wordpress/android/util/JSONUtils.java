@@ -44,6 +44,8 @@ public class JSONUtils {
                 if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
                     return (U) result;
                 } else {
+                    AppLog.w(T.UTILS, String.format("The returned object type %s is not assignable to the type %s. Using default!",
+                            result.getClass(),defaultObject.getClass()));
                     return defaultObject;
                 }
             } catch (java.lang.ClassCastException e) {

@@ -20,6 +20,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -81,7 +82,7 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
+        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, blogId);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);

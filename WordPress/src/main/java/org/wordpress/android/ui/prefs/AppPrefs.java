@@ -11,6 +11,8 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
 public class AppPrefs {
+    private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
+
     public enum PrefKey {
         // name of last shown activity
         LAST_ACTIVITY_STR,
@@ -39,6 +41,9 @@ public class AppPrefs {
 
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
+
+        // Theme image size retrieval
+        THEME_IMAGE_SIZE_WIDTH,
     }
 
     private static SharedPreferences prefs() {
@@ -220,5 +225,19 @@ public class AppPrefs {
     }
     public static void resetStatsWidgetsData() {
         remove(PrefKey.STATS_WIDGET_DATA);
+    }
+
+    // Themes
+    public static void setThemeImageSizeWidth(int width) {
+        setInt(PrefKey.THEME_IMAGE_SIZE_WIDTH, width);
+    }
+
+    public static int getThemeImageSizeWidth() {
+        int value = getInt(PrefKey.THEME_IMAGE_SIZE_WIDTH);
+        if (value == 0) {
+            return THEME_IMAGE_SIZE_WIDTH_DEFAULT;
+        } else {
+            return getInt(PrefKey.THEME_IMAGE_SIZE_WIDTH);
+        }
     }
 }

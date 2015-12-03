@@ -33,6 +33,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
@@ -106,10 +107,6 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.stats_activity_single_post_details);
-
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED);
-        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -201,6 +198,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             Toast.makeText(this, R.string.stats_generic_error, Toast.LENGTH_LONG).show();
             finish();
             return;
+        }
+
+        if (savedInstanceState == null) {
+            AnalyticsUtils.trackWithBlogDetails(
+                    AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED,
+                    mRemoteBlogID
+            );
         }
 
         // Setup the main top label that opens the post in the Reader where possible
