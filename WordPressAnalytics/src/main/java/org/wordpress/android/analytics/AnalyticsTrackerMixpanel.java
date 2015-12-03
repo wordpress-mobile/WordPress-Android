@@ -691,14 +691,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Push Notification Tapped");
                 break;
-            case PUSH_NOTIFICATION_DISMISSED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Push Notification Dismissed");
-                break;
-            case PUSH_NOTIFICATION_IGNORED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Push Notification Ignored");
-                break;
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Support - Opened Helpshift Screen");
