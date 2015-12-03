@@ -40,6 +40,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -87,6 +88,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
     private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles;
+    private Set<MediaGallery> mWaitingGalleries;
     private Set<String> mUploadingMediaIds;
     private Set<String> mFailedMediaIds;
     private MediaGallery mUploadingMediaGallery;
@@ -127,6 +129,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
 
         mWaitingMediaFiles = new ConcurrentHashMap<>();
+        mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
         mUploadingMediaIds = new HashSet<>();
         mFailedMediaIds = new HashSet<>();
 
@@ -719,6 +722,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
+        if (!mDomHasLoaded) {
+            // If the DOM hasn't loaded yet, we won't be able to add a gallery to the ZSSEditor
+            // Place it in a queue to be handled when the DOM loaded callback is received
+            mWaitingGalleries.add(mediaGallery);
+            return;
+        }
+
         if (mediaGallery.getIds().isEmpty()) {
             mUploadingMediaGallery = mediaGallery;
             mWebView.execJavaScriptFromString("ZSSEditor.insertLocalGallery('" + mediaGallery.getUniqueId() + "');");
@@ -850,6 +860,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         appendMediaFile(entry.getValue(), entry.getKey(), null);
                     }
                     mWaitingMediaFiles.clear();
+                }
+
+                // Add any galleries that were placed in a queue due to the DOM not having loaded yet
+                if (mWaitingGalleries.size() > 0) {
+                    // Gallery insertion will only work if the content field is in focus
+                    // (for a new post, no field is in focus until user action)
+                    mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+
+                    for (MediaGallery mediaGallery : mWaitingGalleries) {
+                        appendGallery(mediaGallery);
+                    }
+
+                    mWaitingGalleries.clear();
                 }
             }
         });
