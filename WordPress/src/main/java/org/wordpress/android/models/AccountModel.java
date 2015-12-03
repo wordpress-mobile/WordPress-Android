@@ -144,23 +144,23 @@ public class AccountModel {
         return mFirstName;
     }
 
-    public void setFirstName(String mFirstName) {
-        this.mFirstName = mFirstName;
+    public void setFirstName(String firstName) {
+        mFirstName = firstName;
     }
 
     public String getLastName() {
         return mLastName;
     }
 
-    public void setLastName(String mLastName) {
-        this.mLastName = mLastName;
+    public void setLastName(String lastName) {
+        mLastName = lastName;
     }
 
     public String getAboutMe() {
         return mAboutMe;
     }
 
-    public void setAboutMe(String mAboutMe) {
-        this.mAboutMe = mAboutMe;
+    public void setAboutMe(String aboutMe) {
+        mAboutMe = aboutMe;
     }
 }
