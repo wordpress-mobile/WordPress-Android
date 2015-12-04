@@ -28,6 +28,8 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
+import org.wordpress.android.ui.publicize.PublicizeConstants;
+import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -100,6 +102,14 @@ public class ActivityLauncher {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
             slideInFromRight(context, intent);
         }
+    }
+
+    public static void viewBlogSharing(Context context, Blog blog) {
+        if (blog == null) return;
+
+        Intent intent = new Intent(context, PublicizeListActivity.class);
+        intent.putExtra(PublicizeConstants.ARG_SITE_ID, blog.getRemoteBlogId());
+        slideInFromRight(context, intent);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, Blog blog) {

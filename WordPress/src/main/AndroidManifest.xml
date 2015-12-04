@@ -270,6 +270,10 @@
             android:theme="@style/ReaderPhotoViewerTheme" />
 
         <!-- Other activities -->
+        <activity
+            android:name=".ui.publicize.PublicizeListActivity"
+            android:label="@string/sharing"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <activity android:name=".ui.ShareIntentReceiverActivity" android:theme="@style/Calypso.FloatingActivity">
             <intent-filter>
@@ -352,6 +356,11 @@
         <service android:name=".ui.reader.services.ReaderCommentService"
             android:label="Reader Comment Service"
             android:exported="false"/>
+
+        <service
+            android:name=".ui.publicize.services.PublicizeUpdateService"
+            android:label="Publicize Update Service"
+            android:exported="false" />
 
         <service
             android:name=".ui.suggestion.service.SuggestionService"
