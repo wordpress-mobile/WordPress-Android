@@ -628,6 +628,25 @@ ZSSEditor.setBackgroundColor = function(color) {
 	ZSSEditor.sendEnabledStyles();
 };
 
+/**
+ *  @brief      Wraps given HTML in paragraph tags and appends a new line
+ *  @details    This method makes sure that passed HTML is wrapped in a separate paragraph.
+ *              It also appends a new opening paragraph tag and a space. This step is necessary to keep any spans or
+ *              divs in the HTML from being read by the WebView as a style and applied to all future paragraphs.
+ */
+ZSSEditor.wrapInParagraphTags = function(html) {
+    var space = '<br>';
+    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
+    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
+
+    if (this.getFocusedField().getHTML().length == 0) {
+        html = paragraphOpenTag + html;
+    }
+    html = html + paragraphCloseTag + paragraphOpenTag + space;
+
+    return html;
+};
+
 // Needs addClass method
 
 ZSSEditor.insertLink = function(url, title) {
@@ -802,18 +821,9 @@ ZSSEditor.updateImage = function(url, alt) {
 };
 
 ZSSEditor.insertImage = function(url, remoteId, alt) {
-    var space = '<br>';
-    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
-    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
-
     var html = '<img src="' + url + '" alt="' + alt + '" class="wp-image-' + remoteId + '" />';
 
-    if (this.getFocusedField().getHTML().length == 0) {
-        html = paragraphOpenTag + html;
-    }
-    html = html + paragraphCloseTag + paragraphOpenTag + space;
-
-    this.insertHTML(html);
+    this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
 
@@ -831,9 +841,6 @@ ZSSEditor.insertImage = function(url, remoteId, alt) {
  *                                      does not check for that.  It would be a mistake.
  */
 ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
-    var space = '<br>';
-    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
-    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
     var progressIdentifier = this.getImageProgressIdentifier(imageNodeIdentifier);
     var imageContainerIdentifier = this.getImageContainerIdentifier(imageNodeIdentifier);
     var imgContainerStart = '<span id="' + imageContainerIdentifier+'" class="img_container" contenteditable="false" data-failed="Tap to try again!">';
@@ -842,12 +849,7 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var image = '<img data-wpid="' + imageNodeIdentifier + '" src="' + localImageUrl + '" alt="" />';
     var html = imgContainerStart + progress+image + imgContainerEnd;
 
-    if (this.getFocusedField().getHTML().length == 0) {
-        html = paragraphOpenTag + html;
-    }
-    html = html + paragraphCloseTag + paragraphOpenTag + space;
-
-    this.insertHTML(html);
+    this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
 
@@ -1556,6 +1558,37 @@ ZSSEditor.removeCaptionFormattingCallback = function( match, content ) {
     });
 
     return out;
+}
+
+// MARK: - Galleries
+ZSSEditor.insertGallery = function( imageIds, type, columns ) {
+    var shortcode;
+    if (type) {
+        shortcode = '[gallery type="' + type + '" ids="' + imageIds + '"]';
+    } else {
+        shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
+    }
+
+    this.insertHTML(this.wrapInParagraphTags(shortcode));
+}
+
+ZSSEditor.insertLocalGallery = function( placeholderId ) {
+    var container = '<span id="' + placeholderId + '" class="gallery_container">[Uploading gallery...]</span>';
+
+    this.insertHTML(this.wrapInParagraphTags(container));
+}
+
+ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, type, columns ) {
+    var span = 'span#' + placeholderId + '.gallery_container';
+
+    var shortcode;
+    if (type) {
+        shortcode = '[gallery type="' + type + '" ids="' + imageIds + '"]';
+    } else {
+        shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
+    }
+
+    $(span).replaceWith(shortcode);
 }
 
 // MARK: - Commands

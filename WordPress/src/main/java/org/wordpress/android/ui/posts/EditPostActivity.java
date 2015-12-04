@@ -1673,59 +1673,41 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     };
 
     /**
-     * Handles media upload notifications. Used when uploading local media to create a gallery
-     * after media selection.
+     * Handles media upload notifications. Used by the visual editor when uploading local media, and for both
+     * the visual and the legacy editor to create a gallery after media selection from local media.
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(MediaEvents.MediaUploadSucceeded event) {
-        if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, event.mRemoteMediaId,
-                    event.mRemoteMediaUrl);
-        }
-
         for (Long galleryId : mPendingGalleryUploads.keySet()) {
             if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalMediaId)) {
-                SpannableStringBuilder postContent;
-                if (mEditorFragment.getSpannedContent() != null) {
-                    // needed by the legacy editor to save local drafts
-                    postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+                if (mEditorMediaUploadListener != null) {
+                    // Notify the visual editor of gallery image upload
+                    int remaining = mPendingGalleryUploads.get(galleryId).size() - 1;
+                    mEditorMediaUploadListener.onGalleryMediaUploadSucceeded(galleryId, event.mRemoteMediaId, remaining);
                 } else {
-                    postContent = new SpannableStringBuilder(StringUtils.notNullStr((String)
-                            mEditorFragment.getContent()));
-                }
-                int selectionStart = 0;
-                int selectionEnd = postContent.length();
-
-                MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(selectionStart, selectionEnd,
-                        MediaGalleryImageSpan.class);
-                if (gallerySpans.length != 0) {
-                    for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                        MediaGallery gallery = gallerySpan.getMediaGallery();
-                        if (gallery.getUniqueId() == galleryId) {
-                            ArrayList<String> galleryIds = gallery.getIds();
-                            galleryIds.add(event.mRemoteMediaId);
-                            gallery.setIds(galleryIds);
-                            gallerySpan.setMediaGallery(gallery);
-                            int spanStart = postContent.getSpanStart(gallerySpan);
-                            int spanEnd = postContent.getSpanEnd(gallerySpan);
-                            postContent.setSpan(gallerySpan, spanStart, spanEnd,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    }
+                    handleGalleryImageUploadedLegacyEditor(galleryId, event.mLocalMediaId, event.mRemoteMediaId);
                 }
 
                 mPendingGalleryUploads.get(galleryId).remove(event.mLocalMediaId);
                 if (mPendingGalleryUploads.get(galleryId).size() == 0) {
                     mPendingGalleryUploads.remove(galleryId);
                 }
+
+                if (mPendingGalleryUploads.size() == 0) {
+                    stopMediaUploadService();
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(
+                            Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(10);
+                }
+
+                return;
             }
         }
 
-        if (mPendingGalleryUploads.size() == 0) {
-            stopMediaUploadService();
-            NotificationManager notificationManager = (NotificationManager) getSystemService(
-                    Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(10);
+        // Notify visual editor that a normal image has finished uploading (not part of a gallery)
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, event.mRemoteMediaId,
+                    event.mRemoteMediaUrl);
         }
     }
 
@@ -1738,6 +1720,37 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onEventMainThread(MediaEvents.MediaUploadProgress event) {
         if (mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadProgress(event.mLocalMediaId, event.mProgress);
+        }
+    }
+
+    private void handleGalleryImageUploadedLegacyEditor(Long galleryId, String localId, String remoteId) {
+        SpannableStringBuilder postContent;
+        if (mEditorFragment.getSpannedContent() != null) {
+            // needed by the legacy editor to save local drafts
+            postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
+        } else {
+            postContent = new SpannableStringBuilder(StringUtils.notNullStr((String)
+                    mEditorFragment.getContent()));
+        }
+        int selectionStart = 0;
+        int selectionEnd = postContent.length();
+
+        MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(selectionStart, selectionEnd,
+                MediaGalleryImageSpan.class);
+        if (gallerySpans.length != 0) {
+            for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
+                MediaGallery gallery = gallerySpan.getMediaGallery();
+                if (gallery.getUniqueId() == galleryId) {
+                    ArrayList<String> galleryIds = gallery.getIds();
+                    galleryIds.add(remoteId);
+                    gallery.setIds(galleryIds);
+                    gallerySpan.setMediaGallery(gallery);
+                    int spanStart = postContent.getSpanStart(gallerySpan);
+                    int spanEnd = postContent.getSpanEnd(gallerySpan);
+                    postContent.setSpan(gallerySpan, spanStart, spanEnd,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
         }
     }
 
