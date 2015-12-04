@@ -15,6 +15,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.widgets.OpenSansEditText;
 import org.wordpress.android.widgets.WPTextView;
+import org.xmlrpc.android.ApiHelper;
 
 public class MyProfileActivity extends AppCompatActivity {
 
@@ -27,7 +28,16 @@ public class MyProfileActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AccountHelper.getDefaultAccount().fetchAccountSettings();
+        AccountHelper.getDefaultAccount().fetchAccountSettings(new ApiHelper.GenericCallback() {
+            @Override
+            public void onSuccess() {
+                refreshDetails();
+            }
+
+            @Override
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+            }
+        });
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

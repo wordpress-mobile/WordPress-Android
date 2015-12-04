@@ -9,6 +9,7 @@ import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.xmlrpc.android.ApiHelper;
 
 /**
  * Class for managing logged in user informations.
@@ -37,13 +38,14 @@ public class Account extends AccountModel {
         WordPress.getRestClientUtilsV1_1().get("me", listener, errorListener);
     }
 
-    public void fetchAccountSettings() {
+    public void fetchAccountSettings(final ApiHelper.GenericCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
+                    callback.onSuccess();
                 }
             }
         };
