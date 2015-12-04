@@ -1017,9 +1017,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
         }
-
-        AnalyticsUtils.trackWithReaderPostDetails(
-                AnalyticsTracker.Stat.READER_ARTICLE_OPENED, post);
     }
 
     /*

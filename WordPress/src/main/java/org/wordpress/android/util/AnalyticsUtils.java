@@ -170,8 +170,8 @@ public class AnalyticsUtils {
     public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post) {
         if (post == null) return;
 
-        // posts from wpcom / jetpack pass { feed_id, feed_item_id, blog_id, post_id, is_jetpack }
-        // posts from RSS pass { feed_id, feed_item_id, is_jetpack }
+        // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
+        // RSS pass should pass: feed_id, feed_item_id, is_jetpack
         Map<String, Object> properties =  new HashMap<>();
         if (post.isWP() || post.isJetpack) {
             properties.put(BLOG_ID_KEY, post.blogId);
