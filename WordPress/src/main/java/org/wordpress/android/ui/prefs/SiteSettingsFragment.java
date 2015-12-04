@@ -100,10 +100,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mReceivePingbacksPref;
     private WPSwitchPreference mIdentityRequiredPreference;
     private WPSwitchPreference mUserAccountRequiredPref;
-    private DetailListPreference mCloseAfterPref;
+    private Preference mCloseAfterPref;
     private DetailListPreference mSortByPref;
     private DetailListPreference mThreadingPref;
-    private DetailListPreference mPagingPref;
+    private Preference mPagingPref;
     private DetailListPreference mWhitelistPref;
     private Preference mMultipleLinksPref;
     private Preference mModerationHoldPref;
@@ -240,6 +240,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mDeleteSitePref) {
             removeBlogWithConfirmation();
             return true;
+        } else if (preference == mCloseAfterPref) {
+            // TODO
+        } else if (preference == mPagingPref) {
+            // TODO
         }
 
         return false;
@@ -274,9 +278,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             setReceivePingbacks((Boolean) newValue);
         } else if (preference == mCloseAfterPref) {
             mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
-            setDetailListPreferenceValue(mCloseAfterPref,
-                    newValue.toString(),
-                    getCloseAfterSummary(mSiteSettings.getCloseAfter()));
+//            setDetailListPreferenceValue(mCloseAfterPref,
+//                    newValue.toString(),
+//                    getCloseAfterSummary(mSiteSettings.getCloseAfter()));
         } else if (preference == mSortByPref) {
             mSiteSettings.setCommentSorting(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mSortByPref,
@@ -289,9 +293,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                     getThreadingSummary(mSiteSettings.getThreadingLevels()));
         } else if (preference == mPagingPref) {
             mSiteSettings.setPagingCount(Integer.parseInt(newValue.toString()));
-            setDetailListPreferenceValue(mPagingPref,
-                    newValue.toString(),
-                    getPagingSummary(mSiteSettings.getPagingCount()));
+//            setDetailListPreferenceValue(mPagingPref,
+//                    newValue.toString(),
+//                    getPagingSummary(mSiteSettings.getPagingCount()));
         } else if (preference == mIdentityRequiredPreference) {
             mSiteSettings.setIdentityRequired((Boolean) newValue);
         } else if (preference == mUserAccountRequiredPref) {
@@ -415,10 +419,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mReceivePingbacksNested = (WPSwitchPreference) getPref(R.string.pref_key_site_receive_pingbacks_nested);
         mIdentityRequiredPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_identity_required);
         mUserAccountRequiredPref = (WPSwitchPreference) getPref(R.string.pref_key_site_user_account_required);
-        mCloseAfterPref = (DetailListPreference) getPref(R.string.pref_key_site_close_after);
+        mCloseAfterPref = findPreference(getString(R.string.pref_key_site_close_after));
         mSortByPref = (DetailListPreference) getPref(R.string.pref_key_site_sort_by);
         mThreadingPref = (DetailListPreference) getPref(R.string.pref_key_site_threading);
-        mPagingPref = (DetailListPreference) getPref(R.string.pref_key_site_paging);
+        mPagingPref = findPreference(getString(R.string.pref_key_site_paging));
         mWhitelistPref = (DetailListPreference) getPref(R.string.pref_key_site_whitelist);
         mMultipleLinksPref = getPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getPref(R.string.pref_key_site_moderation_hold);
@@ -430,6 +434,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref.setOnPreferenceClickListener(this);
         mBlacklistPref.setOnPreferenceClickListener(this);
         mDeleteSitePref.setOnPreferenceClickListener(this);
+        mCloseAfterPref.setOnPreferenceClickListener(this);
+        mPagingPref.setOnPreferenceClickListener(this);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
@@ -500,18 +506,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         setAllowComments(mSiteSettings.getAllowComments());
         setSendPingbacks(mSiteSettings.getSendPingbacks());
         setReceivePingbacks(mSiteSettings.getReceivePingbacks());
-        setDetailListPreferenceValue(mCloseAfterPref,
-                String.valueOf(mSiteSettings.getCloseAfter()),
-                getCloseAfterSummary(mSiteSettings.getCloseAfter()));
+//        setDetailListPreferenceValue(mCloseAfterPref,
+//                String.valueOf(mSiteSettings.getCloseAfter()),
+//                getCloseAfterSummary(mSiteSettings.getCloseAfter()));
         setDetailListPreferenceValue(mSortByPref,
                 String.valueOf(mSiteSettings.getCommentSorting()),
                 getSortOrderSummary(mSiteSettings.getCommentSorting()));
         setDetailListPreferenceValue(mThreadingPref,
                 String.valueOf(mSiteSettings.getThreadingLevels()),
                 getThreadingSummary(mSiteSettings.getThreadingLevels()));
-        setDetailListPreferenceValue(mPagingPref,
-                String.valueOf(mSiteSettings.getPagingCount()),
-                getPagingSummary(mSiteSettings.getPagingCount()));
+//        setDetailListPreferenceValue(mPagingPref,
+//                String.valueOf(mSiteSettings.getPagingCount()),
+//                getPagingSummary(mSiteSettings.getPagingCount()));
         int approval = mSiteSettings.getManualApproval() ?
                 mSiteSettings.getUseCommentWhitelist() ? 0
                         : -1 : 1;
@@ -523,7 +529,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
-        mPagingPref.setValue(String.valueOf(mSiteSettings.getPagingCount()));
+//        mPagingPref.setValue(String.valueOf(mSiteSettings.getPagingCount()));
     }
 
     private void setCategories() {

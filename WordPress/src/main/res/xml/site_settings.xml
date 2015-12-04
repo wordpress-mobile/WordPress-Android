@@ -197,12 +197,10 @@
                     android:title="@string/site_settings_account_required_title"
                     app:longClickHint="@string/site_user_account_required_hint" />
 
-                <org.wordpress.android.ui.prefs.DetailListPreference
+                <org.wordpress.android.ui.prefs.WPPreference
                     android:id="@+id/pref_close_after"
                     android:key="@string/pref_key_site_close_after"
                     android:title="@string/site_settings_close_after_title"
-                    android:entries="@array/site_settings_close_after_entries"
-                    android:entryValues="@array/site_settings_close_after_values"
                     android:defaultValue="0"
                     app:longClickHint="@string/site_close_after_hint" />
 
@@ -224,12 +222,10 @@
                     android:defaultValue="0"
                     app:longClickHint="@string/site_threading_hint" />
 
-                <org.wordpress.android.ui.prefs.DetailListPreference
+                <org.wordpress.android.ui.prefs.WPPreference
                     android:id="@+id/pref_paging"
                     android:key="@string/pref_key_site_paging"
                     android:title="@string/site_settings_paging_title"
-                    android:entries="@array/site_settings_paging_entries"
-                    android:entryValues="@array/site_settings_paging_values"
                     android:defaultValue="0"
                     app:longClickHint="@string/site_paging_hint" />
 
