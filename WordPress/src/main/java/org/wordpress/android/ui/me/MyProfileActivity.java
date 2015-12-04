@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.widgets.OpenSansEditText;
 import org.wordpress.android.widgets.WPTextView;
@@ -24,6 +26,8 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        AccountHelper.getDefaultAccount().fetchAccountSettings();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -92,10 +96,20 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     private void refreshDetails() {
-        // TODO: check if we have user details and set them, if we don't hide all the labels
-        mFirstName.setVisibility(View.GONE);
-        mLastName.setVisibility(View.GONE);
-        mDisplayName.setVisibility(View.GONE);
-        mAboutMe.setVisibility(View.GONE);
+        Account account = AccountHelper.getDefaultAccount();
+        updateLabel(mFirstName, account != null ? account.getFirstName() : null);
+        updateLabel(mLastName, account != null ? account.getLastName() : null);
+        updateLabel(mDisplayName, account != null ? account.getDisplayName() : null);
+        updateLabel(mAboutMe, account != null ? account.getAboutMe() : null);
+    }
+
+    private void updateLabel(WPTextView textView, String text) {
+        if (text == null || text.isEmpty()) {
+            textView.setVisibility(View.GONE);
+        }
+        else {
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(text);
+        }
     }
 }
