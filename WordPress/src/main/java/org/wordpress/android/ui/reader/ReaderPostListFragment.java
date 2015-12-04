@@ -1018,11 +1018,8 @@ public class ReaderPostListFragment extends Fragment
                 break;
         }
 
-        // Only pass the blogID if available. Do not track feedID
-        AnalyticsUtils.trackWithBlogDetails(
-                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                mCurrentBlogId != 0 ? mCurrentBlogId : null
-        );
+        AnalyticsUtils.trackWithReaderPostDetails(
+                AnalyticsTracker.Stat.READER_ARTICLE_OPENED, post);
     }
 
     /*
