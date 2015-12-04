@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 108;
+    private static final int DB_VERSION = 109;
 
     /*
      * version history
@@ -60,6 +60,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  106 - dropped is_likes_enabled and is_sharing_enabled from tbl_posts
      *  107 - "Blogs I Follow" renamed to "Followed Sites"
      *  108 - added "has_gap_marker" to tbl_post_tags
+     *  109 - added "feed_item_id" to tbl_posts
      */
 
     /*
