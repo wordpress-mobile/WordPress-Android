@@ -37,6 +37,26 @@ public class Account extends AccountModel {
         WordPress.getRestClientUtilsV1_1().get("me", listener, errorListener);
     }
 
+    public void fetchAccountSettings() {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null) {
+                    updateAccountSettingsFromRestResponse(jsonObject);
+                    save();
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+            }
+        };
+
+        WordPress.getRestClientUtilsV1_1().get("me/settings", listener, errorListener);
+    }
 
     public void signout() {
         init();

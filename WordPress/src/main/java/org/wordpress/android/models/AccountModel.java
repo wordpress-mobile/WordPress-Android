@@ -51,6 +51,9 @@ public class AccountModel {
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
         mEmail = json.optString("email");
+    }
+
+    public void updateAccountSettingsFromRestResponse(JSONObject json) {
         mFirstName = json.optString("first_name");
         mLastName = json.optString("last_name");
         mAboutMe = json.optString("description");
