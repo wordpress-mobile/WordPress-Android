@@ -52,18 +52,10 @@ public class MyProfileActivity extends AppCompatActivity {
 
         refreshDetails();
 
-        findViewById(R.id.first_name_row).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogUtils.showMyProfileDialog(MyProfileActivity.this, getString(org.wordpress.android.R.string.first_name), new DialogUtils.Callback() {
-                    @Override
-                    public void onSuccessfulInput(String input) {
-                        mFirstName.setVisibility(View.VISIBLE);
-                        mFirstName.setText(input);
-                    }
-                });
-            }
-        });
+        findViewById(R.id.first_name_row).setOnClickListener(createOnClickListener(getString(org.wordpress.android.R.string.first_name), mFirstName));
+        findViewById(R.id.last_name_row).setOnClickListener(createOnClickListener(getString(R.string.last_name), mLastName));
+        findViewById(R.id.display_name_row).setOnClickListener(createOnClickListener(getString(R.string.public_display_name), mDisplayName));
+        findViewById(R.id.about_me_row).setOnClickListener(createOnClickListener(getString(R.string.about_me), mAboutMe));
     }
 
     @Override
@@ -97,5 +89,21 @@ public class MyProfileActivity extends AppCompatActivity {
             textView.setVisibility(View.VISIBLE);
             textView.setText(text);
         }
+    }
+
+    // helper method to create onClickListener to avoid code duplication
+    private View.OnClickListener createOnClickListener(final String dialogTitle, final WPTextView textView) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogUtils.showMyProfileDialog(MyProfileActivity.this, dialogTitle, new DialogUtils.Callback() {
+                    @Override
+                    public void onSuccessfulInput(String input) {
+                        textView.setVisibility(View.VISIBLE);
+                        textView.setText(input);
+                    }
+                });
+            }
+        };
     }
 }
