@@ -58,9 +58,10 @@ public class WPNumberPicker extends NumberPicker {
 
         // Draw the middle number with a different font
         String scrollSelectorValue = getDisplayString();
-        float x = ((getRight() - getLeft()) / 2.0f) - (6.0f * getResources().getDisplayMetrics().scaledDensity * scrollSelectorValue.length());
+        float x = ((getRight() - getLeft()) / 2.0f);
         float y = getScrollOffset() + getSelectorElementHeight();
         Paint paint = mInputView.getPaint();
+        paint.setTextAlign(Paint.Align.CENTER);
         paint.setColor(getResources().getColor(R.color.blue_medium));
         canvas.drawText(scrollSelectorValue, x, y, paint);
         if (mInputView != null) mInputView.setVisibility(View.INVISIBLE);
