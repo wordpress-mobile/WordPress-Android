@@ -103,8 +103,7 @@ public class MyProfileActivity extends AppCompatActivity {
                 DialogUtils.showMyProfileDialog(MyProfileActivity.this, dialogTitle, hint, new DialogUtils.Callback() {
                     @Override
                     public void onSuccessfulInput(String input) {
-                        textView.setVisibility(View.VISIBLE);
-                        textView.setText(input);
+                        updateLabel(textView, input);
                     }
                 });
             }
