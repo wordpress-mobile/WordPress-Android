@@ -71,6 +71,7 @@ public class MyProfileActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_save) {
+            saveMyProfile();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -89,6 +90,24 @@ public class MyProfileActivity extends AppCompatActivity {
         updateLabel(mLastName, account != null ? account.getLastName() : null);
         updateLabel(mDisplayName, account != null ? account.getDisplayName() : null);
         updateLabel(mAboutMe, account != null ? account.getAboutMe() : null);
+    }
+
+    private void saveMyProfile() {
+        String firstName = mFirstName.getText().toString();
+        String lastName = mLastName.getText().toString();
+        String displayName = mDisplayName.getText().toString();
+        String aboutMe = mAboutMe.getText().toString();
+
+        AccountHelper.getDefaultAccount().postAccountSettings(firstName, lastName, displayName, aboutMe, new ApiHelper.GenericCallback() {
+            @Override
+            public void onSuccess() {
+                refreshDetails();
+            }
+
+            @Override
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+            }
+        });
     }
 
     private void updateLabel(WPTextView textView, String text) {

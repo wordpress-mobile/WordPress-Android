@@ -11,6 +11,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class for managing logged in user informations.
  */
@@ -60,6 +63,35 @@ public class Account extends AccountModel {
         };
 
         WordPress.getRestClientUtilsV1_1().get("me/settings", listener, errorListener);
+    }
+
+    public void postAccountSettings(String firstName, String lastName, String displayName, String aboutMe, final ApiHelper.GenericCallback callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null) {
+                    updateAccountSettingsFromRestResponse(jsonObject);
+                    save();
+                    if (callback != null) {
+                        callback.onSuccess();
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+            }
+        };
+
+        Map<String, String> params = new HashMap<>();
+        params.put("first_name", firstName);
+        params.put("last_name", lastName);
+        params.put("display_name", displayName);
+        params.put("description", aboutMe);
+        WordPress.getRestClientUtilsV1_1().post("me/settings", params, null, listener, errorListener);
     }
 
     public void signout() {
