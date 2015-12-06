@@ -1107,5 +1107,6 @@
     <string name="last_name">Last Name</string>
     <string name="public_display_name">Public Display Name</string>
     <string name="about_me">About Me</string>
+    <string name="about_me_hint">A few words about you…</string>
 
 </resources>

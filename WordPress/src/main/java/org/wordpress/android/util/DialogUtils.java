@@ -11,6 +11,10 @@ import org.wordpress.android.widgets.WPTextView;
 
 public class DialogUtils {
     public static void showMyProfileDialog(Context context, String title, final Callback callback) {
+        showMyProfileDialog(context, title, null, callback);
+    }
+
+    public static void showMyProfileDialog(Context context, String title, String hint, final Callback callback) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View promptView = layoutInflater.inflate(org.wordpress.android.R.layout.my_profile_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -18,7 +22,16 @@ public class DialogUtils {
 
         final WPTextView textView = (WPTextView) promptView.findViewById(org.wordpress.android.R.id.my_profile_dialog_label);
         final OpenSansEditText editText = (OpenSansEditText) promptView.findViewById(org.wordpress.android.R.id.my_profile_dialog_input);
+        final WPTextView hintView = (WPTextView) promptView.findViewById(org.wordpress.android.R.id.my_profile_dialog_hint);
+
         textView.setText(title);
+        if (hint != null && !hint.isEmpty()) {
+            hintView.setText(hint);
+        }
+        else {
+            hintView.setVisibility(View.GONE);
+        }
+
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton(org.wordpress.android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
