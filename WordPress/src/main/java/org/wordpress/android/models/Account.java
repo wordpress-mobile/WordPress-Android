@@ -45,7 +45,9 @@ public class Account extends AccountModel {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
-                    callback.onSuccess();
+                    if (callback != null) {
+                        callback.onSuccess();
+                    }
                 }
             }
         };
