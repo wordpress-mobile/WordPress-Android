@@ -217,7 +217,7 @@
 
         <activity
             android:name=".ui.themes.ThemeWebActivity"
-            android:label="@string/theme_web_activity"
+            android:label="@string/selected_theme"
             android:parentActivityName=".ui.themes.ThemeBrowserActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -536,8 +537,13 @@ public class ReaderPostListFragment extends Fragment
             titleResId = R.string.reader_empty_posts_in_blog;
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
             if (getCurrentTag().isFollowedSites()) {
-                titleResId = R.string.reader_empty_followed_blogs_title;
-                descriptionResId = R.string.reader_empty_followed_blogs_description;
+                if (ReaderBlogTable.hasFollowedBlogs()) {
+                    titleResId = R.string.reader_empty_followed_blogs_no_recent_posts_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_no_recent_posts_description;
+                } else {
+                    titleResId = R.string.reader_empty_followed_blogs_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_description;
+                }
             } else if (getCurrentTag().isPostsILike()) {
                 titleResId = R.string.reader_empty_posts_liked;
             } else {

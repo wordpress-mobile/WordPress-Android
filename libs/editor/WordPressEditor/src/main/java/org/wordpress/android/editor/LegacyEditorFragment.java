@@ -1131,6 +1131,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
+    public boolean hasFailedMediaUploads() {
+        return false;
+    }
+
+    @Override
     public void setTitlePlaceholder(CharSequence text) {
 
     }

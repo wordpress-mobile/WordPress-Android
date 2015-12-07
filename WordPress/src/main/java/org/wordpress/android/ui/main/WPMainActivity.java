@@ -57,8 +57,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends Activity
-    implements MediaAddFragment.MediaAddFragmentCallback, Bucket.Listener<Note> {
+public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -238,8 +237,12 @@ public class WPMainActivity extends Activity
         if (GCMMessageService.getNotificationsCount() == 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
+                GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
                 NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
             }
+        } else {
+          // mark all tapped here
+            GCMMessageService.bumpPushNotificationsTappedAllAnalytics();
         }
 
         GCMMessageService.clearNotifications();
@@ -539,9 +542,5 @@ public class WPMainActivity extends Activity
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
-    }
-
-    @Override
-    public void onMediaAdded(String mediaId) {
     }
 }
