@@ -12,19 +12,24 @@
     <org.wordpress.android.widgets.WPSwitch
         android:id="@+id/number_picker_switch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/number_picker_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_medium"
-        app:fontVariation="light" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="@dimen/text_sz_small"
+        app:fontFamily="openSans"
+        app:fontVariation="normal" />
 
     <org.wordpress.android.ui.WPNumberPicker
         android:id="@+id/number_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:showDividers="none" />
+        android:paddingTop="36dp" />
 
 </LinearLayout>

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -21,26 +20,44 @@ public class WPNumberPicker extends NumberPicker {
     private static final String INPUT_FIELD = "mInputText";
     private static final String INDICES_FIELD = "mSelectorIndices";
     private static final String CUR_OFFSET_FIELD = "mCurrentScrollOffset";
-    private static final String MIDDLE_INDEX_FIELD = "SELECTOR_MIDDLE_ITEM_INDEX";
     private static final String STRING_CACHE_FIELD = "mSelectorIndexToStringCache";
     private static final String SELECTOR_HEIGHT_FIELD = "mSelectorElementHeight";
+    private static final String INITIAL_OFFSET_FIELD = "mInitialScrollOffset";
+    private static final String CURRENT_OFFSET_FIELD = "mCurrentScrollOffset";
+    private static final String PAINT_FIELD = "mSelectorWheelPaint";
+
+    private static final int DISPLAY_COUNT = 5;
+    private static final int MIDDLE_INDEX = 2;
 
     private Field mOffsetField;
     private Field mSelectorHeight;
     private Field mSelectorIndices;
     private Field mStringCache;
-    private int mMiddleIndex;
+    private Field mInitialOffset;
+    private Field mCurrentOffset;
+
     private EditText mInputView;
+    private Paint mPaint;
 
     public WPNumberPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
-        removeDividers();
+        getFieldsViaReflection();
     }
 
     @Override
     public void addView(View child, int index, android.view.ViewGroup.LayoutParams params) {
         super.addView(child, index, params);
-        updateView(child);
+        if (child instanceof TextView) {
+            WPPrefUtils.layoutAsNumberPickerPeek((TextView) child);
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        updateIntitialOffset();
+        setVerticalFadingEdgeEnabled(false);
+        setHorizontalFadingEdgeEnabled(false);
     }
 
     @Override
@@ -53,44 +70,75 @@ public class WPNumberPicker extends NumberPicker {
     @Override
     protected void onDraw(Canvas canvas) {
         // Draw normally, skipping the middle number
-        if (mInputView != null) mInputView.setVisibility(View.VISIBLE);
+        mInputView.setVisibility(View.VISIBLE);
+        int[] selectorIndices = getIndices();
+        setIndices(new int[0]);
         super.onDraw(canvas);
+        setIndices(selectorIndices);
 
         // Draw the middle number with a different font
-        String scrollSelectorValue = getDisplayString();
+        float elementHeight = getSelectorElementHeight();
         float x = ((getRight() - getLeft()) / 2.0f);
-        float y = getScrollOffset() + getSelectorElementHeight();
+        float y = getScrollOffset();
+        SparseArray displayStrings = getDisplayStrings();
         Paint paint = mInputView.getPaint();
         paint.setTextAlign(Paint.Align.CENTER);
+        //noinspection deprecation
         paint.setColor(getResources().getColor(R.color.blue_medium));
-        canvas.drawText(scrollSelectorValue, x, y, paint);
-        if (mInputView != null) mInputView.setVisibility(View.INVISIBLE);
+        if (selectorIndices != null && displayStrings != null) {
+            for (int i = 0; i < selectorIndices.length; i++) {
+                int selectorIndex = selectorIndices[i];
+                String scrollSelectorValue = String.valueOf(displayStrings.get(selectorIndex));
+                if (i == MIDDLE_INDEX) {
+                    canvas.drawText(scrollSelectorValue, x, y, paint);
+                } else {
+                    canvas.drawText(scrollSelectorValue, x, y, mPaint);
+                }
+                y += elementHeight;
+            }
+        }
+        mInputView.setVisibility(View.INVISIBLE);
     }
 
-    private void updateView(final View view) {
-        if (view instanceof TextView) {
-            WPPrefUtils.layoutAsNumberPickerPeek((TextView) view);
+    private void setIndices(int[] indices) {
+        if (mSelectorIndices != null) {
+            try {
+                mSelectorIndices.set(this, indices);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private String getDisplayString() {
-        if (mSelectorIndices == null || mStringCache == null) return "";
-
-        try {
-            int index = ((int []) mSelectorIndices.get(this))[mMiddleIndex];
-            return ((SparseArray<String>) mStringCache.get(this)).get(index);
-        } catch (IllegalArgumentException | IllegalAccessException | Resources.NotFoundException e) {
-            e.printStackTrace();
+    private int[] getIndices() {
+        if (mSelectorIndices != null) {
+            try {
+                return (int[]) mSelectorIndices.get(this);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
 
-        return "";
+        return null;
+    }
+
+    private SparseArray getDisplayStrings() {
+        if (mStringCache != null) {
+            try {
+                return (SparseArray) mStringCache.get(this);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 
     private int getScrollOffset() {
         if (mOffsetField != null) {
             try {
                 return (Integer) mOffsetField.get(this);
-            } catch (IllegalArgumentException | IllegalAccessException | Resources.NotFoundException e) {
+            } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -110,10 +158,75 @@ public class WPNumberPicker extends NumberPicker {
         return 0;
     }
 
+    private void updateIntitialOffset() {
+        if (mInitialOffset != null) {
+            try {
+                int offset = (Integer) mInitialOffset.get(this) - getSelectorElementHeight();
+                mInitialOffset.set(this, offset);
+                // Only do this once
+                mInitialOffset = null;
+
+                if (mCurrentOffset != null) {
+                    mCurrentOffset.set(this, offset);
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * From https://www.snip2code.com/Snippet/67740/NumberPicker-with-transparent-selection-
      */
-    private void removeDividers() {
+    private void removeDividers(Class<?> clazz) {
+        Field selectionDivider = getFieldAndSetAccessible(clazz, DIVIDER_FIELD);
+        if (selectionDivider != null) {
+            try {
+                selectionDivider.set(this, null);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void getTextPaint(Class<?> clazz) {
+        Field paint = getFieldAndSetAccessible(clazz, PAINT_FIELD);
+        if (paint != null) {
+            try {
+                mPaint = (Paint) paint.get(this);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void getInputField(Class<?> clazz) {
+        Field inputField = getFieldAndSetAccessible(clazz, INPUT_FIELD);
+        if (inputField != null) {
+            try {
+                mInputView = ((EditText) inputField.get(this));
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Gets a class field using reflection and makes it accessible.
+     */
+    private Field getFieldAndSetAccessible(Class<?> clazz, String fieldName) {
+        Field field = null;
+        try {
+            field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        return field;
+    }
+
+    private void getFieldsViaReflection() {
         Class<?> numberPickerClass = null;
         try {
             numberPickerClass = Class.forName(NumberPicker.class.getName());
@@ -122,71 +235,16 @@ public class WPNumberPicker extends NumberPicker {
         }
         if (numberPickerClass == null) return;
 
-        Field selectionDivider = null;
-        Field inputField = null;
-        Field middleIndex = null;
-        try {
-            selectionDivider = numberPickerClass.getDeclaredField(DIVIDER_FIELD);
-            inputField = numberPickerClass.getDeclaredField(INPUT_FIELD);
-            middleIndex = numberPickerClass.getDeclaredField(MIDDLE_INDEX_FIELD);
-            mSelectorIndices = numberPickerClass.getDeclaredField(INDICES_FIELD);
-            mSelectorHeight = numberPickerClass.getDeclaredField(SELECTOR_HEIGHT_FIELD);
-            mOffsetField = numberPickerClass.getDeclaredField(CUR_OFFSET_FIELD);
-            mStringCache = numberPickerClass.getDeclaredField(STRING_CACHE_FIELD);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        if (middleIndex != null) {
-            try {
-                middleIndex.setAccessible(true);
-                mMiddleIndex = (Integer) middleIndex.get(this);
-            } catch (IllegalArgumentException | IllegalAccessException | Resources.NotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        if (selectionDivider != null) {
-            try {
-                selectionDivider.setAccessible(true);
-                selectionDivider.set(this, null);
-            } catch (IllegalArgumentException | IllegalAccessException | Resources.NotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        if (inputField != null) {
-            try {
-                inputField.setAccessible(true);
-                mInputView = ((EditText) inputField.get(this));
-            } catch (IllegalArgumentException | IllegalAccessException | Resources.NotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        if (mStringCache != null) {
-            try {
-                mStringCache.setAccessible(true);
-            } catch (IllegalArgumentException | Resources.NotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        if (mSelectorIndices != null) {
-            try {
-                mSelectorIndices.setAccessible(true);
-            } catch (IllegalArgumentException | Resources.NotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        if (mOffsetField != null) {
-            try {
-                mOffsetField.setAccessible(true);
-            } catch (IllegalArgumentException | Resources.NotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        if (mSelectorHeight != null) {
-            try {
-                mSelectorHeight.setAccessible(true);
-            } catch (IllegalArgumentException | Resources.NotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+        mSelectorHeight = getFieldAndSetAccessible(numberPickerClass, SELECTOR_HEIGHT_FIELD);
+        mOffsetField = getFieldAndSetAccessible(numberPickerClass, CUR_OFFSET_FIELD);
+        mStringCache = getFieldAndSetAccessible(numberPickerClass, STRING_CACHE_FIELD);
+        mSelectorIndices = getFieldAndSetAccessible(numberPickerClass, INDICES_FIELD);
+        mInitialOffset = getFieldAndSetAccessible(numberPickerClass, INITIAL_OFFSET_FIELD);
+        mCurrentOffset = getFieldAndSetAccessible(numberPickerClass, CURRENT_OFFSET_FIELD);
+
+        getTextPaint(numberPickerClass);
+        getInputField(numberPickerClass);
+        removeDividers(numberPickerClass);
+        setIndices(new int[DISPLAY_COUNT]);
     }
 }
