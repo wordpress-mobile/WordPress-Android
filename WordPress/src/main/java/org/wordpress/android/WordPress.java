@@ -214,6 +214,7 @@ public class WordPress extends Application {
 
         // Track app upgrade and install
         int versionCode = PackageUtils.getVersionCode(getContext());
+
         int oldVersionCode = AppPrefs.getLastAppVersionCode();
         if (oldVersionCode == 0) {
             // Track application installed if there isn't old version code
