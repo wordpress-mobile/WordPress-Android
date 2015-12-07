@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -20,7 +19,6 @@ public class WPNumberPicker extends NumberPicker {
     private static final String INPUT_FIELD = "mInputText";
     private static final String INDICES_FIELD = "mSelectorIndices";
     private static final String CUR_OFFSET_FIELD = "mCurrentScrollOffset";
-    private static final String STRING_CACHE_FIELD = "mSelectorIndexToStringCache";
     private static final String SELECTOR_HEIGHT_FIELD = "mSelectorElementHeight";
     private static final String INITIAL_OFFSET_FIELD = "mInitialScrollOffset";
     private static final String CURRENT_OFFSET_FIELD = "mCurrentScrollOffset";
@@ -32,15 +30,16 @@ public class WPNumberPicker extends NumberPicker {
     private Field mOffsetField;
     private Field mSelectorHeight;
     private Field mSelectorIndices;
-    private Field mStringCache;
     private Field mInitialOffset;
     private Field mCurrentOffset;
 
     private EditText mInputView;
     private Paint mPaint;
+    private int[] mDisplayValues;
 
     public WPNumberPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mDisplayValues = new int[DISPLAY_COUNT];
         getFieldsViaReflection();
     }
 
@@ -77,27 +76,38 @@ public class WPNumberPicker extends NumberPicker {
         setIndices(selectorIndices);
 
         // Draw the middle number with a different font
+        setDisplayValues();
         float elementHeight = getSelectorElementHeight();
         float x = ((getRight() - getLeft()) / 2.0f);
         float y = getScrollOffset();
-        SparseArray displayStrings = getDisplayStrings();
         Paint paint = mInputView.getPaint();
         paint.setTextAlign(Paint.Align.CENTER);
         //noinspection deprecation
         paint.setColor(getResources().getColor(R.color.blue_medium));
-        if (selectorIndices != null && displayStrings != null) {
-            for (int i = 0; i < selectorIndices.length; i++) {
-                int selectorIndex = selectorIndices[i];
-                String scrollSelectorValue = String.valueOf(displayStrings.get(selectorIndex));
-                if (i == MIDDLE_INDEX) {
-                    canvas.drawText(scrollSelectorValue, x, y, paint);
-                } else {
-                    canvas.drawText(scrollSelectorValue, x, y, mPaint);
-                }
-                y += elementHeight;
+
+        // Draw the visible values
+        for (int i = 0; i < DISPLAY_COUNT; ++i) {
+            String scrollSelectorValue = String.valueOf(mDisplayValues[i]);
+            if (i == MIDDLE_INDEX) {
+                canvas.drawText(scrollSelectorValue, x, y, paint);
+            } else {
+                canvas.drawText(scrollSelectorValue, x, y, mPaint);
             }
+            y += elementHeight;
         }
         mInputView.setVisibility(View.INVISIBLE);
+    }
+
+    private void setDisplayValues() {
+        int value = getValue();
+        for (int i = 0; i < DISPLAY_COUNT; ++i) {
+            mDisplayValues[i] = value - MIDDLE_INDEX + i;
+            if (mDisplayValues[i] < getMinValue()) {
+                mDisplayValues[i] = getMaxValue() - (getMinValue() - mDisplayValues[i] + 1);
+            } else if (mDisplayValues[i] > getMaxValue()) {
+                mDisplayValues[i] = getMinValue() + (mDisplayValues[i] - getMaxValue() - 1);
+            }
+        }
     }
 
     private void setIndices(int[] indices) {
@@ -114,18 +124,6 @@ public class WPNumberPicker extends NumberPicker {
         if (mSelectorIndices != null) {
             try {
                 return (int[]) mSelectorIndices.get(this);
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
-    private SparseArray getDisplayStrings() {
-        if (mStringCache != null) {
-            try {
-                return (SparseArray) mStringCache.get(this);
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -237,7 +235,6 @@ public class WPNumberPicker extends NumberPicker {
 
         mSelectorHeight = getFieldAndSetAccessible(numberPickerClass, SELECTOR_HEIGHT_FIELD);
         mOffsetField = getFieldAndSetAccessible(numberPickerClass, CUR_OFFSET_FIELD);
-        mStringCache = getFieldAndSetAccessible(numberPickerClass, STRING_CACHE_FIELD);
         mSelectorIndices = getFieldAndSetAccessible(numberPickerClass, INDICES_FIELD);
         mInitialOffset = getFieldAndSetAccessible(numberPickerClass, INITIAL_OFFSET_FIELD);
         mCurrentOffset = getFieldAndSetAccessible(numberPickerClass, CURRENT_OFFSET_FIELD);

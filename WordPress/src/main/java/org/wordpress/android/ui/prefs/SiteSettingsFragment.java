@@ -17,6 +17,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.ContextThemeWrapper;
@@ -241,9 +242,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             removeBlogWithConfirmation();
             return true;
         } else if (preference == mCloseAfterPref) {
-            // TODO
+            showCloseAfterDialog();
         } else if (preference == mPagingPref) {
-            // TODO
+            showPagingDialog();
         }
 
         return false;
@@ -278,9 +279,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             setReceivePingbacks((Boolean) newValue);
         } else if (preference == mCloseAfterPref) {
             mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
-//            setDetailListPreferenceValue(mCloseAfterPref,
-//                    newValue.toString(),
-//                    getCloseAfterSummary(mSiteSettings.getCloseAfter()));
+            mCloseAfterPref.setSummary(getCloseAfterSummary(mSiteSettings.getCloseAfter()));
         } else if (preference == mSortByPref) {
             mSiteSettings.setCommentSorting(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mSortByPref,
@@ -293,9 +292,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     getThreadingSummary(mSiteSettings.getThreadingLevels()));
         } else if (preference == mPagingPref) {
             mSiteSettings.setPagingCount(Integer.parseInt(newValue.toString()));
-//            setDetailListPreferenceValue(mPagingPref,
-//                    newValue.toString(),
-//                    getPagingSummary(mSiteSettings.getPagingCount()));
+            mPagingPref.setSummary(getPagingSummary(mSiteSettings.getPagingCount()));
         } else if (preference == mIdentityRequiredPreference) {
             mSiteSettings.setIdentityRequired((Boolean) newValue);
         } else if (preference == mUserAccountRequiredPref) {
@@ -458,25 +455,84 @@ public class SiteSettingsFragment extends PreferenceFragment
         relatedPosts.show(getFragmentManager(), "related-posts");
     }
 
-    private void showMultipleLinksDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
-        //noinspection deprecation
-        detailText.setTextColor(getResources().getColor(R.color.grey_darken_10));
-        detailText.setText(R.string.multiple_links_description);
-        numberPicker.setMaxValue(getResources().getInteger(R.integer.max_links_limit));
-        numberPicker.setValue(Math.max(numberPicker.getMinValue(), Math.min(numberPicker.getMaxValue(), mSiteSettings.getMultipleLinks())));
+    private View getDialogTitleView(int title) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         @SuppressLint("InflateParams")
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = ((TextView) titleView.findViewById(R.id.title));
-        titleText.setText(R.string.site_settings_multiple_links_title);
+        titleText.setText(title);
         titleText.setLayoutParams(new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT));
-        builder.setCustomTitle(titleView);
+        return titleView;
+    }
+
+    private void showPagingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
+
+        SwitchCompat switchView = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
+        switchView.setText(R.string.site_settings_paging_title);
+
+        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
+        detailText.setText(R.string.paging_description);
+
+        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(getResources().getInteger(R.integer.paging_limit));
+        numberPicker.setValue(Math.max(numberPicker.getMinValue(), Math.min(numberPicker.getMaxValue(), mSiteSettings.getPagingCount())));
+
+        builder.setCustomTitle(getDialogTitleView(R.string.site_settings_paging_title));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mSiteSettings.getPagingCount() != numberPicker.getValue()) {
+                    onPreferenceChange(mPagingPref, numberPicker.getValue());
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setView(view);
+        builder.create().show();
+    }
+
+    private void showCloseAfterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
+
+        view.findViewById(R.id.number_picker_text).setVisibility(View.GONE);
+        view.findViewById(R.id.number_picker_switch).setVisibility(View.GONE);
+
+        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(getResources().getInteger(R.integer.close_after_limit));
+        numberPicker.setValue(Math.max(numberPicker.getMinValue(), Math.min(numberPicker.getMaxValue(), mSiteSettings.getCloseAfter())));
+
+        builder.setCustomTitle(getDialogTitleView(R.string.site_settings_close_after_title));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mSiteSettings.getCloseAfter() != numberPicker.getValue()) {
+                    onPreferenceChange(mCloseAfterPref, numberPicker.getValue());
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setView(view);
+        builder.create().show();
+    }
+
+    private void showMultipleLinksDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
+        view.findViewById(R.id.number_picker_switch).setVisibility(View.GONE);
+        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
+        detailText.setText(R.string.multiple_links_description);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(getResources().getInteger(R.integer.max_links_limit));
+        numberPicker.setValue(Math.max(numberPicker.getMinValue(), Math.min(numberPicker.getMaxValue(), mSiteSettings.getMultipleLinks())));
+        builder.setCustomTitle(getDialogTitleView(R.string.site_settings_multiple_links_title));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -506,30 +562,25 @@ public class SiteSettingsFragment extends PreferenceFragment
         setAllowComments(mSiteSettings.getAllowComments());
         setSendPingbacks(mSiteSettings.getSendPingbacks());
         setReceivePingbacks(mSiteSettings.getReceivePingbacks());
-//        setDetailListPreferenceValue(mCloseAfterPref,
-//                String.valueOf(mSiteSettings.getCloseAfter()),
-//                getCloseAfterSummary(mSiteSettings.getCloseAfter()));
         setDetailListPreferenceValue(mSortByPref,
                 String.valueOf(mSiteSettings.getCommentSorting()),
                 getSortOrderSummary(mSiteSettings.getCommentSorting()));
         setDetailListPreferenceValue(mThreadingPref,
                 String.valueOf(mSiteSettings.getThreadingLevels()),
                 getThreadingSummary(mSiteSettings.getThreadingLevels()));
-//        setDetailListPreferenceValue(mPagingPref,
-//                String.valueOf(mSiteSettings.getPagingCount()),
-//                getPagingSummary(mSiteSettings.getPagingCount()));
         int approval = mSiteSettings.getManualApproval() ?
                 mSiteSettings.getUseCommentWhitelist() ? 0
                         : -1 : 1;
         setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
         mMultipleLinksPref.setSummary(getResources()
                 .getQuantityString(R.plurals.multiple_links_summary,
-                mSiteSettings.getMultipleLinks(),
-                mSiteSettings.getMultipleLinks()));
+                        mSiteSettings.getMultipleLinks(),
+                        mSiteSettings.getMultipleLinks()));
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
-//        mPagingPref.setValue(String.valueOf(mSiteSettings.getPagingCount()));
+        mCloseAfterPref.setSummary(getCloseAfterSummary(mSiteSettings.getCloseAfter()));
+        mPagingPref.setSummary(getPagingSummary(mSiteSettings.getPagingCount()));
     }
 
     private void setCategories() {
