@@ -68,6 +68,7 @@ public class NotificationsUtils {
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
+    public static final String WPCOM_PUSH_DEVICE_TOKEN = "wp_pref_notifications_token";
 
     public static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
@@ -147,6 +148,7 @@ public class NotificationsUtils {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
                 editor.remove(WPCOM_PUSH_DEVICE_SERVER_ID);
                 editor.remove(WPCOM_PUSH_DEVICE_UUID);
+                editor.remove(WPCOM_PUSH_DEVICE_TOKEN);
                 editor.apply();
             }
         };

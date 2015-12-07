@@ -113,11 +113,14 @@ public class JsCallbackReceiver {
                 }
 
                 String mediaMeta = mediaDataMap.get("meta");
+                JSONObject mediaMetaJson = new JSONObject();
+
                 if (mediaMeta != null) {
                     mediaMeta = Utils.decodeHtml(mediaMeta);
 
                     try {
-                        String classes = JSONUtils.getString(new JSONObject(mediaMeta), "classes");
+                        mediaMetaJson = new JSONObject(mediaMeta);
+                        String classes = JSONUtils.getString(mediaMetaJson, "classes");
                         Set<String> classesSet = Utils.splitDelimitedString(classes, ", ");
 
                         if (classesSet.contains("uploading")) {
@@ -131,7 +134,7 @@ public class JsCallbackReceiver {
                     }
                 }
 
-                mListener.onMediaTapped(mediaId, mediaUrl, mediaMeta, uploadStatus);
+                mListener.onMediaTapped(mediaId, mediaUrl, mediaMetaJson, uploadStatus);
                 break;
             case CALLBACK_LINK_TAP:
                 // Extract and HTML-decode the link data from the callback params
@@ -175,6 +178,8 @@ public class JsCallbackReceiver {
                         case "getSelectedText":
                             responseIds.add("result");
                             break;
+                        case "getFailedImages":
+                            responseIds.add("ids");
                     }
 
                     responseDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, responseIds);

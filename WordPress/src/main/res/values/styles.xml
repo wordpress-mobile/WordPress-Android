@@ -230,7 +230,7 @@
     <!--My Site Styles-->
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/my_site_list_row_height</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
@@ -240,6 +240,8 @@
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:gravity">center_vertical</item>
     </style>
@@ -287,7 +289,7 @@
 
     <style name="MeListRowLayout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/me_list_row_height</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:orientation">horizontal</item>
     </style>
@@ -296,6 +298,8 @@
         <item name="android:layout_width">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/me_list_row_icon_size</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginLeft">@dimen/margin_medium</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
     </style>
