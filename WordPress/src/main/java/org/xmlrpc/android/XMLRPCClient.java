@@ -534,6 +534,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 // Detect login issues and broadcast a message if the error is known
                 switch (e.getFaultCode()) {
                     case 403:
+                        // Ignore 403 error from certain methods known for replying with incorrect error code on
+                        // lacking permissions
+                        if ("wp.getPostFormats".equals(method) || "wp.getCommentStatusList".equals(method)
+                            || "wp.getPostStatusList".equals(method) || "wp.getPageStatusList".equals(method)) {
+                            break;
+                        }
                         EventBus.getDefault().post(new CoreEvents.InvalidCredentialsDetected());
                         break;
                     case 425:
