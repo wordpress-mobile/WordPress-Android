@@ -19,6 +19,7 @@ public final class AnalyticsTracker {
     public enum Stat {
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
+        APPLICATION_INSTALLED,
         APPLICATION_UPGRADED,
         READER_ACCESSED,
         READER_ARTICLE_COMMENTED_ON,
@@ -133,7 +134,6 @@ public final class AnalyticsTracker {
 
     public static void loadPrefHasUserOptedOut(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
         boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
