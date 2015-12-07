@@ -1113,6 +1113,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
 
     private void fetchMedia(Uri mediaUri) {
+        if (mediaUri == null) {
+            Toast.makeText(EditPostActivity.this,
+                    getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (URLUtil.isNetworkUrl(mediaUri.toString())) {
             // Create an AsyncTask to download the file
             new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
