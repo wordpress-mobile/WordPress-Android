@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.me;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ public class MyProfileActivity extends AppCompatActivity {
     private WPTextView mLastName;
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
+    private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,14 +100,18 @@ public class MyProfileActivity extends AppCompatActivity {
         String displayName = mDisplayName.getText().toString();
         String aboutMe = mAboutMe.getText().toString();
 
+        mProgressDialog = ProgressDialog.show(this, null, getText(R.string.saving_changes), false);
+
         AccountHelper.getDefaultAccount().postAccountSettings(firstName, lastName, displayName, aboutMe, new ApiHelper.GenericCallback() {
             @Override
             public void onSuccess() {
                 refreshDetails();
+                dismissProgressDialog();
             }
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                dismissProgressDialog();
             }
         });
     }
@@ -137,5 +143,12 @@ public class MyProfileActivity extends AppCompatActivity {
                 });
             }
         };
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+        mProgressDialog = null;
     }
 }
