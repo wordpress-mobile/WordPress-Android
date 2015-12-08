@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_edit_media"
         android:icon="@drawable/ic_create_white_24dp"
-        android:title="@string/new_media"
+        android:title="@string/edit_media"
         app:showAsAction="ifRoom" />
 
     <item

@@ -727,6 +727,7 @@
     <!-- Menu Buttons -->
     <string name="new_post">New post</string>
     <string name="new_media">New media</string>
+    <string name="edit_media">Edit media</string>
     <string name="menu_search">Search</string>
     <string name="view_site">View site</string>
 
