@@ -8,14 +8,14 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/menu_copy_media_url"
+        android:icon="@drawable/ic_content_copy_white_24dp"
+        android:title="@string/media_details_copy_url"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_delete"
         android:icon="@drawable/ic_delete_white_24dp"
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/menu_copy_media_url"
-        android:icon="@drawable/ic_delete_white_24dp"
-        android:title="@string/media_details_copy_url"
-        app:showAsAction="never" />
 </menu>
