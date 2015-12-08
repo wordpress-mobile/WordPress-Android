@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -51,6 +52,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -122,6 +124,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             getActivity().finish();
             return;
         }
+
+        AnalyticsUtils.trackWithCurrentBlogDetails(
+                AnalyticsTracker.Stat.SETTINGS_ACCESSED_SITE_SETTINGS);
 
         mShouldFetch = true;
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
@@ -208,6 +213,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // Add Action Bar to sub-screens
         if (preference == findPreference(getString(R.string.pref_key_site_more_discussion))) {
+            AnalyticsUtils.trackWithCurrentBlogDetails(
+                    AnalyticsTracker.Stat.SETTINGS_ACCESSED_MORE_SETTINGS);
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog != null) {
                 ListView prefList = (ListView) dialog.findViewById(android.R.id.list);
@@ -343,6 +350,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             } else if (obj instanceof PreferenceHint) {
                 PreferenceHint hintObj = (PreferenceHint) obj;
                 if (hintObj.hasHint()) {
+                    HashMap<String, Object> properties = new HashMap<>();
+                    properties.put("hint_shown", hintObj.getHint());
+                    AnalyticsUtils.trackWithCurrentBlogDetails(
+                            AnalyticsTracker.Stat.SETTINGS_HINT_TOAST_SHOWN, properties);
                     ToastUtils.showToast(getActivity(), hintObj.getHint(), ToastUtils.Duration.SHORT);
                 }
                 return true;
@@ -801,6 +812,12 @@ public class SiteSettingsFragment extends PreferenceFragment
             @Override
             public boolean onDeleteRequested() {
                 SparseBooleanArray checkedItems = list.getCheckedItemPositions();
+
+                HashMap<String, Object> properties = new HashMap<>();
+                properties.put("num_items_deleted", checkedItems.size());
+                AnalyticsUtils.trackWithCurrentBlogDetails(
+                        AnalyticsTracker.Stat.SETTINGS_DELETED_LIST_ITEMS, properties);
+
                 ListAdapter adapter = list.getAdapter();
                 for (int i = 0; i < checkedItems.size(); i++) {
                     final int index = checkedItems.keyAt(i);
@@ -836,6 +853,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                             list.setAdapter(new ArrayAdapter<>(getActivity(),
                                     R.layout.wp_simple_list_item_1,
                                     mEditingList));
+                            AnalyticsUtils.trackWithCurrentBlogDetails(
+                                    AnalyticsTracker.Stat.SETTINGS_ADDED_LIST_ITEM);
                         }
                     }
                 });

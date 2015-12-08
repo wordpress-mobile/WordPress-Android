@@ -14,6 +14,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.AnalyticsUtils;
 
 public class LearnMorePreference extends Preference
         implements PreferenceHint, View.OnClickListener, DialogInterface.OnDismissListener {
@@ -40,6 +42,9 @@ public class LearnMorePreference extends Preference
     public void onClick(View v) {
         if (mDialog != null) return;
 
+        AnalyticsUtils.trackWithCurrentBlogDetails(
+                AnalyticsTracker.Stat.SETTINGS_LEARN_MORE_CLICKED);
+
         Context context = getContext();
         mDialog = new Dialog(context);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -51,6 +56,8 @@ public class LearnMorePreference extends Preference
             public void onPageFinished(WebView webView, String url) {
                 super.onPageFinished(webView, url);
                 if (mDialog != null) {
+                    AnalyticsUtils.trackWithCurrentBlogDetails(
+                            AnalyticsTracker.Stat.SETTINGS_LEARN_MORE_LOADED);
                     mDialog.setContentView(webView);
                 }
             }

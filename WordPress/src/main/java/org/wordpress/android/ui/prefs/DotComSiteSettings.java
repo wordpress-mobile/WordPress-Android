@@ -9,9 +9,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -87,6 +89,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Site Settings saved remotely");
                         notifySavedOnUiThread(null);
                         mRemoteSettings.copyFrom(mSettings);
+                        HashMap<String, Object> properties = new HashMap<>();
+                        properties.put("items_saved", response);
+                        AnalyticsUtils.trackWithCurrentBlogDetails(
+                                AnalyticsTracker.Stat.SETTINGS_SAVED_REMOTELY, properties);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override

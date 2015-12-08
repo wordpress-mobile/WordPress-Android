@@ -330,9 +330,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case PUSH_AUTHENTICATION_IGNORED:
                 eventName = "push_authentication_ignored";
                 break;
-            case SETTINGS_LANGUAGE_SELECTION_FORCED:
-                eventName = "settings_language_selection_forced";
-                break;
             case NOTIFICATION_SETTINGS_LIST_OPENED:
                 eventName = "notification_settings_list_opened";
                 break;
@@ -374,6 +371,33 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case THEMES_DETAILS_ACCESSED:
                 eventName = "themes_details_accessed";
+                break;
+            case SETTINGS_LANGUAGE_SELECTION_FORCED:
+                eventName = "settings_language_selection_forced";
+                break;
+            case SETTINGS_ACCESSED_SITE_SETTINGS:
+                eventName = "settings_site_settings_accessed";
+                break;
+            case SETTINGS_ACCESSED_MORE_SETTINGS:
+                eventName = "settings_more_settings_accessed";
+                break;
+            case SETTINGS_ADDED_LIST_ITEM:
+                eventName = "settings_added_list_item";
+                break;
+            case SETTINGS_DELETED_LIST_ITEMS:
+                eventName = "settings_deleted_list_items";
+                break;
+            case SETTINGS_HINT_TOAST_SHOWN:
+                eventName = "settings_hint_toast_shown";
+                break;
+            case SETTINGS_LEARN_MORE_CLICKED:
+                eventName = "settings_learn_more_clicked";
+                break;
+            case SETTINGS_LEARN_MORE_LOADED:
+                eventName = "settings_learn_more_loaded";
+                break;
+            case SETTINGS_SAVED_REMOTELY:
+                eventName = "settings_saved_remotely";
                 break;
             default:
                 eventName = null;

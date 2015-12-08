@@ -3,10 +3,12 @@ package org.wordpress.android.ui.prefs;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MapUtils;
 import org.xmlrpc.android.ApiHelper;
@@ -86,6 +88,10 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             public void onSuccess(long id, final Object result) {
                 notifySavedOnUiThread(null);
                 mRemoteSettings.copyFrom(mSettings);
+                HashMap<String, Object> properties = new HashMap<>();
+                properties.put("items_saved", result);
+                AnalyticsUtils.trackWithCurrentBlogDetails(
+                        AnalyticsTracker.Stat.SETTINGS_SAVED_REMOTELY, properties);
             }
 
             @Override
