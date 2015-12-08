@@ -61,7 +61,7 @@
                 android:id="@+id/me_my_profile_icon"
                 style="@style/MeListRowIcon"
                 android:contentDescription="@string/my_profile"
-                android:src="@drawable/me_icon_settings" />
+                android:src="@drawable/me_icon_my_profile" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_my_profile_text_view"
