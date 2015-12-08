@@ -1913,6 +1913,12 @@ public class WordPressDB {
         }
     }
 
+    public Theme getCurrentTheme(String blogId) {
+        String currentThemeId = getCurrentThemeId(blogId);
+
+        return getTheme(blogId, currentThemeId);
+    }
+
     /*
      * used during development to copy database to SD card so we can access it via DDMS
      */

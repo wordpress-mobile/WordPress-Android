@@ -74,6 +74,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         setContentView(R.layout.theme_browser_activity);
+        setCurrentThemeFromDB();
 
         if (savedInstanceState == null) {
             AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
@@ -82,6 +83,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             addBrowserFragment();
         }
         showToolbar();
+    }
+
+    private void setCurrentThemeFromDB() {
+        mCurrentTheme = WordPress.wpDB.getCurrentTheme(getBlogId());
     }
 
     @Override
