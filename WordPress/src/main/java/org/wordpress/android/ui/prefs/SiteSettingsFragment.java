@@ -780,20 +780,21 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private View getListEditorView(final Dialog dialog, String footerText) {
-        View view = View.inflate(getActivity(), R.layout.list_editor, null);
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        View view = View.inflate(wrapper, R.layout.list_editor, null);
         ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
 
         final MultiSelectListView list = (MultiSelectListView) view.findViewById(android.R.id.list);
         list.setEnterMultiSelectListener(new MultiSelectListView.OnEnterMultiSelect() {
             @Override
             public void onEnterMultiSelect() {
-                WPActivityUtils.changeDialogToolbarVisibility(dialog, View.GONE);
+                WPActivityUtils.setStatusBarColor(dialog.getWindow(), R.color.action_mode_status_bar_tint);
             }
         });
         list.setExitMultiSelectListener(new MultiSelectListView.OnExitMultiSelect() {
             @Override
             public void onExitMultiSelect() {
-                WPActivityUtils.changeDialogToolbarVisibility(dialog, View.VISIBLE);
+                WPActivityUtils.setStatusBarColor(dialog.getWindow(), R.color.status_bar_tint);
             }
         });
         list.setDeleteRequestListener(new MultiSelectListView.OnDeleteRequested() {

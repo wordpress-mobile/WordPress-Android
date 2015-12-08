@@ -17,7 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp" />
+        android:layout_marginRight="24dp"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_sz_large"
+        app:fontFamily="openSans"
+        app:fontVariation="light" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/number_picker_text"

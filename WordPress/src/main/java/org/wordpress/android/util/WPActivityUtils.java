@@ -18,6 +18,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -88,6 +90,14 @@ public class WPActivityUtils {
         View toolbar = dialog.findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setVisibility(visibility);
+        }
+    }
+
+    public static void setStatusBarColor(Window window, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(window.getContext().getResources().getColor(color));
         }
     }
 

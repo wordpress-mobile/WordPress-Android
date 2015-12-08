@@ -63,11 +63,11 @@ public class MultiSelectListView extends ListView
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         if (mActionMode != null) return false;
-        if (mEnterListener != null) mEnterListener.onEnterMultiSelect();
 
         setItemChecked(position, true);
         getChildAt(position).setBackgroundColor(getResources().getColor(R.color.white));
         mActionMode = startActionMode(this);
+        if (mEnterListener != null) mEnterListener.onEnterMultiSelect();
 
         return true;
     }
