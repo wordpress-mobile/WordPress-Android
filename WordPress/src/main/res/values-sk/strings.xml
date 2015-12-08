@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Zvolená téma</string>
+	<string name="could_not_load_theme">Nie je možné načítať tému</string>
+	<string name="theme_activation_error">Niečo nezafungovalo. Nie je možné aktivovať tému.</string>
+	<string name="theme_by_author_prompt_append"> od %1$s</string>
+	<string name="theme_prompt">Ďakujeme, že ste si vybrali %1$s</string>
+	<string name="theme_try_and_customize">Vyskúšajte a prispôsobte si</string>
+	<string name="theme_view">Zobraziť</string>
+	<string name="theme_details">Detaily</string>
+	<string name="theme_support">Podpora</string>
+	<string name="theme_done">HOTOVO</string>
+	<string name="theme_manage_site">SPRAVOVAŤ STRÁNKU</string>
+	<string name="title_activity_theme_support">Témy</string>
+	<string name="theme_activate">Aktivovať</string>
+	<string name="date_range_start_date">Začiatok</string>
+	<string name="date_range_end_date">Koniec</string>
+	<string name="current_theme">Aktuálna téma</string>
+	<string name="customize">Prispôsobiť</string>
+	<string name="details">Detaily</string>
+	<string name="support">Podpora</string>
+	<string name="active">Aktívna</string>
+	<string name="stats_referrers_spam_generic_error">Niečo sa nepodarilo. Označenie za spam nebolo zmenené.</string>
+	<string name="stats_referrers_marking_not_spam">Odznačuje sa ako spam</string>
+	<string name="stats_referrers_unspam">Nie je spam</string>
+	<string name="stats_referrers_marking_spam">Označuje sa ako spam</string>
+	<string name="theme_auth_error_authenticate">Nepodarilo sa načítať témy: nepodarilo sa autentifikovať používateľa</string>
+	<string name="post_published">Článok bol publikovaný</string>
+	<string name="page_published">Stránka bola publikovaná</string>
+	<string name="post_updated">Článok bol aktualizovaný</string>
+	<string name="page_updated">Stránka bola aktualizovaná</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Neboli nájdené žiadne témy.</string>
+	<string name="media_file_name">Názov súboru: %s</string>
+	<string name="media_uploaded_on">Nahrané: %s</string>
+	<string name="media_dimensions">Rozmery: %s</string>
+	<string name="upload_queued">Zaradené do fronty</string>
+	<string name="media_file_type">Typ súboru: %s</string>
 	<string name="reader_label_gap_marker">Načítať ďalšie články</string>
 	<string name="notifications_no_search_results">Žiadne stránky sa nezhodujú s \'%s\'</string>
 	<string name="search_sites">Nájsť webové stránky</string>
@@ -27,8 +63,6 @@
 	<string name="access_media_permission_required">Vyžadujú sa súhlasy na prístup k súborom</string>
 	<string name="stats_enable_rest_api_in_jetpack">Povoľte modul JSON API v Jetpack k náhľadu vašej štatistiky.</string>
 	<string name="error_open_list_from_notification">Tento článok alebo stránka boli zverejnené na inej webovej stránke</string>
-	<string name="page_uploaded">Stránka nahratá</string>
-	<string name="post_uploaded">Článok nahratý</string>
 	<string name="reader_short_comment_count_multi">%s komentárov</string>
 	<string name="reader_short_comment_count_one">1 komentár</string>
 	<string name="reader_label_submit_comment">ODOSLAŤ</string>
@@ -406,7 +440,6 @@
 	<string name="adding_cat_failed">Chyba pri pridávaní kategórie</string>
 	<string name="no_site_error">Nie je možné pripojiť sa na WordPress stránku</string>
 	<string name="username_must_be_at_least_four_characters">Používateľské meno musí mať aspoň 4 znaky</string>
-	<string name="theme_no_search_result_found">Nenašli sa žiadne výsledky</string>
 	<string name="comments_empty_list">Žiadne komentáre</string>
 	<string name="mnu_comment_unspam">Žiadny spam</string>
 	<string name="theme_set_failed">Nepodarilo sa nastaviť tému</string>
@@ -788,5 +821,10 @@
 		<item>Štandard</item>
 		<item>Stav</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Zadarmo</item>
+		<item>Všetky</item>
+		<item>Premium</item>
 	</string-array>
 </resources>
