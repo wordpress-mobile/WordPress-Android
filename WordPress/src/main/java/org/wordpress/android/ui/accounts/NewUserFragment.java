@@ -136,16 +136,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             retValue = false;
         }
 
-        if (username.contains(" ")) {
-            showUsernameError(R.string.invalid_username_no_spaces);
-            retValue = false;
-        }
-
-        if (siteUrl.contains(" ")) {
-            showSiteUrlError(R.string.blog_name_no_spaced_allowed);
-            retValue = false;
-        }
-
         if (siteUrl.length() < 4) {
             showSiteUrlError(R.string.blog_name_must_be_at_least_four_characters);
             retValue = false;
