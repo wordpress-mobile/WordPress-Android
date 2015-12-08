@@ -1,13 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Tema seleccionado</string>
+	<string name="could_not_load_theme">No se ha podido cargar el tema</string>
+	<string name="theme_activation_error">Se ha producido un error. No se ha podido activar el tema</string>
+	<string name="theme_by_author_prompt_append"> de %1$s</string>
+	<string name="theme_prompt">Gracias por elegir %1$s</string>
+	<string name="theme_try_and_customize">Probar y personalizar</string>
+	<string name="theme_view">Vista</string>
+	<string name="theme_details">Detalles</string>
+	<string name="theme_support">Ayuda</string>
+	<string name="theme_done">HECHO</string>
+	<string name="theme_manage_site">GESTIONAR SITIO</string>
+	<string name="title_activity_theme_support">Temas</string>
+	<string name="theme_activate">Activar</string>
+	<string name="date_range_start_date">Fecha de inicio</string>
+	<string name="date_range_end_date">Fecha de finalización</string>
+	<string name="current_theme">Tema actual</string>
+	<string name="customize">Personalizar</string>
+	<string name="details">Detalles</string>
+	<string name="support">Ayuda</string>
+	<string name="active">Activo</string>
+	<string name="stats_referrers_spam_generic_error">Se ha producido un error durante la operación. No se ha cambiado el estado del spam.</string>
+	<string name="stats_referrers_marking_not_spam">Marcando como no spam</string>
+	<string name="stats_referrers_unspam">No spam</string>
+	<string name="stats_referrers_marking_spam">Marcando como spam</string>
+	<string name="theme_auth_error_authenticate">Error al recibir temas: error al autenticar el usuario</string>
+	<string name="post_published">Entrada publicada</string>
+	<string name="page_published">Página publicada</string>
+	<string name="post_updated">Entrada actualizada</string>
+	<string name="page_updated">Página actualizada</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Lo sentimos, no se han encontrados temas.</string>
+	<string name="media_file_name">Nombre del archivo: %s</string>
+	<string name="media_dimensions">Dimensiones: %s</string>
+	<string name="media_uploaded_on">Subido el: %s</string>
+	<string name="upload_queued">En cola</string>
+	<string name="media_file_type">Tipo de archivo: %s</string>
+	<string name="reader_label_gap_marker">Cargar más entradas</string>
+	<string name="notifications_no_search_results">Ningún sitio coincide con "%s"</string>
 	<string name="search_sites">Buscar sitios</string>
+	<string name="notifications_empty_view_reader">Ver Lector</string>
+	<string name="unread">Sin leer</string>
+	<string name="notifications_empty_action_followers_likes">Recibir avisos: comentar en entradas que has leído.</string>
+	<string name="notifications_empty_action_comments">Unirse a una conversación: comentar en entradas de blogs que sigues.</string>
+	<string name="notifications_empty_action_unread">Reiniciar la conversación: escribir una entrada nueva.</string>
+	<string name="notifications_empty_action_all">¡Actívate! Comentario en entradas de blogs que sigues.</string>
+	<string name="notifications_empty_likes">No hay nuevos Me gusta que mostrar... todavía.</string>
+	<string name="notifications_empty_followers">No hay nuevos seguidores de los que informar... todavía.</string>
+	<string name="notifications_empty_comments">No hay comentarios nuevos... todavía.</string>
+	<string name="notifications_empty_unread">¡Te has puesto al día!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Accede a las estadísticas de la aplicación e intenta agregar un widget más tarde</string>
+	<string name="stats_widget_error_readd_widget">Elimina el widget y vuelve a agregarlo</string>
+	<string name="stats_widget_error_no_visible_blog">No se pudo acceder a las estadísticas sin un blog visible</string>
+	<string name="stats_widget_error_no_permissions">Tu cuenta de WordPress.com no puede acceder a las estadísticas de este blog</string>
+	<string name="stats_widget_error_no_account">Accede a WordPress</string>
+	<string name="stats_widget_error_generic">No se han podido cargar las estadísticas</string>
 	<string name="stats_widget_loading_data">Cargando datos...</string>
+	<string name="stats_widget_name_for_blog">Las estadísticas de hoy de %1$s</string>
+	<string name="stats_widget_name">Las estadísticas de hoy de WordPress</string>
+	<string name="add_location_permission_required">Permiso necesario para añadir la ubicación</string>
 	<string name="add_media_permission_required">Permisos necesarios para añadir archivos multimedia</string>
 	<string name="access_media_permission_required">Permisos necesarios para acceder a archivos multimedia</string>
 	<string name="stats_enable_rest_api_in_jetpack">Para ver tus estadísticas debes activar el módulo JSON API en Jetpack.</string>
 	<string name="error_open_list_from_notification">Esta entrada o página fue publicada en otro sitio</string>
-	<string name="post_uploaded">Entrada subida</string>
-	<string name="page_uploaded">Página subida</string>
 	<string name="reader_short_comment_count_multi">%s Comentarios</string>
 	<string name="reader_short_comment_count_one">1 Comentario</string>
 	<string name="reader_label_submit_comment">ENVIAR</string>
@@ -344,7 +399,6 @@
 	<string name="username_only_lowercase_letters_and_numbers">Nombre de usuario solo puede contener letras minúsculas (a-z) y números</string>
 	<string name="theme_fetch_failed">Ocurrió un error al obtener los temas.</string>
 	<string name="comments_empty_list">No hay comentarios.</string>
-	<string name="theme_no_search_result_found">No se encontraron resultados.</string>
 	<string name="adding_cat_success">Categoría agregada correctamente.</string>
 	<string name="stats_bar_graph_empty">Estadísticas no disponibles.</string>
 	<string name="error_refresh_posts">Las entradas no pueden ser actualizadas en este momento</string>
@@ -505,6 +559,7 @@
 	<string name="file_not_found">No ha sido posible encontrar el archivo multimedia para cargar. ¿Se ha borrado o cambiado de ubicación?</string>
 	<string name="email_cant_be_used_to_signup">No puedes usar esta dirección de correo electrónico para registrarte, ya que bloquea algunos de nuestros correos. Utiliza otro proveedor de correo.</string>
 	<string name="email_reserved">Esta dirección de correo electrónico ya se ha utilizado. Comprueba si tienes en tu bandeja de entrada un correo de activación. Si no activas ahora el correo, puedes intentarlo dentro de unos días.</string>
+	<string name="notifications_empty_all">No hay notificaciones... todavía.</string>
 	<string name="deleting_post">Borrando entrada</string>
 	<string name="share_url_post">Compartir entrada</string>
 	<string name="share_url_page">Compartir página</string>
@@ -640,6 +695,7 @@
 	<string name="new_notifications">%d nuevas notificaciones</string>
 	<string name="more_notifications">y %d más.</string>
 	<string name="sign_in">Acceder</string>
+	<string name="follows">Seguimientos</string>
 	<string name="loading">Cargando...</string>
 	<string name="httpuser">Usuario HTTP</string>
 	<string name="httppassword">Contraseña HTTP</string>
@@ -765,5 +821,10 @@
 		<item>Estándar</item>
 		<item>Estatus</item>
 		<item>Vídeo</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratuito</item>
+		<item>Todos</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

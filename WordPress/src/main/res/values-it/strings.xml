@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Tema selezionato</string>
+	<string name="could_not_load_theme">Impossibile caricare il tema</string>
+	<string name="theme_activation_error">Qualche cosa è andato storto. Impossibile attivare il tema.</string>
+	<string name="theme_by_author_prompt_append">di %1$s</string>
+	<string name="theme_prompt">Grazie per aver scelto %1$s</string>
+	<string name="theme_try_and_customize">Prova e personalizza</string>
+	<string name="theme_view">Visualizza</string>
+	<string name="theme_details">Dettagli</string>
+	<string name="theme_support">Supporto</string>
+	<string name="theme_done">FATTO</string>
+	<string name="theme_manage_site">GESTISCI SITO</string>
+	<string name="title_activity_theme_support">Temi</string>
+	<string name="theme_activate">Attiva</string>
+	<string name="date_range_start_date">Data di inizio</string>
+	<string name="date_range_end_date">Data di fine</string>
+	<string name="current_theme">Tema corrente</string>
+	<string name="customize">Personalizza</string>
+	<string name="details">Dettagli</string>
+	<string name="support">Supporto</string>
+	<string name="active">Attivo</string>
+	<string name="stats_referrers_spam_generic_error">Qualche cosa è andato storto durante l\'operazione. Lo stato dello spam non è cambiato.</string>
+	<string name="stats_referrers_marking_not_spam">Contrassegna come non spam</string>
+	<string name="stats_referrers_unspam">Non spam</string>
+	<string name="stats_referrers_marking_spam">Contrassegna come spam</string>
+	<string name="theme_auth_error_authenticate">Impossibile recuperare il tema: autenticazione utente fallita</string>
+	<string name="post_published">Articolo pubblicato</string>
+	<string name="page_published">Pagina pubblicata</string>
+	<string name="post_updated">Articolo aggiornato</string>
+	<string name="page_updated">Pagina aggiornata</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Nessun tema trovato.</string>
+	<string name="media_file_name">Nome del file: %s</string>
+	<string name="media_uploaded_on">Aggiornato il: %s</string>
+	<string name="media_dimensions">Dimensioni: %s</string>
+	<string name="upload_queued">Accodato</string>
+	<string name="media_file_type">Tipo di file: %s</string>
 	<string name="reader_label_gap_marker">Carica altri articoli</string>
 	<string name="notifications_no_search_results">Nessun sito corrisponde a \'%s\'</string>
 	<string name="search_sites">Ricerca siti</string>
@@ -27,8 +63,6 @@
 	<string name="access_media_permission_required">Autorizzazioni richieste per accedere a file multimediali</string>
 	<string name="stats_enable_rest_api_in_jetpack">Per visualizzare le tue statistiche, abilita il modulo JSON API di Jetpack.</string>
 	<string name="error_open_list_from_notification">Questo articolo o questa pagina sono state pubblicate su un altro sito</string>
-	<string name="post_uploaded">Articolo caricato</string>
-	<string name="page_uploaded">Pagina caricata</string>
 	<string name="reader_short_comment_count_multi">%s commenti</string>
 	<string name="reader_short_comment_count_one">1 Commento</string>
 	<string name="reader_label_submit_comment">SPEDISCI</string>
@@ -367,7 +401,6 @@
 	<string name="theme_fetch_failed">Impossibile recuperare i temi</string>
 	<string name="theme_set_failed">Impossibile impostare il tema</string>
 	<string name="theme_auth_error_message">Assicurati di disporre dei privilegi per impostare i temi</string>
-	<string name="theme_no_search_result_found">Nessun risultato trovato</string>
 	<string name="comments_empty_list">Nessun commento</string>
 	<string name="mnu_comment_unspam">Non spam</string>
 	<string name="no_site_error">Impossibile connettersi al sito WordPress</string>
@@ -788,5 +821,10 @@
 		<item>Predefinito</item>
 		<item>Stato</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratuito</item>
+		<item>Tutti</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

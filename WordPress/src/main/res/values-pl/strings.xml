@@ -216,7 +216,6 @@
 	<string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
 	<string name="out_of_memory">Brak pamięci</string>
 	<string name="theme_auth_error_message">Upewnij się, że masz uprawnienia do zmiany motywu</string>
-	<string name="theme_no_search_result_found">Niczego nie znaleziono</string>
 	<string name="comments_empty_list">Brak komentarzy</string>
 	<string name="mnu_comment_unspam">To nie jest spam</string>
 	<string name="adding_cat_failed">Nie udało się dodać kategorii</string>

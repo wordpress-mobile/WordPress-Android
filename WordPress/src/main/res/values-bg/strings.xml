@@ -27,8 +27,6 @@
 	<string name="access_media_permission_required">Изискват се разрешения, за да имате достъп до файловете</string>
 	<string name="stats_enable_rest_api_in_jetpack">За да видите статистиката, то активирайте модула JSON API в Jetpack.</string>
 	<string name="error_open_list_from_notification">Публикацията или страницата бяха публикувани на друг сайт</string>
-	<string name="post_uploaded">Публикацията е качена</string>
-	<string name="page_uploaded">Страницата е качена</string>
 	<string name="reader_short_comment_count_multi">%s коментара</string>
 	<string name="reader_short_comment_count_one">1 коментар</string>
 	<string name="reader_label_submit_comment">ИЗПРАЩАНЕ</string>
@@ -360,7 +358,6 @@
 	<string name="ssl_certificate_ask_trust">Ако обикновено се свързвате с този сайт без проблеми, тази грешка може да означава, че някой се опитва да имитира този сайт и не трябва да продължавате. Искате ли да се доверите на този сертификат въпреки това?</string>
 	<string name="mnu_comment_unspam">Не е спам</string>
 	<string name="comments_empty_list">Няма коментари</string>
-	<string name="theme_no_search_result_found">Няма намерени резултати</string>
 	<string name="wait_until_upload_completes">Изчакай трансфера да завърши</string>
 	<string name="category_automatically_renamed">Категорията %1$s не е валидна. Преименувана е на %2$s,</string>
 	<string name="invalid_url_message">Провери дали зададеният URL е валиден</string>

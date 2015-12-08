@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="error_open_list_from_notification">Чланак или страна је објављена на другом веб месту</string>
-	<string name="post_uploaded">Чланак је отпремљен</string>
-	<string name="page_uploaded">Страна је отпремљена</string>
 	<string name="reader_short_comment_count_multi">%s коментара</string>
 	<string name="reader_short_comment_count_one">1 коментар</string>
 	<string name="reader_label_submit_comment">ПОШАЉИ</string>
@@ -375,7 +373,6 @@
 	<string name="error_delete_post">Дошло је до грешке током брисања %s</string>
 	<string name="error_refresh_pages">Стране тренутно не могу бити освежене</string>
 	<string name="comments_empty_list">Нема коментара</string>
-	<string name="theme_no_search_result_found">Нема резултата</string>
 	<string name="theme_auth_error_message">Потврдите да имате дозволу да постављате теме</string>
 	<string name="theme_set_failed">Неуспешно постављање теме</string>
 	<string name="theme_fetch_failed">Неуспешно добављање тема</string>
