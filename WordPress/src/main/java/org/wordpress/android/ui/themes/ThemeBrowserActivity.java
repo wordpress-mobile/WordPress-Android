@@ -150,10 +150,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
     }
 
-    public Theme getCurrentTheme() {
-        return mCurrentTheme;
-    }
-
     public void setIsInSearchMode(boolean isInSearchMode) {
         mIsInSearchMode = isInSearchMode;
     }
@@ -272,6 +268,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     }
                 }
         );
+    }
+
+    protected Theme getCurrentTheme() {
+        return mCurrentTheme;
     }
 
     protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {
