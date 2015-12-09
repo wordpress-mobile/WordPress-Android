@@ -43,7 +43,7 @@ public class LearnMorePreference extends Preference
         if (mDialog != null) return;
 
         AnalyticsUtils.trackWithCurrentBlogDetails(
-                AnalyticsTracker.Stat.SETTINGS_LEARN_MORE_CLICKED);
+                AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_CLICKED);
 
         Context context = getContext();
         mDialog = new Dialog(context);
@@ -57,7 +57,7 @@ public class LearnMorePreference extends Preference
                 super.onPageFinished(webView, url);
                 if (mDialog != null) {
                     AnalyticsUtils.trackWithCurrentBlogDetails(
-                            AnalyticsTracker.Stat.SETTINGS_LEARN_MORE_LOADED);
+                            AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_LOADED);
                     mDialog.setContentView(webView);
                 }
             }

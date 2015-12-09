@@ -375,29 +375,29 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SETTINGS_LANGUAGE_SELECTION_FORCED:
                 eventName = "settings_language_selection_forced";
                 break;
-            case SETTINGS_ACCESSED_SITE_SETTINGS:
-                eventName = "settings_site_settings_accessed";
+            case SITE_SETTINGS_ACCESSED:
+                eventName = "site_settings_accessed";
                 break;
-            case SETTINGS_ACCESSED_MORE_SETTINGS:
-                eventName = "settings_more_settings_accessed";
+            case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
+                eventName = "site_settings_more_settings_accessed";
                 break;
-            case SETTINGS_ADDED_LIST_ITEM:
-                eventName = "settings_added_list_item";
+            case SITE_SETTINGS_ADDED_LIST_ITEM:
+                eventName = "site_settings_added_list_item";
                 break;
-            case SETTINGS_DELETED_LIST_ITEMS:
-                eventName = "settings_deleted_list_items";
+            case SITE_SETTINGS_DELETED_LIST_ITEMS:
+                eventName = "site_settings_deleted_list_items";
                 break;
-            case SETTINGS_HINT_TOAST_SHOWN:
-                eventName = "settings_hint_toast_shown";
+            case SITE_SETTINGS_HINT_TOAST_SHOWN:
+                eventName = "site_settings_hint_toast_shown";
                 break;
-            case SETTINGS_LEARN_MORE_CLICKED:
-                eventName = "settings_learn_more_clicked";
+            case SITE_SETTINGS_LEARN_MORE_CLICKED:
+                eventName = "site_settings_learn_more_clicked";
                 break;
-            case SETTINGS_LEARN_MORE_LOADED:
-                eventName = "settings_learn_more_loaded";
+            case SITE_SETTINGS_LEARN_MORE_LOADED:
+                eventName = "site_settings_learn_more_loaded";
                 break;
-            case SETTINGS_SAVED_REMOTELY:
-                eventName = "settings_saved_remotely";
+            case SITE_SETTINGS_SAVED_REMOTELY:
+                eventName = "site_settings_saved_remotely";
                 break;
             default:
                 eventName = null;

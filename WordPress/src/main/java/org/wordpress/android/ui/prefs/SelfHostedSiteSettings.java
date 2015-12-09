@@ -19,8 +19,10 @@ import org.xmlrpc.android.XMLRPCException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 class SelfHostedSiteSettings extends SiteSettingsInterface {
     // XML-RPC wp.getOptions keys
@@ -88,10 +90,18 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             public void onSuccess(long id, final Object result) {
                 notifySavedOnUiThread(null);
                 mRemoteSettings.copyFrom(mSettings);
-                HashMap<String, Object> properties = new HashMap<>();
-                properties.put("items_saved", result);
-                AnalyticsUtils.trackWithCurrentBlogDetails(
-                        AnalyticsTracker.Stat.SETTINGS_SAVED_REMOTELY, properties);
+
+                if (result != null) {
+                    HashMap<String, Object> properties = new HashMap<>();
+                    if (result instanceof Map) {
+                        Set keys = ((Map) result).keySet();
+                        List keyList = new ArrayList();
+                        for (Object key : keys) keyList.add(key);
+                        properties.put("items_saved", keyList);
+                    }
+                    AnalyticsUtils.trackWithCurrentBlogDetails(
+                            AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
+                }
             }
 
             @Override

@@ -127,7 +127,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         AnalyticsUtils.trackWithCurrentBlogDetails(
-                AnalyticsTracker.Stat.SETTINGS_ACCESSED_SITE_SETTINGS);
+                AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED);
 
         mShouldFetch = true;
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
@@ -215,7 +215,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // Add Action Bar to sub-screens
         if (preference == findPreference(getString(R.string.pref_key_site_more_discussion))) {
             AnalyticsUtils.trackWithCurrentBlogDetails(
-                    AnalyticsTracker.Stat.SETTINGS_ACCESSED_MORE_SETTINGS);
+                    AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS);
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog != null) {
                 ListView prefList = (ListView) dialog.findViewById(android.R.id.list);
@@ -355,7 +355,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     HashMap<String, Object> properties = new HashMap<>();
                     properties.put("hint_shown", hintObj.getHint());
                     AnalyticsUtils.trackWithCurrentBlogDetails(
-                            AnalyticsTracker.Stat.SETTINGS_HINT_TOAST_SHOWN, properties);
+                            AnalyticsTracker.Stat.SITE_SETTINGS_HINT_TOAST_SHOWN, properties);
                     ToastUtils.showToast(getActivity(), hintObj.getHint(), ToastUtils.Duration.SHORT);
                 }
                 return true;
@@ -818,7 +818,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 HashMap<String, Object> properties = new HashMap<>();
                 properties.put("num_items_deleted", checkedItems.size());
                 AnalyticsUtils.trackWithCurrentBlogDetails(
-                        AnalyticsTracker.Stat.SETTINGS_DELETED_LIST_ITEMS, properties);
+                        AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS, properties);
 
                 ListAdapter adapter = list.getAdapter();
                 for (int i = 0; i < checkedItems.size(); i++) {
@@ -856,7 +856,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     R.layout.wp_simple_list_item_1,
                                     mEditingList));
                             AnalyticsUtils.trackWithCurrentBlogDetails(
-                                    AnalyticsTracker.Stat.SETTINGS_ADDED_LIST_ITEM);
+                                    AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM);
                         }
                     }
                 });

@@ -791,42 +791,42 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Forced Language Selection");
                 break;
-            case SETTINGS_ACCESSED_SITE_SETTINGS:
+            case SITE_SETTINGS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Site Settings Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_settings_accessed");
                 break;
-            case SETTINGS_ACCESSED_MORE_SETTINGS:
+            case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - More Settings Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_more_settings_accessed");
                 break;
-            case SETTINGS_ADDED_LIST_ITEM:
+            case SITE_SETTINGS_ADDED_LIST_ITEM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Added List Item");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_list_items_added");
                 break;
-            case SETTINGS_DELETED_LIST_ITEMS:
+            case SITE_SETTINGS_DELETED_LIST_ITEMS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Site Deleted List Items");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_list_items_were_deleted");
                 break;
-            case SETTINGS_HINT_TOAST_SHOWN:
+            case SITE_SETTINGS_HINT_TOAST_SHOWN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Preference Hint Shown");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_preference_hints_viewed");
                 break;
-            case SETTINGS_LEARN_MORE_CLICKED:
+            case SITE_SETTINGS_LEARN_MORE_CLICKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Learn More Clicked");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_learn_more_clicked");
                 break;
-            case SETTINGS_LEARN_MORE_LOADED:
+            case SITE_SETTINGS_LEARN_MORE_LOADED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Learn More Loaded");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_learn_more_seen");
                 break;
-            case SETTINGS_SAVED_REMOTELY:
+            case SITE_SETTINGS_SAVED_REMOTELY:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Saved Remotely");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_settings_updated_remotely");

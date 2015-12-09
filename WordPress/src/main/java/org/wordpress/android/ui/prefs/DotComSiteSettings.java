@@ -19,6 +19,8 @@ import org.wordpress.android.util.AppLog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 class DotComSiteSettings extends SiteSettingsInterface {
@@ -89,10 +91,19 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Site Settings saved remotely");
                         notifySavedOnUiThread(null);
                         mRemoteSettings.copyFrom(mSettings);
-                        HashMap<String, Object> properties = new HashMap<>();
-                        properties.put("items_saved", response);
-                        AnalyticsUtils.trackWithCurrentBlogDetails(
-                                AnalyticsTracker.Stat.SETTINGS_SAVED_REMOTELY, properties);
+
+                        if (response != null) {
+                            List<String> itemKeys = new ArrayList<>();
+                            JSONObject updated = response.optJSONObject("updated");
+                            if (updated == null) return;
+                            Iterator<String> keys = updated.keys();
+                            while (keys.hasNext()) itemKeys.add(keys.next());
+
+                            HashMap<String, Object> properties = new HashMap<>();
+                            properties.put("items_saved", itemKeys);
+                            AnalyticsUtils.trackWithCurrentBlogDetails(
+                                    AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
+                        }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
