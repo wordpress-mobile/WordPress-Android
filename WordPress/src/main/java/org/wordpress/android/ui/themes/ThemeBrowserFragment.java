@@ -301,6 +301,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         mAdapter.changeCursor(cursor);
         mAdapter.notifyDataSetChanged();
         setEmptyViewVisible(mAdapter.getCount() == 0);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
