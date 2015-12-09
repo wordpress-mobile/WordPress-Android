@@ -570,7 +570,15 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Site Menu - Opened Settings");
+                        mixpanelInstructionsForEventName("Site Menu - Opened Site Settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened Account Settings");
+                break;
+            case OPENED_MY_PROFILE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened My Profile");
                 break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
