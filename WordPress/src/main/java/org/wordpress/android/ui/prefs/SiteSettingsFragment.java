@@ -67,6 +67,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener,
                    Preference.OnPreferenceClickListener,
                    AdapterView.OnItemLongClickListener,
+                   ViewGroup.OnHierarchyChangeListener,
                    Dialog.OnDismissListener,
                    SiteSettingsInterface.SiteSettingsListener {
 
@@ -181,22 +182,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             Resources res = getResources();
 
             if (prefList != null && res != null) {
-                prefList.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-                    @Override
-                    public void onChildViewAdded(View parent, View child) {
-                        if (child.getId() == android.R.id.title && child instanceof TextView) {
-                            TextView title = (TextView) child;
-                            WPPrefUtils.layoutAsBody2(title);
-                        } else {
-                            TextView title = (TextView) child.findViewById(android.R.id.title);
-                            WPPrefUtils.layoutAsSubhead(title);
-                        }
-                    }
-
-                    @Override
-                    public void onChildViewRemoved(View parent, View child) {
-                    }
-                });
+                prefList.setOnHierarchyChangeListener(this);
                 prefList.setOnItemLongClickListener(this);
                 prefList.setFooterDividersEnabled(false);
                 //noinspection deprecation
@@ -205,6 +191,21 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return view;
+    }
+
+    @Override
+    public void onChildViewAdded(View parent, View child) {
+        if (child.getId() == android.R.id.title && child instanceof TextView) {
+            TextView title = (TextView) child;
+            WPPrefUtils.layoutAsBody2(title);
+        } else {
+            TextView title = (TextView) child.findViewById(android.R.id.title);
+            if (title != null) WPPrefUtils.layoutAsSubhead(title);
+        }
+    }
+
+    @Override
+    public void onChildViewRemoved(View parent, View child) {
     }
 
     @Override
@@ -218,6 +219,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog != null) {
                 ListView prefList = (ListView) dialog.findViewById(android.R.id.list);
+                prefList.setOnHierarchyChangeListener(this);
                 prefList.setOnItemLongClickListener(this);
                 String title = getString(R.string.site_settings_discussion_title);
                 WPActivityUtils.addToolbarToDialog(this, dialog, title);
