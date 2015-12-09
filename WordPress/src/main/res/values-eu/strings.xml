@@ -93,7 +93,6 @@
 	<string name="passcode_wrong_passcode">PIN okerra</string>
 	<string name="invalid_password_message">Pasahitzak gutxienez 4 karaktere eduki behar ditu</string>
 	<string name="comments_empty_list">Ez dago iruzkinik.</string>
-	<string name="theme_no_search_result_found">Ez da emaitzarik aurkitu.</string>
 	<string name="adding_cat_success">Kategoria zuzen gehitu da.</string>
 	<string name="stats_bar_graph_empty">Ez dago estatistikarik eskuragarri.</string>
 	<string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>
