@@ -551,6 +551,8 @@
     <string name="hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="paging_description">Break comment threads into multiple pages.</string>
+    <string name="close_after_description">Automatically close comments on articles.</string>
+    <string name="close_after_switch_text">Automatically close</string>
     <string name="multiple_links_description">Require approval for comments that include more than this number of links.</string>
     <string name="oldest_first">Oldest first</string>
     <string name="newest_first">Newest first</string>

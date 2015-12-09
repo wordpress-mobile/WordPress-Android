@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -22,8 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.util.WPPrefUtils;
 
 /**
  * Standard EditTextPreference that has attributes to limit summary length.
@@ -45,6 +42,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     private int mMaxLines;
     private String mHint;
     private AlertDialog mDialog;
+    private int mWhichButtonClicked;
 
     public SummaryEditTextPreference(Context context) {
         super(context);
@@ -80,33 +78,13 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     protected void onBindView(@NonNull View view) {
         super.onBindView(view);
 
-        Resources res = getContext().getResources();
         TextView titleView = (TextView) view.findViewById(android.R.id.title);
         TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
-        Typeface font = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_OPEN_SANS,
-                Typeface.NORMAL,
-                TypefaceCache.VARIATION_NORMAL);
 
-        if (titleView != null) {
-            if (isEnabled()) {
-                titleView.setTextColor(res.getColor(R.color.grey_dark));
-            } else {
-                titleView.setTextColor(res.getColor(R.color.grey_lighten_10));
-            }
-            titleView.setTextSize(16);
-            titleView.setTypeface(font);
-        }
+        if (titleView != null) WPPrefUtils.layoutAsSubhead(titleView);
 
         if (summaryView != null) {
-            if (isEnabled()) {
-                summaryView.setTextColor(res.getColor(R.color.grey_darken_10));
-            } else {
-                summaryView.setTextColor(res.getColor(R.color.grey_lighten_10));
-            }
-            summaryView.setInputType(getEditText().getInputType());
-            summaryView.setTextSize(14);
-            summaryView.setTypeface(font);
+            WPPrefUtils.layoutAsBody1(summaryView);
             summaryView.setEllipsize(TextUtils.TruncateAt.END);
             if (mLines != -1) summaryView.setLines(mLines);
             if (mMaxLines != -1) summaryView.setMaxLines(mMaxLines);
@@ -119,6 +97,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         Resources res = context.getResources();
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
+        mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
 
         builder.setPositiveButton(R.string.ok, this);
         builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
@@ -149,22 +128,8 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
 
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_OPEN_SANS,
-                Typeface.BOLD,
-                TypefaceCache.VARIATION_LIGHT);
-
-        if (positive != null) {
-            //noinspection deprecation
-            positive.setTextColor(res.getColor(R.color.blue_medium));
-            positive.setTypeface(typeface);
-        }
-
-        if (negative != null) {
-            //noinspection deprecation
-            negative.setTextColor(res.getColor(R.color.blue_medium));
-            negative.setTypeface(typeface);
-        }
+        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
+        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
     }
 
     @Override
@@ -172,10 +137,6 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         super.onBindDialogView(view);
 
         if (view != null) {
-            Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_OPEN_SANS,
-                    Typeface.NORMAL,
-                    TypefaceCache.VARIATION_NORMAL);
             EditText editText = getEditText();
             ViewParent oldParent = editText.getParent();
             if (oldParent != view) {
@@ -185,29 +146,36 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
                 ((View) oldParent).setPadding(((View) oldParent).getPaddingLeft(), 0, ((View) oldParent).getPaddingRight(), ((View) oldParent).getPaddingBottom());
                 onAddEditTextToDialogView(view, editText);
             }
+            WPPrefUtils.layoutAsInput(editText);
             editText.setSelection(editText.getText().length());
-            editText.setTypeface(typeface);
-            editText.setTextColor(getContext().getResources().getColor(R.color.grey_dark));
-            editText.requestFocusFromTouch();
             (new Handler()).postDelayed(new Runnable() {
                 public void run() {
                     InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                    inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
                 }
             }, SHOW_KEYBOARD_DELAY);
         }
     }
 
     @Override
+    public void onClick(DialogInterface dialog, int which) {
+        mWhichButtonClicked = which;
+    }
+
+    @Override
     public void onDismiss(DialogInterface dialog) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInputFromWindow(mDialog.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        onDialogClosed(mWhichButtonClicked == DialogInterface.BUTTON_POSITIVE);
         mDialog = null;
-        onDialogClosed(false);
     }
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
-        ActivityUtils.hideKeyboard((Activity) getContext());
+        if (positiveResult) {
+            callChangeListener(getEditText().getText());
+        }
     }
 
     @Override

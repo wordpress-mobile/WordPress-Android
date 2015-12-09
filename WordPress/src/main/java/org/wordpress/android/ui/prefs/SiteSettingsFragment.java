@@ -84,6 +84,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private List<String> mEditingList;
     private boolean mBlogDeleted;
     private boolean mShouldFetch;
+    private NumberPicker mNumberPicker;
 
     private EditTextPreference mTitlePref;
     private EditTextPreference mTaglinePref;
@@ -481,82 +482,88 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showPagingDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-
-        SwitchCompat switchView = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
-        switchView.setText(R.string.site_settings_paging_title);
-
-        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
-        detailText.setText(R.string.paging_description);
-
-        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        numberPicker.setMinValue(1);
-        numberPicker.setMaxValue(getResources().getInteger(R.integer.paging_limit));
-        numberPicker.setValue(Math.max(numberPicker.getMinValue(), Math.min(numberPicker.getMaxValue(), mSiteSettings.getPagingCount())));
-
-        builder.setCustomTitle(getDialogTitleView(R.string.site_settings_paging_title));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mSiteSettings.getPagingCount() != numberPicker.getValue()) {
-                    onPreferenceChange(mPagingPref, numberPicker.getValue());
-                }
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.setView(view);
-        builder.create().show();
+        getNumberPickerDialog(true,
+                R.string.site_settings_paging_title,
+                R.string.paging_description,
+                0,
+                getResources().getInteger(R.integer.paging_limit),
+                mSiteSettings.getPagingCount(),
+                R.string.site_settings_paging_title,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mSiteSettings.getPagingCount() != mNumberPicker.getValue()) {
+                            onPreferenceChange(mPagingPref, mNumberPicker.getValue());
+                        }
+                    }
+                }, null).show();
     }
 
     private void showCloseAfterDialog() {
+        getNumberPickerDialog(true,
+                R.string.close_after_switch_text,
+                R.string.close_after_description,
+                0,
+                getResources().getInteger(R.integer.close_after_limit),
+                mSiteSettings.getCloseAfter(),
+                R.string.site_settings_close_after_title,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mSiteSettings.getCloseAfter() != mNumberPicker.getValue()) {
+                            onPreferenceChange(mCloseAfterPref, mNumberPicker.getValue());
+                        }
+                    }
+                }, null).show();
+    }
+
+    private Dialog getNumberPickerDialog(boolean showSwitch,
+                                         int switchText,
+                                         int detail,
+                                         int min,
+                                         int max,
+                                         int cur,
+                                         int title,
+                                         DialogInterface.OnClickListener positive,
+                                         DialogInterface.OnClickListener negative) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-
-        view.findViewById(R.id.number_picker_text).setVisibility(View.GONE);
-        view.findViewById(R.id.number_picker_switch).setVisibility(View.GONE);
-
-        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(getResources().getInteger(R.integer.close_after_limit));
-        numberPicker.setValue(Math.max(numberPicker.getMinValue(), Math.min(numberPicker.getMaxValue(), mSiteSettings.getCloseAfter())));
-
-        builder.setCustomTitle(getDialogTitleView(R.string.site_settings_close_after_title));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mSiteSettings.getCloseAfter() != numberPicker.getValue()) {
-                    onPreferenceChange(mCloseAfterPref, numberPicker.getValue());
-                }
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
+        SwitchCompat pickerSwitch = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
+        if (showSwitch) {
+            pickerSwitch.setVisibility(View.VISIBLE);
+            pickerSwitch.setText(switchText);
+        } else {
+            pickerSwitch.setVisibility(View.GONE);
+        }
+        mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
+        detailText.setText(detail);
+        mNumberPicker.setMinValue(min);
+        mNumberPicker.setMaxValue(max);
+        mNumberPicker.setValue(cur);
+        builder.setCustomTitle(getDialogTitleView(title));
+        builder.setPositiveButton(R.string.ok, positive);
+        builder.setNegativeButton(R.string.cancel, negative);
         builder.setView(view);
-        builder.create().show();
+        return builder.create();
     }
 
     private void showMultipleLinksDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-        view.findViewById(R.id.number_picker_switch).setVisibility(View.GONE);
-        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
-        detailText.setText(R.string.multiple_links_description);
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(getResources().getInteger(R.integer.max_links_limit));
-        numberPicker.setValue(Math.max(numberPicker.getMinValue(), Math.min(numberPicker.getMaxValue(), mSiteSettings.getMultipleLinks())));
-        builder.setCustomTitle(getDialogTitleView(R.string.site_settings_multiple_links_title));
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        getNumberPickerDialog(false,
+                -1,
+                R.string.multiple_links_description,
+                0,
+                getResources().getInteger(R.integer.max_links_limit),
+                mSiteSettings.getMultipleLinks(),
+                R.string.site_settings_multiple_links_title,
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (mSiteSettings.getMultipleLinks() != numberPicker.getValue()) {
-                    onPreferenceChange(mMultipleLinksPref, numberPicker.getValue());
+                if (mSiteSettings.getMultipleLinks() != mNumberPicker.getValue()) {
+                    onPreferenceChange(mMultipleLinksPref, mNumberPicker.getValue());
                 }
             }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.setView(view);
-        builder.create().show();
+        }, null).show();
     }
 
     private void setPreferencesFromSiteSettings() {
