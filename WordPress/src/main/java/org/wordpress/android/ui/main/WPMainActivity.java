@@ -28,7 +28,6 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -149,7 +148,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         break;
                 }
-                trackLastVisibleTab(position);
+                trackLastVisibleTab(position, true);
             }
 
             @Override
@@ -281,7 +280,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        trackLastVisibleTab(mViewPager.getCurrentItem());
+        trackLastVisibleTab(mViewPager.getCurrentItem(), false);
 
         checkConnection();
 
@@ -290,23 +289,31 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         ProfilingUtils.stop();
     }
 
-    private void trackLastVisibleTab(int position) {
+    private void trackLastVisibleTab(int position, boolean trackAnalytics) {
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
+                if (trackAnalytics) {
+                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
+                }
                 break;
             case WPMainTabAdapter.TAB_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+                if (trackAnalytics) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+                }
                 break;
             case WPMainTabAdapter.TAB_ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
+                if (trackAnalytics) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
+                }
                 break;
             case WPMainTabAdapter.TAB_NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+                if (trackAnalytics) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+                }
                 break;
             default:
                 break;
