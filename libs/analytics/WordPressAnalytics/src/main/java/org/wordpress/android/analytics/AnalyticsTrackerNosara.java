@@ -51,6 +51,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APPLICATION_CLOSED:
                 eventName = "application_closed";
                 break;
+            case APPLICATION_INSTALLED:
+                eventName = "application_installed";
+                break;
             case APPLICATION_UPGRADED:
                 eventName = "application_upgraded";
                 break;
