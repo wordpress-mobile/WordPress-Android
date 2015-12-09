@@ -231,7 +231,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "settings");
+                predefinedEventProperties.put("menu_item", "site_settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                eventName = "me_opened_account_settings";
+                break;
+            case OPENED_MY_PROFILE:
+                eventName = "me_opened_my_profile";
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
