@@ -9,14 +9,17 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.stats.StatsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class AnalyticsUtils {
     private static String BLOG_ID_KEY = "blog_id";
+    private static String POST_ID_KEY = "post_id";
+    private static String FEED_ID_KEY = "feed_id";
+    private static String FEED_ITEM_ID_KEY = "feed_item_id";
     private static String IS_JETPACK_KEY = "is_jetpack";
 
     /**
@@ -155,5 +158,28 @@ public class AnalyticsUtils {
         } catch (NumberFormatException err) {
             AnalyticsTracker.track(stat);
         }
+    }
+
+    /**
+     * Bump Analytics for a reader post
+     *
+     * @param stat The Stat to bump
+     * @param post The reader post to track
+     *
+     */
+    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post) {
+        if (post == null) return;
+
+        // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
+        // RSS pass should pass: feed_id, feed_item_id, is_jetpack
+        Map<String, Object> properties =  new HashMap<>();
+        if (post.isWP() || post.isJetpack) {
+            properties.put(BLOG_ID_KEY, post.blogId);
+            properties.put(POST_ID_KEY, post.postId);
+        }
+        properties.put(FEED_ID_KEY, post.feedId);
+        properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
+        properties.put(IS_JETPACK_KEY, post.isJetpack);
+        AnalyticsTracker.track(stat, properties);
     }
 }
