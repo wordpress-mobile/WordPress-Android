@@ -23,6 +23,7 @@ public class ReaderPost {
     public long postId;
     public long blogId;
     public long feedId;
+    public long feedItemId;
     public long authorId;
 
     private String title;
@@ -69,6 +70,7 @@ public class ReaderPost {
         post.postId = json.optLong("ID");
         post.blogId = json.optLong("site_ID");
         post.feedId = json.optLong("feed_ID");
+        post.feedItemId = json.optLong("feed_item_ID");
 
         if (json.has("pseudo_ID")) {
             post.pseudoId = JSONUtils.getString(json, "pseudo_ID");  // read/ endpoint
@@ -486,6 +488,8 @@ public class ReaderPost {
         return post != null
                 && post.blogId == this.blogId
                 && post.postId == this.postId
+                && post.feedId == this.feedId
+                && post.feedItemId == this.feedItemId
                 && post.numLikes == this.numLikes
                 && post.numReplies == this.numReplies
                 && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser

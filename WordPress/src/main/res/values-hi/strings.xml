@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="theme_by_author_prompt_append">द्वारा %1$s</string>
+	<string name="theme_support">सहायता</string>
+	<string name="theme_activate">सक्रिय करे</string>
+	<string name="active">सक्रिय</string>
+	<string name="support">सहायता</string>
 	<string name="reader_label_gap_marker">अधिक लेख लोड करे </string>
 	<string name="notifications_no_search_results">\'%s\' से किसी साइट का मेल नहीं हुआ </string>
 	<string name="search_sites">साइट्स खोजें</string>
@@ -13,8 +18,6 @@
 	<string name="access_media_permission_required">मीडिया खोजने के लिए अनुमति जरुरी है|</string>
 	<string name="stats_enable_rest_api_in_jetpack">अपने आँकड़ों को देखने के लिए, जेटपैक में JSON API को सक्षम करें। </string>
 	<string name="error_open_list_from_notification">यह लेख किसी और साइट पर पोस्ट हो चुका है|</string>
-	<string name="post_uploaded">लेख अपलोडेड</string>
-	<string name="page_uploaded">पृष्ठ अपलोडेड</string>
 	<string name="reader_short_comment_count_multi">%s टिप्पणियाँ</string>
 	<string name="reader_short_comment_count_one">1 टिप्पणी</string>
 	<string name="reader_label_submit_comment">भेजें</string>
@@ -49,16 +52,23 @@
 	<string name="post_trashed">पोस्ट ट्रैश में भेज दिया गया</string>
 	<string name="page_trashed">पृष्ठ ट्रैश में भेज दिया गया</string>
 	<string name="button_trash">ट्रैश</string>
+	<string name="button_stats">आकड़े</string>
 	<string name="my_site_no_sites_view_subtitle">क्या आप एक जोड़ना चाहेंगे?</string>
+	<string name="tabbar_accessibility_label_my_site">मेरा साईट</string>
 	<string name="editor_toast_changes_saved">परिवर्तन सहेजा गया</string>
 	<string name="ignore">ध्यान न दें</string>
 	<string name="stats_insights_most_popular_hour">सबसे लोकप्रिय घण्टा</string>
 	<string name="stats_insights_most_popular_day">सबसे लोकप्रिय दिन</string>
 	<string name="stats_insights_popular">सबसे लोकप्रिय दिन और घण्टा</string>
+	<string name="me_btn_settings">अकाउंट सेटिंग्स</string>
+	<string name="me_btn_support">मदद और सहायता</string>
 	<string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
 	<string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
+	<string name="site_picker_add_site">साईट जोड़े</string>
 	<string name="my_site_btn_comments">टिप्पणियाँ</string>
 	<string name="my_site_header_publish">प्रकाशित</string>
+	<string name="my_site_btn_blog_posts">ब्लॉग पोस्ट्स</string>
+	<string name="my_site_header_admin">एडमिन</string>
 	<string name="show">दिखाएँ</string>
 	<string name="hide">छुपाएँ</string>
 	<string name="select_all">सभी चुनें</string>
@@ -79,14 +89,40 @@
 	<string name="no_media">मीडिया नहीं</string>
 	<string name="device">यंत्र</string>
 	<string name="language">भाषा</string>
+	<string name="add_to_post">पोस्ट में जोड़ें</string>
+	<string name="media_details_file_url">फाइल यूआरएल:</string>
 	<string name="pages_fetching">पृष्ठ ला रहे है...</string>
 	<string name="publisher">प्रकाशक:</string>
+	<string name="stats_view_authors">लेखक</string>
 	<string name="stats_view_videos">वीडियो</string>
 	<string name="stats_empty_geoviews">कोई देश दर्ज नहीं की गई</string>
+	<string name="stats_followers_days">%1$d दिन</string>
+	<string name="stats_followers_hours">%1$d घंटा</string>
+	<string name="stats_followers_minutes">%1$d मिनट</string>
+	<string name="stats_followers_months">%1$d महीने</string>
+	<string name="stats_followers_years">%1$d वर्ष</string>
+	<string name="stats_followers_a_day">एक दिन</string>
+	<string name="stats_followers_a_minute_ago">एक दिन पहले</string>
+	<string name="stats_followers_a_month">एक महीना</string>
+	<string name="stats_followers_a_year">एक साल</string>
+	<string name="stats_followers_email_selector">ई-मेल</string>
+	<string name="stats_comments">टिप्पणियाँ</string>
+	<string name="stats_followers_an_hour_ago">एक घंटा पहले</string>
+	<string name="stats_entry_top_commenter">लेखक</string>
+	<string name="stats_entry_followers">प्रसंशक</string>
+	<string name="stats_totals_publicize">प्रसंशक</string>
+	<string name="stats_view_followers">प्रसंशक</string>
 	<string name="delete_sure_post">इस लेख को हटाओ</string>
+	<string name="cab_selected">%d चयनित</string>
 	<string name="reader_label_comment_count_single">एक टिप्पणी</string>
 	<string name="reader_label_comments_closed">टिप्पणियाँ बंद हैं</string>
 	<string name="signing_out">भाग रद्द करना</string>
+	<string name="reader_label_comment_count_multi">%,d टिप्पणियां</string>
+	<string name="reader_title_photo_viewer">%1$d का %2$d</string>
+	<string name="comment">टिप्पणी</string>
+	<string name="comment_trashed">टिप्पणी ट्रैश किया गया</string>
+	<string name="reader_title_comments">टिप्पणियाँ</string>
+	<string name="reader_label_comments_on">पर टिप्पणियाँ</string>
 	<string name="reader_menu_block_blog">इस ब्लॉग को ब्लॉक करे</string>
 	<string name="reader_toast_err_block_blog">इस ब्लॉग को ब्लॉक करने में असमर्थ</string>
 	<string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
@@ -144,7 +180,6 @@
 	<string name="mnu_comment_unspam">स्पैम नहीं</string>
 	<string name="invalid_password_message">कूटशब्द कम से कम 4 अक्षर का चाहिए</string>
 	<string name="no_network_message">नेटवर्क उपलब्ध नहीं है </string>
-	<string name="theme_no_search_result_found">कोई परिणाम नहीं मिला</string>
 	<string name="stats_bar_graph_empty">कोई आंकड़े उपलब्ध नहीं</string>
 	<string name="invalid_email_message">आपका ईमेल पता मान्य नहीं है</string>
 	<string name="adding_cat_failed">श्रेणी जोड़ना असफल हुआ</string>
@@ -317,6 +352,7 @@
 	<string name="share_preference_title">वर्डप्रेस पर साझा करे</string>
 	<string name="cant_share_no_visible_blog"> आप एक प्रत्यक्ष ब्लॉग के बिना वर्डप्रेस में साझा नहीं कर सकते</string>
 	<string name="reset_auto_share_preference">स्वत: साझा सेटिंग रीसेट करें</string>
+	<string name="comment_spammed">टिप्पणी स्पैम के रूप में चिह्नित </string>
 	<string name="reader_toast_err_get_post">इस संदेश को पुनः प्राप्त में असमर्थ</string>
 	<string name="reader_likes_you_and_one">आपने और एक और ने इसे पसंद किया है</string>
 	<string name="validating_user_data">उपयोगकर्ता डेटा को सत्यापित किया जा रहा</string>
@@ -545,5 +581,8 @@
 		<item>सामान्य</item>
 		<item>स्थति</item>
 		<item>विडियो</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>सभी</item>
 	</string-array>
 </resources>

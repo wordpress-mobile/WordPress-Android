@@ -1,11 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Tema Terpilih</string>
+	<string name="could_not_load_theme">Tidak dapat memuat tema</string>
+	<string name="theme_activation_error">Terjadi masalah. Tidak dapat mengaktifkan tema</string>
+	<string name="theme_by_author_prompt_append"> oleh %1$s</string>
+	<string name="theme_prompt">Terima kasih sudah memilih %1$s</string>
+	<string name="theme_try_and_customize">Coba &amp; Sesuaikan</string>
+	<string name="theme_view">Lihat</string>
+	<string name="theme_details">Rincian</string>
+	<string name="theme_support">Dukungan</string>
+	<string name="theme_done">SELESAI</string>
+	<string name="theme_manage_site">KELOLA SITUS</string>
+	<string name="title_activity_theme_support">Tema</string>
+	<string name="theme_activate">Aktifkan</string>
+	<string name="date_range_start_date">Tanggal Mulai</string>
+	<string name="date_range_end_date">Tanggal Selesai</string>
+	<string name="current_theme">Tema Saat Ini</string>
+	<string name="customize">Sesuaikan</string>
+	<string name="details">Rincian</string>
+	<string name="support">Dukungan</string>
+	<string name="active">Aktif</string>
+	<string name="stats_referrers_spam_generic_error">Ada masalah selama pengoperasian. Status spam tidak diubah.</string>
+	<string name="stats_referrers_marking_not_spam">Menandai sebagai bukan spam</string>
+	<string name="stats_referrers_unspam">Bukan spam</string>
+	<string name="stats_referrers_marking_spam">Menandai sebagai spam</string>
+	<string name="theme_auth_error_authenticate">Gagal mengambil tema: gagal mengautentikasi pengguna</string>
+	<string name="post_published">Pos diterbitkan</string>
+	<string name="page_published">Halaman diterbitkan</string>
+	<string name="post_updated">Pos diperbarui</string>
+	<string name="page_updated">Halaman diperbarui</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Maaf, tema tidak ditemukan.</string>
+	<string name="media_file_name">Nama file: %s</string>
+	<string name="media_uploaded_on">Diunggah pada: %s</string>
+	<string name="media_dimensions">Dimensi: %s</string>
+	<string name="upload_queued">Diantrekan</string>
+	<string name="media_file_type">Jenis file: %s</string>
+	<string name="reader_label_gap_marker">Muat pos lainnya</string>
+	<string name="notifications_no_search_results">Tidak ada situs yang cocok dengan \'%s\'</string>
+	<string name="search_sites">Cari situs</string>
+	<string name="notifications_empty_view_reader">Lihat Pembaca</string>
+	<string name="unread">Belum dibaca</string>
+	<string name="notifications_empty_action_followers_likes">Dapatkan perhatian: komentari pos yang sudah Anda baca.</string>
+	<string name="notifications_empty_action_comments">Bergabung dengan percakapan: komentari pos dari blog yang Anda ikuti.</string>
+	<string name="notifications_empty_action_unread">Aktifkan kembali percakapan: tulis pos baru.</string>
+	<string name="notifications_empty_action_all">Aktiflah! Komentari pos dari blog yang Anda ikuti.</string>
+	<string name="notifications_empty_likes">Belum ada suka baru untuk ditampilkan.</string>
+	<string name="notifications_empty_followers">Tidak ada pengikut untuk dilaporkan…sampai sekarang.</string>
+	<string name="notifications_empty_comments">Tidak ada komentar baru…lagi.</string>
+	<string name="notifications_empty_unread">Anda semua terperangkap!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Harap akses Statistik di aplikasi, dan coba tambahkan widget nantinya</string>
+	<string name="stats_widget_error_readd_widget">Hapus widget dan tambahkan lagi</string>
+	<string name="stats_widget_error_no_visible_blog">Statistik tidak dapat diakses tanpa blog terlihat</string>
+	<string name="stats_widget_error_no_permissions">Akun WordPress.com Anda tidak dapat mengakses Statistik di blog ini</string>
+	<string name="stats_widget_error_no_account">Harap masuk ke WordPress</string>
+	<string name="stats_widget_error_generic">Statistik tidak dapat dimuat</string>
+	<string name="stats_widget_loading_data">Memuat data…</string>
+	<string name="stats_widget_name_for_blog">Statistik Hari Ini untuk %1$s</string>
+	<string name="stats_widget_name">Statistik Hari Ini WordPress</string>
+	<string name="add_location_permission_required">Izin diperlukan untuk menambahkan lokasi</string>
 	<string name="add_media_permission_required">Izin diperlukan untuk menambahkan media</string>
 	<string name="access_media_permission_required">Izin diperlukan untuk mengakses media</string>
 	<string name="stats_enable_rest_api_in_jetpack">Untuk menampilkan statistik Anda, aktifkan module JSON API di Jetpack.</string>
 	<string name="error_open_list_from_notification">Pos atau laman ini diterbitkan di situs lain</string>
-	<string name="post_uploaded">Pos terunggah</string>
-	<string name="page_uploaded">Laman terunggah</string>
 	<string name="reader_short_comment_count_multi">%s Komentar</string>
 	<string name="reader_short_comment_count_one">1 Komentar</string>
 	<string name="reader_label_submit_comment">KIRIM</string>
@@ -342,7 +399,6 @@
 	<string name="gallery_error">Item media gagal diambil</string>
 	<string name="theme_fetch_failed">Gagal mengunduh tema</string>
 	<string name="theme_set_failed">Gagal memasang tema</string>
-	<string name="theme_no_search_result_found">Tema tidak ditemukan</string>
 	<string name="comments_empty_list">Tidak ada tanggapan</string>
 	<string name="mnu_comment_unspam">Bukan spam</string>
 	<string name="no_site_error">Gagal terhubung dengan situs WordPress</string>
@@ -503,6 +559,7 @@
 	<string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
 	<string name="blog_removed_successfully">Situs berhasil dihapus</string>
 	<string name="remove_account">Hapus situs</string>
+	<string name="notifications_empty_all">Belum ada pemberitahuan...sampai sekarang.</string>
 	<string name="deleting_page">Menghapus laman</string>
 	<string name="deleting_post">Menghapus pos</string>
 	<string name="share_url_post">Bagikan pos</string>
@@ -638,6 +695,7 @@
 	<string name="new_notifications">%d notifikasi baru</string>
 	<string name="more_notifications">dan %d lagi.</string>
 	<string name="sign_in">Log masuk</string>
+	<string name="follows">Mengikuti</string>
 	<string name="loading">Memuat...</string>
 	<string name="post_signature">Kirim tandatangan</string>
 	<string name="add_tagline">Tambahkan sebuah tandatangan dalam tulisan baru</string>
@@ -763,5 +821,10 @@
 		<item>Standar</item>
 		<item>Status</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratis</item>
+		<item>Semua</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

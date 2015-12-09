@@ -1,11 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">تحديد قالب</string>
+	<string name="could_not_load_theme">يتعذر تحميل القالب</string>
+	<string name="theme_activation_error">حدث خطأ. يتعذر تنشيط القالب</string>
+	<string name="theme_by_author_prompt_append"> حسب %1$s</string>
+	<string name="theme_prompt">شكرًا لك على اختيار %1$s</string>
+	<string name="theme_try_and_customize">محاولة وتخصيص</string>
+	<string name="theme_view">عرض</string>
+	<string name="theme_details">تفاصيل</string>
+	<string name="theme_support">الدعم</string>
+	<string name="theme_done">تم</string>
+	<string name="theme_manage_site">إدارة الموقع</string>
+	<string name="title_activity_theme_support">القوالب</string>
+	<string name="theme_activate">تفعيل</string>
+	<string name="date_range_start_date">تاريخ البدء</string>
+	<string name="date_range_end_date">تاريخ الانتهاء</string>
+	<string name="current_theme">القالب الحالي</string>
+	<string name="customize">تخصيص</string>
+	<string name="details">تفاصيل</string>
+	<string name="support">الدعم</string>
+	<string name="active">مفعل</string>
+	<string name="stats_referrers_spam_generic_error">حدث خطأ أثناء التشغيل. لم تتغير حالة البريد المزعج</string>
+	<string name="stats_referrers_marking_not_spam">تحديد كغير مزعج</string>
+	<string name="stats_referrers_unspam">ليس بريدًا مزعجًا</string>
+	<string name="stats_referrers_marking_spam">تحديد كمزعج</string>
+	<string name="theme_auth_error_authenticate">فشل في إحضار القوالب: فشلت مصادقة المستخدم</string>
+	<string name="post_published">تم نشر المقالة</string>
+	<string name="page_published">تم نشر الصفحة</string>
+	<string name="post_updated">تم تحديث المقالة</string>
+	<string name="page_updated">تم تحديث الصفحة</string>
+	<string name="stats_referrers_spam">البريد المزعج</string>
+	<string name="theme_no_search_result_found">عذرًا، لم يتم العثور على أي قوالب.</string>
+	<string name="media_file_name">اسم الملف: %s</string>
+	<string name="media_uploaded_on">تم الرفع في: %s</string>
+	<string name="media_dimensions">أبعاد: %s</string>
+	<string name="upload_queued">تم الوضع في قائمة الانتظار</string>
+	<string name="media_file_type">نوع الملف: %s</string>
+	<string name="reader_label_gap_marker">تحميل المزيد من المقالات</string>
+	<string name="notifications_no_search_results">لا توجد مواقع مطابقة "%s"</string>
+	<string name="search_sites">بحث في المواقع</string>
+	<string name="notifications_empty_view_reader">عرض القارئ</string>
+	<string name="unread">غير مقروء</string>
+	<string name="notifications_empty_action_followers_likes">ملاحظة: التعليق على المقالات التي قرأتها.</string>
+	<string name="notifications_empty_action_comments">الانضمام إلى محادثة: التعليق على المقالات من المدونات التي تتابعها.</string>
+	<string name="notifications_empty_action_unread">إعادة بدء المحادثة: اكتب مقالة جديدة.</string>
+	<string name="notifications_empty_action_all">كن نشطًا! علّق على مقالات من المدونات التي تتابعها.</string>
+	<string name="notifications_empty_likes">لا توجد إعجابات جديدة لإظهارها…حتى الآن.</string>
+	<string name="notifications_empty_followers">ليس هناك متابعون جدد للإبلاغ عنهم…حتى الآن.</string>
+	<string name="notifications_empty_comments">ليست هناك تعليقات جديدة…حتى الآن.</string>
+	<string name="notifications_empty_unread">تمت قراءة الكل!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">يرجى الوصول إلى الإحصاءات في التطبيق، وجرب إضافة المربع الجانبي لاحقًا</string>
+	<string name="stats_widget_error_readd_widget">يرجى إزالة المربع الجانبي وإضافته مرة أخرى</string>
+	<string name="stats_widget_error_no_visible_blog">يتعذر الوصول إلى الإحصاءات بدون مدونة مرئية</string>
+	<string name="stats_widget_error_no_permissions">يتعذر على حسابك في وردبرس.كوم الوصول إلى الإحصاءات في هذه المدونة</string>
+	<string name="stats_widget_error_no_account">يرجى تسجيل الدخول إلى وردبرس</string>
+	<string name="stats_widget_error_generic">يتعذر تحميل الإحصاءات</string>
+	<string name="stats_widget_loading_data">جارٍ تحميل البيانات…</string>
+	<string name="stats_widget_name_for_blog">إحصاءات اليوم لـ %1$s</string>
+	<string name="stats_widget_name">إحصاءات وردبرس اليوم</string>
+	<string name="add_location_permission_required">يلزم وجود صلاحية لإضافة موقع</string>
 	<string name="add_media_permission_required">يلزم وجود أذونات لإضافة الوسائط</string>
 	<string name="access_media_permission_required">يلزم وجود أذونات للوصول إلى الوسائط</string>
 	<string name="stats_enable_rest_api_in_jetpack">لعرض الإحصائيات الخاصة بك، قم بتمكين وحدة JSON API في Jetpack.</string>
 	<string name="error_open_list_from_notification">تم نشر هذا المنشور أو هذه الصفحة في موقع آخر</string>
-	<string name="post_uploaded">تم تحميل المنشور</string>
-	<string name="page_uploaded">تم تحميل الصفحة</string>
 	<string name="reader_short_comment_count_multi">%s تعليقات</string>
 	<string name="reader_short_comment_count_one">تعليق واحد</string>
 	<string name="reader_label_submit_comment">إرسال</string>
@@ -361,7 +418,6 @@
 	<string name="adding_cat_success">تم إضافة التصنيف بنجاح</string>
 	<string name="adding_cat_failed">إضافة التصنيف فشلت</string>
 	<string name="stats_empty_comments">لا تعليقات حتى الآن</string>
-	<string name="theme_no_search_result_found">لا توجد نتائج</string>
 	<string name="nux_cannot_log_in">نحن لا نستطيع تسجيل دخولك</string>
 	<string name="username_or_password_incorrect">اسم المستخدم أو كلمة المرور غير صحيحة</string>
 	<string name="passcode_wrong_passcode">مفتاح الـ PIN خاطئ</string>
@@ -503,6 +559,7 @@
 	<string name="media_gallery_image_order">طلب صورة</string>
 	<string name="comment_status_unapproved">معلق</string>
 	<string name="dlg_unapproving_comments">غير مصدق</string>
+	<string name="notifications_empty_all">ليست هناك تنبيهات…حتى الآن.</string>
 	<string name="share_url_post">مشاركة المقالة</string>
 	<string name="deleting_page">يتم الان حذف الصفحة</string>
 	<string name="deleting_post">يتم الان حذف المقالة</string>
@@ -638,6 +695,7 @@
 	<string name="note_reply_successful">تم نشر الرد</string>
 	<string name="new_notifications">%d تنبيهات جديدة</string>
 	<string name="more_notifications">و %d اكثر</string>
+	<string name="follows">متابعات</string>
 	<string name="loading">جاري التحميل...</string>
 	<string name="httppassword">كلمة مرور HTTP</string>
 	<string name="httpuser">اسم مستخدم HTTP</string>
@@ -763,5 +821,10 @@
 		<item>قياسي</item>
 		<item>حالة</item>
 		<item>فيديو</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>مجاني</item>
+		<item>الكل</item>
+		<item>الإصدار المميز</item>
 	</string-array>
 </resources>

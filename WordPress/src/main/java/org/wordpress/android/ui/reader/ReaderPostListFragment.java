@@ -1017,12 +1017,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
         }
-
-        // Only pass the blogID if available. Do not track feedID
-        AnalyticsUtils.trackWithBlogDetails(
-                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                mCurrentBlogId != 0 ? mCurrentBlogId : null
-        );
     }
 
     /*

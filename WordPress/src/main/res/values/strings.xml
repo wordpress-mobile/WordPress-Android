@@ -167,12 +167,12 @@
     <string name="delete">Delete</string>
 
     <!-- Media details -->
-    <string name="media_details_added_on">Added on:</string>
-    <string name="media_details_uploaded_on">Uploaded on:</string>
-    <string name="media_details_file_name">File name:</string>
-    <string name="media_details_file_type">File type:</string>
-    <string name="media_details_file_url">File URL:</string>
-    <string name="media_details_dimensions">Dimensions:</string>
+    <string name="media_details_label_date_added">Added</string>
+    <string name="media_details_label_date_uploaded">Uploaded</string>
+    <string name="media_details_label_file_name">File name</string>
+    <string name="media_details_label_file_type">File type</string>
+    <string name="media_details_copy_url">Copy URL</string>
+    <string name="media_details_copy_url_toast">URL copied to clipboard</string>
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
@@ -727,6 +727,7 @@
     <!-- Menu Buttons -->
     <string name="new_post">New post</string>
     <string name="new_media">New media</string>
+    <string name="edit_media">Edit media</string>
     <string name="menu_search">Search</string>
     <string name="view_site">View site</string>
 
