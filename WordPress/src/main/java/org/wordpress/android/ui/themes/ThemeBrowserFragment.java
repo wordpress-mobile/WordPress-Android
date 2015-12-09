@@ -306,18 +306,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     private boolean shouldFetchThemesOnScroll(int lastVisibleCount, int totalItemCount) {
         if (totalItemCount < ThemeBrowserActivity.THEME_FETCH_MAX) {
-            mProgressBar.setVisibility(View.GONE);
             return false;
         } else {
             int numberOfColumns = mGridView.getNumColumns();
-
-            if (lastVisibleCount >= totalItemCount - numberOfColumns) {
-                mProgressBar.setVisibility(View.VISIBLE);
-                return true;
-            } else {
-                mProgressBar.setVisibility(View.GONE);
-                return false;
-            }
+            return lastVisibleCount >= totalItemCount - numberOfColumns;
         }
     }
 
@@ -375,6 +367,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getActivity())) {
             mPage++;
             mThemeBrowserActivity.fetchThemes();
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 }
