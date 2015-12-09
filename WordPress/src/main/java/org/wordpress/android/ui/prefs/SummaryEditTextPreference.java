@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,6 +39,8 @@ import org.wordpress.android.widgets.TypefaceCache;
  */
 
 public class SummaryEditTextPreference extends EditTextPreference implements PreferenceHint {
+    private static final long SHOW_KEYBOARD_DELAY = 250;
+
     private int mLines;
     private int mMaxLines;
     private String mHint;
@@ -164,7 +168,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     }
 
     @Override
-    protected void onBindDialogView(View view) {
+    protected void onBindDialogView(final View view) {
         super.onBindDialogView(view);
 
         if (view != null) {
@@ -184,6 +188,13 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             editText.setSelection(editText.getText().length());
             editText.setTypeface(typeface);
             editText.setTextColor(getContext().getResources().getColor(R.color.grey_dark));
+            editText.requestFocusFromTouch();
+            (new Handler()).postDelayed(new Runnable() {
+                public void run() {
+                    InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                }
+            }, SHOW_KEYBOARD_DELAY);
         }
     }
 

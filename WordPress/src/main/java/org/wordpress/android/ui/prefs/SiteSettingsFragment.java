@@ -821,7 +821,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 ListAdapter adapter = list.getAdapter();
                 for (int i = 0; i < checkedItems.size(); i++) {
                     final int index = checkedItems.keyAt(i);
-                    if (checkedItems.get(index) && mEditingList.size() > index) {
+                    if (checkedItems.get(index)) {
                         mEditingList.remove(adapter.getItem(index).toString());
                     }
                 }

@@ -7,11 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey_lighten_30" />
-
     <org.wordpress.android.widgets.WPSwitch
         android:id="@+id/number_picker_switch"
         android:layout_width="match_parent"
@@ -44,6 +39,11 @@
         android:textColor="@color/grey_darken_10"
         app:fontFamily="openSans"
         app:fontVariation="normal" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_lighten_30" />
 
     <org.wordpress.android.ui.WPNumberPicker
         android:id="@+id/number_picker"
