@@ -288,9 +288,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_SINGLE_POST_ACCESSED:
                 eventName = "stats_single_post_accessed";
                 break;
-            case STATS_OPENED_WEB_VERSION:
-                eventName = "stats_web_version_accessed";
-                break;
             case STATS_TAPPED_BAR_CHART:
                 eventName = "stats_bar_chart_tapped";
                 break;

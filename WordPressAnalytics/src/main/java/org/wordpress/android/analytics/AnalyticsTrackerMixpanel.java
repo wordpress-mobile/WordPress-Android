@@ -661,12 +661,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_single_post_screen_stats");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_single_post_screen_stats");
                 break;
-            case STATS_OPENED_WEB_VERSION:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats - Opened Web Version");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_web_version_of_stats");
-                instructions.setCurrentDateForPeopleProperty("last_time_accessed_web_version_of_stats");
-                break;
             case STATS_TAPPED_BAR_CHART:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Tapped Bar Chart");
