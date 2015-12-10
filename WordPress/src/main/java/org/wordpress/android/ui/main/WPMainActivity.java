@@ -62,10 +62,8 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
-    private int mLastReselectedTabPosition = -1;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
-    private static final String KEY_LAST_RESELECTED_TAB_POSITION = "reselected_tab_position";
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -120,19 +118,10 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                // we want to scroll the active fragment's contents to the top when the user taps the currently
-                // selected tab, but a problem in the v22 and v23.0.1 support library causes onTabReselected() to be
-                // fired for every tab change rather than just when the active tab is tapped again - the workaround
-                // below, where we check whether the  tab has already been reselected, prevents the problem.
-                //
-                // Support library ticket: https://code.google.com/p/android/issues/detail?id=177189
-                if (tab.getPosition() == mLastReselectedTabPosition) {
-                    Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
-                    if (fragment instanceof OnScrollToTopListener) {
-                        ((OnScrollToTopListener) fragment).onScrollToTop();
-                    }
-                } else {
-                    mLastReselectedTabPosition = tab.getPosition();
+                //scroll the active fragment's contents to the top when user taps the current tab
+                Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
+                if (fragment instanceof OnScrollToTopListener) {
+                    ((OnScrollToTopListener) fragment).onScrollToTop();
                 }
             }
         });
@@ -184,15 +173,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             } else {
                 ActivityLauncher.showSignInForResult(this);
             }
-        } else {
-            mLastReselectedTabPosition = savedInstanceState.getInt(KEY_LAST_RESELECTED_TAB_POSITION, -1);
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_LAST_RESELECTED_TAB_POSITION, mLastReselectedTabPosition);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
