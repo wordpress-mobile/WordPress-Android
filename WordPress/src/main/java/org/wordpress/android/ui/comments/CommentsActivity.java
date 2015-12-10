@@ -17,6 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
@@ -37,6 +38,7 @@ public class CommentsActivity extends AppCompatActivity
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private long mSelectedCommentId;
+    private final CommentList mTrashedComments = new CommentList();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -252,6 +254,7 @@ public class CommentsActivity extends AppCompatActivity
                 }
             });
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH) {
+            mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
 
@@ -259,6 +262,7 @@ public class CommentsActivity extends AppCompatActivity
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mTrashedComments.remove(comment);
                     getListFragment().setCommentIsModerating(comment.commentID, false);
                     getListFragment().loadComments();
                 }
@@ -274,12 +278,10 @@ public class CommentsActivity extends AppCompatActivity
                     super.onDismissed(snackbar, event);
 
                     // comment will no longer exist in moderating list if action was undone
-                    if (!isFinishing()
-                            && hasListFragment()
-                            && !getListFragment().isModeratingComment(comment.commentID)) {
-                        AppLog.d(AppLog.T.COMMENTS, "comment moderation undone");
+                    if (!mTrashedComments.contains(comment)) {
                         return;
                     }
+                    mTrashedComments.remove(comment);
 
                     CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override

@@ -1,12 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">选择的主题</string>
+	<string name="could_not_load_theme">无法加载主题</string>
+	<string name="theme_activation_error">出现错误。无法激活主题</string>
+	<string name="theme_by_author_prompt_append">作者：%1$s</string>
+	<string name="theme_prompt">感谢您选择 %1$s</string>
+	<string name="theme_try_and_customize">尝试与定制</string>
+	<string name="theme_view">查看</string>
+	<string name="theme_details">详细信息</string>
+	<string name="theme_support">支持</string>
+	<string name="theme_done">完成</string>
+	<string name="theme_manage_site">管理站点</string>
+	<string name="title_activity_theme_support">主题</string>
+	<string name="theme_activate">激活</string>
+	<string name="date_range_start_date">开始日期</string>
+	<string name="date_range_end_date">结束日期</string>
+	<string name="current_theme">当前主题</string>
+	<string name="customize">定制</string>
+	<string name="details">详细信息</string>
+	<string name="support">支持</string>
+	<string name="active">已激活</string>
+	<string name="stats_referrers_spam_generic_error">操作过程中出现错误。未更改垃圾评论的状态。</string>
+	<string name="stats_referrers_marking_not_spam">正在标记为非垃圾评论</string>
+	<string name="stats_referrers_unspam">非垃圾评论</string>
+	<string name="stats_referrers_marking_spam">标记为垃圾评论</string>
+	<string name="theme_auth_error_authenticate">未能获取主题：验证用户身份失败</string>
+	<string name="post_published">文章已发布</string>
+	<string name="page_published">页面已发布</string>
+	<string name="post_updated">文章已更新</string>
+	<string name="page_updated">页面已更新</string>
+	<string name="stats_referrers_spam">垃圾评论</string>
+	<string name="theme_no_search_result_found">抱歉，找不到主题。</string>
+	<string name="media_file_name">文件名：%s</string>
+	<string name="media_uploaded_on">上传时间：%s</string>
+	<string name="media_dimensions">尺寸：%s</string>
+	<string name="upload_queued">在排队</string>
+	<string name="media_file_type">文件类型：%s</string>
+	<string name="reader_label_gap_marker">加载更多文章</string>
+	<string name="notifications_no_search_results">没有符合“%s”条件的站点</string>
+	<string name="search_sites">搜索站点</string>
 	<string name="unread">未读</string>
+	<string name="notifications_empty_view_reader">查看阅读器</string>
+	<string name="notifications_empty_action_followers_likes">受到注意：评论您已读过的文章。</string>
+	<string name="notifications_empty_action_comments">加入会话：评论您关注的博客中的文章。</string>
+	<string name="notifications_empty_action_unread">重新发起会话：撰写新文章。</string>
+	<string name="notifications_empty_action_all">活跃起来吧！评论您关注的博客中的文章。</string>
+	<string name="notifications_empty_likes">尚无新的赞可显示…。</string>
+	<string name="notifications_empty_followers">尚无新的关注者可报告…。</string>
+	<string name="notifications_empty_comments">尚无新评论…。</string>
+	<string name="notifications_empty_unread">您已看完所有通知！</string>
+	<string name="stats_widget_error_jetpack_no_blogid">请访问应用程序中的“统计”，并于稍后尝试添加该小组件</string>
+	<string name="stats_widget_error_readd_widget">请删除该小组件，然后重新添加</string>
+	<string name="stats_widget_error_no_visible_blog">若没有可见的博客，则无法访问“统计”</string>
+	<string name="stats_widget_error_no_permissions">您的 WordPress.com 帐户无法访问此博客上的“统计”</string>
+	<string name="stats_widget_error_no_account">请登录 WordPress</string>
+	<string name="stats_widget_error_generic">无法加载统计信息</string>
+	<string name="stats_widget_loading_data">正在加载数据…</string>
+	<string name="stats_widget_name_for_blog">%1$s 的今日统计</string>
+	<string name="stats_widget_name">WordPress 今日统计</string>
+	<string name="add_location_permission_required">添加位置所需的权限。</string>
 	<string name="add_media_permission_required">添加媒体所需的权限</string>
 	<string name="access_media_permission_required">访问媒体所需的权限</string>
 	<string name="stats_enable_rest_api_in_jetpack">如需查看您的状态，请启用Jetpack的JSON API模块。</string>
 	<string name="error_open_list_from_notification">此文章或页面已在其它站点发布</string>
-	<string name="post_uploaded">文章已上传</string>
-	<string name="page_uploaded">页面已上传</string>
 	<string name="reader_short_comment_count_multi">%s 评论</string>
 	<string name="reader_short_comment_count_one">1评论</string>
 	<string name="reader_label_submit_comment">发送</string>
@@ -344,7 +400,6 @@
 	<string name="theme_fetch_failed">未能获取主题</string>
 	<string name="theme_set_failed">未能设置主题</string>
 	<string name="theme_auth_error_message">确保您有权限设置主题</string>
-	<string name="theme_no_search_result_found">无结果</string>
 	<string name="comments_empty_list">没有评论</string>
 	<string name="mnu_comment_unspam">不是垃圾评论</string>
 	<string name="no_site_error">无法连接到 WordPress 网站</string>
@@ -504,6 +559,7 @@
 	<string name="blog_title_invalid">无效的网站标题</string>
 	<string name="blog_removed_successfully">已成功删除站点</string>
 	<string name="remove_account">删除站点</string>
+	<string name="notifications_empty_all">尚无通知…。</string>
 	<string name="deleting_page">正在删除页面</string>
 	<string name="deleting_post">正在删除日志</string>
 	<string name="share_url_post">分享日志</string>
@@ -639,6 +695,7 @@
 	<string name="more_notifications">以及其他 %d 人。</string>
 	<string name="sign_in">登录</string>
 	<string name="notifications">通知</string>
+	<string name="follows">关注</string>
 	<string name="loading">正在加载…</string>
 	<string name="post_signature">文章签名</string>
 	<string name="add_tagline">为新发表的博文添加签名</string>
@@ -764,5 +821,10 @@
 		<item>标准</item>
 		<item>状态</item>
 		<item>视频</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>免费</item>
+		<item>全部</item>
+		<item>付费</item>
 	</string-array>
 </resources>

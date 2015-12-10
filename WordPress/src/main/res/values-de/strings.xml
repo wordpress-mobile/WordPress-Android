@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Gewähltes Theme</string>
+	<string name="could_not_load_theme">Konnte Theme nicht laden</string>
+	<string name="theme_activation_error">Etwas ist schief gelaufen. Konnte Theme nicht aktivieren</string>
+	<string name="theme_by_author_prompt_append"> von %1$s</string>
+	<string name="theme_prompt">Danke, dass du %1$s gewählt hast</string>
+	<string name="theme_view">Anzeigen</string>
+	<string name="theme_details">Details</string>
+	<string name="theme_support">Support</string>
+	<string name="theme_done">FERTIG</string>
+	<string name="theme_try_and_customize">Ausprobieren &amp; Anpassen</string>
+	<string name="theme_manage_site">WEBSITE VERWALTEN</string>
+	<string name="title_activity_theme_support">Themes</string>
+	<string name="theme_activate">Aktivieren</string>
+	<string name="date_range_start_date">Startdatum</string>
+	<string name="date_range_end_date">Enddatum</string>
+	<string name="current_theme">Aktuelles Theme</string>
+	<string name="customize">Anpassen</string>
+	<string name="details">Details</string>
+	<string name="support">Support</string>
+	<string name="active">Aktiv</string>
+	<string name="stats_referrers_spam_generic_error">Etwas ist während dieses Vorgangs schief gelaufen. Der Spam-Status wurde nicht geändert.</string>
+	<string name="stats_referrers_marking_not_spam">Als kein Spam markieren</string>
+	<string name="stats_referrers_unspam">Kein Spam</string>
+	<string name="stats_referrers_marking_spam">Als Spam markieren</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="page_updated">Seite aktualisiert</string>
+	<string name="post_updated">Beitrag aktualisiert</string>
+	<string name="page_published">Seite veröffentlicht</string>
+	<string name="post_published">Beitrag veröffentlicht</string>
+	<string name="theme_auth_error_authenticate">Konnte Themes nicht laden: Benutzer konnte nicht authentifiziert werden</string>
+	<string name="theme_no_search_result_found">Leider keine Themes gefunden.</string>
+	<string name="media_file_name">Dateiname: %s</string>
+	<string name="media_uploaded_on">Hochgeladen am: %s</string>
+	<string name="media_dimensions">Größe: %s</string>
+	<string name="media_file_type">Dateityp: %s</string>
+	<string name="upload_queued">In Warteschlange</string>
 	<string name="reader_label_gap_marker">Mehr Beiträge laden</string>
 	<string name="notifications_no_search_results">Die Suche nach \'%s\' ergab keine Ergebnisse</string>
 	<string name="search_sites">Websites durchsuchen</string>
@@ -27,8 +63,6 @@
 	<string name="access_media_permission_required">Rechte zum Zugreifen auf Medien erforderlich</string>
 	<string name="stats_enable_rest_api_in_jetpack">Um deine Statistik anzusehen, aktiviere das JSON API-Modul in Jetpack.</string>
 	<string name="error_open_list_from_notification">Diese(r) Seite / Beitrag wurde auf einer anderen Website veröffentlicht</string>
-	<string name="post_uploaded">Beitrag hochgeladen</string>
-	<string name="page_uploaded">Seite hochgeladen</string>
 	<string name="reader_short_comment_count_multi">%s Kommentare</string>
 	<string name="reader_short_comment_count_one">1 Kommentar</string>
 	<string name="reader_label_submit_comment">SENDEN</string>
@@ -362,7 +396,6 @@
 	<string name="gallery_error">Das Medien-Objekt konnte nicht abgerufen werden</string>
 	<string name="mnu_comment_unspam">Kein Spam</string>
 	<string name="comments_empty_list">Keine Kommentare</string>
-	<string name="theme_no_search_result_found">Keine Ergebnisse gefunden</string>
 	<string name="adding_cat_success">Kategorie erfolgreich hinzugefügt</string>
 	<string name="stats_empty_comments">Bisher keine Kommentare</string>
 	<string name="stats_bar_graph_empty">Keine Statistiken verfügbar</string>
@@ -788,5 +821,10 @@
 		<item>Standard</item>
 		<item>Status</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Kostenlos</item>
+		<item>Alle</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

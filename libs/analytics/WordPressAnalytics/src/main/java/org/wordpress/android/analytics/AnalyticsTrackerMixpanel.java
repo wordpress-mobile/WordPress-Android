@@ -266,6 +266,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Closed");
                 break;
+            case APPLICATION_INSTALLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Application Installed");
+                break;
             case APPLICATION_UPGRADED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Upgraded");
@@ -294,12 +298,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Reader - Opened Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_opened_reader_article");
-                break;
-            case READER_ARTICLE_REBLOGGED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Reblogged Article");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reblogged_article");
-                instructions.setCurrentDateForPeopleProperty("last_time_reblogged_article");
                 break;
             case READER_ARTICLE_UNLIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -570,7 +568,15 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Site Menu - Opened Settings");
+                        mixpanelInstructionsForEventName("Site Menu - Opened Site Settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened Account Settings");
+                break;
+            case OPENED_MY_PROFILE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened My Profile");
                 break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -649,12 +655,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_single_post_screen_stats");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_single_post_screen_stats");
                 break;
-            case STATS_OPENED_WEB_VERSION:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats - Opened Web Version");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_web_version_of_stats");
-                instructions.setCurrentDateForPeopleProperty("last_time_accessed_web_version_of_stats");
-                break;
             case STATS_TAPPED_BAR_CHART:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Tapped Bar Chart");
@@ -685,7 +685,11 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Push Notification Received");
+                        mixpanelInstructionsForEventName("Push Notification - Received");
+                break;
+            case PUSH_NOTIFICATION_TAPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Notification - Alert Tapped");
                 break;
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
