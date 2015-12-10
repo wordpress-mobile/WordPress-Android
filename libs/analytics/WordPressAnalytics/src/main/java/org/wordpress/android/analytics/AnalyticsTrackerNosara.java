@@ -463,6 +463,15 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(JETPACK_USER, isJetpackUser);
+            properties.put(NUMBER_OF_BLOGS, numBlogs);
+            mNosaraClient.registerUserProperties(properties);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+        }
+
         if (isUserConnected && isWordPressComUser) {
             setWordPressComUserName(username);
             // Re-unify the user
@@ -478,14 +487,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             }
         }
 
-        try {
-            JSONObject properties = new JSONObject();
-            properties.put(JETPACK_USER, isJetpackUser);
-            properties.put(NUMBER_OF_BLOGS, numBlogs);
-            mNosaraClient.registerUserProperties(properties);
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.UTILS, e);
-        }
+
     }
 
 
