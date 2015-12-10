@@ -77,7 +77,7 @@ public class NotificationsUtils {
 
     private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
 
-    private static boolean mSnackbarDidUndo;
+    private static boolean mSnackbarDidUndoOrDismiss;
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
@@ -448,12 +448,12 @@ public class NotificationsUtils {
         View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSnackbarDidUndo = true;
+                mSnackbarDidUndoOrDismiss = true;
                 EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
             }
         };
 
-        mSnackbarDidUndo = false;
+        mSnackbarDidUndoOrDismiss = false;
         Snackbar snackbar = Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener);
 
@@ -463,9 +463,10 @@ public class NotificationsUtils {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 super.onDismissed(snackbar, event);
-                if (mSnackbarDidUndo) {
+                if (mSnackbarDidUndoOrDismiss) {
                     return;
                 }
+                mSnackbarDidUndoOrDismiss = true;
                 CommentActions.moderateCommentForNote(note, status,
                         new CommentActions.CommentActionListener() {
                             @Override
