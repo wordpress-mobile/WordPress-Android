@@ -1017,12 +1017,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
         }
-
-        // Only pass the blogID if available. Do not track feedID
-        AnalyticsUtils.trackWithBlogDetails(
-                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                mCurrentBlogId != 0 ? mCurrentBlogId : null
-        );
     }
 
     /*
@@ -1057,9 +1051,7 @@ public class ReaderPostListFragment extends Fragment
     private void trackTagLoaded(ReaderTag tag) {
         AnalyticsTracker.Stat stat = null;
 
-        if (tag.isFreshlyPressed()) {
-            stat = AnalyticsTracker.Stat.READER_FRESHLY_PRESSED_LOADED;
-        } else if (tag.isTagTopic()) {
+        if (tag.isTagTopic()) {
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;

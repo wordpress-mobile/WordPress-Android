@@ -316,7 +316,6 @@
 	<string name="no_site_error">Cha b’ urrainn dhuinn ceangal ri làrach WordPress</string>
 	<string name="theme_set_failed">Cha b’ urrainn dhuinn an t-ùrlar a shuidheachadh</string>
 	<string name="theme_auth_error_message">Dèan cinnteach gu bheil cead agad ùrlaran a shuidheachadh</string>
-	<string name="theme_no_search_result_found">Cha deach toradh a lorg</string>
 	<string name="comments_empty_list">Gun bheachdan</string>
 	<string name="mnu_comment_unspam">Beachd còir</string>
 	<string name="gallery_error">Cha b’ urrainn dhuinn am meadhan fhaighinn</string>
