@@ -89,6 +89,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private WPTextView mForgotPassword;
     private WPTextView mJetpackAuthLabel;
+    private WPTextView mAboutButton;
 
     private LinearLayout mBottomButtonsLayout;
     private RelativeLayout mUsernameLayout;
@@ -155,6 +156,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     mUrlButtonLayout.setVisibility(View.VISIBLE);
                     mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
                     mSelfHosted = true;
+                }
+            }
+        });
+        mAboutButton = (WPTextView) rootView.findViewById(R.id.about_button);
+        mAboutButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity activity = getActivity();
+                if (activity != null) {
+                    ActivityLauncher.aboutPage(activity);
                 }
             }
         });

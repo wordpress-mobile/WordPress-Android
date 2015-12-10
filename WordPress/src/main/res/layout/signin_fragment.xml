@@ -298,6 +298,17 @@
             app:maxWidth="@dimen/nux_width">
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/about_button"
+                style="@style/WordPress.NUXFlatButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/nux_main_button_height"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:gravity="center"
+                android:text="@string/about" />
+
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/nux_add_selfhosted_button"
                 style="@style/WordPress.NUXFlatButton"
                 android:layout_width="wrap_content"
