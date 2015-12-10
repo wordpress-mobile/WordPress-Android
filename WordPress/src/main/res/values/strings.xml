@@ -489,6 +489,7 @@
     <string name="site_settings_more_discussion_title">More</string>
     <string name="site_settings_comments_header">Comments</string>
     <string name="site_settings_close_after_title">Close after</string>
+    <string name="site_settings_close_after_dialog_title">Close commenting</string>
     <string name="site_settings_sort_by_title">Sort by</string>
     <string name="site_settings_threading_title">Threading</string>
     <string name="site_settings_paging_title">Paging</string>
@@ -551,6 +552,8 @@
     <string name="hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="paging_description">Break comment threads into multiple pages.</string>
+    <string name="paging_header">Comments per page</string>
+    <string name="close_after_header">Close after</string>
     <string name="close_after_description">Automatically close comments on articles.</string>
     <string name="close_after_switch_text">Automatically close</string>
     <string name="multiple_links_description">Require approval for comments that include more than this number of links.</string>

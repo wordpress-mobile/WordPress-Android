@@ -30,6 +30,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -483,8 +484,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showPagingDialog() {
         getNumberPickerDialog(true,
+                mSiteSettings.getPagingCount() > 0,
                 R.string.site_settings_paging_title,
                 R.string.paging_description,
+                R.string.paging_header,
                 0,
                 getResources().getInteger(R.integer.paging_limit),
                 mSiteSettings.getPagingCount(),
@@ -501,12 +504,14 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showCloseAfterDialog() {
         getNumberPickerDialog(true,
+                mSiteSettings.getCloseAfter() > 0,
                 R.string.close_after_switch_text,
                 R.string.close_after_description,
+                R.string.close_after_header,
                 0,
                 getResources().getInteger(R.integer.close_after_limit),
                 mSiteSettings.getCloseAfter(),
-                R.string.site_settings_close_after_title,
+                R.string.site_settings_close_after_dialog_title,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -517,41 +522,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                 }, null).show();
     }
 
-    private Dialog getNumberPickerDialog(boolean showSwitch,
-                                         int switchText,
-                                         int detail,
-                                         int min,
-                                         int max,
-                                         int cur,
-                                         int title,
-                                         DialogInterface.OnClickListener positive,
-                                         DialogInterface.OnClickListener negative) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-        SwitchCompat pickerSwitch = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
-        if (showSwitch) {
-            pickerSwitch.setVisibility(View.VISIBLE);
-            pickerSwitch.setText(switchText);
-        } else {
-            pickerSwitch.setVisibility(View.GONE);
-        }
-        mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
-        detailText.setText(detail);
-        mNumberPicker.setMinValue(min);
-        mNumberPicker.setMaxValue(max);
-        mNumberPicker.setValue(cur);
-        builder.setCustomTitle(getDialogTitleView(title));
-        builder.setPositiveButton(R.string.ok, positive);
-        builder.setNegativeButton(R.string.cancel, negative);
-        builder.setView(view);
-        return builder.create();
-    }
-
     private void showMultipleLinksDialog() {
         getNumberPickerDialog(false,
+                false,
                 -1,
                 R.string.multiple_links_description,
+                -1,
                 0,
                 getResources().getInteger(R.integer.max_links_limit),
                 mSiteSettings.getMultipleLinks(),
@@ -564,6 +540,52 @@ public class SiteSettingsFragment extends PreferenceFragment
                 }
             }
         }, null).show();
+    }
+
+    private Dialog getNumberPickerDialog(boolean showSwitch,
+                                         boolean switchChecked,
+                                         int switchText,
+                                         int detail,
+                                         int header,
+                                         int min,
+                                         int max,
+                                         int cur,
+                                         int title,
+                                         DialogInterface.OnClickListener positive,
+                                         DialogInterface.OnClickListener negative) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
+        mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
+        SwitchCompat pickerSwitch = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
+        if (showSwitch) {
+            pickerSwitch.setVisibility(View.VISIBLE);
+            pickerSwitch.setText(switchText);
+            pickerSwitch.setChecked(switchChecked);
+            final View toggleContainer = view.findViewById(R.id.number_picker_toggleable);
+            toggleContainer.setEnabled(switchChecked);
+            mNumberPicker.setEnabled(switchChecked);
+            pickerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    toggleContainer.setEnabled(isChecked);
+                    mNumberPicker.setEnabled(isChecked);
+                }
+            });
+        } else {
+            pickerSwitch.setVisibility(View.GONE);
+        }
+        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
+        TextView headerText = (TextView) view.findViewById(R.id.number_picker_header);
+        headerText.setText(header);
+        detailText.setText(detail);
+        mNumberPicker.setMinValue(min);
+        mNumberPicker.setMaxValue(max);
+        mNumberPicker.setValue(cur);
+        builder.setCustomTitle(getDialogTitleView(title));
+        builder.setPositiveButton(R.string.ok, positive);
+        builder.setNegativeButton(R.string.cancel, negative);
+        builder.setView(view);
+        return builder.create();
     }
 
     private void setPreferencesFromSiteSettings() {
