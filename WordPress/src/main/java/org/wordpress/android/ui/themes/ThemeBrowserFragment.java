@@ -25,6 +25,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Theme;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -183,6 +184,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private void addMainHeader(LayoutInflater inflater) {
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
         mCurrentThemeTextView = (TextView) header.findViewById(R.id.header_theme_text);
+
+        setThemeNameIfAlreadyAvailable();
         mThemeBrowserActivity.fetchCurrentTheme();
         LinearLayout customize = (LinearLayout) header.findViewById(R.id.customize);
         customize.setOnClickListener(new View.OnClickListener() {
@@ -209,6 +212,13 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         });
 
         mGridView.addHeaderView(header);
+    }
+
+    private void setThemeNameIfAlreadyAvailable() {
+        Theme currentTheme = mThemeBrowserActivity.getCurrentTheme();
+        if (currentTheme != null) {
+            mCurrentThemeTextView.setText(currentTheme.getName());
+        }
     }
 
     public void setRefreshing(boolean refreshing) {
