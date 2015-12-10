@@ -53,6 +53,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -858,12 +859,14 @@ public class SiteSettingsFragment extends PreferenceFragment
                         AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS, properties);
 
                 ListAdapter adapter = list.getAdapter();
+                List<String> itemsToRemove = new ArrayList<>();
                 for (int i = 0; i < checkedItems.size(); i++) {
                     final int index = checkedItems.keyAt(i);
                     if (checkedItems.get(index)) {
-                        mEditingList.remove(adapter.getItem(index).toString());
+                        itemsToRemove.add(adapter.getItem(index).toString());
                     }
                 }
+                mEditingList.removeAll(itemsToRemove);
                 list.setAdapter(new ArrayAdapter<>(getActivity(),
                         R.layout.wp_simple_list_item_1,
                         mEditingList));
