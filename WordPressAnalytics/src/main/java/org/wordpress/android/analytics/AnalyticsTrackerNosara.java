@@ -69,9 +69,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_ARTICLE_OPENED:
                 eventName = "reader_article_opened";
                 break;
-            case READER_ARTICLE_REBLOGGED:
-                eventName = "reader_article_reblogged";
-                break;
             case READER_ARTICLE_UNLIKED:
                 eventName = "reader_article_unliked";
                 break;

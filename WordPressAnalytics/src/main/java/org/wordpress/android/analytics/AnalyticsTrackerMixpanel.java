@@ -299,12 +299,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_opened_reader_article");
                 break;
-            case READER_ARTICLE_REBLOGGED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Reblogged Article");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reblogged_article");
-                instructions.setCurrentDateForPeopleProperty("last_time_reblogged_article");
-                break;
             case READER_ARTICLE_UNLIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Unliked Article");
