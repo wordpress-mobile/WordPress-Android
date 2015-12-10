@@ -19,7 +19,6 @@ import org.xmlrpc.android.XMLRPCException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -99,10 +98,14 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 if (result != null) {
                     HashMap<String, Object> properties = new HashMap<>();
                     if (result instanceof Map) {
-                        Set keys = ((Map) result).keySet();
-                        List keyList = new ArrayList();
-                        for (Object key : keys) keyList.add(key);
-                        properties.put("items_saved", keyList);
+                        Map<String, Object> resultMap = (Map) result;
+                        Set<String> keys = resultMap.keySet();
+                        for (String key : keys) {
+                            Object currentValue = resultMap.get(key);
+                            if (currentValue != null) {
+                                properties.put("item_saved_" + key, currentValue);
+                            }
+                        }
                     }
                     AnalyticsUtils.trackWithCurrentBlogDetails(
                             AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);

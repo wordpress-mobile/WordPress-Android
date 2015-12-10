@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 class DotComSiteSettings extends SiteSettingsInterface {
@@ -93,14 +92,17 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mRemoteSettings.copyFrom(mSettings);
 
                         if (response != null) {
-                            List<String> itemKeys = new ArrayList<>();
                             JSONObject updated = response.optJSONObject("updated");
                             if (updated == null) return;
-                            Iterator<String> keys = updated.keys();
-                            while (keys.hasNext()) itemKeys.add(keys.next());
-
                             HashMap<String, Object> properties = new HashMap<>();
-                            properties.put("items_saved", itemKeys);
+                            Iterator<String> keys = updated.keys();
+                            while (keys.hasNext()) {
+                                String currentKey = keys.next();
+                                Object currentValue = updated.opt(currentKey);
+                                if (currentValue != null) {
+                                    properties.put("item_saved_" + currentKey, currentValue);
+                                }
+                            }
                             AnalyticsUtils.trackWithCurrentBlogDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
                         }
