@@ -34,6 +34,7 @@ public class WPNumberPicker extends NumberPicker {
     private Field mCurrentOffset;
 
     private EditText mInputView;
+    private Formatter mFormatter;
     private Paint mPaint;
     private int[] mDisplayValues;
 
@@ -90,7 +91,12 @@ public class WPNumberPicker extends NumberPicker {
 
         // Draw the visible values
         for (int i = 0; i < DISPLAY_COUNT; ++i) {
-            String scrollSelectorValue = String.valueOf(mDisplayValues[i]);
+            String scrollSelectorValue;
+            if (mFormatter != null) {
+                scrollSelectorValue = mFormatter.format(mDisplayValues[i]);
+            } else {
+                scrollSelectorValue = String.valueOf(mDisplayValues[i]);
+            }
             if (i == MIDDLE_INDEX) {
                 canvas.drawText(scrollSelectorValue, x, y, paint);
             } else {
@@ -99,6 +105,12 @@ public class WPNumberPicker extends NumberPicker {
             y += elementHeight;
         }
         mInputView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setFormatter(Formatter formatter) {
+        super.setFormatter(formatter);
+        mFormatter = formatter;
     }
 
     private void setDisplayValues() {

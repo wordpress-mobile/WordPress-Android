@@ -520,6 +520,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                         }
                     }
                 }, null).show();
+        mNumberPicker.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int value) {
+                if (value == 0) return getString(R.string.never);
+                return getResources().getQuantityString(R.plurals.days_quantity, value, value);
+            }
+        });
     }
 
     private void showMultipleLinksDialog() {
@@ -533,13 +540,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mSiteSettings.getMultipleLinks(),
                 R.string.site_settings_multiple_links_title,
                 new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mSiteSettings.getMultipleLinks() != mNumberPicker.getValue()) {
-                    onPreferenceChange(mMultipleLinksPref, mNumberPicker.getValue());
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (mSiteSettings.getMultipleLinks() != mNumberPicker.getValue()) {
+                        onPreferenceChange(mMultipleLinksPref, mNumberPicker.getValue());
+                    }
                 }
-            }
-        }, null).show();
+                }, null).show();
     }
 
     private Dialog getNumberPickerDialog(boolean showSwitch,
