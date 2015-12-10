@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -43,6 +44,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int MAX_INDENT_LEVEL = 2;
     private final int mIndentPerLevel;
     private final int mAvatarSz;
+    private final int mDisplayWidth;
 
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
@@ -123,6 +125,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
+        mDisplayWidth = DisplayUtils.getDisplayPixelWidth(context);
 
         mColorAuthor = context.getResources().getColor(R.color.blue_medium);
         mColorNotAuthor = context.getResources().getColor(R.color.grey_dark);
@@ -201,7 +204,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         final ReaderComment comment = getItem(position);
 
         commentHolder.txtAuthor.setText(comment.getAuthorName());
-        CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), commentHolder.itemView.getWidth());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         commentHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -239,14 +241,19 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         // show indentation spacer for comments with parents and indent it based on comment level
+        int indentWidth;
         if (comment.parentId != 0 && comment.level > 0) {
-            int indent = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
+            indentWidth = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) commentHolder.spacerIndent.getLayoutParams();
-            params.width = indent;
+            params.width = indentWidth;
             commentHolder.spacerIndent.setVisibility(View.VISIBLE);
         } else {
+            indentWidth = 0;
             commentHolder.spacerIndent.setVisibility(View.GONE);
         }
+
+        int maxImageWidth = mDisplayWidth - indentWidth;
+        CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), maxImageWidth);
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
