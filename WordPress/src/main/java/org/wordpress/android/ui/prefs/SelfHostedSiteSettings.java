@@ -51,10 +51,15 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     public static final String MAX_LINKS_KEY = "comment_max_links";
     public static final String MODERATION_KEYS_KEY = "moderation_keys";
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    public static final String SOFTWARE_VERSION_KEY = "software_version";
     private static final String BLOG_CATEGORY_ID_KEY = "categoryId";
     private static final String BLOG_CATEGORY_PARENT_ID_KEY = "parentId";
     private static final String BLOG_CATEGORY_DESCRIPTION_KEY = "categoryDescription";
     private static final String BLOG_CATEGORY_NAME_KEY = "categoryName";
+
+    // Requires WordPress 4.5.x or higher
+    private static final int REQUIRED_MAJOR_VERSION = 4;
+    private static final int REQUIRED_MINOR_VERSION = 5;
 
     private static final String OPTION_ALLOWED = "open";
     private static final String OPTION_DISALLOWED = "closed";
@@ -167,6 +172,11 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         public void onSuccess(long id, final Object result) {
             if (result instanceof Map) {
                 AppLog.d(AppLog.T.API, "Received Options XML-RPC response.");
+
+                if (!versionSupported((Map) result)) {
+                    notifyUpdatedOnUiThread(new XMLRPCException("Unsupported WordPress version"));
+                }
+
                 credentialsVerified(true);
 
                 deserializeOptionsResponse(mRemoteSettings, (Map) result);
@@ -186,6 +196,14 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             notifyUpdatedOnUiThread(error);
         }
     };
+
+    private boolean versionSupported(Map map) {
+        String version = getNestedMapValue(map, SOFTWARE_VERSION_KEY);
+        if (TextUtils.isEmpty(version)) return false;
+        String[] split = version.split(".");
+        return Integer.valueOf(split[0]) >= REQUIRED_MAJOR_VERSION &&
+                Integer.valueOf(split[1]) >= REQUIRED_MINOR_VERSION;
+    }
 
     private Map<String, String> serializeSelfHostedParams() {
         Map<String, String> params = new HashMap<>();
