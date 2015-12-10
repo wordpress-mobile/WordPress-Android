@@ -307,7 +307,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 builder.append(key);
                 builder.append("\n");
             }
-            params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            if (builder.length() > 1) {
+                params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            }
         }
         if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
             StringBuilder builder = new StringBuilder();
