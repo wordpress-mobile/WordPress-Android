@@ -175,11 +175,13 @@ public class ActivityLauncher {
 
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
         slideInFromRight(context, intent);
     }
 
     public static void viewAccountSettings(Activity activity) {
         Intent intent = new Intent(activity, SettingsActivity.class);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
         slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
     }
 
