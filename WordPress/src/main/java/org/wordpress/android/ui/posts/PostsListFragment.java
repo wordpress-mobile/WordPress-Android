@@ -486,11 +486,8 @@ public class PostsListFragment extends Fragment
                 WordPress.wpDB.deletePost(fullPost);
 
                 if (!post.isLocalDraft()) {
-                    List<Object> apiArgs = new Vector<>();
-                    apiArgs.add(WordPress.getCurrentBlog());
-                    apiArgs.add(fullPost.getRemotePostId());
-                    apiArgs.add(mIsPage);
-                    new ApiHelper.DeleteSinglePostTask().execute(apiArgs);
+                    new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
+                            fullPost.getRemotePostId(), mIsPage);
                 }
             }
         });
