@@ -380,7 +380,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        setPreferencesFromSiteSettings();
+        if (isAdded()) setPreferencesFromSiteSettings();
     }
 
     @Override

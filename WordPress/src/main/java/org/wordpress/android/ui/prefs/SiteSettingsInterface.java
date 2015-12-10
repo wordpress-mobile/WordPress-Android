@@ -493,7 +493,7 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that settings have been updated with the latest remote data.
      */
     protected void notifyUpdatedOnUiThread(final Exception error) {
-        if (mActivity == null || mListener == null) return;
+        if (mActivity == null || mActivity.isFinishing() || mListener == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
