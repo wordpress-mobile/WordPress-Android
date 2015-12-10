@@ -100,10 +100,8 @@ public class HtmlUtils {
      * Remove {@code <script>..</script>} blocks from the passed string - added to project after noticing
      * comments on posts that use the "Sociable" plugin ( http://wordpress.org/plugins/sociable/ )
      * may have a script block which contains {@code <!--//-->} followed by a CDATA section followed by {@code <!]]>,}
-     * all of which will show up if we don't strip it here (example: http://cl.ly/image/0J0N3z3h1i04 )
-     * first seen at http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/
+     * all of which will show up if we don't strip it here.
      * @see <a href="http://wordpress.org/plugins/sociable/">Wordpress Sociable Plugin</a>
-     * @see <a href="http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/">First seen at</a>
      * @return String without {@code <script>..</script>},  {@code <!--//-->} blocks followed by a CDATA section followed by {@code <!]]>,}
      * @param text String containing script tags
      */
