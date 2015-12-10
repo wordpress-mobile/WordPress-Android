@@ -391,10 +391,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void trackAnalyticsSignIn() {
+        AnalyticsUtils.refreshMetadata();
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
-        AnalyticsUtils.refreshMetadata();
         if (!isWPComLogin()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
