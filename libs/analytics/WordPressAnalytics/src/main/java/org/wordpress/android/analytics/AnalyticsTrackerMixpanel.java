@@ -266,6 +266,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Closed");
                 break;
+            case APPLICATION_INSTALLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Application Installed");
+                break;
             case APPLICATION_UPGRADED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Upgraded");
@@ -570,7 +574,15 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Site Menu - Opened Settings");
+                        mixpanelInstructionsForEventName("Site Menu - Opened Site Settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened Account Settings");
+                break;
+            case OPENED_MY_PROFILE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened My Profile");
                 break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

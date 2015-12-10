@@ -19,6 +19,7 @@ public final class AnalyticsTracker {
     public enum Stat {
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
+        APPLICATION_INSTALLED,
         APPLICATION_UPGRADED,
         READER_ACCESSED,
         READER_ARTICLE_COMMENTED_ON,
@@ -89,6 +90,8 @@ public final class AnalyticsTracker {
         OPENED_VIEW_ADMIN,
         OPENED_MEDIA_LIBRARY,
         OPENED_BLOG_SETTINGS,
+        OPENED_ACCOUNT_SETTINGS,
+        OPENED_MY_PROFILE,
         CREATED_ACCOUNT,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
@@ -128,19 +131,14 @@ public final class AnalyticsTracker {
     }
 
     public static void init(Context context) {
-        loadPrefHasUserOptedOut(context, false);
+        loadPrefHasUserOptedOut(context);
     }
 
-    public static void loadPrefHasUserOptedOut(Context context, boolean manageSession) {
+    public static void loadPrefHasUserOptedOut(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
         boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
-        if (hasUserOptedOut != mHasUserOptedOut && manageSession) {
+        if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
-            if (mHasUserOptedOut) {
-                endSession(true);
-                clearAllData();
-            }
         }
     }
 

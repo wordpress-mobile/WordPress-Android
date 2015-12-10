@@ -51,6 +51,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APPLICATION_CLOSED:
                 eventName = "application_closed";
                 break;
+            case APPLICATION_INSTALLED:
+                eventName = "application_installed";
+                break;
             case APPLICATION_UPGRADED:
                 eventName = "application_upgraded";
                 break;
@@ -228,7 +231,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "settings");
+                predefinedEventProperties.put("menu_item", "site_settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                eventName = "me_opened_account_settings";
+                break;
+            case OPENED_MY_PROFILE:
+                eventName = "me_opened_my_profile";
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
