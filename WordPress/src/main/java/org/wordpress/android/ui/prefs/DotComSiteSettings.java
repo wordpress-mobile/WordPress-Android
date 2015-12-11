@@ -319,7 +319,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 builder.append(key);
                 builder.append("\n");
             }
-            params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            if (builder.length() > 1) {
+                params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            }
         }
 
         return params;
