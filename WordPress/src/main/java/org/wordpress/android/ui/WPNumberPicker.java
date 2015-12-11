@@ -62,6 +62,8 @@ public class WPNumberPicker extends NumberPicker {
 
     @Override
     public void setValue(int value) {
+        if (value < getMinValue()) value = getMinValue();
+        if (value > getMaxValue()) value = getMaxValue();
         super.setValue(value);
         EditText view = (EditText) getChildAt(0);
         WPPrefUtils.layoutAsNumberPickerSelected(view);

@@ -84,7 +84,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Blog mBlog;
     private SiteSettingsInterface mSiteSettings;
     private List<String> mEditingList;
-    private boolean mBlogDeleted;
     private boolean mShouldFetch;
     private NumberPicker mNumberPicker;
 
@@ -146,16 +145,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         mSiteSettings.init(mShouldFetch);
         mShouldFetch = false;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        // Assume user wanted changes propagated when they leave
-        if (!mBlogDeleted && mSiteSettings != null) {
-            mSiteSettings.saveSettings();
-        }
     }
 
     @Override
@@ -339,6 +328,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             return false;
         }
 
+        mSiteSettings.saveSettings();
+
         return true;
     }
 
@@ -386,10 +377,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onSettingsSaved(Exception error) {
-        int message = error == null ?
-                R.string.site_settings_save_success : R.string.error_post_remote_site_settings;
-
-        ToastUtils.showToast(WordPress.getContext(), message);
+        if (error != null) {
+            ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
+            return;
+        }
         mBlog.setBlogName(mSiteSettings.getTitle());
         WordPress.wpDB.saveBlog(mBlog);
         EventBus.getDefault().post(new CoreEvents.BlogListChanged());
@@ -541,12 +532,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mSiteSettings.getMultipleLinks(),
                 R.string.site_settings_multiple_links_title,
                 new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (mSiteSettings.getMultipleLinks() != mNumberPicker.getValue()) {
-                        onPreferenceChange(mMultipleLinksPref, mNumberPicker.getValue());
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mSiteSettings.getMultipleLinks() != mNumberPicker.getValue()) {
+                            onPreferenceChange(mMultipleLinksPref, mNumberPicker.getValue());
+                        }
                     }
-                }
                 }, null);
     }
 
@@ -935,7 +926,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             ToastUtils.showToast(getActivity(), R.string.blog_removed_successfully);
             WordPress.wpDB.deleteLastBlogId();
             WordPress.currentBlog = null;
-            mBlogDeleted = true;
             getActivity().setResult(RESULT_BLOG_REMOVED);
 
             // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
