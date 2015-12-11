@@ -392,14 +392,9 @@ public class CommentsListFragment extends Fragment {
     private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
         ErrorType mErrorType = ErrorType.NO_ERROR;
         final boolean mIsLoadingMore;
-        boolean mRetryOnCancelled;
 
         private UpdateCommentsTask(boolean loadMore) {
             mIsLoadingMore = loadMore;
-        }
-
-        public void setRetryOnCancelled(boolean retryOnCancelled) {
-            mRetryOnCancelled = retryOnCancelled;
         }
 
         @Override
@@ -416,12 +411,7 @@ public class CommentsListFragment extends Fragment {
             super.onCancelled();
             mIsUpdatingComments = false;
             mUpdateCommentsTask = null;
-            if (mRetryOnCancelled) {
-                mRetryOnCancelled = false;
-                updateComments(false);
-            } else {
-                mSwipeToRefreshHelper.setRefreshing(false);
-            }
+            mSwipeToRefreshHelper.setRefreshing(false);
         }
 
         @Override

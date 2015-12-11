@@ -44,7 +44,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final LayoutInflater mInflater;
 
-    private CommentList mComments = new CommentList();
+    private final CommentList mComments = new CommentList();
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
     private final List<Long> mModeratingCommentsIds = new ArrayList<>();
 
@@ -165,18 +165,18 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
-        int checkmarkVisiblity;
+        int checkmarkVisibility;
         if (mEnableSelection && isItemSelected(position)) {
-            checkmarkVisiblity = View.VISIBLE;
+            checkmarkVisibility = View.VISIBLE;
             holder.containerView.setBackgroundColor(mSelectedColor);
         } else {
-            checkmarkVisiblity = View.GONE;
+            checkmarkVisibility = View.GONE;
             holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
             holder.containerView.setBackgroundColor(mUnselectedColor);
         }
 
-        if (holder.imgCheckmark.getVisibility() != checkmarkVisiblity) {
-            holder.imgCheckmark.setVisibility(checkmarkVisiblity);
+        if (holder.imgCheckmark.getVisibility() != checkmarkVisibility) {
+            holder.imgCheckmark.setVisibility(checkmarkVisibility);
         }
 
         // comment text needs to be to the left of date/status when the title is a single line and
@@ -249,8 +249,9 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (mSelectedPositions.size() > 0) {
             mSelectedPositions.clear();
             notifyDataSetChanged();
-            if (mOnSelectedChangeListener != null)
+            if (mOnSelectedChangeListener != null) {
                 mOnSelectedChangeListener.onSelectedItemsChanged();
+            }
         }
     }
 
@@ -260,8 +261,9 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     CommentList getSelectedComments() {
         CommentList comments = new CommentList();
-        if (!mEnableSelection)
+        if (!mEnableSelection) {
             return comments;
+        }
 
         for (Integer position: mSelectedPositions) {
             if (isPositionValid(position))
@@ -284,7 +286,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mSelectedPositions.remove(position);
         }
 
-        notifyDataSetChanged();
+        notifyItemChanged(position);
 
         if (view != null && view.getTag() instanceof CommentHolder) {
             CommentHolder holder = (CommentHolder) view.getTag();
@@ -304,16 +306,23 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void addModeratingCommentId(long commentId) {
         mModeratingCommentsIds.add(commentId);
-        notifyDataSetChanged();
+        int position = indexOfCommentId(commentId);
+        if (position >= 0) {
+            notifyItemChanged(position);
+        }
     }
 
     public void removeModeratingCommentId(long commentId) {
         mModeratingCommentsIds.remove(commentId);
-        notifyDataSetChanged();
+        int position = indexOfCommentId(commentId);
+        if (position >= 0) {
+            notifyItemChanged(position);
+        }
     }
 
     public boolean isModeratingCommentId(long commentId) {
-        return mModeratingCommentsIds.size() > 0 && mModeratingCommentsIds.contains(commentId);
+        return mModeratingCommentsIds.size() > 0
+                && mModeratingCommentsIds.contains(commentId);
     }
 
     private int indexOfCommentId(long commentId) {
@@ -338,10 +347,10 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void removeComment(Comment comment) {
-        int commentIndex = indexOfCommentId(comment.commentID);
-        if (commentIndex >= 0) {
-            mComments.remove(commentIndex);
-            notifyDataSetChanged();
+        int position = indexOfCommentId(comment.commentID);
+        if (position >= 0) {
+            mComments.remove(position);
+            notifyItemRemoved(position);
         }
     }
 
@@ -351,8 +360,9 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     void loadComments() {
         if (mIsLoadTaskRunning) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
+        } else {
+            new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
