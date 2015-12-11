@@ -510,7 +510,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.close_after_switch_text,
                 R.string.close_after_description,
                 R.string.close_after_header,
-                0,
+                1,
                 getResources().getInteger(R.integer.close_after_limit),
                 mSiteSettings.getCloseAfter(),
                 R.string.site_settings_close_after_dialog_title,
@@ -525,7 +525,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mNumberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
             public String format(int value) {
-                if (value == 0) return getString(R.string.never);
                 return getResources().getQuantityString(R.plurals.days_quantity, value, value);
             }
         });
@@ -594,7 +593,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.ok, positive);
         builder.setNegativeButton(R.string.cancel, negative);
         builder.setView(view);
-        return builder.create();
+        AlertDialog dialog = builder.create();
+        WPPrefUtils.layoutAsFlatButton(dialog.getButton(DialogInterface.BUTTON_POSITIVE));
+        WPPrefUtils.layoutAsFlatButton(dialog.getButton(DialogInterface.BUTTON_NEGATIVE));
+        return dialog;
     }
 
     private void setPreferencesFromSiteSettings() {
