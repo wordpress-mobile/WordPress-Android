@@ -2,17 +2,16 @@ package org.wordpress.android.ui.comments;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
@@ -25,48 +24,71 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-class CommentAdapter extends BaseAdapter {
-    static interface DataLoadedListener {
-        public void onDataLoaded(boolean isEmpty);
+class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    interface OnDataLoadedListener {
+        void onDataLoaded(boolean isEmpty);
     }
 
-    static interface OnLoadMoreListener {
-        public void onLoadMore();
+    interface OnLoadMoreListener {
+        void onLoadMore();
     }
 
-    static interface OnSelectedItemsChangeListener {
-        public void onSelectedItemsChanged();
+    interface OnSelectedItemsChangeListener {
+        void onSelectedItemsChanged();
+    }
+
+    interface OnCommentPressedListener {
+        void onCommentPressed(int position, View view);
+        void onCommentLongPressed(int position, View view);
     }
 
     private final LayoutInflater mInflater;
-    private final DataLoadedListener mDataLoadedListener;
-    private final OnLoadMoreListener mOnLoadMoreListener;
-    private final OnSelectedItemsChangeListener mOnSelectedChangeListener;
 
     private CommentList mComments = new CommentList();
-    private final HashSet<Integer> mSelectedPositions = new HashSet<Integer>();
-    private final List<Long> mModeratingCommentsIds = new ArrayList<Long>();
+    private final HashSet<Integer> mSelectedPositions = new HashSet<>();
+    private final List<Long> mModeratingCommentsIds = new ArrayList<>();
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
 
+    private final int mLocalBlogId;
     private final int mAvatarSz;
-
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
     private final int mSelectionColor;
 
+    private OnDataLoadedListener mOnDataLoadedListener;
+    private OnCommentPressedListener mOnCommentPressedListener;
+    private OnLoadMoreListener mOnLoadMoreListener;
+    private OnSelectedItemsChangeListener mOnSelectedChangeListener;
+
     private boolean mEnableSelection;
 
-    CommentAdapter(Context context,
-                   DataLoadedListener onDataLoadedListener,
-                   OnLoadMoreListener onLoadMoreListener,
-                   OnSelectedItemsChangeListener onChangeListener) {
+    class CommentHolder extends RecyclerView.ViewHolder {
+        private final TextView txtTitle;
+        private final TextView txtComment;
+        private final TextView txtStatus;
+        private final TextView txtDate;
+        private final WPNetworkImageView imgAvatar;
+        private final ImageView imgCheckmark;
+        private final View progressBar;
+
+        public CommentHolder(View view) {
+            super(view);
+            txtTitle = (TextView) view.findViewById(R.id.title);
+            txtComment = (TextView) view.findViewById(R.id.comment);
+            txtStatus = (TextView) view.findViewById(R.id.status);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            imgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.avatar);
+            progressBar = view.findViewById(R.id.moderate_progress);
+        }
+    }
+
+    CommentAdapter(Context context, int localBlogId) {
         mInflater = LayoutInflater.from(context);
 
-        mDataLoadedListener = onDataLoadedListener;
-        mOnLoadMoreListener = onLoadMoreListener;
-        mOnSelectedChangeListener = onChangeListener;
+        mLocalBlogId = localBlogId;
 
         mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
         mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
@@ -76,33 +98,139 @@ class CommentAdapter extends BaseAdapter {
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+
+        setHasStableIds(true);
+    }
+
+    void setOnDataLoadedListener(OnDataLoadedListener listener) {
+        mOnDataLoadedListener = listener;
+    }
+
+    void setOnLoadMoreListener(OnLoadMoreListener listener) {
+        mOnLoadMoreListener = listener;
+    }
+
+    void setOnCommentPressedListener(OnCommentPressedListener listener) {
+        mOnCommentPressedListener = listener;
+    }
+
+    void setOnSelectedItemsChangeListener(OnSelectedItemsChangeListener listener) {
+        mOnSelectedChangeListener = listener;
     }
 
     @Override
-    public int getCount() {
-        return (mComments != null ? mComments.size() : 0);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.comment_listitem, null);
+        return new CommentHolder(view);
     }
 
     @Override
-    public Object getItem(int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+        final Comment comment = mComments.get(position);
+        final CommentHolder holder = (CommentHolder) viewHolder;
+
+        if (isModeratingCommentId(comment.commentID)) {
+            holder.progressBar.setVisibility(View.VISIBLE);
+        } else {
+            holder.progressBar.setVisibility(View.GONE);
+        }
+
+        holder.txtTitle.setText(Html.fromHtml(comment.getFormattedTitle()));
+        holder.txtComment.setText(comment.getUnescapedCommentText());
+        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
+
+        // status is only shown for comments that haven't been approved
+        final boolean showStatus;
+        switch (comment.getStatusEnum()) {
+            case SPAM :
+                showStatus = true;
+                holder.txtStatus.setText(mStatusTextSpam);
+                holder.txtStatus.setTextColor(mStatusColorSpam);
+                break;
+            case UNAPPROVED:
+                showStatus = true;
+                holder.txtStatus.setText(mStatusTextUnapproved);
+                holder.txtStatus.setTextColor(mStatusColorUnapproved);
+                break;
+            default :
+                showStatus = false;
+                break;
+        }
+        holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
+
+        boolean useSelectionBackground;
+        if (mEnableSelection && isItemSelected(position)) {
+            useSelectionBackground = true;
+            holder.imgCheckmark.setVisibility(View.VISIBLE);
+        } else {
+            useSelectionBackground = false;
+            holder.imgCheckmark.setVisibility(View.GONE);
+            holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+        }
+
+        if (useSelectionBackground) {
+            holder.itemView.setBackgroundColor(mSelectionColor);
+        } else {
+            holder.itemView.setBackgroundDrawable(null);
+        }
+
+        // comment text needs to be to the left of date/status when the title is a single line and
+        // the status is displayed or else the status may overlap the comment text - note that
+        // getLineCount() will return 0 if the view hasn't been rendered yet, which is why we
+        // check getLineCount() <= 1
+        boolean adjustComment = (showStatus && holder.txtTitle.getLineCount() <= 1);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.txtComment.getLayoutParams();
+        if (adjustComment) {
+            params.addRule(RelativeLayout.LEFT_OF, R.id.layout_date_status);
+        } else {
+            params.addRule(RelativeLayout.LEFT_OF, 0);
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnCommentPressedListener != null) {
+                    mOnCommentPressedListener.onCommentPressed(position, v);
+                }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnCommentPressedListener != null) {
+                    mOnCommentPressedListener.onCommentLongPressed(position, v);
+                }
+                return true;
+            }
+        });
+
+        // request to load more comments when we near the end
+        if (mOnLoadMoreListener != null && position >= getItemCount()-1) {
+            mOnLoadMoreListener.onLoadMore();
+        }
+    }
+
+    public Comment getItem(int position) {
         return mComments.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return mComments.get(position).commentID;
     }
 
-    void clear() {
-        if (mComments.size() > 0) {
-            mComments.clear();
-            notifyDataSetChanged();
-        }
+    @Override
+    public int getItemCount() {
+        return mComments.size();
+    }
+
+    boolean isEmpty() {
+        return getItemCount() == 0;
     }
 
     void setEnableSelection(boolean enable) {
-        if (enable == mEnableSelection)
-            return;
+        if (enable == mEnableSelection) return;
 
         mEnableSelection = enable;
         if (mEnableSelection) {
@@ -143,8 +271,7 @@ class CommentAdapter extends BaseAdapter {
     }
 
     void setItemSelected(int position, boolean isSelected, View view) {
-        if (isItemSelected(position) == isSelected)
-            return;
+        if (isItemSelected(position) == isSelected) return;
 
         if (isSelected) {
             mSelectedPositions.add(position);
@@ -162,8 +289,9 @@ class CommentAdapter extends BaseAdapter {
             holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         }
 
-        if (mOnSelectedChangeListener != null)
+        if (mOnSelectedChangeListener != null) {
             mOnSelectedChangeListener.onSelectedItemsChanged();
+        }
     }
 
     void toggleItemSelected(int position, View view) {
@@ -184,7 +312,7 @@ class CommentAdapter extends BaseAdapter {
         return mModeratingCommentsIds.size() > 0 && mModeratingCommentsIds.contains(commentId);
     }
 
-    public int indexOfCommentId(long commentId) {
+    private int indexOfCommentId(long commentId) {
         return mComments.indexOfCommentId(commentId);
     }
 
@@ -192,16 +320,16 @@ class CommentAdapter extends BaseAdapter {
         return (position >= 0 && position < mComments.size());
     }
 
-    void replaceComments(final CommentList comments) {
+    void replaceComments(CommentList comments) {
         mComments.replaceComments(comments);
         notifyDataSetChanged();
     }
 
-    void deleteComments(final CommentList comments) {
+    void deleteComments(CommentList comments) {
         mComments.deleteComments(comments);
         notifyDataSetChanged();
-        if (mDataLoadedListener != null) {
-            mDataLoadedListener.onDataLoaded(isEmpty());
+        if (mOnDataLoadedListener != null) {
+            mOnDataLoadedListener.onDataLoaded(isEmpty());
         }
     }
 
@@ -210,103 +338,6 @@ class CommentAdapter extends BaseAdapter {
         if (commentIndex >= 0) {
             mComments.remove(commentIndex);
             notifyDataSetChanged();
-        }
-    }
-
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        final Comment comment = mComments.get(position);
-        final CommentHolder holder;
-
-        if (convertView == null || convertView.getTag() == null) {
-            convertView = mInflater.inflate(R.layout.comment_listitem, null);
-            holder = new CommentHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (CommentHolder) convertView.getTag();
-        }
-
-        if (isModeratingCommentId(comment.commentID)) {
-            holder.progressBar.setVisibility(View.VISIBLE);
-        } else {
-            holder.progressBar.setVisibility(View.GONE);
-        }
-
-        holder.txtTitle.setText(Html.fromHtml(comment.getFormattedTitle()));
-        holder.txtComment.setText(comment.getUnescapedCommentText());
-        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
-
-        // status is only shown for comments that haven't been approved
-        final boolean showStatus;
-        switch (comment.getStatusEnum()) {
-            case SPAM :
-                showStatus = true;
-                holder.txtStatus.setText(mStatusTextSpam);
-                holder.txtStatus.setTextColor(mStatusColorSpam);
-                break;
-            case UNAPPROVED:
-                showStatus = true;
-                holder.txtStatus.setText(mStatusTextUnapproved);
-                holder.txtStatus.setTextColor(mStatusColorUnapproved);
-                break;
-            default :
-                showStatus = false;
-                break;
-        }
-        holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
-
-        boolean useSelectionBackground = false;
-        if (mEnableSelection && isItemSelected(position)) {
-            useSelectionBackground = true;
-            if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
-                holder.imgCheckmark.setVisibility(View.VISIBLE);
-        } else {
-            if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
-                holder.imgCheckmark.setVisibility(View.GONE);
-            holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-        }
-
-        if (useSelectionBackground) {
-            convertView.setBackgroundColor(mSelectionColor);
-        } else {
-            convertView.setBackgroundDrawable(null);
-        }
-
-        // comment text needs to be to the left of date/status when the title is a single line and
-        // the status is displayed or else the status may overlap the comment text - note that
-        // getLineCount() will return 0 if the view hasn't been rendered yet, which is why we
-        // check getLineCount() <= 1
-        boolean adjustComment = (showStatus && holder.txtTitle.getLineCount() <= 1);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.txtComment.getLayoutParams();
-        if (adjustComment) {
-            params.addRule(RelativeLayout.LEFT_OF, R.id.layout_date_status);
-        } else {
-            params.addRule(RelativeLayout.LEFT_OF, 0);
-        }
-
-        // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= getCount()-1)
-            mOnLoadMoreListener.onLoadMore();
-
-        return convertView;
-    }
-
-    private class CommentHolder {
-        private final TextView txtTitle;
-        private final TextView txtComment;
-        private final TextView txtStatus;
-        private final TextView txtDate;
-        private final WPNetworkImageView imgAvatar;
-        private final ImageView imgCheckmark;
-        private final View progressBar;
-
-        private CommentHolder(View row) {
-            txtTitle = (TextView) row.findViewById(R.id.title);
-            txtComment = (TextView) row.findViewById(R.id.comment);
-            txtStatus = (TextView) row.findViewById(R.id.status);
-            txtDate = (TextView) row.findViewById(R.id.text_date);
-            imgCheckmark = (ImageView) row.findViewById(R.id.image_checkmark);
-            imgAvatar = (WPNetworkImageView) row.findViewById(R.id.avatar);
-            progressBar = row.findViewById(R.id.moderate_progress);
         }
     }
 
@@ -336,12 +367,12 @@ class CommentAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            int localBlogId = WordPress.getCurrentLocalTableBlogId();
-            tmpComments = CommentTable.getCommentsForBlog(localBlogId);
-            if (mComments.isSameList(tmpComments))
+            tmpComments = CommentTable.getCommentsForBlog(mLocalBlogId);
+            if (mComments.isSameList(tmpComments)) {
                 return false;
+            }
 
-            // pre-calc transient values so they're cached when used by getView()
+            // pre-calc transient values so they're cached prior to display
             for (Comment comment: tmpComments) {
                 comment.getDatePublished();
                 comment.getUnescapedCommentText();
@@ -359,8 +390,8 @@ class CommentAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
 
-            if (mDataLoadedListener != null) {
-                mDataLoadedListener.onDataLoaded(isEmpty());
+            if (mOnDataLoadedListener != null) {
+                mOnDataLoadedListener.onDataLoaded(isEmpty());
             }
 
             mIsLoadTaskRunning = false;

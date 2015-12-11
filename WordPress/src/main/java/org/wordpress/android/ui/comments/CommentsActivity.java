@@ -149,9 +149,8 @@ public class CommentsActivity extends AppCompatActivity
     public void onCommentSelected(long commentId) {
         mSelectedCommentId = commentId;
         FragmentManager fm = getFragmentManager();
-        if (fm == null) {
-            return;
-        }
+        if (fm == null) return;
+
         fm.executePendingTransactions();
         CommentsListFragment listFragment = getListFragment();
 
