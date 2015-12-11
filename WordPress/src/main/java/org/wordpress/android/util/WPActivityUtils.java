@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.SettingsFragment;
@@ -78,7 +79,12 @@ public class WPActivityUtils {
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
 
-        toolbar.setTitle(title);
+        TextView titleView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        titleView.setVisibility(View.VISIBLE);
+        titleView.setText(title);
+
+        toolbar.setTitle("");
+        toolbar.setContentInsetsAbsolute(0, 0);
         toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

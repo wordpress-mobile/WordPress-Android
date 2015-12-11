@@ -490,7 +490,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.site_settings_paging_title,
                 R.string.paging_description,
                 R.string.paging_header,
-                0,
+                1,
                 getResources().getInteger(R.integer.paging_limit),
                 mSiteSettings.getPagingCount(),
                 R.string.site_settings_paging_title,
@@ -501,7 +501,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             onPreferenceChange(mPagingPref, mNumberPicker.getValue());
                         }
                     }
-                }, null).show();
+                }, null);
     }
 
     private void showCloseAfterDialog() {
@@ -521,7 +521,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             onPreferenceChange(mCloseAfterPref, mNumberPicker.getValue());
                         }
                     }
-                }, null).show();
+                }, null);
         mNumberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
             public String format(int value) {
@@ -547,10 +547,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                         onPreferenceChange(mMultipleLinksPref, mNumberPicker.getValue());
                     }
                 }
-                }, null).show();
+                }, null);
     }
 
-    private Dialog getNumberPickerDialog(boolean showSwitch,
+    private void getNumberPickerDialog(boolean showSwitch,
                                          boolean switchChecked,
                                          int switchText,
                                          int detail,
@@ -584,8 +584,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
         TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
         TextView headerText = (TextView) view.findViewById(R.id.number_picker_header);
-        headerText.setText(header);
-        detailText.setText(detail);
+        if (header >= 0) {
+            headerText.setText(header);
+        } else {
+            headerText.setVisibility(View.GONE);
+        }
+        if (detail >= 0) {
+            detailText.setText(detail);
+        } else {
+            detailText.setVisibility(View.GONE);
+        }
         mNumberPicker.setMinValue(min);
         mNumberPicker.setMaxValue(max);
         mNumberPicker.setValue(cur);
@@ -594,9 +602,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setNegativeButton(R.string.cancel, negative);
         builder.setView(view);
         AlertDialog dialog = builder.create();
+        dialog.show();
         WPPrefUtils.layoutAsFlatButton(dialog.getButton(DialogInterface.BUTTON_POSITIVE));
         WPPrefUtils.layoutAsFlatButton(dialog.getButton(DialogInterface.BUTTON_NEGATIVE));
-        return dialog;
     }
 
     private void setPreferencesFromSiteSettings() {
