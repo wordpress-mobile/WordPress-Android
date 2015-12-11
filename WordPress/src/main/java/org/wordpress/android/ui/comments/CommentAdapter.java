@@ -55,7 +55,8 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int mAvatarSz;
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
-    private final int mSelectionColor;
+    private final int mSelectedColor;
+    private final int mUnselectedColor;
 
     private OnDataLoadedListener mOnDataLoadedListener;
     private OnCommentPressedListener mOnCommentPressedListener;
@@ -72,6 +73,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final WPNetworkImageView imgAvatar;
         private final ImageView imgCheckmark;
         private final View progressBar;
+        private final ViewGroup containerView;
 
         public CommentHolder(View view) {
             super(view);
@@ -82,6 +84,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.avatar);
             progressBar = view.findViewById(R.id.moderate_progress);
+            containerView = (ViewGroup) view.findViewById(R.id.layout_container);
         }
     }
 
@@ -92,7 +95,9 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
         mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
-        mSelectionColor = context.getResources().getColor(R.color.semi_transparent_blue_light);
+
+        mUnselectedColor = context.getResources().getColor(R.color.white);
+        mSelectedColor = context.getResources().getColor(R.color.translucent_grey_lighten_20);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
@@ -121,13 +126,15 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.comment_listitem, null);
-        return new CommentHolder(view);
+        CommentHolder holder = new CommentHolder(view);
+        view.setTag(holder);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-        final Comment comment = mComments.get(position);
-        final CommentHolder holder = (CommentHolder) viewHolder;
+        Comment comment = mComments.get(position);
+        CommentHolder holder = (CommentHolder) viewHolder;
 
         if (isModeratingCommentId(comment.commentID)) {
             holder.progressBar.setVisibility(View.VISIBLE);
@@ -158,20 +165,18 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
-        boolean useSelectionBackground;
+        int checkmarkVisiblity;
         if (mEnableSelection && isItemSelected(position)) {
-            useSelectionBackground = true;
-            holder.imgCheckmark.setVisibility(View.VISIBLE);
+            checkmarkVisiblity = View.VISIBLE;
+            holder.containerView.setBackgroundColor(mSelectedColor);
         } else {
-            useSelectionBackground = false;
-            holder.imgCheckmark.setVisibility(View.GONE);
+            checkmarkVisiblity = View.GONE;
             holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+            holder.containerView.setBackgroundColor(mUnselectedColor);
         }
 
-        if (useSelectionBackground) {
-            holder.itemView.setBackgroundColor(mSelectionColor);
-        } else {
-            holder.itemView.setBackgroundDrawable(null);
+        if (holder.imgCheckmark.getVisibility() != checkmarkVisiblity) {
+            holder.imgCheckmark.setVisibility(checkmarkVisiblity);
         }
 
         // comment text needs to be to the left of date/status when the title is a single line and
@@ -283,8 +288,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if (view != null && view.getTag() instanceof CommentHolder) {
             CommentHolder holder = (CommentHolder) view.getTag();
-            // animate the selection change on ICS or later (looks wonky on Gingerbread)
-            holder.imgCheckmark.clearAnimation();
+            // animate the selection change
             AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
             holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         }

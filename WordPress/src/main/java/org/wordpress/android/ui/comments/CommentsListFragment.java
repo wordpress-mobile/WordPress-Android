@@ -202,15 +202,13 @@ public class CommentsListFragment extends Fragment {
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress_loading);
         mProgressLoadMore.setVisibility(View.GONE);
 
-        // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
                 (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
-                        if (!isAdded()) {
-                            return;
-                        }
+                        if (!isAdded()) return;
+
                         if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -254,11 +252,9 @@ public class CommentsListFragment extends Fragment {
             if (comment.getStatusEnum() != newStatus)
                 updateComments.add(comment);
         }
-        if (updateComments.size() == 0)
-            return;
+        if (updateComments.size() == 0) return;
 
-        if (!NetworkUtils.checkConnection(getActivity()))
-            return;
+        if (!NetworkUtils.checkConnection(getActivity())) return;
 
         final int dlgId;
         switch (newStatus) {
@@ -282,8 +278,8 @@ public class CommentsListFragment extends Fragment {
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
-                if (!isAdded())
-                    return;
+                if (!isAdded()) return;
+
                 finishActionMode();
                 dismissDialog(dlgId);
                 if (moderatedComments.size() > 0) {
@@ -324,16 +320,15 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void deleteSelectedComments() {
-        if (!NetworkUtils.checkConnection(getActivity()))
-            return;
+        if (!NetworkUtils.checkConnection(getActivity())) return;
 
         final CommentList selectedComments = getAdapter().getSelectedComments();
         getActivity().showDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
-                if (!isAdded())
-                    return;
+                if (!isAdded()) return;
+
                 finishActionMode();
                 dismissDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
                 if (deletedComments.size() > 0) {
@@ -345,8 +340,8 @@ public class CommentsListFragment extends Fragment {
             }
         };
 
-        CommentActions.moderateComments(WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH,
-                listener);
+        CommentActions.moderateComments(
+                WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
     }
 
     void loadComments() {
@@ -426,8 +421,9 @@ public class CommentsListFragment extends Fragment {
 
         @Override
         protected CommentList doInBackground(Void... args) {
-            if (!isAdded())
+            if (!isAdded()) {
                 return null;
+            }
 
             Blog blog = WordPress.getCurrentBlog();
             if (blog == null) {
