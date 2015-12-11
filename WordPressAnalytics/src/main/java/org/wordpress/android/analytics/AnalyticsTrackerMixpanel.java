@@ -299,12 +299,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_opened_reader_article");
                 break;
-            case READER_ARTICLE_REBLOGGED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Reblogged Article");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reblogged_article");
-                instructions.setCurrentDateForPeopleProperty("last_time_reblogged_article");
-                break;
             case READER_ARTICLE_UNLIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Unliked Article");
@@ -654,12 +648,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Stats - Single Post Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_single_post_screen_stats");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_single_post_screen_stats");
-                break;
-            case STATS_OPENED_WEB_VERSION:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats - Opened Web Version");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_web_version_of_stats");
-                instructions.setCurrentDateForPeopleProperty("last_time_accessed_web_version_of_stats");
                 break;
             case STATS_TAPPED_BAR_CHART:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
