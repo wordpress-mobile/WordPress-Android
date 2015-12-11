@@ -27,11 +27,13 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
@@ -193,8 +195,11 @@ public class CommentsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
+        int spacingHorizontal = 0;
+        int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
