@@ -34,7 +34,7 @@ public class AnalyticsUtils {
         boolean isUserConnected = AccountHelper.isSignedIn();
         boolean isWordPressComUser = AccountHelper.isSignedInWordPressDotCom();
         boolean isJetpackUser = AccountHelper.isJetPackUser();
-        int numBlogs = WordPress.wpDB.getVisibleBlogs().size();
+        int numBlogs = WordPress.wpDB.getNumBlogs();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
         AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
                 versionCode, username, email);
@@ -49,7 +49,7 @@ public class AnalyticsUtils {
         boolean isUserConnected = AccountHelper.isSignedIn();
         boolean isWordPressComUser = AccountHelper.isSignedInWordPressDotCom();
         boolean isJetpackUser = AccountHelper.isJetPackUser();
-        int numBlogs = WordPress.wpDB.getVisibleBlogs().size();
+        int numBlogs = WordPress.wpDB.getNumBlogs();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
         String username = AccountHelper.getDefaultAccount().getUserName();
         String email = AccountHelper.getDefaultAccount().getEmail();
