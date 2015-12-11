@@ -911,6 +911,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 Button negative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
                 if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
                 if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
+                WPActivityUtils.showKeyboard(input);
             }
         });
 
