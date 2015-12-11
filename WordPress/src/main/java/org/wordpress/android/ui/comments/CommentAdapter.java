@@ -386,7 +386,8 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mComments = (CommentList)(tmpComments.clone());
+                mComments.clear();
+                mComments.addAll(tmpComments);
                 notifyDataSetChanged();
             }
 

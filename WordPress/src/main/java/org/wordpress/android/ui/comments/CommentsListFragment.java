@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -193,6 +194,8 @@ public class CommentsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
         // progress bar that appears when loading more comments
@@ -522,38 +525,34 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
-        if (!isAdded()) {
-            return;
-        }
+        if (!isAdded() || !hasAdapter() || mEmptyView == null) return;
 
-        if (mEmptyView != null) {
-            if (getAdapter().isEmpty()) {
-                int stringId = 0;
+        if (getAdapter().isEmpty()) {
+            int stringId = 0;
 
-                switch (emptyViewMessageType) {
-                    case LOADING:
-                        stringId = R.string.comments_fetching;
-                        break;
-                    case NO_CONTENT:
-                        stringId = R.string.comments_empty_list;
-                        break;
-                    case NETWORK_ERROR:
-                        stringId = R.string.no_network_message;
-                        break;
-                    case PERMISSION_ERROR:
-                        stringId = R.string.error_refresh_unauthorized_comments;
-                        break;
-                    case GENERIC_ERROR:
-                        stringId = R.string.error_refresh_comments;
-                        break;
-                }
-
-                mEmptyView.setText(getText(stringId));
-                mEmptyViewMessageType = emptyViewMessageType;
-                mEmptyView.setVisibility(View.VISIBLE);
-            } else {
-                mEmptyView.setVisibility(View.GONE);
+            switch (emptyViewMessageType) {
+                case LOADING:
+                    stringId = R.string.comments_fetching;
+                    break;
+                case NO_CONTENT:
+                    stringId = R.string.comments_empty_list;
+                    break;
+                case NETWORK_ERROR:
+                    stringId = R.string.no_network_message;
+                    break;
+                case PERMISSION_ERROR:
+                    stringId = R.string.error_refresh_unauthorized_comments;
+                    break;
+                case GENERIC_ERROR:
+                    stringId = R.string.error_refresh_comments;
+                    break;
             }
+
+            mEmptyView.setText(getText(stringId));
+            mEmptyViewMessageType = emptyViewMessageType;
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 

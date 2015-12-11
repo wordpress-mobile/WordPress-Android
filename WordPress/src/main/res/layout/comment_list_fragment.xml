@@ -13,13 +13,15 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
         style="@style/WordPress.EmptyList.Title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
