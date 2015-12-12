@@ -140,6 +140,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.setOnTouchListener(this);
         mWebView.setOnImeBackListener(this);
 
+        if (mWebViewHeaders != null && mWebViewHeaders.size() > 0) {
+            for (Map.Entry<String, String> entry : mWebViewHeaders.entrySet()) {
+                mWebView.setCustomHeader(entry.getKey(), entry.getValue());
+            }
+        }
+
         // Ensure that the content field is always filling the remaining screen space
         mWebView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override

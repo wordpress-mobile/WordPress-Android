@@ -11,6 +11,9 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
@@ -34,6 +37,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
+
+    protected Map<String, String> mWebViewHeaders;
 
     @Override
     public void onAttach(Activity activity) {
@@ -81,6 +86,14 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     public void setFeaturedImageId(int featuredImageId) {
         mFeaturedImageId = featuredImageId;
+    }
+
+    public void setWebViewHeader(String name, String value) {
+        if (mWebViewHeaders == null) {
+            mWebViewHeaders = new HashMap<>();
+        }
+
+        mWebViewHeaders.put(name, value);
     }
 
     public void setDebugModeEnabled(boolean debugModeEnabled) {
