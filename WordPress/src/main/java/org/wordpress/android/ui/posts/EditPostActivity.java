@@ -53,6 +53,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListene
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
@@ -853,6 +854,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
+
+                        // Set up custom headers for the visual editor's internal WebView
+                        mEditorFragment.setWebViewHeader("User-Agent", WordPress.getUserAgent());
+
+                        // TODO: how many times is getCurrectBlog() called in this activity? maybe should add mBlog
+                        // For private blogs, the editor will need the bearer token to load media items
+                        Blog currentBlog = WordPress.getCurrentBlog();
+                        String token = AccountHelper.getDefaultAccount().getAccessToken();
+                        if (currentBlog != null && currentBlog.isPrivate() && !TextUtils.isEmpty(token)) {
+                            mEditorFragment.setWebViewHeader("Authorization", "Bearer " + token);
+                        }
                     }
                     break;
                 case 1:
