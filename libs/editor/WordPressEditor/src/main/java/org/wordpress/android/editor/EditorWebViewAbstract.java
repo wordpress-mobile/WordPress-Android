@@ -65,6 +65,12 @@ public abstract class EditorWebViewAbstract extends WebView {
                 String url = request.getUrl().toString();
                 if (mHeaderMap.size() > 0) {
                     try {
+                        // Force HTTPS usage if an authorization header was specified
+                        if (mHeaderMap.keySet().contains("Authorization")) {
+                            url = UrlUtils.makeHttps(url);
+                        }
+                        URL imageUrl = new URL(url);
+
                         HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                         conn.setReadTimeout(REQUEST_TIMEOUT_MS);
                         conn.setConnectTimeout(REQUEST_TIMEOUT_MS);
