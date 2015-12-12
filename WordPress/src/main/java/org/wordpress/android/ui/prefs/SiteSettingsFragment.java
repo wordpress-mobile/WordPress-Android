@@ -62,7 +62,9 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 
 /**
- * Handles changes to WordPress site settings. Syncs with host automatically when user leaves.
+ * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).
+ *
+ * Settings are synced automatically when local changes are made.
  */
 
 public class SiteSettingsFragment extends PreferenceFragment
@@ -73,37 +75,87 @@ public class SiteSettingsFragment extends PreferenceFragment
                    Dialog.OnDismissListener,
                    SiteSettingsInterface.SiteSettingsListener {
 
+    /**
+     * Use this argument to pass the {@link Integer} local blog ID to this fragment.
+     */
     public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
+
+    /**
+     * When the user removes a site (by selecting Delete Site) the parent {@link Activity} result
+     * is set to this value and {@link Activity#finish()} is invoked.
+     */
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
 
+    /**
+     * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
+     *
+     * Used to format user-facing {@link String}'s in certain preferences.
+     */
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
+
+    /**
+     * Request code used when creating the {@link RelatedPostsDialog}.
+     */
     private static final int RELATED_POSTS_REQUEST_CODE = 1;
+
+    /**
+     * Length of a {@link String} (representing a language code) when there is no region included.
+     * For example: "en" contains no region, "en_US" contains a region (US)
+     *
+     * Used to parse a language code {@link String} when creating a {@link Locale}.
+     */
     private static final int NO_REGION_LANG_CODE_LEN = 2;
+
+    /**
+     * Index of a language code {@link String} where the region code begins. The language code
+     * format is cc_rr, where cc is the country code (e.g. en, es, az) and rr is the region code
+     * (e.g. us, au, gb).
+     */
     private static final int REGION_SUBSTRING_INDEX = 3;
 
+    // Reference to blog obtained from passed ID (ARG_LOCAL_BLOG_ID)
     private Blog mBlog;
+
+    // Can interface with WP.com or WP.org
     private SiteSettingsInterface mSiteSettings;
+
+    // Reference to the list of items being edited in the current list editor
     private List<String> mEditingList;
+
+    // Used to ensure that settings are only fetched once throughout the lifecycle of the fragment
     private boolean mShouldFetch;
+
+    // Used to customize Close After, Paging, and Multiple Links dialog views
     private NumberPicker mNumberPicker;
 
+    // General settings
     private EditTextPreference mTitlePref;
     private EditTextPreference mTaglinePref;
     private EditTextPreference mAddressPref;
-    private DetailListPreference mLanguagePref;
     private DetailListPreference mPrivacyPref;
+    private DetailListPreference mLanguagePref;
+
+    // Account settings (NOTE: only for WP.org)
     private EditTextPreference mUsernamePref;
     private EditTextPreference mPasswordPref;
+
+    // Writing settings
     private WPSwitchPreference mLocationPref;
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
     private Preference mRelatedPostsPref;
-    private WPSwitchPreference mAllowCommentsNested;
+
+    // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
-    private WPSwitchPreference mSendPingbacksNested;
     private WPSwitchPreference mSendPingbacksPref;
-    private WPSwitchPreference mReceivePingbacksNested;
     private WPSwitchPreference mReceivePingbacksPref;
+
+    // Discussion settings -> Defaults for New Posts
+    private WPSwitchPreference mAllowCommentsNested;
+    private WPSwitchPreference mSendPingbacksNested;
+    private WPSwitchPreference mReceivePingbacksNested;
+
+    // Discussion settings -> Comments
     private WPSwitchPreference mIdentityRequiredPreference;
     private WPSwitchPreference mUserAccountRequiredPref;
     private Preference mCloseAfterPref;
@@ -114,36 +166,53 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mMultipleLinksPref;
     private Preference mModerationHoldPref;
     private Preference mBlacklistPref;
+
+    // Delete site option (NOTE: only for WP.org)
     private Preference mDeleteSitePref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // make sure we have local site data
-        mBlog = WordPress.getBlog(getArguments().getInt(ARG_LOCAL_BLOG_ID, -1));
+        Activity activity = getActivity();
 
-        if (!NetworkUtils.checkConnection(getActivity()) || mBlog == null) {
+        // make sure we have local site data and a network connection, otherwise finish activity
+        mBlog = WordPress.getBlog(getArguments().getInt(ARG_LOCAL_BLOG_ID, -1));
+        if (mBlog == null || !NetworkUtils.checkConnection(activity)) {
             getActivity().finish();
             return;
         }
 
+        // track successful settings screen access
         AnalyticsUtils.trackWithCurrentBlogDetails(
                 AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED);
 
+        // setup state to fetch remote settings
         mShouldFetch = true;
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
+
+        // initialize the appropriate settings interface (WP.com or WP.org)
+        mSiteSettings = SiteSettingsInterface.getInterface(activity, mBlog, this);
 
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.site_settings);
+
+        // toggle which preferences are shown and set references
         initPreferences();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        WordPress.wpDB.saveBlog(mBlog);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        // initialize settings with locally cached values, fetch remote on first pass
         mSiteSettings.init(mShouldFetch);
+        // stop future calls from fetching remote settings
         mShouldFetch = false;
     }
 
@@ -151,10 +220,14 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RELATED_POSTS_REQUEST_CODE:
-                if (data == null) return;
-                mSiteSettings.setShowRelatedPosts(data.getBooleanExtra(RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, false));
-                mSiteSettings.setShowRelatedPostHeader(data.getBooleanExtra(RelatedPostsDialog.SHOW_HEADER_KEY, false));
-                mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(RelatedPostsDialog.SHOW_IMAGES_KEY, false));
+                // data is null if user cancelled editing Related Posts settings
+                if (data == null) break;
+                mSiteSettings.setShowRelatedPosts(data.getBooleanExtra(
+                        RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, false));
+                mSiteSettings.setShowRelatedPostHeader(data.getBooleanExtra(
+                        RelatedPostsDialog.SHOW_HEADER_KEY, false));
+                mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(
+                        RelatedPostsDialog.SHOW_IMAGES_KEY, false));
                 break;
         }
 
@@ -162,24 +235,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
-        Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
-        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+        // use a wrapper to apply the Calypso theme
+        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        LayoutInflater localInflater = inflater.cloneInContext(themer);
         View view = super.onCreateView(localInflater, container, savedInstanceState);
 
-        // Setup the preferences to handled long clicks
         if (view != null) {
-            ListView prefList = (ListView) view.findViewById(android.R.id.list);
-            Resources res = getResources();
-
-            if (prefList != null && res != null) {
-                prefList.setOnHierarchyChangeListener(this);
-                prefList.setOnItemLongClickListener(this);
-                prefList.setFooterDividersEnabled(false);
-                //noinspection deprecation
-                prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
-            }
+            setupPreferenceList((ListView) view.findViewById(android.R.id.list), getResources());
         }
 
         return view;
@@ -188,9 +253,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onChildViewAdded(View parent, View child) {
         if (child.getId() == android.R.id.title && child instanceof TextView) {
+            // style preference category title views
             TextView title = (TextView) child;
             WPPrefUtils.layoutAsBody2(title);
         } else {
+            // style preference title views
             TextView title = (TextView) child.findViewById(android.R.id.title);
             if (title != null) WPPrefUtils.layoutAsSubhead(title);
         }
@@ -198,24 +265,27 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onChildViewRemoved(View parent, View child) {
+        // NOP
     }
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen screen, Preference preference) {
         super.onPreferenceTreeClick(screen, preference);
 
-        // Add Action Bar to sub-screens
+        // More preference selected, style the Discussion screen
         if (preference == findPreference(getString(R.string.pref_key_site_more_discussion))) {
+            Dialog dialog = ((PreferenceScreen) preference).getDialog();
+            if (dialog == null) return false;
+
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+
+            // add Action Bar
+            String title = getString(R.string.site_settings_discussion_title);
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+
+            // track user accessing the full Discussion settings screen
             AnalyticsUtils.trackWithCurrentBlogDetails(
                     AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS);
-            Dialog dialog = ((PreferenceScreen) preference).getDialog();
-            if (dialog != null) {
-                ListView prefList = (ListView) dialog.findViewById(android.R.id.list);
-                prefList.setOnHierarchyChangeListener(this);
-                prefList.setOnItemLongClickListener(this);
-                String title = getString(R.string.site_settings_discussion_title);
-                WPActivityUtils.addToolbarToDialog(this, dialog, title);
-            }
         }
 
         return false;
@@ -244,8 +314,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mCloseAfterPref) {
             showCloseAfterDialog();
+            return true;
         } else if (preference == mPagingPref) {
             showPagingDialog();
+            return true;
         }
 
         return false;
@@ -400,6 +472,19 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mTaglinePref != null) mTaglinePref.setEnabled(allow);
         if (mPrivacyPref != null) mPrivacyPref.setEnabled(allow);
         if (mLanguagePref != null) mLanguagePref.setEnabled(allow);
+    }
+
+    private void setupPreferenceList(ListView prefList, Resources res) {
+        if (prefList == null || res == null) return;
+
+        // handle long clicks on preferences to display hints
+        prefList.setOnItemLongClickListener(this);
+        // required to customize (Calypso) preference views
+        prefList.setOnHierarchyChangeListener(this);
+        // remove footer divider bar
+        prefList.setFooterDividersEnabled(false);
+        //noinspection deprecation
+        prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
     }
 
     /**
@@ -832,8 +917,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private View getListEditorView(final Dialog dialog, String footerText) {
-        ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
-        View view = View.inflate(wrapper, R.layout.list_editor, null);
+        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        View view = View.inflate(themer, R.layout.list_editor, null);
         ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
 
         final MultiSelectListView list = (MultiSelectListView) view.findViewById(android.R.id.list);

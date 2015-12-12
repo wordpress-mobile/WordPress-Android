@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ToastUtils;
@@ -22,21 +21,15 @@ import de.greenrobot.event.EventBus;
  */
 public class BlogPreferencesActivity extends AppCompatActivity {
     public static final String ARG_LOCAL_BLOG_ID = SiteSettingsFragment.ARG_LOCAL_BLOG_ID;
-    public static final int RESULT_BLOG_REMOVED = RESULT_FIRST_USER;
 
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
-
-    // The blog this activity is managing settings for.
-    private Blog mBlog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Integer id = getIntent().getIntExtra(ARG_LOCAL_BLOG_ID, -1);
-        mBlog = WordPress.getBlog(id);
-
-        if (mBlog == null) {
+        if (WordPress.getBlog(id) == null) {
             Toast.makeText(this, getString(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -77,12 +70,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WordPress.wpDB.saveBlog(mBlog);
     }
 
     @Override
