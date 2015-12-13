@@ -89,6 +89,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
+    /*
+     * cross-post
+     */
+    class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
+        private final CardView cardView;
+        private final WPNetworkImageView imgAvatar;
+        private final TextView txtTitle;
+        private final TextView txtText;
+
+        public ReaderXPostViewHolder(View itemView) {
+            super(itemView);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
+            imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
+            txtTitle = (TextView) itemView.findViewById(R.id.text_title);
+            txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
+        }
+    }
+
+    /*
+     * full post
+     */
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
 
@@ -195,7 +216,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return VIEW_TYPE_TAG_INFO;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
-        } else if (isXpostAtPos(position)) {
+        } else if (getItem(position).isXpost()) {
             return VIEW_TYPE_XPOST;
         } else {
             return VIEW_TYPE_POST;
@@ -218,6 +239,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case VIEW_TYPE_GAP_MARKER:
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
+            case VIEW_TYPE_XPOST:
+                View xpostView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost, parent, false);
+                return new ReaderXPostViewHolder(xpostView);
+
             default:
                 View postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
                 return new ReaderPostViewHolder(postView);
@@ -228,6 +253,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ReaderPostViewHolder) {
             renderPost(position, (ReaderPostViewHolder) holder);
+        } else if (holder instanceof ReaderXPostViewHolder) {
+            renderXPost(position, (ReaderXPostViewHolder) holder);
         } else if (holder instanceof BlogInfoViewHolder) {
             BlogInfoViewHolder blogHolder = (BlogInfoViewHolder) holder;
             blogHolder.mBlogInfoView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
@@ -243,6 +270,22 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
         }
+    }
+
+    private void renderXPost(final int position, ReaderXPostViewHolder xpostHolder) {
+        final ReaderPost post = getItem(position);
+        xpostHolder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
+        xpostHolder.txtTitle.setText(post.getTitle());
+        xpostHolder.txtText.setText(post.getExcerpt());
+
+        xpostHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPostSelectedListener != null) {
+                    // TODO: get post for xpost
+                }
+            }
+        });
     }
 
     private void renderPost(final int position, ReaderPostViewHolder postHolder) {
@@ -476,10 +519,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean isTagPreview() {
         return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
-    }
-
-    private boolean isXpostAtPos(int position) {
-        return false;// getItem(position).isXpost();
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
