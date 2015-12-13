@@ -81,10 +81,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int MIN_READING_TIME_MINUTES = 2;
 
     private static final int VIEW_TYPE_POST        = 0;
-    private static final int VIEW_TYPE_BLOG_INFO   = 1;
-    private static final int VIEW_TYPE_TAG_INFO    = 2;
-    private static final int VIEW_TYPE_TAG_TOOLBAR = 3;
-    private static final int VIEW_TYPE_GAP_MARKER  = 4;
+    private static final int VIEW_TYPE_XPOST       = 1;
+    private static final int VIEW_TYPE_BLOG_INFO   = 2;
+    private static final int VIEW_TYPE_TAG_INFO    = 3;
+    private static final int VIEW_TYPE_TAG_TOOLBAR = 4;
+    private static final int VIEW_TYPE_GAP_MARKER  = 5;
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
@@ -194,8 +195,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return VIEW_TYPE_TAG_INFO;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
+        } else if (isXpostAtPos(position)) {
+            return VIEW_TYPE_XPOST;
+        } else {
+            return VIEW_TYPE_POST;
         }
-        return VIEW_TYPE_POST;
     }
 
     @Override
@@ -222,27 +226,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        if (!(holder instanceof ReaderPostViewHolder)) {
-            if (holder instanceof BlogInfoViewHolder) {
-                BlogInfoViewHolder blogHolder = (BlogInfoViewHolder) holder;
-                blogHolder.mBlogInfoView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
-                blogHolder.mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
-            } else if (holder instanceof TagInfoViewHolder) {
-                TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
-                tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
-            } else if (holder instanceof TagToolbarViewHolder) {
-                TagToolbarViewHolder toolbarHolder = (TagToolbarViewHolder) holder;
-                toolbarHolder.mTagToolbar.setCurrentTag(mCurrentTag);
-                toolbarHolder.mTagToolbar.setOnTagChangedListener(mOnTagChangedListener);
-            } else if (holder instanceof GapMarkerViewHolder) {
-                GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
-                gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
-            }
-            return;
+        if (holder instanceof ReaderPostViewHolder) {
+            renderPost(position, (ReaderPostViewHolder) holder);
+        } else if (holder instanceof BlogInfoViewHolder) {
+            BlogInfoViewHolder blogHolder = (BlogInfoViewHolder) holder;
+            blogHolder.mBlogInfoView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
+            blogHolder.mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
+        } else if (holder instanceof TagInfoViewHolder) {
+            TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
+            tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
+        } else if (holder instanceof TagToolbarViewHolder) {
+            TagToolbarViewHolder toolbarHolder = (TagToolbarViewHolder) holder;
+            toolbarHolder.mTagToolbar.setCurrentTag(mCurrentTag);
+            toolbarHolder.mTagToolbar.setOnTagChangedListener(mOnTagChangedListener);
+        } else if (holder instanceof GapMarkerViewHolder) {
+            GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
+            gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
         }
+    }
 
+    private void renderPost(final int position, ReaderPostViewHolder postHolder) {
         final ReaderPost post = getItem(position);
-        final ReaderPostViewHolder postHolder = (ReaderPostViewHolder) holder;
         ReaderTypes.ReaderPostListType postListType = getPostListType();
 
         postHolder.txtTitle.setText(post.getTitle());
@@ -472,6 +476,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean isTagPreview() {
         return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
+    }
+
+    private boolean isXpostAtPos(int position) {
+        return false;// getItem(position).isXpost();
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
