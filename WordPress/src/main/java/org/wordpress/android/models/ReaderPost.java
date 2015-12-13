@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -59,6 +60,9 @@ public class ReaderPost {
 
     private String attachmentsJson;
     private String discoverJson;
+
+    public long xpostPostId;
+    public long xpostBlogId;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -157,6 +161,9 @@ public class ReaderPost {
             post.setDiscoverJson(jsonDiscover.toString());
         }
 
+        // xpost info
+        assignXpostIdsFromJson(post, json.optJSONArray("metadata"));
+
         // if there's no featured image, check if featured media has been set - this is sometimes
         // a YouTube or Vimeo video, in which case store it as the featured video so we can treat
         // it as a video
@@ -189,6 +196,36 @@ public class ReaderPost {
         }
 
         return post;
+    }
+
+    /*
+     * assigns cross post blog & post IDs from post's metadata section
+     *  "metadata": [
+     *       {
+     *           "id": "21192",
+     *           "key": "xpost_origin",
+     *           "value": "11326809:18427"
+     *       }
+     *     ],
+     */
+    private static void assignXpostIdsFromJson(ReaderPost post, JSONArray jsonMetadata) {
+        if (jsonMetadata ==  null) return;
+
+        for (int i = 0; i < jsonMetadata.length(); i++) {
+            JSONObject jsonMetaItem = jsonMetadata.optJSONObject(i);
+            String metaKey = jsonMetaItem.optString("key");
+            if (!TextUtils.isEmpty(metaKey) && metaKey.equals("xpost_origin")) {
+                String value = jsonMetaItem.optString("value");
+                if (!TextUtils.isEmpty(value) && value.contains(":")) {
+                    String[] valuePair = value.split(":");
+                    if (valuePair.length == 2) {
+                        post.xpostBlogId = StringUtils.stringToLong(valuePair[0]);
+                        post.xpostPostId = StringUtils.stringToLong(valuePair[1]);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
      /*
@@ -483,6 +520,12 @@ public class ReaderPost {
         return !isExternal;
     }
 
+    /*
+     * returns true if this is a cross-post
+     */
+    public boolean isXpost() {
+        return xpostBlogId != 0 && xpostPostId != 0;
+    }
 
     public boolean isSamePost(ReaderPost post) {
         return post != null
