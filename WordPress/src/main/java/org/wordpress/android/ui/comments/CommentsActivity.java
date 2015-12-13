@@ -203,7 +203,7 @@ public class CommentsActivity extends AppCompatActivity
         }
 
         // retain the id of the highlighted and selected comments
-        if (mSelectedCommentId != 0) {
+        if (mSelectedCommentId != 0 && hasDetailFragment()) {
             outState.putLong(KEY_SELECTED_COMMENT_ID, mSelectedCommentId);
         }
 
