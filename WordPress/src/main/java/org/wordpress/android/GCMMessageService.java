@@ -67,6 +67,9 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
 
+    // Add to the analytics properties map a subset of the push notification payload.
+    private static String[] propertiesToCopyIntoAnalytics = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id" };
+
     private void handleDefaultPush(String from, Bundle data) {
         // Ensure Simperium is running so that notes sync
         SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
@@ -86,6 +89,7 @@ public class GCMMessageService extends GcmListenerService {
             handlePushAuth(from, data);
             return;
         }
+
 
         String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
         if (title == null) {
@@ -152,17 +156,21 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        // Bump Analytics
-        Map<String, String> properties = new HashMap<>();
-        if (!TextUtils.isEmpty(noteType)) {
-            // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
-            if (noteType.equals(PUSH_TYPE_COMMENT)) {
-                properties.put("notification_type", "comment");
-            } else {
-                properties.put("notification_type", noteType);
+        // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
+        if (NotificationsUtils.isNotificationsEnabled(this)) {
+            Map<String, Object> properties = new HashMap<>();
+            if (!TextUtils.isEmpty(noteType)) {
+                // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
+                if (noteType.equals(PUSH_TYPE_COMMENT)) {
+                    properties.put("notification_type", "comment");
+                } else {
+                    properties.put("notification_type", noteType);
+                }
             }
+
+            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_RECEIVED, data, properties);
+            AnalyticsTracker.flush();
         }
-        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED, properties);
 
         NotificationCompat.Builder builder;
 
@@ -413,7 +421,9 @@ public class GCMMessageService extends GcmListenerService {
         mActiveNotificationsMap.remove(notificationId);
     }
 
-    // Removes all app notifications from the system bar
+    // Removes all app notifications from the system bar.
+    // This is called when the Notifications tab is resumed. EX: app started, app resumed, even if
+    // the current screen is not the Notifications.
     public static void removeAllNotifications(Context context) {
         if (context == null || !hasNotifications()) return;
 
@@ -424,5 +434,49 @@ public class GCMMessageService extends GcmListenerService {
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
 
         clearNotifications();
+    }
+
+    //NoteID is the ID if the note in WordPress
+    public static void bumpPushNotificationsTappedAnalytics(String noteID) {
+        for (int id : mActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = mActiveNotificationsMap.get(id);
+            if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
+                bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
+                AnalyticsTracker.flush();
+                return;
+            }
+        }
+    }
+
+    // Mark all notifications as tapped
+    public static void bumpPushNotificationsTappedAllAnalytics() {
+        for (int id : mActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = mActiveNotificationsMap.get(id);
+            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
+        }
+        AnalyticsTracker.flush();
+    }
+
+    private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle,  Map<String, Object> properties) {
+        // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
+        if (!NotificationsUtils.isNotificationsEnabled(WordPress.getContext())) {
+            return;
+        }
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+
+        String notificationID = noteBundle.getString(PUSH_ARG_NOTE_ID, "");
+        if (!TextUtils.isEmpty(notificationID)) {
+            for (String currentPropertyToCopy: propertiesToCopyIntoAnalytics) {
+                if (noteBundle.containsKey(currentPropertyToCopy)) {
+                    properties.put("push_notification_" + currentPropertyToCopy,  noteBundle.get(currentPropertyToCopy));
+                }
+            }
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+            String lastRegisteredGCMToken = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, null);
+            properties.put("push_notification_token", lastRegisteredGCMToken);
+            AnalyticsTracker.track(stat, properties);
+        }
     }
 }

@@ -77,7 +77,6 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -213,9 +212,14 @@ public class WordPress extends Application {
         AnalyticsTracker.init(getContext());
         AnalyticsUtils.refreshMetadata();
 
-        // Track app upgrade
+        // Track app upgrade and install
         int versionCode = PackageUtils.getVersionCode(getContext());
+
         int oldVersionCode = AppPrefs.getLastAppVersionCode();
+        if (oldVersionCode == 0) {
+            // Track application installed if there isn't old version code
+            AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
+        }
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
             Map<String, Long> properties = new HashMap<String, Long>(1);
             properties.put("elapsed_time_on_create", elapsedTimeOnCreate);

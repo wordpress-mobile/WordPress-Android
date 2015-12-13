@@ -19,6 +19,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import java.util.UUID;
 
 public class GCMRegistrationIntentService extends IntentService {
+
     public GCMRegistrationIntentService() {
         super("GCMRegistrationIntentService");
     }
@@ -53,6 +54,7 @@ public class GCMRegistrationIntentService extends IntentService {
                     uuid = UUID.randomUUID().toString();
                     preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid).apply();
                 }
+                preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, gcmToken).apply();
                 NotificationsUtils.registerDeviceForPushNotifications(this, gcmToken);
             }
 
@@ -61,6 +63,7 @@ public class GCMRegistrationIntentService extends IntentService {
             AnalyticsTracker.registerPushNotificationToken(gcmToken);
         } else {
             AppLog.w(T.NOTIFS, "Empty GCM token, can't register the id on remote services");
+            PreferenceManager.getDefaultSharedPreferences(this).edit().remove(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN).apply();
         }
     }
 }

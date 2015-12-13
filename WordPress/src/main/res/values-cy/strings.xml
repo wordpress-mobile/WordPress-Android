@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Thema Dewiswyd</string>
+	<string name="could_not_load_theme">Methu llwytho\'r thema</string>
+	<string name="theme_activation_error">Aeth rhywbeth o\'i le</string>
+	<string name="theme_by_author_prompt_append">gan %1$s</string>
+	<string name="theme_prompt">Diolch am ddewis %1$s</string>
+	<string name="theme_try_and_customize">Defnyddio a Chyfaddasu</string>
+	<string name="theme_view">Golwg</string>
+	<string name="theme_details">Manylion</string>
+	<string name="theme_support">Cefnogaeth</string>
+	<string name="theme_done">GORFFEN</string>
+	<string name="theme_manage_site">RHEOLI GWEFAN</string>
+	<string name="title_activity_theme_support">Themâu</string>
+	<string name="theme_activate">Gweithredu</string>
+	<string name="date_range_start_date">Dyddiad Cychwyn</string>
+	<string name="date_range_end_date">Dyddiad Gorffen</string>
+	<string name="current_theme">Thema Gyfredol</string>
+	<string name="customize">Cyfaddasu</string>
+	<string name="details">Manylion</string>
+	<string name="support">Cefnogaeth</string>
+	<string name="active">Gweithredol</string>
+	<string name="stats_referrers_spam_generic_error">Aeth rhywbeth o\'i le wrth wneud hynny. Nid yw\'r cyflwr sbam wedi newid.</string>
+	<string name="stats_referrers_marking_not_spam">Nodi fel nad sbam</string>
+	<string name="stats_referrers_unspam">Nid sbam</string>
+	<string name="stats_referrers_marking_spam">Marciwyd fel sbam</string>
+	<string name="post_updated">Diweddarwyd y cofnod</string>
+	<string name="page_updated">Diweddarwyd y dudalen</string>
+	<string name="stats_referrers_spam">Sbam</string>
+	<string name="theme_auth_error_authenticate">Methwyd estyn themâu: methwyd dilysu defnyddiwr</string>
+	<string name="post_published">Cyhoeddwyd y cofnod</string>
+	<string name="page_published">Cyhoeddwyd y dudalen</string>
+	<string name="theme_no_search_result_found">Ymddiheuriadau, heb ganfod thema.</string>
+	<string name="media_file_name">Enw ffeil: %s</string>
+	<string name="media_uploaded_on">Llwythwyd i fyny ar: %s</string>
+	<string name="media_dimensions">Dimensiynau: %s</string>
+	<string name="upload_queued">Mewn ciw</string>
+	<string name="media_file_type">Math o ffeil: %s</string>
 	<string name="reader_label_gap_marker">Llwytho rhagor o gofnodion</string>
 	<string name="notifications_no_search_results">Dim gwefannau\'n cydweddu â \'%s\'</string>
 	<string name="search_sites">Chwilio gwefannau</string>
@@ -27,8 +63,6 @@
 	<string name="access_media_permission_required">Caniatâd angenrheidiol er mwyn cael mynediad at gyfrwng</string>
 	<string name="stats_enable_rest_api_in_jetpack">I weld eich ystadegau, galluogwch y modiwl  JSON API yn Jetpack.</string>
 	<string name="error_open_list_from_notification">Cafodd y cofnod neu dudalen hwn ei gyhoeddi ar wefan arall</string>
-	<string name="post_uploaded">Cofnod wedi ei lwytho i fyny</string>
-	<string name="page_uploaded">Cofnod wedi ei lwytho i fyny </string>
 	<string name="reader_short_comment_count_multi">%s Sylw</string>
 	<string name="reader_short_comment_count_one">1 Sylw</string>
 	<string name="reader_label_submit_comment">ANFON</string>
@@ -388,7 +422,6 @@
 	<string name="passcode_wrong_passcode">PIN anghywir</string>
 	<string name="error_downloading_image">Gwall wrth lwytho delwedd i lawr</string>
 	<string name="error_load_comment">Methu llwytho\'r sylw</string>
-	<string name="theme_no_search_result_found">Heb ganfod canlyniadau</string>
 	<string name="error_upload">Digwyddodd gwall wrth lwytho\'r %s</string>
 	<string name="error_edit_comment">Digwyddodd gwall wrth olygu\'r sylw</string>
 	<string name="error_moderate_comment">Digwyddodd gwall wrth gymedroli</string>
@@ -788,5 +821,10 @@
 		<item>Safonol</item>
 		<item>Statws</item>
 		<item>Fideo</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Am Ddim</item>
+		<item>Y Cyfan</item>
+		<item>Premiwm</item>
 	</string-array>
 </resources>

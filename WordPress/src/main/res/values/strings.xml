@@ -167,12 +167,12 @@
     <string name="delete">Delete</string>
 
     <!-- Media details -->
-    <string name="media_details_added_on">Added on:</string>
-    <string name="media_details_uploaded_on">Uploaded on:</string>
-    <string name="media_details_file_name">File name:</string>
-    <string name="media_details_file_type">File type:</string>
-    <string name="media_details_file_url">File URL:</string>
-    <string name="media_details_dimensions">Dimensions:</string>
+    <string name="media_details_label_date_added">Added</string>
+    <string name="media_details_label_date_uploaded">Uploaded</string>
+    <string name="media_details_label_file_name">File name</string>
+    <string name="media_details_label_file_type">File type</string>
+    <string name="media_details_copy_url">Copy URL</string>
+    <string name="media_details_copy_url_toast">URL copied to clipboard</string>
 
     <!-- tab titles -->
     <string name="tab_comments">Comments</string>
@@ -741,6 +741,7 @@
     <!-- Menu Buttons -->
     <string name="new_post">New post</string>
     <string name="new_media">New media</string>
+    <string name="edit_media">Edit media</string>
     <string name="menu_search">Search</string>
     <string name="view_site">View site</string>
 
@@ -970,6 +971,7 @@
     <string name="invalid_password_message">Password must contain at least 4 characters</string>
     <string name="invalid_username_too_short">Username must be longer than 4 characters</string>
     <string name="invalid_username_too_long">Username must be shorter than 61 characters</string>
+    <string name="invalid_username_no_spaces">Username can\'t contain spaces</string>
     <string name="email_hint">Email address</string>
     <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
     <string name="username_email">Username or email</string>
@@ -990,6 +992,7 @@
     <string name="email_reserved">That email address has already been used. Check your inbox for an activation email. If you don\'t activate you can try again in a few days.</string>
     <string name="blog_name_required">Enter a site address</string>
     <string name="blog_name_not_allowed">That site address isn\'t allowed</string>
+    <string name="blog_name_no_spaced_allowed">Site address can\'t contain spaces</string>
     <string name="blog_name_must_be_at_least_four_characters">Site address must be at least 4 characters</string>
     <string name="blog_name_must_be_less_than_sixty_four_characters">The site address must be shorter than 64 characters</string>
     <string name="blog_name_contains_invalid_characters">Site address may not contain the character “_”</string>
