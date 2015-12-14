@@ -59,6 +59,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String SET_TITLE_KEY = "blogname";
     private static final String SET_DESC_KEY = "blogdescription";
 
+    // JSON response keys
+    private static final String SETTINGS_KEY = "settings";
+    private static final String UPDATED_KEY = "updated";
+
     // WP.com REST keys used in response to a categories GET request
     private static final String CAT_ID_KEY = "ID";
     private static final String CAT_NAME_KEY = "name";
@@ -92,7 +96,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mRemoteSettings.copyFrom(mSettings);
 
                         if (response != null) {
-                            JSONObject updated = response.optJSONObject("updated");
+                            JSONObject updated = response.optJSONObject(UPDATED_KEY);
                             if (updated == null) return;
                             HashMap<String, Object> properties = new HashMap<>();
                             Iterator<String> keys = updated.keys();
@@ -100,7 +104,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                                 String currentKey = keys.next();
                                 Object currentValue = updated.opt(currentKey);
                                 if (currentValue != null) {
-                                    properties.put("item_saved_" + currentKey, currentValue);
+                                    properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
                                 }
                             }
                             AnalyticsUtils.trackWithCurrentBlogDetails(
@@ -151,7 +155,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
      */
     public void deserializeDotComRestResponse(Blog blog, JSONObject response) {
         if (blog == null || response == null) return;
-        JSONObject settingsObject = response.optJSONObject("settings");
+        JSONObject settingsObject = response.optJSONObject(SETTINGS_KEY);
 
         mRemoteSettings.username = blog.getUsername();
         mRemoteSettings.password = blog.getPassword();

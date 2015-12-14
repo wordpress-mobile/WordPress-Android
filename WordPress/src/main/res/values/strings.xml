@@ -505,6 +505,7 @@
     <string name="site_settings_start_over_title">Start Over</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
     <string name="site_settings_remove_site_title">Remove Site</string>
+    <string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
     <string name="site_title_hint">In a few words, explain what this site is about</string>
     <string name="site_tagline_hint">A short description or catchy phrase to describe your blog</string>
     <string name="site_address_hint">Changing your address is not currently supported</string>

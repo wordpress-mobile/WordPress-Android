@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
@@ -25,11 +26,6 @@ import java.util.Set;
 
 class SelfHostedSiteSettings extends SiteSettingsInterface {
     // XML-RPC wp.getOptions keys
-    private static final String BLOG_URL_KEY = "blog_url";
-    private static final String BLOG_TITLE_KEY = "blog_title";
-    private static final String BLOG_USERNAME_KEY = "username";
-    private static final String BLOG_PASSWORD_KEY = "password";
-    private static final String BLOG_TAGLINE_KEY = "blog_tagline";
     public static final String PRIVACY_KEY = "blog_public";
     public static final String DEF_CATEGORY_KEY = "default_category";
     public static final String DEF_POST_FORMAT_KEY = "default_post_format";
@@ -51,6 +47,12 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     public static final String MODERATION_KEYS_KEY = "moderation_keys";
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
     public static final String SOFTWARE_VERSION_KEY = "software_version";
+
+    private static final String BLOG_URL_KEY = "blog_url";
+    private static final String BLOG_TITLE_KEY = "blog_title";
+    private static final String BLOG_USERNAME_KEY = "username";
+    private static final String BLOG_PASSWORD_KEY = "password";
+    private static final String BLOG_TAGLINE_KEY = "blog_tagline";
     private static final String BLOG_CATEGORY_ID_KEY = "categoryId";
     private static final String BLOG_CATEGORY_PARENT_ID_KEY = "parentId";
     private static final String BLOG_CATEGORY_DESCRIPTION_KEY = "categoryDescription";
@@ -103,7 +105,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                         for (String key : keys) {
                             Object currentValue = resultMap.get(key);
                             if (currentValue != null) {
-                                properties.put("item_saved_" + key, currentValue);
+                                properties.put(SAVED_ITEM_PREFIX + key, currentValue);
                             }
                         }
                     }
@@ -176,8 +178,8 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             if (result instanceof Map) {
                 AppLog.d(AppLog.T.API, "Received Options XML-RPC response.");
 
-                if (!versionSupported((Map) result)) {
-                    notifyUpdatedOnUiThread(new XMLRPCException("Unsupported WordPress version"));
+                if (!versionSupported((Map) result) && mActivity != null) {
+                    notifyUpdatedOnUiThread(new XMLRPCException(mActivity.getString(R.string.site_settings_unsupported_version_error)));
                 }
 
                 credentialsVerified(true);

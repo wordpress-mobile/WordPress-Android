@@ -47,6 +47,8 @@ public abstract class SiteSettingsInterface {
     public static final int ASCENDING_SORT = 0;
     public static final int DESCENDING_SORT = 1;
 
+    protected static final String SAVED_ITEM_PREFIX = "item_saved_";
+
     private static final String STANDARD_POST_FORMAT = "standard";
 
     /**
