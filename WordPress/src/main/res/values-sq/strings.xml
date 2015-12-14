@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Temë e Përzgjedhur</string>
+	<string name="could_not_load_theme">S&amp;#8217;u ngarkua dot tema</string>
+	<string name="theme_activation_error">Diç shkoi ters. S&amp;#8217;u aktivizua dot tema.</string>
+	<string name="theme_by_author_prompt_append">nga %1$s</string>
+	<string name="theme_prompt">Faleminderit që zgjidhni %1$s</string>
+	<string name="theme_try_and_customize">Provojeni &amp; Përshtateni</string>
+	<string name="theme_view">Shihni</string>
+	<string name="theme_details">Hollësi</string>
+	<string name="theme_support">Asistencë</string>
+	<string name="theme_done">U BË</string>
+	<string name="theme_manage_site">ADMINISTRONI SAJTIN</string>
+	<string name="title_activity_theme_support">Tema</string>
+	<string name="theme_activate">Aktivizoje</string>
+	<string name="date_range_start_date">Datë Fillimi</string>
+	<string name="date_range_end_date">Datë Përfundimi</string>
+	<string name="current_theme">Tema e Tanishme</string>
+	<string name="customize">Përshtateni</string>
+	<string name="details">Hollësi</string>
+	<string name="support">Asistencë</string>
+	<string name="active">Aktive</string>
+	<string name="stats_referrers_spam_generic_error">Diç shkoi ters gjatë veprimit. Gjendja për të padëshiruar nuk ndryshoi.</string>
+	<string name="stats_referrers_marking_not_spam">Po shënohet si jo i padëshiruar</string>
+	<string name="stats_referrers_unspam">Jo i padëshiruar</string>
+	<string name="stats_referrers_marking_spam">Po shënohet si i padëshiruar</string>
+	<string name="theme_auth_error_authenticate">Dështoi në prurjen e temave: dështoi në mirëfilltësimin e përdoruesit</string>
+	<string name="post_published">Postimi u botua</string>
+	<string name="page_published">Faqja u botua</string>
+	<string name="post_updated">Postimi u përditësua</string>
+	<string name="page_updated">Faqja u përditësua</string>
+	<string name="stats_referrers_spam">I padëshiruar</string>
+	<string name="theme_no_search_result_found">Na ndjeni, s&amp;#8217;u gjetën tema.</string>
+	<string name="media_file_name">Emër Kartele: %s</string>
+	<string name="media_uploaded_on">Ngarkuar më: %s</string>
+	<string name="media_dimensions">Përmasa: %s</string>
+	<string name="upload_queued">Në Radhë</string>
+	<string name="media_file_type">Lloj kartele: %s</string>
 	<string name="reader_label_gap_marker">Ngarko më tepër postime</string>
 	<string name="notifications_no_search_results">S’ka sajte me përputhje për \'%s\'</string>
 	<string name="search_sites">Kërkoni në sajte</string>
@@ -27,8 +63,6 @@
 	<string name="access_media_permission_required">Që të hyni në media, lypset leje</string>
 	<string name="stats_enable_rest_api_in_jetpack">Që të shihni statistika tuaja, aktivizoni modulin API JSON te Jetpack-u.</string>
 	<string name="error_open_list_from_notification">Ky postim ose faqe është botuar në tjetër sajt</string>
-	<string name="post_uploaded">Postimi u ngarkua</string>
-	<string name="page_uploaded">Faqja u ngarkua</string>
 	<string name="reader_short_comment_count_multi">%s Komente</string>
 	<string name="reader_short_comment_count_one">1 Koment</string>
 	<string name="reader_label_submit_comment">DËRGOJE</string>
@@ -367,7 +401,6 @@
 	<string name="theme_fetch_failed">Dështoi sjellja e temave</string>
 	<string name="theme_set_failed">Dështoi në caktim teme</string>
 	<string name="theme_auth_error_message">Sigurohuni që keni privilegje për caktim temash</string>
-	<string name="theme_no_search_result_found">S’u gjetën përfundime</string>
 	<string name="comments_empty_list">S’ka komente</string>
 	<string name="mnu_comment_unspam">Jo i padëshiruar</string>
 	<string name="no_site_error">S’u lidh dot te sajti WordPress</string>
@@ -383,7 +416,6 @@
 	<string name="invalid_url_message">Kontrolloni nëse URL-ja e blogut të dhënë është e vlefshme</string>
 	<string name="reply_failed">Përgjigja dështoi</string>
 	<string name="notifications_empty_list">S’ka njoftime</string>
-	<string name="error_delete_post">Ndodhi një gabim teksa fshihej  %s</string>
 	<string name="error_refresh_posts">Postimet s’u rifreskuan dot tani</string>
 	<string name="error_refresh_pages">Postimet s’u rifreskuan dot tani</string>
 	<string name="error_refresh_notifications">Njoftimet s’u rifreskuan dot tani</string>
@@ -424,6 +456,7 @@
 	<string name="blog_name_not_allowed">Ajo adresë sajti s’lejohet</string>
 	<string name="blog_name_cant_be_used">S’mund të përdorni atë adresë sajti</string>
 	<string name="email_exists">Ajo adresë email është tashmë në përdorim</string>
+	<string name="error_delete_post">Ndodhi një gabim teksa fshihej %s</string>
 	<string name="select_categories">Përzgjidhni kategori</string>
 	<string name="account_details">Hollësi llogarie</string>
 	<string name="edit_post">Përpunojeni postimin</string>
@@ -540,13 +573,13 @@
 	<string name="reader_toast_err_get_comment">I pazoti ta marrë këtë koment</string>
 	<string name="reader_label_reply">Përgjigjjuni</string>
 	<string name="video">Video</string>
-	<string name="download">Po shkarkohet  media</string>
 	<string name="comment_spammed">Komenti u shënua si i padëshiruar</string>
 	<string name="cant_share_no_visible_blog">S’mund të ndani me të tjerët në WordPress pa një blog të dukshëm</string>
 	<string name="share_preference_title">Ndajeni me të tjerët në WordPress</string>
 	<string name="always_use_these_settings_to_share">Përdor përherë këto rregullime</string>
 	<string name="reset_auto_share_preference">Rikthe në fillimet rregullimet për vetëndarje</string>
 	<string name="reader_likes_you_and_multi">Këtë e pëlqeni ju dhe %,d të tjerë</string>
+	<string name="download">Po shkarkohet media</string>
 	<string name="select_time">Përzgjidhni kohë</string>
 	<string name="reader_likes_you_and_one">Këtë e pëlqeni ju dhe një tjetër</string>
 	<string name="select_date">Përzgjidhni datë</string>
@@ -788,5 +821,10 @@
 		<item>Standard</item>
 		<item>Gjendje</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Falas</item>
+		<item>Krejt</item>
+		<item>Me Pagesë</item>
 	</string-array>
 </resources>

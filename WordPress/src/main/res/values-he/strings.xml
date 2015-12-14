@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">תבנית נבחרת</string>
+	<string name="could_not_load_theme">לא ניתן לטעון תבנית</string>
+	<string name="theme_activation_error">משהו השתבש. לאניתן להפעיל תבנית</string>
+	<string name="theme_by_author_prompt_append">מאת %1$s</string>
+	<string name="theme_prompt">תודה שבחרת %1$s</string>
+	<string name="theme_view">הצג</string>
+	<string name="theme_details">פרטים</string>
+	<string name="theme_support">תמיכה</string>
+	<string name="theme_done">הושלם</string>
+	<string name="theme_manage_site">ניהול אתר</string>
+	<string name="theme_try_and_customize">נסה והתאם אישית</string>
+	<string name="title_activity_theme_support">תבניות</string>
+	<string name="theme_activate">הפעלה</string>
+	<string name="date_range_start_date">תאריך התחלה</string>
+	<string name="date_range_end_date">תאריך סיום</string>
+	<string name="current_theme">תבנית נוכחית</string>
+	<string name="details">פרטים</string>
+	<string name="support">תמיכה</string>
+	<string name="customize">התאמה אישית</string>
+	<string name="active">פעיל</string>
+	<string name="stats_referrers_spam_generic_error">משהו השתבש במהלך הפעולה. הסטטוס של הספאם לא השתנה.</string>
+	<string name="stats_referrers_marking_not_spam">מסמן כלא זבל</string>
+	<string name="stats_referrers_unspam">לא ספאם</string>
+	<string name="stats_referrers_marking_spam">מסמן כזבל</string>
+	<string name="stats_referrers_spam">ספאם</string>
+	<string name="post_published">פוסט פורסם</string>
+	<string name="page_published">עמוד פורסם</string>
+	<string name="post_updated">פוסט עודכן</string>
+	<string name="page_updated">עמוד עודכן</string>
+	<string name="theme_auth_error_authenticate">נכשל בניסיון להביא תבניות: נכשל אימות משתמש</string>
+	<string name="theme_no_search_result_found">לא נמצאו תבניות.</string>
+	<string name="media_file_name">שם קובץ: %s</string>
+	<string name="media_uploaded_on">תאריך העלאה: %s</string>
+	<string name="media_dimensions">מימדים: %s</string>
+	<string name="media_file_type">סוג קובץ: %s</string>
+	<string name="upload_queued">בתור</string>
 	<string name="reader_label_gap_marker">פוסטים נוספים</string>
 	<string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
 	<string name="search_sites">חיפוש אתרים</string>
 	<string name="unread">לא נקרא</string>
+	<string name="notifications_empty_view_reader">הצד קורא</string>
 	<string name="notifications_empty_action_followers_likes">קבל תשומת לב: תגובה לפוסטים שכבר קראת.</string>
 	<string name="notifications_empty_action_comments">הצטרף לדיון: תגובות לפוסטים באתרים אחריהם אתה עוקב.</string>
 	<string name="notifications_empty_action_unread">הצת מחדש את הדיון: כתוב פוסט חדש.</string>
@@ -11,6 +48,7 @@
 	<string name="notifications_empty_likes">אין לייקים חדשים... עדיין.</string>
 	<string name="notifications_empty_followers">אין עוקבים חדשים... עדיין.</string>
 	<string name="notifications_empty_comments">אין תגובות חדשות... עדיין.</string>
+	<string name="notifications_empty_unread">כולכם נתפסתם!</string>
 	<string name="stats_widget_error_jetpack_no_blogid">נא לגשת לסטטיסטיקות באפליקציה ולהוסיף וידג\'ט</string>
 	<string name="stats_widget_error_readd_widget">יש להסיר את הוידג\'ט ולהוסיף אותו שוב</string>
 	<string name="stats_widget_error_no_visible_blog">לא ניתן לגשת לסטטיסטיקות ללא אתר גלוי</string>
@@ -25,8 +63,6 @@
 	<string name="access_media_permission_required">ההרשאות הדרושות כדי לגשת למדיה</string>
 	<string name="stats_enable_rest_api_in_jetpack">להצגת סטטיסטיקות, הפעילו מודול JSON API בג\'טפאק.</string>
 	<string name="error_open_list_from_notification">פוסט או עמוד זה פורסם באתר אחר</string>
-	<string name="post_uploaded">הפוסט עודכן</string>
-	<string name="page_uploaded">העמוד עודכן</string>
 	<string name="reader_short_comment_count_multi">%s תגובות</string>
 	<string name="reader_short_comment_count_one">תגובה אחת</string>
 	<string name="reader_label_submit_comment">שלח</string>
@@ -366,7 +402,6 @@
 	<string name="theme_fetch_failed">הבאת ערכות העיצוב נכשלה</string>
 	<string name="theme_set_failed">הגדרת ערכת העיצוב נכשלה</string>
 	<string name="theme_auth_error_message">ודא שיש לך הרשאה להגדיר ערכות עיצוב</string>
-	<string name="theme_no_search_result_found">לא נמצאו תוצאות</string>
 	<string name="comments_empty_list">אין תגובות</string>
 	<string name="mnu_comment_unspam">לא תגובת זבל</string>
 	<string name="no_site_error">לא ניתן היה להתחבר לאתר WordPress</string>
@@ -786,5 +821,10 @@
 		<item>רגיל</item>
 		<item>סטטוס</item>
 		<item>וידאו</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>חינם</item>
+		<item>הכל</item>
+		<item>פרימיום</item>
 	</string-array>
 </resources>

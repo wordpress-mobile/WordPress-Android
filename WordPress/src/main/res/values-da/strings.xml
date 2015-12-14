@@ -308,7 +308,6 @@
 	<string name="username_required">Indtast et brugernavn</string>
 	<string name="username_exists">Brugernavnet existerer allerede</string>
 	<string name="username_not_allowed">Brugernavnet er ikke tilladt</string>
-	<string name="theme_no_search_result_found">Ingen resultater fundet</string>
 	<string name="mnu_comment_unspam">Ikke spam</string>
 	<string name="comments_empty_list">Ingen kommentarer</string>
 	<string name="notifications_empty_list">Ingen notifikationer</string>
