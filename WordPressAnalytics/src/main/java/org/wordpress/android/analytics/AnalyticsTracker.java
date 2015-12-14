@@ -87,8 +87,8 @@ public final class AnalyticsTracker {
         OPENED_VIEW_ADMIN,
         OPENED_MEDIA_LIBRARY,
         OPENED_BLOG_SETTINGS,
-        OPENED_ACCOUNT_SETTINGS,
-        OPENED_MY_PROFILE,
+        OPENED_ACCOUNT_SETTINGS, // Future
+        OPENED_MY_PROFILE, // Future
         CREATED_ACCOUNT,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
