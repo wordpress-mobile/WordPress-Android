@@ -125,6 +125,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Used to ensure that settings are only fetched once throughout the lifecycle of the fragment
     private boolean mShouldFetch;
 
+    private boolean mSwitchChecked;
+
     // Used to customize Close After, Paging, and Multiple Links dialog views
     private NumberPicker mNumberPicker;
 
@@ -563,6 +565,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showPagingDialog() {
         getNumberPickerDialog(true,
                 mSiteSettings.getPagingCount() > 0,
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mSwitchChecked = isChecked;
+                    }
+                },
                 R.string.site_settings_paging_title,
                 R.string.paging_description,
                 R.string.paging_header,
@@ -574,7 +582,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (mSiteSettings.getPagingCount() != mNumberPicker.getValue()) {
-                            onPreferenceChange(mPagingPref, mNumberPicker.getValue());
+                            if (mSwitchChecked) {
+                                onPreferenceChange(mPagingPref, mNumberPicker.getValue());
+                            } else {
+                                onPreferenceChange(mPagingPref, 0);
+                            }
                         }
                     }
                 }, null);
@@ -583,6 +595,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showCloseAfterDialog() {
         getNumberPickerDialog(true,
                 mSiteSettings.getCloseAfter() > 0,
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mSwitchChecked = isChecked;
+                    }
+                },
                 R.string.close_after_switch_text,
                 R.string.close_after_description,
                 R.string.close_after_header,
@@ -594,7 +612,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (mSiteSettings.getCloseAfter() != mNumberPicker.getValue()) {
-                            onPreferenceChange(mCloseAfterPref, mNumberPicker.getValue());
+                            if (mSwitchChecked) {
+                                onPreferenceChange(mCloseAfterPref, mNumberPicker.getValue());
+                            } else {
+                                onPreferenceChange(mCloseAfterPref, 0);
+                            }
                         }
                     }
                 }, null);
@@ -609,6 +631,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showMultipleLinksDialog() {
         getNumberPickerDialog(false,
                 false,
+                null,
                 -1,
                 R.string.multiple_links_description,
                 -1,
@@ -627,16 +650,17 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void getNumberPickerDialog(boolean showSwitch,
-                                         boolean switchChecked,
-                                         int switchText,
-                                         int detail,
-                                         int header,
-                                         int min,
-                                         int max,
-                                         int cur,
-                                         int title,
-                                         DialogInterface.OnClickListener positive,
-                                         DialogInterface.OnClickListener negative) {
+                                       boolean switchChecked,
+                                       final CompoundButton.OnCheckedChangeListener switchListener,
+                                       int switchText,
+                                       int detail,
+                                       int header,
+                                       int min,
+                                       int max,
+                                       int cur,
+                                       int title,
+                                       DialogInterface.OnClickListener positive,
+                                       DialogInterface.OnClickListener negative) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
@@ -653,6 +677,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     toggleContainer.setEnabled(isChecked);
                     mNumberPicker.setEnabled(isChecked);
+
+                    if (switchListener != null) {
+                        switchListener.onCheckedChanged(buttonView, isChecked);
+                    }
                 }
             });
         } else {
