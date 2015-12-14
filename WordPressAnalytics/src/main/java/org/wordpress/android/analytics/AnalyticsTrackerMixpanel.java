@@ -597,6 +597,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.addSuperPropertyToFlag("jetpack_user");
                 instructions.addSuperPropertyToFlag("dotcom_user");
                 break;
+            case ACCOUNT_LOGOUT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Logged Out");
+                break;
             case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Signed into Jetpack from Stats Screen");
