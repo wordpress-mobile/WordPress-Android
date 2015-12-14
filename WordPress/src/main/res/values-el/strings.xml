@@ -16,8 +16,6 @@
 	<string name="access_media_permission_required">Απαιτούνται δικαιώματα για να αποκτήσετε πρόσβαση στα πολυμέσα</string>
 	<string name="stats_enable_rest_api_in_jetpack">Για να δείτε τα στατιστικά σας, ενεργοποιήστε το πρόσθετο JSON API στο Jetpack.</string>
 	<string name="error_open_list_from_notification">Αυτό το άρθρο ή η σελίδα δημοσιεύτηκε σε άλλο ιστότοπο</string>
-	<string name="post_uploaded">Το άρθρο μεταφορτώθηκε</string>
-	<string name="page_uploaded">Η σελίδα μεταφορτώθηκε</string>
 	<string name="reader_short_comment_count_multi">%s Σχόλια</string>
 	<string name="reader_short_comment_count_one">1 Σχόλιο</string>
 	<string name="reader_label_submit_comment">ΑΠΟΣΤΟΛΗ</string>
@@ -350,7 +348,6 @@
 	<string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
 	<string name="comments_empty_list">Δεν υπάρχουν σχόλια</string>
 	<string name="stats_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
-	<string name="theme_no_search_result_found">Δεν βρέθηκαν αποτελέσματα</string>
 	<string name="passcode_wrong_passcode">Λάθος PIN</string>
 	<string name="invalid_email_message">Η διεύθυνση email σας δεν είναι έγκυρη</string>
 	<string name="invalid_username_too_short">Το όνομα χρήστη πρέπει να είναι μεγαλύτερο από 4 χαρακτήρες</string>

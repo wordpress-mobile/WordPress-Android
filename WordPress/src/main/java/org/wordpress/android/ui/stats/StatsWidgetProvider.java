@@ -340,6 +340,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         try {
             JSONObject prevKeys = new JSONObject(prevWidgetKeysString);
             JSONArray allKeys = prevKeys.names();
+            if (allKeys == null) {
+                return false;
+            }
             for (int i=0; i < allKeys.length(); i ++) {
                 String currentKey = allKeys.getString(i);
                 int currentBlogID = prevKeys.getInt(currentKey);
@@ -363,6 +366,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         try {
             JSONObject prevKeys = new JSONObject(prevWidgetKeysString);
             JSONArray allKeys = prevKeys.names();
+            if (allKeys == null) {
+                return new int[0];
+            }
             for (int i=0; i < allKeys.length(); i ++) {
                 String currentKey = allKeys.getString(i);
                 int currentBlogID = prevKeys.getInt(currentKey);

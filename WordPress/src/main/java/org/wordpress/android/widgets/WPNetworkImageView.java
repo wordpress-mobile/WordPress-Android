@@ -299,7 +299,7 @@ public class WPNetworkImageView extends ImageView {
         mErrorImageResId = resourceId;
     }
 
-    private void showDefaultImage() {
+    public void showDefaultImage() {
         // use default image resource if one was supplied...
         if (mDefaultImageResId != 0) {
             setImageResource(mDefaultImageResId);
