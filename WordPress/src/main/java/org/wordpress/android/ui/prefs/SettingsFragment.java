@@ -197,7 +197,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 if (position != 0) {
                     Map<String, Object> properties = new HashMap<String, Object>();
                     properties.put("forced_app_locale", conf.locale.toString());
-                    AnalyticsTracker.track(Stat.SETTINGS_LANGUAGE_SELECTION_FORCED, properties);
+                    AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED, properties);
                 }
 
                 // Language is now part of metadata, so we need to refresh them
