@@ -342,9 +342,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATION_SETTINGS_DETAILS_OPENED:
                 eventName = "notification_settings_details_opened";
                 break;
-            case NOTIFICATION_SETTINGS_UPDATED:
-                eventName = "notification_settings_updated";
-                break;
             case ME_ACCESSED:
                 eventName = "me_tab_accessed";
                 break;

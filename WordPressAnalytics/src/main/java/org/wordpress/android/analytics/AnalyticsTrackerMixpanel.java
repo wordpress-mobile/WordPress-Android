@@ -739,10 +739,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notification Settings - Accessed Details");
                 break;
-            case NOTIFICATION_SETTINGS_UPDATED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Notification Settings - Updated");
-                break;
             case ME_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me Tab - Accessed");
