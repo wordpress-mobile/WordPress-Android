@@ -230,6 +230,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         RelatedPostsDialog.SHOW_HEADER_KEY, false));
                 mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(
                         RelatedPostsDialog.SHOW_IMAGES_KEY, false));
+                mSiteSettings.saveSettings();
                 break;
         }
 
