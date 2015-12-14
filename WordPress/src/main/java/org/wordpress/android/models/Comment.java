@@ -201,7 +201,7 @@ public class Comment {
      */
     private transient String avatarForDisplay;
     public String getAvatarForDisplay(int avatarSize) {
-        if (avatarForDisplay==null) {
+        if (avatarForDisplay == null) {
             if (hasProfileImageUrl()) {
                 avatarForDisplay = GravatarUtils.fixGravatarUrl(profileImageUrl, avatarSize);
             } else if (hasAuthorEmail()) {

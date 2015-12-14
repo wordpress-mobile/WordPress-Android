@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">選択済みテーマ</string>
+	<string name="could_not_load_theme">テーマを読み込めませんでした</string>
+	<string name="theme_activation_error">エラーが発生しました。テーマを有効化できませんでした。</string>
+	<string name="theme_by_author_prompt_append"> by %1$s</string>
+	<string name="theme_prompt">%1$s を選んでいただきありがとうございます。</string>
+	<string name="theme_try_and_customize">お試し &amp; カスタマイズ</string>
+	<string name="theme_view">表示</string>
+	<string name="theme_details">詳細</string>
+	<string name="theme_support">サポート</string>
+	<string name="theme_done">完了</string>
+	<string name="theme_manage_site">サイト管理</string>
+	<string name="title_activity_theme_support">テーマ</string>
+	<string name="theme_activate">有効化</string>
+	<string name="date_range_start_date">開始日</string>
+	<string name="date_range_end_date">終了日</string>
+	<string name="current_theme">現在のテーマ</string>
+	<string name="customize">カスタマイズ</string>
+	<string name="details">詳細</string>
+	<string name="support">サポート</string>
+	<string name="active">有効</string>
+	<string name="stats_referrers_spam_generic_error">操作中に問題が発生しました。スパムの状態は変更されていません。</string>
+	<string name="stats_referrers_marking_not_spam">非スパムとしてマーク中</string>
+	<string name="stats_referrers_unspam">非スパム</string>
+	<string name="stats_referrers_marking_spam">スパムとしてマーク中</string>
+	<string name="theme_auth_error_authenticate">テーマの取得に失敗しました。ユーザーを認証できません。</string>
+	<string name="post_published">投稿を公開しました</string>
+	<string name="page_published">ページを公開しました</string>
+	<string name="post_updated">投稿を更新しました</string>
+	<string name="page_updated">ページを更新しました</string>
+	<string name="stats_referrers_spam">スパム</string>
+	<string name="theme_no_search_result_found">テーマが見つかりませんでした。</string>
+	<string name="media_file_name">ファイル名: %s</string>
+	<string name="media_uploaded_on">アップロード日: %s</string>
+	<string name="media_dimensions">サイズ: %s</string>
+	<string name="upload_queued">待機中</string>
+	<string name="media_file_type">ファイル形式: %s</string>
 	<string name="reader_label_gap_marker">さらに投稿を読み込む</string>
 	<string name="notifications_no_search_results">「%s」に一致するサイトはありません</string>
 	<string name="search_sites">サイトを検索</string>
@@ -27,8 +63,6 @@
 	<string name="access_media_permission_required">メディアにアクセスするには権限が必要です</string>
 	<string name="stats_enable_rest_api_in_jetpack">統計情報を表示するには、Jetpack の JSON API モジュールを有効化してください。</string>
 	<string name="error_open_list_from_notification">この投稿またはページは他のサイトで公開されています</string>
-	<string name="post_uploaded">投稿を更新しました</string>
-	<string name="page_uploaded">ページを更新しました</string>
 	<string name="reader_short_comment_count_multi">%s件のコメント</string>
 	<string name="reader_short_comment_count_one">1件のコメント</string>
 	<string name="reader_label_submit_comment">送信</string>
@@ -367,7 +401,6 @@
 	<string name="no_network_message">利用可能なネットワークがありません</string>
 	<string name="out_of_memory">デバイスのメモリが足りません</string>
 	<string name="theme_fetch_failed">テーマの取得に失敗しました</string>
-	<string name="theme_no_search_result_found">一致する結果が見つかりません</string>
 	<string name="theme_set_failed">テーマの設定に失敗しました</string>
 	<string name="adding_cat_failed">カテゴリーの追加に失敗しました</string>
 	<string name="adding_cat_success">カテゴリーを追加しました</string>
@@ -788,5 +821,10 @@
 		<item>標準</item>
 		<item>ステータス</item>
 		<item>動画</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>無料</item>
+		<item>すべて</item>
+		<item>プレミアム</item>
 	</string-array>
 </resources>

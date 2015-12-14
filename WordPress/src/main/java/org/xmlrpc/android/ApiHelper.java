@@ -471,30 +471,22 @@ public class ApiHelper {
     /**
      * Delete a single post or page via XML-RPC API parameters follow those of FetchSinglePostTask
      */
-    public static class DeleteSinglePostTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+    public static class DeleteSinglePostTask extends HelperAsyncTask<Object, Boolean, Boolean> {
 
         @Override
-        protected Boolean doInBackground(List<?>... params) {
-            List<?> arguments = params[0];
-            Blog blog = (Blog) arguments.get(0);
+        protected Boolean doInBackground(Object... arguments) {
+            Blog blog = (Blog) arguments[0];
             if (blog == null) {
                 return false;
             }
 
-            String postId = (String) arguments.get(1);
-            boolean isPage = (Boolean) arguments.get(2);
+            String postId = (String) arguments[1];
+            boolean isPage = (Boolean) arguments[2];
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-
-            Object[] postParams = {"", postId,
-                    blog.getUsername(),
-                    blog.getPassword()};
-            Object[] pageParams = {blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(), postId};
-
+            Object[] params = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), postId};
             try {
-                client.call(isPage ? ApiHelper.Methods.DELETE_PAGE : "blogger.deletePost", (isPage) ? pageParams : postParams);
+                client.call(isPage ? Methods.DELETE_PAGE : Methods.DELETE_POST, params);
                 return true;
             } catch (XMLRPCException | IOException | XmlPullParserException e) {
                 mErrorMessage = e.getMessage();

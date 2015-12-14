@@ -155,7 +155,6 @@
 	<string name="ssl_certificate_ask_trust">Доколку вообичаено се поврзувате на страницата без проблеми, оваа грешка може да значи дека некој се обидува да ја имитира вашата страница и не треба да продолжите. Дали му верувате на сертификатот и покрај тоа?</string>
 	<string name="comments_empty_list">Нема коментари</string>
 	<string name="mnu_comment_unspam">Не е спам</string>
-	<string name="theme_no_search_result_found">Не се пронајдени резултати</string>
 	<string name="adding_cat_success">Категоријата е успешно додадена</string>
 	<string name="stats_empty_comments">Сеуште нема коментари</string>
 	<string name="notifications_empty_list">Нема известувања</string>

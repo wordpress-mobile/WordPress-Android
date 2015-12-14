@@ -51,6 +51,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APPLICATION_CLOSED:
                 eventName = "application_closed";
                 break;
+            case APPLICATION_INSTALLED:
+                eventName = "application_installed";
+                break;
             case APPLICATION_UPGRADED:
                 eventName = "application_upgraded";
                 break;
@@ -65,9 +68,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case READER_ARTICLE_OPENED:
                 eventName = "reader_article_opened";
-                break;
-            case READER_ARTICLE_REBLOGGED:
-                eventName = "reader_article_reblogged";
                 break;
             case READER_ARTICLE_UNLIKED:
                 eventName = "reader_article_unliked";
@@ -86,9 +86,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case READER_DISCOVER_VIEWED:
                 eventName = "reader_discover_viewed";
-                break;
-            case READER_FRESHLY_PRESSED_LOADED:
-                eventName = "reader_freshly_pressed_loaded";
                 break;
             case READER_INFINITE_SCROLL:
                 eventName = "reader_infinite_scroll_performed";
@@ -228,7 +225,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "settings");
+                predefinedEventProperties.put("menu_item", "site_settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                eventName = "me_opened_account_settings";
+                break;
+            case OPENED_MY_PROFILE:
+                eventName = "me_opened_my_profile";
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
@@ -278,9 +281,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case STATS_SINGLE_POST_ACCESSED:
                 eventName = "stats_single_post_accessed";
-                break;
-            case STATS_OPENED_WEB_VERSION:
-                eventName = "stats_web_version_accessed";
                 break;
             case STATS_TAPPED_BAR_CHART:
                 eventName = "stats_bar_chart_tapped";
@@ -478,6 +478,15 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(JETPACK_USER, isJetpackUser);
+            properties.put(NUMBER_OF_BLOGS, numBlogs);
+            mNosaraClient.registerUserProperties(properties);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+        }
+
         if (isUserConnected && isWordPressComUser) {
             setWordPressComUserName(username);
             // Re-unify the user
@@ -493,14 +502,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             }
         }
 
-        try {
-            JSONObject properties = new JSONObject();
-            properties.put(JETPACK_USER, isJetpackUser);
-            properties.put(NUMBER_OF_BLOGS, numBlogs);
-            mNosaraClient.registerUserProperties(properties);
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.UTILS, e);
-        }
+
     }
 
 
