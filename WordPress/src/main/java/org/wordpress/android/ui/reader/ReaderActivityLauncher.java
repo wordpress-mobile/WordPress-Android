@@ -24,6 +24,9 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ReaderActivityLauncher {
 
     /*
@@ -119,7 +122,9 @@ public class ReaderActivityLauncher {
         if (tag == null) {
             return;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("tag", tag.getTagName());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
