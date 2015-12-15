@@ -501,12 +501,14 @@ public class ReaderPostDetailFragment extends Fragment
             @Override
             public void onSuccess() {
                 if (isAdded()) {
+                    progress.setVisibility(View.GONE);
                     showPost();
                 }
             }
             @Override
             public void onFailure(int statusCode) {
                 if (isAdded()) {
+                    progress.setVisibility(View.GONE);
                     int errMsgResId;
                     switch (statusCode) {
                         case 401:
