@@ -87,9 +87,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_DISCOVER_VIEWED:
                 eventName = "reader_discover_viewed";
                 break;
-            case READER_FRESHLY_PRESSED_LOADED:
-                eventName = "reader_freshly_pressed_loaded";
-                break;
             case READER_INFINITE_SCROLL:
                 eventName = "reader_infinite_scroll_performed";
                 break;
@@ -457,6 +454,15 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(JETPACK_USER, isJetpackUser);
+            properties.put(NUMBER_OF_BLOGS, numBlogs);
+            mNosaraClient.registerUserProperties(properties);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+        }
+
         if (isUserConnected && isWordPressComUser) {
             setWordPressComUserName(username);
             // Re-unify the user
@@ -472,14 +478,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             }
         }
 
-        try {
-            JSONObject properties = new JSONObject();
-            properties.put(JETPACK_USER, isJetpackUser);
-            properties.put(NUMBER_OF_BLOGS, numBlogs);
-            mNosaraClient.registerUserProperties(properties);
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.UTILS, e);
-        }
+
     }
 
 
