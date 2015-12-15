@@ -180,6 +180,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
 
                 if (!versionSupported((Map) result) && mActivity != null) {
                     notifyUpdatedOnUiThread(new XMLRPCException(mActivity.getString(R.string.site_settings_unsupported_version_error)));
+                    return;
                 }
 
                 credentialsVerified(true);
@@ -205,8 +206,9 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     private boolean versionSupported(Map map) {
         String version = getNestedMapValue(map, SOFTWARE_VERSION_KEY);
         if (TextUtils.isEmpty(version)) return false;
-        String[] split = version.split(".");
-        return Integer.valueOf(split[0]) >= REQUIRED_MAJOR_VERSION &&
+        String[] split = version.split("\\.");
+        return split.length > 0 &&
+                Integer.valueOf(split[0]) >= REQUIRED_MAJOR_VERSION &&
                 Integer.valueOf(split[1]) >= REQUIRED_MINOR_VERSION;
     }
 
@@ -325,9 +327,9 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         String accountRequired = getNestedMapValue(response, REQUIRE_USER_ACCOUNT_KEY);
         String knownUsers = getNestedMapValue(response, WHITELIST_KNOWN_USERS_KEY);
         model.sendPingbacks = !TextUtils.isEmpty(sendPingbacks) && Integer.valueOf(sendPingbacks) > 0;
-        model.commentApprovalRequired = !TextUtils.isEmpty(approvalRequired) && Integer.valueOf(approvalRequired) > 0;
-        model.commentsRequireIdentity = !TextUtils.isEmpty(identityRequired) && Integer.valueOf(identityRequired) > 0;
-        model.commentsRequireUserAccount = !TextUtils.isEmpty(accountRequired) && Integer.valueOf(accountRequired) > 0;
+        model.commentApprovalRequired = !TextUtils.isEmpty(approvalRequired) && Boolean.valueOf(approvalRequired);
+        model.commentsRequireIdentity = !TextUtils.isEmpty(identityRequired) && Boolean.valueOf(identityRequired);
+        model.commentsRequireUserAccount = !TextUtils.isEmpty(accountRequired) && Boolean.valueOf(accountRequired);
         model.commentAutoApprovalKnownUsers = !TextUtils.isEmpty(knownUsers) && Boolean.valueOf(knownUsers);
         model.maxLinks = Integer.valueOf(getNestedMapValue(response, MAX_LINKS_KEY));
         mRemoteSettings.holdForModeration = new ArrayList<>();

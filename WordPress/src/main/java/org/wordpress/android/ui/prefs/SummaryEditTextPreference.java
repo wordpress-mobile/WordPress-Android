@@ -84,6 +84,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         if (summaryView != null) {
             WPPrefUtils.layoutAsBody1(summaryView);
             summaryView.setEllipsize(TextUtils.TruncateAt.END);
+            summaryView.setInputType(getEditText().getInputType());
             if (mLines != -1) summaryView.setLines(mLines);
             if (mMaxLines != -1) summaryView.setMaxLines(mMaxLines);
         }
