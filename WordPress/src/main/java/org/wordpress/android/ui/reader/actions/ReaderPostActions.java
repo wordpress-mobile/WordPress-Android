@@ -19,7 +19,6 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
@@ -205,7 +204,9 @@ public class ReaderPostActions {
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestPost(final long blogId, final long postId, final ActionListener actionListener) {
+    public static void requestPost(final long blogId,
+                                   final long postId,
+                                   final ReaderActions.OnRequestListener actionListener) {
         String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -215,7 +216,7 @@ public class ReaderPostActions {
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
                 if (actionListener != null) {
-                    actionListener.onActionResult(true);
+                    actionListener.onSuccess();
                 }
             }
         };
@@ -224,7 +225,9 @@ public class ReaderPostActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
                 if (actionListener != null) {
-                    actionListener.onActionResult(false);
+                    int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                    // TODO: parse response for error code
+                    actionListener.onFailure(statusCode);
                 }
             }
         };

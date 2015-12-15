@@ -497,29 +497,22 @@ public class ReaderPostDetailFragment extends Fragment
         progress.setVisibility(View.VISIBLE);
         progress.bringToFront();
 
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+        ReaderActions.OnRequestListener listener = new ReaderActions.OnRequestListener() {
             @Override
-            public void onActionResult(boolean succeeded) {
+            public void onSuccess() {
                 if (isAdded()) {
-                    progress.setVisibility(View.GONE);
-                    if (succeeded) {
-                        showPost();
-                    } else {
-                        postFailed();
-                    }
+                    showPost();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode) {
+                if (isAdded()) {
+                    // TODO: separate message for auth failure
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
                 }
             }
         };
-        ReaderPostActions.requestPost(mBlogId, mPostId, actionListener);
-    }
-
-    /*
-     * called when post couldn't be loaded and failed to be returned from server
-     */
-    private void postFailed() {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
-        }
+        ReaderPostActions.requestPost(mBlogId, mPostId, listener);
     }
 
     private void showPost() {
