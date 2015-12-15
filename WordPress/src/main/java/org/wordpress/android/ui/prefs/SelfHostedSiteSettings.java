@@ -274,10 +274,10 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             }
         }
         if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
-            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
+            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity ? 1 : 0));
         }
         if (mSettings.commentsRequireUserAccount != mRemoteSettings.commentsRequireUserAccount) {
-            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
+            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount ? 1 : 0));
         }
         if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
             params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
@@ -291,7 +291,11 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 builder.append(key);
                 builder.append("\n");
             }
-            params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            if (builder.length() > 1) {
+                params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            } else {
+                params.put(BLACKLIST_KEYS_KEY, "");
+            }
         }
         if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
             StringBuilder builder = new StringBuilder();
@@ -299,7 +303,11 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 builder.append(key);
                 builder.append("\n");
             }
-            params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            if (builder.length() > 1) {
+                params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            } else {
+                params.put(BLACKLIST_KEYS_KEY, "");
+            }
         }
 
         return params;
@@ -328,8 +336,8 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         String knownUsers = getNestedMapValue(response, WHITELIST_KNOWN_USERS_KEY);
         model.sendPingbacks = !TextUtils.isEmpty(sendPingbacks) && Integer.valueOf(sendPingbacks) > 0;
         model.commentApprovalRequired = !TextUtils.isEmpty(approvalRequired) && Boolean.valueOf(approvalRequired);
-        model.commentsRequireIdentity = !TextUtils.isEmpty(identityRequired) && Boolean.valueOf(identityRequired);
-        model.commentsRequireUserAccount = !TextUtils.isEmpty(accountRequired) && Boolean.valueOf(accountRequired);
+        model.commentsRequireIdentity = !TextUtils.isEmpty(identityRequired) && Integer.valueOf(identityRequired) > 0;
+        model.commentsRequireUserAccount = !TextUtils.isEmpty(accountRequired) && Integer.valueOf(identityRequired) > 0;
         model.commentAutoApprovalKnownUsers = !TextUtils.isEmpty(knownUsers) && Boolean.valueOf(knownUsers);
         model.maxLinks = Integer.valueOf(getNestedMapValue(response, MAX_LINKS_KEY));
         mRemoteSettings.holdForModeration = new ArrayList<>();
