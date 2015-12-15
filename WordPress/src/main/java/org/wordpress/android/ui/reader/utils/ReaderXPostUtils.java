@@ -31,47 +31,43 @@ public class ReaderXPostUtils {
     }
 
     /*
-     * returns the subtitle to display for this xpost
+     * returns the html subtitle to display for this xpost
      * ex: "Nick cross-posted from +blog1 to +blog2"
      * ex: "Nick left a comment on +blog1, cross-posted to +blog2"
      */
     public static Spanned getXPostSubtitleHtml(@NonNull ReaderPost post) {
         boolean isCommentXPost = post.getExcerpt().startsWith("X-comment");
 
-        // origin site name can be extracted from the excerpt,
-        // ex: "<p>X-post from +blog2: I have a request..."
-        String fromSiteName;
+        String subtitle = String.format(
+                isCommentXPost ? FMT_COMMENT_XPOST : FMT_SITE_XPOST,
+                "<strong>" + post.getAuthorName() + "</strong>",
+                getFromSiteName(post),
+                getToSiteName(post));
+
+        return Html.fromHtml(subtitle);
+    }
+
+    // origin site name can be extracted from the excerpt,
+    // example excerpt: "<p>X-post from +blog2: I have a request..."
+    private static String getFromSiteName(@NonNull ReaderPost post) {
         String excerpt = post.getExcerpt();
         int plusPos = excerpt.indexOf("+");
         int colonPos = excerpt.indexOf(":", plusPos);
         if (plusPos > 0 && colonPos > 0) {
-            fromSiteName = excerpt.substring(plusPos, colonPos);
+            return excerpt.substring(plusPos, colonPos);
         } else {
-            fromSiteName = UNKNOWN_SITE;
-        }
-
-        // destination site name is the subdomain of the blog url
-        String toSiteName = "+" + getSubdomain(post.getBlogUrl());
-
-        String subtitle = String.format(
-                isCommentXPost ? FMT_COMMENT_XPOST : FMT_SITE_XPOST,
-                makeBold(post.getAuthorName()),
-                fromSiteName,
-                toSiteName);
-        return Html.fromHtml(subtitle);
-    }
-
-    private static String makeBold(String s) {
-        return "<strong>" + s + "</strong>";
-    }
-
-    private static String getSubdomain(String url) {
-        Uri uri = Uri.parse(url);
-        String domain = uri.getHost();
-        if (domain == null || !domain.contains(".")) {
             return UNKNOWN_SITE;
         }
+    }
 
-        return domain.substring(0, domain.indexOf("."));
+    // destination site name is the subdomain of the blog url
+    private static String getToSiteName(@NonNull ReaderPost post) {
+        Uri uri = Uri.parse(post.getBlogUrl());
+        String domain = uri.getHost();
+        if (domain == null || !domain.contains(".")) {
+            return "+" + UNKNOWN_SITE;
+        }
+
+        return  "+" + domain.substring(0, domain.indexOf("."));
     }
 }
