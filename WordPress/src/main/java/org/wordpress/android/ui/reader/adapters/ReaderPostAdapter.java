@@ -275,8 +275,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
         final ReaderPost post = getItem(position);
-        holder.imgAvatar.setImageUrl(
-                post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
+        if (post.hasPostAvatar()) {
+            holder.imgAvatar.setImageUrl(
+                    post.getPostAvatarForDisplay(mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            holder.imgAvatar.showDefaultGravatarImage();
+        }
 
         holder.txtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
         holder.txtSubtitle.setText(ReaderXPostUtils.getXPostSubtitleHtml(post));

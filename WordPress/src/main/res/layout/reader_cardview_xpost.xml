@@ -26,14 +26,12 @@
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_avatar"
             style="@style/ReaderImageView.Avatar.Small"
-            android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/margin_large"
             tools:src="@drawable/gravatar_placeholder" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
