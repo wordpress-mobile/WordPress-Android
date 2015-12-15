@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -513,20 +514,35 @@ public class ReaderPostDetailFragment extends Fragment
                     switch (statusCode) {
                         case 401:
                         case 403:
-                            errMsgResId = R.string.reader_toast_err_get_post_not_authorized;
+                            errMsgResId = R.string.reader_err_get_post_not_authorized;
                             break;
                         case 404:
-                            errMsgResId = R.string.reader_toast_err_get_post_not_found;
+                            errMsgResId = R.string.reader_err_get_post_not_found;
                             break;
                         default:
-                            errMsgResId = R.string.reader_toast_err_get_post;
+                            errMsgResId = R.string.reader_err_get_post_generic;
                             break;
                     }
-                    ToastUtils.showToast(getActivity(), errMsgResId, ToastUtils.Duration.LONG);
+                    showError(errMsgResId);
                 }
             }
         };
         ReaderPostActions.requestPost(mBlogId, mPostId, listener);
+    }
+
+    /*
+     * hide the entire post detail container and show an error message in the middle of the screen
+     */
+    private void showError(@StringRes int resId) {
+        if (!isAdded()) return;
+
+        getView().findViewById(R.id.layout_post_detail_container).setVisibility(View.GONE);
+
+        TextView txtError = (TextView) getView().findViewById(R.id.text_error);
+        txtError.setText(resId);
+        if (txtError.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(txtError, AniUtils.Duration.MEDIUM);
+        }
     }
 
     private void showPost() {
