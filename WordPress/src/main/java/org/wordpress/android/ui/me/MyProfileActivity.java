@@ -118,12 +118,12 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     private void updateLabel(WPTextView textView, String text) {
+        textView.setText(text);
         if (text == null || text.isEmpty()) {
             textView.setVisibility(View.GONE);
         }
         else {
             textView.setVisibility(View.VISIBLE);
-            textView.setText(text);
         }
     }
 
