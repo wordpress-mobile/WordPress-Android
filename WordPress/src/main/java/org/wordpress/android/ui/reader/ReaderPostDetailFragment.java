@@ -75,6 +75,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
     private int mToolbarHeight;
+    private String mErrorMessage;
 
     private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
 
@@ -216,6 +217,10 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
+        if (!TextUtils.isEmpty(mErrorMessage)) {
+            outState.putString(ReaderConstants.KEY_ERROR_MESSAGE, mErrorMessage);
+        }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -234,6 +239,9 @@ public class ReaderPostDetailFragment extends Fragment
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
+            if (savedInstanceState.containsKey(ReaderConstants.KEY_ERROR_MESSAGE)) {
+                mErrorMessage = savedInstanceState.getString(ReaderConstants.KEY_ERROR_MESSAGE);
             }
         }
     }
@@ -534,18 +542,17 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * hide the entire post detail container and show an error message in the middle of the screen
+     * shows an error message in the middle of the screen - used when requesting post fails
      */
     private void showError(String errorMessage) {
         if (!isAdded()) return;
-
-        getView().findViewById(R.id.layout_post_detail_container).setVisibility(View.GONE);
 
         TextView txtError = (TextView) getView().findViewById(R.id.text_error);
         txtError.setText(errorMessage);
         if (txtError.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(txtError, AniUtils.Duration.MEDIUM);
         }
+        mErrorMessage = errorMessage;
     }
 
     private void showPost() {
@@ -628,9 +635,7 @@ public class ReaderPostDetailFragment extends Fragment
         protected void onPostExecute(Boolean result) {
             mIsPostTaskRunning = false;
 
-            if (!isAdded()) {
-                return;
-            }
+            if (!isAdded()) return;
 
             if (!result) {
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
@@ -639,6 +644,9 @@ public class ReaderPostDetailFragment extends Fragment
                     mHasAlreadyRequestedPost = true;
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
+                } else if (!TextUtils.isEmpty(mErrorMessage)) {
+                    // post has already been requested and failed, so restore previous error message
+                    showError(mErrorMessage);
                 }
                 return;
             }
