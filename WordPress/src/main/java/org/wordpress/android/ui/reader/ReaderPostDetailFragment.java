@@ -507,8 +507,20 @@ public class ReaderPostDetailFragment extends Fragment
             @Override
             public void onFailure(int statusCode) {
                 if (isAdded()) {
-                    // TODO: separate message for auth failure
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
+                    int errMsgResId;
+                    switch (statusCode) {
+                        case 401:
+                        case 403:
+                            errMsgResId = R.string.reader_toast_err_get_post_not_authorized;
+                            break;
+                        case 404:
+                            errMsgResId = R.string.reader_toast_err_get_post_not_found;
+                            break;
+                        default:
+                            errMsgResId = R.string.reader_toast_err_get_post;
+                            break;
+                    }
+                    ToastUtils.showToast(getActivity(), errMsgResId, ToastUtils.Duration.LONG);
                 }
             }
         };
