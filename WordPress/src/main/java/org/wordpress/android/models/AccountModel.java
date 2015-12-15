@@ -56,6 +56,7 @@ public class AccountModel {
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
         mFirstName = json.optString("first_name");
         mLastName = json.optString("last_name");
+        mDisplayName = json.optString("display_name");
         mAboutMe = json.optString("description");
     }
 
