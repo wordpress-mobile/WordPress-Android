@@ -13,6 +13,7 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.DialogUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.xmlrpc.android.ApiHelper;
 
@@ -88,10 +89,10 @@ public class MyProfileActivity extends AppCompatActivity {
 
     private void refreshDetails() {
         Account account = AccountHelper.getDefaultAccount();
-        updateLabel(mFirstName, account != null ? account.getFirstName() : null);
-        updateLabel(mLastName, account != null ? account.getLastName() : null);
-        updateLabel(mDisplayName, account != null ? account.getDisplayName() : null);
-        updateLabel(mAboutMe, account != null ? account.getAboutMe() : null);
+        updateLabel(mFirstName, account != null ? StringUtils.unescapeHTML(account.getFirstName()) : null);
+        updateLabel(mLastName, account != null ? StringUtils.unescapeHTML(account.getLastName()) : null);
+        updateLabel(mDisplayName, account != null ? StringUtils.unescapeHTML(account.getDisplayName()) : null);
+        updateLabel(mAboutMe, account != null ? StringUtils.unescapeHTML(account.getAboutMe()) : null);
     }
 
     private void saveMyProfile() {
