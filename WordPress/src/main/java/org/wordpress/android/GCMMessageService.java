@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.ArrayMap;
@@ -67,7 +68,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
 
-    private void handleDefaultPush(String from, Bundle data) {
+    private void handleDefaultPush(String from, @NonNull Bundle data) {
         // Ensure Simperium is running so that notes sync
         SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
 
@@ -123,7 +124,7 @@ public class GCMMessageService extends GcmListenerService {
         int pushId = 0;
         for (int id : mActiveNotificationsMap.keySet()) {
             Bundle noteBundle = mActiveNotificationsMap.get(id);
-            if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
+            if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                 pushId = id;
                 mActiveNotificationsMap.put(pushId, data);
                 break;
@@ -211,7 +212,7 @@ public class GCMMessageService extends GcmListenerService {
                 if (noteCtr > mMaxInboxItems) {
                     break;
                 }
-                if (pushBundle.getString(PUSH_ARG_MSG) == null) {
+                if (pushBundle == null || pushBundle.getString(PUSH_ARG_MSG) == null) {
                     continue;
                 }
 
