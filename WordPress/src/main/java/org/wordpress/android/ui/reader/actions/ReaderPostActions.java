@@ -206,7 +206,7 @@ public class ReaderPostActions {
      **/
     public static void requestPost(final long blogId,
                                    final long postId,
-                                   final ReaderActions.OnRequestListener actionListener) {
+                                   final ReaderActions.OnRequestListener requestListener) {
         String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -215,8 +215,8 @@ public class ReaderPostActions {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
-                if (actionListener != null) {
-                    actionListener.onSuccess();
+                if (requestListener != null) {
+                    requestListener.onSuccess();
                 }
             }
         };
@@ -224,10 +224,19 @@ public class ReaderPostActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener != null) {
-                    int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                    // TODO: parse response for error code
-                    actionListener.onFailure(statusCode);
+                if (requestListener != null) {
+                    int statusCode = 0;
+                    // first try to get the error code from the JSON response, example:
+                    //   {"code":403,"headers":[{"name":"Content-Type","value":"application\/json"}],
+                    //    "body":{"error":"unauthorized","message":"User cannot access this private blog."}}
+                    JSONObject jsonObject = VolleyUtils.volleyErrorToJSON(volleyError);
+                    if (jsonObject != null && jsonObject.has("code")) {
+                        statusCode = jsonObject.optInt("code");
+                    }
+                    if (statusCode == 0) {
+                        statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                    }
+                    requestListener.onFailure(statusCode);
                 }
             }
         };

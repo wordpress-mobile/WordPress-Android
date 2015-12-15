@@ -909,7 +909,7 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_changes_saved">Changes saved</string>
-
+    <!-- toast failure messages when retrieving a single reader post -->
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_post_not_authorized">You\'re not authorized to view this post</string>
     <string name="reader_toast_err_get_post_not_found">This post no longer exists</string>
