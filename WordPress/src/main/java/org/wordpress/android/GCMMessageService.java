@@ -122,7 +122,10 @@ public class GCMMessageService extends GcmListenerService {
 
         // Update notification content for the same noteId if it is already showing
         int pushId = 0;
-        for (int id : mActiveNotificationsMap.keySet()) {
+        for (Integer id : mActiveNotificationsMap.keySet()) {
+            if (id == null) {
+                continue;
+            }
             Bundle noteBundle = mActiveNotificationsMap.get(id);
             if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                 pushId = id;
