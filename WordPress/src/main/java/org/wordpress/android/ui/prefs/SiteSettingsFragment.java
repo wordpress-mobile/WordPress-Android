@@ -437,6 +437,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+        mSiteSettings.saveSettings();
         mEditingList = null;
     }
 
