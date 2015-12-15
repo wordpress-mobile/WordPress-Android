@@ -10,11 +10,7 @@ import org.wordpress.android.widgets.OpenSansEditText;
 import org.wordpress.android.widgets.WPTextView;
 
 public class DialogUtils {
-    public static void showMyProfileDialog(Context context, String title, final Callback callback) {
-        showMyProfileDialog(context, title, null, callback);
-    }
-
-    public static void showMyProfileDialog(Context context, String title, String hint, final Callback callback) {
+    public static void showMyProfileDialog(Context context, String title, String initialText, String hint, final Callback callback) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View promptView = layoutInflater.inflate(org.wordpress.android.R.layout.my_profile_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -30,6 +26,11 @@ public class DialogUtils {
         }
         else {
             hintView.setVisibility(View.GONE);
+        }
+
+        if (initialText != null && !initialText.isEmpty()) {
+            editText.setText(initialText);
+            editText.setSelection(0, initialText.length());
         }
 
         alertDialogBuilder.setCancelable(false)
