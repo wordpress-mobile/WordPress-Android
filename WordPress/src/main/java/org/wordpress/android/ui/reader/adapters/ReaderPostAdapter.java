@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
@@ -96,12 +97,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final CardView cardView;
         private final WPNetworkImageView imgAvatar;
         private final TextView txtTitle;
+        private final TextView txtSubtitle;
 
         public ReaderXPostViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
+            txtSubtitle = (TextView) itemView.findViewById(R.id.text_subtitle);
         }
     }
 
@@ -272,8 +275,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
         final ReaderPost post = getItem(position);
-        holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
-        holder.txtTitle.setText(post.getTitle());
+        holder.imgAvatar.setImageUrl(
+                post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
+
+        holder.txtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
+        holder.txtSubtitle.setText(ReaderXPostUtils.getXPostSubtitleHtml(post));
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
