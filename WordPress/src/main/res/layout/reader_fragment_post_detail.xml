@@ -68,6 +68,23 @@
             tools:visibility="visible" />
     </RelativeLayout>
 
+    <!-- error message when requesting post fails -->
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
+        android:drawablePadding="@dimen/margin_small"
+        android:drawableTop="@drawable/noticon_warning_big_grey"
+        android:gravity="center"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:visibility="gone"
+        tools:text="Error message"
+        tools:visibility="visible" />
+
     <!-- container for webView custom view - this is where fullscreen video will appear -->
     <FrameLayout
         android:id="@+id/layout_custom_view_container"
