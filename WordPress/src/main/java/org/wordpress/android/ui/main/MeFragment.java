@@ -36,6 +36,7 @@ public class MeFragment extends Fragment {
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
     private TextView mLoginLogoutTextView;
+    private View mMyProfileView;
     private View mNotificationsView;
     private View mNotificationsDividerView;
     private ProgressDialog mDisconnectProgressDialog;
@@ -54,13 +55,14 @@ public class MeFragment extends Fragment {
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
         mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mMyProfileView = rootView.findViewById(R.id.row_my_profile);
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
         mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
 
         addDropShadowToAvatar();
         refreshAccountDetails();
 
-        rootView.findViewById(R.id.row_my_profile).setOnClickListener(new View.OnClickListener() {
+        mMyProfileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewMyProfile(getActivity());
@@ -148,6 +150,7 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
             mAvatarFrame.setVisibility(View.VISIBLE);
+            mMyProfileView.setVisibility(View.VISIBLE);
             mNotificationsView.setVisibility(View.VISIBLE);
             mNotificationsDividerView.setVisibility(View.VISIBLE);
 
@@ -168,6 +171,7 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
             mAvatarFrame.setVisibility(View.GONE);
+            mMyProfileView.setVisibility(View.GONE);
             mNotificationsView.setVisibility(View.GONE);
             mNotificationsDividerView.setVisibility(View.GONE);
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
