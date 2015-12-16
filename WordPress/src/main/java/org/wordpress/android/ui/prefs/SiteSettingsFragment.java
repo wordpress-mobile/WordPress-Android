@@ -985,6 +985,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 list.setAdapter(new ArrayAdapter<>(getActivity(),
                         R.layout.wp_simple_list_item_1,
                         mEditingList));
+                mSiteSettings.saveSettings();
                 return true;
             }
         });
@@ -1010,6 +1011,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             list.setAdapter(new ArrayAdapter<>(getActivity(),
                                     R.layout.wp_simple_list_item_1,
                                     mEditingList));
+                            mSiteSettings.saveSettings();
                             AnalyticsUtils.trackWithCurrentBlogDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM);
                         }
