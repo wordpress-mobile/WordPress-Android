@@ -65,7 +65,7 @@ public class Account extends AccountModel {
         WordPress.getRestClientUtilsV1_1().get("me/settings", listener, errorListener);
     }
 
-    public void postAccountSettings(String firstName, String lastName, String displayName, String aboutMe, final ApiHelper.GenericCallback callback) {
+    public void postAccountSettings(Map<String, String> params, final ApiHelper.GenericCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -86,11 +86,6 @@ public class Account extends AccountModel {
             }
         };
 
-        Map<String, String> params = new HashMap<>();
-        params.put("first_name", firstName);
-        params.put("last_name", lastName);
-        params.put("display_name", displayName);
-        params.put("description", aboutMe);
         WordPress.getRestClientUtilsV1_1().post("me/settings", params, null, listener, errorListener);
     }
 
@@ -101,5 +96,25 @@ public class Account extends AccountModel {
 
     public void save() {
         AccountTable.save(this);
+    }
+
+    public enum RestParam {
+        FIRST_NAME,
+        LAST_NAME,
+        DISPLAY_NAME,
+        ABOUT_ME;
+
+        public static String toString(RestParam param) {
+            switch (param) {
+                case FIRST_NAME:
+                    return "first_name";
+                case LAST_NAME:
+                    return "last_name";
+                case DISPLAY_NAME:
+                    return "display_name";
+                case ABOUT_ME:
+                    return "description";
+            }
+        }
     }
 }
