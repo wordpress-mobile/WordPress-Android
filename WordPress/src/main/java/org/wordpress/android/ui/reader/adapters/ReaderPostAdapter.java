@@ -53,6 +53,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mPhotonHeight;
     private final int mAvatarSzMedium;
     private final int mAvatarSzSmall;
+    private final int mAvatarSzExtraSmall;
     private final int mMarginLarge;
 
     private final String mWordCountFmtStr;
@@ -96,6 +97,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     class ReaderXPostViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardView;
         private final WPNetworkImageView imgAvatar;
+        private final WPNetworkImageView imgBlavatar;
         private final TextView txtTitle;
         private final TextView txtSubtitle;
 
@@ -103,6 +105,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
+            imgBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_blavatar);
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtSubtitle = (TextView) itemView.findViewById(R.id.text_subtitle);
         }
@@ -282,11 +285,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
         final ReaderPost post = getItem(position);
+
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(
-                    post.getPostAvatarForDisplay(mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                    post.getPostAvatarForDisplay(mAvatarSzExtraSmall), WPNetworkImageView.ImageType.AVATAR);
         } else {
             holder.imgAvatar.showDefaultGravatarImage();
+        }
+
+        if (post.hasBlogUrl()) {
+            holder.imgBlavatar.setImageUrl(
+                    post.getPostBlavatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.BLAVATAR);
+        } else {
+            holder.imgBlavatar.showDefaultBlavatarImage();
         }
 
         holder.txtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
@@ -502,6 +513,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+        mAvatarSzExtraSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 

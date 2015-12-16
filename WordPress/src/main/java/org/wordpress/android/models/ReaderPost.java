@@ -578,14 +578,28 @@ public class ReaderPost {
      * returns the avatar url as a photon url set to the passed size
      */
     private transient String avatarForDisplay;
-    public String getPostAvatarForDisplay(int avatarSize) {
+    public String getPostAvatarForDisplay(int size) {
         if (avatarForDisplay == null) {
             if (!hasPostAvatar()) {
                 return "";
             }
-            avatarForDisplay = GravatarUtils.fixGravatarUrl(postAvatar, avatarSize);
+            avatarForDisplay = GravatarUtils.fixGravatarUrl(postAvatar, size);
         }
         return avatarForDisplay;
+    }
+
+    /*
+     * returns the blog's blavatar url as a photon url set to the passed size
+     */
+    private transient String blavatarForDisplay;
+    public String getPostBlavatarForDisplay(int size) {
+        if (blavatarForDisplay == null) {
+            if (!hasBlogUrl()) {
+                return "";
+            }
+            blavatarForDisplay = GravatarUtils.blavatarFromUrl(getBlogUrl(), size);
+        }
+        return blavatarForDisplay;
     }
 
     /*
