@@ -213,7 +213,7 @@ public class ReaderWebView extends WebView {
             // Intercept requests for private images and add the WP.com authorization header
             if (mIsPrivatePost && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(url)) {
                 try {
-                    URL imageUrl = new URL(url);
+                    URL imageUrl = new URL(UrlUtils.makeHttps(url));
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
