@@ -183,6 +183,9 @@ public abstract class SiteSettingsInterface {
     }
 
     public Map<String, String> getFormats() {
+        if (mSettings.postFormats == null) {
+            mSettings.postFormats = new HashMap<>();
+        }
         return mSettings.postFormats;
     }
 
