@@ -482,6 +482,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void setupPreferenceList(ListView prefList, Resources res) {
         if (prefList == null || res == null) return;
 
+        prefList.setDivider(getResources().getDrawable(R.drawable.preferences_divider));
+        prefList.setDividerHeight(1);
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
         // required to customize (Calypso) preference views
