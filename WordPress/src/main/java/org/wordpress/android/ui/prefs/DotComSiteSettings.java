@@ -316,7 +316,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
             if (builder.length() > 1) {
                 params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
             } else {
-                params.put(BLACKLIST_KEYS_KEY, "");
+                params.put(MODERATION_KEYS_KEY, "");
             }
         }
         if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
