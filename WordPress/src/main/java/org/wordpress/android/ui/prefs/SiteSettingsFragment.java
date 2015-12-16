@@ -482,6 +482,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void setupPreferenceList(ListView prefList, Resources res) {
         if (prefList == null || res == null) return;
 
+        // customize list dividers
         prefList.setDivider(getResources().getDrawable(R.drawable.preferences_divider));
         prefList.setDividerHeight(1);
         // handle long clicks on preferences to display hints
@@ -540,6 +541,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_delete_site);
         } else {
             removePreference(R.string.pref_key_site_general, R.string.pref_key_site_language);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
+        }
+
+        // hide all options except for Delete site and Enable Location if user is not admin
+        if (!mBlog.isAdmin()) {
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_general);
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_account);
+            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_category);
+            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_format);
             removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
         }
     }
@@ -1157,9 +1168,10 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private void removePreference(int parentKey, int preference) {
         PreferenceGroup parent = (PreferenceGroup) findPreference(getString(parentKey));
+        Preference child = findPreference(getString(preference));
 
-        if (parent != null) {
-            parent.removePreference(findPreference(getString(preference)));
+        if (parent != null && child != null) {
+            parent.removePreference(child);
         }
     }
 }

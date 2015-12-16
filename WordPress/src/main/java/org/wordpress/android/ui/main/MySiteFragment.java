@@ -48,8 +48,6 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
-    private View mConfigurationHeader;
-    private View mSettingsView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -118,8 +116,6 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
-        mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
-        mSettingsView = rootView.findViewById(R.id.row_settings);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
@@ -190,7 +186,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        mSettingsView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
@@ -307,10 +303,6 @@ public class MySiteFragment extends Fragment
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
-
-        int settingsVisibility = mBlog.isAdmin() ? View.VISIBLE : View.GONE;
-        mConfigurationHeader.setVisibility(settingsVisibility);
-        mSettingsView.setVisibility(settingsVisibility);
 
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
