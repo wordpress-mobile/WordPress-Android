@@ -11,7 +11,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -115,6 +114,7 @@ public class Account extends AccountModel {
                 case ABOUT_ME:
                     return "description";
             }
+            return "";
         }
     }
 }

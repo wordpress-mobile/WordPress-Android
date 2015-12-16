@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.me;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Account;
@@ -17,13 +16,15 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.xmlrpc.android.ApiHelper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MyProfileActivity extends AppCompatActivity {
 
     private WPTextView mFirstName;
     private WPTextView mLastName;
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
-    private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,24 +86,16 @@ public class MyProfileActivity extends AppCompatActivity {
         updateLabel(mAboutMe, account != null ? StringUtils.unescapeHTML(account.getAboutMe()) : null);
     }
 
-    private void saveMyProfile() {
-        String firstName = mFirstName.getText().toString();
-        String lastName = mLastName.getText().toString();
-        String displayName = mDisplayName.getText().toString();
-        String aboutMe = mAboutMe.getText().toString();
-
-        mProgressDialog = ProgressDialog.show(this, null, getText(R.string.saving_changes), false);
-
-        AccountHelper.getDefaultAccount().postAccountSettings(firstName, lastName, displayName, aboutMe, new ApiHelper.GenericCallback() {
+    private void updateMyProfileForLabel(TextView textView) {
+        Map<String, String> params = new HashMap<>();
+        params.put(restParamForTextView(textView), textView.getText().toString());
+        AccountHelper.getDefaultAccount().postAccountSettings(params, new ApiHelper.GenericCallback() {
             @Override
             public void onSuccess() {
-                refreshDetails();
-                dismissProgressDialog();
             }
 
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                dismissProgressDialog();
             }
         });
     }
@@ -126,16 +119,25 @@ public class MyProfileActivity extends AppCompatActivity {
                     @Override
                     public void onSuccessfulInput(String input) {
                         updateLabel(textView, input);
+                        updateMyProfileForLabel(textView);
                     }
                 });
             }
         };
     }
 
-    private void dismissProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+    // helper method to get the rest parameter for a text view
+    private String restParamForTextView(TextView textView) {
+        Account.RestParam param = null;
+        if (textView == mFirstName) {
+            param = Account.RestParam.FIRST_NAME;
+        } else if (textView == mLastName) {
+            param = Account.RestParam.LAST_NAME;
+        } else if (textView == mDisplayName) {
+            param = Account.RestParam.DISPLAY_NAME;
+        } else if (textView == mAboutMe) {
+            param = Account.RestParam.ABOUT_ME;
         }
-        mProgressDialog = null;
+        return Account.RestParam.toString(param);
     }
 }
