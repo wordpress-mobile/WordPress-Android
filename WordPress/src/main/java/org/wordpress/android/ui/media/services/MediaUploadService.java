@@ -134,10 +134,11 @@ public class MediaUploadService extends Service {
 
                 String errorMessageToDisplay = null;
                 // well formed XML-RPC response from the server, but it's an error.
-                if (throwable != null && throwable instanceof XMLRPCFault) {
+                if (throwable instanceof XMLRPCFault) {
                     XMLRPCFault xmlrpcFault = ((XMLRPCFault) throwable);
                     if (xmlrpcFault.getFaultCode() == 401) {
-                        //errorMessageToDisplay = xmlrpcFault.getFaultString();
+                        //Just for reference - xmlrpcFault.getFaultString() returns the error message
+                        // from the server without the ugly "[Code 401]" part.
                         errorMessageToDisplay = getString(R.string.media_error_no_permission_upload);
                     }
                 }
