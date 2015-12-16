@@ -1110,10 +1110,10 @@
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
-    <string name="public_display_name">Public Display Name</string>
-    <string name="about_me">About Me</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="public_display_name">Public display name</string>
+    <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
 
 </resources>
