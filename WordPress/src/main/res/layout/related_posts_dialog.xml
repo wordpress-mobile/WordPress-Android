@@ -26,7 +26,7 @@
             android:id="@+id/toggle_related_posts_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/related_posts_switch_title"
+            android:text="@string/site_settings_rp_switch_title"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             app:fontFamily="openSans"
@@ -36,7 +36,7 @@
             android:id="@+id/toggleRelatedPostsSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/related_posts_switch_summary"
+            android:text="@string/site_settings_rp_switch_summary"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_small"
             app:fontFamily="openSans"
@@ -49,7 +49,7 @@
             android:layout_marginTop="12dp"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
-            android:text="@string/related_posts_show_header_title" />
+            android:text="@string/site_settings_rp_show_header_title" />
 
         <CheckBox
             android:id="@+id/show_images_checkbox"
@@ -58,7 +58,7 @@
             android:layout_marginTop="6dp"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
-            android:text="@string/related_posts_show_images_title" />
+            android:text="@string/site_settings_rp_show_images_title" />
 
         <View
             android:layout_width="match_parent"
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/related_posts_preview_header"
+            android:text="@string/site_settings_rp_preview_header"
             android:textStyle="bold"
             android:textSize="@dimen/text_sz_medium"
             android:textColor="@color/related_posts_list_header"
@@ -112,7 +112,7 @@
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
-                android:text="@string/related_post_preview1_title"
+                android:text="@string/site_settings_rp_preview1_title"
                 app:fontFamily="openSans"
                 app:fontVariation="light" />
 
@@ -124,7 +124,7 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
                 android:textColor="@color/grey_dark"
-                android:text="@string/related_post_preview1_site"
+                android:text="@string/site_settings_rp_preview1_site"
                 app:fontFamily="openSans"
                 app:fontVariation="normal" />
 
@@ -143,7 +143,7 @@
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
-                android:text="@string/related_post_preview2_title"
+                android:text="@string/site_settings_rp_preview2_title"
                 app:fontFamily="openSans"
                 app:fontVariation="light" />
 
@@ -155,7 +155,7 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
                 android:textColor="@color/grey_dark"
-                android:text="@string/related_post_preview2_site"
+                android:text="@string/site_settings_rp_preview2_site"
                 app:fontFamily="openSans"
                 app:fontVariation="normal" />
 
@@ -174,7 +174,7 @@
                 android:textStyle="bold"
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
-                android:text="@string/related_post_preview3_title"
+                android:text="@string/site_settings_rp_preview3_title"
                 app:fontFamily="openSans"
                 app:fontVariation="light" />
 
@@ -186,7 +186,7 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
                 android:textColor="@color/grey_dark"
-                android:text="@string/related_post_preview3_site"
+                android:text="@string/site_settings_rp_preview3_site"
                 app:fontFamily="openSans"
                 app:fontVariation="normal" />
         </LinearLayout>

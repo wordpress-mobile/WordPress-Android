@@ -306,12 +306,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mModerationHoldPref) {
             mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
-                    R.string.hold_for_moderation_description);
+                    R.string.site_settings_hold_for_moderation_description);
             return true;
         } else if (preference == mBlacklistPref) {
             mEditingList = mSiteSettings.getBlacklistKeys();
             showListEditorDialog(R.string.site_settings_blacklist_title,
-                    R.string.blacklist_description);
+                    R.string.site_settings_blacklist_description);
             return true;
         } else if (preference == mDeleteSitePref) {
             removeBlogWithConfirmation();
@@ -379,7 +379,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
             mMultipleLinksPref.setSummary(getResources()
-                    .getQuantityString(R.plurals.multiple_links_summary,
+                    .getQuantityString(R.plurals.site_settings_multiple_links_summary,
                             mSiteSettings.getMultipleLinks(),
                             mSiteSettings.getMultipleLinks()));
         } else if (preference == mUsernamePref) {
@@ -576,8 +576,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                     }
                 },
                 R.string.site_settings_paging_title,
-                R.string.paging_description,
-                R.string.paging_header,
+                R.string.site_settings_paging_dialog_description,
+                R.string.site_settings_paging_dialog_header,
                 1,
                 getResources().getInteger(R.integer.paging_limit),
                 mSiteSettings.getPagingCount(),
@@ -604,9 +604,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                         mSwitchChecked = isChecked;
                     }
                 },
-                R.string.close_after_switch_text,
-                R.string.close_after_description,
-                R.string.close_after_header,
+                R.string.site_settings_close_after_dialog_switch_text,
+                R.string.site_settings_close_after_dialog_description,
+                R.string.site_settings_close_after_dialog_header,
                 1,
                 getResources().getInteger(R.integer.close_after_limit),
                 mSiteSettings.getCloseAfter(),
@@ -634,7 +634,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 false,
                 null,
                 -1,
-                R.string.multiple_links_description,
+                R.string.site_settings_multiple_links_dialog_description,
                 -1,
                 0,
                 getResources().getInteger(R.integer.max_links_limit),
@@ -739,7 +739,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         : -1 : 1;
         setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
         mMultipleLinksPref.setSummary(getResources()
-                .getQuantityString(R.plurals.multiple_links_summary,
+                .getQuantityString(R.plurals.site_settings_multiple_links_summary,
                         mSiteSettings.getMultipleLinks(),
                         mSiteSettings.getMultipleLinks()));
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
@@ -863,11 +863,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (isAdded()) {
             switch (privacy) {
                 case -1:
-                    return getString(R.string.privacy_private);
+                    return getString(R.string.site_settings_privacy_private_summary);
                 case 0:
-                    return getString(R.string.privacy_hidden);
+                    return getString(R.string.site_settings_privacy_hidden_summary);
                 case 1:
-                    return getString(R.string.privacy_public);
+                    return getString(R.string.site_settings_privacy_public_summary);
             }
         }
         return "";
@@ -894,24 +894,24 @@ public class SiteSettingsFragment extends PreferenceFragment
     private String getThreadingSummary(int levels) {
         if (!isAdded()) return "";
         if (levels <= 1) return getString(R.string.none);
-        return String.format(getString(R.string.levels_quantity), levels);
+        return String.format(getString(R.string.site_settings_threading_summary), levels);
     }
 
     private String getPagingSummary(int count) {
         if (!isAdded()) return "";
         if (count == 0) return getString(R.string.none);
-        return getResources().getQuantityString(R.plurals.paging_quantity, count, count);
+        return getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }
 
     private String getWhitelistSummary(int value) {
         if (isAdded()) {
             switch (value) {
                 case -1:
-                    return getString(R.string.whitelist_summary_no_users);
+                    return getString(R.string.site_settings_whitelist_none_summary);
                 case 0:
-                    return getString(R.string.whitelist_summary_known_users);
+                    return getString(R.string.site_settings_whitelist_known_summary);
                 case 1:
-                    return getString(R.string.whitelist_summary_all_users);
+                    return getString(R.string.site_settings_whitelist_all_summary);
             }
         }
         return "";
@@ -1000,7 +1000,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
                 final EditText input = new EditText(getActivity());
                 WPPrefUtils.layoutAsInput(input);
-                input.setHint(R.string.list_editor_input_hint);
+                input.setHint(R.string.site_settings_list_editor_input_hint);
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

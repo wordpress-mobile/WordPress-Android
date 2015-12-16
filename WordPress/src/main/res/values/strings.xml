@@ -177,7 +177,7 @@
     <string name="media_details_copy_url_toast">URL copied to clipboard</string>
 
     <!-- tab titles -->
-    <string name="tab_comments">Comments</string>
+    <string name="tab_comments">@string/comments</string>
 
     <!-- themes -->
     <string name="themes_live_preview">Live preview</string>
@@ -222,8 +222,8 @@
     <string name="button_preview">Preview</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
-    <string name="button_delete">Delete</string>
-    <string name="button_more">More</string>
+    <string name="button_delete">@string/delete</string>
+    <string name="button_more">@string/more</string>
     <string name="button_back">Back</string>
     <string name="button_revert">Revert</string>
 
@@ -465,140 +465,96 @@
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
     <string name="pref_key_site_remove_site" translatable="false">wp_pref_site_remove_site</string>
 
+    <!--     Begin     -->
     <!-- Site Settings -->
+    <!--               -->
+
+    <!-- General -->
+    <string name="discussion">Discussion</string>
+    <string name="privacy">Privacy</string>
+    <string name="related_posts">Related Posts</string>
+    <string name="more">More</string>
+    <string name="comments">Comments</string>
+    <string name="close_after">Close after</string>
+    <string name="oldest_first">Oldest first</string>
+    <string name="newest_first">Newest first</string>
+    <plurals name="days_quantity">
+        <item quantity="one">1 day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+
+    <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
     <string name="site_settings_account_header">Account</string>
     <string name="site_settings_writing_header">Writing</string>
+    <string name="site_settings_discussion_header">@string/discussion</string>
+    <string name="site_settings_discussion_new_posts_header">Defaults for New Posts</string>
+    <string name="site_settings_comments_header">@string/comments</string>
+
+    <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
     <string name="site_settings_tagline_title">Tagline</string>
     <string name="site_settings_address_title">Address</string>
-    <string name="site_settings_visibility_title">Privacy</string>
-    <string name="site_settings_username_title">Username</string>
-    <string name="site_settings_password_title">Password</string>
+    <string name="site_settings_privacy_title">@string/privacy</string>
     <string name="site_settings_language_title">@string/language</string>
+    <string name="site_settings_username_title">@string/username</string>
+    <string name="site_settings_password_title">@string/password</string>
     <string name="site_settings_location_title">Enable Location</string>
-    <string name="site_settings_category_title">Default Category</string>
-    <string name="site_settings_format_title">Default Format</string>
-    <string name="site_settings_related_posts_title">Related Posts</string>
-    <string name="site_settings_discussion_title">Discussion</string>
-    <string name="site_settings_danger_title">Danger!</string>
-    <string name="site_settings_discussion_defaults_header">Defaults for New Posts</string>
+    <string name="site_settings_default_category_title">Default Category</string>
+    <string name="site_settings_default_format_title">Default Format</string>
+    <string name="site_settings_related_posts_title">@string/related_posts</string>
+    <string name="site_settings_more_title">@string/more</string>
     <string name="site_settings_allow_comments_title">Allow Comments</string>
     <string name="site_settings_send_pingbacks_title">Send Pingbacks</string>
     <string name="site_settings_receive_pingbacks_title">Receive Pingbacks</string>
-    <string name="site_settings_more_discussion_title">More</string>
-    <string name="site_settings_comments_header">Comments</string>
-    <string name="site_settings_close_after_title">Close after</string>
-    <string name="site_settings_close_after_dialog_title">Close commenting</string>
+    <string name="site_settings_identity_required_title">Must include name and email</string>
+    <string name="site_settings_account_required_title">Users must be signed in</string>
+    <string name="site_settings_close_after_title">@string/close_after</string>
     <string name="site_settings_sort_by_title">Sort by</string>
     <string name="site_settings_threading_title">Threading</string>
     <string name="site_settings_paging_title">Paging</string>
-    <string name="site_settings_manual_approval_title">Must be manually approved</string>
-    <string name="site_settings_identity_title">Must include name and email</string>
-    <string name="site_settings_account_required_title">Users must be signed in</string>
-    <string name="site_settings_auto_approve_header">Automatically approve comments</string>
     <string name="site_settings_whitelist_title">Automatically approve</string>
     <string name="site_settings_multiple_links_title">Links in comments</string>
-    <string name="site_settings_multiple_links_summary">Require manual approval for more than %d links</string>
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_blacklist_title">Blacklist</string>
-    <string name="site_settings_start_over_title">Start Over</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
-    <string name="site_settings_remove_site_title">Remove Site</string>
-    <string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
-    <string name="site_title_hint">In a few words, explain what this site is about</string>
-    <string name="site_tagline_hint">A short description or catchy phrase to describe your blog</string>
-    <string name="site_address_hint">Changing your address is not currently supported</string>
-    <string name="site_privacy_hint">Controls who can see your site</string>
-    <string name="site_language_hint">Language this blog is primarily written in</string>
-    <string name="site_username_hint">Current user account</string>
-    <string name="site_password_hint">Change your password</string>
-    <string name="site_location_hint">Automatically add location data to your posts</string>
-    <string name="site_category_hint">Sets new post category</string>
-    <string name="site_format_hint">Sets new post format</string>
-    <string name="site_related_posts_hint">Show or hide related posts in reader</string>
-    <string name="site_discussion_hint">View and change your sites discussion settings</string>
-    <string name="site_allow_comments_hint">Allow readers to post comments</string>
-    <string name="site_send_pingbacks_hint">Attempt to notify any blogs linked to from the article</string>
-    <string name="site_receive_pingbacks_hint">Allow link notifications from other blogs</string>
-    <string name="site_close_after_hint">Disallow comments after the specified time</string>
-    <string name="site_sort_by_hint">Determines the order comments are displayed</string>
-    <string name="site_threading_hint">Allow nested comments to a certain depth</string>
-    <string name="site_paging_hint">Display comments in chunks of a specified size</string>
-    <string name="site_manual_approval_hint">Comments must be manually approved</string>
-    <string name="site_identity_required_hint">Comment author must fill out name and e-mail</string>
-    <string name="site_user_account_required_hint">Users must be registered and logged in to comment</string>
-    <string name="site_whitelist_hint">Comment author must have a previously approved comment</string>
-    <string name="site_multiple_links_hint">Ignores link limit from known users</string>
-    <string name="site_moderation_hold_hint">Comments that match a filter are put in the moderation queue</string>
-    <string name="site_blacklist_hint">Comments that match a filter are marked as spam</string>
-    <string name="site_settings_related_posts_summary">Show related content after posts</string>
-    <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
-    <string name="site_settings_save_success">Site settings updated</string>
-    <string name="site_settings_learn_more_desc">In the Default article settings, there are three options. These settings are defaults for new posts or pages, which can always be changed individually on each article.</string>
-    <string name="site_settings_learn_more_bullets">The Allow Comment option allows you to enable or disable comments by default.</string>
-    <string name="site_settings_learn_more_caption">You can override thee settings for individual posts.</string>
-    <string name="related_posts_switch_title">Show Related Posts</string>
-    <string name="related_posts_switch_summary">Related Posts displays relevant content from your site below your posts.</string>
-    <string name="related_posts_show_header_title">Show Header</string>
-    <string name="related_posts_show_images_title">Show Images</string>
-    <string name="related_posts_preview_header">Related Posts</string>
-    <string name="related_post_preview1_title">Big iPhone/iPad Update Now Available</string>
-    <string name="related_post_preview1_site">in \"Mobile\"</string>
-    <string name="related_post_preview2_title">The WordPress for Android App Gets a Big Facelift</string>
-    <string name="related_post_preview2_site">in \"Apps\"</string>
-    <string name="related_post_preview3_title">Upgrade Focus: VideoPress For Weddings</string>
-    <string name="related_post_preview3_site">in \"Upgrade\"</string>
-    <string name="list_editor_input_hint">Enter a word or phrase</string>
-    <string name="hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
-    <string name="blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
-    <string name="paging_description">Break comment threads into multiple pages.</string>
-    <string name="paging_header">Comments per page</string>
-    <string name="close_after_header">Close after</string>
-    <string name="close_after_description">Automatically close comments on articles.</string>
-    <string name="close_after_switch_text">Automatically close</string>
-    <string name="multiple_links_description">Require approval for comments that include more than this number of links.</string>
-    <string name="oldest_first">Oldest first</string>
-    <string name="newest_first">Newest first</string>
-    <string name="no_items">No items</string>
-    <plurals name="multiple_links_summary">
-        <item quantity="one">Require approval for more than 1 link</item>
-        <item quantity="other">Require approval for more than %d links</item>
-    </plurals>
-    <string-array name="site_settings_auto_approve_entries">
-        <item>No comments</item>
-        <item>Known users\' comments</item>
-        <item>All users</item>
-    </string-array>
-    <string-array name="site_settings_auto_approve_values">
-        <item>-1</item>
-        <item>0</item>
-        <item>1</item>
-    </string-array>
+
+    <!-- Preference Summaries -->
+    <string name="site_settings_privacy_public_summary">Public</string>
+    <string name="site_settings_privacy_hidden_summary">Hidden</string>
+    <string name="site_settings_privacy_private_summary">Private</string>
+    <string name="site_settings_threading_summary">%d levels</string>
+    <string name="site_settings_whitelist_all_summary">Comments from all users</string>
+    <string name="site_settings_whitelist_known_summary">Comments from known users</string>
+    <string name="site_settings_whitelist_none_summary">@string/none</string>
     <string-array name="site_settings_auto_approve_details">
         <item>Require manual approval for everyone\'s comments.</item>
         <item>Automatically approve if the user has a previously approved comment.</item>
         <item>Automatically approve everyone\'s comments.</item>
     </string-array>
-    <string-array name="site_settings_close_after_entries">
-        <item>@string/never</item>
-        <item>One day</item>
-        <item>One week</item>
-        <item>One month</item>
+    <plurals name="site_settings_multiple_links_summary">
+        <item quantity="one">Require approval for more than 1 link</item>
+        <item quantity="other">Require approval for more than %d links</item>
+    </plurals>
+    <plurals name="site_settings_paging_summary">
+        <item quantity="one">1 comment per page</item>
+        <item quantity="other">%d comments per page</item>
+    </plurals>
+    <string-array name="privacy_details">
+        <item>Your site is visible to everyone and may be indexed by search engines</item>
+        <item>Your site is visible to everyone but asks search engines not to index it</item>
+        <item>Your site is visible only to you and users you approve</item>
     </string-array>
-    <string-array name="site_settings_close_after_values">
-        <item>0</item>
-        <item>1</item>
-        <item>7</item>
-        <item>30</item>
+
+    <!-- Preference Entries -->
+    <string-array name="site_settings_auto_approve_entries">
+        <item>No comments</item>
+        <item>Known users\' comments</item>
+        <item>All users</item>
     </string-array>
     <string-array name="site_settings_sort_entries">
         <item>@string/oldest_first</item>
         <item>@string/newest_first</item>
-    </string-array>
-    <string-array name="site_settings_sort_values">
-        <item>0</item>
-        <item>1</item>
     </string-array>
     <string-array name="site_settings_threading_entries">
         <item>@string/none</item>
@@ -612,6 +568,22 @@
         <item>Nine levels</item>
         <item>Ten levels</item>
     </string-array>
+    <string-array name="site_settings_privacy_entries">
+        <item>@string/site_settings_privacy_public_summary</item>
+        <item>@string/site_settings_privacy_hidden_summary</item>
+        <item>@string/site_settings_privacy_private_summary</item>
+    </string-array>
+
+    <!-- Preference Values -->
+    <string-array name="site_settings_auto_approve_values">
+        <item>-1</item>
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="site_settings_sort_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
     <string-array name="site_settings_threading_values">
         <item>1</item>
         <item>2</item>
@@ -624,49 +596,82 @@
         <item>9</item>
         <item>10</item>
     </string-array>
-    <string-array name="site_settings_paging_entries">
-        <item>@string/none</item>
-        <item>50 comments per page</item>
-        <item>100 comments per page</item>
-        <item>200 comments per page</item>
-    </string-array>
-    <string-array name="site_settings_paging_values">
-        <item>0</item>
-        <item>50</item>
-        <item>100</item>
-        <item>200</item>
-    </string-array>
-    <plurals name="days_quantity">
-        <item quantity="one">1 day</item>
-        <item quantity="other">%d days</item>
-    </plurals>
-    <plurals name="paging_quantity">
-        <item quantity="one">1 comment per page</item>
-        <item quantity="other">%d comments per page</item>
-    </plurals>
-    <string name="levels_quantity">%d levels</string>
-    <string name="whitelist_summary_all_users">Comments from all users</string>
-    <string name="whitelist_summary_known_users">Comments from known users</string>
-    <string name="whitelist_summary_no_users">@string/none</string>
-    <string name="privacy">Privacy</string>
-    <string name="privacy_public">Public</string>
-    <string name="privacy_hidden">Hidden</string>
-    <string name="privacy_private">Private</string>
-    <string-array name="privacy_entries">
-        <item>@string/privacy_public</item>
-        <item>@string/privacy_hidden</item>
-        <item>@string/privacy_private</item>
-    </string-array>
-    <string-array name="privacy_details">
-        <item>Your site is visible to everyone and may be indexed by search engines</item>
-        <item>Your site is visible to everyone but asks search engines not to index it</item>
-        <item>Your site is visible only to you and users you approve</item>
-    </string-array>
-    <string-array name="privacy_values">
+    <string-array name="site_settings_privacy_values">
         <item>1</item>
         <item>0</item>
         <item>-1</item>
     </string-array>
+
+    <!-- Hints (long press) -->
+    <string name="site_settings_title_hint">In a few words, explain what this site is about</string>
+    <string name="site_settings_tagline_hint">A short description or catchy phrase to describe your blog</string>
+    <string name="site_settings_address_hint">Changing your address is not currently supported</string>
+    <string name="site_settings_privacy_hint">Controls who can see your site</string>
+    <string name="site_settings_language_hint">Language this blog is primarily written in</string>
+    <string name="site_settings_username_hint">Current user account</string>
+    <string name="site_settings_password_hint">Change your password</string>
+    <string name="site_settings_location_hint">Automatically add location data to your posts</string>
+    <string name="site_settings_category_hint">Sets new post category</string>
+    <string name="site_settings_format_hint">Sets new post format</string>
+    <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
+    <string name="site_settings_more_hint">View all available Discussion settings</string>
+    <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
+    <string name="site_settings_allow_comments_hint">Allow readers to post comments</string>
+    <string name="site_settings_send_pingbacks_hint">Attempt to notify any blogs linked to from the article</string>
+    <string name="site_settings_receive_pingbacks_hint">Allow link notifications from other blogs</string>
+    <string name="site_settings_close_after_hint">Disallow comments after the specified time</string>
+    <string name="site_settings_sort_by_hint">Determines the order comments are displayed</string>
+    <string name="site_settings_threading_hint">Allow nested comments to a certain depth</string>
+    <string name="site_settings_paging_hint">Display comments in chunks of a specified size</string>
+    <string name="site_settings_manual_approval_hint">Comments must be manually approved</string>
+    <string name="site_settings_identity_required_hint">Comment author must fill out name and e-mail</string>
+    <string name="site_settings_user_account_required_hint">Users must be registered and logged in to comment</string>
+    <string name="site_settings_whitelist_hint">Comment author must have a previously approved comment</string>
+    <string name="site_settings_multiple_links_hint">Ignores link limit from known users</string>
+    <string name="site_settings_moderation_hold_hint">Comments that match a filter are put in the moderation queue</string>
+    <string name="site_settings_blacklist_hint">Comments that match a filter are marked as spam</string>
+    <string name="site_settings_delete_site_hint">Removes your site data from the app</string>
+
+    <!-- Related Posts -->
+    <string name="site_settings_rp_switch_title">Show Related Posts</string>
+    <string name="site_settings_rp_switch_summary">Related Posts displays relevant content from your site below your posts.</string>
+    <string name="site_settings_rp_show_header_title">Show Header</string>
+    <string name="site_settings_rp_show_images_title">Show Images</string>
+    <string name="site_settings_rp_preview_header">@string/related_posts</string>
+    <string name="site_settings_rp_preview1_title">Big iPhone/iPad Update Now Available</string>
+    <string name="site_settings_rp_preview1_site">in \"Mobile\"</string>
+    <string name="site_settings_rp_preview2_title">The WordPress for Android App Gets a Big Facelift</string>
+    <string name="site_settings_rp_preview2_site">in \"Apps\"</string>
+    <string name="site_settings_rp_preview3_title">Upgrade Focus: VideoPress For Weddings</string>
+    <string name="site_settings_rp_preview3_site">in \"Upgrade\"</string>
+
+    <!-- Learn More -->
+    <string name="site_settings_learn_more_header">@string/learn_more</string>
+    <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
+
+    <!-- List Editors (Blacklist, Hold for Moderation) -->
+    <string name="site_settings_list_editor_no_items_text">No items</string>
+    <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
+    <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+
+    <!-- Dialogs -->
+    <string name="site_settings_discussion_title">@string/discussion</string>
+    <string name="site_settings_close_after_dialog_title">Close commenting</string>
+    <string name="site_settings_paging_dialog_header">Comments per page</string>
+    <string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
+    <string name="site_settings_close_after_dialog_header">@string/close_after</string>
+    <string name="site_settings_close_after_dialog_description">Automatically close comments on articles.</string>
+    <string name="site_settings_close_after_dialog_switch_text">Automatically close</string>
+    <string name="site_settings_multiple_links_dialog_description">Require approval for comments that include more than this number of links.</string>
+
+    <!-- Errors -->
+    <string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
+    <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
+
+    <!--               -->
+    <!-- Site Settings -->
+    <!--      End      -->
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
@@ -713,7 +718,7 @@
     <string name="stats_views">Views</string>
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
-    <string name="stats_comments">Comments</string>
+    <string name="stats_comments">@string/comments</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>
@@ -724,7 +729,7 @@
     <string name="stats_view_authors">Authors</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
-    <string name="stats_view_comments">Comments</string>
+    <string name="stats_view_comments">@string/comments</string>
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
@@ -746,7 +751,7 @@
     <string name="stats_totals_views">Views</string>
     <string name="stats_totals_clicks">Clicks</string>
     <string name="stats_totals_plays">Plays</string>
-    <string name="stats_totals_comments">Comments</string>
+    <string name="stats_totals_comments">@string/comments</string>
     <string name="stats_totals_publicize">Followers</string>
     <string name="stats_totals_followers">Since</string>
 
@@ -1152,7 +1157,7 @@
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
-    <string name="reader_title_comments">Comments</string>
+    <string name="reader_title_comments">@string/comments</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
@@ -1353,7 +1358,7 @@
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_site_settings">Settings</string>
-    <string name="my_site_btn_comments">Comments</string>
+    <string name="my_site_btn_comments">@string/comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
