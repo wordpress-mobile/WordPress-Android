@@ -18,6 +18,7 @@ import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
+import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,8 +131,22 @@ public class MediaUploadService extends Service {
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
-                EventBus.getDefault().post(new MediaEvents.MediaUploadFailed(mediaId,
-                        getString(R.string.upload_failed)));
+
+                String errorMessageToDisplay = null;
+                // well formed XML-RPC response from the server, but it's an error.
+                if (throwable != null && throwable instanceof XMLRPCFault) {
+                    XMLRPCFault xmlrpcFault = ((XMLRPCFault) throwable);
+                    if (xmlrpcFault.getFaultCode() == 401) {
+                        //errorMessageToDisplay = xmlrpcFault.getFaultString();
+                        errorMessageToDisplay = getString(R.string.media_error_no_permission_upload);
+                    }
+                }
+
+                if (errorMessageToDisplay == null) {
+                    errorMessageToDisplay = getString(R.string.upload_failed);
+                }
+
+                EventBus.getDefault().post(new MediaEvents.MediaUploadFailed(mediaId, errorMessageToDisplay));
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
