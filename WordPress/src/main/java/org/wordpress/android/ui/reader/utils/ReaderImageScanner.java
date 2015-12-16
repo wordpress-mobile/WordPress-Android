@@ -100,5 +100,4 @@ public class ReaderImageScanner {
     public String getLargestImage() {
         return getLargestImage(-1);
     }
-
 }

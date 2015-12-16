@@ -1,28 +1,31 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/margin_large"
-    android:paddingLeft="@dimen/margin_extra_large"
-    android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_large"
+    android:background="?android:selectableItemBackground"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/layout_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/content_margin"
+        android:paddingRight="@dimen/content_margin"
+        android:paddingTop="@dimen/margin_large">
 
         <FrameLayout
             android:id="@+id/frame_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_small">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/notifications_avatar_sz"
-                android:layout_height="@dimen/notifications_avatar_sz"/>
+                android:layout_height="@dimen/notifications_avatar_sz" />
 
             <ImageView
                 android:id="@+id/image_checkmark"
@@ -37,16 +40,17 @@
                 android:id="@+id/moderate_progress"
                 android:layout_width="@dimen/notifications_avatar_sz"
                 android:layout_height="@dimen/notifications_avatar_sz"
-                android:padding="@dimen/margin_large"
                 android:background="@drawable/shape_oval_translucent"
                 android:gravity="center"
+                android:padding="@dimen/margin_large"
                 android:visibility="gone"
                 tools:visibility="visible">
+
                 <ProgressBar
+                    style="@android:style/Widget.Holo.ProgressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    style="@android:style/Widget.Holo.ProgressBar" />
+                    android:indeterminate="true" />
             </LinearLayout>
         </FrameLayout>
 
@@ -56,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_small"
             android:gravity="right"
             android:orientation="vertical">
@@ -74,7 +79,9 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:textAllCaps="true"
                 android:textSize="@dimen/text_sz_small"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:text="status"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
@@ -94,6 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
+            android:layout_marginRight="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_toRightOf="@+id/frame_avatar"
             android:ellipsize="end"
@@ -101,5 +109,7 @@
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"
             tools:text="comment" />
+
     </RelativeLayout>
-</LinearLayout>
+
+</FrameLayout>
