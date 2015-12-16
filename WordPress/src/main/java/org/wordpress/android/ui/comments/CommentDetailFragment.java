@@ -676,22 +676,27 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
-                    @Override
-                    public void onActionResult(boolean succeeded) {
-                        if (!isAdded())
-                            return;
-                        // update title if it wasn't set above
-                        if (!hasTitle) {
-                            String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
-                            if (!TextUtils.isEmpty(postTitle)) {
-                                setPostTitle(txtPostTitle, postTitle, true);
-                            } else {
-                                txtPostTitle.setText(R.string.untitled);
+                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.OnRequestListener() {
+                            @Override
+                            public void onSuccess() {
+                                if (!isAdded()) return;
+
+                                // update title if it wasn't set above
+                                if (!hasTitle) {
+                                    String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
+                                    if (!TextUtils.isEmpty(postTitle)) {
+                                        setPostTitle(txtPostTitle, postTitle, true);
+                                    } else {
+                                        txtPostTitle.setText(R.string.untitled);
+                                    }
+                                }
                             }
-                        }
-                    }
-                });
+
+                            @Override
+                            public void onFailure(int statusCode) {
+                                // noop
+                            }
+                        });
             }
 
             txtPostTitle.setOnClickListener(new View.OnClickListener() {
