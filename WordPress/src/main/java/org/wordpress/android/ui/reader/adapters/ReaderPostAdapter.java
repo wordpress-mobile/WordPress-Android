@@ -288,7 +288,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(
-                    post.getPostAvatarForDisplay(mAvatarSzExtraSmall), WPNetworkImageView.ImageType.AVATAR);
+                    post.getPostAvatarForDisplay(mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
         } else {
             holder.imgAvatar.showDefaultGravatarImage();
         }
