@@ -583,7 +583,8 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
 
-            mReaderWebView.setIsPrivatePost(mPost.isPrivate && UrlUtils.isHttps(mPost.getBlogUrl()));
+            mReaderWebView.setIsPrivatePost(mPost.isPrivate);
+            mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
