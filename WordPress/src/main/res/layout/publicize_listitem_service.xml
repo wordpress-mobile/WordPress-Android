@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/content_margin"
-    android:layout_marginRight="@dimen/content_margin"
-    android:layout_marginTop="@dimen/margin_extra_large"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/margin_medium"
-    android:paddingRight="@dimen/margin_medium">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="?android:selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_icon"
-            android:layout_width="@dimen/avatar_sz_medium"
-            android:layout_height="@dimen/avatar_sz_medium"
+            android:layout_width="@dimen/blavatar_sz_small"
+            android:layout_height="@dimen/blavatar_sz_small"
             tools:src="@drawable/blavatar_placeholder" />
 
         <LinearLayout
@@ -32,29 +32,24 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_service"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_large"
+                android:textSize="@dimen/text_sz_medium"
                 tools:text="text_service" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_description"
-                android:layout_width="wrap_content"
+                android:id="@+id/text_user"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:textColor="@color/grey_darken_20"
+                android:maxLines="2"
+                android:textColor="@color/grey_darken_10"
                 android:textSize="@dimen/text_sz_medium"
-                tools:text="text_description" />
+                tools:text="text_user" />
         </LinearLayout>
 
     </LinearLayout>
-
-    <org.wordpress.android.ui.reader.views.ReaderRecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large" />
-
 </LinearLayout>
