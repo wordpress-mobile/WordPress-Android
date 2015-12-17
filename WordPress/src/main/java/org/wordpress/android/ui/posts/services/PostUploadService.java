@@ -847,16 +847,19 @@ public class PostUploadService extends Service {
             try {
                 return mClient.call(ApiHelper.Methods.UPLOAD_FILE, params, tempFile);
             } catch (XMLRPCException e) {
+                // well formed XML-RPC response from the server, but it's an error. Ok to print the error message
                 AppLog.e(T.API, e);
                 mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } catch (IOException e) {
+                // I/O-related error. Show a generic connection error message
                 AppLog.e(T.API, e);
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload_connection);
                 return null;
             } catch (XmlPullParserException e) {
+                // XML-RPC response isn't well formed or valid. DO NOT print the real error message
                 AppLog.e(T.API, e);
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
                 return null;
             } finally {
                 // remove the temporary upload file now that we're done with it

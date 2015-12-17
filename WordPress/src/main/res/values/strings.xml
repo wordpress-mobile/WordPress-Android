@@ -118,6 +118,7 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
+    <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
@@ -784,6 +785,7 @@
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
+    <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -897,7 +899,6 @@
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
-    <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
@@ -910,6 +911,11 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_changes_saved">Changes saved</string>
+
+    <!-- failure messages when retrieving a single reader post -->
+    <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
+    <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
+    <string name="reader_err_get_post_not_found">This post no longer exists</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
