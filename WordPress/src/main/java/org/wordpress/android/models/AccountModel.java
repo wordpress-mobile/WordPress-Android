@@ -145,7 +145,7 @@ public class AccountModel {
     }
 
     public String getFirstName() {
-        return mFirstName;
+        return StringUtils.notNullStr(mFirstName);
     }
 
     public void setFirstName(String firstName) {
@@ -153,7 +153,7 @@ public class AccountModel {
     }
 
     public String getLastName() {
-        return mLastName;
+        return StringUtils.notNullStr(mLastName);
     }
 
     public void setLastName(String lastName) {
@@ -161,7 +161,7 @@ public class AccountModel {
     }
 
     public String getAboutMe() {
-        return mAboutMe;
+        return StringUtils.notNullStr(mAboutMe);
     }
 
     public void setAboutMe(String aboutMe) {
