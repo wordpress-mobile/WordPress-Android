@@ -50,8 +50,6 @@ public class MyProfileActivity extends AppCompatActivity {
         }
         setContentView(R.layout.my_profile_activity);
 
-        setTitle(R.string.my_profile);
-
         mFirstName = (WPTextView) findViewById(R.id.first_name);
         mLastName = (WPTextView) findViewById(R.id.last_name);
         mDisplayName = (WPTextView) findViewById(R.id.display_name);
