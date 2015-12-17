@@ -23,13 +23,14 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * users to display
  */
 public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
-    private ReaderUserList mUsers = new ReaderUserList();
+    private final ReaderUserList mUsers = new ReaderUserList();
     private DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;
 
     public ReaderUserAdapter(Context context) {
         super();
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+        setHasStableIds(true);
     }
 
     public void setDataLoadedListener(DataLoadedListener listener) {
@@ -74,7 +75,11 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
             holder.itemView.setOnClickListener(null);
         }
 
-        holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+        if (user.hasAvatarUrl()) {
+            holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            holder.imgAvatar.showDefaultGravatarImage();
+        }
     }
 
     @Override
@@ -108,7 +113,6 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
             return;
         }
 
-        mUsers = (ReaderUserList) users.clone();
         final Handler handler = new Handler();
 
         new Thread() {
@@ -118,15 +122,19 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
                 // user domains so we can avoid having to do this for each user when getView()
                 // is called
                 ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
-                for (ReaderUser user: mUsers) {
+                for (ReaderUser user: users) {
                     user.isFollowed = user.hasUrl() && followedBlogUrls.contains(user.getUrl());
-                    user.setAvatarUrl(GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz));
                     user.getUrlDomain();
+                    if (user.hasAvatarUrl()) {
+                        user.setAvatarUrl(GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz));
+                    }
                 }
 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        mUsers.clear();
+                        mUsers.addAll(users);
                         notifyDataSetChanged();
                         if (mDataLoadedListener != null) {
                             mDataLoadedListener.onDataLoaded(isEmpty());

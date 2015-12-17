@@ -81,6 +81,10 @@ public class ReaderUser {
         return !TextUtils.isEmpty(url);
     }
 
+    public boolean hasAvatarUrl() {
+        return !TextUtils.isEmpty(avatarUrl);
+    }
+
     public boolean hasBlogId() {
         return (blogId != 0);
     }
