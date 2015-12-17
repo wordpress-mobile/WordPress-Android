@@ -414,11 +414,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
                 switch (type) {
                     case PREVIEW:
-                        if (isCurrentTheme) {
-                            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, themeProperties);
-                        } else {
-                            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE, themeProperties);
-                        }
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE, themeProperties);
                         break;
                     case DEMO:
                         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DEMO_ACCESSED, themeProperties);

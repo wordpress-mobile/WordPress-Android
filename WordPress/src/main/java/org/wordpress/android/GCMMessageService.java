@@ -69,7 +69,8 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
 
     // Add to the analytics properties map a subset of the push notification payload.
-    private static String[] propertiesToCopyIntoAnalytics = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id" };
+    private static String[] propertiesToCopyIntoAnalytics = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id",
+            "comment_id" };
 
     private void handleDefaultPush(String from, @NonNull Bundle data) {
         // Ensure Simperium is running so that notes sync
