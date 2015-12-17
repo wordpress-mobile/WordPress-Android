@@ -17,6 +17,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.HTTPUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -66,7 +67,8 @@ public abstract class EditorWebViewAbstract extends WebView {
                             mergedHeaders.put(entry.getKey(), entry.getValue());
                         }
 
-                        HttpURLConnection conn = Utils.setupUrlConnection(request.getUrl().toString(), mergedHeaders);
+                        HttpURLConnection conn = HTTPUtils.setupUrlConnection(request.getUrl().toString(),
+                                mergedHeaders);
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
@@ -86,7 +88,7 @@ public abstract class EditorWebViewAbstract extends WebView {
                 // Intercept requests for private images and add the WP.com authorization header
                 if (mHeaderMap.size() > 0) {
                     try {
-                        HttpURLConnection conn = Utils.setupUrlConnection(url, mHeaderMap);
+                        HttpURLConnection conn = HTTPUtils.setupUrlConnection(url, mHeaderMap);
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
