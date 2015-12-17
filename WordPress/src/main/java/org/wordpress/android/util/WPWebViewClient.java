@@ -90,8 +90,10 @@ public class WPWebViewClient extends WebViewClient {
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String stringUrl) {
         // Intercept requests for private images and add the WP.com authorization header
-        if (mBlog != null && mBlog.isPrivate() && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(stringUrl)) {
+        if (mBlog != null && mBlog.isPrivate() && mBlog.getUri().getScheme().equals("https") &&
+                !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(stringUrl)) {
             try {
+                // Force use of HTTPS for the resource, otherwise the request will fail for private sites
                 URL url = new URL(UrlUtils.makeHttps(stringUrl));
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Authorization", "Bearer " + mToken);

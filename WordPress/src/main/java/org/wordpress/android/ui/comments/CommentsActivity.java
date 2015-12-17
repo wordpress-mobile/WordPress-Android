@@ -149,9 +149,8 @@ public class CommentsActivity extends AppCompatActivity
     public void onCommentSelected(long commentId) {
         mSelectedCommentId = commentId;
         FragmentManager fm = getFragmentManager();
-        if (fm == null) {
-            return;
-        }
+        if (fm == null) return;
+
         fm.executePendingTransactions();
         CommentsListFragment listFragment = getListFragment();
 
@@ -204,7 +203,7 @@ public class CommentsActivity extends AppCompatActivity
         }
 
         // retain the id of the highlighted and selected comments
-        if (mSelectedCommentId != 0) {
+        if (mSelectedCommentId != 0 && hasDetailFragment()) {
             outState.putLong(KEY_SELECTED_COMMENT_ID, mSelectedCommentId);
         }
 
