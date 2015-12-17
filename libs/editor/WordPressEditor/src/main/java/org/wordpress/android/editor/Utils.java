@@ -6,16 +6,16 @@ import android.content.res.AssetManager;
 import android.net.Uri;
 
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Arrays;
@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Utils {
+    public static final int REQUEST_TIMEOUT_MS = 30000;
 
     public static String getHtmlFromFile(Activity activity, String filename) {
         try {
@@ -199,5 +200,26 @@ public class Utils {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Builds an HttpURLConnection from a URL and header map. Will force HTTPS usage if given an Authorization header.
+     * @throws IOException
+     */
+    public static HttpURLConnection setupUrlConnection(String url, Map<String, String> headers) throws IOException {
+        // Force HTTPS usage if an authorization header was specified
+        if (headers.keySet().contains("Authorization")) {
+            url = UrlUtils.makeHttps(url);
+        }
+
+        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setReadTimeout(REQUEST_TIMEOUT_MS);
+        conn.setConnectTimeout(REQUEST_TIMEOUT_MS);
+
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            conn.setRequestProperty(entry.getKey(), entry.getValue());
+        }
+
+        return conn;
     }
 }

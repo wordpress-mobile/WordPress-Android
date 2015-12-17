@@ -17,11 +17,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,8 +28,6 @@ import java.util.Map;
  */
 public abstract class EditorWebViewAbstract extends WebView {
     public abstract void execJavaScriptFromString(String javaScript);
-
-    public static final int REQUEST_TIMEOUT_MS = 30000;
 
     private OnImeBackListener mOnImeBackListener;
 
@@ -62,27 +58,15 @@ public abstract class EditorWebViewAbstract extends WebView {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                String url = request.getUrl().toString();
                 if (mHeaderMap.size() > 0) {
                     try {
-                        // Force HTTPS usage if an authorization header was specified
-                        if (mHeaderMap.keySet().contains("Authorization")) {
-                            url = UrlUtils.makeHttps(url);
-                        }
-                        URL imageUrl = new URL(url);
-
-                        HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
-                        conn.setReadTimeout(REQUEST_TIMEOUT_MS);
-                        conn.setConnectTimeout(REQUEST_TIMEOUT_MS);
-
                         // Keep any existing request headers from the WebResourceRequest
-                        for (Map.Entry<String, String> entry : request.getRequestHeaders().entrySet()) {
-                            conn.setRequestProperty(entry.getKey(), entry.getValue());
+                        Map<String, String> mergedHeaders = request.getRequestHeaders();
+                        for (Map.Entry<String, String> entry : mHeaderMap.entrySet()) {
+                            mergedHeaders.put(entry.getKey(), entry.getValue());
                         }
 
-                        for (Map.Entry<String, String> entry : mHeaderMap.entrySet()) {
-                            conn.setRequestProperty(entry.getKey(), entry.getValue());
-                        }
+                        HttpURLConnection conn = Utils.setupUrlConnection(request.getUrl().toString(), mergedHeaders);
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
@@ -102,19 +86,7 @@ public abstract class EditorWebViewAbstract extends WebView {
                 // Intercept requests for private images and add the WP.com authorization header
                 if (mHeaderMap.size() > 0) {
                     try {
-                        // Force HTTPS usage if an authorization header was specified
-                        if (mHeaderMap.keySet().contains("Authorization")) {
-                            url = UrlUtils.makeHttps(url);
-                        }
-                        URL imageUrl = new URL(url);
-
-                        HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
-                        conn.setReadTimeout(REQUEST_TIMEOUT_MS);
-                        conn.setConnectTimeout(REQUEST_TIMEOUT_MS);
-
-                        for (Map.Entry<String, String> entry : mHeaderMap.entrySet()) {
-                            conn.setRequestProperty(entry.getKey(), entry.getValue());
-                        }
+                        HttpURLConnection conn = Utils.setupUrlConnection(url, mHeaderMap);
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
