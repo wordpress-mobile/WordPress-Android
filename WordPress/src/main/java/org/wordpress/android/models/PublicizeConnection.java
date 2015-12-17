@@ -98,6 +98,9 @@ public class PublicizeConnection {
     public void setExternalProfilePictureUrl(String url) {
         this.mExternalProfilePictureUrl = StringUtils.notNullStr(url);
     }
+    public boolean hasExternalProfilePictureUrl() {
+        return !TextUtils.isEmpty(mExternalProfilePictureUrl);
+    }
 
     public String getStatus() {
         return StringUtils.notNullStr(mStatus);
@@ -178,7 +181,7 @@ public class PublicizeConnection {
         connection.mExternalId = json.optString("external_ID");
         connection.mExternalName = json.optString("external_name");
         connection.mExternalDisplayName = json.optString("external_display");
-        connection.mExternalProfilePictureUrl = json.optString("external_profile_URL");
+        connection.mExternalProfilePictureUrl = json.optString("external_profile_picture");
         connection.mStatus = json.optString("status");
         connection.mRefreshUrl = json.optString("refresh_URL");
 

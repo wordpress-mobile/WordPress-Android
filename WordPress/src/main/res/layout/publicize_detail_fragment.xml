@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:text="@string/connected_accounts_label"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_medium" />
 
         <org.wordpress.android.ui.reader.views.ReaderRecyclerView
             android:id="@+id/recycler_view"

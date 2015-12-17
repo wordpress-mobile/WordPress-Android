@@ -90,8 +90,14 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
 
         holder.txtUser.setText(connection.getExternalDisplayName());
 
-        String avatarUrl = PhotonUtils.getPhotonImageUrl(connection.getExternalProfilePictureUrl(), mAvatarSz, mAvatarSz);
-        holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        if (connection.hasExternalProfilePictureUrl()) {
+            String avatarUrl = PhotonUtils.getPhotonImageUrl(
+                    connection.getExternalProfilePictureUrl(), mAvatarSz, mAvatarSz);
+            holder.imgAvatar.setImageUrl(
+                    connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            holder.imgAvatar.showDefaultGravatarImage();
+        }
 
         holder.btnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
         holder.btnConnect.setOnClickListener(new View.OnClickListener() {
