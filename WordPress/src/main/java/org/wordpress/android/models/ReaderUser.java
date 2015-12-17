@@ -91,7 +91,7 @@ public class ReaderUser {
     public String getUrlDomain() {
         if (urlDomain == null) {
             if (hasUrl()) {
-                urlDomain = UrlUtils.getDomainFromUrl(getUrl());
+                urlDomain = UrlUtils.getHost(getUrl());
             } else {
                 urlDomain = "";
             }

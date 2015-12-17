@@ -248,7 +248,7 @@ public class ReaderPostActions {
         return "https://pixel.wp.com/g.gif?v=wpcom&reader=1"
                 + "&blog=" + post.blogId
                 + "&post=" + post.postId
-                + "&host=" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(post.getBlogUrl()))
+                + "&host=" + UrlUtils.urlEncode(UrlUtils.getHost(post.getBlogUrl()))
                 + "&ref="  + UrlUtils.urlEncode(TRACKING_REFERRER)
                 + "&t="    + mRandom.nextInt();
     }
