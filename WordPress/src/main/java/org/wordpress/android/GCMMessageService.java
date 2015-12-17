@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.ArrayMap;
@@ -70,7 +71,7 @@ public class GCMMessageService extends GcmListenerService {
     // Add to the analytics properties map a subset of the push notification payload.
     private static String[] propertiesToCopyIntoAnalytics = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id" };
 
-    private void handleDefaultPush(String from, Bundle data) {
+    private void handleDefaultPush(String from, @NonNull Bundle data) {
         // Ensure Simperium is running so that notes sync
         SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
 
@@ -125,9 +126,12 @@ public class GCMMessageService extends GcmListenerService {
 
         // Update notification content for the same noteId if it is already showing
         int pushId = 0;
-        for (int id : mActiveNotificationsMap.keySet()) {
+        for (Integer id : mActiveNotificationsMap.keySet()) {
+            if (id == null) {
+                continue;
+            }
             Bundle noteBundle = mActiveNotificationsMap.get(id);
-            if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
+            if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                 pushId = id;
                 mActiveNotificationsMap.put(pushId, data);
                 break;
@@ -219,7 +223,7 @@ public class GCMMessageService extends GcmListenerService {
                 if (noteCtr > mMaxInboxItems) {
                     break;
                 }
-                if (pushBundle.getString(PUSH_ARG_MSG) == null) {
+                if (pushBundle == null || pushBundle.getString(PUSH_ARG_MSG) == null) {
                     continue;
                 }
 
