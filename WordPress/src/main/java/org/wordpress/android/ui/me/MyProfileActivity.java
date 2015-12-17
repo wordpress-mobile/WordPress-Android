@@ -58,7 +58,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
         refreshDetails();
 
-        findViewById(R.id.first_name_row).setOnClickListener(createOnClickListener(getString(org.wordpress.android.R.string.first_name), null, mFirstName));
+        findViewById(R.id.first_name_row).setOnClickListener(createOnClickListener(getString(R.string.first_name), null, mFirstName));
         findViewById(R.id.last_name_row).setOnClickListener(createOnClickListener(getString(R.string.last_name), null, mLastName));
         findViewById(R.id.display_name_row).setOnClickListener(createOnClickListener(getString(R.string.public_display_name), null, mDisplayName));
         findViewById(R.id.about_me_row).setOnClickListener(createOnClickListener(getString(R.string.about_me), getString(R.string.about_me_hint), mAboutMe));
