@@ -33,7 +33,9 @@ public class MyProfileActivity extends AppCompatActivity {
         AccountHelper.getDefaultAccount().fetchAccountSettings(new ApiHelper.GenericCallback() {
             @Override
             public void onSuccess() {
-                refreshDetails();
+                if (!isFinishing()) {
+                    refreshDetails();
+                }
             }
 
             @Override
