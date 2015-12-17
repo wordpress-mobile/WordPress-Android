@@ -105,13 +105,13 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 return null;
             }
         } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+            if (!UrlUtils.getHost(baseUrl).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
             return null;
         } catch (SSLPeerUnverifiedException e) {
-            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+            if (!UrlUtils.getHost(baseUrl).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
@@ -150,13 +150,13 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+            if (!UrlUtils.getHost(baseUrl).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
             return null;
         } catch (SSLPeerUnverifiedException e) {
-            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+            if (!UrlUtils.getHost(baseUrl).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
@@ -195,7 +195,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         try {
             rsdUrl = UrlUtils.addUrlSchemeIfNeeded(getRsdUrl(url), false);
         } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+            if (!UrlUtils.getHost(url).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
@@ -212,7 +212,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(getXmlrpcByUserEnteredPath(url), false);
             }
         } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+            if (!UrlUtils.getHost(url).endsWith("wordpress.com")) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
