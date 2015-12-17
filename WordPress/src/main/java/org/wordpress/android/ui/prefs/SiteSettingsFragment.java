@@ -216,12 +216,15 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onResume() {
         super.onResume();
 
+        // always load cached settings
+        mSiteSettings.init(false);
+
         if (mShouldFetch) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     // initialize settings with locally cached values, fetch remote on first pass
-                    mSiteSettings.init(mShouldFetch);
+                    mSiteSettings.init(true);
                     // stop future calls from fetching remote settings
                 }
             }, FETCH_DELAY);
