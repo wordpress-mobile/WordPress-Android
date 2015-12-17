@@ -16,6 +16,7 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 
@@ -90,9 +91,11 @@ public class WPWebViewClient extends WebViewClient {
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String stringUrl) {
         // Intercept requests for private images and add the WP.com authorization header
-        if (mBlog != null && mBlog.isPrivate() && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(stringUrl)) {
+        if (mBlog != null && mBlog.isPrivate() && mBlog.getUri().getScheme().equals("https") &&
+                !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(stringUrl)) {
             try {
-                URL url = new URL(stringUrl);
+                // Force use of HTTPS for the resource, otherwise the request will fail for private sites
+                URL url = new URL(UrlUtils.makeHttps(stringUrl));
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Authorization", "Bearer " + mToken);
                 urlConnection.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
