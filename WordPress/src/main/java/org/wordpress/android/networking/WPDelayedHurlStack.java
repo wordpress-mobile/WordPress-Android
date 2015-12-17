@@ -99,10 +99,8 @@ public class WPDelayedHurlStack implements HttpStack {
                 additionalHeaders.put("Authorization", auth);
             }
 
-            String blogUriScheme = WordPress.currentBlog.getUri().getScheme();
-
             if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && mCtx != null
-                    && AccountHelper.isSignedInWordPressDotCom() && blogUriScheme.equals("https")) {
+                    && AccountHelper.isSignedInWordPressDotCom()) {
                 // Add the auth header to access private WP.com files
                 additionalHeaders.put("Authorization", "Bearer " + AccountHelper.getDefaultAccount().getAccessToken());
             }
