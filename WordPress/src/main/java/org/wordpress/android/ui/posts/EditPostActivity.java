@@ -856,14 +856,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
 
                         // Set up custom headers for the visual editor's internal WebView
-                        mEditorFragment.setWebViewHeader("User-Agent", WordPress.getUserAgent());
+                        mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
 
                         // For private blogs, the editor will need the bearer token to load media items
                         Blog currentBlog = WordPress.getCurrentBlog();
                         String token = AccountHelper.getDefaultAccount().getAccessToken();
                         if (currentBlog != null && currentBlog.isPrivate() &&
                                 currentBlog.getUri().getScheme().equals("https") && !TextUtils.isEmpty(token)) {
-                            mEditorFragment.setWebViewHeader("Authorization", "Bearer " + token);
+                            mEditorFragment.setCustomHttpHeader("Authorization", "Bearer " + token);
                         }
                     }
                     break;

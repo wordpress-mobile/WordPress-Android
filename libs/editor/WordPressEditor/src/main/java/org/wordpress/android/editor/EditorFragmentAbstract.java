@@ -88,7 +88,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         mFeaturedImageId = featuredImageId;
     }
 
-    public void setWebViewHeader(String name, String value) {
+    public void setCustomHttpHeader(String name, String value) {
         if (mCustomHttpHeaders == null) {
             mCustomHttpHeaders = new HashMap<>();
         }
