@@ -114,6 +114,8 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private static final int REGION_SUBSTRING_INDEX = 3;
 
+    private static final long FETCH_DELAY = 1000;
+
     // Reference to blog obtained from passed ID (ARG_LOCAL_BLOG_ID)
     private Blog mBlog;
 
@@ -214,15 +216,17 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onResume() {
         super.onResume();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // initialize settings with locally cached values, fetch remote on first pass
-                mSiteSettings.init(mShouldFetch);
-                // stop future calls from fetching remote settings
-                mShouldFetch = false;
-            }
-        }, 1000);
+        if (mShouldFetch) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // initialize settings with locally cached values, fetch remote on first pass
+                    mSiteSettings.init(mShouldFetch);
+                    // stop future calls from fetching remote settings
+                }
+            }, FETCH_DELAY);
+            mShouldFetch = false;
+        }
     }
 
     @Override
@@ -328,6 +332,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPagingPref) {
             showPagingDialog();
             return true;
+        } else if (preference == mCategoryPref || preference == mFormatPref) {
+            return !shouldShowListPreference((DetailListPreference) preference);
         }
 
         return false;
@@ -1094,6 +1100,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
         dialogBuilder.setCancelable(false);
         dialogBuilder.create().show();
+    }
+
+    private boolean shouldShowListPreference(DetailListPreference preference) {
+        return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
     }
 
     /**

@@ -60,7 +60,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
 
     // Requires WordPress 4.5.x or higher
     private static final int REQUIRED_MAJOR_VERSION = 4;
-    private static final int REQUIRED_MINOR_VERSION = 5;
+    private static final int REQUIRED_MINOR_VERSION = 3;
 
     private static final String OPTION_ALLOWED = "open";
     private static final String OPTION_DISALLOWED = "closed";
@@ -133,11 +133,18 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
      */
     @Override
     protected void fetchRemoteData() {
-        Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
 
-        // Need two interfaces or the first call gets aborted
-        instantiateInterface().callAsync(mOptionsCallback, ApiHelper.Methods.GET_OPTIONS, params);
-        instantiateInterface().callAsync(mCategoriesCallback, ApiHelper.Methods.GET_CATEGORIES, params);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
+
+                // Need two interfaces or the first call gets aborted
+                instantiateInterface().callAsync(mOptionsCallback, ApiHelper.Methods.GET_OPTIONS, params);
+                instantiateInterface().callAsync(mCategoriesCallback, ApiHelper.Methods.GET_CATEGORIES, params);
+            }
+        });
+        thread.run();
     }
 
     /**
