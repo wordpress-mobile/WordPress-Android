@@ -274,13 +274,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
         }
-
-        // if we're nearing the end of the posts, fire request to load more
-        if (mCanRequestMorePosts
-                && mDataRequestedListener != null
-                && (position >= getItemCount() - 1)) {
-            mDataRequestedListener.onRequestData();
-        }
     }
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
@@ -311,6 +304,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
         });
+
+        checkLoadMore(position);
     }
 
     private void renderPost(final int position, ReaderPostViewHolder holder) {
@@ -443,6 +438,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
         });
+
+        checkLoadMore(position);
+    }
+
+    /*
+     * if we're nearing the end of the posts, fire request to load more
+     */
+    private void checkLoadMore(int position) {
+        if (mCanRequestMorePosts
+                && mDataRequestedListener != null
+                && (position >= getItemCount() - 1)) {
+            mDataRequestedListener.onRequestData();
+        }
     }
 
     private void showDiscoverData(final ReaderPostViewHolder postHolder,
