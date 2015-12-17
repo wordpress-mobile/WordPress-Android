@@ -38,7 +38,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
 
-    protected Map<String, String> mWebViewHeaders;
+    protected Map<String, String> mCustomHttpHeaders;
 
     @Override
     public void onAttach(Activity activity) {
@@ -89,11 +89,11 @@ public abstract class EditorFragmentAbstract extends Fragment {
     }
 
     public void setWebViewHeader(String name, String value) {
-        if (mWebViewHeaders == null) {
-            mWebViewHeaders = new HashMap<>();
+        if (mCustomHttpHeaders == null) {
+            mCustomHttpHeaders = new HashMap<>();
         }
 
-        mWebViewHeaders.put(name, value);
+        mCustomHttpHeaders.put(name, value);
     }
 
     public void setDebugModeEnabled(boolean debugModeEnabled) {

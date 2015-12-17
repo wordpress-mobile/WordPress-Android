@@ -140,8 +140,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.setOnTouchListener(this);
         mWebView.setOnImeBackListener(this);
 
-        if (mWebViewHeaders != null && mWebViewHeaders.size() > 0) {
-            for (Map.Entry<String, String> entry : mWebViewHeaders.entrySet()) {
+        if (mCustomHttpHeaders != null && mCustomHttpHeaders.size() > 0) {
+            for (Map.Entry<String, String> entry : mCustomHttpHeaders.entrySet()) {
                 mWebView.setCustomHeader(entry.getKey(), entry.getValue());
             }
         }
@@ -979,6 +979,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 dialogBundle.putString("imageMeta", meta.toString());
                 dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
                 dialogBundle.putBoolean("featuredImageSupported", mFeaturedImageSupported);
+                dialogBundle.putSerializable("headerMap", (HashMap) mCustomHttpHeaders);
 
                 String imageId = JSONUtils.getString(meta, "attachment_id");
                 if (!imageId.isEmpty()) {

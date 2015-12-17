@@ -157,7 +157,7 @@ public class Utils {
         return changeMap;
     }
 
-    public static Uri downloadExternalMedia(Context context, Uri imageUri) {
+    public static Uri downloadExternalMedia(Context context, Uri imageUri, Map<String, String> headers) {
         if(context != null && imageUri != null) {
             File cacheDir = null;
 
@@ -174,7 +174,11 @@ public class Utils {
                         return null;
                     }
                 } else {
-                    inputStream = (new URL(imageUri.toString())).openStream();
+                    if (headers != null) {
+                        inputStream = setupUrlConnection(imageUri.toString(), headers).getInputStream();
+                    } else {
+                        inputStream = (new URL(imageUri.toString())).openStream();
+                    }
                 }
 
                 String fileName = "thumb-" + System.currentTimeMillis();
