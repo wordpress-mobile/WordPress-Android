@@ -858,11 +858,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         // Set up custom headers for the visual editor's internal WebView
                         mEditorFragment.setWebViewHeader("User-Agent", WordPress.getUserAgent());
 
-                        // TODO: how many times is getCurrectBlog() called in this activity? maybe should add mBlog
                         // For private blogs, the editor will need the bearer token to load media items
                         Blog currentBlog = WordPress.getCurrentBlog();
                         String token = AccountHelper.getDefaultAccount().getAccessToken();
-                        if (currentBlog != null && currentBlog.isPrivate() && !TextUtils.isEmpty(token)) {
+                        if (currentBlog != null && currentBlog.isPrivate() &&
+                                currentBlog.getUri().getScheme().equals("https") && !TextUtils.isEmpty(token)) {
                             mEditorFragment.setWebViewHeader("Authorization", "Bearer " + token);
                         }
                     }
