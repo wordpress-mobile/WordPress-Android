@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -25,7 +23,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
     private String mServiceId;
     private PublicizeService mService;
     private RecyclerView mRecycler;
-    private PublicizeActions.OnPublicizeActionListener mActionListener;
+    private ViewGroup mLayoutConnections;
 
     public static PublicizeDetailFragment newInstance(int siteId, PublicizeService service) {
         Bundle args = new Bundle();
@@ -67,6 +65,8 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
+
+        mLayoutConnections = (ViewGroup) rootView.findViewById(R.id.layout_connections);
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         int spacingHorizontal = 0;
@@ -74,14 +74,6 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
         mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         return rootView;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof PublicizeActions.OnPublicizeActionListener) {
-            mActionListener = (PublicizeActions.OnPublicizeActionListener) activity;
-        }
     }
 
     @Override
@@ -114,43 +106,24 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
         imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(getActivity(), mSiteId, mServiceId);
+        adapter.setOnPublicizeActionListener(getOnPublicizeActionListener());
+        adapter.setOnAdapterLoadedListener(new PublicizeConnectionAdapter.OnAdapterLoadedListener() {
+            @Override
+            public void onAdapterLoaded(boolean isEmpty) {
+                if (isAdded()) {
+                    mLayoutConnections.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                }
+            }
+        });
+
         mRecycler.setAdapter(adapter);
         adapter.refresh();
-
-        /*ConnectAction action;
-        if (mConnection == null) {
-            action = ConnectAction.CONNECT;
-        } else if (mConnection.getStatusEnum() == PublicizeConnection.ConnectStatus.BROKEN) {
-            action = ConnectAction.RECONNECT;
-        } else {
-            action = ConnectAction.DISCONNECT;
-        }
-        mConnectButton.setAction(action);
-        mConnectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doConnectBtnClick();
-            }
-        });*/
     }
 
-    private void doConnectBtnClick() {
-        if (mActionListener == null) return;
-
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            return;
+    private PublicizeActions.OnPublicizeActionListener getOnPublicizeActionListener() {
+        if (getActivity() instanceof PublicizeActions.OnPublicizeActionListener) {
+            return (PublicizeActions.OnPublicizeActionListener) getActivity();
         }
-
-        /*switch (mConnectButton.getAction()) {
-            case CONNECT:
-                mActionListener.onRequestConnect(mService);
-                break;
-            case DISCONNECT:
-                mActionListener.onRequestDisconnect(mConnection);
-                break;
-            case RECONNECT:
-                mActionListener.onRequestReconnect(mService, mConnection);
-                break;
-        }*/
+        return null;
     }
 }
