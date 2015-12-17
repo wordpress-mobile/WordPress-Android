@@ -35,7 +35,7 @@ public class DialogUtils {
             editText.setSelection(0, initialText.length());
         }
 
-        alertDialogBuilder.setCancelable(false)
+        alertDialogBuilder.setCancelable(true)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         callback.onSuccessfulInput(editText.getText().toString());
