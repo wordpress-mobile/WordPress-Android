@@ -31,6 +31,7 @@ public class ReaderPost {
     private String text;
     private String excerpt;
     private String authorName;
+    private String authorFirstName;
     private String blogName;
     private String blogUrl;
     private String postAvatar;
@@ -232,11 +233,10 @@ public class ReaderPost {
       * assigns author-related info to the passed post from the passed JSON "author" object
       */
     private static void assignAuthorFromJson(ReaderPost post, JSONObject jsonAuthor) {
-        if (jsonAuthor == null) {
-            return;
-        }
+        if (jsonAuthor == null) return;
 
         post.authorName = JSONUtils.getString(jsonAuthor, "name");
+        post.authorFirstName = JSONUtils.getString(jsonAuthor, "first_name");
         post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         post.authorId = jsonAuthor.optLong("ID");
 
@@ -321,8 +321,15 @@ public class ReaderPost {
     public String getAuthorName() {
         return StringUtils.notNullStr(authorName);
     }
-    public void setAuthorName(String authorName) {
-        this.authorName = StringUtils.notNullStr(authorName);
+    public void setAuthorName(String name) {
+        this.authorName = StringUtils.notNullStr(name);
+    }
+
+    public String getAuthorFirstName() {
+        return StringUtils.notNullStr(authorFirstName);
+    }
+    public void setAuthorFirstName(String name) {
+        this.authorFirstName = StringUtils.notNullStr(name);
     }
 
     public String getTitle() {
@@ -503,6 +510,10 @@ public class ReaderPost {
 
     public boolean hasAuthorName() {
         return !TextUtils.isEmpty(authorName);
+    }
+
+    public boolean hasAuthorFirstName() {
+        return !TextUtils.isEmpty(authorFirstName);
     }
 
     public boolean hasTitle() {

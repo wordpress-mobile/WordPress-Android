@@ -16,7 +16,7 @@ public class ReaderXPostUtils {
     // note that these strings don't need to be localized due to the intended audience
     private static final String UNKNOWN_SITE = "(unknown)";
     private static final String FMT_SITE_XPOST = "%1$s cross-posted from %2$s to %3$s";
-    private static final String FMT_COMMENT_XPOST = "%1$s left a comment on %2$s, cross-posted to %3$s";
+    private static final String FMT_COMMENT_XPOST = "%1$s commented on %2$s, cross-posted to %3$s";
 
     /*
      * returns the title to display for this xpost, which is simply the post's title
@@ -33,14 +33,15 @@ public class ReaderXPostUtils {
     /*
      * returns the html subtitle to display for this xpost
      * ex: "Nick cross-posted from +blog1 to +blog2"
-     * ex: "Nick left a comment on +blog1, cross-posted to +blog2"
+     * ex: "Nick commented on +blog1, cross-posted to +blog2"
      */
     public static Spanned getXPostSubtitleHtml(@NonNull ReaderPost post) {
         boolean isCommentXPost = post.getExcerpt().startsWith("X-comment");
 
+        String name = post.hasAuthorFirstName() ? post.getAuthorFirstName() : post.getAuthorName();
         String subtitle = String.format(
                 isCommentXPost ? FMT_COMMENT_XPOST : FMT_SITE_XPOST,
-                "<strong>" + post.getAuthorName() + "</strong>",
+                "<strong>" + name + "</strong>",
                 getFromSiteName(post),
                 getToSiteName(post));
 
