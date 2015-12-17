@@ -7,16 +7,16 @@ import java.util.Map;
 
 public class UrlUtilsTest extends InstrumentationTestCase {
     public void testGetDomainFromUrlWithEmptyStringDoesNotReturnNull() {
-        assertNotNull(UrlUtils.getDomainFromUrl(""));
+        assertNotNull(UrlUtils.getHost(""));
     }
 
     public void testGetDomainFromUrlWithNoHostDoesNotReturnNull() {
-        assertNotNull(UrlUtils.getDomainFromUrl("wordpress"));
+        assertNotNull(UrlUtils.getHost("wordpress"));
     }
 
     public void testGetDomainFromUrlWithHostReturnsHost() {
         String url = "http://www.wordpress.com";
-        String host = UrlUtils.getDomainFromUrl(url);
+        String host = UrlUtils.getHost(url);
 
         assertTrue(host.equals("www.wordpress.com"));
     }

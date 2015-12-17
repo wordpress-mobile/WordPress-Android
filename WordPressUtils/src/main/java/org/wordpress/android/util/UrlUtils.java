@@ -34,18 +34,16 @@ public class UrlUtils {
     }
 
     /**
-     *
-     * @param urlString url to get domain from
-     * @return domain of uri if available. Empty string otherwise.
+     * @param urlString url to get host from
+     * @return host of uri if available. Empty string otherwise.
      */
-    public static String getDomainFromUrl(final String urlString) {
+    public static String getHost(final String urlString) {
         if (urlString != null) {
             Uri uri = Uri.parse(urlString);
             if (uri.getHost() != null) {
                 return uri.getHost();
             }
         }
-
         return "";
     }
 
