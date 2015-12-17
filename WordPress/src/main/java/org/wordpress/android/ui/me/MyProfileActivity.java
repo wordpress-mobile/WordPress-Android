@@ -3,6 +3,7 @@ package org.wordpress.android.ui.me;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -102,7 +103,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
     private void updateLabel(WPTextView textView, String text) {
         textView.setText(text);
-        if (text == null || text.isEmpty()) {
+        if (TextUtils.isEmpty(text)) {
             textView.setVisibility(View.GONE);
         }
         else {

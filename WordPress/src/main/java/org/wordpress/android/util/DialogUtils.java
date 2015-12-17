@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -21,14 +22,14 @@ public class DialogUtils {
         final WPTextView hintView = (WPTextView) promptView.findViewById(org.wordpress.android.R.id.my_profile_dialog_hint);
 
         textView.setText(title);
-        if (hint != null && !hint.isEmpty()) {
+        if (!TextUtils.isEmpty(hint)) {
             hintView.setText(hint);
         }
         else {
             hintView.setVisibility(View.GONE);
         }
 
-        if (initialText != null && !initialText.isEmpty()) {
+        if (!TextUtils.isEmpty(initialText)) {
             editText.setText(initialText);
             editText.setSelection(0, initialText.length());
         }
