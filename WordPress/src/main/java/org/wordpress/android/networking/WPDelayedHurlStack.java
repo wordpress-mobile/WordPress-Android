@@ -23,6 +23,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -108,6 +109,12 @@ public class WPDelayedHurlStack implements HttpStack {
         additionalHeaders.put("User-Agent", WordPress.getUserAgent());
 
         String url = request.getUrl();
+
+        // Ensure that an HTTPS request is made for images in private sites
+        if (additionalHeaders.containsKey("Authorization")) {
+            url = UrlUtils.makeHttps(url);
+        }
+
         HashMap<String, String> map = new HashMap<String, String>();
         map.putAll(request.getHeaders());
         map.putAll(additionalHeaders);
