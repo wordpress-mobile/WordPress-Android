@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
 
 public class ReaderUser {
     public long userId;
@@ -15,9 +14,6 @@ public class ReaderUser {
     private String url;
     private String profileUrl;
     private String avatarUrl;
-
-    // isFollowed isn't read from json or stored in db - used by ReaderUserAdapter to mark followed users
-    public transient boolean isFollowed;
 
     public static ReaderUser fromJson(JSONObject json) {
         ReaderUser user = new ReaderUser();
@@ -88,23 +84,9 @@ public class ReaderUser {
     public boolean hasBlogId() {
         return (blogId != 0);
     }
-    /*
-     * not stored - used by ReaderUserAdapter for performance
-     */
-    private transient String urlDomain;
-    public String getUrlDomain() {
-        if (urlDomain == null) {
-            if (hasUrl()) {
-                urlDomain = UrlUtils.getDomainFromUrl(getUrl());
-            } else {
-                urlDomain = "";
-            }
-        }
-        return urlDomain;
-    }
 
     public boolean isSameUser(ReaderUser user) {
-        if (user==null)
+        if (user == null)
             return false;
         if (this.userId != user.userId)
             return false;
