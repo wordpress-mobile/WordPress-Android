@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -213,10 +214,15 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onResume() {
         super.onResume();
 
-        // initialize settings with locally cached values, fetch remote on first pass
-        mSiteSettings.init(mShouldFetch);
-        // stop future calls from fetching remote settings
-        mShouldFetch = false;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // initialize settings with locally cached values, fetch remote on first pass
+                mSiteSettings.init(mShouldFetch);
+                // stop future calls from fetching remote settings
+                mShouldFetch = false;
+            }
+        }, 1000);
     }
 
     @Override
