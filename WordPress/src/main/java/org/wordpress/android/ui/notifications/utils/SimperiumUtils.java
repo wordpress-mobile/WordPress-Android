@@ -39,7 +39,7 @@ public class SimperiumUtils {
         return mMetaBucket;
     }
 
-    public static Simperium configureSimperium(final Context context, String token) {
+    public static synchronized Simperium configureSimperium(final Context context, String token) {
         // Create a new instance of Simperium if it doesn't exist yet.
         // In any case, authorize the user.
         if (mSimperium == null) {

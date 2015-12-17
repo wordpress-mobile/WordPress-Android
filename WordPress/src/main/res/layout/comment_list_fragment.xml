@@ -4,29 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@android:id/list"
-            style="@style/WordPress.BorderedBackground"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="#00000000"
-            android:choiceMode="singleChoice"
-            android:divider="@drawable/list_divider"
-            android:dividerHeight="1dp"
-            android:scrollingCache="true"
-            tools:listitem="@layout/comment_listitem" />
+            android:layout_height="match_parent" />
+
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
         style="@style/WordPress.EmptyList.Title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"

@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
@@ -77,6 +78,11 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.notifications_settings);
         setHasOptionsMenu(true);
+
+        // Bump Analytics
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_LIST_OPENED);
+        }
     }
 
     @Override
@@ -438,6 +444,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         if (preference instanceof PreferenceScreen) {
             addToolbarToPreferenceScreen((PreferenceScreen) preference);
+        }
+
+        // Bump Analytics
+        if (preference instanceof PreferenceScreen) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_STREAMS_OPENED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_DETAILS_OPENED);
         }
 
         return false;
