@@ -15,10 +15,11 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.DialogUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.xmlrpc.android.ApiHelper;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class MyProfileActivity extends AppCompatActivity {
 
@@ -31,18 +32,7 @@ public class MyProfileActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AccountHelper.getDefaultAccount().fetchAccountSettings(new ApiHelper.GenericCallback() {
-            @Override
-            public void onSuccess() {
-                if (!isFinishing()) {
-                    refreshDetails();
-                }
-            }
-
-            @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            }
-        });
+        AccountHelper.getDefaultAccount().fetchAccountSettings();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -71,6 +61,18 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -90,15 +92,7 @@ public class MyProfileActivity extends AppCompatActivity {
     private void updateMyProfileForLabel(TextView textView) {
         Map<String, String> params = new HashMap<>();
         params.put(restParamForTextView(textView), textView.getText().toString());
-        AccountHelper.getDefaultAccount().postAccountSettings(params, new ApiHelper.GenericCallback() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            }
-        });
+        AccountHelper.getDefaultAccount().postAccountSettings(params);
     }
 
     private void updateLabel(WPTextView textView, String text) {
@@ -140,5 +134,11 @@ public class MyProfileActivity extends AppCompatActivity {
             param = Account.RestParam.ABOUT_ME;
         }
         return Account.RestParam.toString(param);
+    }
+
+    public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
+        if (!isFinishing()) {
+            refreshDetails();
+        }
     }
 }

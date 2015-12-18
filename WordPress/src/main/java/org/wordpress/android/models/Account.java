@@ -7,11 +7,13 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.ui.prefs.PrefsEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.xmlrpc.android.ApiHelper;
 
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Class for managing logged in user informations.
@@ -40,16 +42,14 @@ public class Account extends AccountModel {
         WordPress.getRestClientUtilsV1_1().get("me", listener, errorListener);
     }
 
-    public void fetchAccountSettings(final ApiHelper.GenericCallback callback) {
+    public void fetchAccountSettings() {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
-                    if (callback != null) {
-                        callback.onSuccess();
-                    }
+                    EventBus.getDefault().post(new PrefsEvents.MyProfileDetailsChanged());
                 }
             }
         };
@@ -64,16 +64,13 @@ public class Account extends AccountModel {
         WordPress.getRestClientUtilsV1_1().get("me/settings", listener, errorListener);
     }
 
-    public void postAccountSettings(Map<String, String> params, final ApiHelper.GenericCallback callback) {
+    public void postAccountSettings(Map<String, String> params) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
-                    if (callback != null) {
-                        callback.onSuccess();
-                    }
                 }
             }
         };
