@@ -76,6 +76,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsLoggedOutReader;
     private int mToolbarHeight;
     private String mErrorMessage;
+    private boolean mIsToolbarShowing = true;
 
     private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
 
@@ -876,13 +877,16 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollUp() {
-        showToolbar(true);
-        showFooter(true);
+        if (!mIsToolbarShowing) {
+            showToolbar(true);
+            showFooter(true);
+        }
     }
 
     @Override
     public void onScrollDown() {
-        if (mScrollView.canScrollDown()
+        if (mIsToolbarShowing
+                && mScrollView.canScrollDown()
                 && mScrollView.canScrollUp()
                 && mScrollView.getScrollY() > mToolbarHeight) {
             showToolbar(false);
@@ -892,13 +896,14 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollCompleted() {
-        if (!mScrollView.canScrollDown()) {
+        if (!mIsToolbarShowing && !mScrollView.canScrollDown()) {
             showToolbar(true);
             showFooter(true);
         }
     }
 
     private void showToolbar(boolean show) {
+        mIsToolbarShowing = show;
         if (mAutoHideToolbarListener != null) {
             mAutoHideToolbarListener.onShowHideToolbar(show);
         }
