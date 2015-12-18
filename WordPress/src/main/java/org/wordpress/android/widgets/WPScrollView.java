@@ -11,10 +11,18 @@ import android.widget.ScrollView;
  * ScrollView which reports when user has scrolled up or down, and when scrolling has completed
  */
 public class WPScrollView extends ScrollView {
-    private static final int SCROLL_CHECK_DELAY = 250;
-    private int mInitialScrollCheckY;
+
+    public interface ScrollDirectionListener {
+        public void onScrollUp(float distanceY);
+        public void onScrollDown(float distanceY);
+        public void onScrollCompleted();
+    }
+
     private ScrollDirectionListener mScrollDirectionListener;
     private final GestureDetectorCompat mDetector;
+
+    private static final int SCROLL_CHECK_DELAY = 250;
+    private int mInitialScrollCheckY;
 
     public WPScrollView(Context context) {
         this(context, null);
@@ -69,9 +77,9 @@ public class WPScrollView extends ScrollView {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             if (distanceY > 0) {
-                mScrollDirectionListener.onScrollDown();
+                mScrollDirectionListener.onScrollDown(distanceY);
             } else if (distanceY < 0) {
-                mScrollDirectionListener.onScrollUp();
+                mScrollDirectionListener.onScrollUp(distanceY);
             }
             startScrollCheck();
             return super.onScroll(e1, e2, distanceX, distanceY);

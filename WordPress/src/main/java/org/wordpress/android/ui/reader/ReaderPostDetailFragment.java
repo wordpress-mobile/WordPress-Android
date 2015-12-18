@@ -49,9 +49,9 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
+import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
 public class ReaderPostDetailFragment extends Fragment
         implements ScrollDirectionListener,
@@ -876,7 +876,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     @Override
-    public void onScrollUp() {
+    public void onScrollUp(float distanceY) {
         if (!mIsToolbarShowing) {
             showToolbar(true);
             showFooter(true);
@@ -884,7 +884,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     @Override
-    public void onScrollDown() {
+    public void onScrollDown(float distanceY) {
         if (mIsToolbarShowing
                 && mScrollView.canScrollDown()
                 && mScrollView.canScrollUp()
