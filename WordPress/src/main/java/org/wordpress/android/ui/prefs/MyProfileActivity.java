@@ -50,7 +50,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
         findViewById(R.id.first_name_row).setOnClickListener(createOnClickListener(getString(R.string.first_name), null, mFirstName));
         findViewById(R.id.last_name_row).setOnClickListener(createOnClickListener(getString(R.string.last_name), null, mLastName));
-        findViewById(R.id.display_name_row).setOnClickListener(createOnClickListener(getString(R.string.public_display_name), null, mDisplayName));
+        findViewById(R.id.display_name_row).setOnClickListener(createOnClickListener(getString(R.string.public_display_name), getString(R.string.public_display_name_hint), mDisplayName));
         findViewById(R.id.about_me_row).setOnClickListener(createOnClickListener(getString(R.string.about_me), getString(R.string.about_me_hint), mAboutMe));
     }
 
@@ -98,7 +98,12 @@ public class MyProfileActivity extends AppCompatActivity {
     private void updateLabel(WPTextView textView, String text) {
         textView.setText(text);
         if (TextUtils.isEmpty(text)) {
-            textView.setVisibility(View.GONE);
+            if (textView == mDisplayName) {
+                Account account = AccountHelper.getDefaultAccount();
+                mDisplayName.setText(account.getUserName());
+            } else {
+                textView.setVisibility(View.GONE);
+            }
         }
         else {
             textView.setVisibility(View.VISIBLE);
