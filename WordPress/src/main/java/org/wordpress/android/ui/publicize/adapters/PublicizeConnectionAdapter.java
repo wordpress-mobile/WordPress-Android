@@ -53,14 +53,18 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
     }
 
     public void refresh() {
-        PublicizeConnectionList connections = PublicizeTable.getConnectionsForSiteAndService(mSiteId, mServiceId);
-        if (!mConnections.isSameAs(connections)) {
+        PublicizeConnectionList siteConnections = PublicizeTable.getConnectionsForSite(mSiteId);
+        PublicizeConnectionList serviceConnections =
+                siteConnections.getServiceConnectionsForUser(mCurrentUserId, mServiceId);
+
+        if (!mConnections.isSameAs(serviceConnections)) {
             mConnections.clear();
-            mConnections.addAll(connections);
+            mConnections.addAll(serviceConnections);
             notifyDataSetChanged();
-            if (mLoadedListener != null) {
-                mLoadedListener.onAdapterLoaded(isEmpty());
-            }
+        }
+
+        if (mLoadedListener != null) {
+            mLoadedListener.onAdapterLoaded(isEmpty());
         }
     }
 

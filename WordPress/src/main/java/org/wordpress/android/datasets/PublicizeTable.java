@@ -12,7 +12,6 @@ import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
 import org.wordpress.android.util.SqlUtils;
-import org.wordpress.android.util.StringUtils;
 
 public class PublicizeTable {
     private static final String SERVICES_TABLE    = "tbl_publicize_services";
@@ -214,20 +213,6 @@ public class PublicizeTable {
         PublicizeConnectionList connectionList= new PublicizeConnectionList();
         String args[] = {Integer.toString(siteId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + CONNECTIONS_TABLE + " WHERE site_id=?", args);
-        try {
-            while (c.moveToNext()) {
-                connectionList.add(getConnectionFromCursor(c));
-            }
-            return connectionList;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
-    public static PublicizeConnectionList getConnectionsForSiteAndService(int siteId, String serviceId) {
-        PublicizeConnectionList connectionList= new PublicizeConnectionList();
-        String args[] = {Integer.toString(siteId), StringUtils.notNullStr(serviceId)};
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + CONNECTIONS_TABLE + " WHERE site_id=? AND service=?", args);
         try {
             while (c.moveToNext()) {
                 connectionList.add(getConnectionFromCursor(c));

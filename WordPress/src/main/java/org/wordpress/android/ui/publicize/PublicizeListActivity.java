@@ -237,7 +237,7 @@ public class PublicizeListActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 PublicizeActions.disconnect(connection);
-                returnToListFragment();
+                reloadDetailFragment();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -260,11 +260,10 @@ public class PublicizeListActivity extends AppCompatActivity
     public void onEventMainThread(PublicizeEvents.ActionCompleted event) {
         if (isFinishing()) return;
 
-        if (event.didSucceed()) {
-            returnToListFragment();
-        } else {
-            closeWebViewFragment();
-            reloadDetailFragment();
+        closeWebViewFragment();
+        reloadDetailFragment();
+
+        if (!event.didSucceed()) {
             ToastUtils.showToast(this, R.string.error_generic);
         }
     }

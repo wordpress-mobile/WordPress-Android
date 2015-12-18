@@ -11,17 +11,21 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
+import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class PublicizeDetailFragment extends PublicizeBaseFragment {
+public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
 
     private int mSiteId;
     private String mServiceId;
+
     private PublicizeService mService;
+
+    private ConnectButton mConnectBtn;
     private RecyclerView mRecycler;
     private ViewGroup mLayoutConnections;
 
@@ -66,6 +70,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
 
+        mConnectBtn = (ConnectButton) rootView.findViewById(R.id.button_connect);
         mLayoutConnections = (ViewGroup) rootView.findViewById(R.id.layout_connections);
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
@@ -107,17 +112,14 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
 
         PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(getActivity(), mSiteId, mServiceId);
         adapter.setOnPublicizeActionListener(getOnPublicizeActionListener());
-        adapter.setOnAdapterLoadedListener(new PublicizeConnectionAdapter.OnAdapterLoadedListener() {
-            @Override
-            public void onAdapterLoaded(boolean isEmpty) {
-                if (isAdded()) {
-                    mLayoutConnections.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-                }
-            }
-        });
+        adapter.setOnAdapterLoadedListener(this);
 
         mRecycler.setAdapter(adapter);
         adapter.refresh();
+    }
+
+    private boolean hasOnPublicizeActionListener() {
+        return getOnPublicizeActionListener() != null;
     }
 
     private PublicizeActions.OnPublicizeActionListener getOnPublicizeActionListener() {
@@ -125,5 +127,23 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
             return (PublicizeActions.OnPublicizeActionListener) getActivity();
         }
         return null;
+    }
+
+    @Override
+    public void onAdapterLoaded(boolean isEmpty) {
+        if (!isAdded()) return;
+
+        mLayoutConnections.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mConnectBtn.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+
+        if (isEmpty && hasOnPublicizeActionListener()) {
+            mConnectBtn.setAction(ConnectAction.CONNECT);
+            mConnectBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getOnPublicizeActionListener().onRequestConnect(mService);
+                }
+            });
+        }
     }
 }

@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,12 +38,12 @@ public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
         return true;
     }
 
-    public PublicizeConnectionList getServiceConnectionsForUser(long userId, PublicizeService service) {
+    public PublicizeConnectionList getServiceConnectionsForUser(long userId, String serviceId) {
         PublicizeConnectionList connections = new PublicizeConnectionList();
-        if (service == null) return connections;
+        if (TextUtils.isEmpty(serviceId)) return connections;
 
         for (PublicizeConnection connection: this) {
-            if (connection.getService().equalsIgnoreCase(service.getId())) {
+            if (connection.getService().equalsIgnoreCase(serviceId)) {
                 // shared connections are available to all users, otherwise the service userId
                 // must match the current userId to be considered connected
                 if (connection.isShared || connection.userId == userId) {

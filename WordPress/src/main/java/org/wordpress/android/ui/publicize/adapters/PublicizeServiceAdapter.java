@@ -95,7 +95,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     @Override
     public void onBindViewHolder(final SharingViewHolder holder, int position) {
         final PublicizeService service = mServices.get(position);
-        final PublicizeConnectionList connections = mConnections.getServiceConnectionsForUser(mCurrentUserId, service);
+        final PublicizeConnectionList connections = mConnections.getServiceConnectionsForUser(mCurrentUserId, service.getId());
 
         holder.txtService.setText(service.getLabel());
         String iconUrl = PhotonUtils.getPhotonImageUrl(service.getIconUrl(), mBlavatarSz, mBlavatarSz);
