@@ -861,7 +861,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         // For private blogs, the editor will need the bearer token to load media items
                         Blog currentBlog = WordPress.getCurrentBlog();
                         String token = AccountHelper.getDefaultAccount().getAccessToken();
-                        if (currentBlog != null && currentBlog.isPrivate() &&
+                        if (currentBlog != null && currentBlog.isPrivate() && currentBlog.isDotcomFlag() &&
                                 currentBlog.getUri().getScheme().equals("https") && !TextUtils.isEmpty(token)) {
                             mEditorFragment.setCustomHttpHeader("Authorization", "Bearer " + token);
                         }
