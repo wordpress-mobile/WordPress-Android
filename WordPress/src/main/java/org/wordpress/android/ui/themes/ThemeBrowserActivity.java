@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -148,8 +149,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTIVATE_THEME) {
-            if (resultCode == RESULT_OK) {
-                String themeId = data.getStringExtra(THEME_ID);
+            String themeId = data.getStringExtra(THEME_ID);
+            if (resultCode == RESULT_OK && !TextUtils.isEmpty(themeId)) {
                 activateTheme(themeId);
             }
         }

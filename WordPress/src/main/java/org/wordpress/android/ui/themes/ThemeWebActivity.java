@@ -2,7 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -105,10 +104,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.theme_web, menu);
-
-        Bundle bundle = getIntent().getExtras();
-        Boolean isPremiumTheme = bundle.getBoolean(IS_PREMIUM_THEME, false);
-        Boolean isCurrentTheme = bundle.getBoolean(IS_CURRENT_THEME, false);
+        Boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
+        Boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
 
         if (isPremiumTheme || isCurrentTheme) {
             menu.findItem(R.id.action_activate).setVisible(false);
@@ -120,10 +117,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_activate) {
-            Bundle bundle = getIntent().getExtras();
             Intent returnIntent = new Intent();
             setResult(RESULT_OK, returnIntent);
-            returnIntent.putExtra(ThemeBrowserActivity.THEME_ID, bundle.getString(ThemeBrowserActivity.THEME_ID));
+            returnIntent.putExtra(ThemeBrowserActivity.THEME_ID,
+                    getIntent().getStringExtra(ThemeBrowserActivity.THEME_ID));
             finish();
             return true;
         } else {
