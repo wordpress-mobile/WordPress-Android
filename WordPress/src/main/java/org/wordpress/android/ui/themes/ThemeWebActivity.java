@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -139,9 +138,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     private void setActionBarTitleToThemeName() {
-        Bundle bundle = getIntent().getExtras();
-        String themeName = bundle.getString(THEME_NAME);
-        if (getSupportActionBar() != null) {
+        String themeName = getIntent().getStringExtra(THEME_NAME);
+        if (getSupportActionBar() != null && themeName != null) {
             getSupportActionBar().setTitle(themeName);
         }
     }
