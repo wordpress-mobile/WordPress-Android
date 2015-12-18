@@ -13,9 +13,9 @@ import android.widget.ScrollView;
 public class WPScrollView extends ScrollView {
 
     public interface ScrollDirectionListener {
-        public void onScrollUp(float distanceY);
-        public void onScrollDown(float distanceY);
-        public void onScrollCompleted();
+        void onScrollUp(float distanceY);
+        void onScrollDown(float distanceY);
+        void onScrollCompleted();
     }
 
     private ScrollDirectionListener mScrollDirectionListener;
@@ -76,12 +76,13 @@ public class WPScrollView extends ScrollView {
     private class ScrollGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (distanceY > 0) {
-                mScrollDirectionListener.onScrollDown(distanceY);
-            } else if (distanceY < 0) {
+            if (distanceY < 0) {
                 mScrollDirectionListener.onScrollUp(distanceY);
+                startScrollCheck();
+            } else if (distanceY > 0) {
+                mScrollDirectionListener.onScrollDown(distanceY);
+                startScrollCheck();
             }
-            startScrollCheck();
             return super.onScroll(e1, e2, distanceX, distanceY);
         }
     }
