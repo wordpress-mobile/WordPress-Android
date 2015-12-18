@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.me;
+package org.wordpress.android.ui.prefs;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;

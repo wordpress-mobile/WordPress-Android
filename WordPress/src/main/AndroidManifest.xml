@@ -318,7 +318,7 @@
 
         <!--Me activities-->
         <activity
-            android:name=".ui.me.MyProfileActivity"
+            android:name=".ui.prefs.MyProfileActivity"
             android:label="@string/my_profile"
             android:theme="@style/CalypsoTheme" />
 
