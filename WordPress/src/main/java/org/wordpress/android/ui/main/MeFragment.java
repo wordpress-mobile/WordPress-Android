@@ -22,11 +22,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.prefs.PrefsEvents;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.lang.ref.WeakReference;
+
+import de.greenrobot.event.EventBus;
 
 public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
@@ -115,6 +118,19 @@ public class MeFragment extends Fragment {
         }
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshAccountDetails();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -237,5 +253,9 @@ public class MeFragment extends Fragment {
             }
             mDisconnectProgressDialog = null;
         }
+    }
+
+    public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
+        refreshAccountDetails();
     }
 }
