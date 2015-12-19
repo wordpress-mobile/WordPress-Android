@@ -148,9 +148,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ACTIVATE_THEME) {
-            if (resultCode == RESULT_OK) {
-                String themeId = data.getStringExtra(THEME_ID);
+        if (requestCode == ACTIVATE_THEME && resultCode == RESULT_OK && data != null) {
+            String themeId = data.getStringExtra(THEME_ID);
+            if (!TextUtils.isEmpty(themeId)) {
                 activateTheme(themeId);
             }
         }
