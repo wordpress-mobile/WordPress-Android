@@ -44,8 +44,8 @@
 
     <LinearLayout
         android:id="@+id/stats_widget_values_container"
-        android:minHeight="@dimen/stats_widget_main_container_size"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/stats_widget_main_container_size"
+        android:minHeight="@dimen/stats_widget_main_container_min_size"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -53,10 +53,9 @@
         <!-- Views -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/margin_medium"
             android:gravity="center"
             android:background="@drawable/stats_visitors_and_views_button_white"
             android:clickable="false">
@@ -100,10 +99,9 @@
         <!-- Visitors -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/margin_medium"
             android:gravity="center"
             android:background="@drawable/stats_visitors_and_views_button_white"
             android:clickable="false">
@@ -147,10 +145,9 @@
         <!-- Likes -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/margin_medium"
             android:gravity="center"
             android:background="@drawable/stats_visitors_and_views_button_white"
             android:clickable="false">
@@ -194,10 +191,9 @@
         <!-- Comments -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/margin_medium"
             android:gravity="center"
             android:background="@drawable/stats_visitors_and_views_button_latest_white"
             android:clickable="false">
@@ -245,8 +241,8 @@
         android:id="@+id/stats_widget_error_container"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:minHeight="@dimen/stats_widget_main_container_size"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/stats_widget_main_container_size"
+        android:minHeight="@dimen/stats_widget_main_container_min_size"
         android:gravity="center_vertical"
         android:orientation="horizontal">
         <TextView
