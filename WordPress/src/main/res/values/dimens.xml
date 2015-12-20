@@ -153,7 +153,7 @@
     <dimen name="stats_widget_one_cell">40dp</dimen>
     <dimen name="stats_widget_four_cells">250dp</dimen>
     <dimen name="stats_widget_five_cells">320dp</dimen>
-    <dimen name="stats_widget_main_container_size">44dp</dimen>
+    <dimen name="stats_widget_main_container_size">48dp</dimen>
     <dimen name="stats_widget_image_layout_size">12dp</dimen>
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
