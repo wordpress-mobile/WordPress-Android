@@ -44,15 +44,15 @@ import java.util.concurrent.TimeUnit;
 import de.greenrobot.event.EventBus;
 
 public class GCMMessageService extends GcmListenerService {
+    private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
+    private static String sPreviousNoteId = null;
+    private static long sPreviousNoteTime = 0L;
+
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
     private static final int PUSH_NOTIFICATION_ID = 10000;
     private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
-
-    private static final ArrayMap<Integer, Bundle> mActiveNotificationsMap = new ArrayMap<>();
-    private static String mPreviousNoteId = null;
-    private static long mPreviousNoteTime = 0L;
-    private static final int mMaxInboxItems = 5;
+    private static final int MAX_INBOX_ITEMS = 5;
 
     private static final String PUSH_ARG_USER = "user";
     private static final String PUSH_ARG_TYPE = "type";
@@ -67,6 +67,13 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_FOLLOW = "follow";
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
+
+    private void synchronizedHandleDefaultPush(String from, @NonNull Bundle data) {
+        // sActiveNotificationsMap being static, we can't just synchronize the method
+        synchronized (sActiveNotificationsMap) {
+            handleDefaultPush(from, data);
+        }
+    }
 
     private void handleDefaultPush(String from, @NonNull Bundle data) {
         // Ensure Simperium is running so that notes sync
@@ -109,34 +116,34 @@ public class GCMMessageService extends GcmListenerService {
          * on the same post will have the same note_id, so don't assume that the note_id is unique
          */
         long thisTime = System.currentTimeMillis();
-        if (mPreviousNoteId != null && mPreviousNoteId.equals(noteId)) {
-            long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - mPreviousNoteTime);
+        if (sPreviousNoteId != null && sPreviousNoteId.equals(noteId)) {
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - sPreviousNoteTime);
             if (seconds <= 1) {
                 AppLog.w(T.NOTIFS, "skipped potential duplicate notification");
                 return;
             }
         }
 
-        mPreviousNoteId = noteId;
-        mPreviousNoteTime = thisTime;
+        sPreviousNoteId = noteId;
+        sPreviousNoteTime = thisTime;
 
         // Update notification content for the same noteId if it is already showing
         int pushId = 0;
-        for (Integer id : mActiveNotificationsMap.keySet()) {
+        for (Integer id : sActiveNotificationsMap.keySet()) {
             if (id == null) {
                 continue;
             }
-            Bundle noteBundle = mActiveNotificationsMap.get(id);
+            Bundle noteBundle = sActiveNotificationsMap.get(id);
             if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                 pushId = id;
-                mActiveNotificationsMap.put(pushId, data);
+                sActiveNotificationsMap.put(pushId, data);
                 break;
             }
         }
 
         if (pushId == 0) {
-            pushId = PUSH_NOTIFICATION_ID + mActiveNotificationsMap.size();
-            mActiveNotificationsMap.put(pushId, data);
+            pushId = PUSH_NOTIFICATION_ID + sActiveNotificationsMap.size();
+            sActiveNotificationsMap.put(pushId, data);
         }
 
         String iconUrl = data.getString("icon");
@@ -207,12 +214,12 @@ public class GCMMessageService extends GcmListenerService {
         showNotificationForBuilder(builder, this, pushId);
 
         // Also add a group summary notification, which is required for non-wearable devices
-        if (mActiveNotificationsMap.size() > 1) {
+        if (sActiveNotificationsMap.size() > 1) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             int noteCtr = 1;
-            for (Bundle pushBundle : mActiveNotificationsMap.values()) {
+            for (Bundle pushBundle : sActiveNotificationsMap.values()) {
                 // InboxStyle notification is limited to 5 lines
-                if (noteCtr > mMaxInboxItems) {
+                if (noteCtr > MAX_INBOX_ITEMS) {
                     break;
                 }
                 if (pushBundle == null || pushBundle.getString(PUSH_ARG_MSG) == null) {
@@ -231,12 +238,12 @@ public class GCMMessageService extends GcmListenerService {
                 noteCtr++;
             }
 
-            if (mActiveNotificationsMap.size() > mMaxInboxItems) {
+            if (sActiveNotificationsMap.size() > MAX_INBOX_ITEMS) {
                 inboxStyle.setSummaryText(String.format(getString(R.string.more_notifications),
-                        mActiveNotificationsMap.size() - mMaxInboxItems));
+                        sActiveNotificationsMap.size() - MAX_INBOX_ITEMS));
             }
 
-            String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
+            String subject = String.format(getString(R.string.new_notifications), sActiveNotificationsMap.size());
             NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.notification_icon)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
@@ -260,7 +267,9 @@ public class GCMMessageService extends GcmListenerService {
 
     // Displays a notification to the user
     private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context, int notificationId) {
-        if (builder == null || context == null) return;
+        if (builder == null || context == null) {
+            return;
+        }
 
         Intent resultIntent = new Intent(this, WPMainActivity.class);
         resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
@@ -268,8 +277,8 @@ public class GCMMessageService extends GcmListenerService {
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
         resultIntent.addCategory("android.intent.category.LAUNCHER");
-        if (mPreviousNoteId != null) {
-            resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mPreviousNoteId);
+        if (sPreviousNoteId != null) {
+            resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, sPreviousNoteId);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -291,7 +300,8 @@ public class GCMMessageService extends GcmListenerService {
         Intent notificationDeletedIntent = new Intent(this, NotificationDismissBroadcastReceiver.class);
         notificationDeletedIntent.putExtra("notificationId", notificationId);
         notificationDeletedIntent.setAction(String.valueOf(notificationId));
-        PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(context, notificationId, notificationDeletedIntent, 0);
+        PendingIntent pendingDeleteIntent =
+                PendingIntent.getBroadcast(context, notificationId, notificationDeletedIntent, 0);
         builder.setDeleteIntent(pendingDeleteIntent);
 
         builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
@@ -381,12 +391,14 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        handleDefaultPush(from, data);
+        synchronizedHandleDefaultPush(from, data);
     }
 
     // Returns true if the note type is known to have a gravatar
     public boolean shouldCircularizeNoteIcon(String noteType) {
-        if (TextUtils.isEmpty(noteType)) return false;
+        if (TextUtils.isEmpty(noteType)) {
+            return false;
+        }
 
         switch (noteType) {
             case PUSH_TYPE_COMMENT:
@@ -401,28 +413,30 @@ public class GCMMessageService extends GcmListenerService {
         }
     }
 
-    public static void clearNotifications() {
-        mActiveNotificationsMap.clear();
+    public static synchronized void clearNotifications() {
+        sActiveNotificationsMap.clear();
     }
 
-    public static int getNotificationsCount() {
-        return mActiveNotificationsMap.size();
+    public static synchronized int getNotificationsCount() {
+        return sActiveNotificationsMap.size();
     }
 
-    public static boolean hasNotifications() {
-        return !mActiveNotificationsMap.isEmpty();
+    public static synchronized boolean hasNotifications() {
+        return !sActiveNotificationsMap.isEmpty();
     }
 
-    public static void removeNotification(int notificationId) {
-        mActiveNotificationsMap.remove(notificationId);
+    public static synchronized void removeNotification(int notificationId) {
+        sActiveNotificationsMap.remove(notificationId);
     }
 
     // Removes all app notifications from the system bar
-    public static void removeAllNotifications(Context context) {
-        if (context == null || !hasNotifications()) return;
+    public static synchronized void removeAllNotifications(Context context) {
+        if (context == null || !hasNotifications()) {
+            return;
+        }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        for (Integer pushId : mActiveNotificationsMap.keySet()) {
+        for (Integer pushId : sActiveNotificationsMap.keySet()) {
             notificationManager.cancel(pushId);
         }
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
