@@ -20,11 +20,7 @@ public class WPUrlUtils {
     public static synchronized boolean isWordPressCom(String url) {
         return UrlUtils.getHost(url).endsWith("wordpress.com");
     }
-
-    public static synchronized boolean isFilesWordPressCom(String url) {
-        return UrlUtils.getHost(url).endsWith("files.wordpress.com");
-    }
-
+    
     public static synchronized boolean isWordPressCom(URL url) {
         if (url == null) {
             return false;
