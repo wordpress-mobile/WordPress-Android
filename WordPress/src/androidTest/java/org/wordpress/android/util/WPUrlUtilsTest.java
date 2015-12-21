@@ -159,8 +159,13 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
     public void testIsWPCOMString4() {
         assertTrue(WPUrlUtils.isWordPressCom(wpcomAddress4));
     }
+
     public void testIsWPCOMString5() {
         assertTrue(WPUrlUtils.isWordPressCom(wpcomAddress5));
+    }
+
+    public void testIsWPCOMString6() {
+        assertTrue(WPUrlUtils.isWordPressCom(wpcomAddress6));
     }
 
     private URL buildURL(String address) {
@@ -189,6 +194,10 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
 
     public void testIsWPCOMURL5() {
         assertTrue(WPUrlUtils.isWordPressCom(buildURL(wpcomAddress5)));
+    }
+
+    public void testIsWPCOMURL6() {
+        assertTrue(WPUrlUtils.isWordPressCom(buildURL(wpcomAddress6)));
     }
 
 
@@ -220,6 +229,9 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
         assertTrue(WPUrlUtils.isWordPressCom(buildURI(wpcomAddress5)));
     }
 
+    public void testIsWPCOMURI6() {
+        assertTrue(WPUrlUtils.isWordPressCom(buildURI(wpcomAddress6)));
+    }
 
     public void testIsNOTWPCOM1() {
         assertFalse(WPUrlUtils.isWordPressCom(notWpcomAddress1));
@@ -243,6 +255,18 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
 
     public void testIsNOTWPCOM6() {
         assertFalse(WPUrlUtils.isWordPressCom(buildURI(notWpcomAddress2)));
+    }
+
+    public void testIsNOTWPCOM7() {
+        assertFalse(WPUrlUtils.isWordPressCom(notWpcomAddress3));
+    }
+
+    public void testIsNOTWPCOM8() {
+        assertFalse(WPUrlUtils.isWordPressCom(buildURL(notWpcomAddress3)));
+    }
+
+    public void testIsNOTWPCOM9() {
+        assertFalse(WPUrlUtils.isWordPressCom(buildURI(notWpcomAddress3)));
     }
 
 }
