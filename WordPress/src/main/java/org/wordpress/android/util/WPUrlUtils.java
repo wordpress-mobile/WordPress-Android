@@ -1,0 +1,50 @@
+package org.wordpress.android.util;
+
+import java.net.URI;
+import java.net.URL;
+
+public class WPUrlUtils {
+
+    public static synchronized boolean safeToAddWordPressComAuthToken(String url) {
+        return UrlUtils.isHttps(url) && isWordPressCom(url);
+    }
+
+    public static synchronized boolean safeToAddWordPressComAuthToken(URL url) {
+        return UrlUtils.isHttps(url) && isWordPressCom(url);
+    }
+
+    public static synchronized boolean safeToAddWordPressComAuthToken(URI uri) {
+        return UrlUtils.isHttps(uri) && isWordPressCom(uri);
+    }
+
+    public static synchronized boolean isWordPressCom(String url) {
+        return UrlUtils.getHost(url).endsWith("wordpress.com");
+    }
+
+    public static synchronized boolean isFilesWordPressCom(String url) {
+        return UrlUtils.getHost(url).endsWith("files.wordpress.com");
+    }
+
+    public static synchronized boolean isWordPressCom(URL url) {
+        if (url == null) {
+            return false;
+        }
+        return url.getHost().endsWith("wordpress.com");
+    }
+
+    public static synchronized boolean isWordPressCom(URI uri) {
+        if (uri == null || uri.getHost() == null) {
+            return false;
+        }
+        return uri.getHost().endsWith("wordpress.com");
+    }
+
+    public static synchronized boolean isGravatar(URL url) {
+        if (url == null) {
+            return false;
+        }
+        return url.getHost().endsWith("gravatar.com");
+    }
+
+
+}
