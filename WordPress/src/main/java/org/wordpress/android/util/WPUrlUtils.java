@@ -39,8 +39,7 @@ public class WPUrlUtils {
         if (url == null) {
             return false;
         }
-        return url.getHost().endsWith("gravatar.com");
+        return url.getHost().equals("gravatar.com") || url.getHost().endsWith(".gravatar.com");
     }
-
 
 }
