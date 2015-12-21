@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -30,6 +31,7 @@ public class ReaderPost {
     private String text;
     private String excerpt;
     private String authorName;
+    private String authorFirstName;
     private String blogName;
     private String blogUrl;
     private String postAvatar;
@@ -59,6 +61,9 @@ public class ReaderPost {
 
     private String attachmentsJson;
     private String discoverJson;
+
+    public long xpostPostId;
+    public long xpostBlogId;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -157,6 +162,9 @@ public class ReaderPost {
             post.setDiscoverJson(jsonDiscover.toString());
         }
 
+        // xpost info
+        assignXpostIdsFromJson(post, json.optJSONArray("metadata"));
+
         // if there's no featured image, check if featured media has been set - this is sometimes
         // a YouTube or Vimeo video, in which case store it as the featured video so we can treat
         // it as a video
@@ -191,15 +199,44 @@ public class ReaderPost {
         return post;
     }
 
+    /*
+     * assigns cross post blog & post IDs from post's metadata section
+     *  "metadata": [
+     *       {
+     *           "id": "21192",
+     *           "key": "xpost_origin",
+     *           "value": "11326809:18427"
+     *       }
+     *     ],
+     */
+    private static void assignXpostIdsFromJson(ReaderPost post, JSONArray jsonMetadata) {
+        if (jsonMetadata ==  null) return;
+
+        for (int i = 0; i < jsonMetadata.length(); i++) {
+            JSONObject jsonMetaItem = jsonMetadata.optJSONObject(i);
+            String metaKey = jsonMetaItem.optString("key");
+            if (!TextUtils.isEmpty(metaKey) && metaKey.equals("xpost_origin")) {
+                String value = jsonMetaItem.optString("value");
+                if (!TextUtils.isEmpty(value) && value.contains(":")) {
+                    String[] valuePair = value.split(":");
+                    if (valuePair.length == 2) {
+                        post.xpostBlogId = StringUtils.stringToLong(valuePair[0]);
+                        post.xpostPostId = StringUtils.stringToLong(valuePair[1]);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
      /*
       * assigns author-related info to the passed post from the passed JSON "author" object
       */
     private static void assignAuthorFromJson(ReaderPost post, JSONObject jsonAuthor) {
-        if (jsonAuthor == null) {
-            return;
-        }
+        if (jsonAuthor == null) return;
 
         post.authorName = JSONUtils.getString(jsonAuthor, "name");
+        post.authorFirstName = JSONUtils.getString(jsonAuthor, "first_name");
         post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         post.authorId = jsonAuthor.optLong("ID");
 
@@ -284,8 +321,15 @@ public class ReaderPost {
     public String getAuthorName() {
         return StringUtils.notNullStr(authorName);
     }
-    public void setAuthorName(String authorName) {
-        this.authorName = StringUtils.notNullStr(authorName);
+    public void setAuthorName(String name) {
+        this.authorName = StringUtils.notNullStr(name);
+    }
+
+    public String getAuthorFirstName() {
+        return StringUtils.notNullStr(authorFirstName);
+    }
+    public void setAuthorFirstName(String name) {
+        this.authorFirstName = StringUtils.notNullStr(name);
     }
 
     public String getTitle() {
@@ -468,6 +512,10 @@ public class ReaderPost {
         return !TextUtils.isEmpty(authorName);
     }
 
+    public boolean hasAuthorFirstName() {
+        return !TextUtils.isEmpty(authorFirstName);
+    }
+
     public boolean hasTitle() {
         return !TextUtils.isEmpty(title);
     }
@@ -483,6 +531,12 @@ public class ReaderPost {
         return !isExternal;
     }
 
+    /*
+     * returns true if this is a cross-post
+     */
+    public boolean isXpost() {
+        return xpostBlogId != 0 && xpostPostId != 0;
+    }
 
     public boolean isSamePost(ReaderPost post) {
         return post != null
@@ -535,14 +589,28 @@ public class ReaderPost {
      * returns the avatar url as a photon url set to the passed size
      */
     private transient String avatarForDisplay;
-    public String getPostAvatarForDisplay(int avatarSize) {
+    public String getPostAvatarForDisplay(int size) {
         if (avatarForDisplay == null) {
             if (!hasPostAvatar()) {
                 return "";
             }
-            avatarForDisplay = GravatarUtils.fixGravatarUrl(postAvatar, avatarSize);
+            avatarForDisplay = GravatarUtils.fixGravatarUrl(postAvatar, size);
         }
         return avatarForDisplay;
+    }
+
+    /*
+     * returns the blog's blavatar url as a photon url set to the passed size
+     */
+    private transient String blavatarForDisplay;
+    public String getPostBlavatarForDisplay(int size) {
+        if (blavatarForDisplay == null) {
+            if (!hasBlogUrl()) {
+                return "";
+            }
+            blavatarForDisplay = GravatarUtils.blavatarFromUrl(getBlogUrl(), size);
+        }
+        return blavatarForDisplay;
     }
 
     /*

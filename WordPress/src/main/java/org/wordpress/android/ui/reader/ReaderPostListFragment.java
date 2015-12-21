@@ -991,6 +991,12 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
+        // if this is a cross-post, we want to show the original post
+        if (post.isXpost()) {
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.xpostBlogId, post.xpostPostId);
+            return;
+        }
+
         ReaderPostListType type = getPostListType();
         Map<String, Object> analyticsProperties = new HashMap<>();
 
