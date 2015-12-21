@@ -1,5 +1,3 @@
-package org.wordpress.android.util;
-
 import android.test.InstrumentationTestCase;
 
 import java.net.MalformedURLException;
