@@ -228,7 +228,7 @@ public class ReaderActivityLauncher {
         if (openUrlType == OpenUrlType.INTERNAL) {
             // That won't work on wpcom sites with custom urls
             // TODO: #2785 (util method to check if a URL is wpcom)
-            if (UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+            if (UrlUtils.getHost(url).endsWith("wordpress.com")) {
                 WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
                         AccountHelper.getDefaultAccount().getUserName());
             } else {

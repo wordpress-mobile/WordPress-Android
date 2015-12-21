@@ -92,14 +92,14 @@ public class WPDelayedHurlStack implements HttpStack {
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         if (request.getUrl() != null) {
-            if (!StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && mCurrentBlog != null
+            if (!UrlUtils.getHost(request.getUrl()).endsWith("wordpress.com") && mCurrentBlog != null
                     && mCurrentBlog.hasValidHTTPAuthCredentials()) {
                 String creds = String.format("%s:%s", mCurrentBlog.getHttpuser(), mCurrentBlog.getHttppassword());
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 additionalHeaders.put("Authorization", auth);
             }
 
-            if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && mCtx != null
+            if (UrlUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && mCtx != null
                     && AccountHelper.isSignedInWordPressDotCom()) {
                 // Add the auth header to access private WP.com files
                 additionalHeaders.put("Authorization", "Bearer " + AccountHelper.getDefaultAccount().getAccessToken());
