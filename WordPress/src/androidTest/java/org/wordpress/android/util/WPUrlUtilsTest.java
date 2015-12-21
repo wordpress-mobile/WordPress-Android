@@ -14,8 +14,10 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
     private static final String wpcomAddress3 = "http://wordpress.com/xmlrpc.php";
     private static final String wpcomAddress4 = "https://wordpress.com";
     private static final String wpcomAddress5 = "https://wordpress.com/test#test";
+    private static final String wpcomAddress6 = "https://developer.wordpress.com";
     private static final String notWpcomAddress1 = "http://i2.wp.com.eritreo.it#.files.wordpress.com/testpicture.gif?strip=all&quality=100&resize=1024,768";
     private static final String notWpcomAddress2 = "wordpress.com";
+    private static final String notWpcomAddress3 = "https://thisisnotwordpress.com";
 
 
     public void testSafeToAddAuthToken1() {
@@ -112,6 +114,33 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
     public void testSafeToAddAuthToken21() {
         // Not wpcom
         assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(notWpcomAddress2)));
+    }
+
+    public void testSafeToAddAuthToken22() {
+        // Not wpcom
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(notWpcomAddress3));
+    }
+
+    public void testSafeToAddAuthToken23() {
+        // Not wpcom
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURL(notWpcomAddress3)));
+    }
+
+    public void testSafeToAddAuthToken24() {
+        // Not wpcom
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(notWpcomAddress3)));
+    }
+
+    public void testSafeToAddAuthToken25() {
+        assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(wpcomAddress6));
+    }
+
+    public void testSafeToAddAuthToken26() {
+        assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURL(wpcomAddress6)));
+    }
+
+    public void testSafeToAddAuthToken27() {
+        assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(wpcomAddress6)));
     }
 
 

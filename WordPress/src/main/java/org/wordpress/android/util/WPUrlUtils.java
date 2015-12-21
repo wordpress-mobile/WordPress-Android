@@ -18,21 +18,21 @@ public class WPUrlUtils {
     }
 
     public static synchronized boolean isWordPressCom(String url) {
-        return UrlUtils.getHost(url).endsWith("wordpress.com");
+        return UrlUtils.getHost(url).endsWith(".wordpress.com") || UrlUtils.getHost(url).equals("wordpress.com");
     }
-    
+
     public static synchronized boolean isWordPressCom(URL url) {
         if (url == null) {
             return false;
         }
-        return url.getHost().endsWith("wordpress.com");
+        return url.getHost().endsWith(".wordpress.com") || url.getHost().equals("wordpress.com");
     }
 
     public static synchronized boolean isWordPressCom(URI uri) {
         if (uri == null || uri.getHost() == null) {
             return false;
         }
-        return uri.getHost().endsWith("wordpress.com");
+        return uri.getHost().endsWith(".wordpress.com") || uri.getHost().equals("wordpress.com");
     }
 
     public static synchronized boolean isGravatar(URL url) {
