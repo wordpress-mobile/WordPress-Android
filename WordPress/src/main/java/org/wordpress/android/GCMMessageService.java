@@ -438,19 +438,11 @@ public class GCMMessageService extends GcmListenerService {
         sActiveNotificationsMap.remove(notificationId);
     }
 
-<<<<<<< HEAD
-    // Removes all app notifications from the system bar.
-    // This is called when the Notifications tab is resumed. EX: app started, app resumed, even if
-    // the current screen is not the Notifications.
-    public static void removeAllNotifications(Context context) {
-        if (context == null || !hasNotifications()) return;
-=======
     // Removes all app notifications from the system bar
     public static synchronized void removeAllNotifications(Context context) {
         if (context == null || !hasNotifications()) {
             return;
         }
->>>>>>> hotfix/4.8.1
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         for (Integer pushId : sActiveNotificationsMap.keySet()) {
@@ -461,10 +453,10 @@ public class GCMMessageService extends GcmListenerService {
         clearNotifications();
     }
 
-    //NoteID is the ID if the note in WordPress
-    public static void bumpPushNotificationsTappedAnalytics(String noteID) {
-        for (int id : mActiveNotificationsMap.keySet()) {
-            Bundle noteBundle = mActiveNotificationsMap.get(id);
+    // NoteID is the ID if the note in WordPress
+    public static synchronized void bumpPushNotificationsTappedAnalytics(String noteID) {
+        for (int id : sActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = sActiveNotificationsMap.get(id);
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
                 AnalyticsTracker.flush();
@@ -474,15 +466,16 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     // Mark all notifications as tapped
-    public static void bumpPushNotificationsTappedAllAnalytics() {
-        for (int id : mActiveNotificationsMap.keySet()) {
-            Bundle noteBundle = mActiveNotificationsMap.get(id);
+    public static synchronized void bumpPushNotificationsTappedAllAnalytics() {
+        for (int id : sActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = sActiveNotificationsMap.get(id);
             bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
         }
         AnalyticsTracker.flush();
     }
 
-    private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle,  Map<String, Object> properties) {
+    private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle,
+                                                                    Map<String, Object> properties) {
         // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
         if (!NotificationsUtils.isNotificationsEnabled(WordPress.getContext())) {
             return;
