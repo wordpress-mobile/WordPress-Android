@@ -24,6 +24,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -92,14 +93,14 @@ public class WPDelayedHurlStack implements HttpStack {
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         if (request.getUrl() != null) {
-            if (!UrlUtils.getHost(request.getUrl()).endsWith("wordpress.com") && mCurrentBlog != null
+            if (!WPUrlUtils.isWordPressCom(request.getUrl()) && mCurrentBlog != null
                     && mCurrentBlog.hasValidHTTPAuthCredentials()) {
                 String creds = String.format("%s:%s", mCurrentBlog.getHttpuser(), mCurrentBlog.getHttppassword());
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 additionalHeaders.put("Authorization", auth);
             }
 
-            if (UrlUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && mCtx != null
+            if (WPUrlUtils.safeToAddWordPressComAuthToken(request.getUrl()) && mCtx != null
                     && AccountHelper.isSignedInWordPressDotCom()) {
                 // Add the auth header to access private WP.com files
                 additionalHeaders.put("Authorization", "Bearer " + AccountHelper.getDefaultAccount().getAccessToken());
@@ -171,8 +172,8 @@ public class WPDelayedHurlStack implements HttpStack {
      */
     protected HttpURLConnection createConnection(URL url) throws IOException {
         // Check that the custom SslSocketFactory is not null on HTTPS connections
-        if ("https".equals(url.getProtocol()) && !url.getHost().endsWith("wordpress.com")
-                && !url.getHost().endsWith("gravatar.com")) {
+        if (UrlUtils.isHttps(url) && !WPUrlUtils.isWordPressCom(url)
+                && !WPUrlUtils.isGravatar(url)) {
             // WordPress.com doesn't need the custom mSslSocketFactory
             synchronized (monitor) {
                 while (mSslSocketFactory == null) {
