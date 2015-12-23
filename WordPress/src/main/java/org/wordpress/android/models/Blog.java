@@ -467,7 +467,7 @@ public class Blog {
         } else {
             String remoteID =  getApi_blogid();
             // Self-hosted blogs edge cases.
-            if (org.apache.commons.lang.StringUtils.isEmpty(remoteID)) {
+            if (TextUtils.isEmpty(remoteID)) {
                 return null;
             }
             try {
@@ -477,7 +477,7 @@ public class Blog {
                     return null;
                 }
             } catch (NumberFormatException e) {
-                AppLog.e(T.STATS, "The remote blog ID stored in options isn't valid: " + remoteID);
+                AppLog.e(T.UTILS, "The remote blog ID stored in options isn't valid: " + remoteID);
                 return null;
             }
             return remoteID;
