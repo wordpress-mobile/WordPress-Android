@@ -10,6 +10,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -112,7 +113,7 @@ public class BlogUtils {
             // deprecated
             blog.setMaxImageWidthId(0);
             blog.setRemoteBlogId(Integer.parseInt(blogId));
-            blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
+            blog.setDotcomFlag(WPUrlUtils.isWordPressCom(xmlRpcUrl));
             // assigned later in getOptions call
             blog.setWpVersion("");
             blog.setAdmin(isAdmin);

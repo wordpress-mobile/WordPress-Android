@@ -415,6 +415,9 @@ public class Blog {
     }
 
     public boolean isPrivate() {
+        if (!isDotcomFlag()) {
+            return false; // only wpcom blogs can be marked private.
+        }
         JSONObject jsonOptions = getBlogOptionsJSONObject();
         if (jsonOptions != null && jsonOptions.has("blog_public")) {
             try {

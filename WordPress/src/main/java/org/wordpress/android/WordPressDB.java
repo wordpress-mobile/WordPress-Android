@@ -33,6 +33,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.FileInputStream;
@@ -80,7 +81,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 39;
+    private static final int DATABASE_VERSION = 40;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -381,10 +382,30 @@ public class WordPressDB {
                 resetThemeTable();
                 currentVersion++;
             case 38:
+                updateDotcomFlag();
+                currentVersion++;
+            case 39:
                 AccountTable.migrationAddFirstNameLastNameAboutMeFields(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
+    }
+
+    private void updateDotcomFlag() {
+        // Loop over all .com blogs in the app and check that are really hosted on wpcom
+        List<Map<String, Object>> allBlogs = getBlogsBy("dotcomFlag=1", null, 0, false);
+        for (Map<String, Object> blog : allBlogs) {
+            String xmlrpcURL = MapUtils.getMapStr(blog, "url");
+            if (!WPUrlUtils.isWordPressCom(xmlrpcURL)) {
+                // .org blog marked as .com. Fix it.
+                int blogID = MapUtils.getMapInt(blog, "id");
+                if (blogID > 0) {
+                    ContentValues values = new ContentValues();
+                    values.put("dotcomFlag", false); // Mark as .org blog
+                    db.update(BLOGS_TABLE, values, "id=" + blogID, null);
+                }
+            }
+        }
     }
 
     /*
