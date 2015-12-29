@@ -290,7 +290,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
             prefScreen.setTitle(title);
-            prefScreen.setSummary(UrlUtils.getDomainFromUrl(siteUrl));
+            prefScreen.setSummary(UrlUtils.getHost(siteUrl));
 
             addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, blogId);
             blogsCategory.addPreference(prefScreen);
