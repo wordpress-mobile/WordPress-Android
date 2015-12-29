@@ -57,6 +57,7 @@ import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
@@ -302,7 +303,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private boolean isWPComLogin() {
         String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
-        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || selfHostedUrl.contains("wordpress.com");
+        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || WPUrlUtils.isWordPressCom(selfHostedUrl);
     }
 
     private boolean isJetpackAuth() {

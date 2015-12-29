@@ -40,7 +40,7 @@ public class BlogUtils {
         homeURL = StringUtils.removeTrailingSlash(homeURL);
 
         if (homeURL.length() == 0) {
-            return StringUtils.getHost(MapUtils.getMapStr(account, "url"));
+            return UrlUtils.getHost(MapUtils.getMapStr(account, "url"));
         }
 
         return homeURL;
