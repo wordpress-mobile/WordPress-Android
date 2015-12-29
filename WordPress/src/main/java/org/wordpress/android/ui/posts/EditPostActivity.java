@@ -86,6 +86,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -857,14 +858,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                         // Set up custom headers for the visual editor's internal WebView
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
-
-                        // For private blogs, the editor will need the bearer token to load media items
-                        Blog currentBlog = WordPress.getCurrentBlog();
-                        String token = AccountHelper.getDefaultAccount().getAccessToken();
-                        if (currentBlog != null && currentBlog.isPrivate() && currentBlog.isDotcomFlag() &&
-                                currentBlog.getUri().getScheme().equals("https") && !TextUtils.isEmpty(token)) {
-                            mEditorFragment.setCustomHttpHeader("Authorization", "Bearer " + token);
-                        }
                     }
                     break;
                 case 1:
@@ -1935,6 +1928,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onFeaturedImageChanged(int mediaId) {
         mPost.setFeaturedImageId(mediaId);
         mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        String authHeader = "";
+        Blog currentBlog = WordPress.getCurrentBlog();
+        String token = AccountHelper.getDefaultAccount().getAccessToken();
+
+        if (currentBlog != null && currentBlog.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url) &&
+                !TextUtils.isEmpty(token)) {
+            authHeader = "Bearer " + token;
+        }
+        return authHeader;
     }
 
     @Override

@@ -18,6 +18,8 @@ import android.webkit.WebViewClient;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HTTPUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -31,6 +33,7 @@ public abstract class EditorWebViewAbstract extends WebView {
     public abstract void execJavaScriptFromString(String javaScript);
 
     private OnImeBackListener mOnImeBackListener;
+    private AuthHeaderRequestListener mAuthHeaderRequestListener;
 
     private Map<String, String> mHeaderMap = new HashMap<>();
 
@@ -59,21 +62,29 @@ public abstract class EditorWebViewAbstract extends WebView {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                if (mHeaderMap.size() > 0) {
-                    try {
-                        // Keep any existing request headers from the WebResourceRequest
-                        Map<String, String> mergedHeaders = request.getRequestHeaders();
-                        for (Map.Entry<String, String> entry : mHeaderMap.entrySet()) {
-                            mergedHeaders.put(entry.getKey(), entry.getValue());
-                        }
+                String url = request.getUrl().toString();
 
-                        HttpURLConnection conn = HTTPUtils.setupUrlConnection(request.getUrl().toString(),
-                                mergedHeaders);
-                        return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
-                                conn.getInputStream());
-                    } catch (IOException e) {
-                        AppLog.e(AppLog.T.EDITOR, e);
+                try {
+                    // Keep any existing request headers from the WebResourceRequest
+                    Map<String, String> headerMap = request.getRequestHeaders();
+                    for (Map.Entry<String, String> entry : mHeaderMap.entrySet()) {
+                        headerMap.put(entry.getKey(), entry.getValue());
                     }
+
+                    // Request and add an authorization header for HTTPS resource requests.
+                    // Use https:// when requesting the auth header, in case the resource is incorrectly using http://.
+                    // If an auth header is returned, force https:// for the actual HTTP request.
+                    String authHeader = mAuthHeaderRequestListener.onAuthHeaderRequested(UrlUtils.makeHttps(url));
+                    if (StringUtils.notNullStr(authHeader).length() > 0) {
+                        url = UrlUtils.makeHttps(url);
+                        headerMap.put("Authorization", authHeader);
+                    }
+
+                    HttpURLConnection conn = HTTPUtils.setupUrlConnection(url, headerMap);
+                    return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
+                            conn.getInputStream());
+                } catch (IOException e) {
+                    AppLog.e(AppLog.T.EDITOR, e);
                 }
 
                 return super.shouldInterceptRequest(view, request);
@@ -85,15 +96,22 @@ public abstract class EditorWebViewAbstract extends WebView {
             @SuppressWarnings("deprecation")
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                // Intercept requests for private images and add the WP.com authorization header
-                if (mHeaderMap.size() > 0) {
-                    try {
-                        HttpURLConnection conn = HTTPUtils.setupUrlConnection(url, mHeaderMap);
-                        return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
-                                conn.getInputStream());
-                    } catch (IOException e) {
-                        AppLog.e(AppLog.T.EDITOR, e);
+                try {
+                    // Request and add an authorization header for HTTPS resource requests.
+                    // Use https:// when requesting the auth header, in case the resource is incorrectly using http://.
+                    // If an auth header is returned, force https:// for the actual HTTP request.
+                    Map<String, String> headerMap = new HashMap<>(mHeaderMap);
+                    String authHeader = mAuthHeaderRequestListener.onAuthHeaderRequested(UrlUtils.makeHttps(url));
+                    if (StringUtils.notNullStr(authHeader).length() > 0) {
+                        url = UrlUtils.makeHttps(url);
+                        headerMap.put("Authorization", authHeader);
                     }
+
+                    HttpURLConnection conn = HTTPUtils.setupUrlConnection(url, headerMap);
+                    return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
+                            conn.getInputStream());
+                } catch (IOException e) {
+                    AppLog.e(AppLog.T.EDITOR, e);
                 }
 
                 return super.shouldInterceptRequest(view, url);
@@ -124,6 +142,10 @@ public abstract class EditorWebViewAbstract extends WebView {
         mOnImeBackListener = listener;
     }
 
+    public void setAuthHeaderRequestListener(AuthHeaderRequestListener listener) {
+        mAuthHeaderRequestListener = listener;
+    }
+
     @Override
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
@@ -136,5 +158,9 @@ public abstract class EditorWebViewAbstract extends WebView {
 
     public void setCustomHeader(String name, String value) {
         mHeaderMap.put(name, value);
+    }
+
+    public interface AuthHeaderRequestListener {
+        String onAuthHeaderRequested(String url);
     }
 }

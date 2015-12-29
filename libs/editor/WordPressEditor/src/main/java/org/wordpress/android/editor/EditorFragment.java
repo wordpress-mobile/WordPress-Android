@@ -51,7 +51,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
-        OnJsEditorStateChangedListener, OnImeBackListener, EditorMediaUploadListener {
+        OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
+        EditorMediaUploadListener {
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -139,6 +140,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWebView.setOnTouchListener(this);
         mWebView.setOnImeBackListener(this);
+        mWebView.setAuthHeaderRequestListener(this);
 
         if (mCustomHttpHeaders != null && mCustomHttpHeaders.size() > 0) {
             for (Map.Entry<String, String> entry : mCustomHttpHeaders.entrySet()) {
@@ -487,6 +489,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onImeBack() {
         mIsKeyboardOpen = false;
         showActionBarIfNeeded();
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        return mEditorFragmentListener.onAuthHeaderRequested(url);
     }
 
     @Override

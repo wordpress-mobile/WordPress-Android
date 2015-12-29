@@ -38,7 +38,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
 
-    protected Map<String, String> mCustomHttpHeaders;
+    protected HashMap<String, String> mCustomHttpHeaders;
 
     @Override
     public void onAttach(Activity activity) {
@@ -126,6 +126,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
         void onFeaturedImageChanged(int mediaId);
+        String onAuthHeaderRequested(String url);
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
     }
