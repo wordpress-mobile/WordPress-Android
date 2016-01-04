@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 public class ReaderUser {
     public long userId;
@@ -83,6 +84,21 @@ public class ReaderUser {
 
     public boolean hasBlogId() {
         return (blogId != 0);
+    }
+
+    /*
+     * not stored - used by ReaderUserAdapter for performance
+     */
+    private transient String urlDomain;
+    public String getUrlDomain() {
+        if (urlDomain == null) {
+            if (hasUrl()) {
+                urlDomain = UrlUtils.getHost(getUrl());
+            } else {
+                urlDomain = "";
+            }
+        }
+        return urlDomain;
     }
 
     public boolean isSameUser(ReaderUser user) {

@@ -57,7 +57,7 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
         holder.txtName.setText(user.getDisplayName());
         if (user.hasUrl()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
-            holder.txtUrl.setText(UrlUtils.getDomainFromUrl(user.getUrl()));
+            holder.txtUrl.setText(user.getUrlDomain());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

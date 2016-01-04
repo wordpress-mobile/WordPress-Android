@@ -702,7 +702,7 @@ public class ReaderPostDetailFragment extends Fragment
                 txtBlogName.setText(mPost.getBlogName());
                 txtBlogName.setVisibility(View.VISIBLE);
             } else if (mPost.hasBlogUrl()) {
-                txtBlogName.setText(UrlUtils.getDomainFromUrl(mPost.getBlogUrl()));
+                txtBlogName.setText(UrlUtils.getHost(mPost.getBlogUrl()));
                 txtBlogName.setVisibility(View.VISIBLE);
             } else {
                 txtBlogName.setVisibility(View.GONE);
@@ -725,7 +725,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             String dateLine;
             if (mPost.hasBlogUrl()) {
-                dateLine = UrlUtils.getDomainFromUrl(mPost.getBlogUrl()) + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
+                dateLine = UrlUtils.getHost(mPost.getBlogUrl()) + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             } else {
                 dateLine = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             }
