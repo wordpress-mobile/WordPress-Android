@@ -22,22 +22,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
 
@@ -53,6 +44,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
     private AlertDialog mDialog;
     private SharedPreferences mSettings;
+    private Preference mUsernamePreference;
     private WPEditTextPreference mTaglineTextPreference;
 
     @Override
@@ -76,6 +68,10 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         if (mTaglineTextPreference != null) {
             mTaglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
         }
+
+        mUsernamePreference = findPreference(getString(R.string.pref_key_username));
+        // AccountHelper.getDefaultAccount() will always return a valid Account even if the username is empty
+        mUsernamePreference.setSummary(AccountHelper.getDefaultAccount().getUserName());
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);

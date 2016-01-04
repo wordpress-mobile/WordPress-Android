@@ -4,6 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="@string/pref_key_settings_root">
 
+    <Preference
+        android:key="@string/pref_key_username"
+        android:title="@string/username"
+        android:enabled="false"/>
+
     <PreferenceCategory
         android:title="@string/post_signature"
         android:key="@string/pref_key_post_sig_section">
