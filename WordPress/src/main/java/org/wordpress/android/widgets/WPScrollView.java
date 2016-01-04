@@ -1,9 +1,7 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
@@ -19,10 +17,8 @@ public class WPScrollView extends ScrollView {
     }
 
     private ScrollDirectionListener mScrollDirectionListener;
-    private final GestureDetectorCompat mDetector;
-
-    private static final int SCROLL_CHECK_DELAY = 250;
     private int mInitialScrollCheckY;
+    private static final int SCROLL_CHECK_DELAY = 250;
 
     public WPScrollView(Context context) {
         this(context, null);
@@ -34,7 +30,6 @@ public class WPScrollView extends ScrollView {
 
     public WPScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mDetector = new GestureDetectorCompat(context, new ScrollGestureListener());
     }
 
     public void setScrollDirectionListener(ScrollDirectionListener listener) {
@@ -43,8 +38,18 @@ public class WPScrollView extends ScrollView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mScrollDirectionListener != null) {
-            mDetector.onTouchEvent(event);
+        if (mScrollDirectionListener != null
+                && event.getActionMasked() == MotionEvent.ACTION_MOVE
+                && event.getHistorySize() > 0) {
+            float initialY = event.getHistoricalY(event.getHistorySize() - 1);
+            float distanceY = initialY - event.getY();
+            if (distanceY < 0) {
+                mScrollDirectionListener.onScrollUp(distanceY);
+                startScrollCheck();
+            } else if (distanceY > 0) {
+                mScrollDirectionListener.onScrollDown(distanceY);
+                startScrollCheck();
+            }
         }
         return super.onTouchEvent(event);
     }
@@ -71,19 +76,5 @@ public class WPScrollView extends ScrollView {
     }
     public boolean canScrollDown() {
         return canScrollVertically(1);
-    }
-
-    private class ScrollGestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (distanceY < 0) {
-                mScrollDirectionListener.onScrollUp(distanceY);
-                startScrollCheck();
-            } else if (distanceY > 0) {
-                mScrollDirectionListener.onScrollDown(distanceY);
-                startScrollCheck();
-            }
-            return super.onScroll(e1, e2, distanceX, distanceY);
-        }
     }
 }
