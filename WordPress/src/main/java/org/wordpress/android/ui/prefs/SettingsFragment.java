@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
@@ -42,6 +41,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
+    private PreferenceScreen mPreferenceScreen;
     private AlertDialog mDialog;
     private SharedPreferences mSettings;
     private Preference mUsernamePreference;
@@ -52,6 +52,8 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
+
+        mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
 
         OnPreferenceChangeListener preferenceChangeListener = new OnPreferenceChangeListener() {
             @Override
@@ -85,6 +87,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         updatePostSignature();
+        checkWordPressComOnlyFields();
     }
 
     @Override
@@ -120,16 +123,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         return false;
     }
 
-    private void hideManageNotificationCategory() {
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-        PreferenceCategory notifs =
-                (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
-        if (preferenceScreen != null && notifs != null) {
-            preferenceScreen.removePreference(notifs);
-        }
-    }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -144,6 +137,12 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             mTaglineTextPreference.setText(getString(R.string.posted_from));
         } else {
             mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
+        }
+    }
+
+    private void checkWordPressComOnlyFields() {
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
+            mPreferenceScreen.removePreference(mUsernamePreference);
         }
     }
 
