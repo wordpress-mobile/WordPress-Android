@@ -422,6 +422,20 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_added_photo_via_wp_media_library");
                 instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_wp_media_library_to_post");
                 break;
+            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Video via Local Library");
+                instructions.
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_video_via_local_library");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_local_library_to_post");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Video via WP Media Library");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_added_video_via_wp_media_library");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_wp_media_library_to_post");
+                break;
             case EDITOR_PUBLISHED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Published Post");
