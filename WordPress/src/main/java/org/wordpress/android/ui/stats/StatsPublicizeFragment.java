@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
-import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;

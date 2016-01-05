@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.models.BaseStatsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
+import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
@@ -169,6 +170,12 @@ public class StatsService extends Service {
                 case PUBLICIZE:
                     return new StatsEvents.PublicizeUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (PublicizeModel)data);
+                case FOLLOWERS_WPCOM:
+                    return new StatsEvents.FollowersWPCOMUdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (FollowersModel)data);
+                case FOLLOWERS_EMAIL:
+                    return new StatsEvents.FollowersEmailUdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (FollowersModel)data);
                 default:
                     return new StatsEvents.SectionUpdated(this, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, data);

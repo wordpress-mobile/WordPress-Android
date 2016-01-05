@@ -6,6 +6,7 @@ import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
+import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
@@ -198,6 +199,28 @@ public class StatsEvents {
                            final int maxResultsRequested, final int pageRequested, PublicizeModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mPublicizeModel = responseObjectModel;
+        }
+    }
+
+    public static class FollowersWPCOMUdated extends SectionUpdatedAbstract {
+
+        public final FollowersModel mFollowers;
+
+        public FollowersWPCOMUdated(String blogId, StatsTimeframe timeframe, String date,
+                                final int maxResultsRequested, final int pageRequested, FollowersModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mFollowers = responseObjectModel;
+        }
+    }
+
+    public static class FollowersEmailUdated extends SectionUpdatedAbstract {
+
+        public final FollowersModel mFollowers;
+
+        public FollowersEmailUdated(String blogId, StatsTimeframe timeframe, String date,
+                                    final int maxResultsRequested, final int pageRequested, FollowersModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mFollowers = responseObjectModel;
         }
     }
 
