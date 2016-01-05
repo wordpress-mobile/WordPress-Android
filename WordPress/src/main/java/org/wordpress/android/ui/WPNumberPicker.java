@@ -120,7 +120,7 @@ public class WPNumberPicker extends NumberPicker {
         for (int i = 0; i < DISPLAY_COUNT; ++i) {
             mDisplayValues[i] = value - MIDDLE_INDEX + i;
             if (mDisplayValues[i] < getMinValue()) {
-                mDisplayValues[i] = getMaxValue() - (mDisplayValues[i] + getMinValue() + 1);
+                mDisplayValues[i] = getMaxValue() + (mDisplayValues[i] + 1 - getMinValue());
             } else if (mDisplayValues[i] > getMaxValue()) {
                 mDisplayValues[i] = getMinValue() + (mDisplayValues[i] - getMaxValue() - 1);
             }
