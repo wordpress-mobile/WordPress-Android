@@ -403,7 +403,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_saved_draft");
                 instructions.setCurrentDateForPeopleProperty("last_time_saved_draft");
                 break;
-            case EDITOR_CLOSED_POST:
+            case EDITOR_CLOSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Closed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_closed");

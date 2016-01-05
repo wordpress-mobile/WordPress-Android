@@ -120,7 +120,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_SAVED_DRAFT:
                 eventName = "editor_draft_saved";
                 break;
-            case EDITOR_CLOSED_POST:
+            case EDITOR_CLOSED:
                 eventName = "editor_closed";
                 break;
             case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
