@@ -16,7 +16,6 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 
@@ -61,8 +60,8 @@ public class WPWebViewClient extends WebViewClient {
             // NOTE: There is still a small security hole here, since the realm is not considered when getting
             // the password. Unfortunately the real is not stored when setting up the blog, and we cannot compare it
             // at this point.
-            String domainFromHttpAuthRequest = UrlUtils.getDomainFromUrl(UrlUtils.addUrlSchemeIfNeeded(host, false));
-            String currentBlogDomain = UrlUtils.getDomainFromUrl(mBlog.getUrl());
+            String domainFromHttpAuthRequest = UrlUtils.getHost(UrlUtils.addUrlSchemeIfNeeded(host, false));
+            String currentBlogDomain = UrlUtils.getHost(mBlog.getUrl());
             if (domainFromHttpAuthRequest.equals(currentBlogDomain)) {
                 handler.proceed(mBlog.getHttpuser(), mBlog.getHttppassword());
                 return;
@@ -90,13 +89,22 @@ public class WPWebViewClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String stringUrl) {
+        URL imageUrl  = null;
+        if (mBlog != null && mBlog.isPrivate() && UrlUtils.isImageUrl(stringUrl)) {
+            try {
+                imageUrl = new URL(UrlUtils.makeHttps(stringUrl));
+            } catch (MalformedURLException e) {
+                AppLog.e(AppLog.T.READER, e);
+            }
+        }
+
         // Intercept requests for private images and add the WP.com authorization header
-        if (mBlog != null && mBlog.isPrivate() && mBlog.getUri().getScheme().equals("https") &&
-                !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(stringUrl)) {
+        if (imageUrl != null &&
+                WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl) &&
+                !TextUtils.isEmpty(mToken)) {
             try {
                 // Force use of HTTPS for the resource, otherwise the request will fail for private sites
-                URL url = new URL(UrlUtils.makeHttps(stringUrl));
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                HttpURLConnection urlConnection = (HttpURLConnection) imageUrl.openConnection();
                 urlConnection.setRequestProperty("Authorization", "Bearer " + mToken);
                 urlConnection.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
                 urlConnection.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);

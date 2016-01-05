@@ -23,6 +23,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -232,8 +233,7 @@ public class ReaderActivityLauncher {
 
         if (openUrlType == OpenUrlType.INTERNAL) {
             // That won't work on wpcom sites with custom urls
-            // TODO: #2785 (util method to check if a URL is wpcom)
-            if (UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+            if (WPUrlUtils.isWordPressCom(url)) {
                 WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
                         AccountHelper.getDefaultAccount().getUserName());
             } else {
