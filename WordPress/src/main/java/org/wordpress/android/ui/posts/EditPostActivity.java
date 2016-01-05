@@ -333,7 +333,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onDestroy() {
         super.onDestroy();
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
 
         if (mSuggestionServiceConnectionManager != null) {
             mSuggestionServiceConnectionManager.unbindFromService();
