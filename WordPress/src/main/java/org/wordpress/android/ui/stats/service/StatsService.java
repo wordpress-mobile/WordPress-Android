@@ -24,6 +24,8 @@ import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
+import org.wordpress.android.ui.stats.models.BaseStatsModel;
+import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.util.AppLog;
@@ -119,6 +121,21 @@ public class StatsService extends Service {
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + this.name());
                     return "";
+            }
+        }
+
+        public StatsEvents.SectionUpdatedAbstract getEndpointUpdateEvent(final String blogId, final StatsTimeframe timeframe, final String date,
+                               final int maxResultsRequested, final int pageRequested, final BaseStatsModel data) {
+            switch (this) {
+                case TOP_POSTS:
+                    return new StatsEvents.TopPostsSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (TopPostsAndPagesModel)data);
+                case VISITS:
+                    return new StatsEvents.VisitorsAndViewsSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (VisitsModel)data);
+                default:
+                    return new StatsEvents.SectionUpdated(this, blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, data);
             }
         }
     }
@@ -237,12 +254,16 @@ public class StatsService extends Service {
         String cachedStats = getCachedStats(blogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
 
         if (cachedStats != null) {
-            Serializable mResponseObjectModel;
+            BaseStatsModel mResponseObjectModel;
                 try {
                     JSONObject response = new JSONObject(cachedStats);
                     mResponseObjectModel = StatsUtils.parseResponse(sectionToUpdate, blogId, response);
-                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(sectionToUpdate, blogId, timeframe, date,
-                            maxResultsRequested, pageRequested, mResponseObjectModel));
+
+                    EventBus.getDefault().post(
+                            sectionToUpdate.getEndpointUpdateEvent(blogId, timeframe, date,
+                                    maxResultsRequested, pageRequested, mResponseObjectModel)
+                    );
+
                     updateWidgetsUI(blogId, sectionToUpdate, timeframe, date, pageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(null);
                     return;
@@ -422,7 +443,6 @@ public class StatsService extends Service {
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         final String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
-        Serializable mResponseObjectModel;
         final StatsEndpointsEnum mEndpointName;
         private final String mDate;
         private Request<JSONObject> currentRequest;
@@ -444,6 +464,7 @@ public class StatsService extends Service {
                 @Override
                 public void run() {
                     // do other stuff here
+                    BaseStatsModel mResponseObjectModel = null;
                     if (response != null) {
                         try {
                             //AppLog.d(T.STATS, response.toString());
@@ -459,8 +480,12 @@ public class StatsService extends Service {
                             AppLog.e(AppLog.T.STATS, e);
                         }
                     }
-                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
-                            mMaxResultsRequested, mPageRequested, mResponseObjectModel));
+
+                    EventBus.getDefault().post(
+                            mEndpointName.getEndpointUpdateEvent(mRequestBlogId, mTimeframe, mDate,
+                            mMaxResultsRequested, mPageRequested, mResponseObjectModel)
+                    );
+
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
@@ -474,7 +499,7 @@ public class StatsService extends Service {
                 public void run() {
                     AppLog.e(T.STATS, "Error while loading Stats!");
                     StatsUtils.logVolleyErrorDetails(volleyError);
-
+                    BaseStatsModel mResponseObjectModel = null;
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
                     if (volleyError instanceof com.android.volley.AuthFailureError) {
@@ -490,9 +515,13 @@ public class StatsService extends Service {
                             }
                         }
                     }
-                    mResponseObjectModel = volleyError;
+
+
+                    EventBus.getDefault().post(new StatsEvents.SectionUpdateError(mEndpointName, mRequestBlogId, mTimeframe, mDate,
+                            mMaxResultsRequested, mPageRequested, volleyError));
+
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
-                            mMaxResultsRequested, mPageRequested, mResponseObjectModel));
+                            mMaxResultsRequested, mPageRequested, volleyError));
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }

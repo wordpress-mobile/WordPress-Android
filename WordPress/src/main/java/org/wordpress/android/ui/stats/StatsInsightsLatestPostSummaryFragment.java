@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -54,12 +55,12 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             }
 
             if (event.mResponseObjectModel == null ||
-                    !(event.mResponseObjectModel instanceof Integer)) {
+                    !(event.mResponseObjectModel instanceof InsightsLatestPostDetailsModel)) {
                 showErrorUI(null);
                 return;
             }
             final InsightsLatestPostModel latestPostModel = (InsightsLatestPostModel) mDatamodels[0];
-            latestPostModel.setPostViewsCount((int) event.mResponseObjectModel);
+            latestPostModel.setPostViewsCount(((InsightsLatestPostDetailsModel) event.mResponseObjectModel).getPostViewsCount());
             updateUI();
         }
     }

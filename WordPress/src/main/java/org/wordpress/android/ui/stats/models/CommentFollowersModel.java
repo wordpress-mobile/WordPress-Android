@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CommentFollowersModel implements Serializable {
+public class CommentFollowersModel extends BaseStatsModel {
     private String mBlogID;
     private int mPage;
     private int mPages;

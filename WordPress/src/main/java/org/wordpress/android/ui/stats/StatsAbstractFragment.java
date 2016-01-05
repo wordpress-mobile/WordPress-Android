@@ -89,12 +89,9 @@ public abstract class StatsAbstractFragment extends Fragment {
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
-            if (pageNumberRequested > 0) {
-                // request 20 items per page. It's the maximum number returned by the server in paged mode
-                intent.putExtra(StatsService.ARG_MAX_RESULTS, StatsService.MAX_RESULTS_REQUESTED_PER_PAGE);
-            } else {
-                intent.putExtra(StatsService.ARG_MAX_RESULTS, MAX_RESULTS_REQUESTED);
-            }
+            // Single Item screen: request 20 items per page on paged requests. Default to the first 100 items otherwise.
+            int maxElementsToRetrieve = pageNumberRequested > 0 ? StatsService.MAX_RESULTS_REQUESTED_PER_PAGE : MAX_RESULTS_REQUESTED;
+            intent.putExtra(StatsService.ARG_MAX_RESULTS, maxElementsToRetrieve);
         }
         if (pageNumberRequested > 0) {
             intent.putExtra(StatsService.ARG_PAGE_REQUESTED, pageNumberRequested);
@@ -131,9 +128,53 @@ public abstract class StatsAbstractFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+
+    public boolean shouldUpdateFragmentOnEvent(StatsEvents.SectionUpdatedAbstract event) {
+        if (!isAdded()) {
+            return false;
+        }
+
+        if (!getDate().equals(event.mDate)) {
+            return false;
+        }
+
+        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+            return false;
+        }
+
+        if (event.mTimeframe != getTimeframe()) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public boolean shouldUpdateFragmentOnErrorEvent(StatsEvents.SectionUpdateError errorEvent) {
+        StatsEvents.SectionUpdatedAbstract abstractEvent = errorEvent;
+        if (!shouldUpdateFragmentOnEvent(abstractEvent)) {
+            return false;
+        }
+
+        StatsService.StatsEndpointsEnum sectionToUpdate = errorEvent.mEndPointName;
+        StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
+        int indexOfDatamodelMatch = -1;
+        for (int i = 0; i < getSectionsToUpdate().length; i++) {
+            if (sectionToUpdate == sectionsToUpdate[i]) {
+                indexOfDatamodelMatch = i;
+                break;
+            }
+        }
+
+        if (-1 == indexOfDatamodelMatch) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static StatsAbstractFragment newVisitorsAndViewsInstance(StatsViewType viewType, int localTableBlogID,
                                                     StatsTimeframe timeframe, String date,  StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
-
         StatsVisitorsAndViewsFragment fragment = (StatsVisitorsAndViewsFragment) newInstance(viewType, localTableBlogID, timeframe, date);
         fragment.setSelectedOverviewItem(itemToSelect);
         return fragment;

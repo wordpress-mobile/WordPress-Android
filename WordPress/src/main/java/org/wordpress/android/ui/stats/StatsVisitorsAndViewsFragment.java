@@ -71,7 +71,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
-    private Serializable mVisitsData; //VisitModel or VolleyError
+    private VisitsModel mVisitsData;
     private int mSelectedOverviewItemIndex = 0;
     private int mSelectedBarGraphBarIndex = -1;
     private int mPrevNumberOfBarsGraph = -1;
@@ -274,7 +274,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-                mVisitsData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+                mVisitsData = (VisitsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             }
             if (savedInstanceState.containsKey(ARG_SELECTED_OVERVIEW_ITEM)) {
                 mSelectedOverviewItemIndex = savedInstanceState.getInt(ARG_SELECTED_OVERVIEW_ITEM, 0);
@@ -296,11 +296,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     public void onSaveInstanceState(Bundle outState) {
         //AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > saving instance state");
 
-        // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
+        /* FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
         if (mVisitsData != null && mVisitsData instanceof VolleyError) {
             VolleyError currentVolleyError = (VolleyError) mVisitsData;
             mVisitsData = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
-        }
+        }*/
+
         outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
         outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
@@ -362,12 +363,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        if (mVisitsData instanceof VolleyError || mVisitsData instanceof StatsError) {
-            setupNoResultsUI(false);
-            return;
-        }
-
-        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
             setupNoResultsUI(false);
             return;
@@ -571,12 +567,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        if (mVisitsData instanceof VolleyError) {
-            setupNoResultsUI(false);
-            return;
-        }
-
-        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
 
         // Make sure we've data to show on the screen
         if (dataToShowOnGraph.length == 0) {
@@ -734,31 +725,29 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.SectionUpdated event) {
-        if (!isAdded()) {
+    public void onEventMainThread(StatsEvents.VisitorsAndViewsSectionUpdated event) {
+        if (!shouldUpdateFragmentOnEvent(event)) {
             return;
         }
 
-        if (!getDate().equals(event.mDate)) {
+        mVisitsData = event.mVisitsAndViews;
+        mSelectedBarGraphBarIndex = -1;
+
+        // Reset the bar to highlight
+        if (mGraphView != null) {
+            mGraphView.resetHighlightBar();
+        }
+
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
             return;
         }
 
-        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
-            return;
-        }
-
-        if (event.mTimeframe != getTimeframe()) {
-            return;
-        }
-
-        StatsService.StatsEndpointsEnum sectionToUpdate = event.mEndPointName;
-        if (sectionToUpdate != StatsService.StatsEndpointsEnum.VISITS) {
-            return;
-        }
-
-        Serializable dataObj = event.mResponseObjectModel;
-
-        mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
+        mVisitsData = null;
         mSelectedBarGraphBarIndex = -1;
 
         // Reset the bar to highlight

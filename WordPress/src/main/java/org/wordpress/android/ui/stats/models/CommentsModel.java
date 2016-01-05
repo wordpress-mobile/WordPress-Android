@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CommentsModel implements Serializable {
+public class CommentsModel extends BaseStatsModel {
     private String mDate;
     private String mBlogID;
     private int mMonthlyComments;

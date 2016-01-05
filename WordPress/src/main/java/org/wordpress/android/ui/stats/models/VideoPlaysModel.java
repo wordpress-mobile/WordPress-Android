@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class VideoPlaysModel implements Serializable {
+public class VideoPlaysModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
     private String mBlogID;

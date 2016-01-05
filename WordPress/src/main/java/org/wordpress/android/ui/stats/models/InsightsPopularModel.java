@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class InsightsPopularModel implements Serializable {
+public class InsightsPopularModel extends BaseStatsModel {
     private final int mHighestHour;
     private final int mHighestDayOfWeek;
     private final Double mHighestDayPercent;

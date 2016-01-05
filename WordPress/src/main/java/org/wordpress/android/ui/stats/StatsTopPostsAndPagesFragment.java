@@ -15,19 +15,44 @@ import java.util.List;
 public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsTopPostsAndPagesFragment.class.getSimpleName();
 
+    private TopPostsAndPagesModel topPostsAndPagesModel = null;
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.TopPostsSectionUpdated event) {
+        if (!shouldUpdateFragmentOnEvent(event)) {
+            return;
+        }
+
+        mGroupIdToExpandedMap.clear();
+        topPostsAndPagesModel = event.mTopPostsAndPagesModel;
+
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        topPostsAndPagesModel = null;
+        mGroupIdToExpandedMap.clear();
+        showErrorUI(event.mError);
+    }
+
     @Override
     protected void updateUI() {
         if (!isAdded()) {
             return;
         }
 
-        if (isErrorResponse()) {
-            showErrorUI();
+        if (topPostsAndPagesModel == null) {
+            showHideNoResultsUI(true);
             return;
         }
 
         if (hasTopPostsAndPages()) {
-            List<PostModel> postViews = ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
+            List<PostModel> postViews = topPostsAndPagesModel.getTopPostsAndPages();
             ArrayAdapter adapter = new PostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -37,14 +62,14 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasTopPostsAndPages() {
-        return !isDataEmpty() && ((TopPostsAndPagesModel) mDatamodels[0]).hasTopPostsAndPages();
+        return topPostsAndPagesModel != null && topPostsAndPagesModel.hasTopPostsAndPages();
     }
 
     private List<PostModel> getTopPostsAndPages() {
         if (!hasTopPostsAndPages()) {
             return new ArrayList<PostModel>(0);
         }
-        return ((TopPostsAndPagesModel) mDatamodels[0]).getTopPostsAndPages();
+        return topPostsAndPagesModel.getTopPostsAndPages();
     }
 
     @Override

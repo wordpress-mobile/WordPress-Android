@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class TopPostsAndPagesModel implements Serializable {
+public class TopPostsAndPagesModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
     private String mBlogID;

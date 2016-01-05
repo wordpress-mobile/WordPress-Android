@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 
-public class InsightsLatestPostModel implements Serializable {
+public class InsightsLatestPostModel extends BaseStatsModel {
     private String mBlogID;
     private String mPostTitle;
     private String mPostURL;

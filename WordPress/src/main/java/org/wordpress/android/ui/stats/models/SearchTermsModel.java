@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class SearchTermsModel implements Serializable {
+public class SearchTermsModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
     private String mBlogID;

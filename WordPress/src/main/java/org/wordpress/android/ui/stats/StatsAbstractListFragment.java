@@ -22,7 +22,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
@@ -126,12 +125,12 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mGroupIdToExpandedMap = new SparseBooleanArray();
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+         /*   if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 Serializable oldData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
                 if (oldData != null && oldData instanceof Serializable[]) {
                     mDatamodels = (Serializable[]) oldData;
                 }
-            }
+            }*/
             if (savedInstanceState.containsKey(ARGS_EXPANDED_ROWS)) {
                 mGroupIdToExpandedMap = savedInstanceState.getParcelable(ARGS_EXPANDED_ROWS);
             }
@@ -151,12 +150,13 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 }
             }
         }
-
+/*
         if (mGroupIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARGS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mGroupIdToExpandedMap));
         }
 
         outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
+        */
         super.onSaveInstanceState(outState);
     }
 
@@ -176,17 +176,25 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     public void onResume() {
         super.onResume();
 
+        showPlaceholderUI();
+        refreshStats();
+
         // Init the UI
-        if (mDatamodels != null) {
+/*        if (mDatamodels != null) {
             updateUI();
         } else {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            showPlaceholderUI();
+            refreshStats();
+  */
+            // TODO : the error and network not available should be fired from the service
+            /* if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 showPlaceholderUI();
                 refreshStats();
             } else {
                 showErrorUI(new NoConnectionError());
             }
-        }
+            */
+    //    }
     }
 
     private void showPlaceholderUI() {
@@ -244,6 +252,39 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
     }
 
+    protected void showErrorUI(VolleyError error) {
+        if (!isAdded()) {
+            return;
+        }
+
+        mGroupIdToExpandedMap.clear();
+        mModuleTitleTextView.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
+
+        String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+
+        if (error instanceof NoConnectionError) {
+            label += "<br/>" + getString(R.string.no_network_message);
+        }
+
+        // No need to show detailed error messages to the user
+        /*else if (error instanceof VolleyError) {
+            String volleyErrorMsg =   ((VolleyError)error).getMessage();
+            if (org.apache.commons.lang.StringUtils.isNotBlank(volleyErrorMsg)){
+                label += volleyErrorMsg;
+            }
+        }*/
+
+        if (label.contains("<")) {
+            mEmptyLabel.setText(Html.fromHtml(label));
+        } else {
+            mEmptyLabel.setText(label);
+        }
+        mEmptyLabel.setVisibility(View.VISIBLE);
+        mListContainer.setVisibility(View.GONE);
+        mList.setVisibility(View.GONE);
+    }
+
     private void showErrorUI(Serializable error) {
         if (!isAdded()) {
             return;
@@ -276,6 +317,12 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mListContainer.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
     }
+
+
+
+
+
+
 
     /**
      * Check if the current datamodel is populated and is NOT an error response.

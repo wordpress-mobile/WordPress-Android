@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class InsightsTodayModel implements Serializable {
+public class InsightsTodayModel extends BaseStatsModel {
 
     private String mBlogID;
     private String mDate;

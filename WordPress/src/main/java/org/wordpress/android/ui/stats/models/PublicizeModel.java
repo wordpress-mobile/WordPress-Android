@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PublicizeModel implements Serializable {
+public class PublicizeModel extends BaseStatsModel {
     private String mBlogID;
     private List<SingleItemModel> mServices;
 
