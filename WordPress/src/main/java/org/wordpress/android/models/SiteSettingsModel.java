@@ -191,9 +191,12 @@ public class SiteSettingsModel {
         allowComments = other.allowComments;
         sendPingbacks = other.sendPingbacks;
         receivePingbacks = other.receivePingbacks;
+        shouldCloseAfter = other.shouldCloseAfter;
         closeCommentAfter = other.closeCommentAfter;
         sortCommentsBy = other.sortCommentsBy;
+        shouldThreadComments = other.shouldThreadComments;
         threadingLevels = other.threadingLevels;
+        shouldPageComments = other.shouldPageComments;
         commentsPerPage = other.commentsPerPage;
         commentApprovalRequired = other.commentApprovalRequired;
         commentsRequireIdentity = other.commentsRequireIdentity;

@@ -362,9 +362,12 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getCloseAfterDescription() {
+        return getCloseAfterDescription(getCloseAfter());
+    }
+
+    public @NonNull String getCloseAfterDescription(int period) {
         if (mActivity == null) return "";
 
-        int period = getCloseAfter();
         if (period == 0) return mActivity.getString(R.string.never);
         return mActivity.getResources().getQuantityString(R.plurals.days_quantity, period, period);
     }

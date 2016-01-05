@@ -92,9 +92,10 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private static final int RELATED_POSTS_REQUEST_CODE = 1;
 
-    private static final int PAGING_REQUEST_CODE = 2;
-    private static final int CLOSE_AFTER_REQUEST_CODE = 3;
-    private static final int MULTIPLE_LINKS_REQUEST_CODE = 4;
+    private static final int THREADING_REQUEST_CODE = 2;
+    private static final int PAGING_REQUEST_CODE = 3;
+    private static final int CLOSE_AFTER_REQUEST_CODE = 4;
+    private static final int MULTIPLE_LINKS_REQUEST_CODE = 5;
 
     private static final long FETCH_DELAY = 1000;
 
@@ -222,23 +223,32 @@ public class SiteSettingsFragment extends PreferenceFragment
                         RelatedPostsDialog.SHOW_IMAGES_KEY, false));
                 mSiteSettings.saveSettings();
                 break;
+            case THREADING_REQUEST_CODE:
+                if (data == null) break;
+                mSiteSettings.setShouldThreadComments(data.getBooleanExtra
+                        (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                onPreferenceChange(mThreadingPref, data.getIntExtra(
+                        NumberPickerDialog.CUR_VALUE_KEY, -1));
+                break;
             case PAGING_REQUEST_CODE:
                 if (data == null) break;
                 mSiteSettings.setShouldPageComments(data.getBooleanExtra
                         (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
-                if (mSiteSettings.getShouldPageComments()) {
-                    onPreferenceChange(mPagingPref, data.getIntExtra(
-                            NumberPickerDialog.CUR_VALUE_KEY, -1));
-                } else {
-                    mSiteSettings.setPagingCount(data.getIntExtra(
-                            NumberPickerDialog.CUR_VALUE_KEY, -1));
-                }
+                onPreferenceChange(mPagingPref, data.getIntExtra(
+                        NumberPickerDialog.CUR_VALUE_KEY, -1));
                 break;
             case CLOSE_AFTER_REQUEST_CODE:
                 if (data == null) break;
+                mSiteSettings.setShouldCloseAfter(data.getBooleanExtra
+                        (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                onPreferenceChange(mCloseAfterPref, data.getIntExtra(
+                        NumberPickerDialog.CUR_VALUE_KEY, -1));
                 break;
             case MULTIPLE_LINKS_REQUEST_CODE:
                 if (data == null) break;
+                int numLinks = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
+                if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
+                onPreferenceChange(mMultipleLinksPref, numLinks);
                 break;
         }
 
@@ -365,7 +375,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             setReceivePingbacks((Boolean) newValue);
         } else if (preference == mCloseAfterPref) {
             mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
-            mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription());
+            if (mSiteSettings.getShouldCloseAfter()) {
+                mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription());
+            } else {
+                mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription(0));
+            }
         } else if (preference == mSortByPref) {
             mSiteSettings.setCommentSorting(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mSortByPref,
@@ -570,7 +584,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showPagingDialog() {
         Bundle args = new Bundle();
         args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, true);
-        args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getPagingCount() > 0);
+        args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getShouldPageComments());
         args.putString(NumberPickerDialog.SWITCH_TITLE_KEY, getString(R.string.site_settings_paging_title));
         args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_paging_title));
         args.putString(NumberPickerDialog.HEADER_TEXT_KEY, getString(R.string.site_settings_paging_dialog_header));
@@ -583,7 +597,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showCloseAfterDialog() {
         Bundle args = new Bundle();
         args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, true);
-        args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getCloseAfter() > 0);
+        args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getShouldCloseAfter());
         args.putString(NumberPickerDialog.SWITCH_TITLE_KEY, getString(R.string.site_settings_close_after_dialog_switch_text));
         args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_close_after_dialog_title));
         args.putString(NumberPickerDialog.HEADER_TEXT_KEY, getString(R.string.site_settings_close_after_dialog_header));

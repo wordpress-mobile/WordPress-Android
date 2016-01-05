@@ -170,6 +170,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.allowComments = settingsObject.optBoolean(ALLOW_COMMENTS_KEY, true);
         mRemoteSettings.sendPingbacks = settingsObject.optBoolean(SEND_PINGBACKS_KEY, false);
         mRemoteSettings.receivePingbacks = settingsObject.optBoolean(RECEIVE_PINGBACKS_KEY, true);
+        mRemoteSettings.shouldCloseAfter = settingsObject.optBoolean(CLOSE_OLD_COMMENTS_KEY, false);
+        mRemoteSettings.closeCommentAfter = settingsObject.optInt(CLOSE_OLD_COMMENTS_DAYS_KEY, 0);
+        mRemoteSettings.shouldThreadComments = settingsObject.optBoolean(THREAD_COMMENTS_KEY, false);
+        mRemoteSettings.threadingLevels = settingsObject.optInt(THREAD_COMMENTS_DEPTH_KEY, 0);
+        mRemoteSettings.shouldPageComments = settingsObject.optBoolean(PAGE_COMMENTS_KEY, false);
+        mRemoteSettings.commentsPerPage = settingsObject.optInt(PAGE_COMMENT_COUNT_KEY, 0);
         mRemoteSettings.commentApprovalRequired = settingsObject.optBoolean(COMMENT_MODERATION_KEY, false);
         mRemoteSettings.commentsRequireIdentity = settingsObject.optBoolean(REQUIRE_IDENTITY_KEY, false);
         mRemoteSettings.commentsRequireUserAccount = settingsObject.optBoolean(REQUIRE_USER_ACCOUNT_KEY, true);
@@ -185,24 +191,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
         String blacklistKeys = settingsObject.optString(BLACKLIST_KEYS_KEY, "");
         if (blacklistKeys.length() > 0) {
             Collections.addAll(mRemoteSettings.blacklist, blacklistKeys.split("\n"));
-        }
-
-        if (settingsObject.optBoolean(CLOSE_OLD_COMMENTS_KEY, false)) {
-            mRemoteSettings.closeCommentAfter = settingsObject.optInt(CLOSE_OLD_COMMENTS_DAYS_KEY, 0);
-        } else {
-            mRemoteSettings.closeCommentAfter = 0;
-        }
-
-        if (settingsObject.optBoolean(THREAD_COMMENTS_KEY, false)) {
-            mRemoteSettings.threadingLevels = settingsObject.optInt(THREAD_COMMENTS_DEPTH_KEY, 0);
-        } else {
-            mRemoteSettings.threadingLevels = 0;
-        }
-
-        if (settingsObject.optBoolean(PAGE_COMMENTS_KEY, false)) {
-            mRemoteSettings.commentsPerPage = settingsObject.optInt(PAGE_COMMENT_COUNT_KEY, 0);
-        } else {
-            mRemoteSettings.commentsPerPage = 0;
         }
 
         if (settingsObject.optString(COMMENT_SORT_ORDER_KEY, "").equals("asc")) {
@@ -264,13 +252,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.commentApprovalRequired != mRemoteSettings.commentApprovalRequired) {
             params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
         }
-        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter) {
-            if (mSettings.closeCommentAfter <= 0) {
-                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(false));
-            } else {
-                params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(true));
-                params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
-            }
+        if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter
+                || mSettings.shouldCloseAfter != mRemoteSettings.shouldCloseAfter) {
+            params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(mSettings.shouldCloseAfter));
+            params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
         }
         if (mSettings.sortCommentsBy != mRemoteSettings.sortCommentsBy) {
             if (mSettings.sortCommentsBy == ASCENDING_SORT) {
@@ -279,21 +264,15 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 params.put(COMMENT_SORT_ORDER_KEY, "desc");
             }
         }
-        if (mSettings.threadingLevels != mRemoteSettings.threadingLevels) {
-            if (mSettings.threadingLevels <= 1) {
-                params.put(THREAD_COMMENTS_KEY, String.valueOf(false));
-            } else {
-                params.put(PAGE_COMMENTS_KEY, String.valueOf(true));
-                params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
-            }
+        if (mSettings.threadingLevels != mRemoteSettings.threadingLevels
+                || mSettings.shouldThreadComments != mRemoteSettings.shouldThreadComments) {
+            params.put(THREAD_COMMENTS_KEY, String.valueOf(mSettings.shouldThreadComments));
+            params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
         }
-        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage) {
-            if (mSettings.commentsPerPage <= 0) {
-                params.put(PAGE_COMMENTS_KEY, String.valueOf(false));
-            } else{
-                params.put(PAGE_COMMENTS_KEY, String.valueOf(true));
-                params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
-            }
+        if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage
+                || mSettings.shouldPageComments != mRemoteSettings.shouldPageComments) {
+            params.put(PAGE_COMMENTS_KEY, String.valueOf(mSettings.shouldPageComments));
+            params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
         }
         if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
             params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
