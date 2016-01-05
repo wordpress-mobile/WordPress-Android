@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,12 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.ContextThemeWrapper;
@@ -31,12 +27,9 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -99,20 +92,9 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     private static final int RELATED_POSTS_REQUEST_CODE = 1;
 
-    /**
-     * Length of a {@link String} (representing a language code) when there is no region included.
-     * For example: "en" contains no region, "en_US" contains a region (US)
-     *
-     * Used to parse a language code {@link String} when creating a {@link Locale}.
-     */
-    private static final int NO_REGION_LANG_CODE_LEN = 2;
-
-    /**
-     * Index of a language code {@link String} where the region code begins. The language code
-     * format is cc_rr, where cc is the country code (e.g. en, es, az) and rr is the region code
-     * (e.g. us, au, gb).
-     */
-    private static final int REGION_SUBSTRING_INDEX = 3;
+    private static final int PAGING_REQUEST_CODE = 2;
+    private static final int CLOSE_AFTER_REQUEST_CODE = 3;
+    private static final int MULTIPLE_LINKS_REQUEST_CODE = 4;
 
     private static final long FETCH_DELAY = 1000;
 
@@ -127,12 +109,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Used to ensure that settings are only fetched once throughout the lifecycle of the fragment
     private boolean mShouldFetch;
-
-    // Used with Close After and Paging dialogs to determine settings values
-    private boolean mSwitchChecked;
-
-    // Used to customize Close After, Paging, and Multiple Links dialog views
-    private NumberPicker mNumberPicker;
 
     // General settings
     private EditTextPreference mTitlePref;
@@ -245,6 +221,24 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(
                         RelatedPostsDialog.SHOW_IMAGES_KEY, false));
                 mSiteSettings.saveSettings();
+                break;
+            case PAGING_REQUEST_CODE:
+                if (data == null) break;
+                mSiteSettings.setShouldPageComments(data.getBooleanExtra
+                        (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                if (mSiteSettings.getShouldPageComments()) {
+                    onPreferenceChange(mPagingPref, data.getIntExtra(
+                            NumberPickerDialog.CUR_VALUE_KEY, -1));
+                } else {
+                    mSiteSettings.setPagingCount(data.getIntExtra(
+                            NumberPickerDialog.CUR_VALUE_KEY, -1));
+                }
+                break;
+            case CLOSE_AFTER_REQUEST_CODE:
+                if (data == null) break;
+                break;
+            case MULTIPLE_LINKS_REQUEST_CODE:
+                if (data == null) break;
                 break;
         }
 
@@ -362,7 +356,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
             setDetailListPreferenceValue(mPrivacyPref,
                     String.valueOf(mSiteSettings.getPrivacy()),
-                    getPrivacySummary(mSiteSettings.getPrivacy()));
+                    mSiteSettings.getPrivacyDescription());
         } else if (preference == mAllowCommentsPref || preference == mAllowCommentsNested) {
             setAllowComments((Boolean) newValue);
         } else if (preference == mSendPingbacksPref || preference == mSendPingbacksNested) {
@@ -371,20 +365,20 @@ public class SiteSettingsFragment extends PreferenceFragment
             setReceivePingbacks((Boolean) newValue);
         } else if (preference == mCloseAfterPref) {
             mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
-            mCloseAfterPref.setSummary(getCloseAfterSummary(mSiteSettings.getCloseAfter()));
+            mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription());
         } else if (preference == mSortByPref) {
             mSiteSettings.setCommentSorting(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mSortByPref,
                     newValue.toString(),
-                    getSortOrderSummary(mSiteSettings.getCommentSorting()));
+                    mSiteSettings.getSortingDescription());
         } else if (preference == mThreadingPref) {
             mSiteSettings.setThreadingLevels(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mThreadingPref,
                     newValue.toString(),
-                    getThreadingSummary(mSiteSettings.getThreadingLevels()));
+                    mSiteSettings.getThreadingDescription());
         } else if (preference == mPagingPref) {
             mSiteSettings.setPagingCount(Integer.parseInt(newValue.toString()));
-            mPagingPref.setSummary(getPagingSummary(mSiteSettings.getPagingCount()));
+            mPagingPref.setSummary(mSiteSettings.getPagingDescription());
         } else if (preference == mIdentityRequiredPreference) {
             mSiteSettings.setIdentityRequired((Boolean) newValue);
         } else if (preference == mUserAccountRequiredPref) {
@@ -498,8 +492,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (prefList == null || res == null) return;
 
         // customize list dividers
-        prefList.setDivider(getResources().getDrawable(R.drawable.preferences_divider));
         prefList.setDividerHeight(1);
+        //noinspection deprecation
+        prefList.setDivider(getResources().getDrawable(R.drawable.preferences_divider));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
         // required to customize (Calypso) preference views
@@ -514,60 +509,44 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
     private void initPreferences() {
-        mTitlePref = (EditTextPreference) getPref(R.string.pref_key_site_title);
-        mTaglinePref = (EditTextPreference) getPref(R.string.pref_key_site_tagline);
-        mAddressPref = (EditTextPreference) getPref(R.string.pref_key_site_address);
-        mPrivacyPref = (DetailListPreference) getPref(R.string.pref_key_site_visibility);
-        mLanguagePref = (DetailListPreference) getPref(R.string.pref_key_site_language);
-        mUsernamePref = (EditTextPreference) getPref(R.string.pref_key_site_username);
-        mPasswordPref = (EditTextPreference) getPref(R.string.pref_key_site_password);
-        mLocationPref = (WPSwitchPreference) getPref(R.string.pref_key_site_location);
-        mCategoryPref = (DetailListPreference) getPref(R.string.pref_key_site_category);
-        mFormatPref = (DetailListPreference) getPref(R.string.pref_key_site_format);
-        mAllowCommentsPref = (WPSwitchPreference) getPref(R.string.pref_key_site_allow_comments);
-        mAllowCommentsNested = (WPSwitchPreference) getPref(R.string.pref_key_site_allow_comments_nested);
-        mSendPingbacksPref = (WPSwitchPreference) getPref(R.string.pref_key_site_send_pingbacks);
-        mSendPingbacksNested = (WPSwitchPreference) getPref(R.string.pref_key_site_send_pingbacks_nested);
-        mReceivePingbacksPref = (WPSwitchPreference) getPref(R.string.pref_key_site_receive_pingbacks);
-        mReceivePingbacksNested = (WPSwitchPreference) getPref(R.string.pref_key_site_receive_pingbacks_nested);
-        mIdentityRequiredPreference = (WPSwitchPreference) getPref(R.string.pref_key_site_identity_required);
-        mUserAccountRequiredPref = (WPSwitchPreference) getPref(R.string.pref_key_site_user_account_required);
-        mCloseAfterPref = findPreference(getString(R.string.pref_key_site_close_after));
-        mSortByPref = (DetailListPreference) getPref(R.string.pref_key_site_sort_by);
-        mThreadingPref = (DetailListPreference) getPref(R.string.pref_key_site_threading);
-        mPagingPref = findPreference(getString(R.string.pref_key_site_paging));
-        mWhitelistPref = (DetailListPreference) getPref(R.string.pref_key_site_whitelist);
-        mMultipleLinksPref = getPref(R.string.pref_key_site_multiple_links);
-        mModerationHoldPref = getPref(R.string.pref_key_site_moderation_hold);
-        mBlacklistPref = getPref(R.string.pref_key_site_blacklist);
-        mRelatedPostsPref = findPreference(getString(R.string.pref_key_site_related_posts));
-        mDeleteSitePref = findPreference(getString(R.string.pref_key_site_delete_site));
-        mRelatedPostsPref.setOnPreferenceClickListener(this);
-        mMultipleLinksPref.setOnPreferenceClickListener(this);
-        mModerationHoldPref.setOnPreferenceClickListener(this);
-        mBlacklistPref.setOnPreferenceClickListener(this);
-        mDeleteSitePref.setOnPreferenceClickListener(this);
-        mCloseAfterPref.setOnPreferenceClickListener(this);
-        mPagingPref.setOnPreferenceClickListener(this);
+        mTitlePref = (EditTextPreference) getChangePref(R.string.pref_key_site_title);
+        mTaglinePref = (EditTextPreference) getChangePref(R.string.pref_key_site_tagline);
+        mAddressPref = (EditTextPreference) getChangePref(R.string.pref_key_site_address);
+        mPrivacyPref = (DetailListPreference) getChangePref(R.string.pref_key_site_visibility);
+        mLanguagePref = (DetailListPreference) getChangePref(R.string.pref_key_site_language);
+        mUsernamePref = (EditTextPreference) getChangePref(R.string.pref_key_site_username);
+        mPasswordPref = (EditTextPreference) getChangePref(R.string.pref_key_site_password);
+        mLocationPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_location);
+        mCategoryPref = (DetailListPreference) getChangePref(R.string.pref_key_site_category);
+        mFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_format);
+        mAllowCommentsPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_allow_comments);
+        mAllowCommentsNested = (WPSwitchPreference) getChangePref(R.string.pref_key_site_allow_comments_nested);
+        mSendPingbacksPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_send_pingbacks);
+        mSendPingbacksNested = (WPSwitchPreference) getChangePref(R.string.pref_key_site_send_pingbacks_nested);
+        mReceivePingbacksPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_receive_pingbacks);
+        mReceivePingbacksNested = (WPSwitchPreference) getChangePref(R.string.pref_key_site_receive_pingbacks_nested);
+        mIdentityRequiredPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_site_identity_required);
+        mUserAccountRequiredPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_user_account_required);
+        mSortByPref = (DetailListPreference) getChangePref(R.string.pref_key_site_sort_by);
+        mThreadingPref = (DetailListPreference) getChangePref(R.string.pref_key_site_threading);
+        mWhitelistPref = (DetailListPreference) getChangePref(R.string.pref_key_site_whitelist);
+        mRelatedPostsPref = getClickPref(R.string.pref_key_site_related_posts);
+        mCloseAfterPref = getClickPref(R.string.pref_key_site_close_after);
+        mPagingPref = getClickPref(R.string.pref_key_site_paging);
+        mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
+        mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
+        mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
+        mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
-            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_account);
-            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_delete_site);
+            removeSelfHostedOnlyPreferences();
         } else {
-            removePreference(R.string.pref_key_site_general, R.string.pref_key_site_language);
-            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
+            removeDotComOnlyPreferences();
         }
 
         // hide all options except for Delete site and Enable Location if user is not admin
-        if (!mBlog.isAdmin()) {
-            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_general);
-            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_account);
-            removePreference(R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
-            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_category);
-            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_format);
-            removePreference(R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
-        }
+        if (!mBlog.isAdmin()) hideAdminRequiredPreferences();
     }
 
     private void showRelatedPostsDialog() {
@@ -581,163 +560,47 @@ public class SiteSettingsFragment extends PreferenceFragment
         relatedPosts.show(getFragmentManager(), "related-posts");
     }
 
-    private View getDialogTitleView(int title) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        @SuppressLint("InflateParams")
-        View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
-        TextView titleText = ((TextView) titleView.findViewById(R.id.title));
-        titleText.setText(title);
-        titleText.setLayoutParams(new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT));
-        return titleView;
+    private void showNumberPickerDialog(Bundle args, int requestCode, String tag) {
+        NumberPickerDialog dialog = new NumberPickerDialog();
+        dialog.setArguments(args);
+        dialog.setTargetFragment(this, requestCode);
+        dialog.show(getFragmentManager(), tag);
     }
 
     private void showPagingDialog() {
-        mSwitchChecked = mSiteSettings.getPagingCount() > 0;
-        getNumberPickerDialog(true,
-                mSwitchChecked,
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        mSwitchChecked = isChecked;
-                    }
-                },
-                R.string.site_settings_paging_title,
-                R.string.site_settings_paging_dialog_description,
-                R.string.site_settings_paging_dialog_header,
-                1,
-                getResources().getInteger(R.integer.paging_limit),
-                mSiteSettings.getPagingCount(),
-                R.string.site_settings_paging_title,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (mSwitchChecked && mSiteSettings.getPagingCount() != mNumberPicker.getValue()) {
-                            onPreferenceChange(mPagingPref, mNumberPicker.getValue());
-                        } else {
-                            onPreferenceChange(mPagingPref, 0);
-                        }
-                    }
-                }, null);
+        Bundle args = new Bundle();
+        args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, true);
+        args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getPagingCount() > 0);
+        args.putString(NumberPickerDialog.SWITCH_TITLE_KEY, getString(R.string.site_settings_paging_title));
+        args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_paging_title));
+        args.putString(NumberPickerDialog.HEADER_TEXT_KEY, getString(R.string.site_settings_paging_dialog_header));
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 1);
+        args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.paging_limit));
+        args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getPagingCount());
+        showNumberPickerDialog(args, PAGING_REQUEST_CODE, "paging-dialog");
     }
 
     private void showCloseAfterDialog() {
-        mSwitchChecked = mSiteSettings.getCloseAfter() > 0;
-        getNumberPickerDialog(true,
-                mSwitchChecked,
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        mSwitchChecked = isChecked;
-                    }
-                },
-                R.string.site_settings_close_after_dialog_switch_text,
-                R.string.site_settings_close_after_dialog_description,
-                R.string.site_settings_close_after_dialog_header,
-                1,
-                getResources().getInteger(R.integer.close_after_limit),
-                mSiteSettings.getCloseAfter(),
-                R.string.site_settings_close_after_dialog_title,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (mSwitchChecked && mSiteSettings.getCloseAfter() != mNumberPicker.getValue()) {
-                            onPreferenceChange(mCloseAfterPref, mNumberPicker.getValue());
-                        } else {
-                            onPreferenceChange(mCloseAfterPref, 0);
-                        }
-                    }
-                }, null);
-        mNumberPicker.setFormatter(new NumberPicker.Formatter() {
-            @Override
-            public String format(int value) {
-                return getResources().getQuantityString(R.plurals.days_quantity, value, value);
-            }
-        });
+        Bundle args = new Bundle();
+        args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, true);
+        args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getCloseAfter() > 0);
+        args.putString(NumberPickerDialog.SWITCH_TITLE_KEY, getString(R.string.site_settings_close_after_dialog_switch_text));
+        args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_close_after_dialog_title));
+        args.putString(NumberPickerDialog.HEADER_TEXT_KEY, getString(R.string.site_settings_close_after_dialog_header));
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 1);
+        args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.close_after_limit));
+        args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getCloseAfter());
+        showNumberPickerDialog(args, CLOSE_AFTER_REQUEST_CODE, "close-after-dialog");
     }
 
     private void showMultipleLinksDialog() {
-        getNumberPickerDialog(false,
-                false,
-                null,
-                -1,
-                R.string.site_settings_multiple_links_dialog_description,
-                -1,
-                0,
-                getResources().getInteger(R.integer.max_links_limit),
-                mSiteSettings.getMultipleLinks(),
-                R.string.site_settings_multiple_links_title,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (mSiteSettings.getMultipleLinks() != mNumberPicker.getValue()) {
-                            onPreferenceChange(mMultipleLinksPref, mNumberPicker.getValue());
-                        }
-                    }
-                }, null);
-    }
-
-    private void getNumberPickerDialog(boolean showSwitch,
-                                       boolean switchChecked,
-                                       final CompoundButton.OnCheckedChangeListener switchListener,
-                                       int switchText,
-                                       int detail,
-                                       int header,
-                                       int min,
-                                       int max,
-                                       int cur,
-                                       int title,
-                                       DialogInterface.OnClickListener positive,
-                                       DialogInterface.OnClickListener negative) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
-        mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
-        SwitchCompat pickerSwitch = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
-        if (showSwitch) {
-            pickerSwitch.setVisibility(View.VISIBLE);
-            pickerSwitch.setText(switchText);
-            pickerSwitch.setChecked(switchChecked);
-            final View toggleContainer = view.findViewById(R.id.number_picker_toggleable);
-            toggleContainer.setEnabled(switchChecked);
-            mNumberPicker.setEnabled(switchChecked);
-            pickerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    toggleContainer.setEnabled(isChecked);
-                    mNumberPicker.setEnabled(isChecked);
-
-                    if (switchListener != null) {
-                        switchListener.onCheckedChanged(buttonView, isChecked);
-                    }
-                }
-            });
-        } else {
-            pickerSwitch.setVisibility(View.GONE);
-        }
-        TextView detailText = (TextView) view.findViewById(R.id.number_picker_text);
-        TextView headerText = (TextView) view.findViewById(R.id.number_picker_header);
-        if (header >= 0) {
-            headerText.setText(header);
-        } else {
-            headerText.setVisibility(View.GONE);
-        }
-        if (detail >= 0) {
-            detailText.setText(detail);
-        } else {
-            detailText.setVisibility(View.GONE);
-        }
-        mNumberPicker.setMinValue(min);
-        mNumberPicker.setMaxValue(max);
-        mNumberPicker.setValue(cur);
-        builder.setCustomTitle(getDialogTitleView(title));
-        builder.setPositiveButton(R.string.ok, positive);
-        builder.setNegativeButton(R.string.cancel, negative);
-        builder.setView(view);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        WPPrefUtils.layoutAsFlatButton(dialog.getButton(DialogInterface.BUTTON_POSITIVE));
-        WPPrefUtils.layoutAsFlatButton(dialog.getButton(DialogInterface.BUTTON_NEGATIVE));
+        Bundle args = new Bundle();
+        args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, false);
+        args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_multiple_links_title));
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 0);
+        args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.max_links_limit));
+        args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getMultipleLinks());
+        showNumberPickerDialog(args, MULTIPLE_LINKS_REQUEST_CODE, "multiple-links-dialog");
     }
 
     private void setPreferencesFromSiteSettings() {
@@ -750,7 +613,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeLanguageValue(mSiteSettings.getLanguageCode());
         setDetailListPreferenceValue(mPrivacyPref,
                 String.valueOf(mSiteSettings.getPrivacy()),
-                getPrivacySummary(mSiteSettings.getPrivacy()));
+                mSiteSettings.getPrivacyDescription());
         setCategories();
         setPostFormats();
         setAllowComments(mSiteSettings.getAllowComments());
@@ -758,10 +621,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         setReceivePingbacks(mSiteSettings.getReceivePingbacks());
         setDetailListPreferenceValue(mSortByPref,
                 String.valueOf(mSiteSettings.getCommentSorting()),
-                getSortOrderSummary(mSiteSettings.getCommentSorting()));
+                mSiteSettings.getSortingDescription());
         setDetailListPreferenceValue(mThreadingPref,
                 String.valueOf(mSiteSettings.getThreadingLevels()),
-                getThreadingSummary(mSiteSettings.getThreadingLevels()));
+                mSiteSettings.getThreadingDescription());
         int approval = mSiteSettings.getManualApproval() ?
                 mSiteSettings.getUseCommentWhitelist() ? 0
                         : -1 : 1;
@@ -773,8 +636,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
-        mCloseAfterPref.setSummary(getCloseAfterSummary(mSiteSettings.getCloseAfter()));
-        mPagingPref.setSummary(getPagingSummary(mSiteSettings.getPagingCount()));
+        mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription());
+        mPagingPref.setSummary(mSiteSettings.getPagingDescription());
     }
 
     private void setCategories() {
@@ -803,14 +666,13 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void setPostFormats() {
         // Ignore if there are no changes
         if (mSiteSettings.isSameFormatList(mFormatPref.getEntryValues())) {
-            mFormatPref.setValue(String.valueOf(mSiteSettings.getDefaultFormat()));
+            mFormatPref.setValue(String.valueOf(mSiteSettings.getDefaultPostFormat()));
             mFormatPref.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
             return;
         }
 
         Map<String, String> formats = mSiteSettings.getFormats();
         String[] formatKeys = mSiteSettings.getFormatKeys();
-        if (formats == null || formatKeys == null) return;
         String[] entries = new String[formatKeys.length];
         String[] values = new String[formatKeys.length];
 
@@ -821,7 +683,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         mFormatPref.setEntries(entries);
         mFormatPref.setEntryValues(values);
-        mFormatPref.setValue(String.valueOf(mSiteSettings.getDefaultFormat()));
+        mFormatPref.setValue(String.valueOf(mSiteSettings.getDefaultPostFormat()));
         mFormatPref.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
     }
 
@@ -876,7 +738,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (TextUtils.isEmpty(mLanguagePref.getSummary()) ||
                 !newValue.equals(mLanguagePref.getValue())) {
             mLanguagePref.setValue(newValue);
-            String summary = getLanguageString(newValue, languageLocale(newValue));
+            String summary = getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
 
             // update details to display in selected locale
@@ -885,50 +747,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             mLanguagePref.setDetails(createLanguageDetailDisplayStrings(languageCodes, newValue));
             mLanguagePref.refreshAdapter();
         }
-    }
-
-    private String getPrivacySummary(int privacy) {
-        if (isAdded()) {
-            switch (privacy) {
-                case -1:
-                    return getString(R.string.site_settings_privacy_private_summary);
-                case 0:
-                    return getString(R.string.site_settings_privacy_hidden_summary);
-                case 1:
-                    return getString(R.string.site_settings_privacy_public_summary);
-            }
-        }
-        return "";
-    }
-
-    private String getCloseAfterSummary(int period) {
-        if (!isAdded()) return "";
-        if (period == 0) return getString(R.string.never);
-        return getResources().getQuantityString(R.plurals.days_quantity, period, period);
-    }
-
-    private String getSortOrderSummary(int order) {
-        if (!isAdded()) return "";
-        switch (order) {
-            case SiteSettingsInterface.ASCENDING_SORT:
-                return getString(R.string.oldest_first);
-            case SiteSettingsInterface.DESCENDING_SORT:
-                return getString(R.string.newest_first);
-            default:
-                return getString(R.string.unknown);
-        }
-    }
-
-    private String getThreadingSummary(int levels) {
-        if (!isAdded()) return "";
-        if (levels <= 1) return getString(R.string.none);
-        return String.format(getString(R.string.site_settings_threading_summary), levels);
-    }
-
-    private String getPagingSummary(int count) {
-        if (!isAdded()) return "";
-        if (count == 0) return getString(R.string.none);
-        return getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }
 
     private String getWhitelistSummary(int value) {
@@ -1119,7 +937,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         for (int i = 0; i < languageCodes.length; ++i) {
             displayStrings[i] = StringUtils.capitalize(getLanguageString(
-                    String.valueOf(languageCodes[i]), languageLocale(languageCodes[i].toString())));
+                    String.valueOf(languageCodes[i]), WPPrefUtils.languageLocale(languageCodes[i].toString())));
         }
 
         return displayStrings;
@@ -1135,7 +953,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
             detailStrings[i] = StringUtils.capitalize(
-                    getLanguageString(languageCodes[i].toString(), languageLocale(locale)));
+                    getLanguageString(languageCodes[i].toString(), WPPrefUtils.languageLocale(locale)));
         }
 
         return detailStrings;
@@ -1149,7 +967,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return "";
         }
 
-        Locale languageLocale = languageLocale(languageCode);
+        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
         String displayLanguage = languageLocale.getDisplayLanguage(displayLocale);
         String displayCountry = languageLocale.getDisplayCountry(displayLocale);
 
@@ -1159,38 +977,30 @@ public class SiteSettingsFragment extends PreferenceFragment
         return displayLanguage;
     }
 
-    /**
-     * Gets a locale for the given language code.
-     */
-    private Locale languageLocale(String languageCode) {
-        if (TextUtils.isEmpty(languageCode)) return Locale.getDefault();
-
-        if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
-            return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),
-                    languageCode.substring(REGION_SUBSTRING_INDEX));
-        }
-
-        return new Locale(languageCode);
+    private void hideAdminRequiredPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_category);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_format);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
     }
 
-    /**
-     * Gets a preference and sets the {@link android.preference.Preference.OnPreferenceChangeListener}.
-     */
-    private Preference getPref(int id) {
-        Preference pref = findPreference(getString(id));
-        pref.setOnPreferenceChangeListener(this);
-        return pref;
+    private void removeDotComOnlyPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
     }
 
-    /**
-     * Removes a {@link Preference} from the {@link PreferenceCategory} with the given key.
-     */
-    private void removePreference(int parentKey, int preference) {
-        PreferenceGroup parent = (PreferenceGroup) findPreference(getString(parentKey));
-        Preference child = findPreference(getString(preference));
+    private void removeSelfHostedOnlyPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_delete_site);
+    }
 
-        if (parent != null && child != null) {
-            parent.removePreference(child);
-        }
+    private Preference getChangePref(int id) {
+        return WPPrefUtils.getPrefAndSetChangeListener(this, id, this);
+    }
+
+    private Preference getClickPref(int id) {
+        return WPPrefUtils.getPrefAndSetClickListener(this, id, this);
     }
 }
