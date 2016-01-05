@@ -120,6 +120,27 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_SAVED_DRAFT:
                 eventName = "editor_draft_saved";
                 break;
+            case EDITOR_DISCARDED_CHANGES:
+                eventName = "editor_discarded_changes";
+                break;
+            case EDITOR_EDITED_IMAGE:
+                eventName = "editor_image_edited";
+                break;
+            case EDITOR_ENABLED_NEW_VERSION:
+                eventName = "editor_enabled_new_version";
+                break;
+            case EDITOR_TOGGLED_OFF:
+                eventName = "editor_toggled_off";
+                break;
+            case EDITOR_TOGGLED_ON:
+                eventName = "editor_toggled_on";
+                break;
+            case EDITOR_UPDLOAD_MEDIA_FAILED:
+                eventName = "editor_upload_media_failed";
+                break;
+            case EDITOR_UPDLOAD_MEDIA_RETRIED:
+                eventName = "editor_upload_media_retried";
+                break;
             case EDITOR_CLOSED:
                 eventName = "editor_closed";
                 break;
@@ -179,6 +200,22 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_UNDERLINE:
                 eventName = "editor_button_tapped";
                 predefinedEventProperties.put("button", "underline");
+                break;
+            case EDITOR_TAPPED_HTML:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "html");
+                break;
+            case EDITOR_TAPPED_ORDERED_LIST:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "ordered_list");
+                break;
+            case EDITOR_TAPPED_UNLINK:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "unlink");
+                break;
+            case EDITOR_TAPPED_UNORDERED_LIST:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "unordered_list");
                 break;
             case NOTIFICATIONS_ACCESSED:
                 eventName = "notifications_accessed";

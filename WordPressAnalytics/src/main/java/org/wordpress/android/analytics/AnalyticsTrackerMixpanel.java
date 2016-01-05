@@ -403,6 +403,45 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_saved_draft");
                 instructions.setCurrentDateForPeopleProperty("last_time_saved_draft");
                 break;
+            case EDITOR_DISCARDED_CHANGES:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Discarded Changes");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_discarded_changes");
+                instructions.setCurrentDateForPeopleProperty("last_time_discarded_changes");
+                break;
+            case EDITOR_EDITED_IMAGE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Edited Image");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_edited_image");
+                instructions.setCurrentDateForPeopleProperty("last_time_edited_image");
+                break;
+            case EDITOR_ENABLED_NEW_VERSION:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Enabled New Version");
+                instructions.addSuperPropertyToFlag("enabled_new_editor");
+                break;
+            case EDITOR_TOGGLED_ON:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Toggled New Editor On");
+                instructions.setPeoplePropertyToValue("enabled_new_editor", true);
+                break;
+            case EDITOR_TOGGLED_OFF:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Toggled New Editor Off");
+                instructions.setPeoplePropertyToValue("enabled_new_editor", true);
+                break;
+            case EDITOR_UPDLOAD_MEDIA_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Upload Media Failed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_upload_media_failed");
+                instructions.setCurrentDateForPeopleProperty("last_time_editor_upload_media_failed");
+                break;
+            case EDITOR_UPDLOAD_MEDIA_RETRIED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Retried Uploading Media");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_retried_uploading_media");
+                instructions.setCurrentDateForPeopleProperty("last_time_editor_retried_uploading_media");
+                break;
             case EDITOR_CLOSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Closed");
@@ -501,6 +540,30 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Editor - Tapped Underline Button");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_underline");
                 instructions.setCurrentDateForPeopleProperty("last_time_tapped_underline_in_editor");
+                break;
+            case EDITOR_TAPPED_HTML:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped HTML Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_html");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_html_in_editor");
+                break;
+            case EDITOR_TAPPED_ORDERED_LIST:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Ordered List Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_ordered_list");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_ordered_list_in_editor");
+                break;
+            case EDITOR_TAPPED_UNLINK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Unlink Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_unlink");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_unlink_in_editor");
+                break;
+            case EDITOR_TAPPED_UNORDERED_LIST:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Unordered List Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_unordered_list");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_unordered_list_in_editor");
                 break;
             case NOTIFICATIONS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
