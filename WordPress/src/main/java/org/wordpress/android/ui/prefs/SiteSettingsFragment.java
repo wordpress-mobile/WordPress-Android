@@ -968,7 +968,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
-        String displayLanguage = languageLocale.getDisplayLanguage(displayLocale);
+        String displayLanguage = StringUtils.capitalize(languageLocale.getDisplayLanguage(displayLocale));
         String displayCountry = languageLocale.getDisplayCountry(displayLocale);
 
         if (!TextUtils.isEmpty(displayCountry)) {
