@@ -1123,4 +1123,13 @@
     <string name="selected_theme">Selected Theme</string>
     <string name="could_not_load_theme">Could not load theme</string>
 
+    <!--My profile-->
+    <string name="my_profile">My Profile</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="public_display_name">Public display name</string>
+    <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
+    <string name="about_me">About me</string>
+    <string name="about_me_hint">A few words about you…</string>
+
 </resources>

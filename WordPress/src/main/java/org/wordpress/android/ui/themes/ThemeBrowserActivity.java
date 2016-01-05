@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -147,9 +148,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ACTIVATE_THEME) {
-            if (resultCode == RESULT_OK) {
-                String themeId = data.getStringExtra(THEME_ID);
+        if (requestCode == ACTIVATE_THEME && resultCode == RESULT_OK && data != null) {
+            String themeId = data.getStringExtra(THEME_ID);
+            if (!TextUtils.isEmpty(themeId)) {
                 activateTheme(themeId);
             }
         }
@@ -407,7 +408,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         String toastText = getString(R.string.no_network_message);
 
         if (NetworkUtils.isNetworkAvailable(this)) {
-            if (mCurrentTheme != null && (themeId != null || !themeId.isEmpty())) {
+            if (mCurrentTheme != null && !TextUtils.isEmpty(themeId)) {
                 boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);

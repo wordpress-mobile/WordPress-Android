@@ -19,9 +19,11 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPRestClient;
+import org.wordpress.android.util.WPUrlUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /*
@@ -215,10 +217,18 @@ public class ReaderWebView extends WebView {
 
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            // Intercept requests for private images and add the WP.com authorization header
-            if (mIsPrivatePost && mBlogSchemeIsHttps && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(url)) {
+            URL imageUrl  = null;
+            if (mIsPrivatePost && mBlogSchemeIsHttps && UrlUtils.isImageUrl(url)) {
                 try {
-                    URL imageUrl = new URL(UrlUtils.makeHttps(url));
+                    imageUrl = new URL(UrlUtils.makeHttps(url));
+                } catch (MalformedURLException e) {
+                    AppLog.e(AppLog.T.READER, e);
+                }
+            }
+            // Intercept requests for private images and add the WP.com authorization header
+            if (imageUrl != null && WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl) &&
+                    !TextUtils.isEmpty(mToken)) {
+                try {
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);

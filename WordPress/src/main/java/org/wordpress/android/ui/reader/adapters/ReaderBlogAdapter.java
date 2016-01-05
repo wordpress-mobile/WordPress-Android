@@ -117,7 +117,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     final ReaderRecommendedBlog blog = mRecommendedBlogs.get(position);
                     blogHolder.txtTitle.setText(blog.getTitle());
                     blogHolder.txtDescription.setText(blog.getReason());
-                    blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blog.getBlogUrl()));
+                    blogHolder.txtUrl.setText(UrlUtils.getHost(blog.getBlogUrl()));
                     blogHolder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.BLAVATAR);
                     break;
 
@@ -129,9 +129,9 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         blogHolder.txtTitle.setText(R.string.reader_untitled_post);
                     }
                     if (blogInfo.hasUrl()) {
-                        blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
+                        blogHolder.txtUrl.setText(UrlUtils.getHost(blogInfo.getUrl()));
                     } else if (blogInfo.hasFeedUrl()) {
-                        blogHolder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogInfo.getFeedUrl()));
+                        blogHolder.txtUrl.setText(UrlUtils.getHost(blogInfo.getFeedUrl()));
                     } else {
                         blogHolder.txtUrl.setText("");
                     }
@@ -253,7 +253,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else if (blog.hasName()) {
                 return blog.getName();
             } else if (blog.hasUrl()) {
-                return StringUtils.notNullStr(UrlUtils.getDomainFromUrl(blog.getUrl()));
+                return StringUtils.notNullStr(UrlUtils.getHost(blog.getUrl()));
             } else {
                 return "";
             }
