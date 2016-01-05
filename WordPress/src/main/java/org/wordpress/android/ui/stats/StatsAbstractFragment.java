@@ -129,7 +129,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
 
-    public boolean shouldUpdateFragmentOnEvent(StatsEvents.SectionUpdatedAbstract event) {
+    public boolean shouldUpdateFragmentOnUpdateEvent(StatsEvents.SectionUpdatedAbstract event) {
         if (!isAdded()) {
             return false;
         }
@@ -152,7 +152,7 @@ public abstract class StatsAbstractFragment extends Fragment {
 
     public boolean shouldUpdateFragmentOnErrorEvent(StatsEvents.SectionUpdateError errorEvent) {
         StatsEvents.SectionUpdatedAbstract abstractEvent = errorEvent;
-        if (!shouldUpdateFragmentOnEvent(abstractEvent)) {
+        if (!shouldUpdateFragmentOnUpdateEvent(abstractEvent)) {
             return false;
         }
 

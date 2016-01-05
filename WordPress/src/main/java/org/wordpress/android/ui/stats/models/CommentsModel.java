@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.stats.StatsConstants;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.stats.service;
 
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -11,11 +9,9 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
@@ -24,9 +20,14 @@ import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
+import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.BaseStatsModel;
+import org.wordpress.android.ui.stats.models.ClicksModel;
+import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
+import org.wordpress.android.ui.stats.models.SearchTermsModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.util.AppLog;
@@ -137,6 +138,21 @@ public class StatsService extends Service {
                 case REFERRERS:
                     return new StatsEvents.ReferrersSectionUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (ReferrersModel)data);
+                case CLICKS:
+                    return new StatsEvents.ClicksSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (ClicksModel)data);
+                case AUTHORS:
+                    return new StatsEvents.AuthorsSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (AuthorsModel)data);
+                case GEO_VIEWS:
+                    return new StatsEvents.CountrySectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (GeoviewsModel)data);
+                case VIDEO_PLAYS:
+                    return new StatsEvents.VideoSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (VideoPlaysModel)data);
+                case SEARCH_TERMS:
+                    return new StatsEvents.SearchTermsSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (SearchTermsModel)data);
                 default:
                     return new StatsEvents.SectionUpdated(this, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, data);

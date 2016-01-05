@@ -61,6 +61,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     private LinearLayout mEmptyModulePlaceholder;
 
+    /**
+     *  @deprecated */
     Serializable[] mDatamodels;
 
     SparseBooleanArray mGroupIdToExpandedMap;
@@ -177,10 +179,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         return false;
     }
     protected void savePreviousData(Bundle outState) {
-        return;
+
     }
     protected void restorePreviousData(Bundle savedInstanceState) {
-        return;
+
     }
 
     private void showPlaceholderUI() {

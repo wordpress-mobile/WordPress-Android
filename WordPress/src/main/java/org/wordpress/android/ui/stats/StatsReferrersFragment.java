@@ -24,7 +24,7 @@ import java.util.List;
 public class StatsReferrersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsReferrersFragment.class.getSimpleName();
 
-    public ReferrersModel mReferrers;
+    private ReferrersModel mReferrers;
 
     @Override
     protected boolean hasPreviousDataAvailable() {
@@ -45,7 +45,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.ReferrersSectionUpdated event) {
-        if (!shouldUpdateFragmentOnEvent(event)) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 

@@ -14,14 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -32,7 +30,6 @@ import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -726,7 +723,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.VisitorsAndViewsSectionUpdated event) {
-        if (!shouldUpdateFragmentOnEvent(event)) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 

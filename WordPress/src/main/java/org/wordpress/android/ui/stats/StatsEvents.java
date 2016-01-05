@@ -2,8 +2,13 @@ package org.wordpress.android.ui.stats;
 
 import com.android.volley.VolleyError;
 
+import org.wordpress.android.ui.stats.models.AuthorsModel;
+import org.wordpress.android.ui.stats.models.ClicksModel;
+import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
+import org.wordpress.android.ui.stats.models.SearchTermsModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService.StatsEndpointsEnum;
 
@@ -89,6 +94,62 @@ public class StatsEvents {
                                       final int maxResultsRequested, final int pageRequested, ReferrersModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mReferrers = responseObjectModel;
+        }
+    }
+
+    public static class ClicksSectionUpdated extends SectionUpdatedAbstract {
+
+        public final ClicksModel mClicks;
+
+        public ClicksSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                       final int maxResultsRequested, final int pageRequested, ClicksModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mClicks = responseObjectModel;
+        }
+    }
+
+
+    public static class AuthorsSectionUpdated extends SectionUpdatedAbstract {
+
+        public final AuthorsModel mAuthors;
+
+        public AuthorsSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                    final int maxResultsRequested, final int pageRequested, AuthorsModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mAuthors = responseObjectModel;
+        }
+    }
+
+    public static class CountrySectionUpdated extends SectionUpdatedAbstract {
+
+        public final GeoviewsModel mCountries;
+
+        public CountrySectionUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                     final int maxResultsRequested, final int pageRequested, GeoviewsModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mCountries = responseObjectModel;
+        }
+    }
+
+    public static class VideoSectionUpdated extends SectionUpdatedAbstract {
+
+        public final VideoPlaysModel mVideos;
+
+        public VideoSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                     final int maxResultsRequested, final int pageRequested, VideoPlaysModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mVideos = responseObjectModel;
+        }
+    }
+
+    public static class SearchTermsSectionUpdated extends SectionUpdatedAbstract {
+
+        public final SearchTermsModel mSearchTerms;
+
+        public SearchTermsSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                   final int maxResultsRequested, final int pageRequested, SearchTermsModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mSearchTerms = responseObjectModel;
         }
     }
 

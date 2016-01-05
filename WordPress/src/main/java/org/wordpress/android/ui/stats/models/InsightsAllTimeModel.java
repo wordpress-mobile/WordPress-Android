@@ -3,8 +3,6 @@ package org.wordpress.android.ui.stats.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
-
 public class InsightsAllTimeModel extends BaseStatsModel {
 
     private String mBlogID;
