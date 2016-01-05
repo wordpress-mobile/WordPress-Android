@@ -317,7 +317,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getDefaultPostFormat() {
-        if (TextUtils.isEmpty(mSettings.defaultPostFormat)) {
+        if (TextUtils.isEmpty(mSettings.defaultPostFormat) || !getFormats().containsKey(mSettings.defaultPostFormat)) {
             mSettings.defaultPostFormat = STANDARD_POST_FORMAT_KEY;
         }
         return mSettings.defaultPostFormat;
