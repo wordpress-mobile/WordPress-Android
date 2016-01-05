@@ -129,7 +129,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
                 eventName = "editor_photo_added";
-                predefinedEventProperties.put("via", "wp_media_library");
+                predefinedEventProperties.put("via", "media_library");
                 break;
             case EDITOR_PUBLISHED_POST:
                 eventName = "editor_post_published";
