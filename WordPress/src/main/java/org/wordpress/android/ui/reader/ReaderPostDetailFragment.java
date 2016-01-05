@@ -903,7 +903,8 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollCompleted() {
-        if (!mIsToolbarShowing && !mScrollView.canScrollDown()) {
+        if (!mIsToolbarShowing
+                && (!mScrollView.canScrollDown() || !mScrollView.canScrollUp())) {
             showToolbar(true);
             showFooter(true);
         }
