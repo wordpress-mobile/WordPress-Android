@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import com.android.volley.VolleyError;
 
+import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService.StatsEndpointsEnum;
@@ -77,6 +78,17 @@ public class StatsEvents {
                                       final int maxResultsRequested, final int pageRequested, TopPostsAndPagesModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mTopPostsAndPagesModel = responseObjectModel;
+        }
+    }
+
+    public static class ReferrersSectionUpdated extends SectionUpdatedAbstract {
+
+        public final ReferrersModel mReferrers;
+
+        public ReferrersSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                      final int maxResultsRequested, final int pageRequested, ReferrersModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mReferrers = responseObjectModel;
         }
     }
 

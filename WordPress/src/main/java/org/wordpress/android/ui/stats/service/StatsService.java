@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.BaseStatsModel;
+import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
@@ -127,12 +128,15 @@ public class StatsService extends Service {
         public StatsEvents.SectionUpdatedAbstract getEndpointUpdateEvent(final String blogId, final StatsTimeframe timeframe, final String date,
                                final int maxResultsRequested, final int pageRequested, final BaseStatsModel data) {
             switch (this) {
-                case TOP_POSTS:
-                    return new StatsEvents.TopPostsSectionUpdated(blogId, timeframe, date,
-                            maxResultsRequested, pageRequested, (TopPostsAndPagesModel)data);
                 case VISITS:
                     return new StatsEvents.VisitorsAndViewsSectionUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (VisitsModel)data);
+                case TOP_POSTS:
+                    return new StatsEvents.TopPostsSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (TopPostsAndPagesModel)data);
+                case REFERRERS:
+                    return new StatsEvents.ReferrersSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (ReferrersModel)data);
                 default:
                     return new StatsEvents.SectionUpdated(this, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, data);

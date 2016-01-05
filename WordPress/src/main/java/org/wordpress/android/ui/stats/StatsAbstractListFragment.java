@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
@@ -125,12 +126,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mGroupIdToExpandedMap = new SparseBooleanArray();
 
         if (savedInstanceState != null) {
-         /*   if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-                Serializable oldData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
-                if (oldData != null && oldData instanceof Serializable[]) {
-                    mDatamodels = (Serializable[]) oldData;
-                }
-            }*/
+            restorePreviousData(savedInstanceState); // Each fragment will override this
             if (savedInstanceState.containsKey(ARGS_EXPANDED_ROWS)) {
                 mGroupIdToExpandedMap = savedInstanceState.getParcelable(ARGS_EXPANDED_ROWS);
             }
@@ -139,24 +135,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // Do not serialize VolleyError, but rewrite in a simple stats Exception.
-        // VolleyErrors should be serializable, but for some reason they are not.
-        // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
-        if (mDatamodels != null) {
-            for (int i=0; i < mDatamodels.length; i++) {
-                if (mDatamodels[i] != null && mDatamodels[i] instanceof VolleyError) {
-                    VolleyError currentVolleyError = (VolleyError) mDatamodels[i];
-                    mDatamodels[i] = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
-                }
-            }
-        }
-/*
         if (mGroupIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARGS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mGroupIdToExpandedMap));
         }
+        savePreviousData(outState); // Each fragment will override this
 
-        outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
-        */
         super.onSaveInstanceState(outState);
     }
 
@@ -176,25 +159,28 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     public void onResume() {
         super.onResume();
 
-        showPlaceholderUI();
-        refreshStats();
-
         // Init the UI
-/*        if (mDatamodels != null) {
+        if (hasPreviousDataAvailable()) {
             updateUI();
         } else {
-            showPlaceholderUI();
-            refreshStats();
-  */
-            // TODO : the error and network not available should be fired from the service
-            /* if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 showPlaceholderUI();
                 refreshStats();
             } else {
                 showErrorUI(new NoConnectionError());
             }
-            */
-    //    }
+        }
+    }
+
+    // TODO: MAKE ME ABSTRACT!!!
+    protected boolean hasPreviousDataAvailable() {
+        return false;
+    }
+    protected void savePreviousData(Bundle outState) {
+        return;
+    }
+    protected void restorePreviousData(Bundle savedInstanceState) {
+        return;
     }
 
     private void showPlaceholderUI() {

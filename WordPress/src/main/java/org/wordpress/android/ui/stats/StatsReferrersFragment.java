@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,14 +24,51 @@ import java.util.List;
 public class StatsReferrersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsReferrersFragment.class.getSimpleName();
 
+    public ReferrersModel mReferrers;
+
     @Override
-    protected void updateUI() {
-        if (!isAdded()) {
+    protected boolean hasPreviousDataAvailable() {
+        return mReferrers != null;
+    }
+    @Override
+    protected void savePreviousData(Bundle outState) {
+        if (hasPreviousDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mReferrers);
+        }
+    }
+    @Override
+    protected void restorePreviousData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+          mReferrers = (ReferrersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.ReferrersSectionUpdated event) {
+        if (!shouldUpdateFragmentOnEvent(event)) {
             return;
         }
 
-        if (isErrorResponse()) {
-            showErrorUI();
+        mGroupIdToExpandedMap.clear();
+        mReferrers = event.mReferrers;
+
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mReferrers = null;
+        mGroupIdToExpandedMap.clear();
+        showErrorUI(event.mError);
+    }
+
+    @Override
+    protected void updateUI() {
+        if (!isAdded()) {
             return;
         }
 
@@ -44,16 +82,16 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasReferrers() {
-        return !isDataEmpty()
-                && ((ReferrersModel) mDatamodels[0]).getGroups() != null
-                && ((ReferrersModel) mDatamodels[0]).getGroups().size() > 0;
+        return mReferrers != null
+                && mReferrers.getGroups() != null
+                && mReferrers.getGroups().size() > 0;
     }
 
     private List<ReferrerGroupModel> getReferrersGroups() {
         if (!hasReferrers()) {
             return new ArrayList<ReferrerGroupModel>(0);
         }
-        return ((ReferrersModel) mDatamodels[0]).getGroups();
+        return mReferrers.getGroups();
     }
 
     @Override

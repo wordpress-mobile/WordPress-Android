@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
@@ -16,6 +17,23 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsTopPostsAndPagesFragment.class.getSimpleName();
 
     private TopPostsAndPagesModel topPostsAndPagesModel = null;
+
+    @Override
+    protected boolean hasPreviousDataAvailable() {
+        return topPostsAndPagesModel != null;
+    }
+    @Override
+    protected void savePreviousData(Bundle outState) {
+        if (hasPreviousDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, topPostsAndPagesModel);
+        }
+    }
+    @Override
+    protected void restorePreviousData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            topPostsAndPagesModel = (TopPostsAndPagesModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.TopPostsSectionUpdated event) {
@@ -43,11 +61,6 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     @Override
     protected void updateUI() {
         if (!isAdded()) {
-            return;
-        }
-
-        if (topPostsAndPagesModel == null) {
-            showHideNoResultsUI(true);
             return;
         }
 
