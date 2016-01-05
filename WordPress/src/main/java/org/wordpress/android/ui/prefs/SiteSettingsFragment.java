@@ -654,7 +654,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         int i = 0;
         for (Integer key : categories.keySet()) {
             entries[i] = categories.get(key);
-            values[i++] = String.valueOf(key);
+            values[i] = String.valueOf(key);
+            if (key == 1) {
+                CharSequence temp = entries[0];
+                entries[0] = entries[i];
+                entries[i] = temp;
+                temp = values[0];
+                values[0] = values[i];
+                values[i] = temp;
+            }
+            ++i;
         }
 
         mCategoryPref.setEntries(entries);
