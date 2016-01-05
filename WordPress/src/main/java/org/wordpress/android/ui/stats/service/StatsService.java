@@ -23,6 +23,8 @@ import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.BaseStatsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
+import org.wordpress.android.ui.stats.models.CommentFollowersModel;
+import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
@@ -153,6 +155,12 @@ public class StatsService extends Service {
                 case SEARCH_TERMS:
                     return new StatsEvents.SearchTermsSectionUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (SearchTermsModel)data);
+                case COMMENTS:
+                    return new StatsEvents.CommentsSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (CommentsModel)data);
+                case COMMENT_FOLLOWERS:
+                    return new StatsEvents.CommentFollowersSectionUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (CommentFollowersModel)data);
                 default:
                     return new StatsEvents.SectionUpdated(this, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, data);

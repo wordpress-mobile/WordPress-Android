@@ -4,6 +4,8 @@ import com.android.volley.VolleyError;
 
 import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
+import org.wordpress.android.ui.stats.models.CommentFollowersModel;
+import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
@@ -150,6 +152,28 @@ public class StatsEvents {
                                    final int maxResultsRequested, final int pageRequested, SearchTermsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mSearchTerms = responseObjectModel;
+        }
+    }
+
+    public static class CommentsSectionUpdated extends SectionUpdatedAbstract {
+
+        public final CommentsModel mComments;
+
+        public CommentsSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                         final int maxResultsRequested, final int pageRequested, CommentsModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mComments = responseObjectModel;
+        }
+    }
+
+    public static class CommentFollowersSectionUpdated extends SectionUpdatedAbstract {
+
+        public final CommentFollowersModel mCommentFollowers;
+
+        public CommentFollowersSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                      final int maxResultsRequested, final int pageRequested, CommentFollowersModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mCommentFollowers = responseObjectModel;
         }
     }
 

@@ -132,6 +132,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             if (savedInstanceState.containsKey(ARGS_EXPANDED_ROWS)) {
                 mGroupIdToExpandedMap = savedInstanceState.getParcelable(ARGS_EXPANDED_ROWS);
             }
+
+            mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
         }
     }
 
@@ -140,6 +142,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         if (mGroupIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARGS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mGroupIdToExpandedMap));
         }
+        outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
         savePreviousData(outState); // Each fragment will override this
 
         super.onSaveInstanceState(outState);
@@ -273,6 +276,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mList.setVisibility(View.GONE);
     }
 
+    /**
+     *  @deprecated */
     private void showErrorUI(Serializable error) {
         if (!isAdded()) {
             return;
@@ -315,11 +320,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     /**
      * Check if the current datamodel is populated and is NOT an error response.
      *
+     * @deprecated
      */
     boolean isDataEmpty() {
         return isDataEmpty(mTopPagerSelectedButtonIndex);
     }
 
+    /**
+     *  @deprecated */
     boolean isDataEmpty(int index) {
         return mDatamodels == null
                 || mDatamodels[index] == null
@@ -329,12 +337,16 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     /**
      * Check if the current datamodel is an error response.
      *
+     * @deprecated
+     *
      * @return true if it is a Volley Error
      */
     boolean isErrorResponse() {
         return isErrorResponse(mTopPagerSelectedButtonIndex);
     }
 
+    /**
+     *  @deprecated */
     boolean isErrorResponse(int index) {
         return mDatamodels != null && mDatamodels[index] != null
                 && (mDatamodels[index] instanceof VolleyError || mDatamodels[index] instanceof StatsError);
