@@ -366,8 +366,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                     return; // already in single view
                 }
 
-                // Model cannot be null here
-                if (mDatamodels == null) {
+                if (!hasPreviousDataAvailable()) {
                     return;
                 }
 

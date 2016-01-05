@@ -26,8 +26,10 @@ import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
+import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
@@ -132,35 +134,41 @@ public class StatsService extends Service {
                                final int maxResultsRequested, final int pageRequested, final BaseStatsModel data) {
             switch (this) {
                 case VISITS:
-                    return new StatsEvents.VisitorsAndViewsSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.VisitorsAndViewsUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (VisitsModel)data);
                 case TOP_POSTS:
-                    return new StatsEvents.TopPostsSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.TopPostsUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (TopPostsAndPagesModel)data);
                 case REFERRERS:
-                    return new StatsEvents.ReferrersSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.ReferrersUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (ReferrersModel)data);
                 case CLICKS:
-                    return new StatsEvents.ClicksSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.ClicksUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (ClicksModel)data);
                 case AUTHORS:
-                    return new StatsEvents.AuthorsSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.AuthorsUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (AuthorsModel)data);
                 case GEO_VIEWS:
-                    return new StatsEvents.CountrySectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.CountriesUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (GeoviewsModel)data);
                 case VIDEO_PLAYS:
-                    return new StatsEvents.VideoSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.VideoPlaysUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (VideoPlaysModel)data);
                 case SEARCH_TERMS:
-                    return new StatsEvents.SearchTermsSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.SearchTermsUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (SearchTermsModel)data);
                 case COMMENTS:
-                    return new StatsEvents.CommentsSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.CommentsUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (CommentsModel)data);
                 case COMMENT_FOLLOWERS:
-                    return new StatsEvents.CommentFollowersSectionUpdated(blogId, timeframe, date,
+                    return new StatsEvents.CommentFollowersUpdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (CommentFollowersModel)data);
+                case TAGS_AND_CATEGORIES:
+                    return new StatsEvents.TagsUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (TagsContainerModel)data);
+                case PUBLICIZE:
+                    return new StatsEvents.PublicizeUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (PublicizeModel)data);
                 default:
                     return new StatsEvents.SectionUpdated(this, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, data);

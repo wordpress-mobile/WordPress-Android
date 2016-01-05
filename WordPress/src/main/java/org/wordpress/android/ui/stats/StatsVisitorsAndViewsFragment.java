@@ -722,7 +722,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.VisitorsAndViewsSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.VisitorsAndViewsUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }

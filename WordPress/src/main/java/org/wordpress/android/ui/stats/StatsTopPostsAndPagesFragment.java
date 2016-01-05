@@ -36,7 +36,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.TopPostsSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.TopPostsUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }

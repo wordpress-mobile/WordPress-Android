@@ -15,7 +15,6 @@ import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
 import org.wordpress.android.ui.stats.models.PostModel;
-import org.wordpress.android.ui.stats.models.SearchTermsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -44,7 +43,6 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         if (mCommentFollowersModel != null) {
             outState.putSerializable(ARG_REST_RESPONSE_FOLLOWERS, mCommentFollowersModel);
         }
-
     }
     @Override
     protected void restorePreviousData(Bundle savedInstanceState) {
@@ -57,7 +55,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.CommentsSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.CommentsUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
@@ -67,7 +65,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.CommentFollowersSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.CommentFollowersUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }

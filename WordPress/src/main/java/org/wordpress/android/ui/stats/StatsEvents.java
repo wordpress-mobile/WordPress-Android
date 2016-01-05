@@ -7,8 +7,10 @@ import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
+import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
@@ -66,114 +68,136 @@ public class StatsEvents {
         }
     }
 
-    public static class VisitorsAndViewsSectionUpdated extends SectionUpdatedAbstract {
+    public static class VisitorsAndViewsUpdated extends SectionUpdatedAbstract {
 
         public final VisitsModel mVisitsAndViews;
 
-        public VisitorsAndViewsSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                      final int maxResultsRequested, final int pageRequested, VisitsModel responseObjectModel) {
+        public VisitorsAndViewsUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                       final int maxResultsRequested, final int pageRequested, VisitsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mVisitsAndViews = responseObjectModel;
         }
     }
 
-    public static class TopPostsSectionUpdated extends SectionUpdatedAbstract {
+    public static class TopPostsUpdated extends SectionUpdatedAbstract {
 
         public final TopPostsAndPagesModel mTopPostsAndPagesModel;
 
-        public TopPostsSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                      final int maxResultsRequested, final int pageRequested, TopPostsAndPagesModel responseObjectModel) {
+        public TopPostsUpdated(String blogId, StatsTimeframe timeframe, String date,
+                               final int maxResultsRequested, final int pageRequested, TopPostsAndPagesModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mTopPostsAndPagesModel = responseObjectModel;
         }
     }
 
-    public static class ReferrersSectionUpdated extends SectionUpdatedAbstract {
+    public static class ReferrersUpdated extends SectionUpdatedAbstract {
 
         public final ReferrersModel mReferrers;
 
-        public ReferrersSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                      final int maxResultsRequested, final int pageRequested, ReferrersModel responseObjectModel) {
+        public ReferrersUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                final int maxResultsRequested, final int pageRequested, ReferrersModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mReferrers = responseObjectModel;
         }
     }
 
-    public static class ClicksSectionUpdated extends SectionUpdatedAbstract {
+    public static class ClicksUpdated extends SectionUpdatedAbstract {
 
         public final ClicksModel mClicks;
 
-        public ClicksSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                       final int maxResultsRequested, final int pageRequested, ClicksModel responseObjectModel) {
+        public ClicksUpdated(String blogId, StatsTimeframe timeframe, String date,
+                             final int maxResultsRequested, final int pageRequested, ClicksModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mClicks = responseObjectModel;
         }
     }
 
 
-    public static class AuthorsSectionUpdated extends SectionUpdatedAbstract {
+    public static class AuthorsUpdated extends SectionUpdatedAbstract {
 
         public final AuthorsModel mAuthors;
 
-        public AuthorsSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                    final int maxResultsRequested, final int pageRequested, AuthorsModel responseObjectModel) {
+        public AuthorsUpdated(String blogId, StatsTimeframe timeframe, String date,
+                              final int maxResultsRequested, final int pageRequested, AuthorsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mAuthors = responseObjectModel;
         }
     }
 
-    public static class CountrySectionUpdated extends SectionUpdatedAbstract {
+    public static class CountriesUpdated extends SectionUpdatedAbstract {
 
         public final GeoviewsModel mCountries;
 
-        public CountrySectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                     final int maxResultsRequested, final int pageRequested, GeoviewsModel responseObjectModel) {
+        public CountriesUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                final int maxResultsRequested, final int pageRequested, GeoviewsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mCountries = responseObjectModel;
         }
     }
 
-    public static class VideoSectionUpdated extends SectionUpdatedAbstract {
+    public static class VideoPlaysUpdated extends SectionUpdatedAbstract {
 
         public final VideoPlaysModel mVideos;
 
-        public VideoSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                     final int maxResultsRequested, final int pageRequested, VideoPlaysModel responseObjectModel) {
+        public VideoPlaysUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                 final int maxResultsRequested, final int pageRequested, VideoPlaysModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mVideos = responseObjectModel;
         }
     }
 
-    public static class SearchTermsSectionUpdated extends SectionUpdatedAbstract {
+    public static class SearchTermsUpdated extends SectionUpdatedAbstract {
 
         public final SearchTermsModel mSearchTerms;
 
-        public SearchTermsSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                   final int maxResultsRequested, final int pageRequested, SearchTermsModel responseObjectModel) {
+        public SearchTermsUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                  final int maxResultsRequested, final int pageRequested, SearchTermsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mSearchTerms = responseObjectModel;
         }
     }
 
-    public static class CommentsSectionUpdated extends SectionUpdatedAbstract {
+    public static class CommentsUpdated extends SectionUpdatedAbstract {
 
         public final CommentsModel mComments;
 
-        public CommentsSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                         final int maxResultsRequested, final int pageRequested, CommentsModel responseObjectModel) {
+        public CommentsUpdated(String blogId, StatsTimeframe timeframe, String date,
+                               final int maxResultsRequested, final int pageRequested, CommentsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mComments = responseObjectModel;
         }
     }
 
-    public static class CommentFollowersSectionUpdated extends SectionUpdatedAbstract {
+    public static class CommentFollowersUpdated extends SectionUpdatedAbstract {
 
         public final CommentFollowersModel mCommentFollowers;
 
-        public CommentFollowersSectionUpdated(String blogId, StatsTimeframe timeframe, String date,
-                                      final int maxResultsRequested, final int pageRequested, CommentFollowersModel responseObjectModel) {
+        public CommentFollowersUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                       final int maxResultsRequested, final int pageRequested, CommentFollowersModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mCommentFollowers = responseObjectModel;
+        }
+    }
+
+    public static class TagsUpdated extends SectionUpdatedAbstract {
+
+        public final TagsContainerModel mTagsContainer;
+
+        public TagsUpdated(String blogId, StatsTimeframe timeframe, String date,
+                                              final int maxResultsRequested, final int pageRequested, TagsContainerModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mTagsContainer = responseObjectModel;
+        }
+    }
+
+    public static class PublicizeUpdated extends SectionUpdatedAbstract {
+
+        public final PublicizeModel mPublicizeModel;
+
+        public PublicizeUpdated(String blogId, StatsTimeframe timeframe, String date,
+                           final int maxResultsRequested, final int pageRequested, PublicizeModel responseObjectModel) {
+            super(blogId, timeframe, date, maxResultsRequested, pageRequested);
+            mPublicizeModel = responseObjectModel;
         }
     }
 

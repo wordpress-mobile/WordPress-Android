@@ -42,7 +42,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.ClicksSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.ClicksUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }

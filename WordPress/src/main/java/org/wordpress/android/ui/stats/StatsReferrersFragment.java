@@ -44,7 +44,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.ReferrersSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.ReferrersUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }

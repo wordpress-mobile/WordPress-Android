@@ -40,7 +40,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.VideoSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.VideoPlaysUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }

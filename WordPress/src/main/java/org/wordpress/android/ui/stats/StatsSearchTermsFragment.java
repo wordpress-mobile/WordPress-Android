@@ -42,7 +42,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.SearchTermsSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.SearchTermsUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }

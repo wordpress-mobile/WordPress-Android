@@ -50,7 +50,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.CountrySectionUpdated event) {
+    public void onEventMainThread(StatsEvents.CountriesUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }

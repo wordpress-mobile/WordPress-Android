@@ -43,7 +43,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.AuthorsSectionUpdated event) {
+    public void onEventMainThread(StatsEvents.AuthorsUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
