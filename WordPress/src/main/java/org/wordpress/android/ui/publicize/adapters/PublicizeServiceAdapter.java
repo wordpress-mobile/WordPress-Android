@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.publicize.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,6 +38,9 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
     private final int mSiteId;
     private final int mBlavatarSz;
+    private final ColorFilter mGrayScaleFilter;
+    private final int mColorConnected;
+    private final int mColorNotConnected;
     private final long mCurrentUserId;
 
     private OnAdapterLoadedListener mAdapterLoadedListener;
@@ -41,9 +48,17 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
     public PublicizeServiceAdapter(Context context, int siteId) {
         super();
+
         mSiteId = siteId;
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mCurrentUserId = AccountHelper.getDefaultAccount().getUserId();
+
+        mColorConnected = context.getResources().getColor(R.color.grey_dark);
+        mColorNotConnected = context.getResources().getColor(R.color.grey_lighten_10);
+
+        int grayscaleColor = Color.parseColor("#80c8d7e1");
+        mGrayScaleFilter = new PorterDuffColorFilter(grayscaleColor, PorterDuff.Mode.MULTIPLY);
+
         setHasStableIds(true);
     }
 
@@ -102,10 +117,14 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         holder.imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         if (connections.size() > 0) {
+            holder.txtService.setTextColor(mColorConnected);
             holder.txtUser.setText(connections.getUserDisplayNames());
             holder.txtUser.setVisibility(View.VISIBLE);
+            holder.imgIcon.clearColorFilter();
         } else {
+            holder.txtService.setTextColor(mColorNotConnected);
             holder.txtUser.setVisibility(View.GONE);
+            holder.imgIcon.setColorFilter(mGrayScaleFilter);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
