@@ -638,6 +638,9 @@ public class ReaderPostDetailFragment extends Fragment
 
             if (!isAdded()) return;
 
+            // make sure options menu reflects whether we now have a post
+            getActivity().invalidateOptionsMenu();
+
             if (!result) {
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
                 // the server if it hasn't already been requested
