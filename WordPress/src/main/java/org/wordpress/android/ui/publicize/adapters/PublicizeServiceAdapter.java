@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.publicize.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,8 +55,9 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         mColorConnected = context.getResources().getColor(R.color.grey_dark);
         mColorNotConnected = context.getResources().getColor(R.color.grey_lighten_10);
 
-        int grayscaleColor = Color.parseColor("#80c8d7e1");
-        mGrayScaleFilter = new PorterDuffColorFilter(grayscaleColor, PorterDuff.Mode.MULTIPLY);
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        mGrayScaleFilter = new ColorMatrixColorFilter(matrix);
 
         setHasStableIds(true);
     }
@@ -121,10 +121,12 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             holder.txtUser.setText(connections.getUserDisplayNames());
             holder.txtUser.setVisibility(View.VISIBLE);
             holder.imgIcon.clearColorFilter();
+            holder.imgIcon.setImageAlpha(255);
         } else {
             holder.txtService.setTextColor(mColorNotConnected);
             holder.txtUser.setVisibility(View.GONE);
             holder.imgIcon.setColorFilter(mGrayScaleFilter);
+            holder.imgIcon.setImageAlpha(128);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
