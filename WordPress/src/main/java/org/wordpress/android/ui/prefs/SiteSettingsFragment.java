@@ -157,6 +157,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // This Device settings
     private DetailListPreference mImageWidthPref;
+    private WPSwitchPreference mUploadAndLinkPref;
 
     // Delete site option (NOTE: only for WP.org)
     private Preference mDeleteSitePref;
@@ -439,6 +440,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mImageWidthPref,
                     mBlog.getMaxImageWidth(),
                     mBlog.getMaxImageWidth());
+        } else if (preference == mUploadAndLinkPref) {
+            mBlog.setFullSizeImage(Boolean.valueOf(newValue.toString()));
         } else {
             return false;
         }
@@ -589,6 +592,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
         mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
+        mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
@@ -689,6 +693,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .getQuantityString(R.plurals.site_settings_multiple_links_summary,
                         mSiteSettings.getMultipleLinks(),
                         mSiteSettings.getMultipleLinks()));
+        mUploadAndLinkPref.setChecked(mBlog.isFullSizeImage());
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
