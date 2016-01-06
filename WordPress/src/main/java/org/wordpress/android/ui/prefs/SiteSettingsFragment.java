@@ -155,6 +155,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mModerationHoldPref;
     private Preference mBlacklistPref;
 
+    // This Device settings
+    private DetailListPreference mImageWidthPref;
+
     // Delete site option (NOTE: only for WP.org)
     private Preference mDeleteSitePref;
 
@@ -177,6 +180,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // setup state to fetch remote settings
         mShouldFetch = true;
+
+        // disable editing until remote data is fetched
+        allowEditing(false);
 
         // initialize the appropriate settings interface (WP.com or WP.org)
         mSiteSettings = SiteSettingsInterface.getInterface(activity, mBlog, this);
@@ -428,6 +434,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mFormatPref,
                     newValue.toString(),
                     mSiteSettings.getDefaultPostFormatDisplay());
+        } else if (preference == mImageWidthPref) {
+            mBlog.setMaxImageWidth(newValue.toString());
+            setDetailListPreferenceValue(mImageWidthPref,
+                    mBlog.getMaxImageWidth(),
+                    mBlog.getMaxImageWidth());
         } else {
             return false;
         }
@@ -501,10 +512,32 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void allowEditing(boolean allow) {
         // Address won't be editable until the app supports domain name changes
         if (mAddressPref != null) mAddressPref.setEnabled(false);
+
         if (mTitlePref != null) mTitlePref.setEnabled(allow);
         if (mTaglinePref != null) mTaglinePref.setEnabled(allow);
         if (mPrivacyPref != null) mPrivacyPref.setEnabled(allow);
         if (mLanguagePref != null) mLanguagePref.setEnabled(allow);
+        if (mLocationPref != null) mLocationPref.setEnabled(allow);
+        if (mCategoryPref != null) mCategoryPref.setEnabled(allow);
+        if (mFormatPref != null) mFormatPref.setEnabled(allow);
+        if (mAllowCommentsPref != null) mAllowCommentsPref.setEnabled(allow);
+        if (mAllowCommentsNested != null) mAllowCommentsNested.setEnabled(allow);
+        if (mSendPingbacksPref != null) mSendPingbacksPref.setEnabled(allow);
+        if (mSendPingbacksNested != null) mSendPingbacksNested.setEnabled(allow);
+        if (mReceivePingbacksPref != null) mReceivePingbacksPref.setEnabled(allow);
+        if (mReceivePingbacksNested != null) mReceivePingbacksNested.setEnabled(allow);
+        if (mIdentityRequiredPreference != null) mIdentityRequiredPreference.setEnabled(allow);
+        if (mUserAccountRequiredPref != null) mUserAccountRequiredPref.setEnabled(allow);
+        if (mCloseAfterPref != null) mCloseAfterPref.setEnabled(allow);
+        if (mSortByPref != null) mSortByPref.setEnabled(allow);
+        if (mThreadingPref != null) mThreadingPref.setEnabled(allow);
+        if (mPagingPref != null) mPagingPref.setEnabled(allow);
+        if (mWhitelistPref != null) mWhitelistPref.setEnabled(allow);
+        if (mMultipleLinksPref != null) mMultipleLinksPref.setEnabled(allow);
+        if (mModerationHoldPref != null) mModerationHoldPref.setEnabled(allow);
+        if (mBlacklistPref != null) mBlacklistPref.setEnabled(allow);
+        if (mRelatedPostsPref != null) mRelatedPostsPref.setEnabled(allow);
+        if (mDeleteSitePref != null) mDeleteSitePref.setEnabled(allow);
     }
 
     private void setupPreferenceList(ListView prefList, Resources res) {
@@ -555,6 +588,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
+        mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
@@ -633,6 +667,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mPrivacyPref,
                 String.valueOf(mSiteSettings.getPrivacy()),
                 mSiteSettings.getPrivacyDescription());
+        setDetailListPreferenceValue(mImageWidthPref,
+                mBlog.getMaxImageWidth(),
+                mBlog.getMaxImageWidth());
         setCategories();
         setPostFormats();
         setAllowComments(mSiteSettings.getAllowComments());

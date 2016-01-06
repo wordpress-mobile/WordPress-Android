@@ -441,6 +441,8 @@
     <string name="pref_key_site_location" translatable="false">wp_pref_site_location</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
+    <string name="pref_key_site_this_device" translatable="false">wp_pref_site_default_this_device</string>
+    <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
     <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
     <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
     <string name="pref_key_site_allow_comments_nested" translatable="false">wp_pref_site_allow_comments_nested</string>
@@ -491,6 +493,7 @@
     <string name="site_settings_discussion_header">@string/discussion</string>
     <string name="site_settings_discussion_new_posts_header">Defaults for New Posts</string>
     <string name="site_settings_comments_header">@string/comments</string>
+    <string name="site_settings_this_device_header">This Device</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -503,6 +506,7 @@
     <string name="site_settings_location_title">Enable Location</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
+    <string name="site_settings_default_image_width_title">Default Image Width</string>
     <string name="site_settings_related_posts_title">@string/related_posts</string>
     <string name="site_settings_more_title">@string/more</string>
     <string name="site_settings_allow_comments_title">Allow Comments</string>
@@ -574,6 +578,29 @@
         <item>@string/site_settings_privacy_hidden_summary</item>
         <item>@string/site_settings_privacy_private_summary</item>
     </string-array>
+    <string-array name="site_settings_image_width_entries">
+        <item>Original Size</item>
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+        <item>400</item>
+        <item>500</item>
+        <item>600</item>
+        <item>700</item>
+        <item>800</item>
+        <item>900</item>
+        <item>1000</item>
+        <item>1100</item>
+        <item>1200</item>
+        <item>1300</item>
+        <item>1400</item>
+        <item>1500</item>
+        <item>1600</item>
+        <item>1700</item>
+        <item>1800</item>
+        <item>1900</item>
+        <item>2000</item>
+    </string-array>
 
     <!-- Preference Values -->
     <string-array name="site_settings_auto_approve_values">
@@ -602,6 +629,29 @@
         <item>0</item>
         <item>-1</item>
     </string-array>
+    <string-array name="site_settings_image_width_values">
+        <item>Original Size</item>
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+        <item>400</item>
+        <item>500</item>
+        <item>600</item>
+        <item>700</item>
+        <item>800</item>
+        <item>900</item>
+        <item>1000</item>
+        <item>1100</item>
+        <item>1200</item>
+        <item>1300</item>
+        <item>1400</item>
+        <item>1500</item>
+        <item>1600</item>
+        <item>1700</item>
+        <item>1800</item>
+        <item>1900</item>
+        <item>2000</item>
+    </string-array>
 
     <!-- Hints (long press) -->
     <string name="site_settings_title_hint">In a few words, explain what this site is about</string>
@@ -614,6 +664,7 @@
     <string name="site_settings_location_hint">Automatically add location data to your posts</string>
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_format_hint">Sets new post format</string>
+    <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
