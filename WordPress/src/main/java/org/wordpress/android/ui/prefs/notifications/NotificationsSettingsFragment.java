@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
@@ -70,6 +71,11 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.notifications_settings);
         setHasOptionsMenu(true);
+
+        // Bump Analytics
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_LIST_OPENED);
+        }
     }
 
     @Override
@@ -277,7 +283,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
             prefScreen.setTitle(title);
-            prefScreen.setSummary(UrlUtils.getDomainFromUrl(siteUrl));
+            prefScreen.setSummary(UrlUtils.getHost(siteUrl));
 
             addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, blogId);
             blogsCategory.addPreference(prefScreen);
@@ -435,6 +441,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                 String title = String.valueOf(preference.getTitle());
                 WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
             }
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_STREAMS_OPENED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_DETAILS_OPENED);
         }
 
         return false;

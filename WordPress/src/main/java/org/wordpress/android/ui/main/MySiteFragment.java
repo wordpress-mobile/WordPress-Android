@@ -321,7 +321,7 @@ public class MySiteFragment extends Fragment
             homeURL = UrlUtils.removeScheme(mBlog.getHomeURL());
             homeURL = StringUtils.removeTrailingSlash(homeURL);
         } else {
-            homeURL = StringUtils.getHost(mBlog.getUrl());
+            homeURL = UrlUtils.getHost(mBlog.getUrl());
         }
         String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
 

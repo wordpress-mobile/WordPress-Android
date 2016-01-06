@@ -2,7 +2,7 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/stats_widget_layout"
-    android:minHeight="@dimen/stats_widget_one_cell"
+    android:minHeight="@dimen/stats_widget_min_height"
     android:configure="org.wordpress.android.ui.stats.StatsWidgetConfigureActivity"
     android:resizeMode="horizontal"
     android:minWidth="@dimen/stats_widget_five_cells"

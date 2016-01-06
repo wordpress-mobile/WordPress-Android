@@ -318,7 +318,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@color/me_list_row_border</item>
+        <item name="android:background">@color/me_divider</item>
     </style>
 
     <style name="fab_menu_label_style">
@@ -330,5 +330,32 @@
     <style name="DialogAnimations">
         <item name="android:windowEnterAnimation">@anim/activity_slide_in_from_right</item>
         <item name="android:windowExitAnimation">@anim/activity_slide_out_to_right</item>
+    </style>
+    <style name="MyProfileRow">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="MyProfileLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="MyProfileText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="MyProfileDividerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/me_divider</item>
     </style>
 </resources>

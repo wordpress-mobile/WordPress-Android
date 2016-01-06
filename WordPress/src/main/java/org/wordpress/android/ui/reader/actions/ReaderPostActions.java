@@ -19,7 +19,6 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
@@ -205,7 +204,9 @@ public class ReaderPostActions {
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestPost(final long blogId, final long postId, final ActionListener actionListener) {
+    public static void requestPost(final long blogId,
+                                   final long postId,
+                                   final ReaderActions.OnRequestListener requestListener) {
         String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -214,8 +215,8 @@ public class ReaderPostActions {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
-                if (actionListener != null) {
-                    actionListener.onActionResult(true);
+                if (requestListener != null) {
+                    requestListener.onSuccess();
                 }
             }
         };
@@ -223,8 +224,19 @@ public class ReaderPostActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
+                if (requestListener != null) {
+                    int statusCode = 0;
+                    // first try to get the error code from the JSON response, example:
+                    //   {"code":403,"headers":[{"name":"Content-Type","value":"application\/json"}],
+                    //    "body":{"error":"unauthorized","message":"User cannot access this private blog."}}
+                    JSONObject jsonObject = VolleyUtils.volleyErrorToJSON(volleyError);
+                    if (jsonObject != null && jsonObject.has("code")) {
+                        statusCode = jsonObject.optInt("code");
+                    }
+                    if (statusCode == 0) {
+                        statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                    }
+                    requestListener.onFailure(statusCode);
                 }
             }
         };
@@ -236,7 +248,7 @@ public class ReaderPostActions {
         return "https://pixel.wp.com/g.gif?v=wpcom&reader=1"
                 + "&blog=" + post.blogId
                 + "&post=" + post.postId
-                + "&host=" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(post.getBlogUrl()))
+                + "&host=" + UrlUtils.urlEncode(UrlUtils.getHost(post.getBlogUrl()))
                 + "&ref="  + UrlUtils.urlEncode(TRACKING_REFERRER)
                 + "&t="    + mRandom.nextInt();
     }

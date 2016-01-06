@@ -44,7 +44,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int MAX_INDENT_LEVEL = 2;
     private final int mIndentPerLevel;
     private final int mAvatarSz;
-    private final int mDisplayWidth;
+    private final int mContentWidth;
 
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
@@ -125,7 +125,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
-        mDisplayWidth = DisplayUtils.getDisplayPixelWidth(context);
+
+        // calculate the max width of comment content
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
+        int contentPadding = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding);
+        int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
+        mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
         mColorAuthor = context.getResources().getColor(R.color.blue_medium);
         mColorNotAuthor = context.getResources().getColor(R.color.grey_dark);
@@ -252,7 +258,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.spacerIndent.setVisibility(View.GONE);
         }
 
-        int maxImageWidth = mDisplayWidth - indentWidth;
+        int maxImageWidth = mContentWidth - indentWidth;
         CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), maxImageWidth);
 
         // different background for highlighted comment, with optional progress bar

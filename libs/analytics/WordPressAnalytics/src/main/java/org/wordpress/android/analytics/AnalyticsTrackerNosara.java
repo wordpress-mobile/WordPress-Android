@@ -209,7 +209,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_COMMENTS:
                 eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "media_library");
+                predefinedEventProperties.put("menu_item", "comments");
                 break;
             case OPENED_VIEW_SITE:
                 eventName = "site_menu_opened";
@@ -338,9 +338,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case NOTIFICATION_SETTINGS_DETAILS_OPENED:
                 eventName = "notification_settings_details_opened";
-                break;
-            case NOTIFICATION_SETTINGS_UPDATED:
-                eventName = "notification_settings_updated";
                 break;
             case ME_ACCESSED:
                 eventName = "me_tab_accessed";

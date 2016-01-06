@@ -595,6 +595,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.addSuperPropertyToFlag("jetpack_user");
                 instructions.addSuperPropertyToFlag("dotcom_user");
                 break;
+            case ACCOUNT_LOGOUT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Logged Out");
+                break;
             case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Signed into Jetpack from Stats Screen");
@@ -661,19 +665,19 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case STATS_SELECTED_INSTALL_JETPACK:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Selected Install Jetpack");
+                        mixpanelInstructionsForEventName("Stats - Selected Install Jetpack");
                 break;
             case STATS_WIDGET_ADDED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats Widget Added");
+                        mixpanelInstructionsForEventName("Stats - Widget Added");
                 break;
             case STATS_WIDGET_REMOVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats Widget Removed");
+                        mixpanelInstructionsForEventName("Stats - Widget Removed");
                 break;
             case STATS_WIDGET_TAPPED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats Widget Tapped");
+                        mixpanelInstructionsForEventName("Stats - Widget Tapped");
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -728,10 +732,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case NOTIFICATION_SETTINGS_DETAILS_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notification Settings - Accessed Details");
-                break;
-            case NOTIFICATION_SETTINGS_UPDATED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Notification Settings - Updated");
                 break;
             case ME_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
