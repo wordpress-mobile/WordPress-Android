@@ -198,24 +198,6 @@ public class StringUtils {
         return "http://i0.wp.com/" + imageUrl + "?w=" + size;
     }
 
-    public static String getHost(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return "";
-        }
-
-        int doubleslash = url.indexOf("//");
-        if (doubleslash == -1) {
-            doubleslash = 0;
-        } else {
-            doubleslash += 2;
-        }
-
-        int end = url.indexOf('/', doubleslash);
-        end = (end >= 0) ? end : url.length();
-
-        return url.substring(doubleslash, end);
-    }
-
     public static String replaceUnicodeSurrogateBlocksWithHTMLEntities(final String inputString) {
         final int length = inputString.length();
         StringBuilder out = new StringBuilder(); // Used to hold the output.
