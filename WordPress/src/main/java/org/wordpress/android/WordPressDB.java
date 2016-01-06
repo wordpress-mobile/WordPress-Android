@@ -1578,6 +1578,12 @@ public class WordPressDB {
         return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
 
+    public Cursor getMediaFileByVideoPressId(String blogId, String videoId) {
+        String shortcode = "[wpvideo " + videoId + "]";
+        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND videoPressShortcode=?",
+                new String[]{blogId, shortcode});
+    }
+
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
         String query = "SELECT " + COLUMN_NAME_THUMBNAIL_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?";
         return SqlUtils.stringForQuery(db, query, new String[]{Integer.toString(blogId), Long.toString(mediaId)});

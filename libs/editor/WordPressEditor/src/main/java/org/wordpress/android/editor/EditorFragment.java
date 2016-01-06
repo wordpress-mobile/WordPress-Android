@@ -1005,6 +1005,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
     }
 
+    @Override
+    public void onVideoPressInfoRequested(final String videoId) {
+        final String videoUrl = mEditorFragmentListener.onVideoPressInfoRequested(videoId);
+
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.execJavaScriptFromString("ZSSEditor.setVideoPressLinks('" + videoId + "', '" +
+                        videoUrl + "', '');");
+            }
+        });
+    }
+
     public void onGetHtmlResponse(Map<String, String> inputArgs) {
         String functionId = inputArgs.get("function");
 

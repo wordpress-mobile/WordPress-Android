@@ -1926,6 +1926,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
+    public String onVideoPressInfoRequested(String videoId) {
+        String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
+        Cursor cursor = WordPress.wpDB.getMediaFileByVideoPressId(blogId, videoId);
+
+        String path = "";
+        if (cursor != null && cursor.moveToFirst()) {
+            path = cursor.getString(cursor.getColumnIndex("fileURL"));
+        }
+        return path;
+    }
+
+    @Override
     public void onEditorFragmentInitialized() {
         fillContentEditorFields();
     }

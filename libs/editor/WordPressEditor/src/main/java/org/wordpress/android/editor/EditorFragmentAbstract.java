@@ -113,6 +113,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
         void onFeaturedImageChanged(int mediaId);
+        String onVideoPressInfoRequested(String videoId);
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
     }

@@ -1938,7 +1938,7 @@ ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, type, c
  */
 ZSSEditor.applyVisualFormatting  = function( html ) {
     var str = wp.shortcode.replace( 'caption', html, ZSSEditor.applyCaptionFormatting );
-
+    str = wp.shortcode.replace( 'wpvideo', str, ZSSEditor.applyVideoFormattingCallback );
     return str;
 }
 
@@ -1953,6 +1953,7 @@ ZSSEditor.removeVisualFormatting = function( html ) {
     var str = html;
     str = ZSSEditor.removeImageSelectionFormattingFromHTML( str );
     str = ZSSEditor.removeCaptionFormatting( str );
+    str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
     return str;
 }
 

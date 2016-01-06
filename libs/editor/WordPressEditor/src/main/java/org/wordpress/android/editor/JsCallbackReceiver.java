@@ -30,6 +30,8 @@ public class JsCallbackReceiver {
     private static final String CALLBACK_IMAGE_TAP = "callback-image-tap";
     private static final String CALLBACK_LINK_TAP = "callback-link-tap";
 
+    private static final String CALLBACK_VIDEOPRESS_INFO_REQUEST = "callback-videopress-info-request";
+
     private static final String CALLBACK_LOG = "callback-log";
 
     private static final String CALLBACK_RESPONSE_STRING = "callback-response-string";
@@ -158,6 +160,10 @@ public class JsCallbackReceiver {
                 }
 
                 mListener.onLinkTapped(url, title);
+                break;
+            case CALLBACK_VIDEOPRESS_INFO_REQUEST:
+                // Extract the VideoPress id from the callback string
+                mListener.onVideoPressInfoRequested(params.substring(3));
                 break;
             case CALLBACK_LOG:
                 // Strip 'msg=' from beginning of string
