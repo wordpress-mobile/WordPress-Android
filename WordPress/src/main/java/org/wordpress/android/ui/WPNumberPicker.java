@@ -58,6 +58,7 @@ public class WPNumberPicker extends NumberPicker {
         updateIntitialOffset();
         setVerticalFadingEdgeEnabled(false);
         setHorizontalFadingEdgeEnabled(false);
+        mInputView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -71,11 +72,8 @@ public class WPNumberPicker extends NumberPicker {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // Draw normally, skipping the middle number
-        mInputView.setVisibility(View.VISIBLE);
         int[] selectorIndices = getIndices();
         setIndices(new int[0]);
-        super.onDraw(canvas);
         setIndices(selectorIndices);
 
         // Draw the middle number with a different font
@@ -91,6 +89,7 @@ public class WPNumberPicker extends NumberPicker {
         paint.setAlpha(alpha);
         mPaint.setAlpha(alpha);
 
+        int offset = getResources().getDimensionPixelSize(R.dimen.margin_medium);
         // Draw the visible values
         for (int i = 0; i < DISPLAY_COUNT; ++i) {
             String scrollSelectorValue;
@@ -100,13 +99,12 @@ public class WPNumberPicker extends NumberPicker {
                 scrollSelectorValue = String.valueOf(mDisplayValues[i]);
             }
             if (i == MIDDLE_INDEX) {
-                canvas.drawText(scrollSelectorValue, x, y, paint);
+                canvas.drawText(scrollSelectorValue, x, y - ((paint.descent() + paint.ascent()) / 2) - offset, paint);
             } else {
-                canvas.drawText(scrollSelectorValue, x, y, mPaint);
+                canvas.drawText(scrollSelectorValue, x, y - ((mPaint.descent() + mPaint.ascent()) / 2) - offset, mPaint);
             }
             y += elementHeight;
         }
-        mInputView.setVisibility(View.INVISIBLE);
     }
 
     @Override

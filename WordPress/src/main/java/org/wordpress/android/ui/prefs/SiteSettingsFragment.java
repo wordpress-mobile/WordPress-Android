@@ -88,6 +88,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     /**
+     * Used to move the Uncategorized category to the beginning of the category list.
+     */
+    private static final int UNCATEGORIZED_CATEGORY_ID = 1;
+
+    /**
      * Request code used when creating the {@link RelatedPostsDialog}.
      */
     private static final int RELATED_POSTS_REQUEST_CODE = 1;
@@ -669,7 +674,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         for (Integer key : categories.keySet()) {
             entries[i] = categories.get(key);
             values[i] = String.valueOf(key);
-            if (key == 1) {
+            if (key == UNCATEGORIZED_CATEGORY_ID) {
                 CharSequence temp = entries[0];
                 entries[0] = entries[i];
                 entries[i] = temp;
