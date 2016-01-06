@@ -7,8 +7,6 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.widgets.WPSwitch;
 
 import java.util.ArrayList;
@@ -78,6 +76,9 @@ public class RelatedPostsDialog extends DialogFragment
         mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image2));
         mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image3));
 
+        WPPrefUtils.layoutAsSubhead(mShowHeader);
+        WPPrefUtils.layoutAsSubhead(mShowImages);
+
         Bundle args = getArguments();
         if (args != null) {
             mShowRelatedPosts.setChecked(args.getBoolean(SHOW_RELATED_POSTS_KEY));
@@ -112,24 +113,10 @@ public class RelatedPostsDialog extends DialogFragment
         super.onStart();
 
         AlertDialog dialog = (AlertDialog) getDialog();
-        Resources res = getResources();
-
         Button positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        Typeface typeface = TypefaceCache.getTypeface(getActivity(),
-                TypefaceCache.FAMILY_OPEN_SANS,
-                Typeface.BOLD,
-                TypefaceCache.VARIATION_LIGHT);
-
-        if (positive != null) {
-            positive.setTextColor(res.getColor(R.color.blue_medium));
-            positive.setTypeface(typeface);
-        }
-
-        if (negative != null) {
-            negative.setTextColor(res.getColor(R.color.blue_medium));
-            negative.setTypeface(typeface);
-        }
+        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
+        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
     }
 
     @Override

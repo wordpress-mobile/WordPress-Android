@@ -8,35 +8,48 @@
         <item name="android:popupMenuStyle">@style/Calypso.PopupMenu</item>
         <item name="android:textAppearanceSmallPopupMenu">@style/Calypso.TextAppearance</item>
         <item name="android:textAppearanceLargePopupMenu">@style/Calypso.TextAppearance</item>
-        <item name="android:actionModeStyle">@style/Calypso.ActionMode</item>
     </style>
 
-    <style name="Calypso.SiteSettingsTheme" parent="CalypsoTheme">
+    <style name="Calypso.SiteSettingsTheme" parent="@style/CalypsoTheme">
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:actionModeCloseDrawable">@drawable/ic_arrow_back_white_24dp</item>
+        <item name="android:actionModeCloseButtonStyle">@style/Calypso.ActionMode.Button</item>
+        <item name="android:actionModeStyle">@style/Calypso.ActionMode</item>
+        <item name="colorPrimaryDark">@color/grey_darken_10</item>
+
         <item name="android:windowContentOverlay">@color/grey_lighten_30</item>
         <item name="alertDialogTheme">@style/Calypso.AlertDialog</item>
+        <item name="dialogTheme">@style/Calypso.AlertDialog</item>
         <item name="colorControlActivated">@color/blue_medium</item>
         <item name="colorControlNormal">@color/grey_lighten_20</item>
-        <item name="colorAccent">@color/blue_medium</item>
+        <item name="colorAccent">@color/orange_jazzy</item>
         <item name="android:listDivider">@drawable/preferences_divider</item>
         <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
     </style>
 
+    <style name="Calypso.ActionMode.Button" parent="ActionButton.CloseMode.WordPress">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
     <style name="Calypso.ActionMode.Text">
-        <item name="titleTextColor">@color/white</item>
+        <item name="fontFamily">openSans</item>
+        <item name="fontVariation">light</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 
-    <style name="Calypso.ActionMode" parent="CalypsoTheme">
-        <item name="colorPrimaryDark">@color/grey_darken_10</item>
-        <item name="android:statusBarColor">@color/grey_darken_10</item>
-        <item name="android:background">@color/grey_darken_10</item>
+    <style name="Calypso.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="android:titleTextStyle">@style/Calypso.ActionMode.Text</item>
-        <item name="android:subtitleTextStyle">@style/Calypso.ActionMode.Text</item>
+        <item name="android:background">@color/grey_darken_10</item>
     </style>
 
-    <style name="Calypso.AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="Calypso.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/grey_darken_10</item>
         <item name="colorAccent">@color/blue_medium</item>
+        <item name="actionModeStyle">@style/Calypso.ActionMode</item>
         <item name="android:background">@color/white</item>
         <item name="android:listDivider">@drawable/preferences_divider</item>
         <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>

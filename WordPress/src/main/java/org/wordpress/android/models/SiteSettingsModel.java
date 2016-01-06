@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * Holds blog settings and provides methods to (de)serialize .com and self-hosted network calls.
  */
+
 public class SiteSettingsModel {
     public static final int RELATED_POSTS_ENABLED_FLAG = 0x1;
     public static final int RELATED_POST_HEADER_FLAG = 0x2;
@@ -37,9 +38,12 @@ public class SiteSettingsModel {
     public static final String ALLOW_COMMENTS_COLUMN_NAME = "allowComments";
     public static final String SEND_PINGBACKS_COLUMN_NAME = "sendPingbacks";
     public static final String RECEIVE_PINGBACKS_COLUMN_NAME = "receivePingbacks";
+    public static final String SHOULD_CLOSE_AFTER_COLUMN_NAME = "shouldCloseAfter";
     public static final String CLOSE_AFTER_COLUMN_NAME = "closeAfter";
     public static final String SORT_BY_COLUMN_NAME = "sortBy";
+    public static final String SHOULD_THREAD_COLUMN_NAME = "shouldThread";
     public static final String THREADING_COLUMN_NAME = "threading";
+    public static final String SHOULD_PAGE_COLUMN_NAME = "shouldPage";
     public static final String PAGING_COLUMN_NAME = "paging";
     public static final String MANUAL_APPROVAL_COLUMN_NAME = "manualApproval";
     public static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
@@ -71,9 +75,12 @@ public class SiteSettingsModel {
                     ALLOW_COMMENTS_COLUMN_NAME + " BOOLEAN, " +
                     SEND_PINGBACKS_COLUMN_NAME + " BOOLEAN, " +
                     RECEIVE_PINGBACKS_COLUMN_NAME + " BOOLEAN, " +
+                    SHOULD_CLOSE_AFTER_COLUMN_NAME + " BOOLEAN, " +
                     CLOSE_AFTER_COLUMN_NAME + " INTEGER, " +
                     SORT_BY_COLUMN_NAME + " INTEGER, " +
+                    SHOULD_THREAD_COLUMN_NAME + " BOOLEAN, " +
                     THREADING_COLUMN_NAME + " INTEGER, " +
+                    SHOULD_PAGE_COLUMN_NAME + " BOOLEAN, " +
                     PAGING_COLUMN_NAME + " INTEGER, " +
                     MANUAL_APPROVAL_COLUMN_NAME + " BOOLEAN, " +
                     IDENTITY_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
@@ -106,9 +113,12 @@ public class SiteSettingsModel {
     public boolean allowComments;
     public boolean sendPingbacks;
     public boolean receivePingbacks;
+    public boolean shouldCloseAfter;
     public int closeCommentAfter;
     public int sortCommentsBy;
+    public boolean shouldThreadComments;
     public int threadingLevels;
+    public boolean shouldPageComments;
     public int commentsPerPage;
     public boolean commentApprovalRequired;
     public boolean commentsRequireIdentity;
@@ -181,9 +191,12 @@ public class SiteSettingsModel {
         allowComments = other.allowComments;
         sendPingbacks = other.sendPingbacks;
         receivePingbacks = other.receivePingbacks;
+        shouldCloseAfter = other.shouldCloseAfter;
         closeCommentAfter = other.closeCommentAfter;
         sortCommentsBy = other.sortCommentsBy;
+        shouldThreadComments = other.shouldThreadComments;
         threadingLevels = other.threadingLevels;
+        shouldPageComments = other.shouldPageComments;
         commentsPerPage = other.commentsPerPage;
         commentApprovalRequired = other.commentApprovalRequired;
         commentsRequireIdentity = other.commentsRequireIdentity;
@@ -215,9 +228,12 @@ public class SiteSettingsModel {
         allowComments = getBooleanFromCursor(cursor, ALLOW_COMMENTS_COLUMN_NAME);
         sendPingbacks = getBooleanFromCursor(cursor, SEND_PINGBACKS_COLUMN_NAME);
         receivePingbacks = getBooleanFromCursor(cursor, RECEIVE_PINGBACKS_COLUMN_NAME);
+        shouldCloseAfter = getBooleanFromCursor(cursor, SHOULD_CLOSE_AFTER_COLUMN_NAME);
         closeCommentAfter = getIntFromCursor(cursor, CLOSE_AFTER_COLUMN_NAME);
         sortCommentsBy = getIntFromCursor(cursor, SORT_BY_COLUMN_NAME);
+        shouldThreadComments = getBooleanFromCursor(cursor, SHOULD_THREAD_COLUMN_NAME);
         threadingLevels = getIntFromCursor(cursor, THREADING_COLUMN_NAME);
+        shouldPageComments = getBooleanFromCursor(cursor, SHOULD_PAGE_COLUMN_NAME);
         commentsPerPage = getIntFromCursor(cursor, PAGING_COLUMN_NAME);
         commentApprovalRequired = getBooleanFromCursor(cursor, MANUAL_APPROVAL_COLUMN_NAME);
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
@@ -283,9 +299,12 @@ public class SiteSettingsModel {
         values.put(ALLOW_COMMENTS_COLUMN_NAME, allowComments);
         values.put(SEND_PINGBACKS_COLUMN_NAME, sendPingbacks);
         values.put(RECEIVE_PINGBACKS_COLUMN_NAME, receivePingbacks);
+        values.put(SHOULD_CLOSE_AFTER_COLUMN_NAME, shouldCloseAfter);
         values.put(CLOSE_AFTER_COLUMN_NAME, closeCommentAfter);
         values.put(SORT_BY_COLUMN_NAME, sortCommentsBy);
+        values.put(SHOULD_THREAD_COLUMN_NAME, shouldThreadComments);
         values.put(THREADING_COLUMN_NAME, threadingLevels);
+        values.put(SHOULD_PAGE_COLUMN_NAME, shouldPageComments);
         values.put(PAGING_COLUMN_NAME, commentsPerPage);
         values.put(MANUAL_APPROVAL_COLUMN_NAME, commentApprovalRequired);
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);

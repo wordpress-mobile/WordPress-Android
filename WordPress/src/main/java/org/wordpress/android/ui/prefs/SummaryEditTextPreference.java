@@ -1,21 +1,25 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
+import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPPrefUtils;
 
 /**
  * Standard EditTextPreference that has attributes to limit summary length.
@@ -34,6 +38,9 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     private int mLines;
     private int mMaxLines;
     private String mHint;
+    private AlertDialog mDialog;
+    private EditText mEditText;
+    private int mWhichButtonClicked;
 
     public SummaryEditTextPreference(Context context) {
         super(context);
@@ -69,55 +76,99 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     protected void onBindView(@NonNull View view) {
         super.onBindView(view);
 
-        Resources res = getContext().getResources();
         TextView titleView = (TextView) view.findViewById(android.R.id.title);
         TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
-        Typeface font = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_OPEN_SANS,
-                Typeface.NORMAL,
-                TypefaceCache.VARIATION_NORMAL);
 
-        if (titleView != null) {
-            if (isEnabled()) {
-                titleView.setTextColor(res.getColor(R.color.grey_dark));
-            } else {
-                titleView.setTextColor(res.getColor(R.color.grey_lighten_10));
-            }
-            titleView.setTextSize(16);
-            titleView.setTypeface(font);
-        }
+        if (titleView != null) WPPrefUtils.layoutAsSubhead(titleView);
 
         if (summaryView != null) {
-            if (isEnabled()) {
-                summaryView.setTextColor(res.getColor(R.color.grey_darken_10));
-            } else {
-                summaryView.setTextColor(res.getColor(R.color.grey_lighten_10));
-            }
-            summaryView.setInputType(getEditText().getInputType());
-            summaryView.setTextSize(14);
-            summaryView.setTypeface(font);
+            WPPrefUtils.layoutAsBody1(summaryView);
             summaryView.setEllipsize(TextUtils.TruncateAt.END);
+            summaryView.setInputType(getEditText().getInputType());
             if (mLines != -1) summaryView.setLines(mLines);
             if (mMaxLines != -1) summaryView.setMaxLines(mMaxLines);
         }
     }
 
     @Override
-    protected void onBindDialogView(View view) {
+    protected void showDialog(Bundle state) {
+        Context context = getContext();
+        Resources res = context.getResources();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
+        View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
+        mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
+
+        builder.setPositiveButton(R.string.ok, this);
+        builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
+        if (titleView != null) {
+            TextView titleText = (TextView) titleView.findViewById(R.id.title);
+            if (titleText != null) {
+                titleText.setText(getTitle());
+            }
+
+            builder.setCustomTitle(titleView);
+        } else {
+            builder.setTitle(getTitle());
+        }
+
+        View view = View.inflate(getContext(), getDialogLayoutResource(), null);
+        if (view != null) {
+            onBindDialogView(view);
+            builder.setView(view);
+        }
+
+        if ((mDialog = builder.create()) == null) return;
+
+        if (state != null) {
+            mDialog.onRestoreInstanceState(state);
+        }
+        mDialog.setOnDismissListener(this);
+        mDialog.show();
+
+        Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
+        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
+    }
+
+    @Override
+    protected void onBindDialogView(final View view) {
         super.onBindDialogView(view);
 
         if (view != null) {
-            EditText text = (EditText) view.findViewById(android.R.id.edit);
-            if (text != null) {
-                text.setSelection(text.getText().length());
+            mEditText = getEditText();
+            ViewParent oldParent = mEditText.getParent();
+            if (oldParent != view) {
+                if (oldParent != null) {
+                    ((ViewGroup) oldParent).removeView(mEditText);
+                }
+                ((View) oldParent).setPadding(((View) oldParent).getPaddingLeft(), 0, ((View) oldParent).getPaddingRight(), ((View) oldParent).getPaddingBottom());
+                onAddEditTextToDialogView(view, mEditText);
             }
+            WPPrefUtils.layoutAsInput(mEditText);
+            mEditText.setSelection(mEditText.getText().length());
+            WPActivityUtils.showKeyboard(mEditText);
         }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        WPActivityUtils.hideKeyboard(mEditText);
+        mWhichButtonClicked = which;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        onDialogClosed(mWhichButtonClicked == DialogInterface.BUTTON_POSITIVE);
+        mDialog = null;
     }
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
-        ActivityUtils.hideKeyboard((Activity) getContext());
+        if (positiveResult) {
+            callChangeListener(getEditText().getText());
+        }
     }
 
     @Override

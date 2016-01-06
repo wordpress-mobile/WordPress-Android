@@ -3,10 +3,13 @@ package org.wordpress.android.ui.prefs;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MapUtils;
 import org.xmlrpc.android.ApiHelper;
@@ -19,14 +22,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 class SelfHostedSiteSettings extends SiteSettingsInterface {
     // XML-RPC wp.getOptions keys
-    private static final String BLOG_URL_KEY = "blog_url";
-    private static final String BLOG_TITLE_KEY = "blog_title";
-    private static final String BLOG_USERNAME_KEY = "username";
-    private static final String BLOG_PASSWORD_KEY = "password";
-    private static final String BLOG_TAGLINE_KEY = "blog_tagline";
     public static final String PRIVACY_KEY = "blog_public";
     public static final String DEF_CATEGORY_KEY = "default_category";
     public static final String DEF_POST_FORMAT_KEY = "default_post_format";
@@ -47,10 +46,21 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     public static final String MAX_LINKS_KEY = "comment_max_links";
     public static final String MODERATION_KEYS_KEY = "moderation_keys";
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    public static final String SOFTWARE_VERSION_KEY = "software_version";
+
+    private static final String BLOG_URL_KEY = "blog_url";
+    private static final String BLOG_TITLE_KEY = "blog_title";
+    private static final String BLOG_USERNAME_KEY = "username";
+    private static final String BLOG_PASSWORD_KEY = "password";
+    private static final String BLOG_TAGLINE_KEY = "blog_tagline";
     private static final String BLOG_CATEGORY_ID_KEY = "categoryId";
     private static final String BLOG_CATEGORY_PARENT_ID_KEY = "parentId";
     private static final String BLOG_CATEGORY_DESCRIPTION_KEY = "categoryDescription";
     private static final String BLOG_CATEGORY_NAME_KEY = "categoryName";
+
+    // Requires WordPress 4.5.x or higher
+    private static final int REQUIRED_MAJOR_VERSION = 4;
+    private static final int REQUIRED_MINOR_VERSION = 3;
 
     private static final String OPTION_ALLOWED = "open";
     private static final String OPTION_DISALLOWED = "closed";
@@ -86,6 +96,22 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             public void onSuccess(long id, final Object result) {
                 notifySavedOnUiThread(null);
                 mRemoteSettings.copyFrom(mSettings);
+
+                if (result != null) {
+                    HashMap<String, Object> properties = new HashMap<>();
+                    if (result instanceof Map) {
+                        Map<String, Object> resultMap = (Map) result;
+                        Set<String> keys = resultMap.keySet();
+                        for (String key : keys) {
+                            Object currentValue = resultMap.get(key);
+                            if (currentValue != null) {
+                                properties.put(SAVED_ITEM_PREFIX + key, currentValue);
+                            }
+                        }
+                    }
+                    AnalyticsUtils.trackWithCurrentBlogDetails(
+                            AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
+                }
             }
 
             @Override
@@ -107,11 +133,18 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
      */
     @Override
     protected void fetchRemoteData() {
-        Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
 
-        // Need two interfaces or the first call gets aborted
-        instantiateInterface().callAsync(mOptionsCallback, ApiHelper.Methods.GET_OPTIONS, params);
-        instantiateInterface().callAsync(mCategoriesCallback, ApiHelper.Methods.GET_CATEGORIES, params);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
+
+                // Need two interfaces or the first call gets aborted
+                instantiateInterface().callAsync(mOptionsCallback, ApiHelper.Methods.GET_OPTIONS, params);
+                instantiateInterface().callAsync(mCategoriesCallback, ApiHelper.Methods.GET_CATEGORIES, params);
+            }
+        });
+        thread.run();
     }
 
     /**
@@ -151,6 +184,12 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         public void onSuccess(long id, final Object result) {
             if (result instanceof Map) {
                 AppLog.d(AppLog.T.API, "Received Options XML-RPC response.");
+
+                if (!versionSupported((Map) result) && mActivity != null) {
+                    notifyUpdatedOnUiThread(new XMLRPCException(mActivity.getString(R.string.site_settings_unsupported_version_error)));
+                    return;
+                }
+
                 credentialsVerified(true);
 
                 deserializeOptionsResponse(mRemoteSettings, (Map) result);
@@ -170,6 +209,15 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             notifyUpdatedOnUiThread(error);
         }
     };
+
+    private boolean versionSupported(Map map) {
+        String version = getNestedMapValue(map, SOFTWARE_VERSION_KEY);
+        if (TextUtils.isEmpty(version)) return false;
+        String[] split = version.split("\\.");
+        return split.length > 0 &&
+                Integer.valueOf(split[0]) >= REQUIRED_MAJOR_VERSION &&
+                Integer.valueOf(split[1]) >= REQUIRED_MINOR_VERSION;
+    }
 
     private Map<String, String> serializeSelfHostedParams() {
         Map<String, String> params = new HashMap<>();
@@ -233,10 +281,10 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             }
         }
         if (mSettings.commentsRequireIdentity != mRemoteSettings.commentsRequireIdentity) {
-            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity));
+            params.put(REQUIRE_IDENTITY_KEY, String.valueOf(mSettings.commentsRequireIdentity ? 1 : 0));
         }
         if (mSettings.commentsRequireUserAccount != mRemoteSettings.commentsRequireUserAccount) {
-            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
+            params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount ? 1 : 0));
         }
         if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
             params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
@@ -250,7 +298,11 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 builder.append(key);
                 builder.append("\n");
             }
-            params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            if (builder.length() > 1) {
+                params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            } else {
+                params.put(MODERATION_KEYS_KEY, "");
+            }
         }
         if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
             StringBuilder builder = new StringBuilder();
@@ -258,7 +310,11 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 builder.append(key);
                 builder.append("\n");
             }
-            params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            if (builder.length() > 1) {
+                params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+            } else {
+                params.put(BLACKLIST_KEYS_KEY, "");
+            }
         }
 
         return params;
@@ -286,9 +342,9 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         String accountRequired = getNestedMapValue(response, REQUIRE_USER_ACCOUNT_KEY);
         String knownUsers = getNestedMapValue(response, WHITELIST_KNOWN_USERS_KEY);
         model.sendPingbacks = !TextUtils.isEmpty(sendPingbacks) && Integer.valueOf(sendPingbacks) > 0;
-        model.commentApprovalRequired = !TextUtils.isEmpty(approvalRequired) && Integer.valueOf(approvalRequired) > 0;
+        model.commentApprovalRequired = !TextUtils.isEmpty(approvalRequired) && Boolean.valueOf(approvalRequired);
         model.commentsRequireIdentity = !TextUtils.isEmpty(identityRequired) && Integer.valueOf(identityRequired) > 0;
-        model.commentsRequireUserAccount = !TextUtils.isEmpty(accountRequired) && Integer.valueOf(accountRequired) > 0;
+        model.commentsRequireUserAccount = !TextUtils.isEmpty(accountRequired) && Integer.valueOf(identityRequired) > 0;
         model.commentAutoApprovalKnownUsers = !TextUtils.isEmpty(knownUsers) && Boolean.valueOf(knownUsers);
         model.maxLinks = Integer.valueOf(getNestedMapValue(response, MAX_LINKS_KEY));
         mRemoteSettings.holdForModeration = new ArrayList<>();

@@ -4,10 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:color="@color/grey"
-        android:state_enabled="true" />
+        android:color="@color/grey_lighten_10"
+        android:state_enabled="false" />
 
-    <item
-        android:color="@color/grey_lighten_20" />
+    <item android:color="@color/grey_dark" />
 
 </selector>

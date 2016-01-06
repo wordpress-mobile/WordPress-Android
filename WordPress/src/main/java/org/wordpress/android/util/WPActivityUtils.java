@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +19,12 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.SettingsFragment;
@@ -27,6 +32,8 @@ import org.wordpress.android.ui.prefs.SettingsFragment;
 import java.util.Locale;
 
 public class WPActivityUtils {
+    private static final long SHOW_KEYBOARD_DELAY = 250;
+
     // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
     // See: http://stackoverflow.com/a/27455363/309558
     public static void addToolbarToDialog(final Fragment context, final Dialog dialog, String title) {
@@ -72,7 +79,12 @@ public class WPActivityUtils {
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
 
-        toolbar.setTitle(title);
+        TextView titleView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        titleView.setVisibility(View.VISIBLE);
+        titleView.setText(title);
+
+        toolbar.setTitle("");
+        toolbar.setContentInsetsAbsolute(0, 0);
         toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,13 +94,27 @@ public class WPActivityUtils {
         });
     }
 
-    public static void changeDialogToolbarVisibility(Dialog dialog, int visibility) {
-        if (dialog == null || !dialog.isShowing()) return;
-
-        View toolbar = dialog.findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setVisibility(visibility);
+    public static void setStatusBarColor(Window window, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //noinspection deprecation
+            window.setStatusBarColor(window.getContext().getResources().getColor(color));
         }
+    }
+
+    public static void showKeyboard(final View view) {
+        (new Handler()).postDelayed(new Runnable() {
+            public void run() {
+                InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
+            }
+        }, SHOW_KEYBOARD_DELAY);
+    }
+
+    public static void hideKeyboard(final View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static void applyLocale(Activity context, boolean restart) {

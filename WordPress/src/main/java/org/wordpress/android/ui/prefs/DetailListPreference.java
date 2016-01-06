@@ -131,8 +131,6 @@ public class DetailListPreference extends ListPreference
         if (listView != null) {
             listView.setDividerHeight(0);
             listView.setClipToPadding(true);
-            //noinspection deprecation
-            listView.setBackgroundColor(res.getColor(R.color.grey_lighten_30));
             listView.setPadding(0, 0, 0, res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         }
 
