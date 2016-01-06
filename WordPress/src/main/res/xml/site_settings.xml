@@ -98,7 +98,7 @@
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_format"
             android:key="@string/pref_key_site_format"
-            android:title="@string/site_settings_default_image_width_title"
+            android:title="@string/site_settings_default_format_title"
             android:entries="@array/post_formats_array"
             android:entryValues="@array/post_formats_array"
             app:longClickHint="@string/site_settings_format_hint" />
