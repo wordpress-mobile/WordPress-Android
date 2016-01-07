@@ -1,16 +1,23 @@
 package org.wordpress.android.ui.stats;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.VolleyError;
+
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+
+import de.greenrobot.event.EventBus;
 
 
 public abstract class StatsAbstractFragment extends Fragment {
@@ -29,6 +36,29 @@ public abstract class StatsAbstractFragment extends Fragment {
     private StatsTimeframe mStatsTimeframe = StatsTimeframe.DAY;
 
     protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
+    protected abstract void showPlaceholderUI();
+    protected abstract void updateUI();
+    protected abstract void showErrorUI(String label);
+
+    /**
+     * Wheter or not previous data is available.
+     * @return True if previous data is already available in the fragment
+     */
+    protected abstract boolean hasDataAvailable();
+
+    /**
+     * Called in onSaveIstance. Fragments should persist data here.
+     * @param outState Bundle in which to place fragment saved state.
+     */
+    protected abstract void saveStatsData(Bundle outState);
+
+    /**
+     * Called in OnCreate. Fragment should restore here previous saved data.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
+    protected abstract void restoreStatsData(Bundle savedInstanceState); // called in onCreate
+
+    protected StatsResourceVars mResourceVars;
 
     public void refreshStats() {
         refreshStats(-1, null);
@@ -112,6 +142,7 @@ public abstract class StatsAbstractFragment extends Fragment {
             if (savedInstanceState.containsKey(ARGS_SELECTED_DATE)) {
                 mDate = savedInstanceState.getString(ARGS_SELECTED_DATE);
             }
+            restoreStatsData(savedInstanceState); // Each fragment will override this to restore fragment dependant data
         }
 
       //  AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
@@ -119,15 +150,51 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mResourceVars = new StatsResourceVars(activity);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
        /* AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > saving instance state");
         AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
         AppLog.d(AppLog.T.STATS, "mDate: " + mDate); */
+
         outState.putString(ARGS_SELECTED_DATE, mDate);
         outState.putSerializable(ARGS_TIMEFRAME, mStatsTimeframe);
+        saveStatsData(outState); // Each fragment will override this
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Init the UI
+        if (hasDataAvailable()) {
+            updateUI();
+        } else {
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                showPlaceholderUI();
+                refreshStats();
+            } else {
+                showErrorUI(new NoConnectionError());
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
     public boolean shouldUpdateFragmentOnUpdateEvent(StatsEvents.SectionUpdatedAbstract event) {
         if (!isAdded()) {
@@ -149,6 +216,28 @@ public abstract class StatsAbstractFragment extends Fragment {
         return true;
     }
 
+    protected void showErrorUI(VolleyError error) {
+        if (!isAdded()) {
+            return;
+        }
+
+        String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+
+        if (error instanceof NoConnectionError) {
+            label += "<br/>" + getString(R.string.no_network_message);
+        }
+
+        if (StatsUtils.isRESTDisabledError(error)) {
+            label += "<br/>" + getString(R.string.stats_enable_rest_api_in_jetpack);
+        }
+
+        showErrorUI(label);
+    }
+
+    protected void showErrorUI() {
+        String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+        showErrorUI(label);
+    }
 
     public boolean shouldUpdateFragmentOnErrorEvent(StatsEvents.SectionUpdateError errorEvent) {
         StatsEvents.SectionUpdatedAbstract abstractEvent = errorEvent;

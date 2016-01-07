@@ -26,17 +26,17 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     private AuthorsModel mAuthors;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mAuthors != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
-        if (hasPreviousDataAvailable()) {
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mAuthors);
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mAuthors = (AuthorsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }

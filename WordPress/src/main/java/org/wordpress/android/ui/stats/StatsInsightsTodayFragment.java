@@ -49,22 +49,68 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         return view;
     }
 
-    void customizeUIWithResults() {
+
+    private VisitsModel mVisitsModel;
+
+    @Override
+    protected boolean hasDataAvailable() {
+        return mVisitsModel != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mVisitsModel);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mVisitsModel = (VisitsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.VisitorsAndViewsUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        mVisitsModel = event.mVisitsAndViews;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mVisitsModel = null;
+        showErrorUI(event.mError);
+    }
+
+    protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (!hasDataAvailable()) {
+            showErrorUI();
+            return;
+        }
+
+        // not an error - update the module UI here
+        mErrorLabel.setVisibility(View.GONE);
+        mResultContainer.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
         mResultContainer.removeAllViews();
 
-        // Another check that the data is available
-        if (isDataEmpty(0) || !(mDatamodels[0] instanceof VisitsModel)) {
-            showErrorUI(null);
+        if (mVisitsModel.getVisits() == null || mVisitsModel.getVisits().size() == 0) {
+            showErrorUI();
             return;
         }
 
-        VisitsModel visitsModel = (VisitsModel) mDatamodels[0];
-        if (visitsModel.getVisits() == null || visitsModel.getVisits().size() == 0) {
-            showErrorUI(null);
-            return;
-        }
-
-        List<VisitModel> visits = visitsModel.getVisits();
+        List<VisitModel> visits = mVisitsModel.getVisits();
         VisitModel data = visits.get(visits.size() - 1);
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()

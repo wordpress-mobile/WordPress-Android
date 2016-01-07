@@ -19,17 +19,17 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     private TopPostsAndPagesModel topPostsAndPagesModel = null;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return topPostsAndPagesModel != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
-        if (hasPreviousDataAvailable()) {
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, topPostsAndPagesModel);
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             topPostsAndPagesModel = (TopPostsAndPagesModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }

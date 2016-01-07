@@ -10,7 +10,7 @@ public class InsightsPopularModel extends BaseStatsModel {
     private final Double mHighestHourPercent;
     private String mBlogID;
 
-    public InsightsPopularModel(String blogID, JSONObject response) throws JSONException {
+    public InsightsPopularModel(String blogID, JSONObject response) {
         this.setBlogID(blogID);
         this.mHighestDayOfWeek = response.optInt("highest_day_of_week");
         this.mHighestHour = response.optInt("highest_hour");

@@ -85,11 +85,11 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     private FollowersModel mFollowersEmail;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mFollowersWPCOM != null && mFollowersEmail != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
+    protected void saveStatsData(Bundle outState) {
         if (mFollowersWPCOM != null) {
             outState.putSerializable(ARG_REST_RESPONSE, mFollowersWPCOM);
         }
@@ -98,7 +98,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mFollowersWPCOM = (FollowersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
@@ -265,7 +265,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (!hasPreviousDataAvailable()) {
+        if (!hasDataAvailable()) {
             return false;
         }
         FollowersModel followersModel = getCurrentDataModel();

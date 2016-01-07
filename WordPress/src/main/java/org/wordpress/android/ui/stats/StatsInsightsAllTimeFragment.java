@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats;
 
+import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,15 +15,61 @@ import org.wordpress.android.util.FormatUtils;
 public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment {
     public static final String TAG = StatsInsightsAllTimeFragment.class.getSimpleName();
 
+    InsightsAllTimeModel mInsightsAllTimeModel;
 
-    void customizeUIWithResults() {
-        // Another check that the data is available
-        if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsAllTimeModel)) {
-            showErrorUI(null);
+    @Override
+    protected boolean hasDataAvailable() {
+        return mInsightsAllTimeModel != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mInsightsAllTimeModel);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mInsightsAllTimeModel = (InsightsAllTimeModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.InsightsAllTimeUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 
-        InsightsAllTimeModel data = (InsightsAllTimeModel) mDatamodels[0];
+        mInsightsAllTimeModel = event.mInsightsAllTimeModel;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mInsightsAllTimeModel = null;
+        showErrorUI(event.mError);
+    }
+
+
+    protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
+
+        // Another check that the data is available
+        if (!hasDataAvailable()) {
+            showErrorUI();
+            return;
+        }
+
+        // not an error - update the module UI here
+        mErrorLabel.setVisibility(View.GONE);
+        mResultContainer.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
 
         mResultContainer.removeAllViews();
 
@@ -35,13 +83,13 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
         TextView besteverDateTextView = (TextView) ll.findViewById(R.id.stats_all_time_bestever_date);
 
 
-        postsTextView.setText(FormatUtils.formatDecimal(data.getPosts()));
-        viewsTextView.setText(FormatUtils.formatDecimal(data.getViews()));
-        visitorsTextView.setText(FormatUtils.formatDecimal(data.getVisitors()));
+        postsTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getPosts()));
+        viewsTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getViews()));
+        visitorsTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getVisitors()));
 
-        besteverTextView.setText(FormatUtils.formatDecimal(data.getViewsBestDayTotal()));
+        besteverTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getViewsBestDayTotal()));
         besteverDateTextView.setText(
-                StatsUtils.parseDate(data.getViewsBestDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM dd, yyyy")
+                StatsUtils.parseDate(mInsightsAllTimeModel.getViewsBestDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM dd, yyyy")
         );
 
         mResultContainer.addView(ll);

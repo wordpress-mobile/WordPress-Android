@@ -32,11 +32,11 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     private CommentFollowersModel mCommentFollowersModel;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mCommentsModel != null && mCommentFollowersModel != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
+    protected void saveStatsData(Bundle outState) {
         if (mCommentsModel != null) {
             outState.putSerializable(ARG_REST_RESPONSE, mCommentsModel);
         }
@@ -45,7 +45,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mCommentsModel = (CommentsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
@@ -174,10 +174,6 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (isDataEmpty(0)) {
-            return false;
-        }
-
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {

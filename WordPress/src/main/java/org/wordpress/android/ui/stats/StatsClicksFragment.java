@@ -25,17 +25,17 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     private ClicksModel mClicks;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mClicks != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
-        if (hasPreviousDataAvailable()) {
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mClicks);
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mClicks = (ClicksModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }

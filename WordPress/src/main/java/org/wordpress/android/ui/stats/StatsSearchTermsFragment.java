@@ -25,17 +25,17 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     private SearchTermsModel mSearchTerms;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mSearchTerms != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
-        if (hasPreviousDataAvailable()) {
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mSearchTerms);
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mSearchTerms = (SearchTermsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
@@ -64,11 +64,6 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     @Override
     protected void updateUI() {
         if (!isAdded()) {
-            return;
-        }
-
-        if (isErrorResponse()) {
-            showErrorUI();
             return;
         }
 

@@ -27,17 +27,17 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private ReferrersModel mReferrers;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mReferrers != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
-        if (hasPreviousDataAvailable()) {
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mReferrers);
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
           mReferrers = (ReferrersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }

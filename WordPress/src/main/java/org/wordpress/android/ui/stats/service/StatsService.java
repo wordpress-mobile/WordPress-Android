@@ -27,6 +27,10 @@ import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
+import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
@@ -176,10 +180,26 @@ public class StatsService extends Service {
                 case FOLLOWERS_EMAIL:
                     return new StatsEvents.FollowersEmailUdated(blogId, timeframe, date,
                             maxResultsRequested, pageRequested, (FollowersModel)data);
+                case INSIGHTS_POPULAR:
+                    return new StatsEvents.InsightsPopularUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (InsightsPopularModel)data);
+                case INSIGHTS_ALL_TIME:
+                    return new StatsEvents.InsightsAllTimeUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (InsightsAllTimeModel)data);
+                case INSIGHTS_TODAY:
+                    return new StatsEvents.VisitorsAndViewsUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (VisitsModel)data);
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    return new StatsEvents.InsightsLatestPostSummaryUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (InsightsLatestPostModel)data);
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    return new StatsEvents.InsightsLatestPostDetailsUpdated(blogId, timeframe, date,
+                            maxResultsRequested, pageRequested, (InsightsLatestPostDetailsModel)data);
                 default:
-                    return new StatsEvents.SectionUpdated(this, blogId, timeframe, date,
-                            maxResultsRequested, pageRequested, data);
+                    AppLog.e(T.STATS, "Can't find an Update Event that match the current endpoint: " + this.name());
             }
+
+            return null;
         }
     }
 
@@ -563,8 +583,6 @@ public class StatsService extends Service {
                     EventBus.getDefault().post(new StatsEvents.SectionUpdateError(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, volleyError));
 
-                    EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
-                            mMaxResultsRequested, mPageRequested, volleyError));
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }

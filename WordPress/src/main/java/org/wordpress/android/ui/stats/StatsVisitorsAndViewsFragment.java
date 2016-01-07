@@ -36,8 +36,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
-
 public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         implements StatsBarGraph.OnGestureListener {
 
@@ -59,7 +57,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private CheckedTextView mLegendLabel;
     private LinearLayout mVisitorsCheckboxContainer;
     private CheckBox mVisitorsCheckbox;
-    private boolean mIsCheckboxChecked;
+    private boolean mIsCheckboxChecked = true;
 
     private OnDateChangeListener mListener;
     private OnOverviewItemChangeListener mOverviewItemChangeListener;
@@ -266,9 +264,21 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     };
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected boolean hasDataAvailable() {
+        return mVisitsData != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
+        outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
+        outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
+        outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
+        outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
                 mVisitsData = (VisitsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
@@ -284,56 +294,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
 
             mIsCheckboxChecked = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, true);
-        } else {
-            mIsCheckboxChecked = true;
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        //AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > saving instance state");
-
-        /* FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
-        if (mVisitsData != null && mVisitsData instanceof VolleyError) {
-            VolleyError currentVolleyError = (VolleyError) mVisitsData;
-            mVisitsData = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
-        }*/
-
-        outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
-        outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
-        outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
-        outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
-        outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
-
-        super.onSaveInstanceState(outState);
+    protected void showErrorUI(String label) {
+        setupNoResultsUI(false);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (mVisitsData != null) {
-            updateUI();
-        } else {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                setupNoResultsUI(true);
-                refreshStats();
-            } else {
-                setupNoResultsUI(false);
-            }
-        }
+    protected void showPlaceholderUI() {
+        setupNoResultsUI(true);
     }
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
@@ -350,7 +321,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return visitModelsToShow;
     }
 
-    private void updateUI() {
+    protected void updateUI() {
         if (!isAdded()) {
             return;
         }

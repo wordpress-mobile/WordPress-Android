@@ -23,17 +23,17 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     private VideoPlaysModel mVideos;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mVideos != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
-        if (hasPreviousDataAvailable()) {
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mVideos);
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mVideos = (VideoPlaysModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }

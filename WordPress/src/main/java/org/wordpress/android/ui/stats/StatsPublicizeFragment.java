@@ -25,17 +25,17 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     private PublicizeModel mPublicizeData;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mPublicizeData != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
+    protected void saveStatsData(Bundle outState) {
         if (mPublicizeData != null) {
             outState.putSerializable(ARG_REST_RESPONSE, mPublicizeData);
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mPublicizeData = (PublicizeModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }

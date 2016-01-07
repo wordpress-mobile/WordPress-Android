@@ -24,17 +24,17 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     private TagsContainerModel mTagsContainer;
 
     @Override
-    protected boolean hasPreviousDataAvailable() {
+    protected boolean hasDataAvailable() {
         return mTagsContainer != null;
     }
     @Override
-    protected void savePreviousData(Bundle outState) {
+    protected void saveStatsData(Bundle outState) {
         if (mTagsContainer != null) {
             outState.putSerializable(ARG_REST_RESPONSE, mTagsContainer);
         }
     }
     @Override
-    protected void restorePreviousData(Bundle savedInstanceState) {
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mTagsContainer = (TagsContainerModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
