@@ -492,9 +492,9 @@
     <string name="site_settings_account_header">Account</string>
     <string name="site_settings_writing_header">Writing</string>
     <string name="site_settings_discussion_header">@string/discussion</string>
-    <string name="site_settings_discussion_new_posts_header">Defaults for New Posts</string>
+    <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header">@string/comments</string>
-    <string name="site_settings_this_device_header">This Device</string>
+    <string name="site_settings_this_device_header">This device</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>

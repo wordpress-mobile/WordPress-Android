@@ -132,11 +132,11 @@ public class WPPrefUtils {
     }
 
     /**
-     * Styles a {@link TextView} to display smaller text with the orange accent color.
+     * Styles a {@link TextView} to display smaller text with a dark grey color.
      */
     public static void layoutAsBody2(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.orange_jazzy, getSemiboldTypeface(view.getContext()));
+        setTextViewAttributes(view, size, R.color.grey_darken_10, getSemiboldTypeface(view.getContext()));
     }
 
     /**
