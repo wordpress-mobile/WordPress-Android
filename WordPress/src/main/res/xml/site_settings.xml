@@ -89,12 +89,6 @@
         android:key="@string/pref_key_site_writing"
         android:title="@string/site_settings_writing_header">
 
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_enable_location"
-            android:key="@string/pref_key_site_location"
-            android:title="@string/site_settings_location_title"
-            app:longClickHint="@string/site_settings_location_hint" />
-
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_category"
             android:key="@string/pref_key_site_category"
@@ -255,6 +249,33 @@
             </PreferenceCategory>
 
         </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:id="@+id/pref_this_device"
+        android:key="@string/pref_key_site_this_device"
+        android:title="@string/site_settings_this_device_header">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_enable_location"
+            android:key="@string/pref_key_site_location"
+            android:title="@string/site_settings_location_title"
+            app:longClickHint="@string/site_settings_location_hint" />
+
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_default_image_width"
+            android:key="@string/pref_key_site_image_width"
+            android:title="@string/site_settings_default_image_width_title"
+            android:entries="@array/site_settings_image_width_entries"
+            android:entryValues="@array/site_settings_image_width_values"
+            app:longClickHint="@string/site_settings_image_width_hint" />
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_upload_and_link_image"
+            android:key="@string/pref_key_site_upload_and_link_image"
+            android:title="@string/site_settings_upload_and_link_image_title"
+            app:longClickHint="@string/site_settings_upload_and_link_image_hint" />
 
     </PreferenceCategory>
 

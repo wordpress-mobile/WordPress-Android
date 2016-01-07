@@ -669,27 +669,16 @@ public abstract class SiteSettingsInterface {
      * If there is a change in verification status the listener is notified.
      */
     protected void credentialsVerified(boolean valid) {
-        if (valid) {
-            if (!mSettings.hasVerifiedCredentials) {
-                notifyCredentialsVerifiedOnUiThread(null);
-            }
-            mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = true;
-        } else {
-            if (mSettings.hasVerifiedCredentials) {
-                notifyCredentialsVerifiedOnUiThread(new AuthenticationError());
-            }
-            mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = false;
-        }
+        Exception e = valid ? null : new AuthenticationError();
+        if (mSettings.hasVerifiedCredentials != valid) notifyCredentialsVerifiedOnUiThread(e);
+        mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = valid;
     }
 
     /**
      * Helper method to create an XML-RPC interface for the current blog.
      */
     protected XMLRPCClientInterface instantiateInterface() {
-        if (mBlog == null) {
-            return null;
-        }
-
+        if (mBlog == null) return null;
         return XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(), mBlog.getHttppassword());
     }
 

@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <CheckBox
+            <org.wordpress.android.widgets.WPCheckBox
                 android:id="@+id/fullSizeImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:text="@string/upload_full_size_image" />
 
-            <CheckBox
+            <org.wordpress.android.widgets.WPCheckBox
                 android:id="@+id/scaledImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

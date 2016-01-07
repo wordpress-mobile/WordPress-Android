@@ -14,7 +14,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/number_picker_title"
+        android:textColor="@color/calypso_title_text"
         app:fontFamily="openSans"
         app:fontVariation="normal" />
 
@@ -45,7 +45,7 @@
             android:layout_marginBottom="8dp"
             android:duplicateParentState="true"
             android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/number_picker_title"
+            android:textColor="@color/calypso_title_text"
             app:fontFamily="openSans"
             app:fontVariation="normal" />
 

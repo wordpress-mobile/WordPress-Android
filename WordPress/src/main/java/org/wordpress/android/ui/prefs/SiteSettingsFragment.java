@@ -155,6 +155,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mModerationHoldPref;
     private Preference mBlacklistPref;
 
+    // This Device settings
+    private DetailListPreference mImageWidthPref;
+    private WPSwitchPreference mUploadAndLinkPref;
+
     // Delete site option (NOTE: only for WP.org)
     private Preference mDeleteSitePref;
 
@@ -207,9 +211,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                 public void run() {
                     // initialize settings with locally cached values, fetch remote on first pass
                     mSiteSettings.init(true);
-                    // stop future calls from fetching remote settings
                 }
             }, FETCH_DELAY);
+            // stop future calls from fetching remote settings
             mShouldFetch = false;
         }
     }
@@ -428,6 +432,13 @@ public class SiteSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mFormatPref,
                     newValue.toString(),
                     mSiteSettings.getDefaultPostFormatDisplay());
+        } else if (preference == mImageWidthPref) {
+            mBlog.setMaxImageWidth(newValue.toString());
+            setDetailListPreferenceValue(mImageWidthPref,
+                    mBlog.getMaxImageWidth(),
+                    mBlog.getMaxImageWidth());
+        } else if (preference == mUploadAndLinkPref) {
+            mBlog.setFullSizeImage(Boolean.valueOf(newValue.toString()));
         } else {
             return false;
         }
@@ -498,22 +509,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    public void allowEditing(boolean allow) {
-        // Address won't be editable until the app supports domain name changes
-        if (mAddressPref != null) mAddressPref.setEnabled(false);
-        if (mTitlePref != null) mTitlePref.setEnabled(allow);
-        if (mTaglinePref != null) mTaglinePref.setEnabled(allow);
-        if (mPrivacyPref != null) mPrivacyPref.setEnabled(allow);
-        if (mLanguagePref != null) mLanguagePref.setEnabled(allow);
-    }
-
     private void setupPreferenceList(ListView prefList, Resources res) {
         if (prefList == null || res == null) return;
 
         // customize list dividers
-        prefList.setDividerHeight(1);
         //noinspection deprecation
-        prefList.setDivider(getResources().getDrawable(R.drawable.preferences_divider));
+        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
+        prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
         // required to customize (Calypso) preference views
@@ -555,6 +557,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
+        mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
+        mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
@@ -633,6 +637,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mPrivacyPref,
                 String.valueOf(mSiteSettings.getPrivacy()),
                 mSiteSettings.getPrivacyDescription());
+        setDetailListPreferenceValue(mImageWidthPref,
+                mBlog.getMaxImageWidth(),
+                mBlog.getMaxImageWidth());
         setCategories();
         setPostFormats();
         setAllowComments(mSiteSettings.getAllowComments());
@@ -652,6 +659,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .getQuantityString(R.plurals.site_settings_multiple_links_summary,
                         mSiteSettings.getMultipleLinks(),
                         mSiteSettings.getMultipleLinks()));
+        mUploadAndLinkPref.setChecked(mBlog.isFullSizeImage());
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
