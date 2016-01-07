@@ -55,20 +55,33 @@ public final class AnalyticsTracker {
         STATS_WIDGET_TAPPED,
         EDITOR_CREATED_POST,
         EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
+        EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
+        EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY,
         EDITOR_UPDATED_POST,
         EDITOR_SCHEDULED_POST,
-        EDITOR_CLOSED_POST,
+        EDITOR_CLOSED,
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
+        EDITOR_DISCARDED_CHANGES, // Visual editor only
+        EDITOR_EDITED_IMAGE, // Visual editor only
+        EDITOR_ENABLED_NEW_VERSION, // Visual editor only
+        EDITOR_TOGGLED_OFF, // Visual editor only
+        EDITOR_TOGGLED_ON, // Visual editor only
+        EDITOR_UPDLOAD_MEDIA_FAILED, // Visual editor only
+        EDITOR_UPDLOAD_MEDIA_RETRIED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,
         EDITOR_TAPPED_BOLD,
+        EDITOR_TAPPED_HTML, // Visual editor only
         EDITOR_TAPPED_IMAGE,
         EDITOR_TAPPED_ITALIC,
         EDITOR_TAPPED_LINK,
         EDITOR_TAPPED_MORE,
         EDITOR_TAPPED_STRIKETHROUGH,
         EDITOR_TAPPED_UNDERLINE,
+        EDITOR_TAPPED_ORDERED_LIST, // Visual editor only
+        EDITOR_TAPPED_UNLINK, // Visual editor only
+        EDITOR_TAPPED_UNORDERED_LIST, // Visual editor only
         ME_ACCESSED,
         MY_SITE_ACCESSED,
         NOTIFICATIONS_ACCESSED,
