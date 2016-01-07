@@ -76,6 +76,7 @@
     <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
       we're using a shade of blue_wordpress -->
     <color name="status_bar_tint">#006b98</color>
+    <color name="action_mode_status_bar_tint">#ff517188</color>
 
     <!-- Media Gallery -->
     <color name="media_gallery_grid_label_bg">@color/semi_transparent_grey_dark</color>
@@ -149,6 +150,9 @@
 
     <!-- Notifications -->
     <color name="notifications_settings_divider_color">#d0d5d9</color>
+
+    <!-- Site Settings -->
+    <color name="site_settings_pref_divider_color">#dce1e6</color>
 
     <!-- Themes -->
     <color name="theme_price">#4FB769</color>

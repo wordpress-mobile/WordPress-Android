@@ -27,6 +27,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
+import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -49,9 +50,9 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
+import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
 public class ReaderPostDetailFragment extends Fragment
         implements ScrollDirectionListener,
@@ -77,7 +78,12 @@ public class ReaderPostDetailFragment extends Fragment
     private int mToolbarHeight;
     private String mErrorMessage;
 
-    private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
+    private boolean mIsToolbarShowing = true;
+    private AutoHideToolbarListener mAutoHideToolbarListener;
+
+    // min scroll distance before toggling toolbar
+    private static final float MIN_SCROLL_DISTANCE_Y = 10;
+
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, null);
@@ -122,8 +128,8 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
-            mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
+        if (activity instanceof AutoHideToolbarListener) {
+            mAutoHideToolbarListener = (AutoHideToolbarListener) activity;
         }
         mToolbarHeight = activity.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
     }
@@ -638,6 +644,9 @@ public class ReaderPostDetailFragment extends Fragment
 
             if (!isAdded()) return;
 
+            // make sure options menu reflects whether we now have a post
+            getActivity().invalidateOptionsMenu();
+
             if (!result) {
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
                 // the server if it hasn't already been requested
@@ -875,14 +884,19 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     @Override
-    public void onScrollUp() {
-        showToolbar(true);
-        showFooter(true);
+    public void onScrollUp(float distanceY) {
+        if (!mIsToolbarShowing
+                && -distanceY >= MIN_SCROLL_DISTANCE_Y) {
+            showToolbar(true);
+            showFooter(true);
+        }
     }
 
     @Override
-    public void onScrollDown() {
-        if (mScrollView.canScrollDown()
+    public void onScrollDown(float distanceY) {
+        if (mIsToolbarShowing
+                && distanceY >= MIN_SCROLL_DISTANCE_Y
+                && mScrollView.canScrollDown()
                 && mScrollView.canScrollUp()
                 && mScrollView.getScrollY() > mToolbarHeight) {
             showToolbar(false);
@@ -892,13 +906,15 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollCompleted() {
-        if (!mScrollView.canScrollDown()) {
+        if (!mIsToolbarShowing
+                && (!mScrollView.canScrollDown() || !mScrollView.canScrollUp())) {
             showToolbar(true);
             showFooter(true);
         }
     }
 
     private void showToolbar(boolean show) {
+        mIsToolbarShowing = show;
         if (mAutoHideToolbarListener != null) {
             mAutoHideToolbarListener.onShowHideToolbar(show);
         }

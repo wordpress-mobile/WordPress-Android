@@ -76,6 +76,11 @@ public class RestClientUtils {
         return mRestClient;
     }
 
+    public void getCategories(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/categories", siteId);
+        get(path, null, null, listener, errorListener);
+    }
+
     /**
      * Reply to a comment
      * <p/>
@@ -230,6 +235,18 @@ public class RestClientUtils {
     public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format("sites/%s/themes/mine", siteId);
         get(path, listener, errorListener);
+    }
+
+    public void getGeneralSettings(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/settings", siteId);
+        Map<String, String> params = new HashMap<String, String>();
+        get(path, params, null, listener, errorListener);
+    }
+
+    public void setGeneralSiteSettings(String siteId, Listener listener, ErrorListener errorListener,
+                                       Map<String, String> params) {
+        String path = String.format("sites/%s/settings", siteId);
+        post(path, params, null, listener, errorListener);
     }
 
     /**

@@ -10,13 +10,10 @@ import android.webkit.URLUtil;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.RedirectError;
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
@@ -25,7 +22,6 @@ import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.networking.WPDelayedHurlStack;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -34,20 +30,14 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,7 +49,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
@@ -87,11 +76,17 @@ public class ApiHelper {
         public static final String EDIT_POST          = "wp.editPost";
         public static final String EDIT_COMMENT       = "wp.editComment";
 
+        public static final String SET_OPTIONS        = "wp.setOptions";
+
         public static final String UPLOAD_FILE        = "wp.uploadFile";
 
         public static final String WPCOM_GET_FEATURES = "wpcom.getFeatures";
 
         public static final String LIST_METHODS       = "system.listMethods";
+    }
+
+    public static final class Params {
+        public static final String SHOW_SUPPORTED_POST_FORMATS = "show-supported";
     }
 
     public enum ErrorType {
@@ -150,7 +145,7 @@ public class ApiHelper {
                     mBlog.getHttppassword());
             Object result = null;
             Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                    mBlog.getPassword(), "show-supported" };
+                    mBlog.getPassword(), Params.SHOW_SUPPORTED_POST_FORMATS };
             try {
                 result = client.call(ApiHelper.Methods.GET_POST_FORMATS, params);
             } catch (ClassCastException cce) {
