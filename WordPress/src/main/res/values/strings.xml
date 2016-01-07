@@ -14,7 +14,7 @@
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
     <string name="post_content">Content (tap to add text and media)</string>
-    <string name="max_thumbnail_px_width">Default image width</string>
+    <string name="max_thumbnail_px_width">Default Image Width</string>
     <string name="password">Password</string>
     <string name="blogs">Blogs</string>
     <string name="account_details">Account details</string>
@@ -507,7 +507,7 @@
     <string name="site_settings_location_title">Enable Location</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
-    <string name="site_settings_default_image_width_title">Default Image Width</string>
+    <string name="site_settings_default_image_width_title">@string/max_thumbnail_px_width</string>
     <string name="site_settings_upload_and_link_image_title">@string/upload_full_size_image</string>
     <string name="site_settings_related_posts_title">@string/related_posts</string>
     <string name="site_settings_more_title">@string/more</string>
