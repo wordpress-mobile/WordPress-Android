@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -45,6 +47,8 @@ import java.util.Map;
  * The theme browser.
  */
 public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
+    private final String THEME_SEARCH_FRAGMENT_TAG = "theme_search_fragment";
+
     public static final int THEME_FETCH_MAX = 100;
     public static final int ACTIVATE_THEME = 1;
     public static final String THEME_ID = "theme_id";
@@ -67,6 +71,17 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            Fragment fragment = getFragmentManager().findFragmentByTag(THEME_SEARCH_FRAGMENT_TAG);
+            if (fragment == null) {
+                mThemeSearchFragment = new ThemeSearchFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment, THEME_SEARCH_FRAGMENT_TAG);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        }
 
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
@@ -351,7 +366,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
         showSearchToolbar();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment);
+        fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment, THEME_SEARCH_FRAGMENT_TAG);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -467,6 +482,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mIsInSearchMode = true;
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH);
         addSearchFragment();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
