@@ -371,11 +371,6 @@
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="no_account">No WordPress account found, add an account and try again</string>
-    <string name="share_preference_title">Share to WordPress</string>
-    <string name="reset_auto_share_preference">Reset auto-sharing settings</string>
-    <string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
-    <string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
-    <string name="always_use_these_settings_to_share">Always use these settings</string>
 
     <!-- file errors -->
     <string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
@@ -401,8 +396,6 @@
     <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
     <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
     <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
-    <string name="pref_key_shared_pref_section" translatable="false">wp_share_pref</string>
-    <string name="pref_key_reset_shared_pref" translatable="false">wp_reset_share_pref</string>
     <string name="pref_key_privacy_section" translatable="false">wp_privacy</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>

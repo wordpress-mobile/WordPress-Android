@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -24,9 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,8 +58,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_reset_shared_pref))
-                .setOnPreferenceClickListener(this);
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -95,8 +90,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             return handleOssPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_language))) {
             return handleLanguagePreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_reset_shared_pref))) {
-            return handleResetAutoSharePreferencesClick();
         }
 
         return false;
@@ -114,16 +107,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         if (!AccountHelper.isSignedInWordPressDotCom()) {
             mPreferenceScreen.removePreference(mUsernamePreference);
         }
-    }
-
-    private boolean handleResetAutoSharePreferencesClick() {
-        Editor editor = mSettings.edit();
-        editor.remove(ShareIntentReceiverActivity.SHARE_IMAGE_BLOG_ID_KEY);
-        editor.remove(ShareIntentReceiverActivity.SHARE_IMAGE_ADDTO_KEY);
-        editor.remove(ShareIntentReceiverActivity.SHARE_TEXT_BLOG_ID_KEY);
-        editor.apply();
-        ToastUtils.showToast(getActivity(), R.string.auto_sharing_preference_reset, ToastUtils.Duration.SHORT);
-        return true;
     }
 
     private boolean handleLanguagePreferenceClick() {

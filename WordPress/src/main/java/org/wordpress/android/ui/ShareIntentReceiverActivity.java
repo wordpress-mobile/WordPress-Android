@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,7 +21,6 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -39,9 +37,6 @@ import java.util.Map;
  * along with the content passed in the intent
  */
 public class ShareIntentReceiverActivity extends AppCompatActivity implements OnItemSelectedListener {
-    public static final String SHARE_TEXT_BLOG_ID_KEY = "wp-settings-share-text-blogid";
-    public static final String SHARE_IMAGE_BLOG_ID_KEY = "wp-settings-share-image-blogid";
-    public static final String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";
     public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
 
@@ -51,7 +46,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
-    private CheckBox mAlwaysUseCheckBox;
     private int mAccountIDs[];
     private TextView mBlogSpinnerTitle;
     private int mActionIndex;
@@ -64,14 +58,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
         mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
-        mAlwaysUseCheckBox = (CheckBox) findViewById(R.id.always_use_checkbox);
         String[] blogNames = getBlogNames();
         if (blogNames == null) {
             finishIfNoVisibleBlogs();
-            return;
-        }
-
-        if (autoShareIfEnabled()) {
             return;
         }
 
@@ -252,54 +241,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         return true;
     }
 
-    private boolean autoShareIfEnabled() {
-        if (isSharingText()) {
-            return autoShareText();
-        } else {
-            return autoShareImage();
-        }
-    }
-
-    private boolean autoShareText() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        int blogId = settings.getInt(SHARE_TEXT_BLOG_ID_KEY, -1);
-        if (blogId != -1) {
-            mActionIndex = ADD_TO_NEW_POST;
-            if (selectBlog(blogId)) {
-                return shareIt();
-            } else {
-                // blog is hidden or has been deleted, reset settings
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-                editor.remove(SHARE_TEXT_BLOG_ID_KEY);
-                editor.commit();
-                ToastUtils.showToast(this, R.string.auto_sharing_preference_reset_caused_by_error,
-                        ToastUtils.Duration.LONG);
-            }
-        }
-        return false;
-    }
-
-    private boolean autoShareImage() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        int blogId = settings.getInt(SHARE_IMAGE_BLOG_ID_KEY, -1);
-        int addTo = settings.getInt(SHARE_IMAGE_ADDTO_KEY, -1);
-        if (blogId != -1 && addTo != -1) {
-            mActionIndex = addTo;
-            if (selectBlog(blogId)) {
-                return shareIt();
-            } else {
-                // blog is hidden or has been deleted, reset settings
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-                editor.remove(SHARE_IMAGE_BLOG_ID_KEY);
-                editor.remove(SHARE_IMAGE_ADDTO_KEY);
-                editor.commit();
-                ToastUtils.showToast(this, R.string.auto_sharing_preference_reset_caused_by_error,
-                        ToastUtils.Duration.LONG);
-            }
-        }
-        return false;
-    }
-
     private void savePreferences() {
         // If current blog is not set don't save preferences
         if (WordPress.currentBlog == null) {
@@ -310,17 +251,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         // Save last used settings
         editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
         editor.putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex);
-
-        // Save "always use these settings"
-        if (mAlwaysUseCheckBox.isChecked()) {
-            if (isSharingText()) {
-                editor.putInt(SHARE_TEXT_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
-            } else {
-                editor.putInt(SHARE_IMAGE_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
-                // Add to new post or media
-                editor.putInt(SHARE_IMAGE_ADDTO_KEY, mActionIndex);
-            }
-        }
         editor.commit();
     }
 
