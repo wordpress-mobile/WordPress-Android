@@ -669,7 +669,7 @@ public abstract class SiteSettingsInterface {
      * If there is a change in verification status the listener is notified.
      */
     protected void credentialsVerified(boolean valid) {
-        Exception e = valid ? new AuthenticationError() : null;
+        Exception e = valid ? null : new AuthenticationError();
         if (mSettings.hasVerifiedCredentials != valid) notifyCredentialsVerifiedOnUiThread(e);
         mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = valid;
     }
