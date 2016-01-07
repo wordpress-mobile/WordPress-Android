@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 
 import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class AnalyticsTrackerMixpanel extends Tracker {
@@ -35,7 +34,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
     public AnalyticsTrackerMixpanel(Context context, String token) throws IllegalArgumentException {
         super(context);
-        mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
+        mAggregatedProperties = new EnumMap<>(AnalyticsTracker.Stat.class);
         mMixpanel = MixpanelAPI.getInstance(context, token);
     }
 
@@ -142,9 +141,8 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
             // Retrieve properties user has already passed in and combine them with the saved properties
             if (properties != null) {
-                Iterator iter = properties.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry pairs = (Map.Entry) iter.next();
+                for (Object o : properties.entrySet()) {
+                    Map.Entry pairs = (Map.Entry) o;
                     String key = (String) pairs.getKey();
                     try {
                         Object value = pairs.getValue();
@@ -254,7 +252,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
     private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(
             AnalyticsTracker.Stat stat) {
-        AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
+        AnalyticsTrackerMixpanelInstructionsForStat instructions;
         switch (stat) {
             case APPLICATION_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -800,10 +798,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Push Authentication - Ignored");
                 break;
-            case SETTINGS_LANGUAGE_SELECTION_FORCED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Settings - Forced Language Selection");
-                break;
             case NOTIFICATION_SETTINGS_LIST_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notification Settings - Accessed List");
@@ -864,6 +858,50 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Themes - Details Accessed");
                 break;
+            case ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Forced Language Selection");
+                break;
+            case SITE_SETTINGS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Site Settings Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_settings_accessed");
+                break;
+            case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - More Settings Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_more_settings_accessed");
+                break;
+            case SITE_SETTINGS_ADDED_LIST_ITEM:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Added List Item");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_list_items_added");
+                break;
+            case SITE_SETTINGS_DELETED_LIST_ITEMS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Site Deleted List Items");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_list_items_were_deleted");
+                break;
+            case SITE_SETTINGS_HINT_TOAST_SHOWN:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Preference Hint Shown");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_preference_hints_viewed");
+                break;
+            case SITE_SETTINGS_LEARN_MORE_CLICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Learn More Clicked");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_learn_more_clicked");
+                break;
+            case SITE_SETTINGS_LEARN_MORE_LOADED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Learn More Loaded");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_learn_more_seen");
+                break;
+            case SITE_SETTINGS_SAVED_REMOTELY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Saved Remotely");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_settings_updated_remotely");
+                break;
             default:
                 instructions = null;
                 break;
@@ -879,6 +917,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     private void incrementSuperProperty(String property) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         int propertyCount = preferences.getInt(property, 0);
@@ -935,8 +974,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
 
         try {
-            Object valueForProperty = properties.get(property);
-            return valueForProperty;
+            return properties.get(property);
         } catch (JSONException e) {
             // We are okay with swallowing this exception as the next line will just return a null value
         }

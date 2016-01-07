@@ -62,6 +62,7 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
@@ -214,6 +215,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 // Create a new post for share intents and QuickPress
                 mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
+                mPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(this) +"]");
+                mPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(this));
                 WordPress.wpDB.savePost(mPost);
                 mIsNewPost = true;
             } else if (extras != null) {
@@ -693,6 +696,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mEditorFragment != null && !mEditorFragment.onBackPressed()) {
             saveAndFinish();
         }
+    }
+
+    public boolean isNewPost() {
+        return mIsNewPost;
     }
 
     private boolean hasEmptyContentFields() {
