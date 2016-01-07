@@ -855,8 +855,8 @@ public class EditPostSettingsFragment extends Fragment
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 
         if (mCategories != null) {
-            AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button, null);
             for (String categoryName : mCategories) {
+                AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button, null);
                 if (categoryName != null && buttonCategory != null) {
                     buttonCategory.setText(Html.fromHtml(categoryName));
                     buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
