@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog.T;
@@ -17,6 +18,7 @@ import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
+import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,10 +120,10 @@ public class MediaUploadService extends Service {
                 new ApiHelper.UploadMediaTask.Callback() {
             @Override
             public void onSuccess(String id) {
-                // once the file has been uploaded, delete the local database entry and
-                // download the new one so that we are up-to-date and so that users can edit it.
-                WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
-                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadSucceed(mediaId, id));
+                // once the file has been uploaded, update the local database entry (swap the id with the remote id)
+                // and download the new one
+                WordPress.wpDB.updateMediaLocalToRemoteId(blogIdStr, mediaId, id);
+                EventBus.getDefault().post(new MediaEvents.MediaUploadSucceed(blogIdStr, mediaId, id));
                 fetchMediaFile(id);
             }
 
@@ -129,8 +131,23 @@ public class MediaUploadService extends Service {
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
-                EventBus.getDefault().post(new MediaUploadEvents.MediaUploadFailed(mediaId,
-                        getString(R.string.upload_failed)));
+
+                String errorMessageToDisplay = null;
+                // well formed XML-RPC response from the server, but it's an error.
+                if (throwable instanceof XMLRPCFault) {
+                    XMLRPCFault xmlrpcFault = ((XMLRPCFault) throwable);
+                    if (xmlrpcFault.getFaultCode() == 401) {
+                        //Just for reference - xmlrpcFault.getFaultString() returns the error message
+                        // from the server without the ugly "[Code 401]" part.
+                        errorMessageToDisplay = getString(R.string.media_error_no_permission_upload);
+                    }
+                }
+
+                if (errorMessageToDisplay == null) {
+                    errorMessageToDisplay = getString(R.string.upload_failed);
+                }
+
+                EventBus.getDefault().post(new MediaEvents.MediaUploadFailed(mediaId, errorMessageToDisplay));
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
@@ -158,6 +175,7 @@ public class MediaUploadService extends Service {
                 WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
                 mUploadInProgress = false;
                 mHandler.post(mFetchQueueTask);
+                EventBus.getDefault().post(new MediaChanged(blogId, mediaId));
             }
 
             @Override

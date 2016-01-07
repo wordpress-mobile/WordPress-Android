@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Выбранная тема</string>
+	<string name="could_not_load_theme">Не удалось загрузить тему</string>
+	<string name="theme_activation_error">Произошла ошибка. Не удалось активировать тему</string>
+	<string name="theme_by_author_prompt_append"> Автор: %1$s</string>
+	<string name="theme_prompt">Благодарим вас за выбор %1$s</string>
+	<string name="theme_try_and_customize">Попробовать и настроить</string>
+	<string name="theme_view">Просмотр</string>
+	<string name="theme_details">Подробнее</string>
+	<string name="theme_support">Поддержка</string>
+	<string name="theme_done">ГОТОВО</string>
+	<string name="theme_manage_site">УПРАВЛЕНИЕ САЙТОМ</string>
+	<string name="title_activity_theme_support">Темы</string>
+	<string name="theme_activate">Активировать</string>
+	<string name="date_range_start_date">Начальная дата</string>
+	<string name="date_range_end_date">Конечная дата</string>
+	<string name="current_theme">Текущая тема</string>
+	<string name="customize">Настроить</string>
+	<string name="details">Подробнее</string>
+	<string name="support">Поддержка</string>
+	<string name="active">Активно</string>
+	<string name="stats_referrers_spam_generic_error">При выполнении операции произошла ошибка. Состояние спама не изменилось.</string>
+	<string name="stats_referrers_marking_not_spam">Пометить как не спам</string>
+	<string name="stats_referrers_unspam">Не спам</string>
+	<string name="stats_referrers_marking_spam">Пометить как спам</string>
+	<string name="theme_auth_error_authenticate">Не удалось получить темы: не удалось проверить пользователя</string>
+	<string name="post_published">Запись опубликована</string>
+	<string name="page_published">Страница опубликована</string>
+	<string name="post_updated">Запись обновлена</string>
+	<string name="page_updated">Страница обновлена</string>
+	<string name="stats_referrers_spam">Спам</string>
+	<string name="theme_no_search_result_found">К сожалению, тем не найдено.</string>
+	<string name="media_file_name">Имя файла: %s</string>
+	<string name="media_uploaded_on">Загружен: %s</string>
+	<string name="media_dimensions">Размеры: %s</string>
+	<string name="upload_queued">В очереди</string>
+	<string name="media_file_type">Тип файла: %s</string>
 	<string name="reader_label_gap_marker">Загрузить другие записи</string>
 	<string name="notifications_no_search_results">Сайтов по запросу «%s» не найдено</string>
 	<string name="search_sites">Поиск сайтов</string>
@@ -27,8 +63,6 @@
 	<string name="access_media_permission_required">Для доступа к медиафайлам необходимы права доступа</string>
 	<string name="stats_enable_rest_api_in_jetpack">Чтобы просмотреть статистику, включите модуль JSON API в Jetpack.</string>
 	<string name="error_open_list_from_notification">Эта запись или страница была опубликована на другом сайте</string>
-	<string name="post_uploaded">Запись загружена</string>
-	<string name="page_uploaded">Страница загружена</string>
 	<string name="reader_short_comment_count_multi">Комментариев: %s</string>
 	<string name="reader_short_comment_count_one">Один комментарий</string>
 	<string name="reader_label_submit_comment">ОТПРАВИТЬ</string>
@@ -363,7 +397,6 @@
 	<string name="wait_until_upload_completes">Подождите конца загрузки</string>
 	<string name="theme_set_failed">Невозможно установить тему</string>
 	<string name="theme_auth_error_message">Убедитесь, что у вас достаточно прав для установки темы</string>
-	<string name="theme_no_search_result_found">Ничего не найдено</string>
 	<string name="comments_empty_list">Нет комментариев</string>
 	<string name="mnu_comment_unspam">Нет спама</string>
 	<string name="no_site_error">Невозможно присоединиться к сайту WordPress</string>
@@ -788,5 +821,10 @@
 		<item>Стандартный</item>
 		<item>Статус</item>
 		<item>Видео</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Бесплатно</item>
+		<item>Все</item>
+		<item>Премиум</item>
 	</string-array>
 </resources>

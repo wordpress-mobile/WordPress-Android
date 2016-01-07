@@ -142,16 +142,19 @@
     <dimen name="progress_bar_height">3dp</dimen>
 
     <!-- stats -->
-    <dimen name="stats_widget_icon_size">18dp</dimen>
     <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
     <dimen name="stats_barchart_legend_item">12dp</dimen>
 
     <!-- stats widget-->
-    <dimen name="stats_widget_one_cell">40dp</dimen>
+    <dimen name="stats_widget_icon_size">18dp</dimen>
+    <dimen name="stats_widget_text_sz">14dp</dimen>
+    <dimen name="stats_widget_text_sz_small">10dp</dimen>
+    <dimen name="stats_widget_min_height">62dp</dimen>
+    <dimen name="stats_widget_main_container_min_size">38dp</dimen>
+    <dimen name="stats_widget_main_container_size">48dp</dimen>
     <dimen name="stats_widget_four_cells">250dp</dimen>
     <dimen name="stats_widget_five_cells">320dp</dimen>
-    <dimen name="stats_widget_main_container_size">48dp</dimen>
     <dimen name="stats_widget_image_layout_size">12dp</dimen>
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
@@ -175,7 +178,6 @@
     <!-- my site -->
     <dimen name="my_site_add_button_padding_bottom">5dp</dimen>
     <dimen name="my_site_blog_name_margin_top">11dp</dimen>
-    <dimen name="my_site_list_row_height">48dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
@@ -185,7 +187,6 @@
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
     <dimen name="me_list_margin_top">20dp</dimen>
-    <dimen name="me_list_row_height">56dp</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
 
     <!--site picker-->

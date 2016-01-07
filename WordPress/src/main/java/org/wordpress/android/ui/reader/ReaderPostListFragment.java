@@ -991,6 +991,12 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
+        // if this is a cross-post, we want to show the original post
+        if (post.isXpost()) {
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.xpostBlogId, post.xpostPostId);
+            return;
+        }
+
         ReaderPostListType type = getPostListType();
         Map<String, Object> analyticsProperties = new HashMap<>();
 
@@ -1017,12 +1023,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
         }
-
-        // Only pass the blogID if available. Do not track feedID
-        AnalyticsUtils.trackWithBlogDetails(
-                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                mCurrentBlogId != 0 ? mCurrentBlogId : null
-        );
     }
 
     /*
@@ -1057,8 +1057,8 @@ public class ReaderPostListFragment extends Fragment
     private void trackTagLoaded(ReaderTag tag) {
         AnalyticsTracker.Stat stat = null;
 
-        if (tag.isFreshlyPressed()) {
-            stat = AnalyticsTracker.Stat.READER_FRESHLY_PRESSED_LOADED;
+        if (tag.isDiscover()) {
+            stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
         } else if (tag.isTagTopic()) {
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {

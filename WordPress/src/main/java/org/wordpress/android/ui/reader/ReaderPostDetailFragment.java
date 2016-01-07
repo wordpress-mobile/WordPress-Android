@@ -27,6 +27,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
+import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -49,9 +50,9 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
+import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
 public class ReaderPostDetailFragment extends Fragment
         implements ScrollDirectionListener,
@@ -75,8 +76,14 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
     private int mToolbarHeight;
+    private String mErrorMessage;
 
-    private ReaderInterfaces.AutoHideToolbarListener mAutoHideToolbarListener;
+    private boolean mIsToolbarShowing = true;
+    private AutoHideToolbarListener mAutoHideToolbarListener;
+
+    // min scroll distance before toggling toolbar
+    private static final float MIN_SCROLL_DISTANCE_Y = 10;
+
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, null);
@@ -121,8 +128,8 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof ReaderInterfaces.AutoHideToolbarListener) {
-            mAutoHideToolbarListener = (ReaderInterfaces.AutoHideToolbarListener) activity;
+        if (activity instanceof AutoHideToolbarListener) {
+            mAutoHideToolbarListener = (AutoHideToolbarListener) activity;
         }
         mToolbarHeight = activity.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
     }
@@ -216,6 +223,10 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
+        if (!TextUtils.isEmpty(mErrorMessage)) {
+            outState.putString(ReaderConstants.KEY_ERROR_MESSAGE, mErrorMessage);
+        }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -234,6 +245,9 @@ public class ReaderPostDetailFragment extends Fragment
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
+            if (savedInstanceState.containsKey(ReaderConstants.KEY_ERROR_MESSAGE)) {
+                mErrorMessage = savedInstanceState.getString(ReaderConstants.KEY_ERROR_MESSAGE);
             }
         }
     }
@@ -497,29 +511,54 @@ public class ReaderPostDetailFragment extends Fragment
         progress.setVisibility(View.VISIBLE);
         progress.bringToFront();
 
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+        ReaderActions.OnRequestListener listener = new ReaderActions.OnRequestListener() {
             @Override
-            public void onActionResult(boolean succeeded) {
+            public void onSuccess() {
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
-                    if (succeeded) {
-                        showPost();
+                    showPost();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode) {
+                if (isAdded()) {
+                    progress.setVisibility(View.GONE);
+                    int errMsgResId;
+                    if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                        errMsgResId = R.string.no_network_message;
                     } else {
-                        postFailed();
+                        switch (statusCode) {
+                            case 401:
+                            case 403:
+                                errMsgResId = R.string.reader_err_get_post_not_authorized;
+                                break;
+                            case 404:
+                                errMsgResId = R.string.reader_err_get_post_not_found;
+                                break;
+                            default:
+                                errMsgResId = R.string.reader_err_get_post_generic;
+                                break;
+                        }
                     }
+                    showError(getString(errMsgResId));
                 }
             }
         };
-        ReaderPostActions.requestPost(mBlogId, mPostId, actionListener);
+        ReaderPostActions.requestPost(mBlogId, mPostId, listener);
     }
 
     /*
-     * called when post couldn't be loaded and failed to be returned from server
+     * shows an error message in the middle of the screen - used when requesting post fails
      */
-    private void postFailed() {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
+    private void showError(String errorMessage) {
+        if (!isAdded()) return;
+
+        TextView txtError = (TextView) getView().findViewById(R.id.text_error);
+        txtError.setText(errorMessage);
+        if (txtError.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(txtError, AniUtils.Duration.MEDIUM);
         }
+        mErrorMessage = errorMessage;
     }
 
     private void showPost() {
@@ -584,6 +623,7 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             mReaderWebView.setIsPrivatePost(mPost.isPrivate);
+            mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
@@ -602,9 +642,10 @@ public class ReaderPostDetailFragment extends Fragment
         protected void onPostExecute(Boolean result) {
             mIsPostTaskRunning = false;
 
-            if (!isAdded()) {
-                return;
-            }
+            if (!isAdded()) return;
+
+            // make sure options menu reflects whether we now have a post
+            getActivity().invalidateOptionsMenu();
 
             if (!result) {
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
@@ -613,6 +654,9 @@ public class ReaderPostDetailFragment extends Fragment
                     mHasAlreadyRequestedPost = true;
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
+                } else if (!TextUtils.isEmpty(mErrorMessage)) {
+                    // post has already been requested and failed, so restore previous error message
+                    showError(mErrorMessage);
                 }
                 return;
             }
@@ -661,7 +705,7 @@ public class ReaderPostDetailFragment extends Fragment
                 txtBlogName.setText(mPost.getBlogName());
                 txtBlogName.setVisibility(View.VISIBLE);
             } else if (mPost.hasBlogUrl()) {
-                txtBlogName.setText(UrlUtils.getDomainFromUrl(mPost.getBlogUrl()));
+                txtBlogName.setText(UrlUtils.getHost(mPost.getBlogUrl()));
                 txtBlogName.setVisibility(View.VISIBLE);
             } else {
                 txtBlogName.setVisibility(View.GONE);
@@ -684,7 +728,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             String dateLine;
             if (mPost.hasBlogUrl()) {
-                dateLine = UrlUtils.getDomainFromUrl(mPost.getBlogUrl()) + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
+                dateLine = UrlUtils.getHost(mPost.getBlogUrl()) + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             } else {
                 dateLine = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             }
@@ -840,14 +884,19 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     @Override
-    public void onScrollUp() {
-        showToolbar(true);
-        showFooter(true);
+    public void onScrollUp(float distanceY) {
+        if (!mIsToolbarShowing
+                && -distanceY >= MIN_SCROLL_DISTANCE_Y) {
+            showToolbar(true);
+            showFooter(true);
+        }
     }
 
     @Override
-    public void onScrollDown() {
-        if (mScrollView.canScrollDown()
+    public void onScrollDown(float distanceY) {
+        if (mIsToolbarShowing
+                && distanceY >= MIN_SCROLL_DISTANCE_Y
+                && mScrollView.canScrollDown()
                 && mScrollView.canScrollUp()
                 && mScrollView.getScrollY() > mToolbarHeight) {
             showToolbar(false);
@@ -857,13 +906,15 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollCompleted() {
-        if (!mScrollView.canScrollDown()) {
+        if (!mIsToolbarShowing
+                && (!mScrollView.canScrollDown() || !mScrollView.canScrollUp())) {
             showToolbar(true);
             showFooter(true);
         }
     }
 
     private void showToolbar(boolean show) {
+        mIsToolbarShowing = show;
         if (mAutoHideToolbarListener != null) {
             mAutoHideToolbarListener.onShowHideToolbar(show);
         }

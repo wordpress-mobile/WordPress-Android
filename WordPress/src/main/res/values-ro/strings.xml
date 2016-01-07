@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Tema selectată</string>
+	<string name="could_not_load_theme">Nu pot încărca tema</string>
+	<string name="theme_activation_error">Ceva a mers prost. Nu pot activa tema</string>
+	<string name="theme_by_author_prompt_append">de %1$s</string>
+	<string name="theme_prompt">Îți mulțumim că ai ales %1$s</string>
+	<string name="theme_try_and_customize">Încearcă și personalizează</string>
+	<string name="theme_view">Vezi</string>
+	<string name="theme_details">Detalii</string>
+	<string name="theme_support">Suport</string>
+	<string name="theme_done">GATA</string>
+	<string name="theme_manage_site">GESTIUNE SIT</string>
+	<string name="title_activity_theme_support">Teme</string>
+	<string name="theme_activate">Activată</string>
+	<string name="date_range_start_date">Dată de început</string>
+	<string name="date_range_end_date">Dată de sfârșit</string>
+	<string name="current_theme">Temă curentă</string>
+	<string name="customize">Personalizare</string>
+	<string name="details">Detalii</string>
+	<string name="support">Suport</string>
+	<string name="active">Activă</string>
+	<string name="stats_referrers_spam_generic_error">Ceva a mers prost în timpul operației. Starea de spam n-a fost schimbată.</string>
+	<string name="stats_referrers_marking_not_spam">Marcare ca ne-spam</string>
+	<string name="stats_referrers_unspam">Nu e spam</string>
+	<string name="stats_referrers_marking_spam">Marcare ca spam</string>
+	<string name="theme_auth_error_authenticate">Am eșuat în a extrage vreo temă: autentificare de utilizator eșuată</string>
+	<string name="post_published">Articol publicat</string>
+	<string name="page_published">Pagină publicată</string>
+	<string name="post_updated">Articol actualizat</string>
+	<string name="page_updated">Pagină actualizată</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Regret, nicio temă găsită.</string>
+	<string name="media_file_name">Nume fișier: %s</string>
+	<string name="media_uploaded_on">Încărcat la: %s</string>
+	<string name="media_dimensions">Dimensiuni: %s</string>
+	<string name="upload_queued">În coadă</string>
+	<string name="media_file_type">Tip fișier: %s</string>
 	<string name="reader_label_gap_marker">Încarcă mai multe articole</string>
 	<string name="notifications_no_search_results">Niciun site nu s-a potrivit cu \'%s\'</string>
 	<string name="search_sites">Caută siturile</string>
@@ -27,8 +63,6 @@
 	<string name="access_media_permission_required">Permisiuni necesare pentru a accesa media</string>
 	<string name="stats_enable_rest_api_in_jetpack">Pentru a vedea statisticile tale, validează extensia JSON API din Jetpack.</string>
 	<string name="error_open_list_from_notification">Acest articol sau pagină a fost publicat(ă) pe alt sit</string>
-	<string name="post_uploaded">Articol actualizat</string>
-	<string name="page_uploaded">Pagină actualizată</string>
 	<string name="reader_short_comment_count_multi">%s comentarii</string>
 	<string name="reader_short_comment_count_one">1 comentariu</string>
 	<string name="reader_label_submit_comment">TRIMITE</string>
@@ -413,7 +447,6 @@
 	<string name="adding_cat_failed">Adăugarea categoriei a eșuat</string>
 	<string name="no_site_error">Nu m-am putut conecta la situl WordPress</string>
 	<string name="mnu_comment_unspam">Nu e spam</string>
-	<string name="theme_no_search_result_found">Niciun rezultat găsit</string>
 	<string name="comments_empty_list">Fără comentarii</string>
 	<string name="theme_auth_error_message">Asigură-te că ai dreptul să setezi teme</string>
 	<string name="passcode_wrong_passcode">PIN greșit</string>
@@ -788,5 +821,10 @@
 		<item>Standard</item>
 		<item>Stare</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratis</item>
+		<item>Toate</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

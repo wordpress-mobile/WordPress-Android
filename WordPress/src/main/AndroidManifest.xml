@@ -316,6 +316,12 @@
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden"/>
 
+        <!--Me activities-->
+        <activity
+            android:name=".ui.prefs.MyProfileActivity"
+            android:label="@string/my_profile"
+            android:theme="@style/CalypsoTheme" />
+
 		<!-- Services -->
         <service
             android:name=".ui.posts.services.PostUploadService"

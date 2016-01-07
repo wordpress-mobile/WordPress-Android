@@ -25,6 +25,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -128,7 +129,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
         DefaultHttpClient client = null;
-        if (uri != null && uri.getHost() != null && uri.getHost().endsWith("wordpress.com")) {
+        if (WPUrlUtils.isWordPressCom(uri)) {
             mIsWpcom = true;
         }
         if (mIsWpcom) {
@@ -534,6 +535,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 // Detect login issues and broadcast a message if the error is known
                 switch (e.getFaultCode()) {
                     case 403:
+                        // Ignore 403 error from certain methods known for replying with incorrect error code on
+                        // lacking permissions
+                        if ("wp.getPostFormats".equals(method) || "wp.getCommentStatusList".equals(method)
+                            || "wp.getPostStatusList".equals(method) || "wp.getPageStatusList".equals(method)) {
+                            break;
+                        }
                         EventBus.getDefault().post(new CoreEvents.InvalidCredentialsDetected());
                         break;
                     case 425:
@@ -642,7 +649,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             return false;
         }
 
-        return path.equals("/xmlrpc.php") && host.endsWith("wordpress.com") && protocol.equals("https");
+        return path.equals("/xmlrpc.php") && WPUrlUtils.safeToAddWordPressComAuthToken(clientUri) && protocol.equals("https");
     }
 
     private class CancelException extends RuntimeException {
