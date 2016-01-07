@@ -54,7 +54,7 @@ public class StatsEvents {
                                       final int maxResultsRequested, final int pageRequested, VolleyError error) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mEndPointName = endPointName;
-            this.mError = error;
+            mError = error;
         }
     }
 

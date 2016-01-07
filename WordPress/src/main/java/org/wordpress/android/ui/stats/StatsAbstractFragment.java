@@ -76,11 +76,6 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         //AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            AppLog.w(AppLog.T.STATS, this.getClass().getCanonicalName() + "--> no connection, update canceled");
-            return;
-        }
-
         final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
         final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
 
@@ -175,12 +170,8 @@ public abstract class StatsAbstractFragment extends Fragment {
         if (hasDataAvailable()) {
             updateUI();
         } else {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                showPlaceholderUI();
-                refreshStats();
-            } else {
-                showErrorUI(new NoConnectionError());
-            }
+            showPlaceholderUI();
+            refreshStats();
         }
     }
 
