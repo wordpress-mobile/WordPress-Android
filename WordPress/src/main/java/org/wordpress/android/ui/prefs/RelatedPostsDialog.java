@@ -76,9 +76,6 @@ public class RelatedPostsDialog extends DialogFragment
         mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image2));
         mPreviewImages.add((ImageView) v.findViewById(R.id.related_post_image3));
 
-        WPPrefUtils.layoutAsSubhead(mShowHeader);
-        WPPrefUtils.layoutAsSubhead(mShowImages);
-
         Bundle args = getArguments();
         if (args != null) {
             mShowRelatedPosts.setChecked(args.getBoolean(SHOW_RELATED_POSTS_KEY));
