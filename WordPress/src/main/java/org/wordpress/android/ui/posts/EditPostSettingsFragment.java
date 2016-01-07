@@ -9,6 +9,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -855,7 +856,7 @@ public class EditPostSettingsFragment extends Fragment
 
         if (mCategories != null) {
             for (String categoryName : mCategories) {
-                Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
+                AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button, null);
                 if (categoryName != null && buttonCategory != null) {
                     buttonCategory.setText(Html.fromHtml(categoryName));
                     buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);

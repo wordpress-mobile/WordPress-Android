@@ -12,18 +12,18 @@
         android:id="@+id/searchLocationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_large"
-        android:hint="@string/current_location"
         android:layout_weight="1"
+        android:hint="@string/current_location"
+        android:imeOptions="actionSearch"
         android:inputType="text"
-        android:imeOptions="actionSearch" />
+        android:textSize="@dimen/text_sz_large" />
 
     <Button
         android:id="@+id/searchLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_large"
         android:ellipsize="end"
         android:lines="1"
-        android:text="@string/search_current_location" />
+        android:text="@string/search_current_location"
+        android:textSize="@dimen/text_sz_large" />
 </LinearLayout>

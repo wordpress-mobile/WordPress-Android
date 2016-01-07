@@ -20,6 +20,8 @@
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
         <item name="android:statusBarColor">@color/status_bar_tint</item>
 
+        <item name="colorButtonNormal">@color/light_gray</item>
+
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
