@@ -214,8 +214,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
                 (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
 
         if (siteSettingsFragment != null) {
-            siteSettingsFragment.allowEditing(event.isConnected());
-
             if (!event.isConnected()) {
                 ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast));
             }
