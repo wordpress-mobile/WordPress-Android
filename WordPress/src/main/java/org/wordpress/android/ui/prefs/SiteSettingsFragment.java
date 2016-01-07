@@ -547,9 +547,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (prefList == null || res == null) return;
 
         // customize list dividers
-        prefList.setDividerHeight(1);
         //noinspection deprecation
-        prefList.setDivider(getResources().getDrawable(R.drawable.preferences_divider));
+        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
+        prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
         // required to customize (Calypso) preference views
