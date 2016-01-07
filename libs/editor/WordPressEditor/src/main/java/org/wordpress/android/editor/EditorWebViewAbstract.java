@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
+import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -64,6 +65,10 @@ public abstract class EditorWebViewAbstract extends WebView {
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
 
+                if (!URLUtil.isNetworkUrl(url)) {
+                    return super.shouldInterceptRequest(view, request);
+                }
+
                 try {
                     // Keep any existing request headers from the WebResourceRequest
                     Map<String, String> headerMap = request.getRequestHeaders();
@@ -96,6 +101,10 @@ public abstract class EditorWebViewAbstract extends WebView {
             @SuppressWarnings("deprecation")
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                if (!URLUtil.isNetworkUrl(url)) {
+                    return super.shouldInterceptRequest(view, url);
+                }
+
                 try {
                     // Request and add an authorization header for HTTPS resource requests.
                     // Use https:// when requesting the auth header, in case the resource is incorrectly using http://.
