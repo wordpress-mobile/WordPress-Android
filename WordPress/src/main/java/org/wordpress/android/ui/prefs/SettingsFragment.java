@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -26,10 +25,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
-import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPEditTextPreference;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,7 +42,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private AlertDialog mDialog;
     private SharedPreferences mSettings;
     private Preference mUsernamePreference;
-    private WPEditTextPreference mTaglineTextPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,22 +50,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         addPreferencesFromResource(R.xml.settings);
 
         mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-
-        OnPreferenceChangeListener preferenceChangeListener = new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue != null) { // cancelled dismiss keyboard
-                    preference.setSummary(newValue.toString());
-                }
-                ActivityUtils.hideKeyboard(getActivity());
-                return true;
-            }
-        };
-
-        mTaglineTextPreference = (WPEditTextPreference) findPreference(getString(R.string.pref_key_post_sig));
-        if (mTaglineTextPreference != null) {
-            mTaglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
-        }
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
         // AccountHelper.getDefaultAccount() will always return a valid Account even if the username is empty
@@ -86,7 +66,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        updatePostSignature();
         checkWordPressComOnlyFields();
     }
 
@@ -129,15 +108,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void updatePostSignature() {
-        if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
-            mTaglineTextPreference.setSummary(R.string.posted_from);
-            mTaglineTextPreference.setText(getString(R.string.posted_from));
-        } else {
-            mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
-        }
     }
 
     private void checkWordPressComOnlyFields() {

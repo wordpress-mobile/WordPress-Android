@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +12,6 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.app.NotificationCompat;
@@ -279,22 +277,6 @@ public class PostUploadService extends Service {
             }
 
             Map<String, Object> contentStruct = new HashMap<String, Object>();
-
-            if (!mPost.isPage() && mPost.isLocalDraft()) {
-                // add the tagline
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-                if (prefs.getBoolean(getString(R.string.pref_key_post_sig_enabled), false)) {
-                    String tagline = prefs.getString(getString(R.string.pref_key_post_sig), "");
-                    if (!TextUtils.isEmpty(tagline)) {
-                        String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
-                        if (TextUtils.isEmpty(moreContent))
-                            descriptionContent += tag;
-                        else
-                            moreContent += tag;
-                    }
-                }
-            }
 
             // Post format
             if (!mPost.isPage()) {

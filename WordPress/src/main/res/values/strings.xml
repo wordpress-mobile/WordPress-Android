@@ -335,10 +335,6 @@
     <string name="post_not_published">Post status isn\'t published</string>
     <string name="page_not_published">Page status isn\'t published</string>
     <string name="view_in_browser">View in browser</string>
-    <string name="post_signature">Post signature</string>
-    <string name="your_signature">Your signature:</string>
-    <string name="add_tagline">Add a signature to new posts</string>
-    <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content</string>
@@ -403,9 +399,6 @@
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
     <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
-    <string name="pref_key_post_sig_section" translatable="false">wp_post_signature</string>
-    <string name="pref_key_post_sig_enabled" translatable="false">wp_pref_signature_enabled</string>
-    <string name="pref_key_post_sig" translatable="false">wp_pref_post_signature</string>
     <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
     <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
     <string name="pref_key_shared_pref_section" translatable="false">wp_share_pref</string>
