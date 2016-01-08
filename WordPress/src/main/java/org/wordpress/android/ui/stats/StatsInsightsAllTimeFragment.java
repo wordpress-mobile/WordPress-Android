@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,7 +14,7 @@ import org.wordpress.android.util.FormatUtils;
 public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment {
     public static final String TAG = StatsInsightsAllTimeFragment.class.getSimpleName();
 
-    InsightsAllTimeModel mInsightsAllTimeModel;
+    private InsightsAllTimeModel mInsightsAllTimeModel;
 
     @Override
     protected boolean hasDataAvailable() {

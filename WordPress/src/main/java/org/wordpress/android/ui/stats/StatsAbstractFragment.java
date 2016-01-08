@@ -15,7 +15,6 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.NetworkUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -231,8 +230,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     public boolean shouldUpdateFragmentOnErrorEvent(StatsEvents.SectionUpdateError errorEvent) {
-        StatsEvents.SectionUpdatedAbstract abstractEvent = errorEvent;
-        if (!shouldUpdateFragmentOnUpdateEvent(abstractEvent)) {
+        if (!shouldUpdateFragmentOnUpdateEvent(errorEvent)) {
             return false;
         }
 

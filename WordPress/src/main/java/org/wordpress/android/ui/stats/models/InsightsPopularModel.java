@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.models;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class InsightsPopularModel extends BaseStatsModel {

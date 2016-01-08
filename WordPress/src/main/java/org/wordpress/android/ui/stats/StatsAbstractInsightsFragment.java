@@ -16,9 +16,9 @@ import org.wordpress.android.R;
 public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragment {
     public static final String TAG = StatsAbstractInsightsFragment.class.getSimpleName();
 
-    protected TextView mErrorLabel;
-    protected LinearLayout mEmptyModulePlaceholder;
-    protected LinearLayout mResultContainer;
+    private TextView mErrorLabel;
+    private LinearLayout mEmptyModulePlaceholder;
+    LinearLayout mResultContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
