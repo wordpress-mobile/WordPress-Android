@@ -1395,6 +1395,7 @@ ZSSEditor.applyVideoFormattingCallback = function( match ) {
     // of the content body when `-webkit-user-select: none` is set and the video is tapped.
     var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="videopress.mp4" preload="metadata" poster=' + posterSVG +' onclick="" onerror="ZSSEditor.sendVideoPressInfoRequest(\'' + videopressID +'\');"></video>';
 
+    out = out + '<br>';
     return out;
 }
 
