@@ -275,9 +275,7 @@ public class ReaderPostDetailFragment extends Fragment
         super.onResume();
 
         // resume the webView if it was paused above - without this the content may not re-appear
-        if (mIsWebViewPaused) {
-            resumeWebView();
-        }
+        resumeWebViewIfPaused();
     }
 
     /*
@@ -896,13 +894,13 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    void resumeWebView() {
+    private void resumeWebViewIfPaused() {
         if (mReaderWebView == null) {
             AppLog.w(T.READER, "reader post detail > attempt to resume null webView");
-        } else {
-            AppLog.d(T.READER, "reader post detail > resuming webView");
+        } else if (mIsWebViewPaused) {
+            AppLog.d(T.READER, "reader post detail > resuming paused webView");
             mReaderWebView.onResume();
-            mIsWebViewPaused = true;
+            mIsWebViewPaused = false;
         }
     }
 
