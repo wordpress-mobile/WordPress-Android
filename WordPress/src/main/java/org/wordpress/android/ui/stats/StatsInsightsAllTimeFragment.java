@@ -56,22 +56,11 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
 
 
     protected void updateUI() {
-        if (!isAdded()) {
+        super.updateUI();
+
+        if (!isAdded() || !hasDataAvailable()) {
             return;
         }
-
-        // Another check that the data is available
-        if (!hasDataAvailable()) {
-            showErrorUI();
-            return;
-        }
-
-        // not an error - update the module UI here
-        mErrorLabel.setVisibility(View.GONE);
-        mResultContainer.setVisibility(View.VISIBLE);
-        mEmptyModulePlaceholder.setVisibility(View.GONE);
-
-        mResultContainer.removeAllViews();
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
                 .inflate(R.layout.stats_insights_all_time_item, (ViewGroup) mResultContainer.getRootView(), false);

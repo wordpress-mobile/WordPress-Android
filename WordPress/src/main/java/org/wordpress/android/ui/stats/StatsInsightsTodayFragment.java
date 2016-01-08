@@ -90,20 +90,11 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     }
 
     protected void updateUI() {
-        if (!isAdded()) {
+        super.updateUI();
+
+        if (!isAdded() || !hasDataAvailable()) {
             return;
         }
-
-        if (!hasDataAvailable()) {
-            showErrorUI();
-            return;
-        }
-
-        // not an error - update the module UI here
-        mErrorLabel.setVisibility(View.GONE);
-        mResultContainer.setVisibility(View.VISIBLE);
-        mEmptyModulePlaceholder.setVisibility(View.GONE);
-        mResultContainer.removeAllViews();
 
         if (mVisitsModel.getVisits() == null || mVisitsModel.getVisits().size() == 0) {
             showErrorUI();

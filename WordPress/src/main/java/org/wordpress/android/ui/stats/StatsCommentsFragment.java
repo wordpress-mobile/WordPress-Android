@@ -111,13 +111,14 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        mTopPagerContainer.setVisibility(View.VISIBLE);
-
         if (mCommentsModel == null && mCommentFollowersModel == null) {
             showHideNoResultsUI(true);
             mTotalsLabel.setVisibility(View.GONE);
+            mTopPagerContainer.setVisibility(View.GONE);
             return;
         }
+
+        mTopPagerContainer.setVisibility(View.VISIBLE);
 
         if (mCommentFollowersModel != null) { // check if comment-followers is already here
             mTotalsLabel.setVisibility(View.VISIBLE);
@@ -126,8 +127,6 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             mTotalsLabel.setText(
                     String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
             );
-        } else {
-            mTotalsLabel.setVisibility(View.GONE);
         }
 
         ArrayAdapter adapter = null;

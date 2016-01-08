@@ -104,20 +104,10 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     }
 
     protected void updateUI() {
-        if (!isAdded()) {
+        super.updateUI();
+
+        if (!isAdded() || !hasDataAvailable()) {
             return;
-        }
-
-        // not an error - update the module UI here
-        mErrorLabel.setVisibility(View.GONE);
-        mResultContainer.setVisibility(View.VISIBLE);
-        mEmptyModulePlaceholder.setVisibility(View.GONE);
-
-        mResultContainer.removeAllViews();
-
-        // Another additional check. It ensures that the data is available.
-        if (!hasDataAvailable()) {
-            showErrorUI();
         }
 
         // check if there are posts "published" on the blog

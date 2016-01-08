@@ -58,20 +58,9 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
     }
 
     protected void updateUI() {
-        if (!isAdded()) {
-            return;
-        }
+        super.updateUI();
 
-            // not an error - update the module UI here
-        mErrorLabel.setVisibility(View.GONE);
-        mResultContainer.setVisibility(View.VISIBLE);
-        mEmptyModulePlaceholder.setVisibility(View.GONE);
-
-        mResultContainer.removeAllViews();
-
-        // Another check that the data is available
-        if (!hasDataAvailable()) {
-            showErrorUI();
+        if (!isAdded() || !hasDataAvailable()) {
             return;
         }
 

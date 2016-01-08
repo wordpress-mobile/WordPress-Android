@@ -144,16 +144,16 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             return;
         }
 
-        mTopPagerContainer.setVisibility(View.VISIBLE);
-        mTotalsLabel.setVisibility(View.VISIBLE);
-
         if (mFollowersWPCOM == null && mFollowersEmail == null) {
             showHideNoResultsUI(true);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
             return;
         }
 
+        mTotalsLabel.setVisibility(View.VISIBLE);
+
         final FollowersModel followersModel = getCurrentDataModel();
+
         if (followersModel != null && followersModel.getFollowers() != null &&
                 followersModel.getFollowers().size() > 0) {
             ArrayAdapter adapter = new DotComFollowerAdapter(getActivity(), followersModel.getFollowers());
@@ -240,6 +240,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             mBottomPaginationContainer.setVisibility(View.GONE);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
         }
+
+        // Always visible. Even if the current tab is empty, otherwise the user can't switch tab
+        mTopPagerContainer.setVisibility(View.VISIBLE);
     }
 
     private FollowersModel getCurrentDataModel() {

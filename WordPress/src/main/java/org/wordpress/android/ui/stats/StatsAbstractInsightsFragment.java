@@ -59,4 +59,27 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         mResultContainer.setVisibility(View.GONE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
     }
+
+    /**
+     * Insights module all have the same basic implementation of updateUI. Let's provide a common code here.
+     */
+    @Override
+    protected void updateUI() {
+        if (!isAdded()) {
+            return;
+        }
+
+        // Another check that the data is available. At this point it should be available.
+        if (!hasDataAvailable()) {
+            showErrorUI();
+            return;
+        }
+
+        // not an error - update the module UI here
+        mErrorLabel.setVisibility(View.GONE);
+        mResultContainer.setVisibility(View.VISIBLE);
+        mEmptyModulePlaceholder.setVisibility(View.GONE);
+
+        mResultContainer.removeAllViews();
+    }
 }
