@@ -43,6 +43,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -573,7 +574,7 @@ public class StatsActivity extends AppCompatActivity
                                 }
                             });
                         }
-                    }, ApiHelper.Methods.GET_OPTIONS, params);
+                    }, Method.GET_OPTIONS, params);
                 } else {
                     mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
                     createFragments(true); // Recreate the fragment and start a refresh of Stats
