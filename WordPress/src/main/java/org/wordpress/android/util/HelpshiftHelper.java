@@ -6,8 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.helpshift.Helpshift;
-import com.helpshift.Helpshift.HelpshiftDelegate;
+import com.helpshift.Core;
+import com.helpshift.support.Support;
+import com.helpshift.support.Support.Delegate;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.BuildConfig;
@@ -83,15 +84,16 @@ public class HelpshiftHelper {
     public static void init(Application application) {
         HashMap<String, Boolean> config = new HashMap<String, Boolean>();
         config.put("enableInAppNotification", false);
-        Helpshift.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
+        Core.init(Support.getInstance());
+        Core.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
                 BuildConfig.HELPSHIFT_API_ID, config);
-        Helpshift.setDelegate(new HelpshiftDelegate() {
+        Support.setDelegate(new Delegate() {
             @Override
-            public void helpshiftSessionBegan() {
+            public void sessionBegan() {
             }
 
             @Override
-            public void helpshiftSessionEnded() {
+            public void sessionEnded() {
             }
 
             @Override
@@ -133,7 +135,7 @@ public class HelpshiftHelper {
         // Add tags to Helpshift metadata
         addTags(new Tag[]{origin});
         HashMap config = getHelpshiftConfig(activity);
-        Helpshift.showConversation(activity, config);
+        Support.showConversation(activity, config);
     }
 
     /**
@@ -152,7 +154,7 @@ public class HelpshiftHelper {
         // Add tags to Helpshift metadata
         addTags(new Tag[]{origin});
         HashMap config = getHelpshiftConfig(activity);
-        Helpshift.showFAQs(activity, config);
+        Support.showFAQs(activity, config);
     }
 
     /**
@@ -162,25 +164,25 @@ public class HelpshiftHelper {
      */
     public void registerDeviceToken(Context context, String regId) {
         if (!TextUtils.isEmpty(regId)) {
-            Helpshift.registerDeviceToken(context, regId);
+            Core.registerDeviceToken(context, regId);
         }
     }
 
     public void setTags(Tag[] tags) {
-        mMetadata.put(Helpshift.HSTagsKey, Tag.toString(tags));
+        mMetadata.put(Support.TagsKey, Tag.toString(tags));
     }
 
     public void addTags(Tag[] tags) {
-        String[] oldTags = (String[]) mMetadata.get(Helpshift.HSTagsKey);
+        String[] oldTags = (String[]) mMetadata.get(Support.TagsKey);
         // Concatenate arrays
-        mMetadata.put(Helpshift.HSTagsKey, ArrayUtils.addAll(oldTags, Tag.toString(tags)));
+        mMetadata.put(Support.TagsKey, ArrayUtils.addAll(oldTags, Tag.toString(tags)));
     }
 
     /**
      * Handle push notification
      */
     public void handlePush(Context context, Intent intent) {
-        Helpshift.handlePush(context, intent);
+        Core.handlePush(context, intent);
     }
 
     /**
@@ -188,7 +190,7 @@ public class HelpshiftHelper {
      *
      * @param key map key
      * @param object to store. Be careful with the type used. Nothing is specified in the documentation. Better to use
-     *               String but String[] is needed for specific key like Helpshift.HSTagsKey
+     *               String but String[] is needed for specific key like Support.TagsKey
      */
     public void addMetaData(MetadataKey key, Object object) {
         mMetadata.put(key.toString(), object);
@@ -225,10 +227,10 @@ public class HelpshiftHelper {
                 name = splitEmail[0];
             }
         }
-        Helpshift.setNameAndEmail(name, emailAddress);
+        Core.setNameAndEmail(name, emailAddress);
         addDefaultMetaData(context);
         HashMap config = new HashMap ();
-        config.put(Helpshift.HSCustomMetadataKey, mMetadata);
+        config.put(Support.CustomMetadataKey, mMetadata);
         return config;
     }
 }
