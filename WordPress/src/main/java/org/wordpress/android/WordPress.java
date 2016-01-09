@@ -450,10 +450,10 @@ public class WordPress extends Application {
     }
 
     /**
-     * returns the blogID of the current blog or -1 if current blog is null
+     * returns the blogID of the current blog or null if current blog is null or remoteID is null.
      */
-    public static int getCurrentRemoteBlogId() {
-        return (getCurrentBlog() != null ? getCurrentBlog().getRemoteBlogId() : -1);
+    public static String getCurrentRemoteBlogId() {
+        return (getCurrentBlog() != null ? getCurrentBlog().getDotComBlogId() : null);
     }
 
     public static int getCurrentLocalTableBlogId() {

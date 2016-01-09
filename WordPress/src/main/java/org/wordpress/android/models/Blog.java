@@ -453,15 +453,34 @@ public class Blog {
     }
 
     /**
-     * Get the WordPress.com blog ID
-     * Stored in blogId for WP.com, api_blogId for Jetpack
+     * Get the remote Blog ID stored on the wpcom backend.
+     *
+     * In the app db it's stored in blogId for WP.com, and in api_blogId for Jetpack.
+     *
+     * For WP.com sites this function returns the same value of getRemoteBlogId().
      *
      * @return WP.com blogId string, potentially null for Jetpack sites
      */
     public String getDotComBlogId() {
-        if (isDotcomFlag())
+        if (isDotcomFlag()) {
             return String.valueOf(getRemoteBlogId());
-        else
-            return getApi_blogid();
+        } else {
+            String remoteID =  getApi_blogid();
+            // Self-hosted blogs edge cases.
+            if (TextUtils.isEmpty(remoteID)) {
+                return null;
+            }
+            try {
+                long parsedBlogID = Long.parseLong(remoteID);
+                // remote blogID is always > 1 for Jetpack blogs
+                if (parsedBlogID < 1) {
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                AppLog.e(T.UTILS, "The remote blog ID stored in options isn't valid: " + remoteID);
+                return null;
+            }
+            return remoteID;
+        }
     }
 }
