@@ -20,6 +20,7 @@ import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.menus.MenusActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -82,6 +83,13 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
+    }
+
+    public static void viewCurrentBlogMenus(Context context) {
+        Intent intent = new Intent(context, MenusActivity.class);
+        slideInFromRight(context, intent);
+        // TODO
+//        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
 
     public static void viewCurrentBlogPages(Context context) {

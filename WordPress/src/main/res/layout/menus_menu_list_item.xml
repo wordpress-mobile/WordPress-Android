@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/menu_item_depth"
+        android:layout_width="8dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:background="@color/grey" />
+
+    <ImageButton
+        android:id="@+id/menu_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/icon_menus_locations"
+        android:backgroundTint="@color/blue_wordpress" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/menu_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/menu_item_depth"
+        tools:text="Title" />
+
+    <ImageButton
+        android:id="@+id/menu_item_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/icon_menus_edit"
+        android:backgroundTint="@color/blue_wordpress" />
+
+    <ImageButton
+        android:id="@+id/menu_item_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/icon_menus_plus"
+        android:backgroundTint="@color/blue_wordpress" />
+
+</RelativeLayout>

@@ -297,6 +297,9 @@
             android:theme="@style/Calypso.NoActionBar" />
 
         <activity
+            android:name=".ui.menus.MenusActivity" />
+
+        <activity
             android:name=".ui.main.SitePickerActivity"
             android:theme="@style/CalypsoTheme"
             android:label="@string/site_picker_title" />

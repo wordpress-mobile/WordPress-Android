@@ -255,6 +255,26 @@
 
             </RelativeLayout>
 
+            <!--Menus-->
+            <RelativeLayout
+                android:id="@+id/row_menus"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_menus_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:contentDescription="@string/menus"
+                    android:tint="@color/grey_disabled"
+                    android:src="@drawable/icon_menus_menus" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_menus_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_menus_icon"
+                    android:text="@string/menus" />
+
+            </RelativeLayout>
+
             <!--Configuration-->
             <LinearLayout
                 android:id="@+id/row_configuration"
