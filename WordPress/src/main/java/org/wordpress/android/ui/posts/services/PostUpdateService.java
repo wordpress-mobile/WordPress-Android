@@ -11,6 +11,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -111,7 +112,7 @@ public class PostUpdateService extends Service {
         try {
             boolean canLoadMore;
 
-            result = (Object[]) client.call(isPage ? ApiHelper.Methods.GET_PAGES : "metaWeblog.getRecentPosts", xmlrpcParams);
+            result = (Object[]) client.call(isPage ? Method.GET_PAGES : "metaWeblog.getRecentPosts", xmlrpcParams);
             if (result != null && result.length > 0) {
                 canLoadMore = true;
 
