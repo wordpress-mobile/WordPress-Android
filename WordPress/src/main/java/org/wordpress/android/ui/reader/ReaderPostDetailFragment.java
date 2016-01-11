@@ -75,6 +75,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
+    private boolean mIsWebViewPaused;
     private int mToolbarHeight;
     private String mErrorMessage;
 
@@ -269,9 +270,17 @@ public class ReaderPostDetailFragment extends Fragment
         pauseWebView();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // resume the webView if it was paused above - without this the content may not re-appear
+        resumeWebViewIfPaused();
+    }
+
     /*
-     * changes the like on the passed post
-     */
+         * changes the like on the passed post
+         */
     private void togglePostLike() {
         if (!isAdded() || !hasPost() || !NetworkUtils.checkConnection(getActivity())) {
             return;
@@ -875,11 +884,23 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     void pauseWebView() {
-        if (mReaderWebView != null) {
+        if (mReaderWebView == null) {
+            AppLog.w(T.READER, "reader post detail > attempt to pause null webView");
+        } else {
+            AppLog.d(T.READER, "reader post detail > pausing webView");
             mReaderWebView.hideCustomView();
             mReaderWebView.onPause();
-        } else {
-            AppLog.i(T.READER, "reader post detail > attempt to pause webView when null");
+            mIsWebViewPaused = true;
+        }
+    }
+
+    private void resumeWebViewIfPaused() {
+        if (mReaderWebView == null) {
+            AppLog.w(T.READER, "reader post detail > attempt to resume null webView");
+        } else if (mIsWebViewPaused) {
+            AppLog.d(T.READER, "reader post detail > resuming paused webView");
+            mReaderWebView.onResume();
+            mIsWebViewPaused = false;
         }
     }
 
