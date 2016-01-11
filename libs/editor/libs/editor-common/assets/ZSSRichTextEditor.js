@@ -1409,17 +1409,13 @@ ZSSEditor.applyVideoFormattingCallback = function( match ) {
  *  @param      posterURL         URL of the poster image to display
  */
 ZSSEditor.setVideoPressLinks = function(videopressID, videoURL, posterURL ) {
-    var videoNode = $('video[data-wpvideopress="' + videopressID+'"]');
+    var videoNode = $('video[data-wpvideopress="' + videopressID + '"]');
     if (videoNode.length == 0) {
         return;
     }
     videoNode.attr('src', videoURL);
     videoNode.attr('controls', '');
-    if (posterURL.length == 0) {
-        videoNode.attr('poster', 'wpposter.svg');
-    } else {
-        videoNode.attr('poster', posterURL);
-    }
+    videoNode.attr('poster', posterURL);
     var thisObj = this;
     videoNode.on('webkitbeginfullscreen', function (event){ thisObj.sendVideoFullScreenStarted(); } );
     videoNode.on('webkitendfullscreen', function (event){ thisObj.sendVideoFullScreenEnded(); } );
