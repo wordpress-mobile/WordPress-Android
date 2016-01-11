@@ -279,10 +279,17 @@
 
     </PreferenceCategory>
 
-    <Preference
-        android:id="@+id/pref_delete_site"
-        android:key="@string/pref_key_site_delete_site"
-        android:title="@string/site_settings_delete_site_title"
-        app:longClickHint="@string/site_settings_delete_site_hint" />
+    <PreferenceCategory
+        android:id="@+id/pref_advanced"
+        android:key="@string/pref_key_site_advanced"
+        android:title="@string/site_settings_advanced_header">
+
+        <Preference
+            android:id="@+id/pref_delete_site"
+            android:key="@string/pref_key_site_delete_site"
+            android:title="@string/site_settings_delete_site_title"
+            app:longClickHint="@string/site_settings_delete_site_hint" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
