@@ -592,6 +592,7 @@
 	<string name="reader_likes_you_and_one">Tu și încă unul la fel</string>
 	<string name="select_time">Selectează timpul</string>
 	<string name="validating_site_data">Validează datele sitului</string>
+	<string name="reader_toast_err_get_post">Nu pot să aduc acest post</string>
 	<string name="validating_user_data">Validează datele utilizatorului</string>
 	<string name="pick_video">Selectează video-ul</string>
 	<string name="pick_photo">Selectează fotografia</string>

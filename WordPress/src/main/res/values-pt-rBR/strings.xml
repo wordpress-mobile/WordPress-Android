@@ -580,6 +580,7 @@
 	<string name="pick_photo">Selecione a foto</string>
 	<string name="account_two_step_auth_enabled">Essa conta possui a autenticação em duas etapas ativada. Visite suas configurações de segurança no WordPress.com e gere uma senha específica para aplicativos.</string>
 	<string name="pick_video">Selecionar vídeo</string>
+	<string name="reader_toast_err_get_post">Não foi possível recuperar esse post</string>
 	<string name="validating_user_data">Validando dados de usuário</string>
 	<string name="validating_site_data">Validando dados do site</string>
 	<string name="reader_empty_followed_blogs_description">Não se preocupe! Toque no ícone na parte superior direita para começar a explorar!</string>

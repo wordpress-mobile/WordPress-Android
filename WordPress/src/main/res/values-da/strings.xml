@@ -419,6 +419,7 @@
 	<string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
 	<string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uden en synlig blog</string>
 	<string name="reset_auto_share_preference">Nulstil indstillinger for automatisk deling</string>
+	<string name="reader_toast_err_get_post">Kunne ikke hente dette indlæg</string>
 	<string name="reader_likes_you_and_one">Du og en anden synes godt om dette</string>
 	<string name="validating_user_data">Validerer brugerdata</string>
 	<string name="validating_site_data">Validerer webstedsdata</string>

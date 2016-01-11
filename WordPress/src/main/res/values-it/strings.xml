@@ -594,6 +594,7 @@
 	<string name="pick_photo">Seleziona foto</string>
 	<string name="account_two_step_auth_enabled">Per questo account è attiva l\'autenticazione in due fasi. Visita le tue impostazioni di sicurezza in WordPress.com e genera una password specifica per l\'applicazione.</string>
 	<string name="pick_video">Seleziona video</string>
+	<string name="reader_toast_err_get_post">Impossibile recuperare questo post</string>
 	<string name="validating_user_data">Convalida dati utente in corso</string>
 	<string name="validating_site_data">Convalida dati sito in corso</string>
 	<string name="reader_empty_followed_blogs_description">Ma non preoccuparti, fai un tap sull\'icona in alto a destra per iniziare ad esplorare!</string>

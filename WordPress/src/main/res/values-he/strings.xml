@@ -593,6 +593,7 @@
 	<string name="select_date">בחר תאריך</string>
 	<string name="pick_photo">בחר תמונה</string>
 	<string name="pick_video">בחר וידאו</string>
+	<string name="reader_toast_err_get_post">לא ניתן לאחזר רשומה זו</string>
 	<string name="validating_user_data">מאמת נתוני משתמש</string>
 	<string name="validating_site_data">מאמת נתוני אתר</string>
 	<string name="account_two_step_auth_enabled">בחשבון זה מופעל אימות דו-שלבי. עיין בהגדרות האבטחה בוורדפרס.קום וצור סיסמה ספציפית ליישום.</string>

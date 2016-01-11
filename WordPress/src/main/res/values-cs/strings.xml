@@ -593,6 +593,7 @@
 	<string name="pick_video">Vyberte video</string>
 	<string name="validating_user_data">Ověřuji data uživatele</string>
 	<string name="validating_site_data">Ověřuji data stránky</string>
+	<string name="reader_toast_err_get_post">Tento příspěvek se nedá načíst</string>
 	<string name="select_time">Zadejte čas</string>
 	<string name="reader_likes_you_and_one">To se líbí vám a jedné další osobě</string>
 	<string name="reader_empty_followed_blogs_description">Ale nebojte se, klepněte jen na ikonu v pravém horním rohu, a začněte poznávat!</string>

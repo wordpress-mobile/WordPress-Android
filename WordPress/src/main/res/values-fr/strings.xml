@@ -588,6 +588,7 @@
 	<string name="reset_auto_share_preference">Remettre à zéro les paramètres de partage automatique</string>
 	<string name="always_use_these_settings_to_share">Toujours utiliser ces réglages</string>
 	<string name="cant_share_no_visible_blog">Vous ne pouvez pas partager vers WordPress sans avoir publié au moins un blog.</string>
+	<string name="reader_toast_err_get_post">Impossible de récupérer cet article</string>
 	<string name="select_time">Sélectionner l\'heure</string>
 	<string name="select_date">Sélectionner la date</string>
 	<string name="pick_photo">Sélectionner une photo</string>

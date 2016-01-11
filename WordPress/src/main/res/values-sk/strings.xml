@@ -587,6 +587,7 @@
 	<string name="share_preference_title">Zdieľať na WordPress</string>
 	<string name="account_two_step_auth_enabled">Tento účet má povolenú dvojkrokové overovanie. Pre vytvorenie hesla pre aplikácie si otvorte bezpečnostné nastavenia na WordPress.com.</string>
 	<string name="reader_likes_you_and_one">Lajkli ste to vy a niekto ďalší</string>
+	<string name="reader_toast_err_get_post">Nie je možné načítať príspevok</string>
 	<string name="validating_site_data">Validujú sa údaje na stránke</string>
 	<string name="validating_user_data">Validujú sa používateľské dáta</string>
 	<string name="pick_video">Vyberte video</string>

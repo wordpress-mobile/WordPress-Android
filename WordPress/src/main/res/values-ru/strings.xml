@@ -594,6 +594,7 @@
 	<string name="validating_user_data">Проверка данных пользователя</string>
 	<string name="validating_site_data">Проверка данных сайта</string>
 	<string name="account_two_step_auth_enabled">Включена двушаговая авторизация- зайдите в настройки безопасности на WordPress.com и сгенерируйте специальный ключ для приложения.</string>
+	<string name="reader_toast_err_get_post">Не удаётся загрузить эту запись</string>
 	<string name="reader_empty_followed_blogs_description">Просто нажмите на иконку справа вверху, чтобы найти что-нибудь интересное!</string>
 	<string name="password_invalid">Требуется более сложный пароль. Используйте пароль длинной 7 и более символов, содержащий прописные и строчные буквы, цифры а так же спецсимволы.</string>
 	<string name="nux_tap_continue">Продолжить</string>

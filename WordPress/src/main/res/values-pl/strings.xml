@@ -394,6 +394,7 @@
 	<string name="reader_likes_multi">%,d osób lubi to</string>
 	<string name="select_time">Wybierz czas</string>
 	<string name="reader_likes_you_and_one">Ty i jedna inna osoba lubicie to</string>
+	<string name="reader_toast_err_get_post">Nie można pobrać tego wpisu</string>
 	<string name="select_date">Wybierz datę</string>
 	<string name="pick_photo">Wybierz zdjęcie</string>
 	<string name="account_two_step_auth_enabled">To konto ma włączoną dwustopniową weryfikację. Odwiedź ustawienia bezpieczeństwa na WordPress.com i wygeneruj hasło aplikacji.</string>

@@ -592,6 +592,7 @@
 	<string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>
 	<string name="pick_photo">تحديد صورة</string>
 	<string name="pick_video">تحديد فيديو</string>
+	<string name="reader_toast_err_get_post">غير قادر على استرجاع هذه المقالة</string>
 	<string name="validating_user_data">التحقق من صحة بيانات المستخدم</string>
 	<string name="validating_site_data">التحقق من صحة بيانات الموقع</string>
 	<string name="reader_empty_followed_blogs_description">ومع ذلك لا داعي للقلق، فما عليك سوى النقر على الأيقونة في أعلى اليمين لبدء الاستكشاف!</string>

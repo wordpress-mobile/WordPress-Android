@@ -589,6 +589,7 @@
 	<string name="pick_photo">Selecteer foto</string>
 	<string name="account_two_step_auth_enabled">Voor deze account is authenticatie in twee stappen actief. Bekijk je beveiligingsinstellingen op WordPress.com en genereer een applicatie-specifiek wachtwoord.</string>
 	<string name="pick_video">Selecteer video</string>
+	<string name="reader_toast_err_get_post">Niet in staat om dit bericht op te halen</string>
 	<string name="validating_user_data">Gebruikersgegevens valideren</string>
 	<string name="validating_site_data">Sitegegevens valideren</string>
 	<string name="select_time">Selecteer tijd</string>

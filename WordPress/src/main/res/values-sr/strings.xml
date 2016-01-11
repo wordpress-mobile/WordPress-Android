@@ -514,6 +514,7 @@
 	<string name="validating_user_data">Проверавам исправност корисничких података</string>
 	<string name="account_two_step_auth_enabled">Овај налог има омогућену потврду идентитета у два корака. Посетите своја подешавања сигурности на WordPress.com и направите посебну лозинку за ову апликацију.</string>
 	<string name="reader_likes_you_and_one">Вама и још некоме се ово свиђа</string>
+	<string name="reader_toast_err_get_post">Није могуће добавити овај чланак</string>
 	<string name="select_time">Одаберите време</string>
 	<string name="select_date">Одаберите датум</string>
 	<string name="pick_photo">Одаберите фотографију</string>

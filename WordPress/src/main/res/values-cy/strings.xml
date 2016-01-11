@@ -591,6 +591,7 @@
 	<string name="validating_site_data">Dilysu data gwefan</string>
 	<string name="validating_user_data">Dilysu data defnyddiwr</string>
 	<string name="pick_video">Dewiswch fideo</string>
+	<string name="reader_toast_err_get_post">Does dim modd adfer y cofnod hwn</string>
 	<string name="pick_photo">Dewis ffoto</string>
 	<string name="account_two_step_auth_enabled">Mae dilysu dau gam wedi ei alluogi ar gyfer y cyfrif hwn. Ewch i\'ch eich gosodiadau diogelwch ar WordPress.com a chrëwch gyfrinair rhaglen benodol.</string>
 	<string name="select_date">Dewis dyddiad</string>

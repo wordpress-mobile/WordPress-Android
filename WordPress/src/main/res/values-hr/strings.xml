@@ -592,6 +592,7 @@
 	<string name="pick_photo">Odaberi sliku</string>
 	<string name="select_time">Odaberi vrijeme</string>
 	<string name="pick_video">Odaberi video</string>
+	<string name="reader_toast_err_get_post">Nije moguće dohvatiti ovu objavu</string>
 	<string name="validating_user_data">Provjeravanje korisničkih podataka</string>
 	<string name="validating_site_data">Provjeravanje podataka web stranice</string>
 	<string name="reader_likes_you_and_one">Vama i još jednoj osobi ovo se sviđa</string>

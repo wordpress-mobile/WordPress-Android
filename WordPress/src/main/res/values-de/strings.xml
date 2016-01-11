@@ -593,6 +593,7 @@
 	<string name="pick_photo">Foto auswählen</string>
 	<string name="pick_video">Video auswählen</string>
 	<string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
+	<string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
 	<string name="account_two_step_auth_enabled">Dieses Konto hat Zwei-Schritt-Authentifizierung aktiviert. Besuche deine Sicherheitseinstellungen auf WordPress.com und generiere ein App-spezifisches Passwort.</string>
 	<string name="validating_site_data">Validiere Webseiten-Daten</string>
 	<string name="validating_user_data">Validiere Benutzer-Daten</string>
