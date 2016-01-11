@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Tento příspěvek již neexistuje</string>
+	<string name="reader_err_get_post_not_authorized">Nemáte oprávnění prozobrazení tohoto příspěvku</string>
+	<string name="reader_err_get_post_generic">Nelze načíst tento příspěvek</string>
+	<string name="blog_name_no_spaced_allowed">Adresa stránky nesmí obsahovat mezery</string>
+	<string name="invalid_username_no_spaces">Uživatelské jméno nemůže obsahovat mezery</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Stránky, které sledujete v poslední době neměly žádné příspěvky</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Žádné nedávné příspěvky</string>
+	<string name="media_details_copy_url_toast">URL adresa byla zkopírována do schránky</string>
+	<string name="edit_media">Upravit média</string>
+	<string name="media_details_copy_url">Kopírovat URL adresu</string>
+	<string name="media_details_label_date_uploaded">Nahráno</string>
+	<string name="media_details_label_date_added">Přidáno</string>
 	<string name="selected_theme">Vybrat šablonu</string>
 	<string name="could_not_load_theme">Šablonu nejde načíst</string>
 	<string name="theme_activation_error">Nastala neočekávaná chyba. Šablonu se nepodařilo aktivovat</string>
@@ -189,11 +201,7 @@
 	<string name="loading_images">Načítání obrázků</string>
 	<string name="loading_videos">Načítání videí</string>
 	<string name="no_media">Žádná média</string>
-	<string name="media_details_dimensions">Rozměry:</string>
-	<string name="media_details_file_type">Typ souboru:</string>
-	<string name="media_details_file_url">URL souboru:</string>
 	<string name="verify">Ověřit</string>
-	<string name="media_details_file_name">Název souboru:</string>
 	<string name="tab_title_site_images">Obrázky na webu</string>
 	<string name="tab_title_site_videos">Videa na webu</string>
 	<string name="tab_title_device_videos">Videa v zařízení</string>
@@ -212,9 +220,9 @@
 	<string name="two_step_sms_sent">Zkontrolujte si své SMSky pro ověřovací kód.</string>
 	<string name="sign_in_jetpack">Přihlašte se k účtu Wordpress.com pro připojení k Jetpacku.</string>
 	<string name="auth_required">Pro pokračování, se přihlašte ještě jednou.</string>
-	<string name="media_details_uploaded_on">Nahráno:</string>
-	<string name="media_details_added_on">Přidáno:</string>
 	<string name="two_step_footer_label">Zadejte kód z ověřovací aplikace</string>
+	<string name="media_details_label_file_type">Typ souboru</string>
+	<string name="media_details_label_file_name">Název souboru</string>
 	<string name="comments_fetching">Načítám komentáře...</string>
 	<string name="pages_fetching">Načítám stránky...</string>
 	<string name="toast_err_post_uploading">Při nahrávání nelze příspěvek otevřít</string>
@@ -682,7 +690,6 @@
 	<string name="passcode_turn_on">Zapnout zámek PIN</string>
 	<string name="media_add_popup_capture_video">Natočit video</string>
 	<string name="media_gallery_type_tiled">Dlaždice</string>
-	<string name="view_stats_full_site">Zobrazit plnohdnotnou stránku</string>
 	<string name="stats_view_visitors_and_views">Návštěvnící a zobrazení</string>
 	<string name="stats_entry_country">Země</string>
 	<string name="media_no_video_message">Získejte VideoPress aktualizaci pro nahrání videa!</string>
