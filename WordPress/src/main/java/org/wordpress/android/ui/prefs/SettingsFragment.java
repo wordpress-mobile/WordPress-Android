@@ -22,6 +22,7 @@ import android.widget.ListView;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 
@@ -31,7 +32,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
-public class SettingsFragment extends PreferenceFragment implements OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
@@ -39,6 +40,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private AlertDialog mDialog;
     private SharedPreferences mSettings;
     private Preference mUsernamePreference;
+    private SummaryEditTextPreference mEmailPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,9 +51,13 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
+        mEmailPreference = (SummaryEditTextPreference) findPreference(getString(R.string.pref_key_email));
         // AccountHelper.getDefaultAccount() will always return a valid Account even if the username is empty
-        mUsernamePreference.setSummary(AccountHelper.getDefaultAccount().getUserName());
+        Account account = AccountHelper.getDefaultAccount();
+        mUsernamePreference.setSummary(account.getUserName());
+        mEmailPreference.setSummary(account.getEmail());
 
+        mEmailPreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
@@ -93,6 +99,17 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         }
 
         return false;
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if (newValue == null) return false;
+
+        if (preference == mEmailPreference) {
+            mEmailPreference.setSummary(newValue.toString());
+        }
+
+        return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

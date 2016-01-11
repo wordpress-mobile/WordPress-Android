@@ -9,6 +9,10 @@
         android:title="@string/username"
         android:enabled="false"/>
 
+    <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+        android:key="@string/pref_key_email"
+        android:title="@string/email" />
+
     <PreferenceCategory
         android:key="@string/pref_key_passlock_section"
         android:persistent="false"
