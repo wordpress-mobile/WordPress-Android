@@ -894,7 +894,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private void resumeWebViewIfPaused() {
+    void resumeWebViewIfPaused() {
         if (mReaderWebView == null) {
             AppLog.w(T.READER, "reader post detail > attempt to resume null webView");
         } else if (mIsWebViewPaused) {

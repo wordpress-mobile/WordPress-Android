@@ -307,6 +307,23 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
     }
 
+    private Fragment getPagerFragmentAtPosition(int position) {
+        if (hasPagerAdapter()) {
+            return getPagerAdapter().getFragmentAtPosition(position);
+        } else {
+            return null;
+        }
+    }
+
+    private ReaderPostDetailFragment getDetailFragmentAtPosition(int position) {
+        Fragment fragment = getPagerFragmentAtPosition(position);
+        if (fragment instanceof ReaderPostDetailFragment) {
+            return (ReaderPostDetailFragment) fragment;
+        } else {
+            return null;
+        }
+    }
+
     /*
      * called when user scrolls towards the last posts - requests older posts with the
      * current tag or in the current blog
