@@ -110,6 +110,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 super.onPageSelected(position);
                 onShowHideToolbar(true);
                 trackPostAtPositionIfNeeded(position);
+                // resume webView paused below
+                ReaderPostDetailFragment fragment = getDetailFragmentAtPosition(position);
+                if (fragment != null) {
+                    fragment.resumeWebViewIfPaused();
+                }
             }
 
             @Override
