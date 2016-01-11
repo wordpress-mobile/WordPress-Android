@@ -38,7 +38,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -316,7 +316,7 @@ public class EditCommentActivity extends AppCompatActivity {
                     mCommentId), postHash};
 
             try {
-                Object result = client.call(ApiHelper.Methods.EDIT_COMMENT, xmlParams);
+                Object result = client.call(Method.EDIT_COMMENT, xmlParams);
                 boolean isSaved = (result != null && Boolean.parseBoolean(result.toString()));
                 if (isSaved) {
                     mComment.setAuthorEmail(authorEmail);

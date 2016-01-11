@@ -75,14 +75,13 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         //AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
 
-        final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
         final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-
         if (currentBlog == null) {
             AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
             return;
         }
 
+        final String blogId = currentBlog.getDotComBlogId();
         // Make sure the blogId is available.
         if (blogId == null) {
             AppLog.e(AppLog.T.STATS, "remote blogID is null: " + currentBlog.getHomeURL());
@@ -195,7 +194,7 @@ public abstract class StatsAbstractFragment extends Fragment {
             return false;
         }
 
-        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+        if (!isSameBlog(event)) {
             return false;
         }
 
@@ -204,6 +203,14 @@ public abstract class StatsAbstractFragment extends Fragment {
         }
 
         return true;
+    }
+
+    boolean isSameBlog(StatsEvents.SectionUpdatedAbstract event) {
+        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
+        if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
+            return event.mRequestBlogId.equals(currentBlog.getDotComBlogId());
+        }
+        return false;
     }
 
     protected void showErrorUI(VolleyError error) {

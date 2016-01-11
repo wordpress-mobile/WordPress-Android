@@ -16,4 +16,9 @@
 
     <integer name="fab_animation_delay">300</integer>
 
+    <!-- Site Settings -->
+    <integer name="max_links_limit">100</integer>
+    <integer name="paging_limit">300</integer>
+    <integer name="close_after_limit">365</integer>
+
 </resources>
