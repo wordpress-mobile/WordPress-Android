@@ -340,6 +340,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
             return true;
+        } else if (preference == mStartOverPref) {
+            showStartOverDialog();
+            return true;
         } else if (preference == mDeleteSitePref) {
             removeBlogWithConfirmation();
             return true;
@@ -819,6 +822,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mWhitelistPref,
                 String.valueOf(val),
                 getWhitelistSummary(val));
+    }
+
+    private void showStartOverDialog() {
+        Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        View view = View.inflate(themer, R.layout.start_over_view, null);
+        dialog.setContentView(view);
+        dialog.show();
+        WPActivityUtils.addToolbarToDialog(this, dialog, getString(R.string.start_over));
     }
 
     private void showListEditorDialog(int titleRes, int footerRes) {
