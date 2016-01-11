@@ -32,6 +32,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A full-screen DialogFragment with image settings.
@@ -58,6 +59,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private CheckBox mFeaturedCheckBox;
 
     private boolean mIsFeatured;
+
+    private Map<String, String> mHttpHeaders;
 
     private CharSequence mPreviousActionBarTitle;
     private boolean mPreviousHomeAsUpEnabled;
@@ -145,6 +148,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             try {
                 mImageMeta = new JSONObject(bundle.getString("imageMeta"));
 
+                mHttpHeaders = (Map) bundle.getSerializable("headerMap");
+
                 final String imageSrc = mImageMeta.getString("src");
                 final String imageFilename = imageSrc.substring(imageSrc.lastIndexOf("/") + 1);
 
@@ -175,7 +180,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                     mIsFeatured = bundle.getBoolean("isFeatured", false);
                     mFeaturedCheckBox.setChecked(mIsFeatured);
                 }
-
             } catch (JSONException e1) {
                 AppLog.d(AppLog.T.EDITOR, "Missing JSON properties");
             }
@@ -318,7 +322,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             @Override
             public void run() {
                 if (isAdded()) {
-                    final Uri localUri = Utils.downloadExternalMedia(getActivity(), Uri.parse(src));
+                    final Uri localUri = Utils.downloadExternalMedia(getActivity(), Uri.parse(src), mHttpHeaders);
 
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(new Runnable() {

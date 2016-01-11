@@ -53,6 +53,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListene
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
@@ -85,6 +86,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -853,6 +855,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
+
+                        // Set up custom headers for the visual editor's internal WebView
+                        mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
                     }
                     break;
                 case 1:
@@ -1923,6 +1928,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onFeaturedImageChanged(int mediaId) {
         mPost.setFeaturedImageId(mediaId);
         mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        String authHeader = "";
+        Blog currentBlog = WordPress.getCurrentBlog();
+        String token = AccountHelper.getDefaultAccount().getAccessToken();
+
+        if (currentBlog != null && currentBlog.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url) &&
+                !TextUtils.isEmpty(token)) {
+            authHeader = "Bearer " + token;
+        }
+        return authHeader;
     }
 
     @Override
