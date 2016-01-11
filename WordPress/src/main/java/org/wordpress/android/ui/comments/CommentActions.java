@@ -357,48 +357,25 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
-
-                Map<String, String> postHash = new HashMap<String, String>();
-                postHash.put("status", CommentStatus.toString(newStatus));
-                postHash.put("content", comment.getCommentText());
-                postHash.put("author", comment.getAuthorName());
-                postHash.put("author_url", comment.getAuthorUrl());
-                postHash.put("author_email", comment.getAuthorEmail());
-
-                Object[] params = { blog.getRemoteBlogId(),
-                        blog.getUsername(),
-                        blog.getPassword(),
-                        Long.toString(comment.commentID),
-                        postHash};
-
-                Object result;
-                try {
-                    result = client.call(Method.EDIT_COMMENT, params);
-                } catch (XMLRPCException e) {
-                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    result = null;
-                } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    result = null;
-                } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    result = null;
-                }
-
-                final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                if (success)
-                    CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, CommentStatus.toString(newStatus));
-
-                if (actionListener != null) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            actionListener.onActionResult(success);
+                CommentActions.moderateCommentRestApi(blog.getRemoteBlogId(), comment.commentID, newStatus, new
+                        CommentActions.CommentActionListener() {
+                    @Override
+                    public void onActionResult(final boolean succeeded) {
+                        if (succeeded) {
+                            CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID,
+                                    CommentStatus.toString(newStatus));
                         }
-                    });
-                }
+
+                        if (actionListener != null) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    actionListener.onActionResult(succeeded);
+                                }
+                            });
+                        }
+                    }
+                });
             }
         }.start();
     }
