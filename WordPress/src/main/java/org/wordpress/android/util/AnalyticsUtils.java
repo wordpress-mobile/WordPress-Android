@@ -109,7 +109,7 @@ public class AnalyticsUtils {
             return;
         }
 
-        String blogID = StatsUtils.getBlogId(blog);
+        String blogID = blog.getDotComBlogId();
         if (blogID != null) {
             if (properties == null) {
                 properties = new HashMap<>();

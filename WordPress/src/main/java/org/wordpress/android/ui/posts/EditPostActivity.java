@@ -370,7 +370,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mTags != null) {
             mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
-            remoteBlogId = WordPress.getCurrentRemoteBlogId();
+            remoteBlogId = -1;
+            String blogID = WordPress.getCurrentRemoteBlogId();
+            if (blogID != null) {
+                try {
+                    remoteBlogId = Integer.parseInt(blogID);
+                } catch (NumberFormatException e) {
+                    AppLog.e(T.EDITOR, "The remote blog ID can't be parsed as Integer: " + remoteBlogId);
+                }
+            }
+
             mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
             mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
             if (mTagSuggestionAdapter != null) {

@@ -13,7 +13,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.WPPrefUtils;
-import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
+import org.xmlrpc.android.ApiHelper.Param;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -738,7 +739,7 @@ public abstract class SiteSettingsInterface {
         if (client == null) return;
 
         Map<String, String> args = new HashMap<>();
-        args.put(ApiHelper.Params.SHOW_SUPPORTED_POST_FORMATS, "true");
+        args.put(Param.SHOW_SUPPORTED_POST_FORMATS, "true");
         Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
                 mBlog.getPassword(), args};
         client.callAsync(new XMLRPCCallback() {
@@ -777,7 +778,7 @@ public abstract class SiteSettingsInterface {
             @Override
             public void onFailure(long id, Exception error) {
             }
-        }, ApiHelper.Methods.GET_POST_FORMATS, params);
+        }, Method.GET_POST_FORMATS, params);
     }
 
     /**

@@ -428,13 +428,13 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Editor - Toggled New Editor Off");
                 instructions.setPeoplePropertyToValue("enabled_new_editor", true);
                 break;
-            case EDITOR_UPDLOAD_MEDIA_FAILED:
+            case EDITOR_UPLOAD_MEDIA_FAILED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Upload Media Failed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_upload_media_failed");
                 instructions.setCurrentDateForPeopleProperty("last_time_editor_upload_media_failed");
                 break;
-            case EDITOR_UPDLOAD_MEDIA_RETRIED:
+            case EDITOR_UPLOAD_MEDIA_RETRIED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Retried Uploading Media");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_retried_uploading_media");
@@ -1004,4 +1004,3 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         editor.apply();
     }
 }
-

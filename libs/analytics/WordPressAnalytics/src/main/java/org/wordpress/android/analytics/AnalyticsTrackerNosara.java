@@ -135,10 +135,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TOGGLED_ON:
                 eventName = "editor_toggled_on";
                 break;
-            case EDITOR_UPDLOAD_MEDIA_FAILED:
+            case EDITOR_UPLOAD_MEDIA_FAILED:
                 eventName = "editor_upload_media_failed";
                 break;
-            case EDITOR_UPDLOAD_MEDIA_RETRIED:
+            case EDITOR_UPLOAD_MEDIA_RETRIED:
                 eventName = "editor_upload_media_retried";
                 break;
             case EDITOR_CLOSED:
