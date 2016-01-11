@@ -1511,5 +1511,7 @@
     <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
     <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
+    <string name="start_over">Start Over</string>
+    <string name="site_settings_start_over_hint">Start your site over</string>
 
 </resources>

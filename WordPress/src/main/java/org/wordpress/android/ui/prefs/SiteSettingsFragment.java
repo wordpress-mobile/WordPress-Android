@@ -159,7 +159,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mImageWidthPref;
     private WPSwitchPreference mUploadAndLinkPref;
 
-    // Delete site option (NOTE: only for WP.org)
+    // Advanced settings
+    private Preference mStartOverPref;
     private Preference mDeleteSitePref;
 
     @Override
@@ -559,6 +560,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
         mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
         mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
+        mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
