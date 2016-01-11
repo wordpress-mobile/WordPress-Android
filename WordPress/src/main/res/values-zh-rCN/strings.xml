@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">此文章不再存在</string>
+	<string name="reader_err_get_post_not_authorized">您不具备查看此文章的权限</string>
+	<string name="reader_err_get_post_generic">无法检索这篇文章</string>
+	<string name="blog_name_no_spaced_allowed">站点地址中不能包含空格</string>
+	<string name="invalid_username_no_spaces">用户名中不能包含空格</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">您关注的站点近期未发布任何内容</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">无近期文章</string>
+	<string name="media_details_copy_url_toast">已将 URL 复制到剪贴板</string>
+	<string name="edit_media">编辑媒体</string>
+	<string name="media_details_copy_url">复制 URL</string>
+	<string name="media_details_label_date_uploaded">已上传</string>
+	<string name="media_details_label_date_added">已添加</string>
 	<string name="selected_theme">选择的主题</string>
 	<string name="could_not_load_theme">无法加载主题</string>
 	<string name="theme_activation_error">出现错误。无法激活主题</string>
@@ -199,12 +211,6 @@
 	<string name="tab_title_device_videos">设备视频</string>
 	<string name="tab_title_site_images">站点图片</string>
 	<string name="tab_title_site_videos">站点视频</string>
-	<string name="media_details_added_on">添加时间：</string>
-	<string name="media_details_uploaded_on">上传时间：</string>
-	<string name="media_details_file_name">文件名：</string>
-	<string name="media_details_file_type">文件类型：</string>
-	<string name="media_details_file_url">文件 URL：</string>
-	<string name="media_details_dimensions">尺寸：</string>
 	<string name="error_publish_no_network">未连接网络时无法发布。保存为草稿。</string>
 	<string name="editor_toast_invalid_path">文件路径无效</string>
 	<string name="verification_code">验证码</string>
@@ -586,7 +592,6 @@
 	<string name="pick_photo">选择图片</string>
 	<string name="account_two_step_auth_enabled">此帐户已启用两步认证。访问您WordPress.com上的安全设置生成一个特定的密码。</string>
 	<string name="pick_video">选择视频</string>
-	<string name="reader_toast_err_get_post">无法检索这篇文章</string>
 	<string name="validating_user_data">验证用户数据</string>
 	<string name="validating_site_data">验证站点数据</string>
 	<string name="reader_empty_followed_blogs_description">别担心，只需轻点右上角的图标即可开始浏览！</string>
@@ -676,7 +681,6 @@
 	<string name="media_gallery_type_slideshow">幻灯片</string>
 	<string name="media_no_video_title">VideoPress不可用</string>
 	<string name="media_no_video_message">得到videopress升级来上传视频！</string>
-	<string name="view_stats_full_site">查看完整统计</string>
 	<string name="stats_entry_referrers">推荐人</string>
 	<string name="stats_totals_views">浏览次数</string>
 	<string name="stats_totals_clicks">点击数</string>

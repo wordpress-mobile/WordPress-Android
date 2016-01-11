@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Bu yazı artık mevcut değil</string>
+	<string name="reader_err_get_post_not_authorized">Bu yazıyı görüntülemeye yetkili değilsiniz</string>
+	<string name="reader_err_get_post_generic">Bu yazı getirilemiyor</string>
+	<string name="blog_name_no_spaced_allowed">Site adresi boşluk karakteri içeremez</string>
+	<string name="invalid_username_no_spaces">Kullanıcı adı boşluk karakteri içeremez</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Takip ettiğiniz siteler yakın tarihte herhangi bir gönderi yapmadı</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Yeni yazı yok</string>
+	<string name="media_details_copy_url_toast">Adres panoya kopyalandı</string>
+	<string name="edit_media">Ortamı düzenle</string>
+	<string name="media_details_copy_url">Adresi kopyala</string>
+	<string name="media_details_label_date_uploaded">Yüklendi</string>
+	<string name="media_details_label_date_added">Eklendi</string>
 	<string name="selected_theme">Seçili tema</string>
 	<string name="could_not_load_theme">Tema yüklenemiyor</string>
 	<string name="theme_activation_error">Bir şeyler ters gitti. Tema etkinleştirilemiyor</string>
@@ -198,12 +210,6 @@
 	<string name="invalid_verification_code">Geçersiz doğrulama kodu</string>
 	<string name="verification_code">Doğrulama kodu</string>
 	<string name="editor_toast_invalid_path">Geçersiz dosya yolu</string>
-	<string name="media_details_dimensions">Boyutlar:</string>
-	<string name="media_details_file_url">Dosya adresi:</string>
-	<string name="media_details_file_type">Dosya tipi:</string>
-	<string name="media_details_file_name">Dosya adı:</string>
-	<string name="media_details_uploaded_on">Yüklenme tarihi:</string>
-	<string name="media_details_added_on">Eklenme tarihi:</string>
 	<string name="tab_title_site_images">Sitedeki görseller</string>
 	<string name="tab_title_site_videos">Sitedeki videolar</string>
 	<string name="tab_title_device_videos">Cihazdaki videolar</string>
@@ -215,6 +221,8 @@
 	<string name="language">Dil</string>
 	<string name="device">Cihaz</string>
 	<string name="error_publish_no_network">Bağlantı yokken yayımlanamıyor. Taslak olarak kaydedildi.</string>
+	<string name="media_details_label_file_type">Dosya tipi</string>
+	<string name="media_details_label_file_name">Dosya adı</string>
 	<string name="stats_empty_search_terms">Hiç arama terimi kaydedilmedi</string>
 	<string name="stats_entry_search_terms">Arama Terimi</string>
 	<string name="stats_view_authors">Yazarlar</string>
@@ -588,7 +596,6 @@
 	<string name="validating_user_data">Kullanıcı verisi doğrulanıyor</string>
 	<string name="validating_site_data">Site verisi doğrulanıyor</string>
 	<string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
-	<string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>
 	<string name="reader_empty_followed_blogs_description">Kaygılanmayın, keşfetmeye başlamak için sağ üstteki simgeye dokunmanız yeterli!</string>
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com\'a giriş yap</string>
 	<string name="nux_tap_continue">Devam</string>
@@ -646,7 +653,6 @@
 	<string name="post_excerpt">Özet</string>
 	<string name="share_action">Paylaş</string>
 	<string name="stats">İstatistikler</string>
-	<string name="view_stats_full_site">Tüm siteyi görüntüle</string>
 	<string name="stats_view_clicks">Tıklamalar</string>
 	<string name="stats_view_comments">Yorumlar</string>
 	<string name="stats_timeframe_today">Bugün</string>

@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">ไม่มีเรื่องนี้อยู่อีกแล้ว</string>
+	<string name="reader_err_get_post_not_authorized">คุณไม่มีสิทธิที่จะดูเรื่องนี้</string>
+	<string name="reader_err_get_post_generic">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
+	<string name="blog_name_no_spaced_allowed">ที่อยู่เว็บไม่สามารถมีที่ว่างได้</string>
+	<string name="invalid_username_no_spaces">ชื่อผู้ใช้ไม่สามารถมีที่ว่างได้</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">เว็บที่คุณติดตามยังไม่มีเรื่องใหม่เมื่อเร็ว ๆ มานี้</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">ไม่มีเรื่องใหม่</string>
+	<string name="media_details_copy_url_toast">คัดลอก URL ไปยังคลิปบอร์ด</string>
+	<string name="edit_media">แก้ไขไฟล์สื่อ</string>
+	<string name="media_details_copy_url">คัดลอก URL</string>
+	<string name="media_details_label_date_uploaded">อัปโหลดแล้ว</string>
+	<string name="media_details_label_date_added">เพิ่มแล้ว</string>
 	<string name="selected_theme">ธีมที่เลือก</string>
 	<string name="could_not_load_theme">ไม่สามารถโหลดธีม</string>
 	<string name="theme_activation_error">มีบางสิ่งผิดปกติ  ไม่สามารถเปิดใช้ธีม</string>
@@ -193,12 +205,6 @@
 	<string name="verification_code">โค้ดยืนยัน</string>
 	<string name="editor_toast_invalid_path">ที่อยู่ไฟล์ไม่ถูกต้อง</string>
 	<string name="error_publish_no_network">ไม่สามารถเผยแพร่ในขณะที่ไม่มีการเชื่อมต่อ  บันทึกเป็นฉบับร่าง</string>
-	<string name="media_details_dimensions">ขนาดมิติ:</string>
-	<string name="media_details_file_url">URL ไฟล์:</string>
-	<string name="media_details_file_type">ประเภทไฟล์:</string>
-	<string name="media_details_file_name">ชื่อไฟล์:</string>
-	<string name="media_details_uploaded_on">อัปโหลดแล้วบน:</string>
-	<string name="media_details_added_on">เพิ่มแล้วบน:</string>
 	<string name="two_step_footer_label">ใส่โค้ดจากแอพยืนยันตัวตนของคุณ</string>
 	<string name="verify">ยืนยัน</string>
 	<string name="auth_required">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
@@ -215,6 +221,8 @@
 	<string name="add_to_post">เพิ่มไปยังเรื่อง</string>
 	<string name="device">อุปกรณ์</string>
 	<string name="language">ภาษา</string>
+	<string name="media_details_label_file_type">ประเภทไฟล์</string>
+	<string name="media_details_label_file_name">ชื่อไฟล์</string>
 	<string name="stats_empty_search_terms_desc">เรียนรู้เพิ่มเติมเกี่ยวกับการหาคนเข้าเว็บของคุณโดยดูที่เงื่อนไขที่ผู้เยี่ยมชมค้นหาสำหรับเว็บไซต์ของคุณ</string>
 	<string name="stats_followers_total_wpcom_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตาม WordPress.com</string>
 	<string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ...</string>
@@ -582,7 +590,6 @@
 	<string name="download">กำลังดาวน์โหลดไฟล์สื่อ</string>
 	<string name="pick_photo">เลือกรูปภาพ</string>
 	<string name="pick_video">เลือกวีดีโอ</string>
-	<string name="reader_toast_err_get_post">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
 	<string name="select_time">เลือกเวลา</string>
 	<string name="reader_likes_you_and_one">คุณและอีกหนึ่งคนชอบสิ่งนี้</string>
 	<string name="select_date">เลือกวันที่</string>
@@ -648,7 +655,6 @@
 	<string name="share_action_title">เพิ่มไปที่...</string>
 	<string name="share_action">แบ่งปัน</string>
 	<string name="stats">สถิติ</string>
-	<string name="view_stats_full_site">ดูทั้งเว็บ</string>
 	<string name="stats_view_visitors_and_views">ผู้เยี่ยมชมและการดู</string>
 	<string name="stats_view_clicks">การกด</string>
 	<string name="stats_view_tags_and_categories">ป้ายกำกับและหมวดหมู่</string>

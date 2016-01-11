@@ -197,9 +197,6 @@
 	<string name="verification_code">Código de verificação</string>
 	<string name="editor_toast_invalid_path">Caminho do arquivo inválido</string>
 	<string name="error_publish_no_network">Não é possível publicar enquanto não houver conexão. Salvo como rascunho.</string>
-	<string name="media_details_dimensions">Dimensões:</string>
-	<string name="media_details_file_name">Nome do arquivo:</string>
-	<string name="media_details_uploaded_on">Upload realizado em:</string>
 	<string name="tab_title_device_videos">Vídeos do dispositivo</string>
 	<string name="tab_title_device_images">Imagens do dispositivo</string>
 	<string name="take_video">Gravar um vídeo</string>
@@ -209,9 +206,6 @@
 	<string name="device">Dispositivo</string>
 	<string name="two_step_sms_sent">Verifique suas mensagens de texto para o código de verificação.</string>
 	<string name="invalid_verification_code">Código de verificação inválido</string>
-	<string name="media_details_file_url">URL do arquivo:</string>
-	<string name="media_details_file_type">Tipo de arquivo:</string>
-	<string name="media_details_added_on">Adicionado em:</string>
 	<string name="tab_title_site_videos">Vídeos do site</string>
 	<string name="tab_title_site_images">Imagens do site</string>
 	<string name="media_picker_title">Selecionar mídia</string>
@@ -586,7 +580,6 @@
 	<string name="pick_photo">Selecione a foto</string>
 	<string name="account_two_step_auth_enabled">Essa conta possui a autenticação em duas etapas ativada. Visite suas configurações de segurança no WordPress.com e gere uma senha específica para aplicativos.</string>
 	<string name="pick_video">Selecionar vídeo</string>
-	<string name="reader_toast_err_get_post">Não foi possível recuperar esse post</string>
 	<string name="validating_user_data">Validando dados de usuário</string>
 	<string name="validating_site_data">Validando dados do site</string>
 	<string name="reader_empty_followed_blogs_description">Não se preocupe! Toque no ícone na parte superior direita para começar a explorar!</string>
@@ -667,7 +660,6 @@
 	<string name="post_excerpt">Resumo</string>
 	<string name="share_action">Compartilhar</string>
 	<string name="stats">Status</string>
-	<string name="view_stats_full_site">Ver site completo</string>
 	<string name="theme_activate_button">Ativado</string>
 	<string name="theme_activating_button">Ativando</string>
 	<string name="themes_features_label">Recursos</string>

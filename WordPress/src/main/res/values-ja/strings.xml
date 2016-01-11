@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">この投稿は存在しません</string>
+	<string name="reader_err_get_post_not_authorized">この投稿を表示する権限がありません</string>
+	<string name="reader_err_get_post_generic">この投稿を取得できません</string>
+	<string name="blog_name_no_spaced_allowed">サイトのアドレスにスペースを含めることはできません</string>
+	<string name="invalid_username_no_spaces">ユーザー名にスペースを含めることはできません</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">フォローしているサイトには、最近の投稿はありません</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">最近の投稿はありません</string>
+	<string name="media_details_copy_url_toast">URL がクリップボードにコピーされました</string>
+	<string name="edit_media">メディアを編集</string>
+	<string name="media_details_copy_url">URL をコピー</string>
+	<string name="media_details_label_date_uploaded">アップロード済み</string>
+	<string name="media_details_label_date_added">追加済み</string>
 	<string name="selected_theme">選択済みテーマ</string>
 	<string name="could_not_load_theme">テーマを読み込めませんでした</string>
 	<string name="theme_activation_error">エラーが発生しました。テーマを有効化できませんでした。</string>
@@ -199,15 +211,9 @@
 	<string name="verification_code">認証コード</string>
 	<string name="editor_toast_invalid_path">無効なファイルパス</string>
 	<string name="error_publish_no_network">接続がないため公開できません。下書きとして保存します。</string>
-	<string name="media_details_dimensions">寸法:</string>
 	<string name="device">端末</string>
 	<string name="tab_title_site_images">サイトの画像</string>
 	<string name="tab_title_site_videos">サイトの動画</string>
-	<string name="media_details_added_on">追加日:</string>
-	<string name="media_details_uploaded_on">アップロード日:</string>
-	<string name="media_details_file_name">ファイル名:</string>
-	<string name="media_details_file_type">ファイル形式:</string>
-	<string name="media_details_file_url">ファイル URL:</string>
 	<string name="tab_title_device_images">端末の画像</string>
 	<string name="tab_title_device_videos">端末の動画</string>
 	<string name="take_video">動画を撮る</string>
@@ -215,6 +221,8 @@
 	<string name="media_picker_title">メディアを選択</string>
 	<string name="add_to_post">投稿に追加</string>
 	<string name="language">言語</string>
+	<string name="media_details_label_file_name">ファイル名</string>
+	<string name="media_details_label_file_type">ファイル形式</string>
 	<string name="stats_empty_search_terms_desc">訪問者があなたのサイトを見つけるために検索したキーワードを見て、検索トラフィックについてより詳しく知りましょう。</string>
 	<string name="toast_err_post_uploading">アップロード中は投稿を開けません</string>
 	<string name="stats_view_authors">投稿者</string>
@@ -586,7 +594,6 @@
 	<string name="select_time">時間を選択</string>
 	<string name="validating_site_data">サイトのデータをチェックしています</string>
 	<string name="validating_user_data">ユーザーのデータをチェックしています</string>
-	<string name="reader_toast_err_get_post">この投稿を読み込みできません</string>
 	<string name="reader_likes_you_and_one">あなたと他1人が「いいね」をつけました</string>
 	<string name="account_two_step_auth_enabled">このアカウントでは2段階認証が有効化されています。WordPress.com のセキュリティ設定ページでアプリケーション用パスワードを生成してください。</string>
 	<string name="reader_empty_followed_blogs_description">右上のタグアイコンをタップし、お気に入りを発見してみてください。</string>
@@ -664,7 +671,6 @@
 	<string name="media_edit_success">更新しました</string>
 	<string name="themes_details_label">詳細</string>
 	<string name="themes_features_label">機能</string>
-	<string name="view_stats_full_site">フルサイズ表示</string>
 	<string name="stats_view_referrers">リファラ</string>
 	<string name="stats_view_comments">コメント</string>
 	<string name="media_edit_failure">更新に失敗しました</string>

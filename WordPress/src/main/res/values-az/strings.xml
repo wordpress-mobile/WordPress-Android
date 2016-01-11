@@ -112,12 +112,6 @@
 	<string name="tab_title_device_videos">Cihaz Videoları</string>
 	<string name="tab_title_site_images">Sayt Təsvirləri</string>
 	<string name="tab_title_site_videos">Sayt Videoları</string>
-	<string name="media_details_added_on">Əlavə edilmə tarixi:</string>
-	<string name="media_details_uploaded_on">Yüklənmə tarixi:</string>
-	<string name="media_details_file_name">Fayl adı:</string>
-	<string name="media_details_file_type">Fayl növü:</string>
-	<string name="media_details_file_url">Fayl URL:</string>
-	<string name="media_details_dimensions">Ölçülər:</string>
 	<string name="error_publish_no_network">Qoşulma olmadığında dərc edilə bilmir. Qaralama olaraq qeyd edildi.</string>
 	<string name="editor_toast_invalid_path">Keçərsiz fayl yolu.</string>
 	<string name="verification_code">Təsdiqləmə kodu</string>
@@ -494,7 +488,6 @@
 	<string name="select_date">Tarix seç</string>
 	<string name="pick_photo">Foto seç</string>
 	<string name="pick_video">Video seç</string>
-	<string name="reader_toast_err_get_post">Bu yazını almaq mümkün deyil</string>
 	<string name="validating_user_data">İstifadəçi məlumatları təsdiqlənir</string>
 	<string name="validating_site_data">Sayt məlumatları təsdiqlənir</string>
 	<string name="reader_likes_you_and_one">Siz və bir diğəri bunu bəyənir</string>
@@ -563,7 +556,6 @@
 	<string name="media_edit_description_hint">Buraya bir açıqlama daxil edin</string>
 	<string name="post_excerpt">Çıxarış</string>
 	<string name="stats">Statistikalar</string>
-	<string name="view_stats_full_site">Saytı bütöv olaraq ziyarət et</string>
 	<string name="stats_view_visitors_and_views">Qonaqlar və Baxışlar</string>
 	<string name="stats_view_clicks">Tıklamalar</string>
 	<string name="unattached">Bərkidilməmiş</string>

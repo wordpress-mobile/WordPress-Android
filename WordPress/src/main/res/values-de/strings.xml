@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Dieser Beitrag ist nicht mehr vorhanden</string>
+	<string name="reader_err_get_post_not_authorized">Du hast nicht die erforderlichen Rechte diesen Beitrag anzusehen</string>
+	<string name="reader_err_get_post_generic">Konnte den Beitrag nicht empfangen</string>
+	<string name="blog_name_no_spaced_allowed">Website-Adresse darf keine Leerzeichen enthalten</string>
+	<string name="invalid_username_no_spaces">Benutzername darf keine Leerzeichen enthalten</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Die Websites, denen du folgst, haben keine aktuellen Beiträge veröffentlicht</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Keine aktuellen Beiträge</string>
+	<string name="edit_media">Medien bearbeiten</string>
+	<string name="media_details_copy_url_toast">URL in Zwischenablage kopiert</string>
+	<string name="media_details_copy_url">Kopiere URL</string>
+	<string name="media_details_label_date_uploaded">Hochgeladen</string>
+	<string name="media_details_label_date_added">Hinzugefügt</string>
 	<string name="selected_theme">Gewähltes Theme</string>
 	<string name="could_not_load_theme">Konnte Theme nicht laden</string>
 	<string name="theme_activation_error">Etwas ist schief gelaufen. Konnte Theme nicht aktivieren</string>
@@ -189,7 +201,6 @@
 	<string name="loading_images">Lade Bilder</string>
 	<string name="no_media">Keine Medien</string>
 	<string name="loading_videos">Lade Videos</string>
-	<string name="media_details_dimensions">Maße:</string>
 	<string name="two_step_sms_sent">Der Überprüfungscode kommt per Textnachricht.</string>
 	<string name="two_step_footer_label">Gib den Code aus der Authenticator-App ein.</string>
 	<string name="error_publish_no_network">Kann ohne Verbindung nicht veröffentlichen. Als Entwurf gespeichert.</string>
@@ -200,10 +211,6 @@
 	<string name="verify">Überprüfen</string>
 	<string name="verification_code">Überprüfungscode</string>
 	<string name="editor_toast_invalid_path">Ungültiger Dateipfad</string>
-	<string name="media_details_file_type">Dateityp:</string>
-	<string name="media_details_file_name">Dateiname:</string>
-	<string name="media_details_uploaded_on">Hochgeladen am:</string>
-	<string name="media_details_added_on">Hinzugefügt am:</string>
 	<string name="tab_title_site_videos">Website-Videos</string>
 	<string name="tab_title_device_videos">Videos vom Gerät</string>
 	<string name="tab_title_site_images">Website-Bilder</string>
@@ -213,8 +220,9 @@
 	<string name="media_picker_title">Medien auswählen</string>
 	<string name="add_to_post">Zum Beitrag hinzufügen</string>
 	<string name="language">Sprache</string>
-	<string name="media_details_file_url">Datei-URL:</string>
 	<string name="device">Gerät</string>
+	<string name="media_details_label_file_type">Dateityp</string>
+	<string name="media_details_label_file_name">Dateiname</string>
 	<string name="media_fetching">Medien werden abgerufen…</string>
 	<string name="pages_fetching">Seiten werden abgerufen…</string>
 	<string name="toast_err_post_uploading">Der Beitrag kann während dem Hochladen nicht geöffnet werden.</string>
@@ -585,7 +593,6 @@
 	<string name="pick_photo">Foto auswählen</string>
 	<string name="pick_video">Video auswählen</string>
 	<string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
-	<string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
 	<string name="account_two_step_auth_enabled">Dieses Konto hat Zwei-Schritt-Authentifizierung aktiviert. Besuche deine Sicherheitseinstellungen auf WordPress.com und generiere ein App-spezifisches Passwort.</string>
 	<string name="validating_site_data">Validiere Webseiten-Daten</string>
 	<string name="validating_user_data">Validiere Benutzer-Daten</string>
@@ -678,7 +685,6 @@
 	<string name="media_no_video_message">Hol dir das VideoPress Upgrade, um Videos hochzuladen!</string>
 	<string name="theme_set_success">Theme erfolgreich festgelegt!</string>
 	<string name="theme_auth_error_title">Abruf der Themes fehlgeschlagen</string>
-	<string name="view_stats_full_site">Ganze Seite ansehen</string>
 	<string name="stats_view_visitors_and_views">Besucher und Aufrufe</string>
 	<string name="stats_totals_views">Aufrufe</string>
 	<string name="stats_totals_plays">Abgespielt</string>

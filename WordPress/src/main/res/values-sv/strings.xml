@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Detta inlägg finns inte längre</string>
+	<string name="reader_err_get_post_not_authorized">Du har inte behörighet att se detta inlägg</string>
+	<string name="reader_err_get_post_generic">Kunde inte hämta detta inlägg</string>
+	<string name="blog_name_no_spaced_allowed">En webbadress kan inte innehålla mellanslag</string>
+	<string name="invalid_username_no_spaces">Ett användarnamn kan inte innehålla mellanslag</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">De webbplatser du följer har inte publicerat något nyligen</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Inga nya inlägg</string>
+	<string name="media_details_copy_url_toast">URL kopierad till urklipp</string>
+	<string name="edit_media">Redigera media</string>
+	<string name="media_details_copy_url">Kopiera URL</string>
+	<string name="media_details_label_date_uploaded">Uppladdad</string>
+	<string name="media_details_label_date_added">Lade till</string>
 	<string name="selected_theme">Valt tema</string>
 	<string name="could_not_load_theme">Kunde inte ladda tema</string>
 	<string name="theme_activation_error">Något gick fel. Kunde inte aktivera tema</string>
@@ -199,13 +211,7 @@
 	<string name="verify">Verifiera</string>
 	<string name="editor_toast_invalid_path">Ogiltig sökväg till fil</string>
 	<string name="error_publish_no_network">Kunde inte publicera eftersom det into fanns någon nätanslutning. Sparat som utkast.</string>
-	<string name="media_details_dimensions">Storlek:</string>
-	<string name="media_details_file_url">Filens URL:</string>
-	<string name="media_details_file_type">Filtyp:</string>
 	<string name="tab_title_site_videos">Videoklipp på webbplats</string>
-	<string name="media_details_added_on">Tillagd:</string>
-	<string name="media_details_uploaded_on">Uppladdad:</string>
-	<string name="media_details_file_name">Filnamn:</string>
 	<string name="tab_title_site_images">Bilder på webbplats</string>
 	<string name="tab_title_device_videos">Videoklipp på enhet</string>
 	<string name="tab_title_device_images">Bilder på enhet</string>
@@ -586,7 +592,6 @@
 	<string name="select_date">Välj datum</string>
 	<string name="reader_likes_you_and_one">Du och en annan gillar detta</string>
 	<string name="account_two_step_auth_enabled">Detta konto har två-stegsautentisering påslaget. Gå till dina säkerhetsinställningar på WordPress.com och skapa ett unikt lösenord för appen.</string>
-	<string name="reader_toast_err_get_post">Kunde inte hämta detta inlägg</string>
 	<string name="validating_user_data">Validerar användarinformation</string>
 	<string name="validating_site_data">Validerar webbplats</string>
 	<string name="reader_empty_followed_blogs_description">Inget att oroa sig för, peka på ikonen uppe till höger för att börja utforska!</string>
@@ -659,7 +664,6 @@
 	<string name="share_action_title">Lägg till...</string>
 	<string name="share_action">Dela</string>
 	<string name="stats">Statistik</string>
-	<string name="view_stats_full_site">Visa hela webbplatsen</string>
 	<string name="stats_view_visitors_and_views">Besökare och visningar</string>
 	<string name="stats_view_clicks">Klick</string>
 	<string name="stats_view_tags_and_categories">Etiketter och kategorier</string>

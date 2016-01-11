@@ -39,6 +39,7 @@
 	<string name="app_notifications">एप्लिकेशन अधिसूची</string>
 	<string name="notifications_other">अन्य</string>
 	<string name="notifications_account_emails">Wordpress.com की ओर से ईमेल</string>
+	<string name="your_sites">आपकी साइटे</string>
 	<string name="button_revert">उलट दें</string>
 	<string name="days_ago">%d दिन पहले</string>
 	<string name="yesterday">कल</string>
@@ -90,7 +91,6 @@
 	<string name="device">यंत्र</string>
 	<string name="language">भाषा</string>
 	<string name="add_to_post">पोस्ट में जोड़ें</string>
-	<string name="media_details_file_url">फाइल यूआरएल:</string>
 	<string name="pages_fetching">पृष्ठ ला रहे है...</string>
 	<string name="publisher">प्रकाशक:</string>
 	<string name="stats_view_authors">लेखक</string>
@@ -112,6 +112,8 @@
 	<string name="stats_entry_followers">प्रसंशक</string>
 	<string name="stats_totals_publicize">प्रसंशक</string>
 	<string name="stats_view_followers">प्रसंशक</string>
+	<string name="stats_timeframe_years">वर्ष </string>
+	<string name="stats_entry_video_plays">वीडियो </string>
 	<string name="delete_sure_post">इस लेख को हटाओ</string>
 	<string name="cab_selected">%d चयनित</string>
 	<string name="reader_label_comment_count_single">एक टिप्पणी</string>
@@ -353,7 +355,6 @@
 	<string name="cant_share_no_visible_blog"> आप एक प्रत्यक्ष ब्लॉग के बिना वर्डप्रेस में साझा नहीं कर सकते</string>
 	<string name="reset_auto_share_preference">स्वत: साझा सेटिंग रीसेट करें</string>
 	<string name="comment_spammed">टिप्पणी स्पैम के रूप में चिह्नित </string>
-	<string name="reader_toast_err_get_post">इस संदेश को पुनः प्राप्त में असमर्थ</string>
 	<string name="reader_likes_you_and_one">आपने और एक और ने इसे पसंद किया है</string>
 	<string name="validating_user_data">उपयोगकर्ता डेटा को सत्यापित किया जा रहा</string>
 	<string name="validating_site_data">साईट डेटा को सत्यापित किया जा रहा</string>
@@ -431,7 +432,6 @@
 	<string name="stats_totals_views">देखें गये</string>
 	<string name="passcode_change_passcode">पिन बदलें</string>
 	<string name="media_no_video_title">विडियोप्रेस उपलब्ध नहीं</string>
-	<string name="view_stats_full_site">पूरी साईट को देखा गया</string>
 	<string name="theme_auth_error_title">थीम को प्राप्त करने में असफल</string>
 	<string name="stats">आँकड़े</string>
 	<string name="theme_set_success">थीम सफलतापूर्वक सेट किया गया!</string>

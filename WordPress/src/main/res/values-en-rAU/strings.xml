@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">This post no longer exists</string>
+	<string name="reader_err_get_post_not_authorized">You\'re not authorised to view this post</string>
+	<string name="reader_err_get_post_generic">Unable to retrieve this post</string>
+	<string name="blog_name_no_spaced_allowed">Site address can\'t contain spaces</string>
+	<string name="invalid_username_no_spaces">Username can\'t contain spaces</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
+	<string name="media_details_copy_url_toast">URL copied to clipboard</string>
+	<string name="edit_media">Edit media</string>
+	<string name="media_details_copy_url">Copy URL</string>
+	<string name="media_details_label_date_uploaded">Uploaded</string>
+	<string name="media_details_label_date_added">Added</string>
 	<string name="selected_theme">Selected Theme</string>
 	<string name="could_not_load_theme">Could not load theme</string>
 	<string name="theme_activation_error">Something went wrong. Could not activate theme</string>
@@ -199,12 +211,7 @@
 	<string name="verification_code">Verification code</string>
 	<string name="editor_toast_invalid_path">Invalid file path</string>
 	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
-	<string name="media_details_dimensions">Dimensions:</string>
-	<string name="media_details_file_url">File URL:</string>
-	<string name="media_details_file_type">File type:</string>
-	<string name="media_details_file_name">File name:</string>
-	<string name="media_details_uploaded_on">Uploaded on:</string>
-	<string name="media_details_added_on">Added on:</string>
+	<string name="media_details_label_file_name">File name</string>
 	<string name="tab_title_site_videos">Site Videos</string>
 	<string name="tab_title_site_images">Site Images</string>
 	<string name="tab_title_device_videos">Device Videos</string>
@@ -215,6 +222,7 @@
 	<string name="add_to_post">Add to Post</string>
 	<string name="language">Language</string>
 	<string name="device">Device</string>
+	<string name="media_details_label_file_type">File type</string>
 	<string name="media_fetching">Fetching media…</string>
 	<string name="posts_fetching">Fetching posts…</string>
 	<string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
@@ -586,7 +594,6 @@
 	<string name="pick_photo">Select photo</string>
 	<string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 	<string name="pick_video">Select video</string>
-	<string name="reader_toast_err_get_post">Unable to retrieve this post</string>
 	<string name="validating_user_data">Validating user data</string>
 	<string name="validating_site_data">Validating site data</string>
 	<string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
@@ -660,7 +667,6 @@
 	<string name="share_action_title">Add to …</string>
 	<string name="share_action">Share</string>
 	<string name="stats">Stats</string>
-	<string name="view_stats_full_site">View full site</string>
 	<string name="stats_view_visitors_and_views">Visitors and Views</string>
 	<string name="stats_view_clicks">Clicks</string>
 	<string name="stats_view_referrers">Referrers</string>

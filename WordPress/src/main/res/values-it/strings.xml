@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Questo articolo non esiste più</string>
+	<string name="reader_err_get_post_not_authorized">Non disponi del permesso per visualizzare questo articolo</string>
+	<string name="reader_err_get_post_generic">Impossibile recuperare questo articolo</string>
+	<string name="blog_name_no_spaced_allowed">L\'indirizzo del sito non può contenere spazi</string>
+	<string name="invalid_username_no_spaces">Il nome utente non può contenere spazi</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">I siti che segui non hanno pubblicato nulla recentemente</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nessun articolo recente</string>
+	<string name="media_details_copy_url_toast">URL copiata negli appunti</string>
+	<string name="edit_media">Modifica media</string>
+	<string name="media_details_copy_url">Copia URL</string>
+	<string name="media_details_label_date_uploaded">Caricato</string>
+	<string name="media_details_label_date_added">Aggiunto</string>
 	<string name="selected_theme">Tema selezionato</string>
 	<string name="could_not_load_theme">Impossibile caricare il tema</string>
 	<string name="theme_activation_error">Qualche cosa è andato storto. Impossibile attivare il tema.</string>
@@ -199,12 +211,6 @@
 	<string name="take_video">Fai un video</string>
 	<string name="tab_title_site_images">Immagini sito</string>
 	<string name="tab_title_site_videos">Video sito</string>
-	<string name="media_details_added_on">Aggiunto il:</string>
-	<string name="media_details_uploaded_on">Caricato il:</string>
-	<string name="media_details_file_name">Nome fiel:</string>
-	<string name="media_details_file_type">Tipo file:</string>
-	<string name="media_details_file_url">URL file:</string>
-	<string name="media_details_dimensions">Dimensioni:</string>
 	<string name="error_publish_no_network">Impossibile pubblicare perchè non c\'è una connessione. Salva come bozza.</string>
 	<string name="editor_toast_invalid_path">Percorso file non valido</string>
 	<string name="verification_code">Codice di verifica</string>
@@ -215,6 +221,8 @@
 	<string name="two_step_sms_sent">Verifica i messaggi di testo per il codice di verifica.</string>
 	<string name="sign_in_jetpack">Autentificati al tuo account WordPress.com  per connetterti a Jetpack.</string>
 	<string name="auth_required">Autentificati nuovamente per continuare.</string>
+	<string name="media_details_label_file_name">Nome file</string>
+	<string name="media_details_label_file_type">Tipo file</string>
 	<string name="media_fetching">Recupero file multimediali in corso…</string>
 	<string name="posts_fetching">Recupero degli articoli in corso...</string>
 	<string name="toast_err_post_uploading">Impossibile aprire l\'articolo durante il suo caricamento</string>
@@ -586,7 +594,6 @@
 	<string name="pick_photo">Seleziona foto</string>
 	<string name="account_two_step_auth_enabled">Per questo account è attiva l\'autenticazione in due fasi. Visita le tue impostazioni di sicurezza in WordPress.com e genera una password specifica per l\'applicazione.</string>
 	<string name="pick_video">Seleziona video</string>
-	<string name="reader_toast_err_get_post">Impossibile recuperare questo post</string>
 	<string name="validating_user_data">Convalida dati utente in corso</string>
 	<string name="validating_site_data">Convalida dati sito in corso</string>
 	<string name="reader_empty_followed_blogs_description">Ma non preoccuparti, fai un tap sull\'icona in alto a destra per iniziare ad esplorare!</string>
@@ -650,7 +657,6 @@
 	<string name="media_gallery_image_order_random">Casuale</string>
 	<string name="media_gallery_image_order_reverse">Invertito</string>
 	<string name="media_gallery_type">Tipo</string>
-	<string name="view_stats_full_site">Visualizza sito completo</string>
 	<string name="stats_entry_country">Paese</string>
 	<string name="stats_entry_posts_and_pages">Titolo</string>
 	<string name="media_edit_failure">Aggiornamento fallito</string>

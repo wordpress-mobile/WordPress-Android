@@ -64,19 +64,13 @@
 	<string name="verification_code">Godkendelseskode</string>
 	<string name="verify">Bekræft</string>
 	<string name="auth_required">Log ind igen for at fortsætte.</string>
-	<string name="media_details_uploaded_on">Overført den:</string>
 	<string name="tab_title_device_images">Enhedsbilleder</string>
 	<string name="tab_title_device_videos">Enhedsvideoer</string>
 	<string name="tab_title_site_images">Webstedsbilleder</string>
 	<string name="tab_title_site_videos">Webstedsvideoer</string>
-	<string name="media_details_added_on">Tilføjet den:</string>
-	<string name="media_details_file_type">Filtype</string>
 	<string name="media_picker_title">Vælg filer</string>
-	<string name="media_details_dimensions">Størrelse:</string>
 	<string name="device">Enhed</string>
-	<string name="media_details_file_name">Filnavn:</string>
 	<string name="add_to_post">Tilføj til indlæg</string>
-	<string name="media_details_file_url">Fil URL:</string>
 	<string name="take_video">Optag en video</string>
 	<string name="take_photo">Tag et billede</string>
 	<string name="language">Sprog</string>
@@ -425,7 +419,6 @@
 	<string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
 	<string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uden en synlig blog</string>
 	<string name="reset_auto_share_preference">Nulstil indstillinger for automatisk deling</string>
-	<string name="reader_toast_err_get_post">Kunne ikke hente dette indlæg</string>
 	<string name="reader_likes_you_and_one">Du og en anden synes godt om dette</string>
 	<string name="validating_user_data">Validerer brugerdata</string>
 	<string name="validating_site_data">Validerer webstedsdata</string>
@@ -511,7 +504,6 @@
 	<string name="stats_view_visitors_and_views">Besøgende og visninger</string>
 	<string name="share_action">Del</string>
 	<string name="stats">Statistikker</string>
-	<string name="view_stats_full_site">Vis hele websted</string>
 	<string name="media_edit_success">Opdateret</string>
 	<string name="media_edit_failure">Opdatering mislykkedes</string>
 	<string name="themes_details_label">Detaljer</string>

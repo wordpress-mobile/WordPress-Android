@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Эта запись больше не существует</string>
+	<string name="reader_err_get_post_not_authorized">У вас нет прав на просмотр этой записи</string>
+	<string name="reader_err_get_post_generic">Не удается загрузить эту запись</string>
+	<string name="blog_name_no_spaced_allowed">В адресе сайта не должно быть пробелов</string>
+	<string name="invalid_username_no_spaces">Имя пользователя не должно содержать пробелы</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">На сайтах, на которые вы подписаны, в последнее время не публиковались новые записи</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Нет свежих записей</string>
+	<string name="media_details_copy_url_toast">URL-адрес скопирован в буфер обмена</string>
+	<string name="edit_media">Изменить файл мультимедиа</string>
+	<string name="media_details_copy_url">Копировать URL</string>
+	<string name="media_details_label_date_uploaded">Загружено</string>
+	<string name="media_details_label_date_added">Добавлено</string>
 	<string name="selected_theme">Выбранная тема</string>
 	<string name="could_not_load_theme">Не удалось загрузить тему</string>
 	<string name="theme_activation_error">Произошла ошибка. Не удалось активировать тему</string>
@@ -195,19 +207,13 @@
 	<string name="verification_code">Код подтверждения</string>
 	<string name="invalid_verification_code">Неверный код подтверждения</string>
 	<string name="sign_in_jetpack">Войдите в вашу учётную запись WordPress.com для подключения к Jetpack.</string>
-	<string name="media_details_dimensions">Размеры:</string>
 	<string name="media_picker_title">Выбрать файл</string>
-	<string name="media_details_added_on">Добавлено:</string>
-	<string name="media_details_uploaded_on">Загружено:</string>
 	<string name="tab_title_site_images">Изображения с сайта</string>
 	<string name="tab_title_device_images">Изображения на устройстве</string>
-	<string name="media_details_file_name">Имя файла:</string>
 	<string name="editor_toast_invalid_path">Неверный путь к файлу</string>
 	<string name="error_publish_no_network">Нельзя опубликовать без подключения к сети. Сохранено как черновик.</string>
 	<string name="auth_required">Войдите заново для продолжения.</string>
 	<string name="two_step_footer_button">Отправить код SMS-сообщением</string>
-	<string name="media_details_file_url">Ссылка на файл:</string>
-	<string name="media_details_file_type">Тип файла:</string>
 	<string name="tab_title_site_videos">Видео с сайта</string>
 	<string name="tab_title_device_videos">Видео на устройстве</string>
 	<string name="take_video">Записать видео</string>
@@ -588,7 +594,6 @@
 	<string name="validating_user_data">Проверка данных пользователя</string>
 	<string name="validating_site_data">Проверка данных сайта</string>
 	<string name="account_two_step_auth_enabled">Включена двушаговая авторизация- зайдите в настройки безопасности на WordPress.com и сгенерируйте специальный ключ для приложения.</string>
-	<string name="reader_toast_err_get_post">Не удаётся загрузить эту запись</string>
 	<string name="reader_empty_followed_blogs_description">Просто нажмите на иконку справа вверху, чтобы найти что-нибудь интересное!</string>
 	<string name="password_invalid">Требуется более сложный пароль. Используйте пароль длинной 7 и более символов, содержащий прописные и строчные буквы, цифры а так же спецсимволы.</string>
 	<string name="nux_tap_continue">Продолжить</string>
@@ -662,7 +667,6 @@
 	<string name="theme_activate_button">Активировать</string>
 	<string name="media_edit_failure">Ошибка обновления</string>
 	<string name="share_action">Поделиться</string>
-	<string name="view_stats_full_site">Показать весь сайт</string>
 	<string name="stats_view_visitors_and_views">Посетители и Просмотры</string>
 	<string name="stats_totals_plays">Проиграно раз</string>
 	<string name="passcode_manage">Управление PIN</string>

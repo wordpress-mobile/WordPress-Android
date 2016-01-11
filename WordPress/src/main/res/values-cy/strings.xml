@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Nid yw\'r cofnod yma\'n bodoli bellach</string>
+	<string name="reader_err_get_post_not_authorized">Nid ydych wedi eich awdurdodi i weld y cofnod hwn</string>
+	<string name="reader_err_get_post_generic">Methu estyn y cofnod hwn</string>
+	<string name="blog_name_no_spaced_allowed">Nid oes modd i gyfeiriad gwefan gynnwys bylchau</string>
+	<string name="invalid_username_no_spaces">Nid oes modd i enw defnyddiwr gynnwys bylchau</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Nid yw\'r gwefannau rydych yn eu dilyn gofnodi dim yn ddiweddar</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Dim cofnodion diweddar</string>
+	<string name="media_details_copy_url_toast">URL wedi ei gopïo i\'r clipfwrdd</string>
+	<string name="edit_media">Golygu cyfrwng</string>
+	<string name="media_details_copy_url">Copïo URL</string>
+	<string name="media_details_label_date_uploaded">Wedi ei lwytho</string>
+	<string name="media_details_label_date_added">Ychwanegwyd</string>
 	<string name="selected_theme">Thema Dewiswyd</string>
 	<string name="could_not_load_theme">Methu llwytho\'r thema</string>
 	<string name="theme_activation_error">Aeth rhywbeth o\'i le</string>
@@ -191,7 +203,6 @@
 	<string name="loading_videos">Llwytho fideos</string>
 	<string name="sign_in_jetpack">Mewngofnodwch i\'ch cyfrif WordPress.com i gysylltu â Jetpack.</string>
 	<string name="two_step_sms_sent">Gwiriwch eich neges testun am god dilysu.</string>
-	<string name="media_details_dimensions">Dimensiynau:</string>
 	<string name="auth_required">Mewngofnodwch eto i barhau.</string>
 	<string name="two_step_footer_button">Anfonwch god drwy neges testun</string>
 	<string name="two_step_footer_label">Rhowch y cod o\'ch ap dilysu.</string>
@@ -200,11 +211,6 @@
 	<string name="verification_code">Cod dilysu</string>
 	<string name="editor_toast_invalid_path">Llwybr ffeil annilys</string>
 	<string name="error_publish_no_network">Methu cyhoeddi heb gysylltiad. Cadw fel drafft.</string>
-	<string name="media_details_file_url">URL ffeil:</string>
-	<string name="media_details_file_type">Math o ffeil:</string>
-	<string name="media_details_file_name">Enw ffeil:</string>
-	<string name="media_details_uploaded_on">Llwythwyd:</string>
-	<string name="media_details_added_on">Ychwanegwyd:</string>
 	<string name="tab_title_device_images">Delweddau Dyfais</string>
 	<string name="tab_title_device_videos">Fideos Dyfais</string>
 	<string name="tab_title_site_images">Delweddau Gwefan</string>
@@ -215,6 +221,8 @@
 	<string name="add_to_post">Ychwanegu at Gofnod</string>
 	<string name="device">Dyfais</string>
 	<string name="language">Iaith</string>
+	<string name="media_details_label_file_type">Math o ffeil</string>
+	<string name="media_details_label_file_name">Enw ffeil</string>
 	<string name="media_fetching">Estyn cyfrwng…</string>
 	<string name="posts_fetching">Estyn cofnodion…</string>
 	<string name="pages_fetching">Estyn tudalennau…</string>
@@ -583,7 +591,6 @@
 	<string name="validating_site_data">Dilysu data gwefan</string>
 	<string name="validating_user_data">Dilysu data defnyddiwr</string>
 	<string name="pick_video">Dewiswch fideo</string>
-	<string name="reader_toast_err_get_post">Does dim modd adfer y cofnod hwn</string>
 	<string name="pick_photo">Dewis ffoto</string>
 	<string name="account_two_step_auth_enabled">Mae dilysu dau gam wedi ei alluogi ar gyfer y cyfrif hwn. Ewch i\'ch eich gosodiadau diogelwch ar WordPress.com a chrëwch gyfrinair rhaglen benodol.</string>
 	<string name="select_date">Dewis dyddiad</string>
@@ -654,7 +661,6 @@
 	<string name="stats_view_referrers">Cyfeirwyr</string>
 	<string name="stats_view_clicks">Cliciau</string>
 	<string name="stats_view_visitors_and_views">Ymwelwyr a Golygon</string>
-	<string name="view_stats_full_site">Gweld y wefan lawn</string>
 	<string name="stats">Ystadegau</string>
 	<string name="share_action">Rhannu</string>
 	<string name="share_action_title">Ychwanegu at …</string>

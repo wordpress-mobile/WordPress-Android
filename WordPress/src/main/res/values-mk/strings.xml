@@ -339,7 +339,6 @@
 	<string name="reset_auto_share_preference">Ресетирање на подесувањата за автоматско споделување</string>
 	<string name="pick_photo">Избери фотографија</string>
 	<string name="validating_site_data">Валидирање на податоци за сајт</string>
-	<string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>
 	<string name="pick_video">Избери видео</string>
 	<string name="validating_user_data">Валидација на кориснички податоци</string>
 	<string name="reader_likes_you_and_one">На вас и на уште еден му се допаѓа ова</string>
@@ -421,7 +420,6 @@
 	<string name="share_action_title">Додади на ...</string>
 	<string name="share_action">Сподели</string>
 	<string name="stats">Статистики</string>
-	<string name="view_stats_full_site">Види ја целата страница</string>
 	<string name="stats_view_visitors_and_views">Посетители и прегледи</string>
 	<string name="stats_view_clicks">Кликнувања</string>
 	<string name="stats_view_comments">Коментари</string>

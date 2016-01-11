@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Ky postim s&amp;#8217;ekziston më</string>
+	<string name="reader_err_get_post_not_authorized">S&amp;#8217;jeni i autorizuar ta shihni këtë postim</string>
+	<string name="reader_err_get_post_generic">S&amp;#8217;arrihet të merret ky postim</string>
+	<string name="blog_name_no_spaced_allowed">Adresa e sajtit s&amp;#8217;mund të përmbajë hapësira</string>
+	<string name="invalid_username_no_spaces">Emri i përdoruesit s&amp;#8217;mund të përmbajë hapësira</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Sajtet që ndiqni s&amp;#8217;kanë postuar gjë tani afër</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Pa postime së fundi</string>
+	<string name="media_details_copy_url_toast">URL-ja u kopjua në të papastër</string>
+	<string name="edit_media">Përpunoni media</string>
+	<string name="media_details_copy_url">Kopjojei URL-në</string>
+	<string name="media_details_label_date_uploaded">U ngarkua</string>
+	<string name="media_details_label_date_added">U shtua</string>
 	<string name="selected_theme">Temë e Përzgjedhur</string>
 	<string name="could_not_load_theme">S&amp;#8217;u ngarkua dot tema</string>
 	<string name="theme_activation_error">Diç shkoi ters. S&amp;#8217;u aktivizua dot tema.</string>
@@ -199,12 +211,6 @@
 	<string name="tab_title_device_videos">Video Te Pajisja</string>
 	<string name="tab_title_site_images">Figura Te Sajti</string>
 	<string name="tab_title_site_videos">Video Figura Te Sajti</string>
-	<string name="media_details_added_on">Shtuar më:</string>
-	<string name="media_details_uploaded_on">Ngarkuar më:</string>
-	<string name="media_details_file_name">Emër kartele:</string>
-	<string name="media_details_file_type">Lloj kartele:</string>
-	<string name="media_details_file_url">URL kartele:</string>
-	<string name="media_details_dimensions">Përmasa:</string>
 	<string name="editor_toast_invalid_path">Shteg kartele i pavlefshëm</string>
 	<string name="verification_code">Kod verifikimi</string>
 	<string name="invalid_verification_code">Kod verifikimi i pavlefshëm</string>
@@ -215,6 +221,8 @@
 	<string name="sign_in_jetpack">Që të lidheni me Jetpack-n, bëni hyrjen te llogaria juaj WordPress.com.</string>
 	<string name="auth_required">Që të vazhdoni, duhet të hyni.</string>
 	<string name="error_publish_no_network">S’mund të ketë botim, kur s’ka lidhje. U ruajt si skicë.</string>
+	<string name="media_details_label_file_name">Emër kartele</string>
+	<string name="media_details_label_file_type">Lloj kartele</string>
 	<string name="reader_empty_posts_request_failed">S’arrin të marrë dot postimet</string>
 	<string name="publisher">Botues:</string>
 	<string name="error_notification_open">S’u hap dot njoftimi</string>
@@ -585,7 +593,6 @@
 	<string name="select_date">Përzgjidhni datë</string>
 	<string name="pick_photo">Përzgjidhni foto</string>
 	<string name="pick_video">Përzgjidhni video</string>
-	<string name="reader_toast_err_get_post">I pazoti të marrë këtë postim</string>
 	<string name="validating_user_data">Po vleftësohen të dhëna përdoruesi</string>
 	<string name="validating_site_data">Po vleftësohen të dhëna sajti</string>
 	<string name="reader_empty_followed_blogs_description">Por mos u shqetësoni, thjesht prekeni ikonën sipër djathtas që të filloni eksplorimin!</string>
@@ -656,7 +663,6 @@
 	<string name="share_action_title">Shtojeni te …</string>
 	<string name="share_action">Ndajeni me të tjerët</string>
 	<string name="stats">Statistika</string>
-	<string name="view_stats_full_site">Shihni sajtin e plotë</string>
 	<string name="stats_view_visitors_and_views">Vizitorë dhe Parje</string>
 	<string name="stats_view_clicks">Klikime</string>
 	<string name="stats_view_tags_and_categories">Etiketa &amp; Kategori</string>

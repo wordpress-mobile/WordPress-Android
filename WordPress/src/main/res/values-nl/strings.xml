@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Dit bericht bestaat niet meer</string>
+	<string name="reader_err_get_post_not_authorized">Je hebt geen rechten om dit bericht te lezen</string>
+	<string name="reader_err_get_post_generic">Kan dit bericht niet ophalen</string>
+	<string name="blog_name_no_spaced_allowed">Het adres van de site mag geen spaties bevatten</string>
+	<string name="invalid_username_no_spaces">De gebruikersnaam mag geen spaties bevatten</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">De sites die je volgt hebben recent niets geplaatst</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
+	<string name="media_details_copy_url_toast">URL gekopieerd naar klembord</string>
+	<string name="edit_media">Media bewerken</string>
+	<string name="media_details_copy_url">URL kopiëren</string>
+	<string name="media_details_label_date_uploaded">Geüpload</string>
+	<string name="media_details_label_date_added">Toegevoegd</string>
 	<string name="selected_theme">Geselecteerd thema</string>
 	<string name="could_not_load_theme">Kan thema niet laden</string>
 	<string name="theme_activation_error">Er is iets fout gegaan. Kan thema niet activeren</string>
@@ -199,12 +211,6 @@
 	<string name="tab_title_device_videos">Apparaatvideo\'s</string>
 	<string name="tab_title_site_images">Siteafbeeldingen</string>
 	<string name="tab_title_site_videos">Sitevideo\'s</string>
-	<string name="media_details_added_on">Toegevoegd op:</string>
-	<string name="media_details_uploaded_on">Geüpload op:</string>
-	<string name="media_details_file_name">Bestandsnaam:</string>
-	<string name="media_details_file_type">Bestandstype:</string>
-	<string name="media_details_file_url">Bestands-URL:</string>
-	<string name="media_details_dimensions">Afmetingen:</string>
 	<string name="error_publish_no_network">Kan niet publiceren als er geen verbinding is. Opgeslagen als concept.</string>
 	<string name="editor_toast_invalid_path">Ongeldig bestandspad</string>
 	<string name="verification_code">Verificatiecode</string>
@@ -583,7 +589,6 @@
 	<string name="pick_photo">Selecteer foto</string>
 	<string name="account_two_step_auth_enabled">Voor deze account is authenticatie in twee stappen actief. Bekijk je beveiligingsinstellingen op WordPress.com en genereer een applicatie-specifiek wachtwoord.</string>
 	<string name="pick_video">Selecteer video</string>
-	<string name="reader_toast_err_get_post">Niet in staat om dit bericht op te halen</string>
 	<string name="validating_user_data">Gebruikersgegevens valideren</string>
 	<string name="validating_site_data">Sitegegevens valideren</string>
 	<string name="select_time">Selecteer tijd</string>
@@ -651,7 +656,6 @@
 	<string name="theme_activate_button">Activeren</string>
 	<string name="share_action">Deel</string>
 	<string name="stats">Statistieken</string>
-	<string name="view_stats_full_site">Bekijk site</string>
 	<string name="stats_view_visitors_and_views">Bezoekers en views</string>
 	<string name="stats_view_clicks">Kliks</string>
 	<string name="stats_view_tags_and_categories">Tags en categorieën </string>
