@@ -307,47 +307,6 @@ public class StatsUtils {
         return localId;
     }
 
-    /**
-     * Return the remote blogId as stored on the wpcom backend.
-     * <p>
-     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
-     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
-     * </p>
-     * @return String  blogId or null
-     */
-    public static String getBlogId(int localTableBlogID) {
-        Blog currentBlog = WordPress.getBlog(localTableBlogID);
-        if (currentBlog == null) {
-            return null;
-        }
-        return getBlogId(currentBlog);
-    }
-    public static String getBlogId(Blog blog) {
-        if (blog == null) {
-            return null;
-        }
-        if (blog.isDotcomFlag()) {
-            return String.valueOf(blog.getRemoteBlogId());
-        } else {
-            String remoteID =  blog.getApi_blogid();
-            // Self-hosted blogs edge cases.
-            if (StringUtils.isEmpty(remoteID)) {
-               return null;
-            }
-            try {
-                int parsedBlogID = Integer.parseInt(remoteID);
-                // remote blogID is always > 1 for Jetpack blogs
-                if (parsedBlogID < 1) {
-                    return null;
-                }
-            } catch (NumberFormatException e) {
-                AppLog.e(T.STATS, "The remote blog ID stored in options isn't valid: " + remoteID);
-                return null;
-            }
-            return remoteID;
-        }
-    }
-
     public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
         if (volleyError == null) {
             AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null!");

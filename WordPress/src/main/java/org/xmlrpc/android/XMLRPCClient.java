@@ -30,6 +30,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
+import org.xmlrpc.android.ApiHelper.Method;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -338,7 +339,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException, IllegalArgumentException, IllegalStateException {
         // prepare POST body
-        if (method.equals("wp.uploadFile")) {
+        if (method.equals(Method.UPLOAD_FILE)) {
             if (!tempFile.exists() && !tempFile.mkdirs()) {
                 throw new XMLRPCException("Path to file could not be created.");
             }
@@ -512,7 +513,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                         if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") &&
                                 responseString.contains("bytes exhausted")) {
                             String newErrorMsg;
-                            if (method.equals("wp.uploadFile")) {
+                            if (method.equals(Method.UPLOAD_FILE)) {
                                 newErrorMsg =
                                         "The server doesn't have enough memory to upload this file. You may need to increase the PHP memory limit on your site.";
                             } else {
@@ -620,7 +621,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     private void deleteTempFile(String method, File tempFile) {
         if (tempFile != null) {
-            if ((method.equals("wp.uploadFile"))){ //get rid of the temp file
+            if ((method.equals(Method.UPLOAD_FILE))){ //get rid of the temp file
                 tempFile.delete();
             }
         }

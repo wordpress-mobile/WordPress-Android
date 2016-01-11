@@ -48,6 +48,7 @@ import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -827,7 +828,7 @@ public class PostUploadService extends Service {
             }
 
             try {
-                return mClient.call(ApiHelper.Methods.UPLOAD_FILE, params, tempFile);
+                return mClient.call(Method.UPLOAD_FILE, params, tempFile);
             } catch (XMLRPCException e) {
                 // well formed XML-RPC response from the server, but it's an error. Ok to print the error message
                 AppLog.e(T.API, e);
@@ -922,7 +923,7 @@ public class PostUploadService extends Service {
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
             if (largeIcon == null) {
                 notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.drawable.app_icon));
+                        R.mipmap.app_icon));
             } else {
                 notificationBuilder.setLargeIcon(largeIcon);
             }

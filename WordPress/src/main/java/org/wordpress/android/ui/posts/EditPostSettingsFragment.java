@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -9,6 +10,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -45,6 +47,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -188,7 +191,7 @@ public class EditPostSettingsFragment extends Fragment
 
         initSettingsFields();
         populateSelectedCategories();
-        initLocation();
+        initLocation(mRootView);
         return mRootView;
     }
 
@@ -612,12 +615,11 @@ public class EditPostSettingsFragment extends Fragment
      * called when activity is created to initialize the location provider, show views related
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
-    public void initLocation() {
-        if (!mPost.supportsLocation()) {
-            return;
-        }
+    private void initLocation(ViewGroup rootView) {
+        if (!mPost.supportsLocation()) return;
+
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        View locationRootView = ((ViewStub) mRootView.findViewById(R.id.stub_post_location_settings)).inflate();
+        View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
         TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
         locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
@@ -644,13 +646,21 @@ public class EditPostSettingsFragment extends Fragment
         updateLocation.setOnClickListener(this);
         removeLocation.setOnClickListener(this);
 
+        if (!checkForLocationPermission()) return;
+
         // if this post has location attached to it, look up the location address
         if (mPost.hasLocation()) {
             showLocationView();
             PostLocation location = mPost.getLocation();
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
-            showLocationAdd();
+            // Search for current location to geotag post if preferences allow
+            EditPostActivity activity = (EditPostActivity) getActivity();
+            if (SiteSettingsInterface.getGeotagging(activity) && activity.isNewPost()) {
+                searchLocation();
+            } else {
+                showLocationAdd();
+            }
         }
     }
 
@@ -855,7 +865,7 @@ public class EditPostSettingsFragment extends Fragment
 
         if (mCategories != null) {
             for (String categoryName : mCategories) {
-                Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
+                AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button, null);
                 if (categoryName != null && buttonCategory != null) {
                     buttonCategory.setText(Html.fromHtml(categoryName));
                     buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);

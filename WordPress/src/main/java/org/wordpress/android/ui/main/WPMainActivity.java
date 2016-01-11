@@ -33,8 +33,8 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
+import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -385,7 +385,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 }
                 break;
             case RequestCodes.BLOG_SETTINGS:
-                if (resultCode == BlogPreferencesActivity.RESULT_BLOG_REMOVED) {
+                if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
                     // user removed the current (self-hosted) blog from blog settings
                     if (!AccountHelper.isSignedIn()) {
                         ActivityLauncher.showSignInForResult(this);
