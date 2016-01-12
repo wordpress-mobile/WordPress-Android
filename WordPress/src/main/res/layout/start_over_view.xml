@@ -9,44 +9,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="40dp"
+        android:paddingTop="@dimen/start_over_padding_top"
         android:layout_gravity="center_horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/start_over_margin"
+            android:layout_marginEnd="@dimen/start_over_margin"
             android:tint="@color/grey_darken_30"
             android:src="@drawable/gridicons_history"/>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="300dp"
+            android:layout_width="@dimen/start_over_width"
             android:layout_height="wrap_content">
 
             <org.wordpress.android.widgets.WPTextView
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_sz_extra_large"
                 android:textStyle="bold"
-                android:layout_marginBottom="20dp"
-                android:text="Let Us Help" />
+                android:layout_marginBottom="@dimen/start_over_margin"
+                android:text="@string/let_us_help" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="If you want a site but don't want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out."
-                android:layout_marginBottom="20dp" />
+                android:textSize="@dimen/text_sz_large"
+                android:text="@string/start_over_text"
+                android:layout_marginBottom="@dimen/start_over_margin" />
 
             <Button
                 android:backgroundTint="@color/white"
                 android:id="@+id/contact_support_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Contact support"
-                android:textSize="16sp"
+                android:text="@string/contact_support"
+                android:textSize="@dimen/text_sz_large"
                 android:textStyle="bold"
                 android:textAllCaps="true"/>
 
