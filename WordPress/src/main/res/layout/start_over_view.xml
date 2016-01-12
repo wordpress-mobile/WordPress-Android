@@ -4,11 +4,35 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingTop="40dp"
-    android:layout_gravity="center">
+    android:gravity="center_horizontal">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/gridicons_history"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Let Us Help" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="If you want a site but don't want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you. \n This will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out."/>
+
+        <Button
+            android:id="@+id/contact_support_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact support"
+            android:textAllCaps="true"/>
+
+    </LinearLayout>
 
 </LinearLayout>
