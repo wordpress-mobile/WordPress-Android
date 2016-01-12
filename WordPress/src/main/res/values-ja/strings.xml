@@ -594,6 +594,7 @@
 	<string name="select_time">時間を選択</string>
 	<string name="validating_site_data">サイトのデータをチェックしています</string>
 	<string name="validating_user_data">ユーザーのデータをチェックしています</string>
+	<string name="reader_toast_err_get_post">この投稿を読み込みできません</string>
 	<string name="reader_likes_you_and_one">あなたと他1人が「いいね」をつけました</string>
 	<string name="account_two_step_auth_enabled">このアカウントでは2段階認証が有効化されています。WordPress.com のセキュリティ設定ページでアプリケーション用パスワードを生成してください。</string>
 	<string name="reader_empty_followed_blogs_description">右上のタグアイコンをタップし、お気に入りを発見してみてください。</string>

@@ -592,6 +592,7 @@
 	<string name="pick_photo">选择图片</string>
 	<string name="account_two_step_auth_enabled">此帐户已启用两步认证。访问您WordPress.com上的安全设置生成一个特定的密码。</string>
 	<string name="pick_video">选择视频</string>
+	<string name="reader_toast_err_get_post">无法检索这篇文章</string>
 	<string name="validating_user_data">验证用户数据</string>
 	<string name="validating_site_data">验证站点数据</string>
 	<string name="reader_empty_followed_blogs_description">别担心，只需轻点右上角的图标即可开始浏览！</string>

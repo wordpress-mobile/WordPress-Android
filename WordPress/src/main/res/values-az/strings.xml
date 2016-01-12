@@ -488,6 +488,7 @@
 	<string name="select_date">Tarix seç</string>
 	<string name="pick_photo">Foto seç</string>
 	<string name="pick_video">Video seç</string>
+	<string name="reader_toast_err_get_post">Bu yazını almaq mümkün deyil</string>
 	<string name="validating_user_data">İstifadəçi məlumatları təsdiqlənir</string>
 	<string name="validating_site_data">Sayt məlumatları təsdiqlənir</string>
 	<string name="reader_likes_you_and_one">Siz və bir diğəri bunu bəyənir</string>

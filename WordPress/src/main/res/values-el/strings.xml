@@ -580,6 +580,7 @@
 	<string name="pick_photo">Επιλέξτε εικόνα</string>
 	<string name="account_two_step_auth_enabled">Αυτός ο λογαριασμός έχει ενεργοποιημένη τη διαπίστευση σε δύο στάδια. Επισκεφθείτε τις ρυθμίσεις ασφάλειάς σας στο WordPress.com για να παράξετε ένα κωδικό ειδικά για την εφαρμογή.</string>
 	<string name="pick_video">Διάλεξε Βίντεο</string>
+	<string name="reader_toast_err_get_post">Δεν είναι δυνατή η ανάκτηση αυτού του άρθρου.</string>
 	<string name="validating_user_data">Επικύρωση των στοιχείων του χρήστη.</string>
 	<string name="validating_site_data">Επικύρωση στοιχείων του ιστότοπου</string>
 	<string name="reader_empty_followed_blogs_description">Αλλά μην ανησυχείτε, απλά πατήστε το εικονίδιο επάνω δεξιά για να εξερευνήσετε!</string>

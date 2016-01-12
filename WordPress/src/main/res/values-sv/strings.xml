@@ -592,6 +592,7 @@
 	<string name="select_date">Välj datum</string>
 	<string name="reader_likes_you_and_one">Du och en annan gillar detta</string>
 	<string name="account_two_step_auth_enabled">Detta konto har två-stegsautentisering påslaget. Gå till dina säkerhetsinställningar på WordPress.com och skapa ett unikt lösenord för appen.</string>
+	<string name="reader_toast_err_get_post">Kunde inte hämta detta inlägg</string>
 	<string name="validating_user_data">Validerar användarinformation</string>
 	<string name="validating_site_data">Validerar webbplats</string>
 	<string name="reader_empty_followed_blogs_description">Inget att oroa sig för, peka på ikonen uppe till höger för att börja utforska!</string>

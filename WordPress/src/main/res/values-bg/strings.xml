@@ -547,6 +547,7 @@
 	<string name="select_date">Избор на дата</string>
 	<string name="pick_photo">Избор на снимка</string>
 	<string name="pick_video">Избор на видео</string>
+	<string name="reader_toast_err_get_post">Извличането на тази публикация е неуспешно</string>
 	<string name="password_invalid">Имате нужда от по-сигурна парола. Моля уверете се че използвате поне 7 символа, смесени с главни и малки букви, числа или специални символи.</string>
 	<string name="signing_in">Влизане...</string>
 	<string name="nux_tap_continue">Напред</string>

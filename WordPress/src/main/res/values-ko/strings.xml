@@ -592,6 +592,7 @@
 	<string name="select_time">시간을 선택</string>
 	<string name="validating_site_data">사이트의 데이터를 체크 합니다</string>
 	<string name="validating_user_data">사용자의 데이터를 체크 합니다</string>
+	<string name="reader_toast_err_get_post">이 게시물 을 로드 할 수 없습니다</string>
 	<string name="reader_likes_you_and_one">당신과 다른 1명이 "좋아요"를 눌렀습니다.</string>
 	<string name="account_two_step_auth_enabled">이 계정에서 2단계 인증이 활성화되어 있습니다. WordPress.com의 보안 설정 페이지에서 응용 프로그램 암호를 생성하십시오.</string>
 	<string name="reader_empty_followed_blogs_description">걱정하지 마세요. 둘러보려면 태그 아이콘을 누르세요!</string>

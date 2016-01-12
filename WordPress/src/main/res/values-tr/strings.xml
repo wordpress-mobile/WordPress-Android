@@ -596,6 +596,7 @@
 	<string name="validating_user_data">Kullanıcı verisi doğrulanıyor</string>
 	<string name="validating_site_data">Site verisi doğrulanıyor</string>
 	<string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
+	<string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>
 	<string name="reader_empty_followed_blogs_description">Kaygılanmayın, keşfetmeye başlamak için sağ üstteki simgeye dokunmanız yeterli!</string>
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com\'a giriş yap</string>
 	<string name="nux_tap_continue">Devam</string>

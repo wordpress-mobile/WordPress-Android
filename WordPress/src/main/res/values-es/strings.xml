@@ -592,6 +592,7 @@
 	<string name="select_date">Elegir fecha</string>
 	<string name="pick_photo">Elige una foto</string>
 	<string name="pick_video">Elige un vídeo</string>
+	<string name="reader_toast_err_get_post">No fue posible cargar esta entrada</string>
 	<string name="validating_user_data">Datos de validación del usuario</string>
 	<string name="validating_site_data">Validando datos del sitio</string>
 	<string name="account_two_step_auth_enabled">Esta cuenta tiene activado el proceso de autentificación en dos pasos. Visita los ajustes de seguridad de WordPress.com y genera una contraseña específica para la aplicación.</string>

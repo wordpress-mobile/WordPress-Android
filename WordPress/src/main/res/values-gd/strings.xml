@@ -447,6 +447,7 @@
 	<string name="pick_photo">Tagh dealbh</string>
 	<string name="account_two_step_auth_enabled">Tha dearbhadh dà-cheumnach an sàs sa chunntas seo. Tadhail air na roghainnean tèarainteachd agad air WordPress.com agus gin facal-faire gu sònraichte dhan aplacaid.</string>
 	<string name="pick_video">Tagh video</string>
+	<string name="reader_toast_err_get_post">Chan urrainn dhuinn am post seo fhaighinn dhut</string>
 	<string name="validating_user_data">A\' dearbhadh dàta a\' chleachdaiche</string>
 	<string name="validating_site_data">A\' dearbhadh dàta na làraich</string>
 	<string name="password_invalid">Feumaidh tu facal-faire nas tèarainte. Dèan cinnteach gun cleachd thu co-dhiù 7 caractaran, measgachadh de litrichean mòra \'s beaga, àireamhan is caractaran sònraichte.</string>

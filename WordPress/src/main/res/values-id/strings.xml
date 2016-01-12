@@ -594,6 +594,7 @@
 	<string name="pick_photo">Pilih foto</string>
 	<string name="account_two_step_auth_enabled">Akun ini memiliki sistem autentifikasi dua langkah yang aktif. Kunjungi pengaturan keamanan Anda di WordPress.com dan buat password khusus untuk aplikasi.</string>
 	<string name="pick_video">Pilih video</string>
+	<string name="reader_toast_err_get_post">Gagal membuka pos ini</string>
 	<string name="validating_user_data">Memeriksa keabsahan data pengguna</string>
 	<string name="validating_site_data">Memeriksa keabsahan data situs</string>
 	<string name="reader_empty_followed_blogs_description">Tapi jangan khawatir, cukup ketuk ikon di kanan atas untuk mulai menjelajah!</string>

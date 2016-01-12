@@ -592,6 +592,7 @@
 	<string name="pick_photo">選取照片</string>
 	<string name="account_two_step_auth_enabled">此帳號已啟用兩步驟驗證。瀏覽你的 WordPress.com 安全性設定，並產生一組應用程式專用密碼。</string>
 	<string name="pick_video">選取影片</string>
+	<string name="reader_toast_err_get_post">無法擷取此文章</string>
 	<string name="validating_user_data">正在驗證使用者資料</string>
 	<string name="validating_site_data">正在驗證網站資料</string>
 	<string name="reader_empty_followed_blogs_description">不過別擔心，只要點選右上方的圖示即可開始探索！</string>

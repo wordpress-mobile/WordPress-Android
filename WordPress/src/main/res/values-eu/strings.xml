@@ -283,6 +283,7 @@
 	<string name="pick_photo">Aukeratu argazkia</string>
 	<string name="account_two_step_auth_enabled">Kontu honek bi pausotako autentikazioa gaiturik dauka. Joan WordPress.com-eko hobespenetara eta aplikazioarentzat pasahitz bat sortu.</string>
 	<string name="pick_video">Aukeratu bideoa</string>
+	<string name="reader_toast_err_get_post">Ezin izan da bidalketa hau eskuratu</string>
 	<string name="validating_user_data">Erabiltzaile-datuak egiaztatzen</string>
 	<string name="validating_site_data">Gunearen datuak egiaztatzen</string>
 	<string name="nux_welcome_create_account">Sortu kontua</string>

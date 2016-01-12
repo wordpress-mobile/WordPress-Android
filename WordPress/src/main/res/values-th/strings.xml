@@ -590,6 +590,7 @@
 	<string name="download">กำลังดาวน์โหลดไฟล์สื่อ</string>
 	<string name="pick_photo">เลือกรูปภาพ</string>
 	<string name="pick_video">เลือกวีดีโอ</string>
+	<string name="reader_toast_err_get_post">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
 	<string name="select_time">เลือกเวลา</string>
 	<string name="reader_likes_you_and_one">คุณและอีกหนึ่งคนชอบสิ่งนี้</string>
 	<string name="select_date">เลือกวันที่</string>

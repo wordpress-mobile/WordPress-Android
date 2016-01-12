@@ -593,6 +593,7 @@
 	<string name="select_date">Përzgjidhni datë</string>
 	<string name="pick_photo">Përzgjidhni foto</string>
 	<string name="pick_video">Përzgjidhni video</string>
+	<string name="reader_toast_err_get_post">I pazoti të marrë këtë postim</string>
 	<string name="validating_user_data">Po vleftësohen të dhëna përdoruesi</string>
 	<string name="validating_site_data">Po vleftësohen të dhëna sajti</string>
 	<string name="reader_empty_followed_blogs_description">Por mos u shqetësoni, thjesht prekeni ikonën sipër djathtas që të filloni eksplorimin!</string>
