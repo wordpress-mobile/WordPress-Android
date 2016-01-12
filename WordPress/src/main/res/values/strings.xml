@@ -119,6 +119,7 @@
     <string name="media_gallery_edit">Edit gallery</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
+    <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>

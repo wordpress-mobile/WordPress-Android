@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">此文章已不存在</string>
+	<string name="reader_err_get_post_not_authorized">你未獲授權無法檢視此文章</string>
+	<string name="reader_err_get_post_generic">無法擷取此文章</string>
+	<string name="blog_name_no_spaced_allowed">網站位址不可包含空格</string>
+	<string name="invalid_username_no_spaces">使用者名稱不可包含空格</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">您所關注的網站最近未發表任何文章</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">沒有近期文章</string>
+	<string name="media_details_copy_url_toast">URL 已複製到剪貼簿</string>
+	<string name="edit_media">編輯媒體</string>
+	<string name="media_details_copy_url">複製 URL</string>
+	<string name="media_details_label_date_uploaded">已上傳</string>
+	<string name="media_details_label_date_added">已新增</string>
 	<string name="selected_theme">選取的佈景主題</string>
 	<string name="could_not_load_theme">無法載入佈景主題</string>
 	<string name="theme_activation_error">發生了點錯誤。無法啟用佈景主題</string>
@@ -199,12 +211,6 @@
 	<string name="tab_title_device_videos">裝置影片</string>
 	<string name="tab_title_site_images">網站圖片</string>
 	<string name="tab_title_site_videos">網站影片</string>
-	<string name="media_details_added_on">已新增於：</string>
-	<string name="media_details_uploaded_on">已上傳於：</string>
-	<string name="media_details_file_name">檔案名稱：</string>
-	<string name="media_details_file_type">檔案類型：</string>
-	<string name="media_details_file_url">檔案 URL：</string>
-	<string name="media_details_dimensions">尺寸：</string>
 	<string name="error_publish_no_network">未連線時無法發表。已儲存為草稿。</string>
 	<string name="editor_toast_invalid_path">檔案路徑無效</string>
 	<string name="verification_code">驗證碼</string>
@@ -652,7 +658,6 @@
 	<string name="media_edit_success">更新</string>
 	<string name="media_edit_failure">更新失敗</string>
 	<string name="themes_details_label">細節</string>
-	<string name="view_stats_full_site">檢視全站</string>
 	<string name="stats_view_tags_and_categories">標籤與分類</string>
 	<string name="media_no_video_message">取得 VideoPress 升級以上傳影片！</string>
 	<string name="themes_features_label">功能</string>
