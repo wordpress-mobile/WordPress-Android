@@ -41,6 +41,7 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -828,6 +829,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
         Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
         View view = View.inflate(themer, R.layout.start_over_view, null);
+        Button contactSupportButton = (Button) view.findViewById(R.id.contact_support_button);
+        contactSupportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_START_OVER);
+            }
+        });
         dialog.setContentView(view);
         dialog.show();
         WPActivityUtils.addToolbarToDialog(this, dialog, getString(R.string.start_over));
