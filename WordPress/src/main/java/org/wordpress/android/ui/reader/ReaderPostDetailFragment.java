@@ -886,7 +886,7 @@ public class ReaderPostDetailFragment extends Fragment
     void pauseWebView() {
         if (mReaderWebView == null) {
             AppLog.w(T.READER, "reader post detail > attempt to pause null webView");
-        } else {
+        } else if (!mIsWebViewPaused) {
             AppLog.d(T.READER, "reader post detail > pausing webView");
             mReaderWebView.hideCustomView();
             mReaderWebView.onPause();
