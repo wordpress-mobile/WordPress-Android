@@ -15,7 +15,6 @@ import android.os.StrictMode;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
@@ -575,14 +574,11 @@ public class WordPress extends Application {
     private static String mDefaultUserAgent;
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
+            // TODO: use WebSettings.getDefaultUserAgent() after upgrade to API level 17+
             try {
                 // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
                 // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
-                } else {
-                    mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
-                }
+                mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
             } catch (AndroidRuntimeException e) {
                 // init with the empty string, it's a rare issue
                 mDefaultUserAgent = "";
@@ -604,8 +600,13 @@ public class WordPress extends Application {
     private static String mUserAgent;
     public static String getUserAgent() {
         if (mUserAgent == null) {
-            mUserAgent = getDefaultUserAgent() + " "
-                       + USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
+            String defaultUserAgent = getDefaultUserAgent();
+            if (TextUtils.isEmpty(defaultUserAgent)) {
+                mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
+            } else {
+                mUserAgent = defaultUserAgent + " "+ USER_AGENT_APPNAME + "/"
+                        + PackageUtils.getVersionName(getContext());
+            }
         }
         return mUserAgent;
     }
