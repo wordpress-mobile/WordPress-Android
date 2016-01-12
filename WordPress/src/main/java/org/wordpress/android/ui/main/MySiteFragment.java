@@ -50,6 +50,7 @@ public class MySiteFragment extends Fragment
     private RelativeLayout mThemesContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
+    private View mSharingView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -120,6 +121,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
+        mSharingView = rootView.findViewById(R.id.row_sharing);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
@@ -187,6 +189,13 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());
+            }
+        });
+
+        mSharingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogSharing(getActivity(), mBlog);
             }
         });
 
@@ -307,6 +316,10 @@ public class MySiteFragment extends Fragment
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
+
+        // sharing is only exposed for wp.com blogs
+        int sharingVisibility = mBlog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        mSharingView.setVisibility(sharingVisibility);
 
         // show settings for all self-hosted to expose Delete Site
         int settingsVisibility = mBlog.isAdmin() || !mBlog.isDotcomFlag() ? View.VISIBLE : View.GONE;
