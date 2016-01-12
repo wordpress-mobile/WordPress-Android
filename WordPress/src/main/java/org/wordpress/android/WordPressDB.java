@@ -389,6 +389,9 @@ public class WordPressDB {
             case 39:
                 AccountTable.migrationAddFirstNameLastNameAboutMeFields(db);
                 currentVersion++;
+            case 40:
+                AccountTable.migrationAddNewEmailPendingEmailChangeFields(db);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }

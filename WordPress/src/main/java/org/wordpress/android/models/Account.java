@@ -98,7 +98,8 @@ public class Account extends AccountModel {
         FIRST_NAME("first_name"),
         LAST_NAME("last_name"),
         DISPLAY_NAME("display_name"),
-        ABOUT_ME("description");
+        ABOUT_ME("description"),
+        EMAIL("user_email");
 
         private String description;
 
