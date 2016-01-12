@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">이 글은 더 이상 존재하지 않습니다.</string>
+	<string name="reader_err_get_post_not_authorized">이 글을 볼 권한이 없습니다.</string>
+	<string name="reader_err_get_post_generic">이 글을 가져올 수 없습니다.</string>
+	<string name="blog_name_no_spaced_allowed">사이트 주소에 공백을 포함할 수 없습니다.</string>
+	<string name="invalid_username_no_spaces">사용자명에 공백을 포함할 수 없습니다.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">팔로우하는 사이트에 최근 게시된 글이 없습니다.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">최근 글 없음</string>
+	<string name="media_details_copy_url_toast">URL이 클립보드에 복사됨</string>
+	<string name="edit_media">미디어 편집</string>
+	<string name="media_details_copy_url">URL 복사</string>
+	<string name="media_details_label_date_uploaded">업로드됨</string>
+	<string name="media_details_label_date_added">추가됨</string>
 	<string name="selected_theme">선택된 테마</string>
 	<string name="could_not_load_theme">테마를 로드할 수 없음</string>
 	<string name="theme_activation_error">문제가 생겼습니다. 테마를 활성화할 수 없음</string>
@@ -199,12 +211,6 @@
 	<string name="tab_title_device_videos">장치 비디오</string>
 	<string name="tab_title_site_images">사이트 이미지</string>
 	<string name="tab_title_site_videos">사이트 비디오</string>
-	<string name="media_details_added_on">추가 위치:</string>
-	<string name="media_details_uploaded_on">업로드 위치:</string>
-	<string name="media_details_file_name">파일 이름:</string>
-	<string name="media_details_file_type">파일 형식:</string>
-	<string name="media_details_file_url">파일 URL:</string>
-	<string name="media_details_dimensions">넓이:</string>
 	<string name="error_publish_no_network">네트워크에 연결되지 않아 게시할 수 없습니다. 임시글로 저장되었습니다.</string>
 	<string name="editor_toast_invalid_path">잘못된 파일 경로</string>
 	<string name="verification_code">확인 코드</string>
@@ -667,7 +673,6 @@
 	<string name="media_add_popup_capture_video">동영상을 촬영</string>
 	<string name="media_edit_success">업데이트되었습니다</string>
 	<string name="themes_details_label">정보</string>
-	<string name="view_stats_full_site">전체 크기 보기</string>
 	<string name="stats_view_referrers">리퍼러</string>
 	<string name="media_edit_failure">업데이트에 실패</string>
 	<string name="media_edit_description_hint">설명을 입력</string>

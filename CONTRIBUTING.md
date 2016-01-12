@@ -26,13 +26,13 @@ Here's a quick guide to create a pull request for your WordPress-Android patch:
 [pr]: https://github.com/wordpress-mobile/WordPress-Android/compare/
 [style]: https://github.com/wordpress-mobile/WordPress-Android/CODESTYLE.md
 
-# Notes about versioning
+# Versioning
 
 * Version `x.y` (2.8 or 4.0 for instance) are major releases. There is no distinction between a 2.9 version or a 3.0 version, we want to avoid naming like 2.142 so the version after `x.9` (2.9) is simply `x+1.0` (3.0). A new major version is released every ~4 weeks.
 
 * Version `x.y.z` (2.8.1 or 4.0.2 for instance) are hotfix releases. We release them only when a blocking or major bug is found in the currently released version.
 
-# Notes about branching
+# Branching
 
 We use the [git flow branching model][git-flow].
 
@@ -56,6 +56,14 @@ We use the [git flow branching model][git-flow].
 Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a new version is released. A new tag will be created and pushed at the same time.
 
 [git-flow]: http://nvie.com/posts/a-successful-git-branching-model/
+
+# Drawable Resources
+
+Final APK will be packaged with `hpdi`, `xhdpi` and `xxhdpi` resolutions for our graphic resources. Other resolutions are supported but they will be scaled.
+
+If you have to add a new graphic resource to the app. You must provides `hpdi`, `xhdpi` and `xxhdpi` resolutions in `WordPress/src/main/res/`, but also the `xxxhdpi` version in `WordPress/src/future/res/drawable-xxxhdpi`. That `xxxhdpi` version won't be packaged in the current released APK. In future versions of the app, when very high resolution devices are common, we will release the app including `xxxhdpi` resources, and it will be much easier for us to just move existing resources from the `WordPress/src/future/res/drawable-xxxhdpi` folder.
+
+If the new drawable source is a SVG, then add it to `WordPress/src/future/res/svg/`. If the new drawable source is a Vector Drawable source, then add it to `WordPress/src/future/res/drawable/`.
 
 # Contribute to translations
 

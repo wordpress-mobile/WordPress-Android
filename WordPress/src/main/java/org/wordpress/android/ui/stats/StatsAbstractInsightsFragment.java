@@ -206,7 +206,7 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
             return;
         }
 
-        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+        if (!isSameBlog(event)) {
             return;
         }
 

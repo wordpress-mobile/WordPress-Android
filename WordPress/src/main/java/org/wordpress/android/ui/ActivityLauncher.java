@@ -28,6 +28,7 @@ import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
@@ -149,8 +150,10 @@ public class ActivityLauncher {
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
         if (blog == null) return;
 
-        // Create a new post object
+        // Create a new post object and assign default settings
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
+        newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) +"]");
+        newPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(context));
         WordPress.wpDB.savePost(newPost);
 
         Intent intent = new Intent(context, EditPostActivity.class);

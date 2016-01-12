@@ -51,13 +51,12 @@ public abstract class StatsAbstractFragment extends Fragment {
             return;
         }
 
-        final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
         final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-
         if (currentBlog == null) {
             AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
             return;
         }
+        final String blogId = currentBlog.getDotComBlogId();
 
         // Make sure the blogId is available.
         if (blogId == null) {
@@ -237,4 +236,12 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     protected abstract String getTitle();
+
+    boolean isSameBlog(StatsEvents.SectionUpdated event) {
+        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
+        if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
+            return event.mRequestBlogId.equals(currentBlog.getDotComBlogId());
+        }
+        return false;
+    }
 }

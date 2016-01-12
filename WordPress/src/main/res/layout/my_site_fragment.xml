@@ -256,7 +256,9 @@
             </RelativeLayout>
 
             <!--Configuration-->
-            <LinearLayout style="@style/MySiteListHeaderLayout">
+            <LinearLayout
+                android:id="@+id/row_configuration"
+                style="@style/MySiteListHeaderLayout">
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/MySiteListHeaderTextView"
