@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingTop="40dp"
-    android:gravity="center_horizontal">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:tint="@color/grey_darken_30"
-        android:src="@drawable/gridicons_history"/>
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content">
+        android:id="@android:id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="40dp"
+        android:layout_gravity="center_horizontal">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:textColor="@color/black"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="20dp"
-            android:text="Let Us Help" />
+            android:layout_marginRight="20dp"
+            android:tint="@color/grey_darken_30"
+            android:src="@drawable/gridicons_history"/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="If you want a site but don't want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out."
-            android:layout_marginBottom="20dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:backgroundTint="@color/white"
-            android:id="@+id/contact_support_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Contact support"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAllCaps="true"/>
+            <org.wordpress.android.widgets.WPTextView
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                android:text="Let Us Help" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="If you want a site but don't want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out."
+                android:layout_marginBottom="20dp" />
+
+            <Button
+                android:backgroundTint="@color/white"
+                android:id="@+id/contact_support_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact support"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
