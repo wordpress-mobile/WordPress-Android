@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -26,6 +26,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.DualPaneFragment;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
@@ -44,7 +45,7 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import de.greenrobot.event.EventBus;
 
-public class PostsListFragment extends Fragment
+public class PostsListFragment extends DualPaneFragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
@@ -68,10 +69,15 @@ public class PostsListFragment extends Fragment
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
+
+    public static PostsListFragment newInstance() {
+        return new PostsListFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        setHasOptionsMenu(true);
 
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
@@ -85,18 +91,6 @@ public class PostsListFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_list_fragment, container, false);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
         mFabView = view.findViewById(R.id.fab_button);
@@ -109,7 +103,27 @@ public class PostsListFragment extends Fragment
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
+        int spacingHorizontal;
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        if (isNested()) {
+            toolbar.setVisibility(View.GONE);
+
+            spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
+        } else {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+
+            spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
+        }
+
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         // hide the fab so we can animate it in - note that we only do this on Lollipop and higher
@@ -176,8 +190,7 @@ public class PostsListFragment extends Fragment
 
         initSwipeToRefreshHelper();
 
-        // since setRetainInstance(true) is used, we only need to request latest
-        // posts the first time this is called (ie: not after device rotation)
+        // latest posts only will be requested the first time this is called (ie: not after device rotation)
         if (bundle == null && NetworkUtils.checkConnection(getActivity())) {
             requestPosts(false);
         }
@@ -508,5 +521,16 @@ public class PostsListFragment extends Fragment
         });
 
         snackbar.show();
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            getActivity().onBackPressed();
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
