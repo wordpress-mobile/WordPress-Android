@@ -2,7 +2,6 @@ package org.wordpress.android.models;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 import android.test.mock.MockCursor;
@@ -46,12 +45,88 @@ public class MenuModelTest extends InstrumentationTestCase {
     }
 
     public void testDeserialize() {
-        MenuModel testModel = MenuModel.deserializeFromDatabase(getTestCursor());
+        MenuModel testModel = MenuModel.deserializeFromDatabase(new TestCursor());
         assertEquals(TEST_ID, testModel.menuId);
         assertEquals(TEST_NAME, testModel.name);
         assertEquals(TEST_DETAILS, testModel.details);
         assertEquals(TEST_LOCATIONS, testModel.serializeMenuLocations());
         assertEquals(TEST_ITEMS, testModel.serializeMenuItems());
+    }
+
+    public void testEqualsWithNull() {
+        //noinspection ObjectEqualsNull
+        assertFalse(getTestModel().equals(null));
+    }
+
+    public void testEqualsWithSameMenu() {
+        assertTrue(getTestModel().equals(getTestModel()));
+    }
+
+    public void testEqualsWithDifferentMenu() {
+        MenuModel staticModel = getTestModel();
+        MenuModel testModel = getTestModel();
+        testModel.name = null;
+        assertFalse(testModel.equals(staticModel));
+        testModel.name = staticModel.name;
+        testModel.menuId = null;
+        assertFalse(testModel.equals(staticModel));
+        testModel.menuId = staticModel.menuId;
+        testModel.details = null;
+        assertFalse(testModel.equals(staticModel));
+        testModel.details = staticModel.details;
+        testModel.locations = null;
+        assertFalse(testModel.equals(staticModel));
+        testModel.locations = staticModel.locations;
+        testModel.menuItems = null;
+        assertFalse(testModel.equals(staticModel));
+    }
+
+    private class TestCursor extends MockCursor {
+        @Override
+        public int getCount() {
+            return 5;
+        }
+
+        @Override
+        public boolean moveToFirst() {
+            return true;
+        }
+
+        @Override
+        public String getString(int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return TEST_ID;
+                case 1:
+                    return TEST_NAME;
+                case 2:
+                    return TEST_DETAILS;
+                case 3:
+                    return TEST_LOCATIONS;
+                case 4:
+                    return TEST_ITEMS;
+                default:
+                    return "";
+            }
+        }
+
+        @Override
+        public int getColumnIndex(String columnName) {
+            switch (columnName) {
+                case MenuModel.ID_COLUMN_NAME:
+                    return 0;
+                case MenuModel.NAME_COLUMN_NAME:
+                    return 1;
+                case MenuModel.DETAILS_COLUMN_NAME:
+                    return 2;
+                case MenuModel.LOCATIONS_COLUMN_NAME:
+                    return 3;
+                case MenuModel.ITEMS_COLUMN_NAME:
+                    return 4;
+                default:
+                    return -1;
+            }
+        }
     }
 
     private MenuModel getTestModel() {
@@ -64,62 +139,10 @@ public class MenuModelTest extends InstrumentationTestCase {
         return testModel;
     }
 
-    private Cursor getTestCursor() {
-        return new MockCursor() {
-            @Override
-            public int getCount() {
-                return 5;
-            }
-
-            @Override
-            public boolean moveToFirst() {
-                return true;
-            }
-
-            @Override
-            public String getString(int columnIndex) {
-                switch (columnIndex) {
-                    case 0:
-                        return TEST_ID;
-                    case 1:
-                        return TEST_NAME;
-                    case 2:
-                        return TEST_DETAILS;
-                    case 3:
-                        return TEST_LOCATIONS;
-                    case 4:
-                        return TEST_ITEMS;
-                    default:
-                        return "";
-                }
-            }
-
-            @Override
-            public int getColumnIndex(String columnName) {
-                switch (columnName) {
-                    case MenuModel.ID_COLUMN_NAME:
-                        return 0;
-                    case MenuModel.NAME_COLUMN_NAME:
-                        return 1;
-                    case MenuModel.DETAILS_COLUMN_NAME:
-                        return 2;
-                    case MenuModel.LOCATIONS_COLUMN_NAME:
-                        return 3;
-                    case MenuModel.ITEMS_COLUMN_NAME:
-                        return 4;
-                    default:
-                        return -1;
-                }
-            }
-        };
-    }
-
     private List<MenuLocationModel> getTestLocations() {
         List<MenuLocationModel> locations = new ArrayList<>();
         for (String name : TEST_LOCATIONS.split(",")) {
-            MenuLocationModel location = new MenuLocationModel();
-            location.name = name;
-            locations.add(location);
+            locations.add(MenuLocationModel.fromName(name));
         }
         return locations;
     }
@@ -127,9 +150,7 @@ public class MenuModelTest extends InstrumentationTestCase {
     private List<MenuItemModel> getTestItems() {
         List<MenuItemModel> items = new ArrayList<>();
         for (String id : TEST_ITEMS.split(",")) {
-            MenuItemModel item = new MenuItemModel();
-            item.itemId = id;
-            items.add(item);
+            items.add(MenuItemModel.fromItemId(id));
         }
         return items;
     }

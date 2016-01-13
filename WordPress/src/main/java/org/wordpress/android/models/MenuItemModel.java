@@ -3,6 +3,9 @@ package org.wordpress.android.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.wordpress.android.util.CollectionUtils;
+import org.wordpress.android.util.StringUtils;
+
 import java.util.List;
 
 public class MenuItemModel {
@@ -28,13 +31,31 @@ public class MenuItemModel {
     public String typeLabel;
     public String url;
     public MenuModel menu;
-    public List<MenuItemModel> children;
     public MenuItemModel parent;
+    public List<MenuItemModel> children;
 
     public static MenuItemModel fromItemId(String itemId) {
         MenuItemModel model = new MenuItemModel();
         model.itemId = itemId;
         return model;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof MenuItemModel)) return false;
+
+        MenuItemModel otherModel = (MenuItemModel) other;
+        return StringUtils.equals(name, otherModel.name) &&
+                StringUtils.equals(contentId, otherModel.contentId) &&
+                StringUtils.equals(itemId, otherModel.itemId) &&
+                StringUtils.equals(linkTarget, otherModel.linkTarget) &&
+                StringUtils.equals(linkTitle, otherModel.linkTitle) &&
+                StringUtils.equals(type, otherModel.type) &&
+                StringUtils.equals(typeFamily, otherModel.typeFamily) &&
+                StringUtils.equals(typeLabel, otherModel.typeLabel) &&
+                StringUtils.equals(url, otherModel.url) &&
+                StringUtils.equals(details, otherModel.details) &&
+                CollectionUtils.areListsEqual(children, otherModel.children);
     }
 
     public void deserializeFromDatabaseCursor(Cursor cursor) {

@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import org.wordpress.android.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -161,8 +163,8 @@ public class SiteSettingsModel {
                 commentsRequireUserAccount == otherModel.commentsRequireUserAccount &&
                 commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
                 maxLinks == otherModel.maxLinks &&
-                holdForModeration != null && holdForModeration.equals(otherModel.holdForModeration) &&
-                blacklist != null && blacklist.equals(otherModel.blacklist);
+                CollectionUtils.areListsEqual(holdForModeration, otherModel.holdForModeration) &&
+                CollectionUtils.areListsEqual(blacklist, otherModel.blacklist);
     }
 
     /**

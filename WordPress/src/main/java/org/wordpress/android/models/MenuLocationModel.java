@@ -4,6 +4,8 @@ package org.wordpress.android.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.wordpress.android.util.StringUtils;
+
 public class MenuLocationModel {
     // MenuLocation table column names
     public static final String ID_COLUMN_NAME = "id";
@@ -25,6 +27,16 @@ public class MenuLocationModel {
         MenuLocationModel model = new MenuLocationModel();
         model.name = name;
         return model;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof MenuLocationModel)) return false;
+
+        MenuLocationModel otherModel = (MenuLocationModel) other;
+        return StringUtils.equals(name, otherModel.name) &&
+                StringUtils.equals(defaultState, otherModel.defaultState) &&
+                StringUtils.equals(details, otherModel.details);
     }
 
     public void deserializeFromDatabaseCursor(Cursor cursor) {

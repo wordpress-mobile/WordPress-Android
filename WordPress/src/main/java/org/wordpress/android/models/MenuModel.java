@@ -3,6 +3,9 @@ package org.wordpress.android.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.wordpress.android.util.CollectionUtils;
+import org.wordpress.android.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +34,8 @@ public class MenuModel {
     public String details;
     public String menuId;
     public String name;
-    public List<MenuItemModel> menuItems;
     public List<MenuLocationModel> locations;
+    public List<MenuItemModel> menuItems;
 
     public static MenuModel deserializeFromDatabase(Cursor cursor) {
         MenuModel model = new MenuModel();
@@ -40,6 +43,18 @@ public class MenuModel {
     }
 
     public MenuModel() {
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof MenuModel)) return false;
+
+        MenuModel otherModel = (MenuModel) other;
+        return StringUtils.equals(details, otherModel.details) &&
+                StringUtils.equals(menuId, otherModel.menuId) &&
+                StringUtils.equals(name, otherModel.name) &&
+                CollectionUtils.areListsEqual(locations, otherModel.locations) &&
+                CollectionUtils.areListsEqual(menuItems, otherModel.menuItems);
     }
 
     /**
