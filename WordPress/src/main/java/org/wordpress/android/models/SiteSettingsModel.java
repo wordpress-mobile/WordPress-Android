@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.wordpress.android.util.DatabaseUtils.*;
+
 /**
  * Holds blog settings and provides methods to (de)serialize .com and self-hosted network calls.
  */
@@ -383,29 +385,5 @@ public class SiteSettingsModel {
         builder.setLength(builder.length() - 1);
 
         return builder.toString();
-    }
-
-    /**
-     * Helper method to get an integer value from a given column in a Cursor.
-     */
-    public static int getIntFromCursor(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex != -1 ? cursor.getInt(columnIndex) : -1;
-    }
-
-    /**
-     * Helper method to get a String value from a given column in a Cursor.
-     */
-    public static String getStringFromCursor(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex != -1 ? cursor.getString(columnIndex) : "";
-    }
-
-    /**
-     * Helper method to get a boolean value (stored as an int) from a given column in a Cursor.
-     */
-    public static boolean getBooleanFromCursor(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
 }

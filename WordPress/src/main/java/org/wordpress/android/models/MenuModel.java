@@ -6,6 +6,8 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wordpress.android.util.DatabaseUtils.*;
+
 public class MenuModel {
     // Menu table column names
     public static final String ID_COLUMN_NAME = "id";
@@ -45,9 +47,9 @@ public class MenuModel {
      */
     public MenuModel deserializeDatabaseCursor(Cursor cursor) {
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
-            menuId = SiteSettingsModel.getStringFromCursor(cursor, ID_COLUMN_NAME);
-            name = SiteSettingsModel.getStringFromCursor(cursor, NAME_COLUMN_NAME);
-            details = SiteSettingsModel.getStringFromCursor(cursor, DETAILS_COLUMN_NAME);
+            menuId = getStringFromCursor(cursor, ID_COLUMN_NAME);
+            name = getStringFromCursor(cursor, NAME_COLUMN_NAME);
+            details = getStringFromCursor(cursor, DETAILS_COLUMN_NAME);
             locations = deserializeLocations(cursor);
             menuItems = deserializeItems(cursor);
         }
@@ -56,7 +58,7 @@ public class MenuModel {
     }
 
     public List<MenuLocationModel> deserializeLocations(Cursor cursor) {
-        String locationNames = SiteSettingsModel.getStringFromCursor(cursor, LOCATIONS_COLUMN_NAME);
+        String locationNames = getStringFromCursor(cursor, LOCATIONS_COLUMN_NAME);
         List<MenuLocationModel> locations = new ArrayList<>();
         for (String name : locationNames.split(",")) {
             locations.add(MenuLocationModel.fromName(name));
@@ -65,7 +67,7 @@ public class MenuModel {
     }
 
     public List<MenuItemModel> deserializeItems(Cursor cursor) {
-        String itemIds = SiteSettingsModel.getStringFromCursor(cursor, ITEMS_COLUMN_NAME);
+        String itemIds = getStringFromCursor(cursor, ITEMS_COLUMN_NAME);
         List<MenuItemModel> items = new ArrayList<>();
         for (String id : itemIds.split(",")) {
             items.add(MenuItemModel.fromItemId(id));
