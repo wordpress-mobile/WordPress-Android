@@ -388,7 +388,7 @@ public class SiteSettingsModel {
     /**
      * Helper method to get an integer value from a given column in a Cursor.
      */
-    private int getIntFromCursor(Cursor cursor, String columnName) {
+    public static int getIntFromCursor(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 ? cursor.getInt(columnIndex) : -1;
     }
@@ -396,7 +396,7 @@ public class SiteSettingsModel {
     /**
      * Helper method to get a String value from a given column in a Cursor.
      */
-    private String getStringFromCursor(Cursor cursor, String columnName) {
+    public static String getStringFromCursor(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 ? cursor.getString(columnIndex) : "";
     }
@@ -404,7 +404,7 @@ public class SiteSettingsModel {
     /**
      * Helper method to get a boolean value (stored as an int) from a given column in a Cursor.
      */
-    private boolean getBooleanFromCursor(Cursor cursor, String columnName) {
+    public static boolean getBooleanFromCursor(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
