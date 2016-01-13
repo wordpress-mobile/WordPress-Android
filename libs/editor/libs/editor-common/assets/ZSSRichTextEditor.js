@@ -1400,11 +1400,12 @@ ZSSEditor.applyVideoFormattingCallback = function( match ) {
 }
 
 /**
- *  @brief      Sets the VidoPress video URL and poster URL on a video tag.
- *  @details    When switching between source and visual the wpvideo shortcode are replace by a video tag. Unfortunaly there
- *              is no way to infer the video url from the shortcode so we need to find this information and then set it on the video tag.
+ *  @brief      Sets the VideoPress video URL and poster URL on a video tag.
+ *  @details    When switching from HTML to visual mode, wpvideo shortcodes are replaced by video tags.
+ *              A request is sent using ZSSEditor.sendVideoPressInfoRequest() to obtain the video url matching each
+ *              wpvideo shortcode. This function must be called to set the url for each videopress id.
  *
- *  @param      videopressID      videopress identifier of the video.
+ *  @param      videopressID      VideoPress identifier of the video.
  *  @param      videoURL          URL of the video file to display.
  *  @param      posterURL         URL of the poster image to display
  */
@@ -1413,6 +1414,15 @@ ZSSEditor.setVideoPressLinks = function(videopressID, videoURL, posterURL ) {
     if (videoNode.length == 0) {
         return;
     }
+
+    if (videoURL.length == 0) {
+        // If no URL is being passed, the host activity probably doesn't have a record of this videopressID
+        // Drop the error event since it can cause an infinite loop in this case
+        // The user is still able to manually retry by tapping the video element
+        videoNode.attr('onError', '');
+        return;
+    }
+
     videoNode.attr('src', videoURL);
     videoNode.attr('controls', '');
     videoNode.attr('poster', posterURL);
@@ -2714,6 +2724,8 @@ ZSSField.prototype.handleTapEvent = function(e) {
                     // If the tapped video is a placeholder for a VideoPress video, send out an update request.
                     // This provides a way to load the video for Android API<19, where the onError property function in
                     // the placeholder video isn't being triggered, and sendVideoPressInfoRequest is never called.
+                    // This is also used to manually retry loading a VideoPress video after the onError attribute has
+                    // been stripped for the video tag.
                     targetNode.setAttribute("onerror", "");
                     ZSSEditor.sendVideoPressInfoRequest(targetNode.dataset.wpvideopress);
                     return;
