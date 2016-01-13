@@ -108,8 +108,12 @@ public class PostsListFragment extends DualPaneFragment
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         if (isInDualPaneMode()) {
+            //hide toolbar in dual pane mode
             toolbar.setVisibility(View.GONE);
 
+            //Use normal margin (instead of wide, tablet one) while in dual pane mode.
+            //Setting margin through different resource qualifiers in this case
+            //is too complicated and harder to follow.
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
         } else {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
