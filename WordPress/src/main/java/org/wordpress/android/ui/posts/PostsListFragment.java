@@ -107,7 +107,7 @@ public class PostsListFragment extends DualPaneFragment
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        if (isNested()) {
+        if (isInDualPaneMode()) {
             toolbar.setVisibility(View.GONE);
 
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
@@ -115,11 +115,9 @@ public class PostsListFragment extends DualPaneFragment
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
             ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
+            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         }
