@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuModel {
@@ -31,17 +32,45 @@ public class MenuModel {
     public List<MenuItemModel> menuItems;
     public List<MenuLocationModel> locations;
 
+    public static MenuModel deserializeFromDatabase(Cursor cursor) {
+        MenuModel model = new MenuModel();
+        return model.deserializeDatabaseCursor(cursor);
+    }
+
+    public MenuModel() {
+    }
+
     /**
      * Sets values from a local database {@link Cursor}.
      */
-    public void deserializeDatabaseCursor(Cursor cursor) {
-        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return;
+    public MenuModel deserializeDatabaseCursor(Cursor cursor) {
+        if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
+            menuId = SiteSettingsModel.getStringFromCursor(cursor, ID_COLUMN_NAME);
+            name = SiteSettingsModel.getStringFromCursor(cursor, NAME_COLUMN_NAME);
+            details = SiteSettingsModel.getStringFromCursor(cursor, DETAILS_COLUMN_NAME);
+            locations = deserializeLocations(cursor);
+            menuItems = deserializeItems(cursor);
+        }
 
-        menuId = SiteSettingsModel.getStringFromCursor(cursor, ID_COLUMN_NAME);
-        name = SiteSettingsModel.getStringFromCursor(cursor, NAME_COLUMN_NAME);
-        details = SiteSettingsModel.getStringFromCursor(cursor, DETAILS_COLUMN_NAME);
-//        locations = SiteSettingsModel.getStringFromCursor(cursor, LOCATIONS_COLUMN_NAME);
-//        menuItems = SiteSettingsModel.getStringFromCursor(cursor, ITEMS_COLUMN_NAME);
+        return this;
+    }
+
+    public List<MenuLocationModel> deserializeLocations(Cursor cursor) {
+        String locationNames = SiteSettingsModel.getStringFromCursor(cursor, LOCATIONS_COLUMN_NAME);
+        List<MenuLocationModel> locations = new ArrayList<>();
+        for (String name : locationNames.split(",")) {
+            locations.add(MenuLocationModel.fromName(name));
+        }
+        return locations;
+    }
+
+    public List<MenuItemModel> deserializeItems(Cursor cursor) {
+        String itemIds = SiteSettingsModel.getStringFromCursor(cursor, ITEMS_COLUMN_NAME);
+        List<MenuItemModel> items = new ArrayList<>();
+        for (String id : itemIds.split(",")) {
+            items.add(MenuItemModel.fromItemId(id));
+        }
+        return items;
     }
 
     /**

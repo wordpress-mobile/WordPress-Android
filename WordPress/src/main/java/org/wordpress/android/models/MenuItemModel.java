@@ -1,6 +1,7 @@
 package org.wordpress.android.models;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.util.List;
 
@@ -29,6 +30,15 @@ public class MenuItemModel {
     public MenuModel menu;
     public List<MenuItemModel> children;
     public MenuItemModel parent;
+
+    public static MenuItemModel fromItemId(String itemId) {
+        MenuItemModel model = new MenuItemModel();
+        model.itemId = itemId;
+        return model;
+    }
+
+    public void deserializeFromDatabaseCursor(Cursor cursor) {
+    }
 
     /**
      * Creates a {@link ContentValues} object to store this object in a local database.

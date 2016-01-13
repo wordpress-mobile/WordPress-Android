@@ -36,13 +36,7 @@ public class MenuModelTest extends InstrumentationTestCase {
     }
 
     public void testSerialize() {
-        MenuModel testModel = new MenuModel();
-        testModel.menuId = TEST_ID;
-        testModel.name = TEST_NAME;
-        testModel.details = TEST_DETAILS;
-        testModel.locations = getTestLocations();
-        testModel.menuItems = getTestItems();
-
+        MenuModel testModel = getTestModel();
         ContentValues values = testModel.serializeToDatabase();
         assertEquals(TEST_ID, values.getAsString(MenuModel.ID_COLUMN_NAME));
         assertEquals(TEST_NAME, values.getAsString(MenuModel.NAME_COLUMN_NAME));
@@ -52,13 +46,22 @@ public class MenuModelTest extends InstrumentationTestCase {
     }
 
     public void testDeserialize() {
-        MenuModel testModel = new MenuModel();
-        testModel.deserializeDatabaseCursor(getTestCursor());
+        MenuModel testModel = MenuModel.deserializeFromDatabase(getTestCursor());
         assertEquals(TEST_ID, testModel.menuId);
         assertEquals(TEST_NAME, testModel.name);
         assertEquals(TEST_DETAILS, testModel.details);
         assertEquals(TEST_LOCATIONS, testModel.serializeMenuLocations());
         assertEquals(TEST_ITEMS, testModel.serializeMenuItems());
+    }
+
+    private MenuModel getTestModel() {
+        MenuModel testModel = new MenuModel();
+        testModel.menuId = TEST_ID;
+        testModel.name = TEST_NAME;
+        testModel.details = TEST_DETAILS;
+        testModel.locations = getTestLocations();
+        testModel.menuItems = getTestItems();
+        return testModel;
     }
 
     private Cursor getTestCursor() {

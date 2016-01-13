@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 public class MenuLocationModel {
     // MenuLocation table column names
@@ -19,6 +20,15 @@ public class MenuLocationModel {
     public String details;
     public String name;
     public MenuModel menu;
+
+    public static MenuLocationModel fromName(String name) {
+        MenuLocationModel model = new MenuLocationModel();
+        model.name = name;
+        return model;
+    }
+
+    public void deserializeFromDatabaseCursor(Cursor cursor) {
+    }
 
     /**
      * Creates a {@link ContentValues} object to store this object in a local database.
