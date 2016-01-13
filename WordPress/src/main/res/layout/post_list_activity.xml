@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment android:id="@+id/postList"
-    android:name="org.wordpress.android.ui.posts.PostsListFragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/postList"
+        android:name="org.wordpress.android.ui.posts.PostsListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
