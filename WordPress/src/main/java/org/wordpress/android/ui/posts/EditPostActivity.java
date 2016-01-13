@@ -150,6 +150,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // -1=no response yet, 0=unavailable, 1=available
     private int mBlogMediaStatus = -1;
     private boolean mMediaUploadServiceStarted;
+    private List<String> mPendingVideoPressInfoRequests;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -1788,6 +1789,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 @Override
                 public void onSuccess(int count) {
                     mBlogMediaStatus = 1;
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!mPendingVideoPressInfoRequests.isEmpty()) {
+                                // If there are pending requests for video URLs from VideoPress ids, query the DB for
+                                // them again and notify the editor
+                                for (String videoId : mPendingVideoPressInfoRequests) {
+                                    String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
+                                    String path = WordPressMediaUtils.getNetworkVideoUrlFromVideoPressId(blogId,
+                                            videoId);
+
+                                    mEditorFragment.setUrlForVideoPressId(videoId, path, "");
+                                }
+
+                                mPendingVideoPressInfoRequests.clear();
+                            }
+                        }
+                    });
                 }
 
                 @Override
@@ -1926,15 +1946,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public String onVideoPressInfoRequested(String videoId) {
+    public void onVideoPressInfoRequested(String videoId) {
         String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
-        Cursor cursor = WordPress.wpDB.getMediaFileByVideoPressId(blogId, videoId);
+        String path = WordPressMediaUtils.getNetworkVideoUrlFromVideoPressId(blogId, videoId);
 
-        String path = "";
-        if (cursor != null && cursor.moveToFirst()) {
-            path = cursor.getString(cursor.getColumnIndex("fileURL"));
+        if (path.isEmpty()) {
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                if (mPendingVideoPressInfoRequests == null) {
+                    mPendingVideoPressInfoRequests = new ArrayList<>();
+                }
+                mPendingVideoPressInfoRequests.add(videoId);
+                refreshBlogMedia();
+            }
         }
-        return path;
+
+        mEditorFragment.setUrlForVideoPressId(videoId, path, "");
     }
 
     @Override

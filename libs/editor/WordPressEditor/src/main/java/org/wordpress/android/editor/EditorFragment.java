@@ -743,6 +743,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void setUrlForVideoPressId(final String videoId, final String videoUrl, final String posterUrl) {
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.execJavaScriptFromString("ZSSEditor.setVideoPressLinks('" + videoId + "', '" +
+                        videoUrl + "', '" + posterUrl + "');");
+            }
+        });
+    }
+
+    @Override
     public boolean hasFailedMediaUploads() {
         return (mFailedMediaIds.size() > 0);
     }
@@ -1007,15 +1018,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onVideoPressInfoRequested(final String videoId) {
-        final String videoUrl = mEditorFragmentListener.onVideoPressInfoRequested(videoId);
-
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                mWebView.execJavaScriptFromString("ZSSEditor.setVideoPressLinks('" + videoId + "', '" +
-                        videoUrl + "', '');");
-            }
-        });
+        mEditorFragmentListener.onVideoPressInfoRequested(videoId);
     }
 
     public void onGetHtmlResponse(Map<String, String> inputArgs) {

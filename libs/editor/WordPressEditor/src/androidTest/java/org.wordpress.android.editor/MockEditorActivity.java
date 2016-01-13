@@ -62,8 +62,8 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     }
 
     @Override
-    public String onVideoPressInfoRequested(String videoId) {
-        return "";
+    public void onVideoPressInfoRequested(String videoId) {
+
     }
 
     @Override

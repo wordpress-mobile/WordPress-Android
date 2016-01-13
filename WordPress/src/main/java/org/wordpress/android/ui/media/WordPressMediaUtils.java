@@ -280,6 +280,22 @@ public class WordPressMediaUtils {
     }
 
     /**
+     * Given a VideoPress id, returns the corresponding remote video URL stored in the DB
+     * @param blogId the current blog id
+     * @param videoPressId the VideoPress id (used in VP shortcodes: [wpvideo the-VideoPress-id])
+     */
+    public static String getNetworkVideoUrlFromVideoPressId(String blogId, String videoPressId) {
+        Cursor cursor = WordPress.wpDB.getMediaFileByVideoPressId(blogId, videoPressId);
+
+        String path = "";
+        if (cursor != null && cursor.moveToFirst()) {
+            path = cursor.getString(cursor.getColumnIndex("fileURL"));
+        }
+
+        return path;
+    }
+
+    /**
      * Given a media file cursor, returns the thumbnail network URL. Will use photon if available, using the specified
      * width.
      * @param cursor the media file cursor
