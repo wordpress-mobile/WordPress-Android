@@ -75,6 +75,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
+    private boolean mIsWebViewPaused;
     private int mToolbarHeight;
     private String mErrorMessage;
 
@@ -258,15 +259,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (!hasPost()) {
             showPost();
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        // this ensures embedded videos don't continue to play when the fragment is no longer
-        // active or has been detached
-        pauseWebView();
     }
 
     /*
@@ -875,11 +867,23 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     void pauseWebView() {
-        if (mReaderWebView != null) {
+        if (mReaderWebView == null) {
+            AppLog.w(T.READER, "reader post detail > attempt to pause null webView");
+        } else if (!mIsWebViewPaused) {
+            AppLog.d(T.READER, "reader post detail > pausing webView");
             mReaderWebView.hideCustomView();
             mReaderWebView.onPause();
-        } else {
-            AppLog.i(T.READER, "reader post detail > attempt to pause webView when null");
+            mIsWebViewPaused = true;
+        }
+    }
+
+    void resumeWebViewIfPaused() {
+        if (mReaderWebView == null) {
+            AppLog.w(T.READER, "reader post detail > attempt to resume null webView");
+        } else if (mIsWebViewPaused) {
+            AppLog.d(T.READER, "reader post detail > resuming paused webView");
+            mReaderWebView.onResume();
+            mIsWebViewPaused = false;
         }
     }
 

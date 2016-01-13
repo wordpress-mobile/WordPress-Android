@@ -439,7 +439,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
 
         // At this point the remote ID cannot be null.
-        String remoteBlogID = StatsUtils.getBlogId(blog);
+        String remoteBlogID = blog.getDotComBlogId();
         // Add the following check just to be safe
         if (remoteBlogID == null) {
             showMessage(context, new int[]{widgetID},

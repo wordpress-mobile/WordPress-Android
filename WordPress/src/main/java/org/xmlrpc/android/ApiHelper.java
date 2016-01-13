@@ -53,7 +53,7 @@ import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
 
-    public static final class Methods {
+    public static final class Method {
         public static final String GET_MEDIA_LIBRARY  = "wp.getMediaLibrary";
         public static final String GET_POST_FORMATS   = "wp.getPostFormats";
         public static final String GET_CATEGORIES     = "wp.getCategories";
@@ -85,7 +85,7 @@ public class ApiHelper {
         public static final String LIST_METHODS       = "system.listMethods";
     }
 
-    public static final class Params {
+    public static final class Param {
         public static final String SHOW_SUPPORTED_POST_FORMATS = "show-supported";
     }
 
@@ -145,9 +145,9 @@ public class ApiHelper {
                     mBlog.getHttppassword());
             Object result = null;
             Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                    mBlog.getPassword(), Params.SHOW_SUPPORTED_POST_FORMATS };
+                    mBlog.getPassword(), Param.SHOW_SUPPORTED_POST_FORMATS };
             try {
-                result = client.call(ApiHelper.Methods.GET_POST_FORMATS, params);
+                result = client.call(Method.GET_POST_FORMATS, params);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
@@ -278,7 +278,7 @@ public class ApiHelper {
                                     hPost};
                 Object versionResult = null;
                 try {
-                    versionResult = client.call(Methods.GET_OPTIONS, vParams);
+                    versionResult = client.call(Method.GET_OPTIONS, vParams);
                 } catch (ClassCastException cce) {
                     setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                     return false;
@@ -312,7 +312,7 @@ public class ApiHelper {
             // Check if user is an admin
             Object[] userParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
             try {
-                Map<String, Object> userInfos = (HashMap<String, Object>) client.call(ApiHelper.Methods.GET_PROFILE, userParams);
+                Map<String, Object> userInfos = (HashMap<String, Object>) client.call(Method.GET_PROFILE, userParams);
                 updateBlogAdmin(userInfos);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
@@ -378,7 +378,7 @@ public class ApiHelper {
 
         int numDeleted = 0;
         try {
-            Object[] result = (Object[]) client.call(ApiHelper.Methods.GET_COMMENTS, params);
+            Object[] result = (Object[]) client.call(Method.GET_COMMENTS, params);
             if (result == null || result.length == 0) {
                 return 0;
             }
@@ -411,7 +411,7 @@ public class ApiHelper {
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                 blog.getHttppassword());
         Object[] result;
-        result = (Object[]) client.call(ApiHelper.Methods.GET_COMMENTS, commentParams);
+        result = (Object[]) client.call(Method.GET_COMMENTS, commentParams);
 
         if (result.length == 0) {
             return null;
@@ -475,7 +475,7 @@ public class ApiHelper {
                     blog.getHttppassword());
             Object[] params = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), postId};
             try {
-                client.call(isPage ? Methods.DELETE_PAGE : Methods.DELETE_POST, params);
+                client.call(isPage ? Method.DELETE_PAGE : Method.DELETE_POST, params);
                 return true;
             } catch (XMLRPCException | IOException | XmlPullParserException e) {
                 mErrorMessage = e.getMessage();
@@ -527,7 +527,7 @@ public class ApiHelper {
 
             Object[] results = null;
             try {
-                results = (Object[]) client.call(ApiHelper.Methods.GET_MEDIA_LIBRARY, apiParams);
+                results = (Object[]) client.call(Method.GET_MEDIA_LIBRARY, apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return 0;
@@ -631,7 +631,7 @@ public class ApiHelper {
 
             Boolean result = null;
             try {
-                result = (Boolean) client.call(ApiHelper.Methods.EDIT_POST, apiParams);
+                result = (Boolean) client.call(Method.EDIT_POST, apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
@@ -691,7 +691,7 @@ public class ApiHelper {
             };
             Map<?, ?> results = null;
             try {
-                results = (Map<?, ?>) client.call(ApiHelper.Methods.GET_MEDIA_ITEM, apiParams);
+                results = (Map<?, ?>) client.call(Method.GET_MEDIA_ITEM, apiParams);
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
             } catch (XMLRPCException e) {
@@ -772,7 +772,7 @@ public class ApiHelper {
 
             Map<?, ?> resultMap;
             try {
-                resultMap = (HashMap<?, ?>) client.call(Methods.UPLOAD_FILE, apiParams, getTempFile(mContext));
+                resultMap = (HashMap<?, ?>) client.call(Method.UPLOAD_FILE, apiParams, getTempFile(mContext));
             } catch (ClassCastException cce) {
                 setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
                 return null;
@@ -845,7 +845,7 @@ public class ApiHelper {
 
             try {
                 if (client != null) {
-                    Boolean result = (Boolean) client.call(ApiHelper.Methods.DELETE_POST, apiParams);
+                    Boolean result = (Boolean) client.call(Method.DELETE_POST, apiParams);
                     if (!result) {
                         setError(ErrorType.INVALID_RESULT, "wp.deletePost returned false");
                     }
@@ -911,7 +911,7 @@ public class ApiHelper {
 
             Map<?, ?> resultMap = null;
             try {
-                resultMap = (HashMap<?, ?>) client.call(ApiHelper.Methods.WPCOM_GET_FEATURES, apiParams);
+                resultMap = (HashMap<?, ?>) client.call(Method.WPCOM_GET_FEATURES, apiParams);
             } catch (ClassCastException cce) {
                 AppLog.e(T.API, "wpcom.getFeatures error", cce);
             } catch (XMLRPCException e) {
@@ -1141,7 +1141,7 @@ public class ApiHelper {
         }
 
         try {
-            Object result = client.call(isPage ? ApiHelper.Methods.GET_PAGE : "metaWeblog.getPost", apiParams);
+            Object result = client.call(isPage ? Method.GET_PAGE : "metaWeblog.getPost", apiParams);
 
             if (result != null && result instanceof Map) {
                 Map postMap = (HashMap) result;

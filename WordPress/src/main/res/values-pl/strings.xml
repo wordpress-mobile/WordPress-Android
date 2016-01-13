@@ -25,7 +25,6 @@
 	<string name="two_step_sms_sent">Sprawdź swoje SMSy w poszukiwaniu kodu weryfikacyjnego.</string>
 	<string name="two_step_footer_label">Wprowadź kod z aplikacji do uwierzytelniania.</string>
 	<string name="device">Urządzenie</string>
-	<string name="media_details_file_name">Nazwa pliku:</string>
 	<string name="media_picker_title">Wybierz media</string>
 	<string name="add_to_post">Dodaj do wpisu</string>
 	<string name="tab_title_device_images">Zdjęcia z urządzenia</string>
@@ -33,16 +32,11 @@
 	<string name="take_video">Nagraj film</string>
 	<string name="tab_title_site_videos">Filmy z witryny</string>
 	<string name="tab_title_site_images">Zdjęcia z witryny</string>
-	<string name="media_details_dimensions">Wymiary:</string>
-	<string name="media_details_file_url">Adres URL pliku:</string>
-	<string name="media_details_added_on">Dodane:</string>
-	<string name="media_details_uploaded_on">Wgrane:</string>
 	<string name="verify">Weryfikuj</string>
 	<string name="error_publish_no_network">Publikacja nie jest możliwa bez połączenia z Internetem. Treść zapisano jako szkic.</string>
 	<string name="editor_toast_invalid_path">Niewłaściwa ścieżka do pliku</string>
 	<string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
 	<string name="verification_code">Kod weryfikacyjny</string>
-	<string name="media_details_file_type">Typ pliku:</string>
 	<string name="take_photo">Zrób zdjęcie</string>
 	<string name="language">Język</string>
 	<string name="media_fetching">Ładowanie mediów...</string>
@@ -461,7 +455,6 @@
 	<string name="themes_features_label">Funkcje</string>
 	<string name="share_action">Udostępnij</string>
 	<string name="stats">Statystyki</string>
-	<string name="view_stats_full_site">Zobacz całą witrynę</string>
 	<string name="stats_view_visitors_and_views">Odwiedzający i wyświetlenia</string>
 	<string name="stats_view_clicks">Kliknięcia</string>
 	<string name="stats_view_tags_and_categories">Tagi i kategorie</string>

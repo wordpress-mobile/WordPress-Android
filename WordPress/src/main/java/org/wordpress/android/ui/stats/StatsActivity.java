@@ -43,6 +43,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -523,7 +524,7 @@ public class StatsActivity extends AppCompatActivity
             mResultCode = resultCode;
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
-                if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+                if (currentBlog.getDotComBlogId() == null) {
                     final Handler handler = new Handler();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
@@ -573,7 +574,7 @@ public class StatsActivity extends AppCompatActivity
                                 }
                             });
                         }
-                    }, ApiHelper.Methods.GET_OPTIONS, params);
+                    }, Method.GET_OPTIONS, params);
                 } else {
                     mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
                     createFragments(true); // Recreate the fragment and start a refresh of Stats
@@ -695,13 +696,14 @@ public class StatsActivity extends AppCompatActivity
             AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
             return false;
         }
-        final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             return false;
         }
+
+        final String blogId = currentBlog.getDotComBlogId();
 
         // blogId is always available for dotcom blogs. It could be null on Jetpack blogs...
         if (blogId != null) {
@@ -763,7 +765,11 @@ public class StatsActivity extends AppCompatActivity
         mSwipeToRefreshHelper.setRefreshing(false);
 
         if (!event.isError) {
-            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+            final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+            if (currentBlog == null) {
+                return;
+            }
+            if (currentBlog.getDotComBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 showJetpackMissingAlert();
             } else {
