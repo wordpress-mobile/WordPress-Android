@@ -17,6 +17,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -357,25 +358,24 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                CommentActions.moderateCommentRestApi(blog.getRemoteBlogId(), comment.commentID, newStatus, new
-                        CommentActions.CommentActionListener() {
-                    @Override
-                    public void onActionResult(final boolean succeeded) {
-                        if (succeeded) {
-                            CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID,
-                                    CommentStatus.toString(newStatus));
-                        }
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                        blog.getHttppassword());
 
-                        if (actionListener != null) {
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    actionListener.onActionResult(succeeded);
-                                }
-                            });
+                final boolean success = ApiHelper.editComment(blog, comment, newStatus);
+
+                if (success) {
+                    CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, CommentStatus
+                            .toString(newStatus));
+                }
+
+                if (actionListener != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            actionListener.onActionResult(success);
                         }
-                    }
-                });
+                    });
+                }
             }
         }.start();
     }
@@ -405,43 +405,15 @@ public class CommentActions {
         final CommentList moderatedComments = new CommentList();
         final String newStatusStr = CommentStatus.toString(newStatus);
         final int localBlogId = blog.getLocalTableBlogId();
-        final int remoteBlogId = blog.getRemoteBlogId();
 
         final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
                 for (Comment comment: comments) {
-                    Map<String, String> postHash = new HashMap<String, String>();
-                    postHash.put("status", newStatusStr);
-                    postHash.put("content", comment.getCommentText());
-                    postHash.put("author", comment.getAuthorName());
-                    postHash.put("author_url", comment.getAuthorUrl());
-                    postHash.put("author_email", comment.getAuthorEmail());
-
-                    Object[] params = {
-                            remoteBlogId,
-                            blog.getUsername(),
-                            blog.getPassword(),
-                            Long.toString(comment.commentID),
-                            postHash};
-
-                    Object result;
-                    try {
-                        result = client.call(Method.EDIT_COMMENT, params);
-                        boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                        if (success) {
-                            comment.setStatus(newStatusStr);
-                            moderatedComments.add(comment);
-                        }
-                    } catch (XMLRPCException e) {
-                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    } catch (IOException e) {
-                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    } catch (XmlPullParserException e) {
-                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
+                    if (ApiHelper.editComment(blog, comment, newStatus)) {
+                        comment.setStatus(newStatusStr);
+                        moderatedComments.add(comment);
                     }
                 }
 
