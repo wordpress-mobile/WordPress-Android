@@ -38,6 +38,10 @@ public class MenuModel {
         if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return;
 
         menuId = SiteSettingsModel.getStringFromCursor(cursor, ID_COLUMN_NAME);
+        name = SiteSettingsModel.getStringFromCursor(cursor, NAME_COLUMN_NAME);
+        details = SiteSettingsModel.getStringFromCursor(cursor, DETAILS_COLUMN_NAME);
+//        locations = SiteSettingsModel.getStringFromCursor(cursor, LOCATIONS_COLUMN_NAME);
+//        menuItems = SiteSettingsModel.getStringFromCursor(cursor, ITEMS_COLUMN_NAME);
     }
 
     /**
@@ -48,12 +52,12 @@ public class MenuModel {
         values.put(ID_COLUMN_NAME, menuId);
         values.put(NAME_COLUMN_NAME, name);
         values.put(DETAILS_COLUMN_NAME, details);
-        values.put(LOCATIONS_COLUMN_NAME, serializeMenuItems());
-        values.put(ITEMS_COLUMN_NAME, serializeMenuLocations());
+        values.put(LOCATIONS_COLUMN_NAME, serializeMenuLocations());
+        values.put(ITEMS_COLUMN_NAME, serializeMenuItems());
         return values;
     }
 
-    private String serializeMenuItems() {
+    public String serializeMenuItems() {
         StringBuilder builder = new StringBuilder();
         for (MenuItemModel item : menuItems) {
             builder.append(item.itemId);
@@ -62,7 +66,7 @@ public class MenuModel {
         return builder.substring(0, builder.length() - 1);
     }
 
-    private String serializeMenuLocations() {
+    public String serializeMenuLocations() {
         StringBuilder builder = new StringBuilder();
         for (MenuLocationModel location : locations) {
             builder.append(location.name);
