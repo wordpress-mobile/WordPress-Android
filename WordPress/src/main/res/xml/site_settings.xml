@@ -284,7 +284,7 @@
         android:key="@string/pref_key_site_advanced"
         android:title="@string/site_settings_advanced_header">
 
-        <Preference
+        <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_start_over"
             android:key="@string/pref_key_site_start_over"
             android:title="@string/start_over"
