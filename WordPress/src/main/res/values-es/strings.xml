@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Esta entrada ya no existe</string>
+	<string name="reader_err_get_post_not_authorized">No estás autorizado a ver esta entrada</string>
+	<string name="reader_err_get_post_generic">No se pudo cargar esta entrada</string>
+	<string name="blog_name_no_spaced_allowed">La dirección del sitio no puede tener espacios</string>
+	<string name="invalid_username_no_spaces">El nombre de usuario no puede tener espacios</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Los sitios que estás siguiendo no han publicado nada recientemente</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">No hay entradas recientes</string>
+	<string name="media_details_copy_url_toast">URL copiada al portapapeles</string>
+	<string name="edit_media">Editar multimedia</string>
+	<string name="media_details_copy_url">Copiar URL</string>
+	<string name="media_details_label_date_uploaded">Subido</string>
+	<string name="media_details_label_date_added">Añadido</string>
 	<string name="selected_theme">Tema seleccionado</string>
 	<string name="could_not_load_theme">No se ha podido cargar el tema</string>
 	<string name="theme_activation_error">Se ha producido un error. No se ha podido activar el tema</string>
@@ -196,7 +208,6 @@
 	<string name="tab_title_site_images">Imágenes del sitio</string>
 	<string name="tab_title_site_videos">Vídeos del sitio</string>
 	<string name="add_to_post">Añadir a la entrada</string>
-	<string name="media_details_file_name">Nombre del archivo:</string>
 	<string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
 	<string name="verification_code">Código de verificación</string>
 	<string name="two_step_sms_sent">Revisa tus mensajes de texto para el código de verificación.</string>
@@ -205,16 +216,13 @@
 	<string name="verify">Verificar</string>
 	<string name="invalid_verification_code">Código de verificación no válido</string>
 	<string name="error_publish_no_network">No se puede publicar mientras no haya conexión. Guardado como borrador.</string>
-	<string name="media_details_file_url">URL del archivo:</string>
-	<string name="media_details_dimensions">Dimensiones:</string>
-	<string name="media_details_file_type">Tipo de archivo:</string>
-	<string name="media_details_uploaded_on">Subido a:</string>
-	<string name="media_details_added_on">Añadido en:</string>
 	<string name="take_video">Grabar un vídeo</string>
 	<string name="take_photo">Sacar una foto</string>
 	<string name="media_picker_title">Selecciona medio</string>
 	<string name="language">Idioma</string>
 	<string name="device">Dispositivo</string>
+	<string name="media_details_label_file_name">Nombre del archivo</string>
+	<string name="media_details_label_file_type">Tipo de archivo</string>
 	<string name="publisher">Autor:</string>
 	<string name="stats_empty_search_terms">No se han grabado los términos de búsqueda</string>
 	<string name="comments_fetching">Recuperando comentarios…</string>
@@ -230,7 +238,7 @@
 	<string name="stats_followers_total_wpcom_paged">Mostrando del %1$d al %2$d de %3$s suscriptores de WordPress.com</string>
 	<string name="error_notification_open">No se pudo abrir la notificación</string>
 	<string name="stats_followers_total_email_paged">Mostrando del %1$d al %2$d de %3$s suscriptores por correo electrónico</string>
-	<string name="reader_empty_posts_request_failed">No fue posible cargar las entradas</string>
+	<string name="reader_empty_posts_request_failed">No se pudieron cargar las entradas</string>
 	<string name="stats_months_and_years">Meses y años</string>
 	<string name="stats_average_per_day">Media diaria</string>
 	<string name="stats_overall">Global</string>
@@ -673,7 +681,6 @@
 	<string name="media_gallery_type_tiled">Mosaico</string>
 	<string name="media_gallery_type_circles">Círculos</string>
 	<string name="media_no_video_message">Necesitas comprar VideoPress para subir videos</string>
-	<string name="view_stats_full_site">Ver sitio completo </string>
 	<string name="stats_view_visitors_and_views">Visitantes y Vistas</string>
 	<string name="theme_set_success">¡Tema aplicado con exito!</string>
 	<string name="theme_auth_error_title">Error al recibir temas</string>

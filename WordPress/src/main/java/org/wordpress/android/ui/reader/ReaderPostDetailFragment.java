@@ -261,26 +261,9 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        // this ensures embedded videos don't continue to play when the fragment is no longer
-        // active or has been detached
-        pauseWebView();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // resume the webView if it was paused above - without this the content may not re-appear
-        resumeWebViewIfPaused();
-    }
-
     /*
-         * changes the like on the passed post
-         */
+     * changes the like on the passed post
+     */
     private void togglePostLike() {
         if (!isAdded() || !hasPost() || !NetworkUtils.checkConnection(getActivity())) {
             return;
@@ -886,7 +869,7 @@ public class ReaderPostDetailFragment extends Fragment
     void pauseWebView() {
         if (mReaderWebView == null) {
             AppLog.w(T.READER, "reader post detail > attempt to pause null webView");
-        } else {
+        } else if (!mIsWebViewPaused) {
             AppLog.d(T.READER, "reader post detail > pausing webView");
             mReaderWebView.hideCustomView();
             mReaderWebView.onPause();
@@ -894,7 +877,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private void resumeWebViewIfPaused() {
+    void resumeWebViewIfPaused() {
         if (mReaderWebView == null) {
             AppLog.w(T.READER, "reader post detail > attempt to resume null webView");
         } else if (mIsWebViewPaused) {

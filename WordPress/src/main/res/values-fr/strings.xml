@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Cet article n’existe plus</string>
+	<string name="reader_err_get_post_not_authorized">Vous n’avez pas les droits nécessaires pour voir cet article</string>
+	<string name="reader_err_get_post_generic">Impossible de retrouver cet article</string>
+	<string name="blog_name_no_spaced_allowed">L\'adresse du site ne peut pas contenir d\'espaces.</string>
+	<string name="invalid_username_no_spaces">Le nom d\'utilisateur ne peut pas contenir d\'espaces.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Les sites que vous suivez n\'ont rien publié récemment.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Pas d\'articles récents.</string>
+	<string name="media_details_copy_url_toast">URL copiée dans le presse-papiers.</string>
+	<string name="edit_media">Modifier le média.</string>
+	<string name="media_details_copy_url">Copier l\'URL.</string>
+	<string name="media_details_label_date_uploaded">Envoyé</string>
+	<string name="media_details_label_date_added">Ajouté</string>
 	<string name="selected_theme">Thème sélectionné</string>
 	<string name="could_not_load_theme">Impossible de charger le thème</string>
 	<string name="theme_activation_error">Quelque chose s\'est mal passé. Impossible d&amp;rsquo;activer le thème.</string>
@@ -200,12 +212,7 @@
 	<string name="editor_toast_invalid_path">Chemin de fichier invalide</string>
 	<string name="error_publish_no_network">Impossible de publier quand il n\'y a pas de connexion. Brouillon sauvegardé.</string>
 	<string name="device">Appareil</string>
-	<string name="media_details_dimensions">Dimensions:</string>
-	<string name="media_details_file_url">URL du fichier</string>
-	<string name="media_details_file_type">Type de fichier:</string>
-	<string name="media_details_file_name">Nom de fichier:</string>
-	<string name="media_details_uploaded_on">Uploadé le:</string>
-	<string name="media_details_added_on">Ajouté le:</string>
+	<string name="media_details_label_file_type">Type de fichier:</string>
 	<string name="tab_title_site_videos">Videos du site</string>
 	<string name="tab_title_site_images">Images du site</string>
 	<string name="tab_title_device_videos">Vidéos de l\'appareil</string>
@@ -215,6 +222,7 @@
 	<string name="media_picker_title">Sélectionner un média</string>
 	<string name="add_to_post">Ajouter à l\'article</string>
 	<string name="language">Langue</string>
+	<string name="media_details_label_file_name">Nom de fichier :</string>
 	<string name="posts_fetching">Récupération des articles…</string>
 	<string name="media_fetching">Récupération des médias…</string>
 	<string name="stats_view_search_terms">Termes de Recherche</string>
@@ -650,7 +658,6 @@
 	<string name="stats_timeframe_days">Jours</string>
 	<string name="stats_timeframe_weeks">Semaines</string>
 	<string name="stats_timeframe_months">Mois</string>
-	<string name="view_stats_full_site">Voir le site complet</string>
 	<string name="stats_view_clicks">Clicks</string>
 	<string name="media_no_video_title">VideoPress indisponible</string>
 	<string name="media_gallery_type_slideshow">Diaporama</string>

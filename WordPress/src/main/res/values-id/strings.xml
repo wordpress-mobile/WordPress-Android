@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Pos ini tidak ada lagi</string>
+	<string name="reader_err_get_post_not_authorized">Anda tidak diizinkan melihat pos ini</string>
+	<string name="reader_err_get_post_generic">Gagal mengambil pos ini</string>
+	<string name="blog_name_no_spaced_allowed">Alamat situs tak boleh memuat spasi</string>
+	<string name="invalid_username_no_spaces">Nama pengguna tak boleh memuat spasi</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Situs-situs yang Anda ikuti belum menerbitkan pos apapun belakangan ini</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Tak ada pos terbaru</string>
+	<string name="media_details_copy_url_toast">URL tersalin dalam papan klip</string>
+	<string name="edit_media">Edit media</string>
+	<string name="media_details_copy_url">Salin URL</string>
+	<string name="media_details_label_date_uploaded">Terunggah</string>
+	<string name="media_details_label_date_added">Ditambahkan</string>
 	<string name="selected_theme">Tema Terpilih</string>
 	<string name="could_not_load_theme">Tidak dapat memuat tema</string>
 	<string name="theme_activation_error">Terjadi masalah. Tidak dapat mengaktifkan tema</string>
@@ -199,12 +211,6 @@
 	<string name="verification_code">Kode verifikasi</string>
 	<string name="editor_toast_invalid_path">Lokasi file tidak valid</string>
 	<string name="error_publish_no_network">Tak bisa menerbitkan tanpa koneksi internet. Tersimpan sebagai draf.</string>
-	<string name="media_details_dimensions">Dimensi:</string>
-	<string name="media_details_file_url">URL file:</string>
-	<string name="media_details_file_name">Nama file:</string>
-	<string name="media_details_file_type">Tipe file:</string>
-	<string name="media_details_added_on">Ditambahkan pada:</string>
-	<string name="media_details_uploaded_on">Diunggah pada:</string>
 	<string name="tab_title_device_videos">Video Perangkat</string>
 	<string name="tab_title_device_images">Gambar Perangkat</string>
 	<string name="tab_title_site_images">Gambar Situs</string>
@@ -215,6 +221,8 @@
 	<string name="add_to_post">Tambahkan ke Pos</string>
 	<string name="language">Bahasa</string>
 	<string name="device">Perangkat</string>
+	<string name="media_details_label_file_name">Nama file</string>
+	<string name="media_details_label_file_type">Tipe file</string>
 	<string name="posts_fetching">Memuat pos...</string>
 	<string name="media_fetching">Memuat media...</string>
 	<string name="toast_err_post_uploading">Gagal membuka pos saat diunggah</string>
@@ -665,7 +673,6 @@
 	<string name="share_action_title">Tambah ke ...</string>
 	<string name="share_action">Bagi</string>
 	<string name="stats">Stat</string>
-	<string name="view_stats_full_site">Lihat situs penuh</string>
 	<string name="stats_view_visitors_and_views">Pengunjung dan Tampilan</string>
 	<string name="stats_totals_views">Tampilan</string>
 	<string name="stats_totals_clicks">Klik</string>
