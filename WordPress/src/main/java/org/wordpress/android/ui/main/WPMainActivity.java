@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.main;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -56,7 +56,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
+public class WPMainActivity extends AppCompatActivity implements Bucket.Listener<Note> {
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -83,7 +83,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
         mViewPager.setOffscreenPageLimit(WPMainTabAdapter.NUM_TABS - 1);
 
-        mTabAdapter = new WPMainTabAdapter(getFragmentManager());
+        mTabAdapter = new WPMainTabAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
         mConnectionBar = (TextView) findViewById(R.id.connection_bar);
@@ -221,7 +221,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
             }
         } else {
-          // mark all tapped here
+            // mark all tapped here
             GCMMessageService.bumpPushNotificationsTappedAllAnalytics();
         }
 
@@ -320,7 +320,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
         // remember the current tab position, then recreate the adapter so new fragments are created
         int position = mViewPager.getCurrentItem();
-        mTabAdapter = new WPMainTabAdapter(getFragmentManager());
+        mTabAdapter = new WPMainTabAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
         // restore previous position

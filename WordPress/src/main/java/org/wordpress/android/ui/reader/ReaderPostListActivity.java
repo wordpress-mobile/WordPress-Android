@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -97,7 +97,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
             return;
         }
         Fragment fragment = ReaderPostListFragment.newInstanceForTag(tag, listType);
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
@@ -111,7 +111,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
             return;
         }
         Fragment fragment = ReaderPostListFragment.newInstanceForBlog(blogId);
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
@@ -122,14 +122,14 @@ public class ReaderPostListActivity extends AppCompatActivity {
             return;
         }
         Fragment fragment = ReaderPostListFragment.newInstanceForFeed(feedId);
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
     }
 
     private ReaderPostListFragment getListFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
         if (fragment == null) {
             return null;
         }
