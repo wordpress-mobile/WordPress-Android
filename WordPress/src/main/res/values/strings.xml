@@ -469,6 +469,7 @@
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
     <string name="pref_key_site_remove_site" translatable="false">wp_pref_site_remove_site</string>
+    <string name="pref_key_site_advanced" translatable="false">wp_pref_site_default_advanced</string>
 
     <!--     Begin     -->
     <!-- Site Settings -->
@@ -496,6 +497,7 @@
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header">@string/comments</string>
     <string name="site_settings_this_device_header">This device</string>
+    <string name="site_settings_advanced_header">Advanced</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -1510,5 +1512,10 @@
     <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
     <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
+    <string name="start_over">Start Over</string>
+    <string name="site_settings_start_over_hint">Start your site over</string>
+    <string name="let_us_help">Let Us Help</string>
+    <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
+    <string name="contact_support">Contact support</string>
 
 </resources>
