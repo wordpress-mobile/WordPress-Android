@@ -22,6 +22,8 @@ import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsPopularModel;
+import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.util.AppLog;
 
@@ -43,7 +45,8 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
     private RestRequest.ErrorListener errListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError response) {
-            AppLog.e(AppLog.T.STATS, "The Rest Client returned an error from a mock call!?");
+            AppLog.e(AppLog.T.STATS, "The Rest Client returned an error from a mock call: " + response.getMessage());
+            assertFalse(response.getMessage(), true);
         }
     };
 
@@ -61,27 +64,6 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
             assertFalse(parseError);
         }
         abstract void parseResponse(JSONObject response) throws JSONException;
-    }
-
-
-    public void testAllTime() throws Exception  {
-        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
-            @Override
-            void parseResponse(JSONObject response) throws JSONException {
-                InsightsAllTimeModel model = new InsightsAllTimeModel("12345",response);
-                assertEquals(model.getPosts(), 128);
-                assertEquals(model.getViews(), 56687);
-                assertEquals(model.getVisitors(), 42893);
-                assertEquals(model.getViewsBestDayTotal(), 3485);
-                assertNotNull(model.getViewsBestDay());
-            }
-        };
-
-        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats",
-                null,
-                listener,
-                errListener
-        );
     }
 
     public void testClicks() throws Exception  {
@@ -237,7 +219,6 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
     }
 
     public void testFollowersEmail() throws Exception  {
-
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
@@ -275,11 +256,10 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
     }
 
     public void testFollowersWPCOM() throws Exception  {
-
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                FollowersModel model = new FollowersModel("123456", response);
+                FollowersModel model = new FollowersModel("1234567890", response);
                 assertEquals(model.getTotalEmail(), 2930);
                 assertEquals(model.getTotalWPCom(), 7925800);
                 assertEquals(model.getTotal(), 7925800);
@@ -309,4 +289,85 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         );
     }
 
+    public void testPostDetails() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                PostViewsModel model = new PostViewsModel(response);
+                assertNotNull(model.getOriginalResponse());
+
+                assertEquals(model.getDate(), "2015-03-04");
+                assertEquals(model.getHighestMonth(), 278);
+                assertEquals(model.getHighestDayAverage(), 8);
+                assertEquals(model.getHighestWeekAverage(), 8);
+
+                assertNotNull(model.getDayViews());
+                assertEquals(model.getDayViews()[0].getViews(), 0);
+                assertEquals(model.getDayViews()[0].getPeriod(), "2014-06-04");
+                assertEquals(model.getDayViews()[model.getDayViews().length-1].getViews(), 8);
+                assertEquals(model.getDayViews()[model.getDayViews().length - 1].getPeriod(), "2015-03-04");
+
+                assertNotNull(model.getYears().size());
+                assertEquals(model.getYears().size(), 2);
+                assertEquals(model.getYears().get(0).getTotal(), 1097);
+                assertEquals(model.getYears().get(0).getLabel(), "2014");
+                assertEquals(model.getYears().get(0).getMonths().size(), 7);
+                assertEquals(model.getYears().get(0).getMonths().get(0).getMonth(), "6");
+                assertEquals(model.getYears().get(1).getTotal(), 226);
+                assertEquals(model.getYears().get(1).getLabel(), "2015");
+
+                assertNotNull(model.getWeeks().size());
+                assertEquals(model.getWeeks().size(), 6);
+
+                assertNotNull(model.getAverages());
+                assertEquals(model.getAverages().size(), 2);
+                assertEquals(model.getAverages().get(0).getTotal(), 5);
+                assertEquals(model.getAverages().get(0).getLabel(), "2014");
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/123",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testInsightsAllTime() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                InsightsAllTimeModel model = new InsightsAllTimeModel("12345",response);
+                assertEquals(model.getPosts(), 128);
+                assertEquals(model.getViews(), 56687);
+                assertEquals(model.getVisitors(), 42893);
+                assertEquals(model.getViewsBestDayTotal(), 3485);
+                assertNotNull(model.getViewsBestDay());
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testInsightsPopular() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                InsightsPopularModel model = new InsightsPopularModel("123456", response);
+                assertEquals(model.getHighestHour(), 9);
+                assertEquals(model.getHighestDayOfWeek(), 5);
+                assertEquals(model.getHighestDayPercent(), 30.532081377152);
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/insights",
+                null,
+                listener,
+                errListener
+        );
+    }
 }
