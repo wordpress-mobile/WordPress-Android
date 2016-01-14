@@ -45,6 +45,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private SharedPreferences mSettings;
     private Preference mUsernamePreference;
     private SummaryEditTextPreference mEmailPreference;
+    private Snackbar mEmailSnackbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,17 +158,23 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private void checkIfEmailChangeIsPending() {
         Account account = AccountHelper.getDefaultAccount();
         if (account.getPendingEmailChange() && getView() != null) {
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            };
+            if (mEmailSnackbar == null) {
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                };
 
-            Snackbar snackbar = Snackbar
-                    .make(getView(), getString(R.string.pending_email_change_snackbar, account.getNewEmail()), Snackbar.LENGTH_INDEFINITE).setAction(getString(R.string.undo), clickListener);
-            TextView textView = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
-            textView.setMaxLines(4);
-            snackbar.show();
+                mEmailSnackbar = Snackbar
+                        .make(getView(), "", Snackbar.LENGTH_INDEFINITE).setAction(getString(R.string.undo), clickListener);
+                TextView textView = (TextView) mEmailSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                textView.setMaxLines(4);
+            }
+            // instead of creating a new snackbar, update the current one to avoid the jumping animation
+            mEmailSnackbar.setText(getString(R.string.pending_email_change_snackbar, account.getNewEmail()));
+            if (!mEmailSnackbar.isShown()) {
+                mEmailSnackbar.show();
+            }
         }
     }
 
