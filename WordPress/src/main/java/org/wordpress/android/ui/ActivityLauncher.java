@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SSLCertsViewActivity;
@@ -177,12 +178,16 @@ public class ActivityLauncher {
     }
 
     public static void viewMyProfile(Context context) {
+        AccountHelper.getDefaultAccount().fetchAccountSettings();
+
         Intent intent = new Intent(context, MyProfileActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
         slideInFromRight(context, intent);
     }
 
     public static void viewAccountSettings(Activity activity) {
+        AccountHelper.getDefaultAccount().fetchAccountSettings();
+
         Intent intent = new Intent(activity, SettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
         slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
