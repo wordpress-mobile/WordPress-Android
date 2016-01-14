@@ -156,12 +156,18 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     }
 
     private void checkIfEmailChangeIsPending() {
-        Account account = AccountHelper.getDefaultAccount();
+        final Account account = AccountHelper.getDefaultAccount();
         if (account.getPendingEmailChange() && getView() != null) {
             if (mEmailSnackbar == null) {
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Map<String, String> params = new HashMap<>();
+                        params.put(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING), "false");
+                        account.postAccountSettings(params);
+                        if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
+                            mEmailSnackbar.dismiss();
+                        }
                     }
                 };
 

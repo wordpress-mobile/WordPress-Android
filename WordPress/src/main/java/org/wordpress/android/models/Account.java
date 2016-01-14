@@ -100,7 +100,8 @@ public class Account extends AccountModel {
         LAST_NAME("last_name"),
         DISPLAY_NAME("display_name"),
         ABOUT_ME("description"),
-        EMAIL("user_email");
+        EMAIL("user_email"),
+        EMAIL_CHANGE_PENDING("user_email_change_pending");
 
         private String description;
 
