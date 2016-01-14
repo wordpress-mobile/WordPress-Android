@@ -69,11 +69,6 @@ public class PostsListFragment extends DualPaneFragment
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
-
-    public static PostsListFragment newInstance() {
-        return new PostsListFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -524,7 +519,6 @@ public class PostsListFragment extends DualPaneFragment
 
         snackbar.show();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

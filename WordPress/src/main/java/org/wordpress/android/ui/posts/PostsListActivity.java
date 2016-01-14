@@ -108,7 +108,6 @@ public class PostsListActivity extends AppCompatActivity {
         return mPostList.isRefreshing();
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (outState.isEmpty()) {
