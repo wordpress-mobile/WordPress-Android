@@ -12,6 +12,9 @@ import org.wordpress.android.widgets.OpenSansEditText;
 import org.wordpress.android.widgets.WPTextView;
 
 public class DialogUtils {
+
+    private static OpenSansEditText editText;
+
     public static void showMyProfileDialog(Context context, String title, String initialText, String hint, final Callback callback) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View promptView = layoutInflater.inflate(R.layout.my_profile_dialog, null);
@@ -19,8 +22,9 @@ public class DialogUtils {
         alertDialogBuilder.setView(promptView);
 
         final WPTextView textView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_label);
-        final OpenSansEditText editText = (OpenSansEditText) promptView.findViewById(R.id.my_profile_dialog_input);
         final WPTextView hintView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_hint);
+
+        editText = (OpenSansEditText) promptView.findViewById(R.id.my_profile_dialog_input);
 
         textView.setText(title);
         if (!TextUtils.isEmpty(hint)) {
@@ -50,6 +54,10 @@ public class DialogUtils {
 
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
+    }
+
+    public static String getMyProfileDialogText(Context context) {
+        return editText.getText().toString();
     }
 
     public interface Callback {

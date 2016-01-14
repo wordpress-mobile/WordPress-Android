@@ -28,6 +28,15 @@ public class MyProfileActivity extends AppCompatActivity {
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
 
+    private  String mDialogTitle;
+    private  String mHint;
+    private  WPTextView mTextView;
+
+    private final String TITLE_TAG = "TITLE";
+    private final String HINT_TAG = "HINT";
+    private final String TEXT_VIEW_TAG = "TEXT-VIEW";
+    private final String DIALOG_TEXT_TAG = "DIALOG-TEXT";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +48,7 @@ public class MyProfileActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         setContentView(R.layout.my_profile_activity);
 
         mFirstName = (WPTextView) findViewById(R.id.first_name);
@@ -52,6 +62,22 @@ public class MyProfileActivity extends AppCompatActivity {
         findViewById(R.id.last_name_row).setOnClickListener(createOnClickListener(getString(R.string.last_name), null, mLastName));
         findViewById(R.id.display_name_row).setOnClickListener(createOnClickListener(getString(R.string.public_display_name), getString(R.string.public_display_name_hint), mDisplayName));
         findViewById(R.id.about_me_row).setOnClickListener(createOnClickListener(getString(R.string.about_me), getString(R.string.about_me_hint), mAboutMe));
+
+        if (savedInstanceState != null) {
+            final WPTextView textView = (WPTextView) findViewById(savedInstanceState.getInt(TEXT_VIEW_TAG));
+            String title = savedInstanceState.getString(TITLE_TAG);
+            String hint = savedInstanceState.getString(HINT_TAG);
+            String dialogText = savedInstanceState.getString(DIALOG_TEXT_TAG);
+
+            DialogUtils.showMyProfileDialog(MyProfileActivity.this, title,
+                    dialogText, hint, new DialogUtils.Callback() {
+                        @Override
+                        public void onSuccessfulInput(String input) {
+                            updateLabel(textView, input);
+                            updateMyProfileForLabel(textView);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -112,6 +138,9 @@ public class MyProfileActivity extends AppCompatActivity {
 
     // helper method to create onClickListener to avoid code duplication
     private View.OnClickListener createOnClickListener(final String dialogTitle, final String hint, final WPTextView textView) {
+        mDialogTitle = dialogTitle;
+        mHint = hint;
+        mTextView = textView;
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,5 +174,15 @@ public class MyProfileActivity extends AppCompatActivity {
         if (!isFinishing()) {
             refreshDetails();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(TITLE_TAG, mDialogTitle);
+        outState.putString(HINT_TAG, mHint);
+        outState.putInt(TEXT_VIEW_TAG, mTextView.getId());
+        outState.putString(DIALOG_TEXT_TAG, DialogUtils.getMyProfileDialogText(MyProfileActivity.this));
     }
 }
