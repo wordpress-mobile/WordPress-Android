@@ -139,7 +139,7 @@ public class MyProfileActivity extends AppCompatActivity {
         return Account.RestParam.toString(param);
     }
 
-    public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
+    public void onEventMainThread(PrefsEvents.AccountSettingsChanged event) {
         if (!isFinishing()) {
             refreshDetails();
         }

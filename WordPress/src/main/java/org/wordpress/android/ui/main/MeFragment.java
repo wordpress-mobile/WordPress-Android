@@ -260,7 +260,7 @@ public class MeFragment extends Fragment {
         }
     }
 
-    public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
+    public void onEventMainThread(PrefsEvents.AccountSettingsChanged event) {
         refreshAccountDetails();
     }
 }

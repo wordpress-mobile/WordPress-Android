@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 @SuppressWarnings("deprecation")
 public class SettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final String LANGUAGE_PREF_KEY = "language-pref";
@@ -89,6 +91,18 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         super.onResume();
 
         getActivity().setTitle(R.string.settings);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -244,5 +258,11 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         Map<String, String> params = new HashMap<>();
         params.put(Account.RestParam.toString(Account.RestParam.EMAIL), newEmail);
         account.postAccountSettings(params);
+    }
+
+    public void onEventMainThread(PrefsEvents.AccountSettingsChanged event) {
+        if (isAdded()) {
+            refreshAccountDetails();
+        }
     }
 }

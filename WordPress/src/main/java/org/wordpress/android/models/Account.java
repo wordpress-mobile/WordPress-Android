@@ -49,7 +49,7 @@ public class Account extends AccountModel {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
-                    EventBus.getDefault().post(new PrefsEvents.MyProfileDetailsChanged());
+                    EventBus.getDefault().post(new PrefsEvents.AccountSettingsChanged());
                 }
             }
         };
@@ -71,6 +71,7 @@ public class Account extends AccountModel {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
+                    EventBus.getDefault().post(new PrefsEvents.AccountSettingsChanged());
                 }
             }
         };
