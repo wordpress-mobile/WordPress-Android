@@ -23,9 +23,20 @@ import org.wordpress.android.ui.stats.models.GeoviewModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
+import org.wordpress.android.ui.stats.models.InsightsTodayModel;
+import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
+import org.wordpress.android.ui.stats.models.ReferrerGroupModel;
+import org.wordpress.android.ui.stats.models.ReferrerResultModel;
+import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.models.TagModel;
+import org.wordpress.android.ui.stats.models.TagsContainerModel;
+import org.wordpress.android.ui.stats.models.TagsModel;
+import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.util.AppLog;
+
+import java.util.List;
 
 
 public class RemoteTests extends DefaultMocksInstrumentationTestCase {
@@ -333,6 +344,137 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         );
     }
 
+    public void testReferrers() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                ReferrersModel model = new ReferrersModel("123456", response);
+                assertEquals(model.getTotalViews(), 2161);
+                assertEquals(model.getOtherViews(), 938);
+                assertNotNull(model.getGroups());
+                assertEquals(model.getGroups().size(), 10);
+
+                // first group in the response
+                ReferrerGroupModel gModel = model.getGroups().get(0);
+                assertEquals(gModel.getName(), "Search Engines");
+                assertEquals(gModel.getGroupId(), "Search Engines");
+                assertEquals(gModel.getIcon(), "https://wordpress.com/i/stats/search-engine.png");
+                assertEquals(gModel.getTotal(), 480);
+                assertNotNull(gModel.getResults());
+                assertEquals(gModel.getResults().size(), 7);
+
+                // 2nd level item
+                ReferrerResultModel refResultModel = gModel.getResults().get(0);
+                assertEquals(refResultModel.getName(), "Google Search");
+                assertEquals(refResultModel.getIcon(), "https://secure.gravatar.com/blavatar/6741a05f4bc6e5b65f504c4f3df388a1?s=48");
+                assertEquals(refResultModel.getViews(), 461);
+                assertNotNull(refResultModel.getChildren());
+                assertNull(refResultModel.getUrl()); //has childs. No URL.
+
+                // 3rd level items
+                SingleItemModel child =  refResultModel.getChildren().get(0);
+                assertEquals(child.getUrl(), "http://www.google.com/");
+                assertEquals(child.getTitle(), "google.com");
+                assertEquals(child.getIcon(), "https://secure.gravatar.com/blavatar/ff90821feeb2b02a33a6f9fc8e5f3fcd?s=48");
+                assertEquals(child.getTotals(), 176);
+                child =  refResultModel.getChildren().get(10);
+                assertEquals(child.getUrl(), "http://www.google.co.jp");
+                assertEquals(child.getTitle(), "google.co.jp");
+                assertEquals(child.getIcon(), "https://secure.gravatar.com/blavatar/a28b8206a6562f6098688508d4665905?s=48");
+                assertEquals(child.getTotals(), 6);
+
+
+                // 7th group in the response
+                gModel = model.getGroups().get(6);
+                assertEquals(gModel.getName(), "ma.tt");
+                assertEquals(gModel.getGroupId(), "ma.tt");
+                assertEquals(gModel.getIcon(), "https://secure.gravatar.com/blavatar/733a27a6b983dd89d6dd64d0445a3e8e?s=48");
+                assertEquals(gModel.getTotal(), 56);
+                assertNotNull(gModel.getResults());
+                assertEquals(gModel.getResults().size(), 11);
+
+                // 2nd level item
+                refResultModel = gModel.getResults().get(0);
+                assertEquals(refResultModel.getName(), "ma.tt");
+                assertEquals(refResultModel.getUrl(), "http://ma.tt/");
+                assertEquals(refResultModel.getIcon(), "");
+                assertEquals(refResultModel.getViews(), 34); // No childs. Has URL.
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/referrers",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testTagsCategories() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                TagsContainerModel model = new TagsContainerModel("123456", response);
+                assertEquals(model.getDate(), "2014-12-16");
+                assertNotNull(model.getTags());
+                assertEquals(model.getTags().size(), 10);
+
+                TagsModel tag = model.getTags().get(0);
+                assertEquals(tag.getViews(), 461);
+                assertNotNull(tag.getTags());
+                assertEquals(tag.getTags().size(), 1);
+                assertNotNull(tag.getTags());
+                assertEquals(tag.getTags().get(0).getName(), "Uncategorized");
+                assertEquals(tag.getTags().get(0).getType(), "category");
+                assertEquals(tag.getTags().get(0).getLink(), "http://astralbodi.es/category/uncategorized/");
+
+                tag = model.getTags().get(9);
+                assertEquals(tag.getViews(), 41);
+                assertEquals(tag.getTags().get(0).getName(), "networking");
+                assertEquals(tag.getTags().get(0).getType(), "tag");
+                assertEquals(tag.getTags().get(0).getLink(), "http://astralbodi.es/tag/networking/");
+                assertEquals(tag.getTags().get(1).getName(), "unix");
+                assertEquals(tag.getTags().get(1).getType(), "tag");
+                assertEquals(tag.getTags().get(1).getLink(), "http://astralbodi.es/tag/unix/");
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/tags",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testTopPostException() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                TopPostsAndPagesModel model = new TopPostsAndPagesModel("123456", response);
+                assertNotNull(model.getTopPostsAndPages());
+                assertEquals(model.getTopPostsAndPages().size(), 10);
+                assertEquals(model.getTopPostsAndPages().get(0).getItemID(), "39806");
+                assertEquals(model.getTopPostsAndPages().get(0).getTotals(), 2420);
+                assertEquals(model.getTopPostsAndPages().get(0).getTitle(), "Home");
+                assertEquals(model.getTopPostsAndPages().get(0).getUrl(), "http://automattic.com/home/");
+                assertEquals(model.getTopPostsAndPages().get(0).getDate(), StatsUtils.toMs("2011-08-30 21:47:38"));
+                assertEquals(model.getTopPostsAndPages().get(0).getPostType(), "page");
+
+                assertEquals(model.getTopPostsAndPages().get(9).getItemID(), "39254");
+                assertEquals(model.getTopPostsAndPages().get(9).getTotals(), 56);
+                assertEquals(model.getTopPostsAndPages().get(9).getTitle(), "Growth Explorer");
+                assertEquals(model.getTopPostsAndPages().get(9).getUrl(), "http://automattic.com/work-with-us/growth-explorer/");
+                assertEquals(model.getTopPostsAndPages().get(9).getDate(), StatsUtils.toMs("2011-08-25 19:37:27"));
+                assertEquals(model.getTopPostsAndPages().get(9).getPostType(), "page");
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts",
+                null,
+                listener,
+                errListener
+        );
+    }
+
     public void testInsightsAllTime() throws Exception  {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
@@ -347,6 +489,29 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testInsightsToday() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                InsightsTodayModel model = new InsightsTodayModel("123456", response);
+                assertEquals(model.getDate(), "2014-10-28");
+                assertEquals(model.getBlogID(), "123456");
+                assertEquals(model.getViews(), 56);
+                assertEquals(model.getVisitors(), 44);
+                assertEquals(model.getLikes(), 1);
+                assertEquals(model.getReblogs(), 2);
+                assertEquals(model.getComments(), 3);
+                assertEquals(model.getFollowers(), 56);
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/summary",
                 null,
                 listener,
                 errListener
