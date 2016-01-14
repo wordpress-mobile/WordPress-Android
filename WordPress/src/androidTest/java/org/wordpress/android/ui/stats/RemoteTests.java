@@ -16,6 +16,9 @@ import org.wordpress.android.ui.stats.models.AuthorModel;
 import org.wordpress.android.ui.stats.models.ClickGroupModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
+import org.wordpress.android.ui.stats.models.FollowDataModel;
+import org.wordpress.android.ui.stats.models.FollowerModel;
+import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
@@ -165,7 +168,6 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
     }
 
     public void testCommentsDay() throws Exception  {
-
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
@@ -205,7 +207,6 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
     }
 
     public void testCountryViewsDay() throws Exception  {
-
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
@@ -234,4 +235,78 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 errListener
         );
     }
+
+    public void testFollowersEmail() throws Exception  {
+
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                FollowersModel model = new FollowersModel("123456", response);
+                assertEquals(model.getTotalEmail(), 2931);
+                assertEquals(model.getTotalWPCom(), 7926165);
+                assertEquals(model.getTotal(), 2931);
+                assertEquals(model.getPage(), 1);
+                assertEquals(model.getPages(), 419);
+
+                assertNotNull(model.getFollowers());
+                assertEquals(model.getFollowers().size(), 7);
+                FollowerModel first = model.getFollowers().get(0);
+                assertEquals(first.getAvatar(), "https://2.gravatar.com/avatar/e82142697283897ad7444810e5975895?s=64" +
+                        "&amp;d=https%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
+                assertEquals(first.getLabel(), "user1@example.com");
+                assertNull(first.getURL());
+                assertNull(first.getFollowData());
+                assertEquals(first.getDateSubscribed(), "2014-12-16T11:24:41+00:00");
+                FollowerModel last = model.getFollowers().get(6);
+                assertEquals(last.getAvatar(), "https://0.gravatar.com/avatar/3b37f38b63ce4f595cc5cfbaadb10938?s=64" +
+                        "&amp;d=https%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
+                assertEquals(last.getLabel(), "user7@example.com");
+                assertNull(last.getURL());
+                assertNull(last.getFollowData());
+                assertEquals(last.getDateSubscribed(), "2014-12-15T15:09:01+00:00");
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/followers",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testFollowersWPCOM() throws Exception  {
+
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                FollowersModel model = new FollowersModel("123456", response);
+                assertEquals(model.getTotalEmail(), 2930);
+                assertEquals(model.getTotalWPCom(), 7925800);
+                assertEquals(model.getTotal(), 7925800);
+                assertEquals(model.getPage(), 1);
+                assertEquals(model.getPages(), 1132258);
+
+                assertNotNull(model.getFollowers());
+                assertEquals(model.getFollowers().size(), 7);
+                FollowerModel first = model.getFollowers().get(0);
+                assertEquals(first.getAvatar(), "https://0.gravatar.com/avatar/624b89cb0c8b9136f9629dd7bcab0517?s=64" +
+                        "&amp;d=https%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
+                assertEquals(first.getLabel(), "ritu929");
+                assertEquals(first.getURL(), "http://ritu9blog.wordpress.com");
+                assertEquals(first.getDateSubscribed(), "2014-12-16T14:53:21+00:00");
+                assertNotNull(first.getFollowData());
+                FollowDataModel followDatamodel = first.getFollowData();
+                assertFalse(followDatamodel.isFollowing());
+                assertEquals(followDatamodel.getType(), "follow");
+
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/followers",
+                null,
+                listener,
+                errListener
+        );
+    }
+
 }
