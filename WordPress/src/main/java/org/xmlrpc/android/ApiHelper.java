@@ -1229,7 +1229,8 @@ public class ApiHelper {
 
         try {
             Map<?, ?> contentHash = (Map<?, ?>) client.call(Method.GET_COMMENT, params);
-            return CommentStatus.fromString(contentHash.get("status").toString());
+            final Object status = contentHash.get("status");
+            return status == null ? null : CommentStatus.fromString(status.toString());
         } catch (XMLRPCException e) {
             AppLog.e(T.COMMENTS, "Error while getting comment", e);
         } catch (IOException e) {
