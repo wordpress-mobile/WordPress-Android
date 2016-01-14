@@ -1215,7 +1215,7 @@ public class ApiHelper {
      * @return the status of the comment on the server, null if error
      */
     public static @Nullable CommentStatus getCommentStatus(Blog blog, Comment comment) {
-        if (blog == null) {
+        if (blog == null || comment == null) {
             return null;
         }
 
