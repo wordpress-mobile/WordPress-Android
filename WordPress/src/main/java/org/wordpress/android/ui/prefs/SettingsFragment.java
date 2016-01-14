@@ -115,7 +115,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         if (newValue == null) return false;
 
         if (preference == mEmailPreference) {
-            mEmailPreference.setSummary(newValue.toString());
+            updateEmail(newValue.toString());
         }
 
         return true;
@@ -232,5 +232,12 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private boolean handleOssPreferenceClick() {
         startActivity(new Intent(getActivity(), LicensesActivity.class));
         return true;
+    }
+
+    private void updateEmail(String newEmail) {
+        Account account = AccountHelper.getDefaultAccount();
+        Map<String, String> params = new HashMap<>();
+        params.put(Account.RestParam.toString(Account.RestParam.EMAIL), newEmail);
+        account.postAccountSettings(params);
     }
 }
