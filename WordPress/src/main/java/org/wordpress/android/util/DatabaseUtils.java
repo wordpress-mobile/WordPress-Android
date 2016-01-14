@@ -11,6 +11,14 @@ public class DatabaseUtils {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 ? cursor.getInt(columnIndex) : -1;
     }
+    /**
+     * @return
+     *  the long value for the given column, -1 if the column name is not valid
+     */
+    public static long getLongFromCursor(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex != -1 ? cursor.getLong(columnIndex) : -1;
+    }
 
     /**
      * @return

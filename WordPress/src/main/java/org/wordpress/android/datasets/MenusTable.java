@@ -21,9 +21,18 @@ public class MenusTable {
     public static MenuModel getMenuForMenuId(String id) {
         if (TextUtils.isEmpty(id)) return null;
         String sqlCommand = "";
-        MenuModel model = new MenuModel();
-        model.deserializeDatabaseCursor(WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null));
-        return model;
+        MenuModel menu = new MenuModel();
+        menu.deserializeFromDatabase(WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null));
+        return menu;
+    }
+
+    public static MenuItemModel getMenuItemForId(long id) {
+        if (id < 0) return null;
+        String sqlCommand = "SELECT * FROM " + MenuItemModel.MENU_ITEMS_TABLE_NAME + " WHERE " + MenuItemModel.ID_COLUMN_NAME + "=?";
+        String[] args = new String[] { String.valueOf(id) };
+        MenuItemModel item = new MenuItemModel();
+        item.deserializeFromDatabase(WordPress.wpDB.getDatabase().rawQuery(sqlCommand, args));
+        return item;
     }
 
     public static boolean saveMenu(MenuModel menu) {

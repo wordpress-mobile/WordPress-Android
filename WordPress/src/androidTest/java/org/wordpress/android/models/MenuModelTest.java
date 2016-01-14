@@ -7,37 +7,36 @@ import android.test.RenamingDelegatingContext;
 import android.test.mock.MockCursor;
 
 import org.wordpress.android.TestUtils;
-import org.wordpress.android.datasets.MenusTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MenuModelTest extends InstrumentationTestCase {
-    private static final String TEST_ID = "MenuModelTest";
+    private static final String CONTEXT_RENAME_PREFIX = "test_";
+    private static final String DB_FILE_NAME = "taliwutt-blogs-sample.sql";
+
+    private static final long TEST_ID = Long.MAX_VALUE;
     private static final String TEST_NAME = "MenuModelTestName";
     private static final String TEST_DETAILS = "MenuModelTestDetails";
     private static final String TEST_LOCATIONS = "TESTLOC0,TESTLOC1,TESTLOC2,TESTLOC3,TESTLOC4";
-    private static final String TEST_ITEMS = "TESTITEM0,TESTITEM1,TESTITEM2,TESTITEM3,TESTITEM4";
+    private static final String TEST_ITEMS = "0,1,2,3,4";
 
     protected Context mTestContext;
     protected Context mTargetContext;
 
     @Override
     protected void setUp() throws Exception {
-        mTargetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
+        Context targetContext = getInstrumentation().getTargetContext();
+        mTargetContext = new RenamingDelegatingContext(targetContext, CONTEXT_RENAME_PREFIX);
         mTestContext = getInstrumentation().getContext();
-        TestUtils.loadDBFromDump(mTargetContext, mTestContext, "taliwutt-blogs-sample.sql");
+        TestUtils.loadDBFromDump(mTargetContext, mTestContext, DB_FILE_NAME);
         super.setUp();
     }
 
-    public void testInvalidMenu() {
-        assertNull(MenusTable.getMenuForMenuId(""));
-    }
-
     public void testSerialize() {
-        MenuModel testModel = getTestModel();
-        ContentValues values = testModel.serializeToDatabase();
-        assertEquals(TEST_ID, values.getAsString(MenuModel.ID_COLUMN_NAME));
+        MenuModel testMenu = getTestMenu();
+        ContentValues values = testMenu.serializeToDatabase();
+        assertEquals(TEST_ID, values.getAsLong(MenuModel.ID_COLUMN_NAME).longValue());
         assertEquals(TEST_NAME, values.getAsString(MenuModel.NAME_COLUMN_NAME));
         assertEquals(TEST_DETAILS, values.getAsString(MenuModel.DETAILS_COLUMN_NAME));
         assertEquals(TEST_LOCATIONS, values.getAsString(MenuModel.LOCATIONS_COLUMN_NAME));
@@ -45,40 +44,40 @@ public class MenuModelTest extends InstrumentationTestCase {
     }
 
     public void testDeserialize() {
-        MenuModel testModel = MenuModel.deserializeFromDatabase(new TestCursor());
-        assertEquals(TEST_ID, testModel.menuId);
-        assertEquals(TEST_NAME, testModel.name);
-        assertEquals(TEST_DETAILS, testModel.details);
-        assertEquals(TEST_LOCATIONS, testModel.serializeMenuLocations());
-        assertEquals(TEST_ITEMS, testModel.serializeMenuItems());
+        MenuModel testMenu = MenuModel.fromDatabase(new TestCursor());
+        assertEquals(TEST_ID, testMenu.menuId);
+        assertEquals(TEST_NAME, testMenu.name);
+        assertEquals(TEST_DETAILS, testMenu.details);
+        assertEquals(TEST_LOCATIONS, testMenu.serializeMenuLocations());
+        assertEquals(TEST_ITEMS, testMenu.serializeMenuItems());
     }
 
     public void testEqualsWithNull() {
         //noinspection ObjectEqualsNull
-        assertFalse(getTestModel().equals(null));
+        assertFalse(getTestMenu().equals(null));
     }
 
     public void testEqualsWithSameMenu() {
-        assertTrue(getTestModel().equals(getTestModel()));
+        assertTrue(getTestMenu().equals(getTestMenu()));
     }
 
     public void testEqualsWithDifferentMenu() {
-        MenuModel staticModel = getTestModel();
-        MenuModel testModel = getTestModel();
-        testModel.name = null;
-        assertFalse(testModel.equals(staticModel));
-        testModel.name = staticModel.name;
-        testModel.menuId = null;
-        assertFalse(testModel.equals(staticModel));
-        testModel.menuId = staticModel.menuId;
-        testModel.details = null;
-        assertFalse(testModel.equals(staticModel));
-        testModel.details = staticModel.details;
-        testModel.locations = null;
-        assertFalse(testModel.equals(staticModel));
-        testModel.locations = staticModel.locations;
-        testModel.menuItems = null;
-        assertFalse(testModel.equals(staticModel));
+        MenuModel staticMenu = getTestMenu();
+        MenuModel testMenu = getTestMenu();
+        testMenu.name = null;
+        assertFalse(testMenu.equals(staticMenu));
+        testMenu.name = staticMenu.name;
+        testMenu.menuId = -1;
+        assertFalse(testMenu.equals(staticMenu));
+        testMenu.menuId = staticMenu.menuId;
+        testMenu.details = null;
+        assertFalse(testMenu.equals(staticMenu));
+        testMenu.details = staticMenu.details;
+        testMenu.locations = null;
+        assertFalse(testMenu.equals(staticMenu));
+        testMenu.locations = staticMenu.locations;
+        testMenu.menuItems = null;
+        assertFalse(testMenu.equals(staticMenu));
     }
 
     private class TestCursor extends MockCursor {
@@ -93,10 +92,18 @@ public class MenuModelTest extends InstrumentationTestCase {
         }
 
         @Override
-        public String getString(int columnIndex) {
+        public long getLong(int columnIndex) {
             switch (columnIndex) {
                 case 0:
                     return TEST_ID;
+                default:
+                    return -1;
+            }
+        }
+
+        @Override
+        public String getString(int columnIndex) {
+            switch (columnIndex) {
                 case 1:
                     return TEST_NAME;
                 case 2:
@@ -129,7 +136,7 @@ public class MenuModelTest extends InstrumentationTestCase {
         }
     }
 
-    private MenuModel getTestModel() {
+    private MenuModel getTestMenu() {
         MenuModel testModel = new MenuModel();
         testModel.menuId = TEST_ID;
         testModel.name = TEST_NAME;
@@ -150,7 +157,7 @@ public class MenuModelTest extends InstrumentationTestCase {
     private List<MenuItemModel> getTestItems() {
         List<MenuItemModel> items = new ArrayList<>();
         for (String id : TEST_ITEMS.split(",")) {
-            items.add(MenuItemModel.fromItemId(id));
+            items.add(MenuItemModel.fromItemId(Long.valueOf(id)));
         }
         return items;
     }

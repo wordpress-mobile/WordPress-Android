@@ -11,35 +11,48 @@ import java.util.List;
 
 import static org.wordpress.android.util.DatabaseUtils.*;
 
+/**
+ * Holds menu data and provides convenience methods for local database (de)serialization.
+ */
+
 public class MenuModel {
     // Menu table column names
-    public static final String ID_COLUMN_NAME = "id";
-    public static final String NAME_COLUMN_NAME = "name";
-    public static final String DETAILS_COLUMN_NAME = "details";
-    public static final String LOCATIONS_COLUMN_NAME = "locations";
-    public static final String ITEMS_COLUMN_NAME = "items";
+    public static final String ID_COLUMN_NAME = "menuId";
+    public static final String NAME_COLUMN_NAME = "menuName";
+    public static final String DETAILS_COLUMN_NAME = "menuDetails";
+    public static final String LOCATIONS_COLUMN_NAME = "menuLocations";
+    public static final String ITEMS_COLUMN_NAME = "menuItems";
 
     public static final String MENUS_TABLE_NAME = "menus";
     public static final String CREATE_MENUS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
-                    MENUS_TABLE_NAME +
-                    " (" +
-                    ID_COLUMN_NAME + " TEXT PRIMARY KEY, " +
+                    MENUS_TABLE_NAME + " (" +
+                    ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
                     NAME_COLUMN_NAME + " TEXT, " +
                     DETAILS_COLUMN_NAME + " TEXT, " +
                     LOCATIONS_COLUMN_NAME + " TEXT, " +
                     ITEMS_COLUMN_NAME + " TEXT" +
                     ");";
 
-    public String details;
-    public String menuId;
+    /** Menu GUID, used as primary key in database */
+    public long menuId;
+
+    /** Menu name */
     public String name;
+
+    /** Menu description */
+    public String details;
+
+    /** Menu Locations that this Menu belongs to */
     public List<MenuLocationModel> locations;
+
+    /** Menu Items that this Menu contains */
     public List<MenuItemModel> menuItems;
 
-    public static MenuModel deserializeFromDatabase(Cursor cursor) {
+    public static MenuModel fromDatabase(Cursor cursor) {
         MenuModel model = new MenuModel();
-        return model.deserializeDatabaseCursor(cursor);
+        model.deserializeFromDatabase(cursor);
+        return model;
     }
 
     public MenuModel() {
@@ -50,9 +63,9 @@ public class MenuModel {
         if (!(other instanceof MenuModel)) return false;
 
         MenuModel otherModel = (MenuModel) other;
-        return StringUtils.equals(details, otherModel.details) &&
-                StringUtils.equals(menuId, otherModel.menuId) &&
+        return menuId == otherModel.menuId &&
                 StringUtils.equals(name, otherModel.name) &&
+                StringUtils.equals(details, otherModel.details) &&
                 CollectionUtils.areListsEqual(locations, otherModel.locations) &&
                 CollectionUtils.areListsEqual(menuItems, otherModel.menuItems);
     }
@@ -60,9 +73,9 @@ public class MenuModel {
     /**
      * Sets values from a local database {@link Cursor}.
      */
-    public MenuModel deserializeDatabaseCursor(Cursor cursor) {
+    public MenuModel deserializeFromDatabase(Cursor cursor) {
         if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
-            menuId = getStringFromCursor(cursor, ID_COLUMN_NAME);
+            menuId = getLongFromCursor(cursor, ID_COLUMN_NAME);
             name = getStringFromCursor(cursor, NAME_COLUMN_NAME);
             details = getStringFromCursor(cursor, DETAILS_COLUMN_NAME);
             locations = deserializeLocations(cursor);
@@ -85,7 +98,7 @@ public class MenuModel {
         String itemIds = getStringFromCursor(cursor, ITEMS_COLUMN_NAME);
         List<MenuItemModel> items = new ArrayList<>();
         for (String id : itemIds.split(",")) {
-            items.add(MenuItemModel.fromItemId(id));
+            items.add(MenuItemModel.fromItemId(Long.valueOf(id)));
         }
         return items;
     }

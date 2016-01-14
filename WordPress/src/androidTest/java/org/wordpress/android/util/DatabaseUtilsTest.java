@@ -9,17 +9,20 @@ import static org.wordpress.android.util.DatabaseUtils.*;
 public class DatabaseUtilsTest extends InstrumentationTestCase {
     private static final int INVALID_INTEGER = -1;
     private static final int VALID_INTEGER = 1;
+    private static final long VALID_LONG = Long.MAX_VALUE;
     private static final String INVALID_STRING = "";
     private static final String VALID_STRING = "DatabaseUtilsTest_validString";
     private static final int VALID_BOOL = 1;
     private static final String INVALID_COLUMN_NAME = "DatabaseUtilsTest_invalidColumnName";
     private static final String INTEGER_COLUMN_NAME = "DatabaseUtilsTest_integerColumnName";
+    private static final String LONG_COLUMN_NAME = "DatabaseUtilsTest_longColumnName";
     private static final String STRING_COLUMN_NAME = "DatabaseUtilsTest_stringColumnName";
     private static final String BOOL_COLUMN_NAME = "DatabaseUtilsTest_boolColumnName";
     private static final int INVALID_COLUMN_INDEX = -1;
     private static final int INTEGER_COLUMN_INDEX = 0;
-    private static final int STRING_COLUMN_INDEX = 1;
-    private static final int BOOL_COLUMN_INDEX = 2;
+    private static final int LONG_COLUMN_INDEX = 1;
+    private static final int STRING_COLUMN_INDEX = 2;
+    private static final int BOOL_COLUMN_INDEX = 3;
 
     public void testInvalidIntFromCursor() {
         Cursor testCursor = new TestCursor();
@@ -27,6 +30,16 @@ public class DatabaseUtilsTest extends InstrumentationTestCase {
     }
 
     public void testValidIntFromCursor() {
+        Cursor testCursor = new TestCursor();
+        assertEquals(VALID_INTEGER, getIntFromCursor(testCursor, INTEGER_COLUMN_NAME));
+    }
+
+    public void testInvalidLongFromCursor() {
+        Cursor testCursor = new TestCursor();
+        assertEquals(INVALID_INTEGER, getIntFromCursor(testCursor, INVALID_COLUMN_NAME));
+    }
+
+    public void testValidLongFromCursor() {
         Cursor testCursor = new TestCursor();
         assertEquals(VALID_INTEGER, getIntFromCursor(testCursor, INTEGER_COLUMN_NAME));
     }
@@ -57,12 +70,24 @@ public class DatabaseUtilsTest extends InstrumentationTestCase {
             switch (columnName) {
                 case INTEGER_COLUMN_NAME:
                     return INTEGER_COLUMN_INDEX;
+                case LONG_COLUMN_NAME:
+                    return LONG_COLUMN_INDEX;
                 case STRING_COLUMN_NAME:
                     return STRING_COLUMN_INDEX;
                 case BOOL_COLUMN_NAME:
                     return BOOL_COLUMN_INDEX;
                 default:
                     return INVALID_COLUMN_INDEX;
+            }
+        }
+
+        @Override
+        public long getLong(int columnIndex) {
+            switch (columnIndex) {
+                case LONG_COLUMN_INDEX:
+                    return VALID_LONG;
+                default:
+                    return INVALID_INTEGER;
             }
         }
 
