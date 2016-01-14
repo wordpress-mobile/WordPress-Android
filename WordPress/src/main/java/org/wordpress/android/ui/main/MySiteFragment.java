@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +20,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.DualPaneFragment;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
@@ -37,10 +38,10 @@ import org.wordpress.android.widgets.WPTextView;
 
 import de.greenrobot.event.EventBus;
 
-public class MySiteFragment extends Fragment
+public class MySiteFragment extends DualPaneFragment
         implements WPMainActivity.OnScrollToTopListener {
 
-    private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
+    private static final long ALERT_ANIM_OFFSET_MS = 1000l;
     private static final long ALERT_ANIM_DURATION_MS = 1000l;
 
     private WPNetworkImageView mBlavatarImageView;
@@ -104,9 +105,15 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
+
+        if (isInDualPaneMode()) {
+            ScrollView.LayoutParams lp = (ScrollView.LayoutParams) rootView.findViewById(R.id.content_container)
+                    .getLayoutParams();
+            lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
+            lp.rightMargin = getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
+        }
 
         int fabHeight = getResources().getDimensionPixelSize(android.support.design.R.dimen.design_fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
@@ -158,7 +165,11 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPosts(getActivity());
+                if (isInDualPaneMode()) {
+                    ((OnMenuItemClickListener) getParentFragment()).onSideBarMenuClicked(PostsListFragment.class, null);
+                } else {
+                    ActivityLauncher.viewCurrentBlogPosts(getActivity());
+                }
             }
         });
 
@@ -219,7 +230,7 @@ public class MySiteFragment extends Fragment
     private void showSitePicker() {
         if (isAdded()) {
             int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
-            ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
+            ActivityLauncher.showSitePickerForResult(this, localBlogId);
         }
     }
 
@@ -231,6 +242,7 @@ public class MySiteFragment extends Fragment
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
+                    ((OnSiteChangedListener) getParentFragment()).onSiteChanged();
                     setBlog(WordPress.getCurrentBlog());
                 }
                 break;
@@ -249,6 +261,7 @@ public class MySiteFragment extends Fragment
 
             case RequestCodes.CREATE_BLOG:
                 // if the user created a new blog refresh the blog details
+                ((OnSiteChangedListener) getParentFragment()).onSiteChanged();
                 mBlog = WordPress.getCurrentBlog();
                 refreshBlogDetails();
                 break;
@@ -313,7 +326,8 @@ public class MySiteFragment extends Fragment
         mConfigurationHeader.setVisibility(settingsVisibility);
         mSettingsView.setVisibility(settingsVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
+        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz),
+                WPNetworkImageView.ImageType.BLAVATAR);
 
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
         String homeURL;
@@ -364,5 +378,13 @@ public class MySiteFragment extends Fragment
         if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
             mBlogTitleTextView.setText(mBlog.getBlogName());
         }
+    }
+
+    public interface OnMenuItemClickListener {
+        void onSideBarMenuClicked(Class contentFragmentClass, Bundle parameters);
+    }
+
+    public interface OnSiteChangedListener {
+        void onSiteChanged();
     }
 }
