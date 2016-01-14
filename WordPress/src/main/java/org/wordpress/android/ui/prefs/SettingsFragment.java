@@ -12,12 +12,14 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -68,6 +70,13 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         checkWordPressComOnlyFields();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        checkIfEmailChangeIsPending();
     }
 
     @Override
@@ -123,6 +132,23 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private void checkWordPressComOnlyFields() {
         if (!AccountHelper.isSignedInWordPressDotCom()) {
             mPreferenceScreen.removePreference(mUsernamePreference);
+        }
+    }
+
+    private void checkIfEmailChangeIsPending() {
+        Account account = AccountHelper.getDefaultAccount();
+        if (account.getPendingEmailChange() && getView() != null) {
+            View.OnClickListener clickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            };
+
+            Snackbar snackbar = Snackbar
+                    .make(getView(), getString(R.string.pending_email_change_snackbar, account.getNewEmail()), Snackbar.LENGTH_INDEFINITE).setAction(getString(R.string.undo), clickListener);
+            TextView textView = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+            textView.setMaxLines(4);
+            snackbar.show();
         }
     }
 

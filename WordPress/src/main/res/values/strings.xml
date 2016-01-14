@@ -1498,4 +1498,7 @@
     <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
 
+    <!--Account Settings-->
+    <string name="pending_email_change_snackbar">There is a pending change of your email to %1$s. Please check your inbox for a confirmation link.</string>
+
 </resources>
