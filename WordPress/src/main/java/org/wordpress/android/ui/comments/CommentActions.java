@@ -18,6 +18,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -108,7 +109,7 @@ public class CommentActions {
 
                 int newCommentID;
                 try {
-                    newCommentID = (Integer) client.call(ApiHelper.Methods.NEW_COMMENT, params);
+                    newCommentID = (Integer) client.call(Method.NEW_COMMENT, params);
                 } catch (XMLRPCException e) {
                     AppLog.e(T.COMMENTS, "Error while sending new comment", e);
                     newCommentID = -1;
@@ -173,7 +174,7 @@ public class CommentActions {
 
                 long newCommentID;
                 try {
-                    Object newCommentIDObject = client.call(ApiHelper.Methods.NEW_COMMENT, params);
+                    Object newCommentIDObject = client.call(Method.NEW_COMMENT, params);
                     if (newCommentIDObject instanceof Integer) {
                         newCommentID = ((Integer) newCommentIDObject).longValue();
                     } else if (newCommentIDObject instanceof Long) {
@@ -360,36 +361,12 @@ public class CommentActions {
                 XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
-                Map<String, String> postHash = new HashMap<String, String>();
-                postHash.put("status", CommentStatus.toString(newStatus));
-                postHash.put("content", comment.getCommentText());
-                postHash.put("author", comment.getAuthorName());
-                postHash.put("author_url", comment.getAuthorUrl());
-                postHash.put("author_email", comment.getAuthorEmail());
+                final boolean success = ApiHelper.editComment(blog, comment, newStatus);
 
-                Object[] params = { blog.getRemoteBlogId(),
-                        blog.getUsername(),
-                        blog.getPassword(),
-                        Long.toString(comment.commentID),
-                        postHash};
-
-                Object result;
-                try {
-                    result = client.call(ApiHelper.Methods.EDIT_COMMENT, params);
-                } catch (XMLRPCException e) {
-                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    result = null;
-                } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    result = null;
-                } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    result = null;
+                if (success) {
+                    CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, CommentStatus
+                            .toString(newStatus));
                 }
-
-                final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                if (success)
-                    CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, CommentStatus.toString(newStatus));
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -428,43 +405,15 @@ public class CommentActions {
         final CommentList moderatedComments = new CommentList();
         final String newStatusStr = CommentStatus.toString(newStatus);
         final int localBlogId = blog.getLocalTableBlogId();
-        final int remoteBlogId = blog.getRemoteBlogId();
 
         final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
                 for (Comment comment: comments) {
-                    Map<String, String> postHash = new HashMap<String, String>();
-                    postHash.put("status", newStatusStr);
-                    postHash.put("content", comment.getCommentText());
-                    postHash.put("author", comment.getAuthorName());
-                    postHash.put("author_url", comment.getAuthorUrl());
-                    postHash.put("author_email", comment.getAuthorEmail());
-
-                    Object[] params = {
-                            remoteBlogId,
-                            blog.getUsername(),
-                            blog.getPassword(),
-                            Long.toString(comment.commentID),
-                            postHash};
-
-                    Object result;
-                    try {
-                        result = client.call(ApiHelper.Methods.EDIT_COMMENT, params);
-                        boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                        if (success) {
-                            comment.setStatus(newStatusStr);
-                            moderatedComments.add(comment);
-                        }
-                    } catch (XMLRPCException e) {
-                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    } catch (IOException e) {
-                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
-                    } catch (XmlPullParserException e) {
-                        AppLog.e(T.COMMENTS, "Error while editing comment", e);
+                    if (ApiHelper.editComment(blog, comment, newStatus)) {
+                        comment.setStatus(newStatusStr);
+                        moderatedComments.add(comment);
                     }
                 }
 
@@ -512,7 +461,7 @@ public class CommentActions {
 
                 Object result;
                 try {
-                    result = client.call(ApiHelper.Methods.DELETE_COMMENT, params);
+                    result = client.call(Method.DELETE_COMMENT, params);
                 } catch (final XMLRPCException e) {
                     AppLog.e(T.COMMENTS, "Error while deleting comment", e);
                     result = null;
@@ -574,7 +523,7 @@ public class CommentActions {
 
                     Object result;
                     try {
-                        result = client.call(ApiHelper.Methods.DELETE_COMMENT, params);
+                        result = client.call(Method.DELETE_COMMENT, params);
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success)
                             deletedComments.add(comment);

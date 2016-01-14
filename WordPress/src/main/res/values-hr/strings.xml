@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Objava više ne postoji</string>
+	<string name="reader_err_get_post_not_authorized">Nemate pravo pristupa pregledavanja ove objave</string>
+	<string name="reader_err_get_post_generic">Nije moguće učitati objavu</string>
+	<string name="blog_name_no_spaced_allowed">Adresa web stranice ne može sadržavati razmake</string>
+	<string name="invalid_username_no_spaces">Korisničko ime ne može sadržavati razmake</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Web stranice koje pratite nisu ništa objavile u posljednje vrijeme</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nema novijih objava</string>
+	<string name="media_details_copy_url_toast">URL kopiran u međuspremnik</string>
+	<string name="edit_media">Uredi medijski zapis</string>
+	<string name="media_details_copy_url">Kopiraj URL</string>
+	<string name="media_details_label_date_uploaded">Preneseno</string>
+	<string name="media_details_label_date_added">Dodano</string>
 	<string name="selected_theme">Odabrana tema</string>
 	<string name="could_not_load_theme">Nije moguće učitati temu</string>
 	<string name="theme_activation_error">Nešto je pošlo krivo. Nije moguće aktivirati temu.</string>
@@ -195,18 +207,12 @@
 	<string name="take_photo">Slikaj</string>
 	<string name="take_video">Snimi video</string>
 	<string name="tab_title_site_images">Slike stranice</string>
-	<string name="media_details_file_name">Ime datoteke:</string>
 	<string name="verification_code">Kod za provjeru</string>
 	<string name="verify">Provjeri</string>
 	<string name="media_picker_title">Odabir medijskoga zapisa</string>
 	<string name="tab_title_device_images">Slike sa uređaja</string>
 	<string name="tab_title_device_videos">Video sa uređaja</string>
 	<string name="tab_title_site_videos">Video sa web stranice</string>
-	<string name="media_details_uploaded_on">Preneseno:</string>
-	<string name="media_details_added_on">Dodano:</string>
-	<string name="media_details_file_type">Vrsta datoteke:</string>
-	<string name="media_details_file_url">URL datoteke:</string>
-	<string name="media_details_dimensions">Dimenzije:</string>
 	<string name="error_publish_no_network">Nije moguće objaviti dok nema veze. Snimljeno kao skica.</string>
 	<string name="editor_toast_invalid_path">Neispravna putanja datoteke</string>
 	<string name="invalid_verification_code">Neispravan verifikacijski kod</string>
@@ -215,6 +221,8 @@
 	<string name="two_step_sms_sent">Provjerite poruke za verifikacijski kod.</string>
 	<string name="sign_in_jetpack">Prijavite se u WordPress.com račun kako bi spojili Jetpack.</string>
 	<string name="auth_required">Ponovno se prijavite za nastavak.</string>
+	<string name="media_details_label_file_name">Ime datoteke</string>
+	<string name="media_details_label_file_type">Vrsta datoteke</string>
 	<string name="publisher">Izdavač:</string>
 	<string name="error_notification_open">Ne mogu otvoriti obavjesti</string>
 	<string name="comments_fetching">Dohvaćanje komentara</string>
@@ -653,7 +661,6 @@
 	<string name="share_action_title">Dodaj u ...</string>
 	<string name="share_action">Podjeli</string>
 	<string name="stats">Statistika</string>
-	<string name="view_stats_full_site">Pregledaj cijelu stranicu</string>
 	<string name="stats_view_visitors_and_views">Posjetitelji i pregledi</string>
 	<string name="stats_view_clicks">Klikovi</string>
 	<string name="images">Slike</string>

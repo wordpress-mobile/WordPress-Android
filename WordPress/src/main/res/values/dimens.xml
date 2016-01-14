@@ -92,6 +92,7 @@
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
+    <dimen name="text_sz_triple_extra_large">26sp</dimen>
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
@@ -144,17 +145,36 @@
 
     <dimen name="progress_bar_height">3dp</dimen>
 
+    <!-- DetailListPreference -->
+    <dimen name="dlp_padding_start">20dp</dimen>
+    <dimen name="dlp_padding_end">24dp</dimen>
+    <dimen name="dlp_padding_top">6dp</dimen>
+    <dimen name="dlp_padding_bottom">6dp</dimen>
+    <dimen name="dlp_radio_margin_top">4dp</dimen>
+    <dimen name="dlp_text_margin_start">4dp</dimen>
+    <dimen name="dlp_text_margin_end">4dp</dimen>
+    <dimen name="dlp_title_padding_start">24dp</dimen>
+    <dimen name="dlp_title_padding_end">24dp</dimen>
+    <dimen name="dlp_title_padding_top">24dp</dimen>
+    <dimen name="dlp_title_padding_bottom">16dp</dimen>
+    <dimen name="dlp_title_logo_padding">8dp</dimen>
+    <dimen name="dlp_title_logo_width">36dp</dimen>
+    <dimen name="dlp_title_logo_height">36dp</dimen>
+
     <!-- stats -->
-    <dimen name="stats_widget_icon_size">18dp</dimen>
     <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
     <dimen name="stats_barchart_legend_item">12dp</dimen>
 
     <!-- stats widget-->
-    <dimen name="stats_widget_one_cell">40dp</dimen>
+    <dimen name="stats_widget_icon_size">18dp</dimen>
+    <dimen name="stats_widget_text_sz">14dp</dimen>
+    <dimen name="stats_widget_text_sz_small">10dp</dimen>
+    <dimen name="stats_widget_min_height">62dp</dimen>
+    <dimen name="stats_widget_main_container_min_size">38dp</dimen>
+    <dimen name="stats_widget_main_container_size">48dp</dimen>
     <dimen name="stats_widget_four_cells">250dp</dimen>
     <dimen name="stats_widget_five_cells">320dp</dimen>
-    <dimen name="stats_widget_main_container_size">48dp</dimen>
     <dimen name="stats_widget_image_layout_size">12dp</dimen>
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
@@ -200,6 +220,14 @@
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <!-- Site Settings -->
+    <dimen name="site_settings_divider_height">1dp</dimen>
+    <dimen name="related_posts_dialog_padding_left">24dp</dimen>
+    <dimen name="related_posts_dialog_padding_top">12dp</dimen>
+    <dimen name="related_posts_dialog_padding_right">24dp</dimen>
+    <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
+    <dimen name="text_sz_related_post_small">11sp</dimen>
 
     <!--empty lists-->
     <dimen name="empty_list_button_top_margin">32dp</dimen>

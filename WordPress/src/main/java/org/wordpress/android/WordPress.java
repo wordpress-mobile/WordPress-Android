@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.AndroidRuntimeException;
 import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
@@ -450,10 +451,10 @@ public class WordPress extends Application {
     }
 
     /**
-     * returns the blogID of the current blog or -1 if current blog is null
+     * returns the blogID of the current blog or null if current blog is null or remoteID is null.
      */
-    public static int getCurrentRemoteBlogId() {
-        return (getCurrentBlog() != null ? getCurrentBlog().getRemoteBlogId() : -1);
+    public static String getCurrentRemoteBlogId() {
+        return (getCurrentBlog() != null ? getCurrentBlog().getDotComBlogId() : null);
     }
 
     public static int getCurrentLocalTableBlogId() {
@@ -574,7 +575,14 @@ public class WordPress extends Application {
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             // TODO: use WebSettings.getDefaultUserAgent() after upgrade to API level 17+
-            mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
+            try {
+                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
+                mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
+            } catch (AndroidRuntimeException e) {
+                // init with the empty string, it's a rare issue
+                mDefaultUserAgent = "";
+            }
         }
         return mDefaultUserAgent;
     }
@@ -592,8 +600,13 @@ public class WordPress extends Application {
     private static String mUserAgent;
     public static String getUserAgent() {
         if (mUserAgent == null) {
-            mUserAgent = getDefaultUserAgent() + " "
-                       + USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
+            String defaultUserAgent = getDefaultUserAgent();
+            if (TextUtils.isEmpty(defaultUserAgent)) {
+                mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
+            } else {
+                mUserAgent = defaultUserAgent + " "+ USER_AGENT_APPNAME + "/"
+                        + PackageUtils.getVersionName(getContext());
+            }
         }
         return mUserAgent;
     }
