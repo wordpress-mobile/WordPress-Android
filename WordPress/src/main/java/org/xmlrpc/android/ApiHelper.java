@@ -1212,7 +1212,7 @@ public class ApiHelper {
      * Fetches the status of a comment
      * @param blog the blog the comment is in
      * @param comment the comment to fetch its status
-     * @return the status of the comment on the server
+     * @return the status of the comment on the server, null if error
      */
     public static @Nullable CommentStatus getCommentStatus(Blog blog, Comment comment) {
         if (blog == null) {
