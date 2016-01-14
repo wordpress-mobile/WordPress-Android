@@ -284,17 +284,37 @@
         android:key="@string/pref_key_site_advanced"
         android:title="@string/site_settings_advanced_header">
 
-        <Preference
+        <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_start_over"
             android:key="@string/pref_key_site_start_over"
             android:title="@string/start_over"
             app:longClickHint="@string/site_settings_start_over_hint" />
 
-        <Preference
+        <PreferenceScreen
             android:id="@+id/pref_delete_site"
             android:key="@string/pref_key_site_delete_site"
             android:title="@string/site_settings_delete_site_title"
-            app:longClickHint="@string/site_settings_delete_site_hint" />
+            app:longClickHint="@string/site_settings_delete_site_hint">
+
+            <org.wordpress.android.ui.prefs.WPPreference
+                android:title="Domain Removal"
+                android:summary="Be careful! Deleting your site will also remove your domain(s) listed below."
+                app:longClickHint="@string/site_settings_start_over_hint"
+                android:selectable="false" />
+
+            <org.wordpress.android.ui.prefs.WPPreference
+                android:title="Keep Your Content"
+                android:summary="If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future."
+                app:longClickHint="@string/site_settings_start_over_hint"
+                android:selectable="false" />
+
+            <org.wordpress.android.ui.prefs.WPPreference
+                android:title="Are You Sure?"
+                android:summary="This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site."
+                app:longClickHint="@string/site_settings_start_over_hint"
+                android:selectable="false" />
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
 

@@ -162,7 +162,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Advanced settings
     private Preference mStartOverPref;
-    private Preference mDeleteSitePref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -318,6 +317,12 @@ public class SiteSettingsFragment extends PreferenceFragment
             // track user accessing the full Discussion settings screen
             AnalyticsUtils.trackWithCurrentBlogDetails(
                     AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS);
+        } else if (preference == findPreference(getString(R.string.pref_key_site_delete_site))) {
+            Dialog dialog = ((PreferenceScreen) preference).getDialog();
+            if (dialog == null) return false;
+
+            String title = getString(R.string.site_settings_delete_site_title);
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
 
         return false;
@@ -343,9 +348,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mStartOverPref) {
             showStartOverDialog();
-            return true;
-        } else if (preference == mDeleteSitePref) {
-            removeBlogWithConfirmation();
             return true;
         } else if (preference == mCloseAfterPref) {
             showCloseAfterDialog();
@@ -565,7 +567,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
         mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
-        mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
