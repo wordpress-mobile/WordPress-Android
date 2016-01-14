@@ -33,6 +33,9 @@ import org.wordpress.android.ui.stats.models.SingleItemModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TagsModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.models.VideoPlaysModel;
+import org.wordpress.android.ui.stats.models.VisitModel;
+import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.util.AppLog;
 
 
@@ -54,7 +57,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         @Override
         public void onErrorResponse(VolleyError response) {
             AppLog.e(AppLog.T.STATS, "The Rest Client returned an error from a mock call: " + response.getMessage());
-            assertFalse(response.getMessage(), true);
+            assertFalse(response.getMessage(), true); // force the test to fails in this case
         }
     };
 
@@ -530,6 +533,78 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/insights",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testVideoPlaysNoData() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                VideoPlaysModel model = new VideoPlaysModel("123456", response);
+                assertEquals(model.getOtherPlays(), 0);
+                assertEquals(model.getTotalPlays(), 0);
+                assertNotNull(model.getPlays());
+                assertEquals(model.getPlays().size(), 0);
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/video-plays",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testVideoPlays() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                VideoPlaysModel model = new VideoPlaysModel("1234567890", response);
+                assertEquals(model.getOtherPlays(), 0);
+                assertEquals(model.getTotalPlays(), 2);
+                assertNotNull(model.getPlays());
+                assertEquals(model.getPlays().size(), 1);
+                SingleItemModel videoItemModel = model.getPlays().get(0);
+                assertEquals(videoItemModel.getTitle(), "Test Video");
+                assertEquals(videoItemModel.getUrl(), "http://maplebaconyummies.wordpress.com/wp-admin/media.php?action=edit&attachment_id=144");
+                assertEquals(videoItemModel.getItemID(), "144");
+                assertEquals(videoItemModel.getTotals(), 2);
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/video-plays",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testVisits() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                VisitsModel model = new VisitsModel("123456", response);
+                assertNotNull(model.getVisits());
+                assertNotNull(model.getUnit());
+                assertNotNull(model.getDate());
+
+                assertEquals(model.getVisits().size(), 30);
+                assertEquals(model.getUnit(), "day");
+
+                VisitModel visitModel = model.getVisits().get(0);
+                assertEquals(visitModel.getViews(), 7808);
+                assertEquals(visitModel.getVisitors(), 4331);
+                assertEquals(visitModel.getLikes(), 0);
+                assertEquals(visitModel.getComments(), 0);
+                assertEquals(visitModel.getPeriod(), "2014-10-08");
+
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits",
                 null,
                 listener,
                 errListener

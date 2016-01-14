@@ -119,19 +119,20 @@ public class RestClientCustomizableMock extends RestClient {
             return dummyReturnValue;
         }
 
-        try {
-            String data = fileToString(filename);
-            if (data == null) {
-                AppLog.e(T.TESTS, "can't read file: " + filename);
-                if (errorListener != null) {
-                    errorListener.onErrorResponse(new VolleyError("can't read file: " + filename));
-                }
-                return dummyReturnValue;
+        String data = fileToString(filename);
+        if (data == null) {
+            AppLog.e(T.TESTS, "Can't read file: " + filename);
+            if (errorListener != null) {
+                errorListener.onErrorResponse(new VolleyError("Can't read file: " + filename));
             }
+            return dummyReturnValue;
+        }
+
+        try {
             JSONObject jsonObj = new JSONObject(data);
             listener.onResponse(jsonObj);
         } catch (JSONException je) {
-            AppLog.e(T.TESTS, "can't read file: " + filename + " - " + je.toString());
+            AppLog.e(T.TESTS, je.toString());
         }
         return dummyReturnValue;
     }
