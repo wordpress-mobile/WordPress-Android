@@ -54,10 +54,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
         mEmailPreference = (SummaryEditTextPreference) findPreference(getString(R.string.pref_key_email));
-        // AccountHelper.getDefaultAccount() will always return a valid Account even if the username is empty
-        Account account = AccountHelper.getDefaultAccount();
-        mUsernamePreference.setSummary(account.getUserName());
-        mEmailPreference.setSummary(account.getEmail());
 
         mEmailPreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
@@ -76,7 +72,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        checkIfEmailChangeIsPending();
+        refreshAccountDetails();
     }
 
     @Override
@@ -127,6 +123,15 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void refreshAccountDetails() {
+        Account account = AccountHelper.getDefaultAccount();
+        mUsernamePreference.setSummary(account.getUserName());
+        mEmailPreference.setSummary(account.getEmail());
+
+        checkIfEmailChangeIsPending();
     }
 
     private void checkWordPressComOnlyFields() {
