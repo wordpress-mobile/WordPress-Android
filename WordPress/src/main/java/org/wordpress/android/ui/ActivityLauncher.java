@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -20,13 +21,13 @@ import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
@@ -48,14 +49,10 @@ public class ActivityLauncher {
 
     private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
-    public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
-        Intent intent = new Intent(activity, SitePickerActivity.class);
+    public static void showSitePickerForResult(Fragment fragment, int blogLocalTableId) {
+        Intent intent = new Intent(fragment.getActivity(), SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_in_from_left,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
+        fragment.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
     public static void viewCurrentSite(Context context) {
@@ -142,7 +139,7 @@ public class ActivityLauncher {
 
         // Create a new post object and assign default settings
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
-        newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) +"]");
+        newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) + "]");
         newPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(context));
         WordPress.wpDB.savePost(newPost);
 
