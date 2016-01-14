@@ -310,8 +310,11 @@
 
             <org.wordpress.android.ui.prefs.WPPreference
                 android:title="Are You Sure?"
+                android:icon="@drawable/gridicons_history"
                 android:summary="This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site."
                 app:longClickHint="@string/site_settings_start_over_hint"
+                android:layout="@layout/delete_site_preference"
+                android:widgetLayout="@layout/delete_site_preference_button"
                 android:selectable="false" />
 
         </PreferenceScreen>
