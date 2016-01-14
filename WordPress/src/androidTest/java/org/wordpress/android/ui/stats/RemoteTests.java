@@ -30,13 +30,10 @@ import org.wordpress.android.ui.stats.models.ReferrerGroupModel;
 import org.wordpress.android.ui.stats.models.ReferrerResultModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
-import org.wordpress.android.ui.stats.models.TagModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TagsModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.util.AppLog;
-
-import java.util.List;
 
 
 public class RemoteTests extends DefaultMocksInstrumentationTestCase {
@@ -452,19 +449,22 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 TopPostsAndPagesModel model = new TopPostsAndPagesModel("123456", response);
                 assertNotNull(model.getTopPostsAndPages());
                 assertEquals(model.getTopPostsAndPages().size(), 10);
-                assertEquals(model.getTopPostsAndPages().get(0).getItemID(), "39806");
-                assertEquals(model.getTopPostsAndPages().get(0).getTotals(), 2420);
-                assertEquals(model.getTopPostsAndPages().get(0).getTitle(), "Home");
-                assertEquals(model.getTopPostsAndPages().get(0).getUrl(), "http://automattic.com/home/");
-                assertEquals(model.getTopPostsAndPages().get(0).getDate(), StatsUtils.toMs("2011-08-30 21:47:38"));
-                assertEquals(model.getTopPostsAndPages().get(0).getPostType(), "page");
 
-                assertEquals(model.getTopPostsAndPages().get(9).getItemID(), "39254");
-                assertEquals(model.getTopPostsAndPages().get(9).getTotals(), 56);
-                assertEquals(model.getTopPostsAndPages().get(9).getTitle(), "Growth Explorer");
-                assertEquals(model.getTopPostsAndPages().get(9).getUrl(), "http://automattic.com/work-with-us/growth-explorer/");
-                assertEquals(model.getTopPostsAndPages().get(9).getDate(), StatsUtils.toMs("2011-08-25 19:37:27"));
-                assertEquals(model.getTopPostsAndPages().get(9).getPostType(), "page");
+                PostModel postModel = model.getTopPostsAndPages().get(0);
+                assertEquals(postModel.getItemID(), "39806");
+                assertEquals(postModel.getTotals(), 2420);
+                assertEquals(postModel.getTitle(), "Home");
+                assertEquals(postModel.getUrl(), "http://automattic.com/home/");
+                assertEquals(postModel.getDate(), StatsUtils.toMs("2011-08-30 21:47:38"));
+                assertEquals(postModel.getPostType(), "page");
+
+                postModel = model.getTopPostsAndPages().get(9);
+                assertEquals(postModel.getItemID(), "39254");
+                assertEquals(postModel.getTotals(), 56);
+                assertEquals(postModel.getTitle(), "Growth Explorer");
+                assertEquals(postModel.getUrl(), "http://automattic.com/work-with-us/growth-explorer/");
+                assertEquals(postModel.getDate(), StatsUtils.toMs("2011-08-25 19:37:27"));
+                assertEquals(postModel.getPostType(), "page");
             }
         };
 
