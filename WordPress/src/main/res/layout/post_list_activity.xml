@@ -4,10 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
-
     <fragment
         android:id="@+id/postList"
         android:name="org.wordpress.android.ui.posts.PostsListFragment"
