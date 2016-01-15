@@ -1499,6 +1499,7 @@
     <string name="about_me_hint">A few words about you…</string>
 
     <!--Account Settings-->
-    <string name="pending_email_change_snackbar">There is a pending change of your email to %1$s. Please check your inbox for a confirmation link.</string>
+    <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
+
 
 </resources>

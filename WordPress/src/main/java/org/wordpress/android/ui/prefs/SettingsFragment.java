@@ -172,7 +172,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 };
 
                 mEmailSnackbar = Snackbar
-                        .make(getView(), "", Snackbar.LENGTH_INDEFINITE).setAction(getString(R.string.undo), clickListener);
+                        .make(getView(), "", Snackbar.LENGTH_INDEFINITE).setAction(getString(R.string.button_revert), clickListener);
                 TextView textView = (TextView) mEmailSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
                 textView.setMaxLines(4);
             }
