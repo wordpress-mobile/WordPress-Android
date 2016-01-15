@@ -2736,6 +2736,7 @@ ZSSField.prototype.handleTapEvent = function(e) {
                 this.sendVideoTappedCallback( targetNode );
                 return;
             }
+        }
     }
 };
 
