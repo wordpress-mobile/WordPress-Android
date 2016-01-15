@@ -317,7 +317,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             // track user accessing the full Discussion settings screen
             AnalyticsUtils.trackWithCurrentBlogDetails(
                     AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS);
-        } else if (preference == findPreference(getString(R.string.pref_key_site_delete_site))) {
+        } else if (preference == findPreference(getString(R.string.pref_key_site_delete_site_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog == null) return false;
 
@@ -1052,7 +1052,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeSelfHostedOnlyPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_delete_site);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_delete_site_screen);
     }
 
     private Preference getChangePref(int id) {

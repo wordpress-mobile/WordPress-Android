@@ -291,8 +291,8 @@
             app:longClickHint="@string/site_settings_start_over_hint" />
 
         <PreferenceScreen
-            android:id="@+id/pref_delete_site"
-            android:key="@string/pref_key_site_delete_site"
+            android:id="@+id/pref_delete_site_screen"
+            android:key="@string/pref_key_site_delete_site_screen"
             android:title="@string/site_settings_delete_site_title"
             app:longClickHint="@string/site_settings_delete_site_hint">
 
