@@ -6,6 +6,9 @@
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
+    <string name="fragment_tag_publicize_list" translatable="false">fragment_publicize_list</string>
+    <string name="fragment_tag_publicize_detail" translatable="false">fragment_publicize_detail</string>
+    <string name="fragment_tag_publicize_webview" translatable="false">fragment_publicize_webview</string>
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>

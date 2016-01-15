@@ -1177,6 +1177,7 @@
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_btn_sharing">Sharing</string>
     <string name="my_site_btn_site_settings">Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
@@ -1233,6 +1234,15 @@
     <!-- Noticons -->
     <string name="noticon_clock" translatable="false">\uf303</string>
     <string name="noticon_note" translatable="false">\uf814</string>
+
+    <!-- Publicize and sharing -->
+    <string name="sharing">Sharing</string>
+    <string name="connections_label">Connections</string>
+    <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
+    <string name="share_btn_connect">Connect</string>
+    <string name="share_btn_disconnect">Disconnect</string>
+    <string name="share_btn_reconnect">Reconnect</string>
+    <string name="dlg_confirm_publicize_disconnect">Disconnect from %s?</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
