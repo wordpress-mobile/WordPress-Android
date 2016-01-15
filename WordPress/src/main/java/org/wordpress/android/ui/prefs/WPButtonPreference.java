@@ -18,6 +18,8 @@ public class WPButtonPreference extends WPPreference {
     public WPButtonPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        mButtonTextColor = ContextCompat.getColor(context, R.color.black);
+
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPButtonPreference);
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
