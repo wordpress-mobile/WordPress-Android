@@ -445,7 +445,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         );
     }
 
-    public void testTopPostException() throws Exception  {
+    public void testTopPost() throws Exception  {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
@@ -472,6 +472,31 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts",
+                null,
+                listener,
+                errListener
+        );
+    }
+
+    public void testTopPostEmptyURL() throws Exception  {
+        StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
+            @Override
+            void parseResponse(JSONObject response) throws JSONException {
+                TopPostsAndPagesModel model = new TopPostsAndPagesModel("1234567890", response);
+                assertNotNull(model.getTopPostsAndPages());
+                assertEquals(model.getTopPostsAndPages().size(), 10);
+
+                PostModel postModel = model.getTopPostsAndPages().get(0);
+                assertEquals(postModel.getItemID(), "750");
+                assertEquals(postModel.getTotals(), 7);
+                assertEquals(postModel.getTitle(), "Asynchronous unit testing Core Data with Xcode 6");
+                assertEquals(postModel.getUrl(), ""); // This post has no URL?!? Unpublished post that was prev published?
+                assertEquals(postModel.getDate(), StatsUtils.toMs("2014-08-06 14:52:11"));
+                assertEquals(postModel.getPostType(), "post");
+            }
+        };
+
+        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/top-posts",
                 null,
                 listener,
                 errListener

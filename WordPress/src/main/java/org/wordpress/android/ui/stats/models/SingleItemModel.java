@@ -25,7 +25,14 @@ public class SingleItemModel implements Serializable {
         this.mItemID = itemID;
         this.mTitle = title;
         this.mTotals = totals;
-        this.mUrl = url;
+
+        // We could get invalid data back from the server. Check that URL is OK.
+        if (url == null || "null".equals(url) || "false".equals(url)) {
+            this.mUrl = "";
+        } else {
+            this.mUrl = url;
+        }
+
         this.mDate = date;
         this.mIcon = icon;
     }
