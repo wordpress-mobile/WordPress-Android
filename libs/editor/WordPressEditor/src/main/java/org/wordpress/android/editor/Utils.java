@@ -6,16 +6,15 @@ import android.content.res.AssetManager;
 import android.net.Uri;
 
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.HTTPUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Arrays;
@@ -27,7 +26,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Utils {
-
     public static String getHtmlFromFile(Activity activity, String filename) {
         try {
             AssetManager assetManager = activity.getAssets();
@@ -156,7 +154,7 @@ public class Utils {
         return changeMap;
     }
 
-    public static Uri downloadExternalMedia(Context context, Uri imageUri) {
+    public static Uri downloadExternalMedia(Context context, Uri imageUri, Map<String, String> headers) {
         if(context != null && imageUri != null) {
             File cacheDir = null;
 
@@ -173,7 +171,11 @@ public class Utils {
                         return null;
                     }
                 } else {
-                    inputStream = (new URL(imageUri.toString())).openStream();
+                    if (headers != null) {
+                        inputStream = HTTPUtils.setupUrlConnection(imageUri.toString(), headers).getInputStream();
+                    } else {
+                        inputStream = (new URL(imageUri.toString())).openStream();
+                    }
                 }
 
                 String fileName = "thumb-" + System.currentTimeMillis();

@@ -30,12 +30,14 @@ import android.widget.ToggleButton;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
@@ -51,7 +53,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
-        OnJsEditorStateChangedListener, OnImeBackListener, EditorMediaUploadListener {
+        OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
+        EditorMediaUploadListener {
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -139,6 +142,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWebView.setOnTouchListener(this);
         mWebView.setOnImeBackListener(this);
+        mWebView.setAuthHeaderRequestListener(this);
+
+        if (mCustomHttpHeaders != null && mCustomHttpHeaders.size() > 0) {
+            for (Map.Entry<String, String> entry : mCustomHttpHeaders.entrySet()) {
+                mWebView.setCustomHeader(entry.getKey(), entry.getValue());
+            }
+        }
 
         // Ensure that the content field is always filling the remaining screen space
         mWebView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -481,6 +491,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onImeBack() {
         mIsKeyboardOpen = false;
         showActionBarIfNeeded();
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        return mEditorFragmentListener.onAuthHeaderRequested(url);
     }
 
     @Override
@@ -981,9 +996,26 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 Bundle dialogBundle = new Bundle();
 
-                dialogBundle.putString("imageMeta", meta.toString());
                 dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
                 dialogBundle.putBoolean("featuredImageSupported", mFeaturedImageSupported);
+
+                // Request and add an authorization header for HTTPS images
+                // Use https:// when requesting the auth header, in case the image is incorrectly using http://.
+                // If an auth header is returned, force https:// for the actual HTTP request.
+                HashMap<String, String> headerMap = new HashMap<>(mCustomHttpHeaders);
+                try {
+                    final String imageSrc = meta.getString("src");
+                    String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
+                    if (authHeader.length() > 0) {
+                        meta.put("src", UrlUtils.makeHttps(imageSrc));
+                        headerMap.put("Authorization", authHeader);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(T.EDITOR, "Could not retrieve image url from JSON metadata");
+                }
+                dialogBundle.putSerializable("headerMap", headerMap);
+
+                dialogBundle.putString("imageMeta", meta.toString());
 
                 String imageId = JSONUtils.getString(meta, "attachment_id");
                 if (!imageId.isEmpty()) {

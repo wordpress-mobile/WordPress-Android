@@ -5,7 +5,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
-        classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -17,7 +16,6 @@ repositories {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'android-cq'
 apply plugin: 'io.fabric'
 
 android {
@@ -32,8 +30,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "4.9-rc-4"
-        versionCode 231
+        versionName "5.0-rc-1"
+        versionCode 234
         minSdkVersion 14
         targetSdkVersion 23
 
@@ -80,7 +78,7 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.google.android.gms:play-services-gcm:8.3.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.helpshift:android-aar:3.12.0'
+    compile 'com.helpshift:android-aar:4.2.0-support'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.2'
     compile 'org.wordpress:graphview:3.4.0'

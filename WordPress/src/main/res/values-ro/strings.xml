@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Acest articol nu mai există</string>
+	<string name="reader_err_get_post_not_authorized">Nu ești autorizat să vezi acest articol</string>
+	<string name="reader_err_get_post_generic">Acest articol nu poate fi regăsit</string>
+	<string name="blog_name_no_spaced_allowed">Adresa sitului nu poate conține spații</string>
+	<string name="invalid_username_no_spaces">Numele utilizator nu pot conține spații</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Siturile pe care le urmărești n-au publicat nimic recent</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Niciun articol recent</string>
+	<string name="media_details_copy_url_toast">URL copiat în clipbord</string>
+	<string name="edit_media">Editare media</string>
+	<string name="media_details_copy_url">Copiere URL</string>
+	<string name="media_details_label_date_uploaded">Încărcat</string>
+	<string name="media_details_label_date_added">Adăugat</string>
 	<string name="selected_theme">Tema selectată</string>
 	<string name="could_not_load_theme">Nu pot încărca tema</string>
 	<string name="theme_activation_error">Ceva a mers prost. Nu pot activa tema</string>
@@ -199,12 +211,6 @@
 	<string name="verification_code">Cod de verificare</string>
 	<string name="editor_toast_invalid_path">Cale fișier invalidă</string>
 	<string name="error_publish_no_network">Nu pot publica cât timp nu există o conexiune. Salvat ca ciornă.</string>
-	<string name="media_details_dimensions">Dimensiuni:</string>
-	<string name="media_details_file_type">Tip fișier:</string>
-	<string name="media_details_file_url">URL fișier:</string>
-	<string name="media_details_uploaded_on">Încărcate pe:</string>
-	<string name="media_details_file_name">Nume fișier:</string>
-	<string name="media_details_added_on">Adăugate la:</string>
 	<string name="tab_title_site_videos">Videuri sit</string>
 	<string name="tab_title_site_images">Imagini sit</string>
 	<string name="tab_title_device_videos">Videouri din dispozitiv</string>
@@ -215,6 +221,8 @@
 	<string name="add_to_post">Adaugă la articol</string>
 	<string name="language">Limbă</string>
 	<string name="device">Dispozitiv</string>
+	<string name="media_details_label_file_type">Tip fișier</string>
+	<string name="media_details_label_file_name">Nume fișier</string>
 	<string name="posts_fetching">Extrag articolele...</string>
 	<string name="media_fetching">Extrag media...</string>
 	<string name="pages_fetching">Extrag paginile...</string>
@@ -655,7 +663,6 @@
 	<string name="stats_view_referrers">Referințe</string>
 	<string name="stats_view_comments">Comentarii</string>
 	<string name="stats_timeframe_today">Azi</string>
-	<string name="view_stats_full_site">Vezi situl complet</string>
 	<string name="stats">statistici</string>
 	<string name="share_action_title">Adaug la...</string>
 	<string name="post_excerpt">Rezumat</string>

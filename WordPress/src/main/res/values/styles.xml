@@ -20,6 +20,8 @@
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
         <item name="android:statusBarColor">@color/status_bar_tint</item>
 
+        <item name="colorButtonNormal">@color/light_gray</item>
+
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
@@ -326,6 +328,11 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- Used in Notifications and Site settings to animate nested preference screens -->
+    <style name="DialogAnimations">
+        <item name="android:windowEnterAnimation">@anim/activity_slide_in_from_right</item>
+        <item name="android:windowExitAnimation">@anim/activity_slide_out_to_right</item>
+    </style>
     <style name="MyProfileRow">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>
