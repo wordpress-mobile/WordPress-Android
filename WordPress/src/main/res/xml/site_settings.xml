@@ -316,7 +316,8 @@
                 android:summary="This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site."
                 app:longClickHint="@string/site_settings_start_over_hint"
                 android:layout="@layout/delete_site_preference"
-                app:buttonText="DELETE SITE"
+                app:buttonText="delete site"
+                app:buttonTextAllCaps="true"
                 app:buttonTextColor="#d94f4f"
                 android:widgetLayout="@layout/delete_site_preference_button"
                 android:selectable="false" />
