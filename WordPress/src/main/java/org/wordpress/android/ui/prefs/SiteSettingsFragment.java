@@ -362,6 +362,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mExportSitePref) {
             return true;
         } else if (preference == mDeleteSitePref) {
+            showDeleteSiteDialog();
             return true;
         }
 
@@ -616,6 +617,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.paging_limit));
         args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getPagingCount());
         showNumberPickerDialog(args, PAGING_REQUEST_CODE, "paging-dialog");
+    }
+
+    private void showDeleteSiteDialog() {
+        DeleteSiteDialog deleteSiteDialog = new DeleteSiteDialog();
+        deleteSiteDialog.show(getFragmentManager(), null);
     }
 
     private void showCloseAfterDialog() {
