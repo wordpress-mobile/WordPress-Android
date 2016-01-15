@@ -15,7 +15,7 @@ public class DeleteSiteDialog extends DialogFragment {
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                dismiss();
             }
         });
         builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
