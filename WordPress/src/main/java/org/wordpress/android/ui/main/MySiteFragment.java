@@ -18,6 +18,7 @@ import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.DualPaneFragment;
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DisplayUtils;
@@ -165,8 +167,8 @@ public class MySiteFragment extends DualPaneFragment
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isInDualPaneMode()) {
-                    ((OnMenuItemClickListener) getParentFragment()).onSideBarMenuClicked(PostsListFragment.class, null);
+                if (isAttachedToDualPaneDashboard()) {
+                    showContentFragment(PostsListFragment.class, null, AnalyticsTracker.Stat.OPENED_POSTS);
                 } else {
                     ActivityLauncher.viewCurrentBlogPosts(getActivity());
                 }
@@ -227,6 +229,21 @@ public class MySiteFragment extends DualPaneFragment
         return rootView;
     }
 
+    private boolean isAttachedToDualPaneDashboard() {
+        return isInDualPaneMode() && getParentFragment() instanceof DualPaneDashboard;
+    }
+
+    private void showContentFragment(Class fragmentClass, Bundle parameters, AnalyticsTracker.Stat statType) {
+        DualPaneDashboard dualPaneDashboard = ((DualPaneDashboard) getParentFragment());
+
+        dualPaneDashboard.addContentFragment(fragmentClass, parameters);
+
+        //Unlike with activities, we need to check if the fragment is already added before tracking it
+        if (statType != null && !dualPaneDashboard.isFragmentAdded(fragmentClass)) {
+            AnalyticsUtils.trackWithCurrentBlogDetails(statType);
+        }
+    }
+
     private void showSitePicker() {
         if (isAdded()) {
             int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
@@ -242,7 +259,7 @@ public class MySiteFragment extends DualPaneFragment
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
-                    ((OnSiteChangedListener) getParentFragment()).onSiteChanged();
+                    ((DualPaneDashboard) getParentFragment()).removeContentFragment();
                     setBlog(WordPress.getCurrentBlog());
                 }
                 break;
@@ -261,7 +278,7 @@ public class MySiteFragment extends DualPaneFragment
 
             case RequestCodes.CREATE_BLOG:
                 // if the user created a new blog refresh the blog details
-                ((OnSiteChangedListener) getParentFragment()).onSiteChanged();
+                ((DualPaneDashboard) getParentFragment()).removeContentFragment();
                 mBlog = WordPress.getCurrentBlog();
                 refreshBlogDetails();
                 break;
@@ -378,13 +395,5 @@ public class MySiteFragment extends DualPaneFragment
         if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
             mBlogTitleTextView.setText(mBlog.getBlogName());
         }
-    }
-
-    public interface OnMenuItemClickListener {
-        void onSideBarMenuClicked(Class contentFragmentClass, Bundle parameters);
-    }
-
-    public interface OnSiteChangedListener {
-        void onSiteChanged();
     }
 }
