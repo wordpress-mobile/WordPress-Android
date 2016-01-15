@@ -27,8 +27,8 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public static ThemeSearchFragment newInstance() {
         return new ThemeSearchFragment();
     }
+    private static String mLastSearch = "";
 
-    private String mLastSearch = "";
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
 
@@ -56,6 +56,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(BUNDLE_LAST_SEARCH)) {
                 mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
+                configureSearchView();
             }
         }
     }
@@ -63,6 +64,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_LAST_SEARCH, mLastSearch);
         saveState(outState);
     }
 
@@ -113,14 +115,20 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        search(query);
+        if (!mLastSearch.equals(query)) {
+            mLastSearch = query;
+            search(query);
+        }
         clearFocus(mSearchView);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        search(newText);
+        if (!mLastSearch.equals(newText)) {
+            mLastSearch = newText;
+            search(newText);
+        }
         return true;
     }
 
