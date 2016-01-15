@@ -162,6 +162,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Advanced settings
     private Preference mStartOverPref;
+    private Preference mExportSitePref;
     private Preference mDeleteSitePref;
 
     @Override
@@ -358,6 +359,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             return true;
         } else if (preference == mCategoryPref || preference == mFormatPref) {
             return !shouldShowListPreference((DetailListPreference) preference);
+        } else if (preference == mExportSitePref) {
+            return true;
         } else if (preference == mDeleteSitePref) {
             return true;
         }
@@ -570,6 +573,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
         mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
+        mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference

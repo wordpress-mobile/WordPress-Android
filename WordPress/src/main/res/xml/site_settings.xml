@@ -302,25 +302,32 @@
                 app:longClickHint="@string/site_settings_start_over_hint"
                 android:selectable="false" />
 
-            <org.wordpress.android.ui.prefs.WPPreference
+            <org.wordpress.android.ui.prefs.WPButtonPreference
+                android:id="@+id/pref_export_site"
+                android:key="@string/pref_key_site_export_site"
+                android:icon="@drawable/gridicons_history"
                 android:title="Keep Your Content"
                 android:summary="If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future."
+                android:layout="@layout/delete_site_preference"
+                android:widgetLayout="@layout/delete_site_preference_button"
+                android:selectable="false"
                 app:longClickHint="@string/site_settings_start_over_hint"
-                android:selectable="false" />
+                app:buttonText="Export content"
+                app:buttonTextAllCaps="true" />
 
             <org.wordpress.android.ui.prefs.WPButtonPreference
                 android:id="@+id/pref_delete_site"
                 android:key="@string/pref_key_site_delete_site"
-                android:title="Are You Sure?"
                 android:icon="@drawable/gridicons_history"
+                android:title="Are You Sure?"
                 android:summary="This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site."
-                app:longClickHint="@string/site_settings_start_over_hint"
                 android:layout="@layout/delete_site_preference"
+                android:widgetLayout="@layout/delete_site_preference_button"
+                android:selectable="false"
+                app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="delete site"
                 app:buttonTextAllCaps="true"
-                app:buttonTextColor="#d94f4f"
-                android:widgetLayout="@layout/delete_site_preference_button"
-                android:selectable="false" />
+                app:buttonTextColor="#d94f4f" />
 
         </PreferenceScreen>
 
