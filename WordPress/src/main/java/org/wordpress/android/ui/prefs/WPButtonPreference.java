@@ -18,11 +18,16 @@ public class WPButtonPreference extends WPPreference {
     protected void onBindView(@NonNull View view) {
         super.onBindView(view);
 
-        Button button = (Button) view.findViewById(R.id.button);
-    }
+        if (view.findViewById(R.id.button) != null) {
+            final WPButtonPreference wpButtonPreference = this;
 
-    @Override
-    public int getLayoutResource() {
-        return R.layout.button_preference;
+            Button button = (Button) view.findViewById(R.id.button);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getOnPreferenceClickListener().onPreferenceClick(wpButtonPreference);
+                }
+            });
+        }
     }
 }

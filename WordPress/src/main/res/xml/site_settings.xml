@@ -308,7 +308,9 @@
                 app:longClickHint="@string/site_settings_start_over_hint"
                 android:selectable="false" />
 
-            <org.wordpress.android.ui.prefs.WPPreference
+            <org.wordpress.android.ui.prefs.WPButtonPreference
+                android:id="@+id/pref_delete_site"
+                android:key="@string/pref_key_site_delete_site"
                 android:title="Are You Sure?"
                 android:icon="@drawable/gridicons_history"
                 android:summary="This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site."
