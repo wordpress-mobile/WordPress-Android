@@ -59,12 +59,13 @@ Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a ne
 
 # Drawable Resources
 
-Final APK will be packaged with `hpdi`, `xhdpi` and `xxhdpi` resolutions for our graphic resources. Other resolutions are supported but they will be scaled.
+The Android build tools now allow drawable resources to be provided exclusively in vector format, PNG's are automatically generated at build time if necessary.
 
-If you have to add a new graphic resource to the app. You must provides `hpdi`, `xhdpi` and `xxhdpi` resolutions in `WordPress/src/main/res/`, but also the `xxxhdpi` version in `WordPress/src/future/res/drawable-xxxhdpi`. That `xxxhdpi` version won't be packaged in the current released APK. In future versions of the app, when very high resolution devices are common, we will release the app including `xxxhdpi` resources, and it will be much easier for us to just move existing resources from the `WordPress/src/future/res/drawable-xxxhdpi` folder.
-
-If the new drawable source is a SVG, then add it to `WordPress/src/future/res/svg/`. If the new drawable source is a Vector Drawable source, then add it to `WordPress/src/future/res/drawable/`.
+From the [release notes](http://tools.android.com/tech-docs/new-build-system):
+`PNGs are generated for every vector drawable found in a resource directory that does not specify an API version (or specifies a version lower than 21).`
 
 # Contribute to translations
 
 We use a tool called GlotPress to manage translations. The WordPress-Android GlotPress instance lives here: http://translate.wordpress.org/projects/apps/android/dev. To add new translations or fix existing ones, create an account over at GlotPress and submit your changes over at the GlotPress site.
+
+To help ease the translation process we ask that you mark alias string resources - as well as other strings where appropriate - as not translatable. For example `<string name="foo" translatable="false">@string/bar</string>'
