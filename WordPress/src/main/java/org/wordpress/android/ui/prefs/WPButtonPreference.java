@@ -11,7 +11,6 @@ import org.wordpress.android.R;
 public class WPButtonPreference extends WPPreference {
     public WPButtonPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setLayoutResource(R.layout.button_preference);
     }
 
     @Override
