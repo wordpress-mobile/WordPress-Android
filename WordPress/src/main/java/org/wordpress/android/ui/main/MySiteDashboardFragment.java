@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,23 +19,30 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import java.security.InvalidParameterException;
 
 /**
- * Dashboard fragments shows dual pane layout for tablets and single pane for smartphones.
+ * Dashboard fragment that shows dual pane layout for tablets and single pane for smartphones.
  */
 
-public class MySiteDashboardFragment extends Fragment implements MySiteFragment.OnMenuItemClickListener,
-        MySiteFragment.OnSiteChangedListener {
+public class MySiteDashboardFragment extends Fragment implements DualPaneDashboard {
 
+    //Root view ID of activity this fragment is a part of.
     private final static int CONTAINER_ACTIVITY_ROOT_VIEW_ID = R.id.root_view_main;
 
-    private final static String SIDEBAR_FRAGMENT_TAG = "my_sites";
+    //ID of "content pane" fragment container in dual pane layout.
+    //This container is a part of dashboard fragment view hierarchy.
+    private final static int NESTED_CONTENT_FRAGMENT_CONTAINER_ID = R.id.content_fragment_container;
+
+    //We maintain separate BackStack for dashboard related fragment transactions.
     private final static String BACK_STACK_ID = "dashboard_back_stack";
+
+    private final static String SIDEBAR_FRAGMENT_TAG = "my_sites";
+
     private final static String CONTENT_FRAGMENT_TAG_PARAMETER_KEY = "content_fragment_tag";
     private final static String CONTENT_FRAGMENT_STATE_PARAMETER_KEY = "single_pane_content_fragment_is_hidden";
 
-    private View mEmptyView;
     private String mContentFragmentTag;
-
     private boolean mIsSinglePaneContentFragmentHidden = false;
+
+    private View mEmptyView;
 
     public static MySiteDashboardFragment newInstance() {
         return new MySiteDashboardFragment();
@@ -63,24 +71,27 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //Content fragment is attached to activity's view hierarchy (not to this's one) in single pane mode
+        //Content fragment is attached to activity's view hierarchy in single pane mode (not nested in dashboard)
         //that's why we do it in onActivityCreated()
-        attachContentFragment();
+        showContentFragment();
     }
 
     private void attachSidebarFragment() {
-        //sidebar fragment is always part of a dashboard, so we only use child fragment manager
+        //sidebar fragment is always a part of a dashboard, so we only need to use child fragment manager
         FragmentTransaction childFragmentTransaction = getChildFragmentManager().beginTransaction();
 
+        //lazy load - won't be null
         Fragment mySitesFragment = getSidebarFragment();
         if (mySitesFragment.isDetached()) {
             childFragmentTransaction.attach(mySitesFragment);
         } else {
             childFragmentTransaction.replace(R.id.my_site_fragment_container, mySitesFragment, SIDEBAR_FRAGMENT_TAG);
         }
+
         childFragmentTransaction.commit();
     }
 
+    @NonNull
     private Fragment getSidebarFragment() {
         Fragment sidebarFragment = getChildFragmentManager().findFragmentByTag(SIDEBAR_FRAGMENT_TAG);
         if (sidebarFragment == null) {
@@ -89,10 +100,16 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
         return sidebarFragment;
     }
 
+    /*
+     * Check's if content fragment exist in parent activity's FragmentManger
+     */
     private boolean isContentFragmentAttachedToActivity() {
         return getFragmentManager().findFragmentByTag(mContentFragmentTag) != null;
     }
 
+    /*
+     * Check's if content fragment exist in this fragment's child FragmentManger
+     */
     private boolean isContentFragmentAttachedToDashboardFragment() {
         return getChildFragmentManager().findFragmentByTag(mContentFragmentTag) != null;
     }
@@ -101,9 +118,10 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
      * Remove's fragment from FragmentManger when necessary and return's reference to it (so it wont ne GC'ed)
      */
     private Fragment getDetachedContentFragment() {
-        FragmentManager fragmentManager = getContentFragmentManager();
         Fragment fragment = getContentFragment();
         if (fragment != null) {
+            FragmentManager fragmentManager = getContentFragmentManager();
+
             //if number of panes did not changed after configuration change (fragment was simply recreated, etc)
             //we just return fragment as-is
             if (isContentFragmentAttachedToActivity() && isInDualPaneMode()) {
@@ -119,14 +137,20 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
         return fragment;
     }
 
+    @Nullable
     private Fragment getContentFragment() {
+        return getContentFragment(mContentFragmentTag);
+    }
+
+    @Nullable
+    private Fragment getContentFragment(String tag) {
         Fragment contentFragment = null;
 
         //content fragment can belong to either activity's or dashboard's FragmentManger
-        if (getFragmentManager().findFragmentByTag(mContentFragmentTag) != null) {
-            contentFragment = getFragmentManager().findFragmentByTag(mContentFragmentTag);
-        } else if (getChildFragmentManager().findFragmentByTag(mContentFragmentTag) != null) {
-            contentFragment = getChildFragmentManager().findFragmentByTag(mContentFragmentTag);
+        if (isContentFragmentAttachedToActivity()) {
+            contentFragment = getFragmentManager().findFragmentByTag(tag);
+        } else if (isContentFragmentAttachedToDashboardFragment()) {
+            contentFragment = getChildFragmentManager().findFragmentByTag(tag);
         }
 
         return contentFragment;
@@ -135,7 +159,7 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
     /*
      *  There is no method to get "main" FragmentManger from fragment
      *  so we are going from opposite direction, and querying each FragmentManger if they have our fragment
-     *  and returning them if they do
+     *  and returning them if they do. Will return null if there is no content fragment.
      */
     private FragmentManager getContentFragmentManager() {
         FragmentManager fragmentManager = null;
@@ -147,9 +171,8 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
         return fragmentManager;
     }
 
-    private void attachContentFragment() {
-        //we need to keep a reference to a wild Fragment removed from FragmentManger
-        //otherwise it will be GC'ed
+    private void showContentFragment() {
+        //we need to keep a reference to a wild Fragment removed from FragmentManger, otherwise it will be GC'ed
         Fragment contentFragment = getDetachedContentFragment();
 
         if (contentFragment != null) {
@@ -157,7 +180,7 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
 
             if (isInDualPaneMode()) {
                 fragmentTransaction = getChildFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.content_fragment_container, contentFragment, mContentFragmentTag);
+                fragmentTransaction.replace(NESTED_CONTENT_FRAGMENT_CONTAINER_ID, contentFragment, mContentFragmentTag);
             } else {
                 checkContainerActivityLayoutCompatibility();
 
@@ -204,7 +227,7 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
     }
 
     @Override
-    public void onSideBarMenuClicked(Class contentFragmentClass, Bundle parameters) {
+    public void addContentFragment(Class contentFragmentClass, Bundle parameters) {
         if (contentFragmentClass == null || !Fragment.class.isAssignableFrom(contentFragmentClass)) {
             throw new IllegalArgumentException("You need to pass a Fragment class as a parameter.");
         }
@@ -220,7 +243,7 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
 
             if (fragment == null) {
                 fragment = Fragment.instantiate(getActivity(), contentFragmentClass.getName(), parameters);
-                fragmentTransaction.replace(R.id.content_fragment_container, fragment, mContentFragmentTag);
+                fragmentTransaction.replace(NESTED_CONTENT_FRAGMENT_CONTAINER_ID, fragment, mContentFragmentTag);
             } else if (fragment.isDetached()) {
                 fragmentTransaction.attach(fragment);
             }
@@ -266,7 +289,7 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
     }
 
     @Override
-    public void onSiteChanged() {
+    public void removeContentFragment() {
         //when the site is changed/created - remove content fragment
         //clear back stack, reset state variables and show empty view
         Fragment contentFragment = getContentFragment();
@@ -281,6 +304,15 @@ public class MySiteDashboardFragment extends Fragment implements MySiteFragment.
         mContentFragmentTag = null;
         mIsSinglePaneContentFragmentHidden = false;
         showEmptyView();
+    }
+
+    @Override
+    public boolean isFragmentAdded(Class contentFragmentClass) {
+        String fragmentTag = contentFragmentClass.getSimpleName();
+
+        Fragment fragment = getContentFragment(fragmentTag);
+
+        return fragment != null;
     }
 
     private void hideEmptyView() {
