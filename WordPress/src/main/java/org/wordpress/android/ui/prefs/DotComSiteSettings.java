@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static org.wordpress.android.util.DatabaseUtils.separatedStringList;
+
 class DotComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
     public static final String LANGUAGE_ID_KEY = "lang_id";
@@ -287,28 +289,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
             params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
         }
         if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
-            StringBuilder builder = new StringBuilder();
-            for (String key : mSettings.holdForModeration) {
-                builder.append(key);
-                builder.append("\n");
-            }
-            if (builder.length() > 1) {
-                params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
-            } else {
-                params.put(MODERATION_KEYS_KEY, "");
-            }
+            params.put(MODERATION_KEYS_KEY, separatedStringList(mSettings.holdForModeration, "\n"));
         }
         if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
-            StringBuilder builder = new StringBuilder();
-            for (String key : mSettings.blacklist) {
-                builder.append(key);
-                builder.append("\n");
-            }
-            if (builder.length() > 1) {
-                params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
-            } else {
-                params.put(BLACKLIST_KEYS_KEY, "");
-            }
+            params.put(BLACKLIST_KEYS_KEY, separatedStringList(mSettings.blacklist, "\n"));
         }
 
         return params;

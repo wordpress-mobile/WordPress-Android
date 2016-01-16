@@ -24,6 +24,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import static org.wordpress.android.util.DatabaseUtils.separatedStringList;
+
 class SelfHostedSiteSettings extends SiteSettingsInterface {
     // XML-RPC wp.getOptions keys
     public static final String PRIVACY_KEY = "blog_public";
@@ -293,28 +295,10 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
         }
         if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
-            StringBuilder builder = new StringBuilder();
-            for (String key : mSettings.holdForModeration) {
-                builder.append(key);
-                builder.append("\n");
-            }
-            if (builder.length() > 1) {
-                params.put(MODERATION_KEYS_KEY, builder.substring(0, builder.length() - 1));
-            } else {
-                params.put(MODERATION_KEYS_KEY, "");
-            }
+            params.put(MODERATION_KEYS_KEY, separatedStringList(mSettings.holdForModeration, "\n"));
         }
         if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
-            StringBuilder builder = new StringBuilder();
-            for (String key : mSettings.blacklist) {
-                builder.append(key);
-                builder.append("\n");
-            }
-            if (builder.length() > 1) {
-                params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
-            } else {
-                params.put(BLACKLIST_KEYS_KEY, "");
-            }
+            params.put(MODERATION_KEYS_KEY, separatedStringList(mSettings.blacklist, "\n"));
         }
 
         return params;

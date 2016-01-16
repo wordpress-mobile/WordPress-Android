@@ -12,17 +12,30 @@ import java.util.List;
 import static org.wordpress.android.util.DatabaseUtils.*;
 
 /**
- * Holds menu data and provides convenience methods for local database (de)serialization.
+ * Describes a Menu and provides convenience methods for local database (de)serialization.
+ *
+ * Menus contain a list of {@link MenuItemModel} ID's and a list of {@link MenuLocationModel} ID's,
+ * the former being ordered.
  */
 
 public class MenuModel {
-    // Menu table column names
+    //
+    // Menu database table column names
+    //
+    /** SQL type - INTEGER (PRIMARY KEY) */
     public static final String ID_COLUMN_NAME = "menuId";
+    /** SQL type - TEXT */
     public static final String NAME_COLUMN_NAME = "menuName";
+    /** SQL type - TEXT */
     public static final String DETAILS_COLUMN_NAME = "menuDetails";
+    /** SQL type - TEXT */
     public static final String LOCATIONS_COLUMN_NAME = "menuLocations";
+    /** SQL type - TEXT */
     public static final String ITEMS_COLUMN_NAME = "menuItems";
 
+    //
+    // Convenience Strings for SQL database table creation.
+    //
     public static final String MENUS_TABLE_NAME = "menus";
     public static final String CREATE_MENUS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
@@ -34,29 +47,11 @@ public class MenuModel {
                     ITEMS_COLUMN_NAME + " TEXT" +
                     ");";
 
-    /** Menu GUID, used as primary key in database */
     public long menuId;
-
-    /** Menu name */
     public String name;
-
-    /** Menu description */
     public String details;
-
-    /** Menu Locations that this Menu belongs to */
-    public List<MenuLocationModel> locations;
-
-    /** Menu Items that this Menu contains */
-    public List<MenuItemModel> menuItems;
-
-    public static MenuModel fromDatabase(Cursor cursor) {
-        MenuModel model = new MenuModel();
-        model.deserializeFromDatabase(cursor);
-        return model;
-    }
-
-    public MenuModel() {
-    }
+    public List<Long> locations;
+    public List<Long> menuItems;
 
     @Override
     public boolean equals(Object other) {
@@ -85,20 +80,20 @@ public class MenuModel {
         return this;
     }
 
-    public List<MenuLocationModel> deserializeLocations(Cursor cursor) {
+    public List<Long> deserializeLocations(Cursor cursor) {
         String locationNames = getStringFromCursor(cursor, LOCATIONS_COLUMN_NAME);
-        List<MenuLocationModel> locations = new ArrayList<>();
+        List<Long> locations = new ArrayList<>();
         for (String name : locationNames.split(",")) {
-            locations.add(MenuLocationModel.fromName(name));
+            locations.add(Long.valueOf(name));
         }
         return locations;
     }
 
-    public List<MenuItemModel> deserializeItems(Cursor cursor) {
+    public List<Long> deserializeItems(Cursor cursor) {
         String itemIds = getStringFromCursor(cursor, ITEMS_COLUMN_NAME);
-        List<MenuItemModel> items = new ArrayList<>();
+        List<Long> items = new ArrayList<>();
         for (String id : itemIds.split(",")) {
-            items.add(MenuItemModel.fromItemId(Long.valueOf(id)));
+            items.add(Long.valueOf(id));
         }
         return items;
     }
@@ -111,26 +106,52 @@ public class MenuModel {
         values.put(ID_COLUMN_NAME, menuId);
         values.put(NAME_COLUMN_NAME, name);
         values.put(DETAILS_COLUMN_NAME, details);
-        values.put(LOCATIONS_COLUMN_NAME, serializeMenuLocations());
-        values.put(ITEMS_COLUMN_NAME, serializeMenuItems());
+        values.put(LOCATIONS_COLUMN_NAME, separatedStringList(locations, ","));
+        values.put(ITEMS_COLUMN_NAME, separatedStringList(menuItems, ","));
         return values;
     }
 
-    public String serializeMenuItems() {
-        StringBuilder builder = new StringBuilder();
-        for (MenuItemModel item : menuItems) {
-            builder.append(item.itemId);
-            builder.append(",");
-        }
-        return builder.substring(0, builder.length() - 1);
+    /**
+     * Removes any existing children before adding children from given string list.
+     *
+     * @param locationList
+     *  comma (',') separated {@link MenuItemModel#itemId}'s to be added as children to this item
+     */
+    public void setLocationsFromStringList(String locationList) {
+        if (locations != null) locations.clear();
+        addLocationFromStringList(locationList);
     }
 
-    public String serializeMenuLocations() {
-        StringBuilder builder = new StringBuilder();
-        for (MenuLocationModel location : locations) {
-            builder.append(location.name);
-            builder.append(",");
-        }
-        return builder.substring(0, builder.length() - 1);
+    /**
+     * Adds children from given string list, maintaining existing children.
+     *
+     * @param locationList
+     *  comma (',') separated {@link MenuItemModel#itemId}'s to be added as children to this item
+     */
+    public void addLocationFromStringList(String locationList) {
+        if (locations == null) locations = new ArrayList<>();
+        CollectionUtils.addLongsFromStringListToArrayList(locations, locationList);
+    }
+
+    /**
+     * Removes any existing children before adding children from given string list.
+     *
+     * @param itemList
+     *  comma (',') separated {@link MenuItemModel#itemId}'s to be added as children to this item
+     */
+    public void setItemsFromStringList(String itemList) {
+        if (menuItems != null) menuItems.clear();
+        addItemsFromStringList(itemList);
+    }
+
+    /**
+     * Adds children from given string list, maintaining existing children.
+     *
+     * @param itemList
+     *  comma (',') separated {@link MenuItemModel#itemId}'s to be added as children to this item
+     */
+    public void addItemsFromStringList(String itemList) {
+        if (menuItems == null) menuItems = new ArrayList<>();
+        CollectionUtils.addLongsFromStringListToArrayList(menuItems, itemList);
     }
 }

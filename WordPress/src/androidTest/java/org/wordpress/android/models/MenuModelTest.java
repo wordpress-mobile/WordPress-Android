@@ -2,54 +2,28 @@ package org.wordpress.android.models;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 import android.test.mock.MockCursor;
 
 import org.wordpress.android.TestUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.wordpress.android.util.DatabaseUtils;
 
 public class MenuModelTest extends InstrumentationTestCase {
-    private static final String CONTEXT_RENAME_PREFIX = "test_";
-    private static final String DB_FILE_NAME = "taliwutt-blogs-sample.sql";
-
-    private static final long TEST_ID = Long.MAX_VALUE;
-    private static final String TEST_NAME = "MenuModelTestName";
-    private static final String TEST_DETAILS = "MenuModelTestDetails";
-    private static final String TEST_LOCATIONS = "TESTLOC0,TESTLOC1,TESTLOC2,TESTLOC3,TESTLOC4";
-    private static final String TEST_ITEMS = "0,1,2,3,4";
-
     protected Context mTestContext;
     protected Context mTargetContext;
+    protected SQLiteDatabase mDb;
 
     @Override
     protected void setUp() throws Exception {
+        super.setUp();
+
         Context targetContext = getInstrumentation().getTargetContext();
         mTargetContext = new RenamingDelegatingContext(targetContext, CONTEXT_RENAME_PREFIX);
         mTestContext = getInstrumentation().getContext();
-        TestUtils.loadDBFromDump(mTargetContext, mTestContext, DB_FILE_NAME);
-        super.setUp();
-    }
-
-    public void testSerialize() {
-        MenuModel testMenu = getTestMenu();
-        ContentValues values = testMenu.serializeToDatabase();
-        assertEquals(TEST_ID, values.getAsLong(MenuModel.ID_COLUMN_NAME).longValue());
-        assertEquals(TEST_NAME, values.getAsString(MenuModel.NAME_COLUMN_NAME));
-        assertEquals(TEST_DETAILS, values.getAsString(MenuModel.DETAILS_COLUMN_NAME));
-        assertEquals(TEST_LOCATIONS, values.getAsString(MenuModel.LOCATIONS_COLUMN_NAME));
-        assertEquals(TEST_ITEMS, values.getAsString(MenuModel.ITEMS_COLUMN_NAME));
-    }
-
-    public void testDeserialize() {
-        MenuModel testMenu = MenuModel.fromDatabase(new TestCursor());
-        assertEquals(TEST_ID, testMenu.menuId);
-        assertEquals(TEST_NAME, testMenu.name);
-        assertEquals(TEST_DETAILS, testMenu.details);
-        assertEquals(TEST_LOCATIONS, testMenu.serializeMenuLocations());
-        assertEquals(TEST_ITEMS, testMenu.serializeMenuItems());
+        mDb = TestUtils.loadDBFromDump(mTargetContext, mTestContext, DB_FILE_NAME);
     }
 
     public void testEqualsWithNull() {
@@ -80,16 +54,38 @@ public class MenuModelTest extends InstrumentationTestCase {
         assertFalse(testMenu.equals(staticMenu));
     }
 
-    private class TestCursor extends MockCursor {
-        @Override
-        public int getCount() {
-            return 5;
-        }
+    public void testSerialize() {
+        MenuModel testMenu = getTestMenu();
+        ContentValues values = testMenu.serializeToDatabase();
+        assertEquals(TEST_ID, values.getAsLong(MenuModel.ID_COLUMN_NAME).longValue());
+        assertEquals(TEST_NAME, values.getAsString(MenuModel.NAME_COLUMN_NAME));
+        assertEquals(TEST_DETAILS, values.getAsString(MenuModel.DETAILS_COLUMN_NAME));
+        assertEquals(TEST_LOCATIONS, values.getAsString(MenuModel.LOCATIONS_COLUMN_NAME));
+        assertEquals(TEST_ITEMS, values.getAsString(MenuModel.ITEMS_COLUMN_NAME));
+    }
 
-        @Override
-        public boolean moveToFirst() {
-            return true;
-        }
+    public void testDeserialize() {
+        Cursor testCursor = new TestCursor();
+        MenuModel testMenu = new MenuModel();
+        testMenu.deserializeFromDatabase(testCursor);
+        testCursor.close();
+        assertEquals(TEST_ID, testMenu.menuId);
+        assertEquals(TEST_NAME, testMenu.name);
+        assertEquals(TEST_DETAILS, testMenu.details);
+        assertEquals(TEST_LOCATIONS, DatabaseUtils.separatedStringList(testMenu.locations, ","));
+        assertEquals(TEST_ITEMS, DatabaseUtils.separatedStringList(testMenu.menuItems, ","));
+    }
+
+    private class TestCursor extends MockCursor {
+        @Override public int getCount() { return 1; }
+
+        @Override public boolean moveToFirst() { return true; }
+
+        @Override public boolean isBeforeFirst() { return false; }
+
+        @Override public boolean isAfterLast() { return false; }
+
+        @Override public void close() {}
 
         @Override
         public long getLong(int columnIndex) {
@@ -141,24 +137,17 @@ public class MenuModelTest extends InstrumentationTestCase {
         testModel.menuId = TEST_ID;
         testModel.name = TEST_NAME;
         testModel.details = TEST_DETAILS;
-        testModel.locations = getTestLocations();
-        testModel.menuItems = getTestItems();
+        testModel.setLocationsFromStringList(TEST_LOCATIONS);
+        testModel.setItemsFromStringList(TEST_ITEMS);
         return testModel;
     }
 
-    private List<MenuLocationModel> getTestLocations() {
-        List<MenuLocationModel> locations = new ArrayList<>();
-        for (String name : TEST_LOCATIONS.split(",")) {
-            locations.add(MenuLocationModel.fromName(name));
-        }
-        return locations;
-    }
+    private static final String CONTEXT_RENAME_PREFIX = "test_";
+    private static final String DB_FILE_NAME = "taliwutt-blogs-sample.sql";
 
-    private List<MenuItemModel> getTestItems() {
-        List<MenuItemModel> items = new ArrayList<>();
-        for (String id : TEST_ITEMS.split(",")) {
-            items.add(MenuItemModel.fromItemId(Long.valueOf(id)));
-        }
-        return items;
-    }
+    private static final long TEST_ID = Long.MAX_VALUE;
+    private static final String TEST_NAME = "MenuModelTestName";
+    private static final String TEST_DETAILS = "MenuModelTestDetails";
+    private static final String TEST_LOCATIONS = "0,1,2,3,4";
+    private static final String TEST_ITEMS = "0,1,2,3,4";
 }

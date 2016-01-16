@@ -7,9 +7,8 @@ import android.test.RenamingDelegatingContext;
 import org.wordpress.android.TestUtils;
 import org.wordpress.android.datasets.MenusTable;
 import org.wordpress.android.models.MenuItemModel;
+import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
-
-import java.util.ArrayList;
 
 public class MenusTableTest extends InstrumentationTestCase {
     private static final String CONTEXT_RENAME_PREFIX = "test_";
@@ -30,6 +29,12 @@ public class MenusTableTest extends InstrumentationTestCase {
         TestUtils.clearApplicationState(mTargetContext);
         TestUtils.resetEventBus();
         TestUtils.loadDBFromDump(mTargetContext, mTestContext, DB_FILE_NAME);
+    }
+
+    public void testUniqueTableNames() {
+        assertFalse(MenuModel.MENUS_TABLE_NAME == MenuItemModel.MENU_ITEMS_TABLE_NAME);
+        assertFalse(MenuModel.MENUS_TABLE_NAME == MenuLocationModel.MENU_LOCATIONS_TABLE_NAME);
+        assertFalse(MenuItemModel.MENU_ITEMS_TABLE_NAME == MenuLocationModel.MENU_LOCATIONS_TABLE_NAME);
     }
 
     public void testInvalidMenu() {
@@ -55,14 +60,14 @@ public class MenusTableTest extends InstrumentationTestCase {
         assertEquals(testItem.typeFamily, savedItem.typeFamily);
         assertEquals(testItem.typeLabel, savedItem.typeLabel);
         assertEquals(testItem.url, savedItem.url);
-        assertEquals(testItem.menu.menuId, TEST_ID);
-        assertEquals(testItem.parent.itemId, TEST_ID);
+        assertEquals(testItem.menuId, TEST_ID);
+        assertEquals(testItem.parentId, TEST_ID);
     }
 
     private MenuItemModel getTestMenuItem() {
         MenuItemModel testItem = new MenuItemModel();
         testItem.itemId = 0;
-        testItem.contentId = "";
+        testItem.contentId = 0;
         testItem.details = TEST_DETAILS;
         testItem.linkTarget = "";
         testItem.linkTitle = "";
@@ -71,10 +76,9 @@ public class MenusTableTest extends InstrumentationTestCase {
         testItem.typeFamily = "";
         testItem.typeLabel = "";
         testItem.url = "";
-        (testItem.menu = new MenuModel()).menuId = TEST_ID;
-        (testItem.parent = new MenuItemModel()).itemId = TEST_ID;
-        testItem.children = new ArrayList<>();
-        testItem.children.add(new MenuItemModel());
+        testItem.menuId = TEST_ID;
+        testItem.parentId = TEST_ID;
+        testItem.setChildrenFromStringList("111,112,113");
         return testItem;
     }
 }

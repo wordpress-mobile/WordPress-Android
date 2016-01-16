@@ -11,29 +11,55 @@ import java.util.List;
 
 import static org.wordpress.android.util.DatabaseUtils.*;
 
+/**
+ * Describes a Menu Item and provides convenience methods for local database (de)serialization.
+ *
+ * Menu Items can be of type Page, Link, Post, Category, or Tag and can have any number of child
+ * {@link MenuItemModel}'s associated with it.
+ */
+
 public class MenuItemModel {
-    // MenuItem table column names
+    //
+    // Menu Location database table column names
+    //
+    /** SQL type - INTEGER (PRIMARY KEY) */
     public static final String ID_COLUMN_NAME = "itemId";
+    /** SQL type - INTEGER */
+    public static final String MENU_ID_COLUMN_NAME = "itemMenu";
+    /** SQL type - INTEGER */
+    public static final String PARENT_ID_COLUMN_NAME = "itemParent";
+    /** SQL type - INTEGER */
     public static final String CONTENT_ID_COLUMN_NAME = "itemContentId";
+    /** SQL type - TEXT */
     public static final String URL_COLUMN_NAME = "itemUrl";
+    /** SQL type - TEXT */
     public static final String NAME_COLUMN_NAME = "itemName";
+    /** SQL type - TEXT */
     public static final String DETAILS_COLUMN_NAME = "itemDetails";
+    /** SQL type - TEXT */
     public static final String LINK_TARGET_COLUMN_NAME = "itemLinkTarget";
+    /** SQL type - TEXT */
     public static final String LINK_TITLE_COLUMN_NAME = "itemLinkTitle";
+    /** SQL type - TEXT */
     public static final String TYPE_COLUMN_NAME = "itemType";
+    /** SQL type - TEXT */
     public static final String TYPE_FAMILY_COLUMN_NAME = "itemTypeFamily";
+    /** SQL type - TEXT */
     public static final String TYPE_LABEL_COLUMN_NAME = "itemTypeLabel";
-    public static final String MENU_COLUMN_NAME = "itemMenu";
-    public static final String PARENT_COLUMN_NAME = "itemParent";
+    /** SQL type - TEXT */
     public static final String CHILDREN_COLUMN_NAME = "itemChildren";
 
+    //
+    // Convenience Strings for SQL database table creation.
+    //
     public static final String MENU_ITEMS_TABLE_NAME = "menu_items";
     public static final String CREATE_MENU_ITEMS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
-                    MENU_ITEMS_TABLE_NAME +
-                    " (" +
+                    MENU_ITEMS_TABLE_NAME + " (" +
                     ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-                    CONTENT_ID_COLUMN_NAME + " TEXT, " +
+                    MENU_ID_COLUMN_NAME + " INTEGER, " +
+                    PARENT_ID_COLUMN_NAME + " INTEGER, " +
+                    CONTENT_ID_COLUMN_NAME + " INTEGER, " +
                     URL_COLUMN_NAME + " TEXT, " +
                     NAME_COLUMN_NAME + " TEXT, " +
                     DETAILS_COLUMN_NAME + " TEXT, " +
@@ -42,13 +68,13 @@ public class MenuItemModel {
                     TYPE_COLUMN_NAME + " TEXT, " +
                     TYPE_FAMILY_COLUMN_NAME + " TEXT, " +
                     TYPE_LABEL_COLUMN_NAME + " TEXT, " +
-                    MENU_COLUMN_NAME + " INTEGER, " +
-                    PARENT_COLUMN_NAME + " INTEGER, " +
                     CHILDREN_COLUMN_NAME + " TEXT" +
                     ");";
 
     public long itemId;
-    public String contentId;
+    public long menuId;
+    public long parentId;
+    public long contentId;
     public String url;
     public String name;
     public String details;
@@ -57,40 +83,38 @@ public class MenuItemModel {
     public String type;
     public String typeFamily;
     public String typeLabel;
-    public MenuModel menu;
-    public MenuItemModel parent;
-    public List<MenuItemModel> children;
-
-    public static MenuItemModel fromItemId(long itemId) {
-        MenuItemModel model = new MenuItemModel();
-        model.itemId = itemId;
-        return model;
-    }
+    public List<Long> children;
 
     @Override
     public boolean equals(Object other) {
         if (!(other instanceof MenuItemModel)) return false;
 
-        MenuItemModel otherModel = (MenuItemModel) other;
-        return itemId == otherModel.itemId &&
-                StringUtils.equals(contentId, otherModel.contentId) &&
-                StringUtils.equals(url, otherModel.url) &&
-                StringUtils.equals(name, otherModel.name) &&
-                StringUtils.equals(details, otherModel.details) &&
-                StringUtils.equals(linkTarget, otherModel.linkTarget) &&
-                StringUtils.equals(linkTitle, otherModel.linkTitle) &&
-                StringUtils.equals(type, otherModel.type) &&
-                StringUtils.equals(typeFamily, otherModel.typeFamily) &&
-                StringUtils.equals(typeLabel, otherModel.typeLabel) &&
-                hasSameMenu(otherModel.menu) &&
-                hasSameParent(otherModel.parent) &&
-                CollectionUtils.areListsEqual(children, otherModel.children);
+        MenuItemModel otherItem = (MenuItemModel) other;
+        return itemId == otherItem.itemId &&
+                menuId == otherItem.menuId &&
+                parentId == otherItem.parentId &&
+                contentId == otherItem.contentId &&
+                StringUtils.equals(url, otherItem.url) &&
+                StringUtils.equals(name, otherItem.name) &&
+                StringUtils.equals(details, otherItem.details) &&
+                StringUtils.equals(linkTarget, otherItem.linkTarget) &&
+                StringUtils.equals(linkTitle, otherItem.linkTitle) &&
+                StringUtils.equals(type, otherItem.type) &&
+                StringUtils.equals(typeFamily, otherItem.typeFamily) &&
+                StringUtils.equals(typeLabel, otherItem.typeLabel) &&
+                CollectionUtils.areListsEqual(children, otherItem.children);
     }
 
+    /**
+     * Sets the state of this instance to match the state described by the row at the current
+     * position of the given {@link Cursor}.
+     */
     public void deserializeFromDatabase(Cursor cursor) {
-        if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
+        if (cursor != null && !cursor.isBeforeFirst() && !cursor.isAfterLast()) {
             itemId = getLongFromCursor(cursor, ID_COLUMN_NAME);
-            contentId = getStringFromCursor(cursor, CONTENT_ID_COLUMN_NAME);
+            menuId = getLongFromCursor(cursor, MENU_ID_COLUMN_NAME);
+            parentId = getLongFromCursor(cursor, PARENT_ID_COLUMN_NAME);
+            contentId = getLongFromCursor(cursor, CONTENT_ID_COLUMN_NAME);
             url = getStringFromCursor(cursor, URL_COLUMN_NAME);
             name = getStringFromCursor(cursor, NAME_COLUMN_NAME);
             details = getStringFromCursor(cursor, DETAILS_COLUMN_NAME);
@@ -99,18 +123,20 @@ public class MenuItemModel {
             type = getStringFromCursor(cursor, TYPE_COLUMN_NAME);
             typeFamily = getStringFromCursor(cursor, TYPE_FAMILY_COLUMN_NAME);
             typeLabel = getStringFromCursor(cursor, TYPE_LABEL_COLUMN_NAME);
-            (menu = new MenuModel()).menuId = getLongFromCursor(cursor, MENU_COLUMN_NAME);
-            (parent = new MenuItemModel()).itemId = getLongFromCursor(cursor, PARENT_COLUMN_NAME);
-            children = deserializeChildren(getStringFromCursor(cursor, CHILDREN_COLUMN_NAME));
+            setChildrenFromStringList(getStringFromCursor(cursor, CHILDREN_COLUMN_NAME));
         }
     }
 
     /**
-     * Creates a {@link ContentValues} object to store this object in a local database.
+     * Creates a {@link ContentValues} object to store in a local database. Passing a {@link Cursor}
+     * with these values to {@link MenuItemModel#deserializeFromDatabase(Cursor)} will recreate
+     * this instance state.
      */
     public ContentValues serializeToDatabase() {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN_NAME, itemId);
+        values.put(MENU_ID_COLUMN_NAME, menuId);
+        values.put(PARENT_ID_COLUMN_NAME, parentId);
         values.put(CONTENT_ID_COLUMN_NAME, contentId);
         values.put(URL_COLUMN_NAME, url);
         values.put(NAME_COLUMN_NAME, name);
@@ -120,38 +146,29 @@ public class MenuItemModel {
         values.put(TYPE_COLUMN_NAME, type);
         values.put(TYPE_FAMILY_COLUMN_NAME, typeFamily);
         values.put(TYPE_LABEL_COLUMN_NAME, typeLabel);
-        values.put(MENU_COLUMN_NAME, menu != null ? menu.menuId : -1);
-        values.put(PARENT_COLUMN_NAME, parent != null ? parent.itemId : -1);
-        values.put(CHILDREN_COLUMN_NAME, serializeChildren());
+        values.put(CHILDREN_COLUMN_NAME, separatedStringList(children, ","));
         return values;
     }
 
-    public List<MenuItemModel> deserializeChildren(String childList) {
-        List<MenuItemModel> childrenModels = new ArrayList<>();
-        for (String child : childList.split(",")) {
-            MenuItemModel childModel = new MenuItemModel();
-            childModel.itemId = Long.valueOf(child);
-            childrenModels.add(childModel);
-        }
-        return childrenModels;
+    /**
+     * Removes any existing children before adding children from given string list.
+     *
+     * @param childList
+     *  comma (',') separated {@link MenuItemModel#itemId}'s to be added as children to this item
+     */
+    public void setChildrenFromStringList(String childList) {
+        if (children != null) children.clear();
+        addChildrenFromStringList(childList);
     }
 
-    public String serializeChildren() {
-        StringBuilder builder = new StringBuilder();
-        for (MenuItemModel item : children) {
-            builder.append(item.itemId);
-            builder.append(",");
-        }
-        return builder.substring(0, builder.length() - 1);
-    }
-
-    private boolean hasSameParent(MenuItemModel otherParent) {
-        if (menu == null) return otherParent == null;
-        return otherParent != null && parent.itemId == otherParent.itemId;
-    }
-
-    private boolean hasSameMenu(MenuModel otherMenu) {
-        if (menu == null) return otherMenu == null;
-        return otherMenu != null && menu.menuId == otherMenu.menuId;
+    /**
+     * Adds children from given string list, maintaining existing children.
+     *
+     * @param childList
+     *  comma (',') separated {@link MenuItemModel#itemId}'s to be added as children to this item
+     */
+    public void addChildrenFromStringList(String childList) {
+        if (children == null) children = new ArrayList<>();
+        CollectionUtils.addLongsFromStringListToArrayList(children, childList);
     }
 }
