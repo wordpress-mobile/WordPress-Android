@@ -620,8 +620,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showDeleteSiteDialog() {
-        DeleteSiteDialog deleteSiteDialog = new DeleteSiteDialog();
-        deleteSiteDialog.show(getFragmentManager(), null);
+        DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
+        deleteSiteDialogFragment.show(getFragmentManager(), null);
     }
 
     private void showCloseAfterDialog() {
