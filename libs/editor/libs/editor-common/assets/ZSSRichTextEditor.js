@@ -65,6 +65,10 @@ ZSSEditor.lastTappedNode = null;
 // The default paragraph separator
 ZSSEditor.defaultParagraphSeparator = 'p';
 
+// Video format tags supported by the [video] shortcode: https://codex.wordpress.org/Video_Shortcode
+// mp4, m4v and webm prioritized since they're supported by the stock player as of Android API 23
+ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
+
 /**
  * The initializer function that must be called onLoad
  */
@@ -1376,16 +1380,51 @@ ZSSEditor.removeVideo = function(videoNodeIdentifier) {
 ZSSEditor.replaceVideoPressVideosForShortcode = function ( html) {
     // call methods to restore any transformed content from its visual presentation to its source code.
     var regex = /<video[^>]*data-wpvideopress="([\s\S]+?)"[^>]*>*<\/video>/g;
+    var str = html.replace( regex, ZSSEditor.removeVideoPressVisualFormattingCallback );
+
+    return str;
+}
+
+ZSSEditor.replaceVideosForShortcode = function ( html) {
+    var regex = /<video(?:(?!data-wpvideopress).)*><\/video>/g;
     var str = html.replace( regex, ZSSEditor.removeVideoVisualFormattingCallback );
 
     return str;
 }
 
-ZSSEditor.removeVideoVisualFormattingCallback = function( match, content ) {
+ZSSEditor.removeVideoPressVisualFormattingCallback = function( match, content ) {
     return "[wpvideo " + content + "]";
 }
 
-ZSSEditor.applyVideoFormattingCallback = function( match ) {
+ZSSEditor.removeVideoVisualFormattingCallback = function( match, content ) {
+    var videoElement = $.parseHTML(match)[0];
+
+    // Remove editor playback attributes
+    videoElement.removeAttribute("onclick");
+    videoElement.removeAttribute("controls");
+    videoElement.removeAttribute("webkit-playsinline");
+    if (videoElement.getAttribute("preload") == "metadata") {
+        // The "metadata" setting is the WP default and is usually automatically stripped from the shortcode.
+        // If it's present, it was probably set by this editor and we should remove it. Even if it wasn't, removing it
+        // won't affect anything as it's the default setting for the preload attribute.
+        videoElement.removeAttribute("preload");
+    }
+
+    // If filetype attributes exist, the src attribute wasn't there originally and we should remove it
+    for (var i = 0; i < ZSSEditor.videoShortcodeFormats.length; i++) {
+        var format = ZSSEditor.videoShortcodeFormats[i];
+        if (videoElement.hasAttribute(format)) {
+            videoElement.removeAttribute("src");
+            break;
+        }
+    }
+
+    var shortcode = videoElement.outerHTML.replace(/</g, "[");
+    shortcode = shortcode.replace(/>/g, "]");
+    return shortcode;
+}
+
+ZSSEditor.applyVideoPressFormattingCallback = function( match ) {
     if (match.attrs.numeric.length == 0) {
         return match.content;
     }
@@ -1396,6 +1435,42 @@ ZSSEditor.applyVideoFormattingCallback = function( match ) {
     var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="videopress.mp4" preload="metadata" poster=' + posterSVG +' onclick="" onerror="ZSSEditor.sendVideoPressInfoRequest(\'' + videopressID +'\');"></video>';
 
     out = out + '<br>';
+    return out;
+}
+
+ZSSEditor.applyVideoFormattingCallback = function( match ) {
+    // Find the tag containing the video source
+    var srcTag = "";
+
+    if (match.attrs.named['src']) {
+        srcTag = "src";
+    } else {
+        for (var i = 0; i < ZSSEditor.videoShortcodeFormats.length; i++) {
+            var format = ZSSEditor.videoShortcodeFormats[i];
+            if (match.attrs.named[format]) {
+                srcTag = format;
+                break;
+            }
+        }
+    }
+
+    if (srcTag.length == 0) {
+        return match.content;
+    }
+
+    var out = '<video webkit-playsinline src="' + match.attrs.named[srcTag] + '"';
+
+    // Preserve all existing tags
+    for (var item in match.attrs.named) {
+        out += ' ' + item + '="' + match.attrs.named[item] + '"';
+    }
+
+    if (!match.attrs.named['preload']) {
+        out += ' preload="metadata"';
+    }
+
+    out += ' onclick="" controls="controls"></video>';
+
     return out;
 }
 
@@ -1945,7 +2020,9 @@ ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, type, c
  */
 ZSSEditor.applyVisualFormatting  = function( html ) {
     var str = wp.shortcode.replace( 'caption', html, ZSSEditor.applyCaptionFormatting );
-    str = wp.shortcode.replace( 'wpvideo', str, ZSSEditor.applyVideoFormattingCallback );
+    str = wp.shortcode.replace( 'wpvideo', str, ZSSEditor.applyVideoPressFormattingCallback );
+    str = wp.shortcode.replace( 'video', str, ZSSEditor.applyVideoFormattingCallback );
+
     return str;
 }
 
@@ -1961,6 +2038,7 @@ ZSSEditor.removeVisualFormatting = function( html ) {
     str = ZSSEditor.removeImageSelectionFormattingFromHTML( str );
     str = ZSSEditor.removeCaptionFormatting( str );
     str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
+    str = ZSSEditor.replaceVideosForShortcode( str );
     return str;
 }
 
