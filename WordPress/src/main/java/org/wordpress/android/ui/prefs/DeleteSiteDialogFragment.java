@@ -7,18 +7,17 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ToastUtils;
 
-public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher {
-    private Dialog mDeleteSiteDialog;
+public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnShowListener {
+    private AlertDialog mDeleteSiteDialog;
     private EditText mUrlConfirmation;
-    private Button
+    private Button mDeleteButton;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -50,23 +49,32 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
             }
         });
 
-        return builder.create();
+        mDeleteSiteDialog = builder.create();
+        mDeleteSiteDialog.setOnShowListener(this);
+
+        return mDeleteSiteDialog;
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
     }
 
     @Override
     public void afterTextChanged(Editable s) {
         if (mUrlConfirmation.getText().toString().toLowerCase().equals(mUrlConfirmation.getHint().toString().toLowerCase())) {
-
+            mDeleteButton.setEnabled(true);
+        } else {
+            mDeleteButton.setEnabled(false);
         }
+    }
+
+    @Override
+    public void onShow(DialogInterface dialog) {
+        mDeleteButton = mDeleteSiteDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        mDeleteButton.setEnabled(false);
     }
 }
