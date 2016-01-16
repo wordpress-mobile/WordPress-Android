@@ -360,6 +360,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mCategoryPref || preference == mFormatPref) {
             return !shouldShowListPreference((DetailListPreference) preference);
         } else if (preference == mExportSitePref) {
+            showExportContentDialog();
             return true;
         } else if (preference == mDeleteSitePref) {
             showDeleteSiteDialog();
@@ -617,6 +618,20 @@ public class SiteSettingsFragment extends PreferenceFragment
         args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.paging_limit));
         args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getPagingCount());
         showNumberPickerDialog(args, PAGING_REQUEST_CODE, "paging-dialog");
+    }
+
+    private void showExportContentDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Export content");
+        builder.setMessage("Currently exporting is only available through the web interface. Please go to WordPress.com on your browser to export content.");
+        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
     }
 
     private void showDeleteSiteDialog() {
