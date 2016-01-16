@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -49,10 +48,14 @@ public class ActivityLauncher {
 
     private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
-    public static void showSitePickerForResult(Fragment fragment, int blogLocalTableId) {
-        Intent intent = new Intent(fragment.getActivity(), SitePickerActivity.class);
+    public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
+        Intent intent = new Intent(activity, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
-        fragment.startActivityForResult(intent, RequestCodes.SITE_PICKER);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                activity,
+                R.anim.activity_slide_in_from_left,
+                R.anim.do_nothing);
+        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
     public static void viewCurrentSite(Context context) {

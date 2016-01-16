@@ -247,7 +247,7 @@ public class MySiteFragment extends DualPaneFragment
     private void showSitePicker() {
         if (isAdded()) {
             int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
-            ActivityLauncher.showSitePickerForResult(this, localBlogId);
+            ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
         }
     }
 
