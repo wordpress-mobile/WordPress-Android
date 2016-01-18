@@ -1107,9 +1107,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        WordPress.wpDB.deleteBlog(getActivity(), currentBlog.getLocalTableBlogId());
-                        getActivity().setResult(Activity.RESULT_FIRST_USER);
-                        getActivity().finish();
+                        removeBlog();
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override

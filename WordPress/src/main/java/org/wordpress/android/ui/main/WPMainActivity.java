@@ -386,7 +386,6 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 break;
             case RequestCodes.BLOG_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
-                    // user removed the current (self-hosted) blog from blog settings
                     if (!AccountHelper.isSignedIn()) {
                         ActivityLauncher.showSignInForResult(this);
                     } else {
