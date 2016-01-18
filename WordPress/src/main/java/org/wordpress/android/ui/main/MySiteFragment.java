@@ -18,16 +18,12 @@ import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.DualPaneFragment;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DisplayUtils;
@@ -40,8 +36,7 @@ import org.wordpress.android.widgets.WPTextView;
 
 import de.greenrobot.event.EventBus;
 
-public class MySiteFragment extends DualPaneFragment
-        implements WPMainActivity.OnScrollToTopListener {
+public class MySiteFragment extends DualPaneFragment implements WPMainActivity.OnScrollToTopListener {
 
     private static final long ALERT_ANIM_OFFSET_MS = 1000l;
     private static final long ALERT_ANIM_DURATION_MS = 1000l;
@@ -167,11 +162,7 @@ public class MySiteFragment extends DualPaneFragment
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAttachedToDualPaneDashboard()) {
-                    showContentFragment(PostsListFragment.class, null, AnalyticsTracker.Stat.OPENED_POSTS);
-                } else {
-                    ActivityLauncher.viewCurrentBlogPosts(getActivity());
-                }
+                ActivityLauncher.viewCurrentBlogPosts(getActivity(), getDashboard());
             }
         });
 
@@ -227,21 +218,6 @@ public class MySiteFragment extends DualPaneFragment
         refreshBlogDetails();
 
         return rootView;
-    }
-
-    private boolean isAttachedToDualPaneDashboard() {
-        return isInDualPaneMode() && getParentFragment() instanceof DualPaneDashboard;
-    }
-
-    private void showContentFragment(Class fragmentClass, Bundle parameters, AnalyticsTracker.Stat statType) {
-        DualPaneDashboard dualPaneDashboard = ((DualPaneDashboard) getParentFragment());
-
-        dualPaneDashboard.addContentFragment(fragmentClass, parameters);
-
-        //Unlike with activities, we need to check if the fragment is already added before tracking it
-        if (statType != null && !dualPaneDashboard.isFragmentAdded(fragmentClass)) {
-            AnalyticsUtils.trackWithCurrentBlogDetails(statType);
-        }
     }
 
     private void showSitePicker() {
