@@ -1,12 +1,17 @@
 package org.wordpress.android.ui.main;
 
-import android.os.Bundle;
+import android.content.Intent;
 
 public interface DualPaneDashboard {
 
-    void addContentFragment(Class contentFragmentClass, Bundle parameters);
+    void showContentInDashboard(Class contentFragmentClass, Intent activityIntent);
+
+    void notifyContentActivityStarted();
 
     void removeContentFragment();
 
-    boolean isFragmentAdded(Class contentFragmentClass);
+    boolean isContentFragmentAdded(Class contentFragmentClass);
+
+    boolean isInDualPaneMode();
+
 }
