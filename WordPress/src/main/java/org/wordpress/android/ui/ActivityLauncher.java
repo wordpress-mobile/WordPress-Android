@@ -3,6 +3,7 @@ package org.wordpress.android.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -19,12 +20,15 @@ import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.main.DualPaneContentActivity;
+import org.wordpress.android.ui.main.DualPaneDashboard;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
@@ -72,8 +76,21 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewCurrentBlogPosts(Context context) {
+    public static void viewCurrentBlogPosts(Context context, @Nullable DualPaneDashboard dashboard) {
         Intent intent = new Intent(context, PostsListActivity.class);
+
+        if (dashboard != null) {
+            intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, true);
+
+            if (dashboard.isInDualPaneMode()) {
+                if (!dashboard.isContentFragmentAdded(PostsListFragment.class)) {
+                    dashboard.showContentInDashboard(PostsListFragment.class, intent);
+                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
+                    return;
+                }
+            }
+            dashboard.notifyContentActivityStarted();
+        }
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
     }
