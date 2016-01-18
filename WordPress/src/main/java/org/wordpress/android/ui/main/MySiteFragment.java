@@ -86,6 +86,12 @@ public class MySiteFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+
+        // Site name may have changed (e.g. via Settings and returning to this Fragment) so update the UI
+        if (mBlog != null && !mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
+            mBlogTitleTextView.setText(mBlog.getBlogName());
+        }
+
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
