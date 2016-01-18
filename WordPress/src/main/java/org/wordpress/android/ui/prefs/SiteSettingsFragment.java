@@ -32,11 +32,17 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -263,6 +269,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 onPreferenceChange(mMultipleLinksPref, numLinks);
                 break;
             case DELETE_SITE_REQUEST_CODE:
+                deleteSite();
                 break;
         }
 
@@ -1096,10 +1103,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void deleteSite() {
-        Blog currentBlog = WordPress.getCurrentBlog();
+        final Blog currentBlog = WordPress.getCurrentBlog();
         WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        WordPress.wpDB.deleteBlog(getActivity(), currentBlog.getLocalTableBlogId());
+                        getActivity().setResult(Activity.RESULT_FIRST_USER);
                         getActivity().finish();
                     }
                 }, new RestRequest.ErrorListener() {

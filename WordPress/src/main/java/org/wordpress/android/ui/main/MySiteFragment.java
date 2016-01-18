@@ -252,6 +252,18 @@ public class MySiteFragment extends Fragment
                 mBlog = WordPress.getCurrentBlog();
                 refreshBlogDetails();
                 break;
+
+            case RequestCodes.BLOG_SETTINGS:
+                if (resultCode == Activity.RESULT_FIRST_USER) {
+                    Blog currentBlog = WordPress.getCurrentBlog();
+                    if (currentBlog == null) {
+                        setBlog(null);
+                        refreshBlogDetails();
+                    } else {
+                        ActivityLauncher.showSitePickerForResult(getActivity(), currentBlog.getLocalTableBlogId());
+                    }
+                }
+
         }
     }
 
