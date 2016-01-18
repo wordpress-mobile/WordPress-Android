@@ -97,11 +97,11 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Request code used when creating the {@link RelatedPostsDialog}.
      */
     private static final int RELATED_POSTS_REQUEST_CODE = 1;
-
     private static final int THREADING_REQUEST_CODE = 2;
     private static final int PAGING_REQUEST_CODE = 3;
     private static final int CLOSE_AFTER_REQUEST_CODE = 4;
     private static final int MULTIPLE_LINKS_REQUEST_CODE = 5;
+    private static final int DELETE_SITE_REQUEST_CODE = 6;
 
     private static final long FETCH_DELAY = 1000;
 
