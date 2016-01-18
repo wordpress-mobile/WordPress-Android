@@ -364,6 +364,7 @@
     <string name="category_slug">Category slug (optional)</string>
     <string name="category_desc">Category description (optional)</string>
     <string name="category_parent">Category parent (optional):</string>
+    <string name="none">None</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
