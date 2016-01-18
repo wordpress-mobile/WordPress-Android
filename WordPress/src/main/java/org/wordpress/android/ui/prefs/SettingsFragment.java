@@ -13,10 +13,13 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -70,6 +73,15 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         checkWordPressComOnlyFields();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View coordinatorView = inflater.inflate(R.layout.preference_coordinator, container, false);
+        CoordinatorLayout coordinator = (CoordinatorLayout) coordinatorView.findViewById(R.id.coordinator);
+        View preferenceView = super.onCreateView(inflater, coordinator, savedInstanceState);
+        coordinator.addView(preferenceView);
+        return coordinatorView;
     }
 
     @Override
