@@ -9,7 +9,7 @@
         android:title="@string/username"
         android:enabled="false"/>
 
-    <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+    <EditTextPreference
         android:key="@string/pref_key_email"
         android:title="@string/email" />
 

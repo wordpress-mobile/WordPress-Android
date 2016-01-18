@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
@@ -44,7 +45,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private AlertDialog mDialog;
     private SharedPreferences mSettings;
     private Preference mUsernamePreference;
-    private SummaryEditTextPreference mEmailPreference;
+    private EditTextPreference mEmailPreference;
     private Snackbar mEmailSnackbar;
 
     @Override
@@ -56,7 +57,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
-        mEmailPreference = (SummaryEditTextPreference) findPreference(getString(R.string.pref_key_email));
+        mEmailPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_email));
 
         mEmailPreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
@@ -127,6 +128,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         if (preference == mEmailPreference) {
             updateEmail(newValue.toString());
+            return false;
         }
 
         return true;
