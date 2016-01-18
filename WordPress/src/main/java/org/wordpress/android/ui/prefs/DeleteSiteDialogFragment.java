@@ -41,11 +41,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
         builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (mUrlConfirmation.getText().toString().toLowerCase().equals(mUrlConfirmation.getHint().toString().toLowerCase())) {
-
-                } else {
-                    ToastUtils.showToast(getActivity(), "Please type the correct domain name");
-                }
+                
             }
         });
 
@@ -65,7 +61,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (mUrlConfirmation.getText().toString().toLowerCase().equals(mUrlConfirmation.getHint().toString().toLowerCase())) {
+        if (isUrlConfimationTextValid()) {
             mDeleteButton.setEnabled(true);
         } else {
             mDeleteButton.setEnabled(false);
@@ -76,5 +72,12 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     public void onShow(DialogInterface dialog) {
         mDeleteButton = mDeleteSiteDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         mDeleteButton.setEnabled(false);
+    }
+
+    private boolean isUrlConfimationTextValid() {
+        String confirmationText = mUrlConfirmation.getText().toString().trim().toLowerCase();
+        String hintText = mUrlConfirmation.getHint().toString().toLowerCase();
+
+        return confirmationText.equals(hintText);
     }
 }
