@@ -1,4 +1,4 @@
-<FrameLayout android:id="@+id/my_site_fragment_container"
+<FrameLayout android:id="@+id/sidebar_fragment_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
