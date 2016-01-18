@@ -26,8 +26,8 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.DualPaneFragment;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.main.DualPaneFragment;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
@@ -69,6 +69,15 @@ public class PostsListFragment extends DualPaneFragment
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
+    public static PostsListFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        PostsListFragment fragment = new PostsListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +111,7 @@ public class PostsListFragment extends DualPaneFragment
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        if (isInDualPaneMode()) {
+        if (isInDualPaneMode() && isPartOfDualPaneDashboard()) {
             //hide toolbar in dual pane mode
             toolbar.setVisibility(View.GONE);
 

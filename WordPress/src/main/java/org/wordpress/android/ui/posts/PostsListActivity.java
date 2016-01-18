@@ -6,20 +6,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.main.DualPaneContentActivity;
 import org.wordpress.android.util.ToastUtils;
 
 /*
  * Serves as the host for PostsListFragment when showing uploaded posts.
  */
 
-public class PostsListActivity extends AppCompatActivity {
+public class PostsListActivity extends DualPaneContentActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
@@ -30,14 +30,26 @@ public class PostsListActivity extends AppCompatActivity {
     private PostsListFragment mPostList;
 
     @Override
+    protected String getContentFragmentTag() {
+        return PostsListFragment.class.getSimpleName();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_list_activity);
 
         mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
 
-        FragmentManager fm = getSupportFragmentManager();
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
+        if (savedInstanceState == null) {
+            FragmentManager fm = getSupportFragmentManager();
+
+            mPostList = PostsListFragment.newInstance();
+            if (getFragmentSavedState() != null) {
+                mPostList.setInitialSavedState(getFragmentSavedState());
+            }
+            fm.beginTransaction().replace(R.id.fragment_container, mPostList, getContentFragmentTag()).commit();
+        }
 
         showErrorDialogIfNeeded(getIntent().getExtras());
         showWarningToastIfNeeded(getIntent().getExtras());
