@@ -262,6 +262,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
                 onPreferenceChange(mMultipleLinksPref, numLinks);
                 break;
+            case DELETE_SITE_REQUEST_CODE:
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -636,7 +638,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showDeleteSiteDialog() {
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
-        deleteSiteDialogFragment.show(getFragmentManager(), null);
+        deleteSiteDialogFragment.setTargetFragment(this, DELETE_SITE_REQUEST_CODE);
+        deleteSiteDialogFragment.show(getFragmentManager(), "delete-site");
     }
 
     private void showCloseAfterDialog() {
@@ -1090,5 +1093,19 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private Preference getClickPref(int id) {
         return WPPrefUtils.getPrefAndSetClickListener(this, id, this);
+    }
+
+    private void deleteSite() {
+        Blog currentBlog = WordPress.getCurrentBlog();
+        WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        getActivity().finish();
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
     }
 }

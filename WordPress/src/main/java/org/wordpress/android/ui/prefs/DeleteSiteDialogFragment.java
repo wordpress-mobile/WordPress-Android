@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,14 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.ToastUtils;
 
 public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnShowListener {
     private AlertDialog mDeleteSiteDialog;
@@ -47,7 +42,12 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
         builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                deleteSite();
+                Fragment target = getTargetFragment();
+                if (target != null) {
+                    target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+                }
+
+                dismiss();
             }
         });
 
@@ -85,20 +85,5 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
         String hintText = mUrlConfirmation.getHint().toString().toLowerCase();
 
         return confirmationText.equals(hintText);
-    }
-
-    private void deleteSite() {
-        Blog currentBlog = WordPress.getCurrentBlog();
-        WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        ToastUtils.showToast(getActivity(), "Deleted");
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        ToastUtils.showToast(getActivity(), "Error");
-                    }
-                });
     }
 }
