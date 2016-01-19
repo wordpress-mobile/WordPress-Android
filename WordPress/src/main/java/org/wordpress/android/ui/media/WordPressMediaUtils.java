@@ -346,4 +346,12 @@ public class WordPressMediaUtils {
             imageView.setImageResource(0);
         }
     }
+
+    /**
+     * Returns a poster (thumbnail) URL given a VideoPress video URL
+     * @param videoUrl the remote URL to the VideoPress video
+     */
+    public static String getVideoPressVideoPosterFromURL(String videoUrl) {
+        return videoUrl.substring(0, videoUrl.lastIndexOf(".")) + "_std.original.jpg";
+    }
 }

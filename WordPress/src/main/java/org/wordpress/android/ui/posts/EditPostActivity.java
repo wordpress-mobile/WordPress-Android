@@ -1824,10 +1824,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                 // them again and notify the editor
                                 for (String videoId : mPendingVideoPressInfoRequests) {
                                     String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
-                                    String path = WordPressMediaUtils.getNetworkVideoUrlFromVideoPressId(blogId,
+                                    String videoUrl = WordPressMediaUtils.getNetworkVideoUrlFromVideoPressId(blogId,
                                             videoId);
 
-                                    mEditorFragment.setUrlForVideoPressId(videoId, path, "");
+                                    String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+
+                                    mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
                                 }
 
                                 mPendingVideoPressInfoRequests.clear();
@@ -1974,9 +1976,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onVideoPressInfoRequested(String videoId) {
         String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
-        String path = WordPressMediaUtils.getNetworkVideoUrlFromVideoPressId(blogId, videoId);
+        String videoUrl = WordPressMediaUtils.getNetworkVideoUrlFromVideoPressId(blogId, videoId);
 
-        if (path.isEmpty()) {
+        if (videoUrl.isEmpty()) {
             if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                 if (mPendingVideoPressInfoRequests == null) {
                     mPendingVideoPressInfoRequests = new ArrayList<>();
@@ -1986,7 +1988,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        mEditorFragment.setUrlForVideoPressId(videoId, path, "");
+        String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+
+        mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
     }
 
     @Override
