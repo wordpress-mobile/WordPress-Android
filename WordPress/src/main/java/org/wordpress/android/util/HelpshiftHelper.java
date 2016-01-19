@@ -48,7 +48,8 @@ public class HelpshiftHelper {
         ORIGIN_LOGIN_SCREEN_HELP("origin:login-screen-help"),
         ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error"),
         ORIGIN_ME_SCREEN_HELP("origin:me-screen-help"),
-        ORIGIN_START_OVER("origin:start-over");
+        ORIGIN_START_OVER("origin:start-over"),
+        ORIGIN_DELETE_SITE("origin:delete-site");
 
         private final String mStringValue;
 

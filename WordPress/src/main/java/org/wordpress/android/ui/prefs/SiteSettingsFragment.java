@@ -1102,6 +1102,25 @@ public class SiteSettingsFragment extends PreferenceFragment
         return WPPrefUtils.getPrefAndSetClickListener(this, id, this);
     }
 
+    private void handleDeleteSiteError() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Error deleting site");
+        builder.setMessage("There was an error in deleting your site. Please contact support for more assistance");
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("Contact Support", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_DELETE_SITE);
+            }
+        });
+        builder.show();
+    }
+
     private void deleteSite() {
         final Blog currentBlog = WordPress.getCurrentBlog();
         WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
@@ -1112,6 +1131,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        handleDeleteSiteError();
                     }
                 });
     }
