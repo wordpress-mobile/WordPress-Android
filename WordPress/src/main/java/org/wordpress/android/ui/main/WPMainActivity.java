@@ -21,6 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -391,7 +392,12 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                     } else {
                         MySiteFragment mySiteFragment = getMySiteFragment();
                         if (mySiteFragment != null) {
-                            mySiteFragment.setBlog(WordPress.getCurrentBlog());
+                            Blog currentBlog = WordPress.getCurrentBlog();
+                            if (currentBlog == null) {
+                                mySiteFragment.setBlog(null);
+                            } else {
+                                ActivityLauncher.showSitePickerForResult(this, currentBlog.getLocalTableBlogId());
+                            }
                         }
                     }
                 }
