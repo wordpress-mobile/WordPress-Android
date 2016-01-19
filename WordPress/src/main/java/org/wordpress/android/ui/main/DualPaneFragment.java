@@ -16,6 +16,9 @@ public class DualPaneFragment extends Fragment {
 
     @Nullable
     protected DualPaneDashboard getDashboard() {
+        if (!isPartOfDualPaneDashboard()) {
+            return null;
+        }
         return (DualPaneDashboard) getParentFragment();
     }
 

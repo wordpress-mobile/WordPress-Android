@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -83,13 +84,15 @@ public class ActivityLauncher {
             intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, true);
 
             if (dashboard.isInDualPaneMode()) {
-                if (!dashboard.isContentFragmentAdded(PostsListFragment.class)) {
+                Fragment contentPaneFragment = dashboard.getContentPaneFragment();
+                if (contentPaneFragment == null || contentPaneFragment.getClass() != PostsListFragment.class) {
                     dashboard.showContentInDashboard(PostsListFragment.class, intent);
                     AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
-                    return;
                 }
+                return;
+            } else {
+                dashboard.onContentActivityStarted();
             }
-            dashboard.notifyContentActivityStarted();
         }
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);

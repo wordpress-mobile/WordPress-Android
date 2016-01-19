@@ -74,4 +74,8 @@ public class DualPaneContentState implements Parcelable {
             return new DualPaneContentState[size];
         }
     };
+
+    public boolean isActivityIntentAvailable() {
+        return getOriginalIntent() != null;
+    }
 }
