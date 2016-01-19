@@ -16,40 +16,17 @@ import android.widget.EditText;
 import org.wordpress.android.R;
 
 public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnShowListener {
+    public static final String SITE_DOMAIN_KEY          = "site-domain";
+
     private AlertDialog mDeleteSiteDialog;
     private EditText mUrlConfirmation;
     private Button mDeleteButton;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Confirm by entering the primary domain below.");
-        builder.setTitle("Delete the entire site?");
-
-        View view = getActivity().getLayoutInflater().inflate(R.layout.delete_site_dialog, null);
-        mUrlConfirmation = (EditText) view.findViewById(R.id.url_confirmation);
-        mUrlConfirmation.setHint("kwonye.wordpress.com");
-
-        mUrlConfirmation.addTextChangedListener(this);
-
-        builder.setView(view);
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
-            }
-        });
-        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Fragment target = getTargetFragment();
-                if (target != null) {
-                    target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
-                }
-
-                dismiss();
-            }
-        });
+        configureAlertViewBuilder(builder);
 
         mDeleteSiteDialog = builder.create();
         mDeleteSiteDialog.setOnShowListener(this);
@@ -78,6 +55,51 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     public void onShow(DialogInterface dialog) {
         mDeleteButton = mDeleteSiteDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         mDeleteButton.setEnabled(false);
+    }
+
+    private void configureAlertViewBuilder(AlertDialog.Builder builder) {
+        builder.setMessage("Confirm by entering the primary domain below.");
+        builder.setTitle("Delete the entire site?");
+
+        configureUrlConfirmation(builder);
+        configureButtons(builder);
+    }
+
+    private void configureButtons(AlertDialog.Builder builder) {
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dismiss();
+            }
+        });
+        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Fragment target = getTargetFragment();
+                if (target != null) {
+                    target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+                }
+
+                dismiss();
+            }
+        });
+    }
+
+    private void configureUrlConfirmation(AlertDialog.Builder builder) {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.delete_site_dialog, null);
+        mUrlConfirmation = (EditText) view.findViewById(R.id.url_confirmation);
+        setSiteDomainHint();
+        mUrlConfirmation.addTextChangedListener(this);
+        builder.setView(view);
+    }
+
+    private void setSiteDomainHint() {
+        Bundle args = getArguments();
+        String siteDomain = "delete";
+        if (args != null) {
+            siteDomain = args.getString(SITE_DOMAIN_KEY);
+        }
+        mUrlConfirmation.setHint(siteDomain);
     }
 
     private boolean isUrlConfimationTextValid() {

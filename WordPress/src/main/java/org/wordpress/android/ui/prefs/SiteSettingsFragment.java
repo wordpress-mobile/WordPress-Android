@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -54,6 +55,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -644,7 +647,18 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showDeleteSiteDialog() {
+        Bundle args = new Bundle();
+        String url = "";
+        try {
+            URI uri = new URI(mBlog.getHomeURL());
+            url = uri.getHost();
+        } catch (URISyntaxException e) {
+            url = "";
+        }
+
+        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, url);
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
+        deleteSiteDialogFragment.setArguments(args);
         deleteSiteDialogFragment.setTargetFragment(this, DELETE_SITE_REQUEST_CODE);
         deleteSiteDialogFragment.show(getFragmentManager(), "delete-site");
     }
