@@ -139,8 +139,14 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         if (newValue == null) return false;
 
         if (preference == mEmailPreference) {
-            updateEmail(newValue.toString());
-            showPendingEmailChangeSnackbar(newValue.toString());
+            Account account = AccountHelper.getDefaultAccount();
+            // if the user changed her email to her verified email, just cancel the pending email change
+            if (account.getEmail().equals(newValue.toString())) {
+                cancelPendingEmailChange();
+            } else {
+                updateEmail(newValue.toString());
+                showPendingEmailChangeSnackbar(newValue.toString());
+            }
             return false;
         }
 
@@ -183,12 +189,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Map<String, String> params = new HashMap<>();
-                        params.put(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING), "false");
-                        AccountHelper.getDefaultAccount().postAccountSettings(params);
-                        if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
-                            mEmailSnackbar.dismiss();
-                        }
+                        cancelPendingEmailChange();
                     }
                 };
 
@@ -202,6 +203,15 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             if (!mEmailSnackbar.isShown()) {
                 mEmailSnackbar.show();
             }
+        }
+    }
+
+    private void cancelPendingEmailChange() {
+        Map<String, String> params = new HashMap<>();
+        params.put(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING), "false");
+        AccountHelper.getDefaultAccount().postAccountSettings(params);
+        if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
+            mEmailSnackbar.dismiss();
         }
     }
 
