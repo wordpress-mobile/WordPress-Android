@@ -25,7 +25,7 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFragmentSavedState = getIntent().getParcelableExtra("fragment_saved_state");
+        mFragmentSavedState = getIntent().getParcelableExtra(FRAGMENT_STATE_KEY);
         boolean isLaunchedFromDualPaneDashboard = getIntent().getBooleanExtra(ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, false);
 
         if (isInDualPaneMode() && isLaunchedFromDualPaneDashboard) {
