@@ -88,9 +88,7 @@ public class MySiteFragment extends Fragment
         super.onResume();
 
         // Site name may have changed (e.g. via Settings and returning to this Fragment) so update the UI
-        if (mBlog != null && !mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
-            mBlogTitleTextView.setText(mBlog.getBlogName());
-        }
+        updateBlogNameView();
 
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
@@ -321,6 +319,10 @@ public class MySiteFragment extends Fragment
 
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
+        updateBlogNameView();
+    }
+
+    private void updateBlogNameView() {
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
         String homeURL;
         if (!TextUtils.isEmpty(mBlog.getHomeURL())) {
@@ -366,9 +368,6 @@ public class MySiteFragment extends Fragment
     public void onEventMainThread(CoreEvents.BlogListChanged event) {
         if (!isAdded() || (mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId())) == null) return;
 
-        // Update view if blog has a new name
-        if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
-            mBlogTitleTextView.setText(mBlog.getBlogName());
-        }
+        updateBlogNameView();
     }
 }
