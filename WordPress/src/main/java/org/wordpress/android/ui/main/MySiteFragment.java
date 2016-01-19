@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,8 +41,17 @@ import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends DualPaneFragment implements WPMainActivity.OnScrollToTopListener {
 
+    public interface MySiteContent {
+
+        int getSelectorId();
+    }
+
     private static final long ALERT_ANIM_OFFSET_MS = 1000l;
     private static final long ALERT_ANIM_DURATION_MS = 1000l;
+
+    private static final String SELECTED_CATEGORY_ID = "selected_category_id";
+
+    private int mSelectedCategoryViewId;
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -81,9 +93,49 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
         }
     }
 
+    private void updateSelectorState() {
+        clearSelectedView();
+        if (isInDualPaneMode() && isPartOfDualPaneDashboard()) {
+            DualPaneDashboard dashboard = getDashboard();
+            if (dashboard != null) {
+                Fragment contentPaneFragment = dashboard.getContentPaneFragment();
+                if (contentPaneFragment != null && contentPaneFragment instanceof MySiteContent) {
+                    selectView(((MySiteContent) contentPaneFragment).getSelectorId());
+                }
+            }
+        }
+    }
+
+    private void clearSelectedView() {
+        if (getView() == null) return;
+        View selectorView = getView().findViewById(mSelectedCategoryViewId);
+        if (selectorView != null) {
+            View selectableChildView = ((ViewGroup) selectorView).getChildAt(0);
+            if (selectableChildView != null && selectableChildView instanceof LinearLayout) {
+                selectableChildView.setBackgroundDrawable(null);
+            }
+        }
+        mSelectedCategoryViewId = 0;
+    }
+
+    private void selectView(int viewId) {
+        if (getView() == null) return;
+        View selectorView = getView().findViewById(viewId);
+        if (selectorView != null && selectorView instanceof ViewGroup) {
+
+            View selectableChildView = ((ViewGroup) selectorView).getChildAt(0);
+            if (selectableChildView != null && selectableChildView instanceof LinearLayout) {
+                mSelectedCategoryViewId = viewId;
+                selectableChildView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color
+                        .translucent_grey_lighten_20));
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        updateSelectorState();
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
@@ -105,7 +157,7 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        if (isInDualPaneMode()) {
+        if (isInDualPaneMode() && isPartOfDualPaneDashboard()) {
             ScrollView.LayoutParams lp = (ScrollView.LayoutParams) rootView.findViewById(R.id.content_container)
                     .getLayoutParams();
             lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
@@ -136,77 +188,16 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
             }
         });
 
-        rootView.findViewById(R.id.switch_site).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSitePicker();
-            }
-        });
-
-        rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewCurrentSite(getActivity());
-            }
-        });
-
-        rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBlog != null) {
-                    ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
-                }
-            }
-        });
-
-        rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPosts(getActivity(), getDashboard());
-            }
-        });
-
-        rootView.findViewById(R.id.row_media).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogMedia(getActivity());
-            }
-        });
-
-        rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPages(getActivity());
-            }
-        });
-
-        rootView.findViewById(R.id.row_comments).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogComments(getActivity());
-            }
-        });
-
-        mThemesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogThemes(getActivity());
-            }
-        });
-
-        mSettingsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
-            }
-        });
-
-        rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
-            }
-        });
+        rootView.findViewById(R.id.switch_site).setOnClickListener(mMySiteMenuClickListener);
+        rootView.findViewById(R.id.row_view_site).setOnClickListener(mMySiteMenuClickListener);
+        rootView.findViewById(R.id.row_stats).setOnClickListener(mMySiteMenuClickListener);
+        rootView.findViewById(R.id.row_blog_posts).setOnClickListener(mMySiteMenuClickListener);
+        rootView.findViewById(R.id.row_media).setOnClickListener(mMySiteMenuClickListener);
+        rootView.findViewById(R.id.row_pages).setOnClickListener(mMySiteMenuClickListener);
+        rootView.findViewById(R.id.row_comments).setOnClickListener(mMySiteMenuClickListener);
+        mThemesContainer.setOnClickListener(mMySiteMenuClickListener);
+        mSettingsView.setOnClickListener(mMySiteMenuClickListener);
+        rootView.findViewById(R.id.row_admin).setOnClickListener(mMySiteMenuClickListener);
 
         rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +210,61 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
 
         return rootView;
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) {
+            mSelectedCategoryViewId = savedInstanceState.getInt(SELECTED_CATEGORY_ID);
+            if (mSelectedCategoryViewId != 0) {
+                selectView(mSelectedCategoryViewId);
+            }
+        }
+    }
+
+    private View.OnClickListener mMySiteMenuClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            clearSelectedView();
+            switch (v.getId()) {
+                case R.id.switch_site:
+                    showSitePicker();
+                    break;
+                case R.id.row_view_site:
+                    ActivityLauncher.viewCurrentSite(getActivity());
+                    break;
+                case R.id.row_stats:
+                    if (mBlog != null) {
+                        ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
+                    }
+                    break;
+                case R.id.row_blog_posts:
+                    ActivityLauncher.viewCurrentBlogPosts(getActivity(), getDashboard());
+                    break;
+                case R.id.row_media:
+                    ActivityLauncher.viewCurrentBlogMedia(getActivity());
+                    break;
+                case R.id.row_pages:
+                    ActivityLauncher.viewCurrentBlogPages(getActivity());
+                    break;
+                case R.id.row_comments:
+                    ActivityLauncher.viewCurrentBlogComments(getActivity());
+                    break;
+                case R.id.row_themes:
+                    ActivityLauncher.viewCurrentBlogThemes(getActivity());
+                    break;
+                case R.id.row_settings:
+                    ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
+                    break;
+                case R.id.row_admin:
+                    ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
+                    break;
+            }
+            if (isInDualPaneMode() && isPartOfDualPaneDashboard()) {
+                selectView(v.getId());
+            }
+        }
+    };
 
     private void showSitePicker() {
         if (isAdded()) {
@@ -235,7 +281,10 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
-                    ((DualPaneDashboard) getParentFragment()).removeContentFragment();
+                    if (getDashboard() != null) {
+                        getDashboard().removeContentFragment();
+                        clearSelectedView();
+                    }
                     setBlog(WordPress.getCurrentBlog());
                 }
                 break;
@@ -254,7 +303,10 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
 
             case RequestCodes.CREATE_BLOG:
                 // if the user created a new blog refresh the blog details
-                ((DualPaneDashboard) getParentFragment()).removeContentFragment();
+                if (getDashboard() != null) {
+                    getDashboard().removeContentFragment();
+                    clearSelectedView();
+                }
                 mBlog = WordPress.getCurrentBlog();
                 refreshBlogDetails();
                 break;
@@ -371,5 +423,11 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
         if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
             mBlogTitleTextView.setText(mBlog.getBlogName());
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SELECTED_CATEGORY_ID, mSelectedCategoryViewId);
     }
 }

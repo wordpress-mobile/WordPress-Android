@@ -28,6 +28,7 @@ import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.main.DualPaneFragment;
+import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
@@ -49,7 +50,7 @@ public class PostsListFragment extends DualPaneFragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
-        PostsListAdapter.OnPostButtonClickListener {
+        PostsListAdapter.OnPostButtonClickListener, MySiteFragment.MySiteContent {
 
     public static final int POSTS_REQUEST_COUNT = 20;
 
@@ -537,5 +538,10 @@ public class PostsListFragment extends DualPaneFragment
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public int getSelectorId() {
+        return R.id.row_blog_posts;
     }
 }
