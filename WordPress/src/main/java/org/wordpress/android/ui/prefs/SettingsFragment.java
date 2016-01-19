@@ -140,6 +140,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         if (preference == mEmailPreference) {
             updateEmail(newValue.toString());
+            showPendingEmailChangeSnackbar(newValue.toString());
             return false;
         }
 
@@ -171,14 +172,20 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
     private void checkIfEmailChangeIsPending() {
         final Account account = AccountHelper.getDefaultAccount();
-        if (account.getPendingEmailChange() && getView() != null) {
-            if (mEmailSnackbar == null) {
+        if (account.getPendingEmailChange()) {
+            showPendingEmailChangeSnackbar(account.getNewEmail());
+        }
+    }
+
+    private void showPendingEmailChangeSnackbar(String newEmail) {
+        if (getView() != null) {
+            if (mEmailSnackbar == null || !mEmailSnackbar.isShown()) {
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Map<String, String> params = new HashMap<>();
                         params.put(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING), "false");
-                        account.postAccountSettings(params);
+                        AccountHelper.getDefaultAccount().postAccountSettings(params);
                         if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
                             mEmailSnackbar.dismiss();
                         }
@@ -191,7 +198,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 textView.setMaxLines(4);
             }
             // instead of creating a new snackbar, update the current one to avoid the jumping animation
-            mEmailSnackbar.setText(getString(R.string.pending_email_change_snackbar, account.getNewEmail()));
+            mEmailSnackbar.setText(getString(R.string.pending_email_change_snackbar, newEmail));
             if (!mEmailSnackbar.isShown()) {
                 mEmailSnackbar.show();
             }
