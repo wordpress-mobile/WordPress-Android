@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -58,21 +60,23 @@ public class MySiteFragment extends Fragment
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
 
-    private Blog mBlog;
+    private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
     }
 
-    public void setBlog(Blog blog) {
-        mBlog = blog;
-        refreshBlogDetails();
+    public void setBlog(@Nullable final Blog blog) {
+        mBlogLocalId = BlogUtils.getBlogLocalId(blog);
+
+        refreshBlogDetails(blog);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBlog = WordPress.getCurrentBlog();
+
+        mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
     }
 
     @Override
@@ -87,8 +91,10 @@ public class MySiteFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        // Site name may have changed (e.g. via Settings and returning to this Fragment) so update the UI
-        updateBlogNameView();
+        final Blog blog = WordPress.getBlog(mBlogLocalId);
+
+        // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
+        refreshBlogDetails(blog);
 
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
@@ -99,7 +105,7 @@ public class MySiteFragment extends Fragment
             @Override
             public void run() {
                 if (isAdded()
-                        && mBlog != null
+                        && blog != null
                         && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
                     AniUtils.showFab(mFabView, true);
                 }
@@ -132,7 +138,7 @@ public class MySiteFragment extends Fragment
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getBlog(mBlogLocalId), false);
             }
         });
 
@@ -153,9 +159,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBlog != null) {
-                    ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
-                }
+                ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
             }
         });
 
@@ -197,14 +201,14 @@ public class MySiteFragment extends Fragment
         mSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
+                ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getBlog(mBlogLocalId));
             }
         });
 
         rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
+                ActivityLauncher.viewBlogAdmin(getActivity(), WordPress.getBlog(mBlogLocalId));
             }
         });
 
@@ -215,15 +219,12 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        refreshBlogDetails();
-
         return rootView;
     }
 
     private void showSitePicker() {
         if (isAdded()) {
-            int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
-            ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
+            ActivityLauncher.showSitePickerForResult(getActivity(), mBlogLocalId);
         }
     }
 
@@ -252,9 +253,8 @@ public class MySiteFragment extends Fragment
                 break;
 
             case RequestCodes.CREATE_BLOG:
-                // if the user created a new blog refresh the blog details
-                mBlog = WordPress.getCurrentBlog();
-                refreshBlogDetails();
+                // user created a new blog so, use and show that new one
+                setBlog(WordPress.getCurrentBlog());
                 break;
         }
     }
@@ -283,12 +283,12 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void refreshBlogDetails() {
+    private void refreshBlogDetails(@Nullable final Blog blog) {
         if (!isAdded()) {
             return;
         }
 
-        if (mBlog == null) {
+        if (blog == null) {
             mScrollView.setVisibility(View.GONE);
             mFabView.setVisibility(View.GONE);
             mNoSiteView.setVisibility(View.VISIBLE);
@@ -313,23 +313,19 @@ public class MySiteFragment extends Fragment
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        int settingsVisibility = mBlog.isAdmin() || !mBlog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        int settingsVisibility = blog.isAdmin() || !blog.isDotcomFlag() ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
         mSettingsView.setVisibility(settingsVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
+        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(blog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
-        updateBlogNameView();
-    }
-
-    private void updateBlogNameView() {
-        String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
+        String blogName = StringUtils.unescapeHTML(blog.getBlogName());
         String homeURL;
-        if (!TextUtils.isEmpty(mBlog.getHomeURL())) {
-            homeURL = UrlUtils.removeScheme(mBlog.getHomeURL());
+        if (!TextUtils.isEmpty(blog.getHomeURL())) {
+            homeURL = UrlUtils.removeScheme(blog.getHomeURL());
             homeURL = StringUtils.removeTrailingSlash(homeURL);
         } else {
-            homeURL = UrlUtils.getHost(mBlog.getUrl());
+            homeURL = UrlUtils.getHost(blog.getUrl());
         }
         String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
 
@@ -366,8 +362,10 @@ public class MySiteFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.BlogListChanged event) {
-        if (!isAdded() || (mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId())) == null) return;
+        if (!isAdded()) {
+            return;
+        }
 
-        updateBlogNameView();
+        refreshBlogDetails(WordPress.getBlog(mBlogLocalId));
     }
 }

@@ -499,6 +499,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
         mBlog.setBlogName(mSiteSettings.getTitle());
         WordPress.wpDB.saveBlog(mBlog);
+        WordPress.setCurrentBlog(mBlog.getLocalTableBlogId());
         EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
 
