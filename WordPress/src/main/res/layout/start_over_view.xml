@@ -42,14 +42,14 @@
                 android:layout_marginBottom="@dimen/start_over_margin" />
 
             <Button
-                android:backgroundTint="@color/white"
                 android:id="@+id/contact_support_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/contact_support"
                 android:textSize="@dimen/text_sz_large"
                 android:textStyle="bold"
-                android:textAllCaps="true"/>
+                android:textAllCaps="true"
+                android:theme="@style/WhiteButton"/>
 
         </LinearLayout>
 
