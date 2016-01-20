@@ -21,11 +21,9 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.helpers.Version;
@@ -336,6 +334,15 @@ public class WordPressMediaUtils {
      * @param videoUrl the remote URL to the VideoPress video
      */
     public static String getVideoPressVideoPosterFromURL(String videoUrl) {
-        return videoUrl.substring(0, videoUrl.lastIndexOf(".")) + "_std.original.jpg";
+        String posterUrl = "";
+
+        if (videoUrl != null) {
+            int filetypeLocation = videoUrl.lastIndexOf(".");
+            if (filetypeLocation > 0) {
+                posterUrl = videoUrl.substring(0, filetypeLocation) + "_std.original.jpg";
+            }
+        }
+
+        return posterUrl;
     }
 }
