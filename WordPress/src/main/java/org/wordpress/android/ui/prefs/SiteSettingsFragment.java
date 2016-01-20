@@ -335,6 +335,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog == null) return false;
 
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+
             String title = getString(R.string.site_settings_delete_site_title);
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
