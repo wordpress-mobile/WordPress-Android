@@ -299,8 +299,7 @@
             <org.wordpress.android.ui.prefs.WPPreference
                 android:title="Domain Removal"
                 android:summary="Be careful! Deleting your site will also remove your domain(s) listed below."
-                app:longClickHint="@string/site_settings_start_over_hint"
-                android:selectable="false" />
+                app:longClickHint="@string/site_settings_start_over_hint" />
 
             <org.wordpress.android.ui.prefs.WPButtonPreference
                 android:id="@+id/pref_export_site"
@@ -310,7 +309,6 @@
                 android:summary="If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future."
                 android:layout="@layout/delete_site_preference"
                 android:widgetLayout="@layout/delete_site_preference_button"
-                android:selectable="false"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="Export content"
                 app:buttonTextAllCaps="true" />
@@ -323,7 +321,6 @@
                 android:summary="This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site."
                 android:layout="@layout/delete_site_preference"
                 android:widgetLayout="@layout/delete_site_preference_button"
-                android:selectable="false"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="delete site"
                 app:buttonTextAllCaps="true"
