@@ -14,7 +14,7 @@
         android:layout_marginStart="@dimen/delete_site_preference_margin_large"
         android:layout_marginRight="@dimen/delete_site_preference_margin_medium"
         android:layout_marginEnd="@dimen/delete_site_preference_margin_medium"
-        android:layout_marginTop="@dimen/delete_site_preference_margin_medium"
+        android:layout_marginTop="@dimen/delete_site_preference_margin_large"
         android:layout_marginBottom="@dimen/delete_site_preference_margin_medium"
         android:layout_weight="1">
 
