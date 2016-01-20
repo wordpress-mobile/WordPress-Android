@@ -162,17 +162,21 @@ public class JsCallbackReceiver {
                 mListener.onLinkTapped(url, title);
                 break;
             case CALLBACK_VIDEOPRESS_INFO_REQUEST:
-                // Extract the VideoPress id from the callback string
-                mListener.onVideoPressInfoRequested(params.substring(3));
+                // Extract the VideoPress id from the callback string (stripping the 'id=' part of the callback string)
+                if (params.length() > 3) {
+                    mListener.onVideoPressInfoRequested(params.substring(3));
+                }
                 break;
             case CALLBACK_LOG:
                 // Strip 'msg=' from beginning of string
-                AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params.substring(4));
+                if (params.length() > 4) {
+                    AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params.substring(4));
+                }
                 break;
             case CALLBACK_RESPONSE_STRING:
                 AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
                 Set<String> responseDataSet;
-                if (params.startsWith("function=")) {
+                if (params.startsWith("function=") && params.contains(JS_CALLBACK_DELIMITER)) {
                     String functionName = params.substring("function=".length(), params.indexOf(JS_CALLBACK_DELIMITER));
 
                     List<String> responseIds = new ArrayList<>();
