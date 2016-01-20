@@ -12,9 +12,8 @@ import android.util.TypedValue;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.wordpress.android.widgets.TypefaceCache;
-
 import org.wordpress.android.R;
+import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -222,5 +221,55 @@ public class WPPrefUtils {
         }
 
         return languageMap;
+    }
+
+    /**
+     * Generates display strings for given language codes. Used as entries in language preference.
+     */
+    public static String[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
+        if (languageCodes == null || languageCodes.length < 1) return null;
+
+        String[] displayStrings = new String[languageCodes.length];
+
+        for (int i = 0; i < languageCodes.length; ++i) {
+            displayStrings[i] = StringUtils.capitalize(getLanguageString(
+                    String.valueOf(languageCodes[i]), WPPrefUtils.languageLocale(languageCodes[i].toString())));
+        }
+
+        return displayStrings;
+    }
+
+    /**
+     * Generates detail display strings in the currently selected locale. Used as detail text
+     * in language preference dialog.
+     */
+    public static String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes, String locale) {
+        if (languageCodes == null || languageCodes.length < 1) return null;
+
+        String[] detailStrings = new String[languageCodes.length];
+        for (int i = 0; i < languageCodes.length; ++i) {
+            detailStrings[i] = StringUtils.capitalize(
+                    getLanguageString(languageCodes[i].toString(), WPPrefUtils.languageLocale(locale)));
+        }
+
+        return detailStrings;
+    }
+
+    /**
+     * Return a non-null display string for a given language code.
+     */
+    public static String getLanguageString(String languageCode, Locale displayLocale) {
+        if (languageCode == null || languageCode.length() < 2 || languageCode.length() > 6) {
+            return "";
+        }
+
+        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
+        String displayLanguage = StringUtils.capitalize(languageLocale.getDisplayLanguage(displayLocale));
+        String displayCountry = languageLocale.getDisplayCountry(displayLocale);
+
+        if (!TextUtils.isEmpty(displayCountry)) {
+            return displayLanguage + " (" + displayCountry + ")";
+        }
+        return displayLanguage;
     }
 }

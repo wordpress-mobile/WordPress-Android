@@ -50,7 +50,6 @@ import org.wordpress.android.util.WPPrefUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -774,13 +773,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (TextUtils.isEmpty(mLanguagePref.getSummary()) ||
                 !newValue.equals(mLanguagePref.getValue())) {
             mLanguagePref.setValue(newValue);
-            String summary = getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
+            String summary = WPPrefUtils.getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
 
             // update details to display in selected locale
             CharSequence[] languageCodes = mLanguagePref.getEntryValues();
-            mLanguagePref.setEntries(createLanguageDisplayStrings(languageCodes));
-            mLanguagePref.setDetails(createLanguageDetailDisplayStrings(languageCodes, newValue));
+            mLanguagePref.setEntries(WPPrefUtils.createLanguageDisplayStrings(languageCodes));
+            mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(languageCodes, newValue));
             mLanguagePref.refreshAdapter();
         }
     }
@@ -961,56 +960,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private boolean shouldShowListPreference(DetailListPreference preference) {
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
-    }
-
-    /**
-     * Generates display strings for given language codes. Used as entries in language preference.
-     */
-    private String[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
-        if (languageCodes == null || languageCodes.length < 1) return null;
-
-        String[] displayStrings = new String[languageCodes.length];
-
-        for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = StringUtils.capitalize(getLanguageString(
-                    String.valueOf(languageCodes[i]), WPPrefUtils.languageLocale(languageCodes[i].toString())));
-        }
-
-        return displayStrings;
-    }
-
-    /**
-     * Generates detail display strings in the currently selected locale. Used as detail text
-     * in language preference dialog.
-     */
-    public String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes, String locale) {
-        if (languageCodes == null || languageCodes.length < 1) return null;
-
-        String[] detailStrings = new String[languageCodes.length];
-        for (int i = 0; i < languageCodes.length; ++i) {
-            detailStrings[i] = StringUtils.capitalize(
-                    getLanguageString(languageCodes[i].toString(), WPPrefUtils.languageLocale(locale)));
-        }
-
-        return detailStrings;
-    }
-
-    /**
-     * Return a non-null display string for a given language code.
-     */
-    private String getLanguageString(String languageCode, Locale displayLocale) {
-        if (languageCode == null || languageCode.length() < 2 || languageCode.length() > 6) {
-            return "";
-        }
-
-        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
-        String displayLanguage = StringUtils.capitalize(languageLocale.getDisplayLanguage(displayLocale));
-        String displayCountry = languageLocale.getDisplayCountry(displayLocale);
-
-        if (!TextUtils.isEmpty(displayCountry)) {
-            return displayLanguage + " (" + displayCountry + ")";
-        }
-        return displayLanguage;
     }
 
     private void hideAdminRequiredPreferences() {
