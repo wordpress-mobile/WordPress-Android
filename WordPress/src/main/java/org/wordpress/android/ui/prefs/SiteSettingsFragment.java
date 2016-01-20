@@ -654,12 +654,12 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showDeleteSiteDialog() {
         Bundle args = new Bundle();
-        String url = "";
+        String url;
         try {
             URI uri = new URI(mBlog.getHomeURL());
             url = uri.getHost();
         } catch (URISyntaxException e) {
-            url = "";
+            url = StringUtils.unescapeHTML(mBlog.getHomeURL().replaceFirst(ADDRESS_FORMAT_REGEX, ""));
         }
 
         args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, url);
