@@ -18,10 +18,12 @@
         android:layout_marginBottom="6dp"
         android:layout_weight="1">
 
+
         <ImageView
             android:id="@+android:id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginRight="10dp"
             android:layout_gravity="center" />
 
         <TextView
@@ -30,12 +32,15 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:layout_toRightOf="@android:id/icon"
+            android:layout_alignBottom="@android:id/icon"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal" />
 
         <TextView
             android:id="@android:id/summary"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"
