@@ -1819,13 +1819,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (!mPendingVideoPressInfoRequests.isEmpty()) {
+                            if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
                                 // If there are pending requests for video URLs from VideoPress ids, query the DB for
                                 // them again and notify the editor
+                                String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
                                 for (String videoId : mPendingVideoPressInfoRequests) {
-                                    String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
                                     String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
-
                                     String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
 
                                     mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
@@ -1973,17 +1972,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onVideoPressInfoRequested(String videoId) {
+    public void onVideoPressInfoRequested(final String videoId) {
         String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
         String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
 
         if (videoUrl.isEmpty()) {
             if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                if (mPendingVideoPressInfoRequests == null) {
-                    mPendingVideoPressInfoRequests = new ArrayList<>();
-                }
-                mPendingVideoPressInfoRequests.add(videoId);
-                refreshBlogMedia();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mPendingVideoPressInfoRequests == null) {
+                            mPendingVideoPressInfoRequests = new ArrayList<>();
+                        }
+                        mPendingVideoPressInfoRequests.add(videoId);
+                        refreshBlogMedia();
+                    }
+                });
             }
         }
 
