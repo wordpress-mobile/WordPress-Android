@@ -52,6 +52,9 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.util.List;
+import java.util.Map;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -387,19 +390,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 break;
             case RequestCodes.BLOG_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
-                    if (!AccountHelper.isSignedIn()) {
-                        ActivityLauncher.showSignInForResult(this);
-                    } else {
-                        MySiteFragment mySiteFragment = getMySiteFragment();
-                        if (mySiteFragment != null) {
-                            Blog currentBlog = WordPress.getCurrentBlog();
-                            if (currentBlog == null) {
-                                mySiteFragment.setBlog(null);
-                            } else {
-                                ActivityLauncher.showSitePickerForResult(this, currentBlog.getLocalTableBlogId());
-                            }
-                        }
-                    }
+                    handleBlogRemoved();
                 }
                 break;
             case RequestCodes.ACCOUNT_SETTINGS:
@@ -495,6 +486,31 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         } else if (!isConnected && mConnectionBar.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mConnectionBar, true);
         }
+    }
+
+    private void handleBlogRemoved() {
+        if (!AccountHelper.isSignedIn()) {
+            ActivityLauncher.showSignInForResult(this);
+        } else {
+            MySiteFragment mySiteFragment = getMySiteFragment();
+            if (mySiteFragment != null) {
+                List<Map<String, Object>> allBlogs = WordPress.wpDB.getAllBlogs();
+                if (allBlogs.isEmpty()) {
+                    mySiteFragment.setBlog(null);
+                } else {
+                    showSitePickerWithCurrentBlog();
+                }
+            }
+        }
+    }
+
+    private void showSitePickerWithCurrentBlog() {
+        Blog currentBlog = WordPress.getCurrentBlog();
+        int currentBlogId = 0;
+        if (currentBlog != null) {
+            currentBlogId = currentBlog.getLocalTableBlogId();
+        }
+        ActivityLauncher.showSitePickerForResult(this, currentBlogId);
     }
 
     /*
