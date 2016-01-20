@@ -1824,8 +1824,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                 // them again and notify the editor
                                 for (String videoId : mPendingVideoPressInfoRequests) {
                                     String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
-                                    String videoUrl = WordPressMediaUtils.getNetworkVideoUrlFromVideoPressId(blogId,
-                                            videoId);
+                                    String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
 
                                     String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
 
@@ -1976,7 +1975,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onVideoPressInfoRequested(String videoId) {
         String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
-        String videoUrl = WordPressMediaUtils.getNetworkVideoUrlFromVideoPressId(blogId, videoId);
+        String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
 
         if (videoUrl.isEmpty()) {
             if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
