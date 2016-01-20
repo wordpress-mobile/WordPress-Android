@@ -52,8 +52,11 @@
         <Preference android:title="@string/open_source_licenses"
                     android:key="@string/pref_key_oss_licenses" />
 
-        <Preference android:title="@string/language"
-                    android:key="@string/pref_key_language" />
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:key="@string/pref_key_language"
+            android:title="@string/language"
+            android:entries="@array/available_languages"
+            android:entryValues="@array/language_codes" />
 
     </PreferenceCategory>
 

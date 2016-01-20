@@ -32,6 +32,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,6 +51,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private SharedPreferences mSettings;
     private Preference mUsernamePreference;
     private EditTextPreference mEmailPreference;
+    private DetailListPreference mLanguagePreference;
     private Snackbar mEmailSnackbar;
 
     @Override
@@ -70,6 +72,13 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
+
+        // Update the display names for the languages
+        mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
+        CharSequence[] languageCodes = mLanguagePreference.getEntryValues();
+        mLanguagePreference.setEntries(WPPrefUtils.createLanguageDisplayStrings(languageCodes));
+        mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(languageCodes, mSettings.getString(LANGUAGE_PREF_KEY, "")));
+        mLanguagePreference.refreshAdapter();
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -128,8 +137,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
             return handleOssPreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_language))) {
-            return handleLanguagePreferenceClick();
         }
 
         return false;
@@ -149,6 +156,8 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 showPendingEmailChangeSnackbar(newValue.toString());
             }
             return false;
+        } else if (preference == mLanguagePreference) {
+            //
         }
 
         return true;
