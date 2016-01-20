@@ -24,7 +24,8 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginRight="6dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:tint="@color/grey_darken_30"/>
 
         <TextView
             android:id="@android:id/title"
