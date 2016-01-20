@@ -194,7 +194,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnCommentPressedListener != null) {
+                if (mOnCommentPressedListener != null && isPositionValid(position)) {
                     mOnCommentPressedListener.onCommentPressed(position, v);
                 }
             }
@@ -203,7 +203,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (mOnCommentPressedListener != null) {
+                if (mOnCommentPressedListener != null && isPositionValid(position)) {
                     mOnCommentPressedListener.onCommentLongPressed(position, v);
                 }
                 return true;
@@ -217,7 +217,11 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public Comment getItem(int position) {
-        return mComments.get(position);
+        if (isPositionValid(position)) {
+            return mComments.get(position);
+        } else {
+            return null;
+        }
     }
 
     @Override
