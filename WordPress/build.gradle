@@ -36,6 +36,7 @@ android {
         targetSdkVersion 23
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
+        generatedDensities = ['hdpi', 'xhdpi', 'xxhdpi']
     }
 
     productFlavors {

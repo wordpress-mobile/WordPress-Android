@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@android:id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/start_over_padding_top"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/start_over_margin"
+            android:layout_marginEnd="@dimen/start_over_margin"
+            android:tint="@color/grey_darken_30"
+            android:src="@drawable/gridicons_history"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="@dimen/start_over_width"
+            android:layout_height="wrap_content">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_sz_extra_large"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/start_over_margin"
+                android:text="@string/let_us_help" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_sz_large"
+                android:text="@string/start_over_text"
+                android:layout_marginBottom="@dimen/start_over_margin" />
+
+            <Button
+                android:id="@+id/contact_support_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_support"
+                android:textSize="@dimen/text_sz_large"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:theme="@style/WhiteButton"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

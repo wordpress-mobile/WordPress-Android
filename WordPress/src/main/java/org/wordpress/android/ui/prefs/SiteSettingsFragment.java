@@ -41,6 +41,7 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -159,7 +160,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mImageWidthPref;
     private WPSwitchPreference mUploadAndLinkPref;
 
-    // Delete site option (NOTE: only for WP.org)
+    // Advanced settings
+    private Preference mStartOverPref;
     private Preference mDeleteSitePref;
 
     @Override
@@ -338,6 +340,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             mEditingList = mSiteSettings.getBlacklistKeys();
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
+            return true;
+        } else if (preference == mStartOverPref) {
+            showStartOverDialog();
             return true;
         } else if (preference == mDeleteSitePref) {
             removeBlogWithConfirmation();
@@ -559,6 +564,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
         mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
         mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
+        mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
@@ -817,6 +823,22 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mWhitelistPref,
                 String.valueOf(val),
                 getWhitelistSummary(val));
+    }
+
+    private void showStartOverDialog() {
+        Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        View view = View.inflate(themer, R.layout.start_over_view, null);
+        Button contactSupportButton = (Button) view.findViewById(R.id.contact_support_button);
+        contactSupportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_START_OVER);
+            }
+        });
+        dialog.setContentView(view);
+        dialog.show();
+        WPActivityUtils.addToolbarToDialog(this, dialog, getString(R.string.start_over));
     }
 
     private void showListEditorDialog(int titleRes, int footerRes) {
