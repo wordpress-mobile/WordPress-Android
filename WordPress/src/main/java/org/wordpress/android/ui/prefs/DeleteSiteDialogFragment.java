@@ -16,7 +16,7 @@ import android.widget.EditText;
 import org.wordpress.android.R;
 
 public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnShowListener {
-    public static final String SITE_DOMAIN_KEY          = "site-domain";
+    public static final String SITE_DOMAIN_KEY = "site-domain";
 
     private AlertDialog mDeleteSiteDialog;
     private EditText mUrlConfirmation;
@@ -24,7 +24,6 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         configureAlertViewBuilder(builder);
 
@@ -58,21 +57,21 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     }
 
     private void configureAlertViewBuilder(AlertDialog.Builder builder) {
-        builder.setMessage("Confirm by entering the primary domain below.");
-        builder.setTitle("Delete the entire site?");
+        builder.setTitle(R.string.delete_entire_site);
+        builder.setMessage(R.string.confirm_entering_primary_domain_below);
 
         configureUrlConfirmation(builder);
         configureButtons(builder);
     }
 
     private void configureButtons(AlertDialog.Builder builder) {
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dismiss();
             }
         });
-        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Fragment target = getTargetFragment();
@@ -95,7 +94,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     private void setSiteDomainHint() {
         Bundle args = getArguments();
-        String siteDomain = "delete";
+        String siteDomain = getString(R.string.delete).toLowerCase();
         if (args != null) {
             siteDomain = args.getString(SITE_DOMAIN_KEY);
         }

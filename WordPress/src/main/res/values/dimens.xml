@@ -244,5 +244,10 @@
     <dimen name="theme_browser_header_button_width">100dp</dimen>
     <dimen name="theme_browser_more_button_padding">8dp</dimen>
     <dimen name="drake_themes_width">400dp</dimen>
+    <dimen name="delete_site_text_margin">25dp</dimen>
+    <dimen name="delete_site_url_margin">22dp</dimen>
+    <dimen name="delete_site_preference_margin_large">15dp</dimen>
+    <dimen name="delete_site_preference_margin_medium">6dp</dimen>
+    <dimen name="delete_site_preference_margin_small">4dp</dimen>
 
 </resources>

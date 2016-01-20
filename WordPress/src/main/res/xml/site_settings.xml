@@ -297,34 +297,34 @@
             app:longClickHint="@string/site_settings_delete_site_hint">
 
             <org.wordpress.android.ui.prefs.WPPreference
-                android:title="Domain Removal"
-                android:summary="Be careful! Deleting your site will also remove your domain(s) listed below."
-                app:longClickHint="@string/site_settings_start_over_hint" />
+                android:title="@string/domain_removal"
+                android:summary="@string/domain_removal_summary"
+                app:longClickHint="@string/domain_removal_hint" />
 
             <org.wordpress.android.ui.prefs.WPButtonPreference
                 android:id="@+id/pref_export_site"
                 android:key="@string/pref_key_site_export_site"
                 android:icon="@drawable/gridicons_history"
-                android:title="Keep Your Content"
-                android:summary="If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future."
+                android:title="@string/keep_your_content"
+                android:summary="@string/export_site_summary"
                 android:layout="@layout/delete_site_preference"
                 android:widgetLayout="@layout/delete_site_preference_button"
-                app:longClickHint="@string/site_settings_start_over_hint"
-                app:buttonText="Export content"
+                app:longClickHint="@string/export_site_hint"
+                app:buttonText="@string/export_content"
                 app:buttonTextAllCaps="true" />
 
             <org.wordpress.android.ui.prefs.WPButtonPreference
                 android:id="@+id/pref_delete_site"
                 android:key="@string/pref_key_site_delete_site"
                 android:icon="@drawable/gridicons_trash"
-                android:title="Are You Sure?"
-                android:summary="This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site."
+                android:title="@string/are_you_sure"
+                android:summary="@string/delete_site_summary"
                 android:layout="@layout/delete_site_preference"
                 android:widgetLayout="@layout/delete_site_preference_button"
-                app:longClickHint="@string/site_settings_start_over_hint"
+                app:longClickHint="@string/delete_site_hint"
                 app:buttonText="delete site"
                 app:buttonTextAllCaps="true"
-                app:buttonTextColor="#d94f4f" />
+                app:buttonTextColor="@color/alert_red" />
 
         </PreferenceScreen>
 

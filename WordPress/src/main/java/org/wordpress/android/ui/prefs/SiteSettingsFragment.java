@@ -111,6 +111,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int CLOSE_AFTER_REQUEST_CODE = 4;
     private static final int MULTIPLE_LINKS_REQUEST_CODE = 5;
     private static final int DELETE_SITE_REQUEST_CODE = 6;
+    private static final String DELETE_SITE_TAG = "delete-site";
 
     private static final long FETCH_DELAY = 1000;
 
@@ -640,9 +641,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showExportContentDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Export content");
-        builder.setMessage("Currently exporting is only available through the web interface. Please go to WordPress.com on your browser to export content.");
-        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.export_content);
+        builder.setMessage(R.string.export_content_message);
+        builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -666,7 +667,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
         deleteSiteDialogFragment.setArguments(args);
         deleteSiteDialogFragment.setTargetFragment(this, DELETE_SITE_REQUEST_CODE);
-        deleteSiteDialogFragment.show(getFragmentManager(), "delete-site");
+        deleteSiteDialogFragment.show(getFragmentManager(), DELETE_SITE_TAG);
     }
 
     private void showCloseAfterDialog() {
@@ -1124,15 +1125,15 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void handleDeleteSiteError() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Error deleting site");
-        builder.setMessage("There was an error in deleting your site. Please contact support for more assistance");
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.error_deleting_site);
+        builder.setMessage(R.string.error_deleting_site_summary);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        builder.setPositiveButton("Contact Support", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_DELETE_SITE);

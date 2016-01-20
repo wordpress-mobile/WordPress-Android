@@ -8,22 +8,22 @@
     android:background="?android:attr/selectableItemBackground">
 
     <RelativeLayout
-        android:layout_width="0dp"
+        android:layout_width="@dimen/margin_none"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="@dimen/delete_site_preference_margin_large"
+        android:layout_marginStart="@dimen/delete_site_preference_margin_large"
+        android:layout_marginRight="@dimen/delete_site_preference_margin_medium"
+        android:layout_marginEnd="@dimen/delete_site_preference_margin_medium"
+        android:layout_marginTop="@dimen/delete_site_preference_margin_medium"
+        android:layout_marginBottom="@dimen/delete_site_preference_margin_medium"
         android:layout_weight="1">
 
 
         <ImageView
             android:id="@+android:id/icon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginRight="6dp"
+            android:layout_width="@dimen/delete_site_preference_margin_large"
+            android:layout_height="@dimen/delete_site_preference_margin_large"
+            android:layout_marginRight="@dimen/delete_site_preference_margin_medium"
             android:layout_gravity="center"
             android:tint="@color/grey_darken_30"/>
 
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:paddingLeft="4dp"
+            android:paddingLeft="@dimen/delete_site_preference_margin_small"
             android:layout_toRightOf="@android:id/icon"
             android:layout_alignBottom="@android:id/icon"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -41,9 +41,9 @@
 
         <TextView
             android:id="@android:id/summary"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
-            android:paddingLeft="4dp"
+            android:layout_marginTop="@dimen/delete_site_preference_margin_medium"
+            android:layout_marginBottom="@dimen/delete_site_preference_margin_medium"
+            android:paddingLeft="@dimen/delete_site_preference_margin_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"

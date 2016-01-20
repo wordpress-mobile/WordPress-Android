@@ -1276,5 +1276,21 @@
     <string name="let_us_help">Let Us Help</string>
     <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
     <string name="contact_support">Contact support</string>
+    <string name="delete_entire_site">Delete the entire site?</string>
+    <string name="confirm_entering_primary_domain_below">Confirm by entering the primary domain below.</string>
+    <string name="export_content">Export content</string>
+    <string name="export_content_message">Currently exporting is only available through the web interface. Please go to WordPress.com on your browser to export content.</string>
+    <string name="error_deleting_site">Error deleting site</string>
+    <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance</string>
+    <string name="primary_domain">Primary Domain</string>
+    <string name="domain_removal">Domain Removal</string>
+    <string name="domain_removal_summary">Be careful! Deleting your site will also remove your domain(s) listed below.</string>
+    <string name="domain_removal_hint">The domains that will not work once you remove your site</string>
+    <string name="keep_your_content">Keep Your Content</string>
+    <string name="export_site_summary">If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future.</string>
+    <string name="export_site_hint">Export your site to an XML file</string>
+    <string name="are_you_sure">Are You Sure?</string>
+    <string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
+    <string name="delete_site_hint">Delete your site</string>
 
 </resources>
