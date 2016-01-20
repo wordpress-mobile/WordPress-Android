@@ -23,6 +23,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.DualPaneDashboard;
+import org.wordpress.android.util.DualPaneHelper;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -39,7 +41,7 @@ import org.wordpress.android.widgets.WPTextView;
 
 import de.greenrobot.event.EventBus;
 
-public class MySiteFragment extends DualPaneFragment implements WPMainActivity.OnScrollToTopListener {
+public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollToTopListener {
 
     public interface MySiteContent {
 
@@ -95,8 +97,8 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
 
     private void updateSelectorState() {
         clearSelectedView();
-        if (isInDualPaneMode() && isPartOfDualPaneDashboard()) {
-            DualPaneDashboard dashboard = getDashboard();
+        if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(this)) {
+            DualPaneDashboard dashboard = DualPaneHelper.getDashboard(this);
             if (dashboard != null) {
                 Fragment contentPaneFragment = dashboard.getContentPaneFragment();
                 if (contentPaneFragment != null && contentPaneFragment instanceof MySiteContent) {
@@ -157,7 +159,7 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        if (isInDualPaneMode() && isPartOfDualPaneDashboard()) {
+        if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(this)) {
             ScrollView.LayoutParams lp = (ScrollView.LayoutParams) rootView.findViewById(R.id.content_container)
                     .getLayoutParams();
             lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
@@ -239,7 +241,7 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
                     }
                     break;
                 case R.id.row_blog_posts:
-                    ActivityLauncher.viewCurrentBlogPosts(getActivity(), getDashboard());
+                    ActivityLauncher.viewCurrentBlogPosts(getActivity(), DualPaneHelper.getDashboard(MySiteFragment.this));
                     break;
                 case R.id.row_media:
                     ActivityLauncher.viewCurrentBlogMedia(getActivity());
@@ -260,7 +262,7 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
                     ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
                     break;
             }
-            if (isInDualPaneMode() && isPartOfDualPaneDashboard()) {
+            if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(MySiteFragment.this)) {
                 selectView(v.getId());
             }
         }
@@ -273,6 +275,15 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
         }
     }
 
+    private void resetContentState(){
+        DualPaneDashboard dashboard = DualPaneHelper.getDashboard(MySiteFragment.this);
+        if (dashboard != null) {
+            dashboard.removeContentFragment();
+            clearSelectedView();
+        }
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -281,10 +292,7 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
-                    if (getDashboard() != null) {
-                        getDashboard().removeContentFragment();
-                        clearSelectedView();
-                    }
+                    resetContentState();
                     setBlog(WordPress.getCurrentBlog());
                 }
                 break;
@@ -303,10 +311,7 @@ public class MySiteFragment extends DualPaneFragment implements WPMainActivity.O
 
             case RequestCodes.CREATE_BLOG:
                 // if the user created a new blog refresh the blog details
-                if (getDashboard() != null) {
-                    getDashboard().removeContentFragment();
-                    clearSelectedView();
-                }
+                resetContentState();
                 mBlog = WordPress.getCurrentBlog();
                 refreshBlogDetails();
                 break;

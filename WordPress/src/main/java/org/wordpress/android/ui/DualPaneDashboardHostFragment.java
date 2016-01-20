@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main;
+package org.wordpress.android.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.DualPaneContentState;
 
 import de.greenrobot.event.EventBus;
 
@@ -184,15 +185,12 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
 
         Bundle parameters = intent.getExtras();
 
-        FragmentTransaction fragmentTransaction;
-        DualPaneFragment fragment;
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
-        fragment = (DualPaneFragment) getChildFragmentManager().findFragmentByTag(mContentFragmentTag);
-        fragmentTransaction = getChildFragmentManager().beginTransaction();
+        Fragment fragment = getChildFragmentManager().findFragmentByTag(mContentFragmentTag);
 
         if (fragment == null) {
-            fragment = (DualPaneFragment) Fragment.instantiate(getActivity(), contentFragmentClass.getName(),
-                    parameters);
+            fragment = Fragment.instantiate(getActivity(), contentFragmentClass.getName(), parameters);
             fragmentTransaction.replace(CONTENT_FRAGMENT_CONTAINER_ID, fragment, mContentFragmentTag);
         } else if (fragment.isDetached()) {
             fragmentTransaction.attach(fragment);

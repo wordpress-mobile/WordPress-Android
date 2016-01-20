@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import org.wordpress.android.ui.DualPaneDashboardHostFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
 /**

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main;
+package org.wordpress.android.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.PostsListFragment;
+import org.wordpress.android.util.DualPaneContentState;
 
 import de.greenrobot.event.EventBus;
 

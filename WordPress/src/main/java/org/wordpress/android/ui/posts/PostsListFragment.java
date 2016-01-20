@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,8 +27,8 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.DualPaneHelper;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.main.DualPaneFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
@@ -46,7 +47,7 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import de.greenrobot.event.EventBus;
 
-public class PostsListFragment extends DualPaneFragment
+public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
@@ -112,7 +113,7 @@ public class PostsListFragment extends DualPaneFragment
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        if (isInDualPaneMode() && isPartOfDualPaneDashboard()) {
+        if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(this)) {
             //hide toolbar in dual pane mode
             toolbar.setVisibility(View.GONE);
 
