@@ -65,15 +65,7 @@ public class WPButtonPreference extends WPPreference {
         if (view.findViewById(R.id.domain) != null) {
             TextView textView = (TextView) view.findViewById(R.id.domain);
             Blog blog = WordPress.getCurrentBlog();
-            String url;
-            try {
-                URI uri = new URI(blog.getHomeURL());
-                url = uri.getHost();
-            } catch (URISyntaxException e) {
-                url = StringUtils.unescapeHTML(blog.getHomeURL().replaceFirst(SiteSettingsFragment.ADDRESS_FORMAT_REGEX, ""));
-            }
-
-            textView.setText(url);
+            textView.setText(blog.getHomeURLHost());
         }
     }
 }

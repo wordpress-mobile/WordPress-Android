@@ -15,6 +15,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class Blog {
+    /**
+     * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
+     *
+     * Used to format user-facing {@link String}s.
+     */
+    public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
+
     private int localTableBlogId;
     private String url;
     private String homeURL;
@@ -112,6 +119,15 @@ public class Blog {
         } catch (URISyntaxException e) {
             AppLog.e(T.UTILS, "Blog url is invalid: " + getUrl());
             return null;
+        }
+    }
+
+    public String getHomeURLHost() {
+        URI uri = getUri();
+        if (uri != null) {
+            return uri.getHost();
+        } else {
+            return StringUtils.unescapeHTML(getHomeURL().replaceFirst(ADDRESS_FORMAT_REGEX, ""));
         }
     }
 
