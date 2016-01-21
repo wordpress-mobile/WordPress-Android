@@ -1013,20 +1013,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void removeBlogWithConfirmation() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
-        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                removeBlog();
-            }
-        });
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
-        dialogBuilder.setCancelable(false);
-        dialogBuilder.create().show();
-    }
-
     private boolean shouldShowListPreference(DetailListPreference preference) {
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
     }
