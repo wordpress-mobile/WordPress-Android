@@ -1432,7 +1432,7 @@ ZSSEditor.applyVideoPressFormattingCallback = function( match ) {
     var posterSVG = '"wpposter.svg"';
     // The empty 'onclick' is important. It prevents the cursor jumping to the end
     // of the content body when `-webkit-user-select: none` is set and the video is tapped.
-    var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="videopress.mp4" preload="metadata" poster=' + posterSVG +' onclick="" onerror="ZSSEditor.sendVideoPressInfoRequest(\'' + videopressID +'\');"></video>';
+    var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="" preload="metadata" poster=' + posterSVG +' onclick="" onerror="ZSSEditor.sendVideoPressInfoRequest(\'' + videopressID +'\');"></video>';
 
     out = out + '<br>';
     return out;
@@ -2799,7 +2799,7 @@ ZSSField.prototype.handleTapEvent = function(e) {
         if (targetNode.nodeName.toLowerCase() == 'video') {
         // If the video is uploading, or is a local image do not select it.
             if (targetNode.dataset.wpvideopress) {
-                if (targetNode.src.substr(targetNode.src.lastIndexOf('/') + 1) == 'videopress.mp4') {
+                if (targetNode.src.length == 0 || targetNode.src == 'file:///android_asset/') {
                     // If the tapped video is a placeholder for a VideoPress video, send out an update request.
                     // This provides a way to load the video for Android API<19, where the onError property function in
                     // the placeholder video isn't being triggered, and sendVideoPressInfoRequest is never called.
