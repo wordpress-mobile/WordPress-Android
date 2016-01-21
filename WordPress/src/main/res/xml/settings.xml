@@ -54,9 +54,7 @@
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:key="@string/pref_key_language"
-            android:title="@string/language"
-            android:entries="@array/available_languages"
-            android:entryValues="@array/language_codes" />
+            android:title="@string/language" />
 
     </PreferenceCategory>
 

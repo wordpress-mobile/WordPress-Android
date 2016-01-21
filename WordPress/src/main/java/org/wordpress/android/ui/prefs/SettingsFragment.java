@@ -16,6 +16,7 @@ import android.preference.PreferenceScreen;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,12 +27,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.Arrays;
@@ -64,21 +67,16 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
         mEmailPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_email));
+        mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
 
         mEmailPreference.setOnPreferenceChangeListener(this);
+        mLanguagePreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
-
-        // Update the display names for the languages
-        mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
-        CharSequence[] languageCodes = mLanguagePreference.getEntryValues();
-        mLanguagePreference.setEntries(WPPrefUtils.createLanguageDisplayStrings(languageCodes));
-        mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(languageCodes, mSettings.getString(LANGUAGE_PREF_KEY, "")));
-        mLanguagePreference.refreshAdapter();
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -98,6 +96,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setInitialLanguagePreference();
         refreshAccountDetails();
     }
 
@@ -157,7 +156,15 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             }
             return false;
         } else if (preference == mLanguagePreference) {
-            //
+            mLanguagePreference.setValue(newValue.toString());
+            String summary = WPPrefUtils.getLanguageString(newValue.toString(), WPPrefUtils.languageLocale(newValue.toString()));
+            mLanguagePreference.setSummary(summary);
+
+            // update details to display in selected locale
+            CharSequence[] languageCodes = mLanguagePreference.getEntryValues();
+            mLanguagePreference.setEntries(WPPrefUtils.createLanguageDisplayStrings(languageCodes));
+            mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(languageCodes, newValue.toString()));
+            mLanguagePreference.refreshAdapter();
         }
 
         return true;
@@ -225,6 +232,28 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
             mEmailSnackbar.dismiss();
         }
+    }
+
+    private void setInitialLanguagePreference() {
+        if (mLanguagePreference == null) return;
+
+        Resources res = getResources();
+        Configuration conf = res.getConfiguration();
+
+        String[] availableLocales = getResources().getStringArray(R.array.available_languages);
+        Arrays.sort(availableLocales);
+        mLanguagePreference.setEntryValues(availableLocales);
+
+        if (TextUtils.isEmpty(mLanguagePreference.getSummary())) {
+            mLanguagePreference.setValue(conf.locale.toString());
+            mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(conf.locale.toString(), conf.locale));
+        }
+
+        // update details to display in selected locale
+        CharSequence[] languageCodes = mLanguagePreference.getEntryValues();
+        mLanguagePreference.setEntries(WPPrefUtils.createLanguageDisplayStrings(languageCodes));
+        mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(languageCodes, conf.locale.getLanguage()));
+        mLanguagePreference.refreshAdapter();
     }
 
     private boolean handleLanguagePreferenceClick() {
