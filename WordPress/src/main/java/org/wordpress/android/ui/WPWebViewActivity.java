@@ -1,14 +1,19 @@
 package org.wordpress.android.ui;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.DownloadListener;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -22,7 +27,9 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPUrlUtils;
@@ -67,7 +74,7 @@ import java.util.Map;
  * or self-signed certs in place.
  *
  */
-public class WPWebViewActivity extends WebViewActivity {
+public class WPWebViewActivity extends WebViewActivity implements DownloadListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -75,8 +82,11 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
     public static final String SHARABLE_URL = "sharable_url";
+    public static final int EXTERNAL_WRITE_STORAGE_REQUEST_CODE = 1;
 
     private static final String ENCODING_UTF8 = "UTF-8";
+
+    private String exportUrl;
 
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
         openWPCOMURL(context, url, user);
@@ -181,6 +191,7 @@ public class WPWebViewActivity extends WebViewActivity {
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.setDownloadListener(this);
 
         String addressToLoad = extras.getString(URL_TO_LOAD);
         String username = extras.getString(AUTHENTICATION_USER, "");
@@ -330,5 +341,46 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+        exportUrl = url;
+        if (PermissionUtils.checkAndRequestStoragePermission(this, EXTERNAL_WRITE_STORAGE_REQUEST_CODE)) {
+            downloadURL();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case EXTERNAL_WRITE_STORAGE_REQUEST_CODE:
+                for (int grantResult : grantResults) {
+                    if (grantResult == PackageManager.PERMISSION_DENIED) {
+                        ToastUtils.showToast(this, "Permissions required in order to download export file");
+                        return;
+                    }
+                }
+                downloadURL();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void downloadURL() {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(exportUrl));
+        request.allowScanningByMediaScanner();
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setMimeType("text/xml");
+        request.setTitle("yup");
+        request.setDescription("WordPress backup");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "dd");
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        dm.enqueue(request);
+        Toast.makeText(this, "Downloading File", //To notify the Client that the file is being downloaded
+                Toast.LENGTH_LONG).show();
     }
 }
