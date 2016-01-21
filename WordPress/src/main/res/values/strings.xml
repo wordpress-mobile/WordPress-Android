@@ -179,7 +179,7 @@
     <string name="media_details_copy_url_toast">URL copied to clipboard</string>
 
     <!-- tab titles -->
-    <string name="tab_comments">@string/comments</string>
+    <string name="tab_comments" translatable="false">@string/comments</string>
 
     <!-- themes -->
     <string name="themes_live_preview">Live preview</string>
@@ -224,8 +224,8 @@
     <string name="button_preview">Preview</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
-    <string name="button_delete">@string/delete</string>
-    <string name="button_more">@string/more</string>
+    <string name="button_delete" translatable="false">@string/delete</string>
+    <string name="button_more" translatable="false">@string/more</string>
     <string name="button_back">Back</string>
     <string name="button_revert">Revert</string>
 
@@ -364,7 +364,6 @@
     <string name="category_slug">Category slug (optional)</string>
     <string name="category_desc">Category description (optional)</string>
     <string name="category_parent">Category parent (optional):</string>
-    <string name="none">None</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
@@ -402,74 +401,6 @@
     <string name="edit_location">Edit</string>
     <string name="add_location_permission_required">Permission required in order to add location</string>
 
-    <!-- Preference keys -->
-    <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
-    <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
-    <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
-    <string name="pref_key_post_sig_section" translatable="false">wp_post_signature</string>
-    <string name="pref_key_post_sig_enabled" translatable="false">wp_pref_signature_enabled</string>
-    <string name="pref_key_post_sig" translatable="false">wp_pref_post_signature</string>
-    <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
-    <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
-    <string name="pref_key_shared_pref_section" translatable="false">wp_share_pref</string>
-    <string name="pref_key_reset_shared_pref" translatable="false">wp_reset_share_pref</string>
-    <string name="pref_key_privacy_section" translatable="false">wp_privacy</string>
-    <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
-    <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
-    <string name="pref_key_language" translatable="false">wp_pref_language</string>
-    <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
-    <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
-    <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
-    <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
-    <string name="pref_notification_other_blogs" translatable="false">wp_pref_notification_other_blogs</string>
-    <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
-    <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
-    <string name="pref_notification_account_emails" translatable="false">wp_pref_notification_account_emails</string>
-    <string name="pref_notification_sights_sounds" translatable="false">wp_pref_notification_sights_sounds</string>
-    <string name="pref_key_notification_site_settings" translatable="false">wp_pref_notification_site_settings</string>
-    <string name="pref_key_site_screen" translatable="false">wp_pref_site_screen</string>
-    <string name="pref_key_site_general" translatable="false">wp_pref_site_general</string>
-    <string name="pref_key_site_account" translatable="false">wp_pref_site_account</string>
-    <string name="pref_key_site_writing" translatable="false">wp_pref_site_writing</string>
-    <string name="pref_key_site_title" translatable="false">wp_pref_site_title</string>
-    <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>
-    <string name="pref_key_site_address" translatable="false">wp_pref_site_address</string>
-    <string name="pref_key_site_language" translatable="false">wp_pref_site_language</string>
-    <string name="pref_key_site_visibility" translatable="false">wp_pref_site_visibility</string>
-    <string name="pref_key_site_username" translatable="false">wp_pref_site_username</string>
-    <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
-    <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
-    <string name="pref_key_site_location" translatable="false">wp_pref_site_location</string>
-    <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
-    <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
-    <string name="pref_key_site_this_device" translatable="false">wp_pref_site_default_this_device</string>
-    <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
-    <string name="pref_key_site_upload_and_link_image" translatable="false">wp_pref_site_upload_and_link_image</string>
-    <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
-    <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
-    <string name="pref_key_site_allow_comments_nested" translatable="false">wp_pref_site_allow_comments_nested</string>
-    <string name="pref_key_site_send_pingbacks" translatable="false">wp_pref_site_send_pingbacks</string>
-    <string name="pref_key_site_send_pingbacks_nested" translatable="false">wp_pref_site_send_pingbacks_nested</string>
-    <string name="pref_key_site_receive_pingbacks" translatable="false">wp_pref_site_receive_pingbacks</string>
-    <string name="pref_key_site_receive_pingbacks_nested" translatable="false">wp_pref_site_receive_pingbacks_nested</string>
-    <string name="pref_key_site_more_discussion" translatable="false">wp_pref_site_more_discussion</string>
-    <string name="pref_key_site_learn_more" translatable="false">wp_pref_site_learn_more</string>
-    <string name="pref_key_site_close_after" translatable="false">wp_pref_site_close_after</string>
-    <string name="pref_key_site_sort_by" translatable="false">wp_pref_site_sort_by</string>
-    <string name="pref_key_site_threading" translatable="false">wp_pref_site_threading</string>
-    <string name="pref_key_site_paging" translatable="false">wp_pref_site_paging</string>
-    <string name="pref_key_site_manual_approval" translatable="false">wp_pref_site_manual_approval</string>
-    <string name="pref_key_site_identity_required" translatable="false">wp_pref_site_identity_required</string>
-    <string name="pref_key_site_user_account_required" translatable="false">wp_pref_site_user_account_required</string>
-    <string name="pref_key_site_whitelist" translatable="false">wp_pref_site_whitelist</string>
-    <string name="pref_key_site_multiple_links" translatable="false">wp_pref_site_multiple_links</string>
-    <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
-    <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
-    <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
-    <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
-    <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
-    <string name="pref_key_site_remove_site" translatable="false">wp_pref_site_remove_site</string>
-
     <!--     Begin     -->
     <!-- Site Settings -->
     <!--               -->
@@ -479,6 +410,7 @@
     <string name="privacy">Privacy</string>
     <string name="related_posts">Related Posts</string>
     <string name="more">More</string>
+    <string name="none">None</string>
     <string name="comments">Comments</string>
     <string name="close_after">Close after</string>
     <string name="oldest_first">Oldest first</string>
@@ -492,32 +424,33 @@
     <string name="site_settings_general_header">General</string>
     <string name="site_settings_account_header">Account</string>
     <string name="site_settings_writing_header">Writing</string>
-    <string name="site_settings_discussion_header">@string/discussion</string>
+    <string name="site_settings_discussion_header" translatable="false">@string/discussion</string>
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
-    <string name="site_settings_comments_header">@string/comments</string>
+    <string name="site_settings_comments_header" translatable="false">@string/comments</string>
     <string name="site_settings_this_device_header">This device</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
     <string name="site_settings_tagline_title">Tagline</string>
     <string name="site_settings_address_title">Address</string>
-    <string name="site_settings_privacy_title">@string/privacy</string>
-    <string name="site_settings_language_title">@string/language</string>
-    <string name="site_settings_username_title">@string/username</string>
-    <string name="site_settings_password_title">@string/password</string>
+    <string name="site_settings_privacy_title" translatable="false">@string/privacy</string>
+    <string name="site_settings_language_title" translatable="false">@string/language</string>
+    <string name="site_settings_username_title" translatable="false">@string/username</string>
+    <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_location_title">Enable Location</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
-    <string name="site_settings_default_image_width_title">@string/max_thumbnail_px_width</string>
-    <string name="site_settings_upload_and_link_image_title">@string/upload_full_size_image</string>
-    <string name="site_settings_related_posts_title">@string/related_posts</string>
-    <string name="site_settings_more_title">@string/more</string>
+    <string name="site_settings_image_original_size">Original Size</string>
+    <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
+    <string name="site_settings_upload_and_link_image_title" translatable="false">@string/upload_full_size_image</string>
+    <string name="site_settings_related_posts_title" translatable="false">@string/related_posts</string>
+    <string name="site_settings_more_title" translatable="false">@string/more</string>
     <string name="site_settings_allow_comments_title">Allow Comments</string>
     <string name="site_settings_send_pingbacks_title">Send Pingbacks</string>
     <string name="site_settings_receive_pingbacks_title">Receive Pingbacks</string>
     <string name="site_settings_identity_required_title">Must include name and email</string>
     <string name="site_settings_account_required_title">Users must be signed in</string>
-    <string name="site_settings_close_after_title">@string/close_after</string>
+    <string name="site_settings_close_after_title" translatable="false">@string/close_after</string>
     <string name="site_settings_sort_by_title">Sort by</string>
     <string name="site_settings_threading_title">Threading</string>
     <string name="site_settings_paging_title">Paging</string>
@@ -534,7 +467,7 @@
     <string name="site_settings_threading_summary">%d levels</string>
     <string name="site_settings_whitelist_all_summary">Comments from all users</string>
     <string name="site_settings_whitelist_known_summary">Comments from known users</string>
-    <string name="site_settings_whitelist_none_summary">@string/none</string>
+    <string name="site_settings_whitelist_none_summary" translatable="false">@string/none</string>
     <string-array name="site_settings_auto_approve_details">
         <item>Require manual approval for everyone\'s comments.</item>
         <item>Automatically approve if the user has a previously approved comment.</item>
@@ -560,12 +493,8 @@
         <item>Known users\' comments</item>
         <item>All users</item>
     </string-array>
-    <string-array name="site_settings_sort_entries">
-        <item>@string/oldest_first</item>
-        <item>@string/newest_first</item>
-    </string-array>
     <string-array name="site_settings_threading_entries">
-        <item>@string/none</item>
+        <item>None</item>
         <item>Two levels</item>
         <item>Three levels</item>
         <item>Four levels</item>
@@ -576,84 +505,16 @@
         <item>Nine levels</item>
         <item>Ten levels</item>
     </string-array>
-    <string-array name="site_settings_privacy_entries">
+
+    <string-array name="site_settings_privacy_entries" translatable="false">
         <item>@string/site_settings_privacy_public_summary</item>
         <item>@string/site_settings_privacy_hidden_summary</item>
         <item>@string/site_settings_privacy_private_summary</item>
     </string-array>
-    <string-array name="site_settings_image_width_entries">
-        <item>Original Size</item>
-        <item>100</item>
-        <item>200</item>
-        <item>300</item>
-        <item>400</item>
-        <item>500</item>
-        <item>600</item>
-        <item>700</item>
-        <item>800</item>
-        <item>900</item>
-        <item>1000</item>
-        <item>1100</item>
-        <item>1200</item>
-        <item>1300</item>
-        <item>1400</item>
-        <item>1500</item>
-        <item>1600</item>
-        <item>1700</item>
-        <item>1800</item>
-        <item>1900</item>
-        <item>2000</item>
-    </string-array>
 
-    <!-- Preference Values -->
-    <string-array name="site_settings_auto_approve_values">
-        <item>-1</item>
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="site_settings_sort_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="site_settings_threading_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-    </string-array>
-    <string-array name="site_settings_privacy_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-    <string-array name="site_settings_image_width_values">
-        <item>Original Size</item>
-        <item>100</item>
-        <item>200</item>
-        <item>300</item>
-        <item>400</item>
-        <item>500</item>
-        <item>600</item>
-        <item>700</item>
-        <item>800</item>
-        <item>900</item>
-        <item>1000</item>
-        <item>1100</item>
-        <item>1200</item>
-        <item>1300</item>
-        <item>1400</item>
-        <item>1500</item>
-        <item>1600</item>
-        <item>1700</item>
-        <item>1800</item>
-        <item>1900</item>
-        <item>2000</item>
+    <string-array name="site_settings_sort_entries" translatable="false">
+        <item>@string/oldest_first</item>
+        <item>@string/newest_first</item>
     </string-array>
 
     <!-- Hints (long press) -->
@@ -693,7 +554,7 @@
     <string name="site_settings_rp_switch_summary">Related Posts displays relevant content from your site below your posts.</string>
     <string name="site_settings_rp_show_header_title">Show Header</string>
     <string name="site_settings_rp_show_images_title">Show Images</string>
-    <string name="site_settings_rp_preview_header">@string/related_posts</string>
+    <string name="site_settings_rp_preview_header" translatable="false">@string/related_posts</string>
     <string name="site_settings_rp_preview1_title">Big iPhone/iPad Update Now Available</string>
     <string name="site_settings_rp_preview1_site">in \"Mobile\"</string>
     <string name="site_settings_rp_preview2_title">The WordPress for Android App Gets a Big Facelift</string>
@@ -702,7 +563,7 @@
     <string name="site_settings_rp_preview3_site">in \"Upgrade\"</string>
 
     <!-- Learn More -->
-    <string name="site_settings_learn_more_header">@string/learn_more</string>
+    <string name="site_settings_learn_more_header" translatable="false">@string/learn_more</string>
     <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
 
     <!-- List Editors (Blacklist, Hold for Moderation) -->
@@ -712,11 +573,11 @@
     <string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
 
     <!-- Dialogs -->
-    <string name="site_settings_discussion_title">@string/discussion</string>
+    <string name="site_settings_discussion_title" translatable="false">@string/discussion</string>
     <string name="site_settings_close_after_dialog_title">Close commenting</string>
     <string name="site_settings_paging_dialog_header">Comments per page</string>
     <string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
-    <string name="site_settings_close_after_dialog_header">@string/close_after</string>
+    <string name="site_settings_close_after_dialog_header" translatable="false">@string/close_after</string>
     <string name="site_settings_close_after_dialog_description">Automatically close comments on articles.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatically close</string>
     <string name="site_settings_multiple_links_dialog_description">Require approval for comments that include more than this number of links.</string>
@@ -774,7 +635,7 @@
     <string name="stats_views">Views</string>
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
-    <string name="stats_comments">@string/comments</string>
+    <string name="stats_comments" translatable="false">@string/comments</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>
@@ -785,7 +646,7 @@
     <string name="stats_view_authors">Authors</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_view_videos">Videos</string>
-    <string name="stats_view_comments">@string/comments</string>
+    <string name="stats_view_comments" translatable="false">@string/comments</string>
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
@@ -807,7 +668,7 @@
     <string name="stats_totals_views">Views</string>
     <string name="stats_totals_clicks">Clicks</string>
     <string name="stats_totals_plays">Plays</string>
-    <string name="stats_totals_comments">@string/comments</string>
+    <string name="stats_totals_comments" translatable="false">@string/comments</string>
     <string name="stats_totals_publicize">Followers</string>
     <string name="stats_totals_followers">Since</string>
 
@@ -981,31 +842,14 @@
         <item>Site achievements</item>
         <item>Username mentions</item>
     </string-array>
-    <string-array name="notifications_blog_settings_values" translatable="false">
-        <item>new_comment</item>
-        <item>comment_like</item>
-        <item>post_like</item>
-        <item>follow</item>
-        <item>achievement</item>
-        <item>mentions</item>
-    </string-array>
     <string-array name="notifications_other_settings">
         <item>Replies to my comments</item>
         <item>Likes on my comments</item>
-    </string-array>
-    <string-array name="notifications_other_settings_values" translatable="false">
-        <item>comment_reply</item>
-        <item>comment_like</item>
     </string-array>
     <string-array name="notifications_wpcom_settings">
         <item>Suggestions</item>
         <item>Research</item>
         <item>Community</item>
-    </string-array>
-    <string-array name="notifications_wpcom_settings_values" translatable="false">
-        <item>marketing</item>
-        <item>research</item>
-        <item>community</item>
     </string-array>
     <string-array name="notifications_wpcom_settings_summaries">
         <item>Tips for getting the most out of WordPress.com.</item>
@@ -1028,83 +872,6 @@
         <item>Standard</item>
         <item>Status</item>
         <item>Video</item>
-    </string-array>
-
-    <!-- Used as values to a preference in Site Settings -->
-    <string-array name="language_codes">
-        <item>en_US</item>
-        <item>az</item>
-        <item>de</item>
-        <item>el</item>
-        <item>es</item>
-        <item>fr</item>
-        <item>gd</item>
-        <item>hi</item>
-        <item>hu</item>
-        <item>id</item>
-        <item>it</item>
-        <item>ja</item>
-        <item>ko</item>
-        <item>nb</item>
-        <item>nl</item>
-        <item>pl</item>
-        <item>ru</item>
-        <item>sv</item>
-        <item>th</item>
-        <item>uz</item>
-        <item>zh_CN</item>
-        <item>zh_TW</item>
-        <item>zh_HK</item>
-        <item>en_GB</item>
-        <item>tr</item>
-        <item>eu</item>
-        <item>he</item>
-        <item>pt_BR</item>
-        <item>ar</item>
-        <item>ro</item>
-        <item>mk</item>
-        <item>en_AU</item>
-        <item>sr</item>
-        <item>sk</item>
-        <item>cy</item>
-        <item>da</item>
-    </string-array>
-
-    <!-- Language IDs for WordPress REST call -->
-    <string-array name="lang_ids">
-        <item>1</item>
-        <item>79</item>
-        <item>15</item>
-        <item>17</item>
-        <item>19</item>
-        <item>24</item>
-        <item>476</item>
-        <item>30</item>
-        <item>31</item>
-        <item>33</item>
-        <item>35</item>
-        <item>36</item>
-        <item>40</item>
-        <item>49</item>
-        <item>58</item>
-        <item>62</item>
-        <item>68</item>
-        <item>71</item>
-        <item>458</item>
-        <item>449</item>
-        <item>452</item>
-        <item>482</item>
-        <item>78</item>
-        <item>429</item>
-        <item>29</item>
-        <item>438</item>
-        <item>3</item>
-        <item>61</item>
-        <item>435</item>
-        <item>67</item>
-        <item>64</item>
-        <item>13</item>
-        <item>14</item>
     </string-array>
 
     <!-- Menu Buttons -->
@@ -1214,7 +981,7 @@
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
-    <string name="reader_title_comments">@string/comments</string>
+    <string name="reader_title_comments" translatable="false">@string/comments</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
@@ -1326,13 +1093,6 @@
     <!-- connection bar which appears on main activity when there's no connection -->
     <string name="connectionbar_no_connection">No connection</string>
 
-    <!-- layout tags - do not translate -->
-    <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
-    <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
-    <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
-    <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
-    <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
-
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
     <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
@@ -1419,7 +1179,7 @@
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_site_settings">Settings</string>
-    <string name="my_site_btn_comments">@string/comments</string>
+    <string name="my_site_btn_comments" translatable="false">@string/comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
@@ -1460,8 +1220,8 @@
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
 
     <!-- Static URLs -->
-    <string name="privacy_settings_url">https://en.support.wordpress.com/privacy-settings</string>
-    <string name="language_settings_url">https://en.support.wordpress.com/language-settings</string>
+    <string name="privacy_settings_url" translatable="false">https://en.support.wordpress.com/privacy-settings</string>
+    <string name="language_settings_url" translatable="false">https://en.support.wordpress.com/language-settings</string>
 
     <string name="date_range_start_date">Start Date</string>
     <string name="date_range_end_date">End Date</string>
