@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,7 +61,6 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     }
 
     private void showSidebarFragment() {
-        Log.v(TAG, "Showing sidebar fragment");
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         Fragment sidebarFragment = getSidebarFragment();
 
@@ -93,38 +91,33 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     }
 
     private void showContent() {
-        //If we came into dual pane mode from activity, we would use fresh content state that activity has provided
-        if (stickyDualPaneActivityStateAvailable()) {
-            Log.v(TAG, "Pending content state exist.");
-            mContentState = getStickyContentState();
-            EventBus.getDefault().removeStickyEvent(DualPaneContentState.class);
-        }
-
-        if (mContentState != null) {
-            if (isInDualPaneMode()) {
-                Log.v(TAG, "Dashboard is in dual pane mode.");
+        if (isInDualPaneMode()) {
+            Log.v(TAG, "Dashboard is in dual pane mode.");
+            if (stickyDualPaneActivityStateAvailable()) {
                 removeDefaultContentFragment();
                 showContentFragment();
-                mIsSinglePaneContentFragmentHidden = false;
-            } else {
-                Log.v(TAG, "Dashboard is in single pane mode.");
-                //Do nothing if no Intent was provided.
-                if (!mContentState.isActivityIntentAvailable()) {
-                    Log.v(TAG, "No intent to start single pane activity.");
-                    return;
-                }
-                if (shouldOpenActivityAfterSwitchToSinglePane() && !mIsSinglePaneContentFragmentHidden) {
-                    Log.v(TAG, "Starting single pane activity.");
-                    openContentActivity();
-                    onContentActivityStarted();
-                } else {
-                    Log.v(TAG, "Cant start single pane activity yet.");
-                    mIsSinglePaneContentFragmentHidden = true;
-                }
+            } else if (mContentState == null) {
+                Log.v(TAG, "No saved content state.");
+                showDefaultContentFragment();
             }
+
+            mIsSinglePaneContentFragmentHidden = false;
         } else {
-            Log.v(TAG, "No saved content state.");
-            showDefaultContentFragment();
+            if (mContentState == null) return;
+            Log.v(TAG, "Dashboard is in single pane mode.");
+            //Do nothing if no Intent was provided.
+            if (!mContentState.isActivityIntentAvailable()) {
+                Log.v(TAG, "No intent to start single pane activity.");
+                return;
+            }
+            if (shouldOpenActivityAfterSwitchToSinglePane() && !mIsSinglePaneContentFragmentHidden) {
+                Log.v(TAG, "Starting single pane activity.");
+                openContentActivity();
+                onContentActivityStarted();
+            } else {
+                Log.v(TAG, "Cant start single pane activity yet.");
+                mIsSinglePaneContentFragmentHidden = true;
+            }
         }
     }
 
@@ -179,6 +172,10 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
 
     private void showContentFragment() {
         Log.v(TAG, "Showing restored content fragment.");
+
+        mContentState = getStickyContentState();
+        EventBus.getDefault().removeStickyEvent(DualPaneContentState.class);
+
         mContentFragmentTag = mContentState.getFragmentClass().getSimpleName();
 
         Fragment fragment = Fragment.instantiate(getActivity(), mContentState.getFragmentClass().getName(), null);
@@ -255,10 +252,10 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
 
         if (contentFragment != null) {
             Log.v(TAG, "Removing content fragment.");
-            FragmentManager fragmentManager = getChildFragmentManager();
-            fragmentManager.beginTransaction().remove(contentFragment).commit();
+            getChildFragmentManager().beginTransaction().remove(contentFragment).commit();
+            resetContentPaneState();
+            showDefaultContentFragment();
         }
-        resetContentPaneState();
     }
 
     private void resetContentPaneState() {
