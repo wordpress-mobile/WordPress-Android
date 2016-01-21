@@ -20,6 +20,8 @@ public class AccountModel {
     private String mFirstName;
     private String mLastName;
     private String mAboutMe;
+    private String mNewEmail;
+    private boolean mPendingEmailChange;
 
     public AccountModel() {
         init();
@@ -39,6 +41,8 @@ public class AccountModel {
         mFirstName = "";
         mLastName = "";
         mAboutMe = "";
+        mNewEmail = "";
+        mPendingEmailChange = false;
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -58,6 +62,8 @@ public class AccountModel {
         mLastName = json.optString("last_name");
         mDisplayName = json.optString("display_name");
         mAboutMe = json.optString("description");
+        mNewEmail = json.optString("new_user_email");
+        mPendingEmailChange = json.optBoolean("user_email_change_pending");
     }
 
     public long getUserId() {
@@ -166,5 +172,21 @@ public class AccountModel {
 
     public void setAboutMe(String aboutMe) {
         mAboutMe = aboutMe;
+    }
+
+    public String getNewEmail() {
+        return StringUtils.notNullStr(mNewEmail);
+    }
+
+    public void setNewEmail(String newEmail) {
+        mNewEmail = newEmail;
+    }
+
+    public boolean getPendingEmailChange() {
+        return mPendingEmailChange;
+    }
+
+    public void setPendingEmailChange(boolean pendingEmailChange) {
+        mPendingEmailChange = pendingEmailChange;
     }
 }

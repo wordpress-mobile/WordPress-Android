@@ -32,8 +32,6 @@ public class MyProfileActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AccountHelper.getDefaultAccount().fetchAccountSettings();
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -169,7 +167,7 @@ public class MyProfileActivity extends AppCompatActivity {
         return Account.RestParam.toString(param);
     }
 
-    public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
+    public void onEventMainThread(PrefsEvents.AccountSettingsChanged event) {
         if (!isFinishing()) {
             refreshDetails();
         }
