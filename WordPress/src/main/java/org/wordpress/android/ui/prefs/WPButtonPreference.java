@@ -7,8 +7,15 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.StringUtils;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class WPButtonPreference extends WPPreference {
     private String mButtonText;
@@ -53,6 +60,20 @@ public class WPButtonPreference extends WPPreference {
                     getOnPreferenceClickListener().onPreferenceClick(wpButtonPreference);
                 }
             });
+        }
+
+        if (view.findViewById(R.id.domain) != null) {
+            TextView textView = (TextView) view.findViewById(R.id.domain);
+            Blog blog = WordPress.getCurrentBlog();
+            String url;
+            try {
+                URI uri = new URI(blog.getHomeURL());
+                url = uri.getHost();
+            } catch (URISyntaxException e) {
+                url = StringUtils.unescapeHTML(blog.getHomeURL().replaceFirst(SiteSettingsFragment.ADDRESS_FORMAT_REGEX, ""));
+            }
+
+            textView.setText(url);
         }
     }
 }

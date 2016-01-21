@@ -95,7 +95,7 @@ public class SiteSettingsFragment extends PreferenceFragment
      *
      * Used to format user-facing {@link String}'s in certain preferences.
      */
-    private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
+    public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     /**
      * Used to move the Uncategorized category to the beginning of the category list.

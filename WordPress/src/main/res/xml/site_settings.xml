@@ -296,7 +296,9 @@
             android:title="@string/site_settings_delete_site_title"
             app:longClickHint="@string/site_settings_delete_site_hint">
 
-            <org.wordpress.android.ui.prefs.WPPreference
+            <org.wordpress.android.ui.prefs.WPButtonPreference
+                android:widgetLayout="@layout/domain_removal_preference"
+                android:layout="@layout/delete_site_preference"
                 android:title="@string/domain_removal"
                 android:summary="@string/domain_removal_summary"
                 app:longClickHint="@string/domain_removal_hint" />
