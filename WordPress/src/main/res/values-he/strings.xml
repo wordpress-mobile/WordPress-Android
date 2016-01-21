@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">הפוסט כבר לא קיים</string>
+	<string name="reader_err_get_post_not_authorized">אינך רשאי לראות פוסט זה</string>
+	<string name="reader_err_get_post_generic">לא ניתן לאחזר פוסט זה</string>
+	<string name="blog_name_no_spaced_allowed">כתובת האתר לא יכולה להכיל רווחים</string>
+	<string name="invalid_username_no_spaces">שם המשתמש לא יכול להכיל רווחים</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">האתרים אחריהם אתה עוקב לא פרסמו דבר לאחרונה</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">אין פוסטים אחרונים</string>
+	<string name="edit_media">עריכת מדיה</string>
+	<string name="media_details_copy_url_toast">הכתובת הועתקה ללוח העריכה</string>
+	<string name="media_details_copy_url">העתק כתובת</string>
+	<string name="media_details_label_date_uploaded">הועלה</string>
+	<string name="media_details_label_date_added">התווסף</string>
 	<string name="selected_theme">תבנית נבחרת</string>
 	<string name="could_not_load_theme">לא ניתן לטעון תבנית</string>
 	<string name="theme_activation_error">משהו השתבש. לאניתן להפעיל תבנית</string>
@@ -198,12 +210,6 @@
 	<string name="two_step_sms_sent">יש לבדוק הודעות טקסט לקבלת קוד אימות.</string>
 	<string name="error_publish_no_network">לא ניתן לפרסם כאשר אין חיבור אינטרנט. נשמר כטיוטה.</string>
 	<string name="auth_required">יש להתחבר שוב כדי המשיך.</string>
-	<string name="media_details_dimensions">ממדים:</string>
-	<string name="media_details_file_type">סוג קובץ:</string>
-	<string name="media_details_file_url">כתובת קובץ:</string>
-	<string name="media_details_file_name">שם קובץ:</string>
-	<string name="media_details_uploaded_on">הועלה ב:</string>
-	<string name="media_details_added_on">התווסף ב:</string>
 	<string name="tab_title_site_videos">וידאו מהאתר</string>
 	<string name="tab_title_site_images">תמונות מהאתר</string>
 	<string name="tab_title_device_videos">וידאו מהמכשיר</string>
@@ -215,6 +221,8 @@
 	<string name="language">שפה</string>
 	<string name="device">מכשיר</string>
 	<string name="sign_in_jetpack">יש להתחבר לחשבון וורדפרס.קום כדי להתחבר אל Jetpack.</string>
+	<string name="media_details_label_file_type">סוג קובץ</string>
+	<string name="media_details_label_file_name">שם קובץ</string>
 	<string name="media_fetching">מביא מדיה...</string>
 	<string name="posts_fetching">מביא פוסטים...</string>
 	<string name="pages_fetching">מביא עמודים...</string>
@@ -660,7 +668,6 @@
 	<string name="share_action_title">הוסף ל...</string>
 	<string name="share_action">שתף</string>
 	<string name="stats">נתונים סטטיסטיים</string>
-	<string name="view_stats_full_site">צפה באתר כולו</string>
 	<string name="stats_view_visitors_and_views">מבקרים וצפיות</string>
 	<string name="stats_view_clicks">קליקים</string>
 	<string name="stats_view_referrers">הפניות</string>
