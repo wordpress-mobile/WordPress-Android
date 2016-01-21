@@ -307,7 +307,7 @@
             <org.wordpress.android.ui.prefs.WPIconWidgetPreference
                 android:id="@+id/pref_export_site"
                 android:key="@string/pref_key_site_export_site"
-                android:icon="@drawable/gridicons_history"
+                android:icon="@drawable/ic_swap_vert"
                 android:title="@string/keep_your_content"
                 android:summary="@string/export_site_summary"
                 android:layout="@layout/delete_site_preference"
