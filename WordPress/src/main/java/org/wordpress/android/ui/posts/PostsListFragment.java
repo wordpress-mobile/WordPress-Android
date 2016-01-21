@@ -51,7 +51,7 @@ public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
-        PostsListAdapter.OnPostButtonClickListener, MySiteFragment.MySiteContent {
+        PostsListAdapter.OnPostButtonClickListener, MySiteFragment.MySiteContentFragment {
 
     public static final int POSTS_REQUEST_COUNT = 20;
 

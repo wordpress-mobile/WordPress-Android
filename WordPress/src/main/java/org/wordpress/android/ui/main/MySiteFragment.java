@@ -44,17 +44,14 @@ import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollToTopListener {
 
-    public interface MySiteContent {
-
-        int getSelectorId();
-    }
-
     private static final long ALERT_ANIM_OFFSET_MS = 1000l;
     private static final long ALERT_ANIM_DURATION_MS = 1000l;
 
     private static final String SELECTED_CATEGORY_ID = "selected_category_id";
+    private static final String CACHED_BLOG_LOCAL_ID = "cached_blog_local_id";
 
     private int mSelectedCategoryViewId;
+    private int mCachedBlogLocalId = 0;
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -73,6 +70,8 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
 
     private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
 
+    private boolean mIsFragmentContentRemoalRequired = false;
+
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
     }
@@ -86,8 +85,12 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
+
+        if (savedInstanceState != null) {
+            mSelectedCategoryViewId = savedInstanceState.getInt(SELECTED_CATEGORY_ID);
+            mCachedBlogLocalId = savedInstanceState.getInt(CACHED_BLOG_LOCAL_ID);
+        }
     }
 
     @Override
@@ -99,14 +102,18 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     }
 
     private void updateSelectorState() {
+        if (getView() == null) return;
+
         clearSelectedView();
-        if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(this)) {
+
+        if (DualPaneHelper.isInDualPaneMode(getActivity())) {
             DualPaneDashboard dashboard = DualPaneHelper.getDashboard(this);
-            if (dashboard != null) {
-                Fragment contentPaneFragment = dashboard.getContentPaneFragment();
-                if (contentPaneFragment != null && contentPaneFragment instanceof MySiteContent) {
-                    selectView(((MySiteContent) contentPaneFragment).getSelectorId());
-                }
+
+            if (dashboard == null) return;
+
+            Fragment contentPaneFragment = dashboard.getContentPaneFragment();
+            if (contentPaneFragment != null && contentPaneFragment instanceof MySiteContentFragment) {
+                selectView(getView().findViewById(((MySiteContentFragment) contentPaneFragment).getSelectorId()));
             }
         }
     }
@@ -123,14 +130,12 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         mSelectedCategoryViewId = 0;
     }
 
-    private void selectView(int viewId) {
-        if (getView() == null) return;
-        View selectorView = getView().findViewById(viewId);
-        if (selectorView != null && selectorView instanceof ViewGroup) {
+    private void selectView(View view) {
+        if (view != null && view instanceof ViewGroup) {
 
-            View selectableChildView = ((ViewGroup) selectorView).getChildAt(0);
+            View selectableChildView = ((ViewGroup) view).getChildAt(0);
             if (selectableChildView != null && selectableChildView instanceof LinearLayout) {
-                mSelectedCategoryViewId = viewId;
+                mSelectedCategoryViewId = view.getId();
                 selectableChildView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color
                         .translucent_grey_lighten_20));
             }
@@ -140,6 +145,10 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     @Override
     public void onResume() {
         super.onResume();
+        if (mIsFragmentContentRemoalRequired) {
+            removeContentFragment();
+        }
+
         updateSelectorState();
 
         final Blog blog = WordPress.getBlog(mBlogLocalId);
@@ -217,18 +226,21 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
             }
         });
 
+//        if (mSelectedCategoryViewId != 0) {
+//            selectView(rootView.findViewById(mSelectedCategoryViewId));
+//        }
+
+        if (isSameBlog()) {
+            removeContentFragment();
+            clearSelectedView();
+        }
+        mCachedBlogLocalId = mBlogLocalId;
+
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState != null) {
-            mSelectedCategoryViewId = savedInstanceState.getInt(SELECTED_CATEGORY_ID);
-            if (mSelectedCategoryViewId != 0) {
-                selectView(mSelectedCategoryViewId);
-            }
-        }
+    private boolean isSameBlog() {
+        return mCachedBlogLocalId != mBlogLocalId;
     }
 
     private View.OnClickListener mMySiteMenuClickListener = new View.OnClickListener() {
@@ -269,7 +281,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
             }
             if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(MySiteFragment
                     .this)) {
-                selectView(v.getId());
+                selectView(v);
             }
         }
     };
@@ -280,11 +292,10 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         }
     }
 
-    private void resetContentState() {
+    private void removeContentFragment() {
         DualPaneDashboard dashboard = DualPaneHelper.getDashboard(MySiteFragment.this);
         if (dashboard != null) {
             dashboard.removeContentFragment();
-            clearSelectedView();
         }
     }
 
@@ -296,7 +307,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
-                    resetContentState();
+                    mIsFragmentContentRemoalRequired = true;
                     setBlog(WordPress.getCurrentBlog());
                 }
                 break;
@@ -314,7 +325,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                 break;
 
             case RequestCodes.CREATE_BLOG:
-                resetContentState();
+                mIsFragmentContentRemoalRequired = true;
                 // user created a new blog so, use and show that new one
                 setBlog(WordPress.getCurrentBlog());
                 break;
@@ -436,5 +447,10 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_CATEGORY_ID, mSelectedCategoryViewId);
+        outState.putInt(CACHED_BLOG_LOCAL_ID, mBlogLocalId);
+    }
+
+    public interface MySiteContentFragment {
+        int getSelectorId();
     }
 }
