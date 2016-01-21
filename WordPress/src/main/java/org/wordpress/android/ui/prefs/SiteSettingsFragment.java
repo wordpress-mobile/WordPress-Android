@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -42,8 +41,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -54,9 +52,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -633,17 +628,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showExportContentDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.export_content);
-        builder.setMessage(R.string.export_content_message);
-        builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.show();
+        String url = mBlog.getAdminUrl() + "export.php";
+        WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), url, AccountHelper.getDefaultAccount().getUserName());
     }
 
     private void showDeleteSiteDialog() {
