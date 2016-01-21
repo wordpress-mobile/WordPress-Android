@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.DualPaneDashboardHostFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
@@ -23,6 +24,10 @@ public class MySiteDashboardFragment extends DualPaneDashboardHostFragment {
 
     @Override
     protected Fragment initializeDefaultFragment() {
+        if (WordPress.getCurrentBlog() == null) {
+            return null;
+        }
+
         return MeFragment.newInstance();
     }
 
