@@ -12,30 +12,26 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.StringUtils;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-public class WPButtonPreference extends WPPreference {
+public class WPIconWidgetPreference extends WPPreference {
     private String mButtonText;
     private int mButtonTextColor;
     private boolean mButtonTextAllCaps;
 
-    public WPButtonPreference(Context context, AttributeSet attrs) {
+    public WPIconWidgetPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mButtonTextColor = ContextCompat.getColor(context, R.color.black);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPButtonPreference);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPIconWidgetPreference);
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
             int index = array.getIndex(i);
-            if (index == R.styleable.WPButtonPreference_buttonText) {
+            if (index == R.styleable.WPIconWidgetPreference_buttonText) {
                 mButtonText = array.getString(index);
-            } else if (index == R.styleable.WPButtonPreference_buttonTextColor) {
+            } else if (index == R.styleable.WPIconWidgetPreference_buttonTextColor) {
                 mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.black));
-            } else if (index == R.styleable.WPButtonPreference_buttonTextAllCaps) {
+            } else if (index == R.styleable.WPIconWidgetPreference_buttonTextAllCaps) {
                 mButtonTextAllCaps = array.getBoolean(index, false);
             }
         }
@@ -48,7 +44,7 @@ public class WPButtonPreference extends WPPreference {
         super.onBindView(view);
 
         if (view.findViewById(R.id.button) != null) {
-            final WPButtonPreference wpButtonPreference = this;
+            final WPIconWidgetPreference iconWidgetPreference = this;
 
             Button button = (Button) view.findViewById(R.id.button);
             button.setText(mButtonText);
@@ -57,7 +53,7 @@ public class WPButtonPreference extends WPPreference {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getOnPreferenceClickListener().onPreferenceClick(wpButtonPreference);
+                    getOnPreferenceClickListener().onPreferenceClick(iconWidgetPreference);
                 }
             });
         }
