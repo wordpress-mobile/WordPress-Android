@@ -297,11 +297,12 @@
             app:longClickHint="@string/site_settings_delete_site_hint">
 
             <org.wordpress.android.ui.prefs.WPIconWidgetPreference
-                android:widgetLayout="@layout/domain_removal_preference"
-                android:layout="@layout/delete_site_preference"
+                android:icon="@drawable/ic_business"
                 android:title="@string/domain_removal"
                 android:summary="@string/domain_removal_summary"
-                app:longClickHint="@string/domain_removal_hint" />
+                app:longClickHint="@string/domain_removal_hint"
+                android:widgetLayout="@layout/domain_removal_preference"
+                android:layout="@layout/delete_site_preference" />
 
             <org.wordpress.android.ui.prefs.WPIconWidgetPreference
                 android:id="@+id/pref_export_site"
