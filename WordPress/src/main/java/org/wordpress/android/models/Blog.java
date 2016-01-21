@@ -123,10 +123,10 @@ public class Blog {
     }
 
     public String getHomeURLHost() {
-        URI uri = getUri();
-        if (uri != null) {
-            return uri.getHost();
-        } else {
+        try {
+            URI uri = new URI(getHomeURL());
+            return  uri.getHost();
+        } catch (URISyntaxException e) {
             return StringUtils.unescapeHTML(getHomeURL().replaceFirst(ADDRESS_FORMAT_REGEX, ""));
         }
     }
