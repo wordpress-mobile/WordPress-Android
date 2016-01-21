@@ -24,14 +24,15 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.DualPaneDashboard;
-import org.wordpress.android.util.DualPaneHelper;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.DualPaneHelper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -70,21 +71,23 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
 
-    private Blog mBlog;
+    private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
     }
 
-    public void setBlog(Blog blog) {
-        mBlog = blog;
-        refreshBlogDetails();
+    public void setBlog(@Nullable final Blog blog) {
+        mBlogLocalId = BlogUtils.getBlogLocalId(blog);
+
+        refreshBlogDetails(blog);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBlog = WordPress.getCurrentBlog();
+
+        mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
     }
 
     @Override
@@ -138,6 +141,12 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     public void onResume() {
         super.onResume();
         updateSelectorState();
+
+        final Blog blog = WordPress.getBlog(mBlogLocalId);
+
+        // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
+        refreshBlogDetails(blog);
+
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
@@ -147,7 +156,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
             @Override
             public void run() {
                 if (isAdded()
-                        && mBlog != null
+                        && blog != null
                         && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
                     AniUtils.showFab(mFabView, true);
                 }
@@ -186,7 +195,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getBlog(mBlogLocalId), false);
             }
         });
 
@@ -207,8 +216,6 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                 SitePickerActivity.addSite(getActivity());
             }
         });
-
-        refreshBlogDetails();
 
         return rootView;
     }
@@ -236,9 +243,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                     ActivityLauncher.viewCurrentSite(getActivity());
                     break;
                 case R.id.row_stats:
-                    if (mBlog != null) {
-                        ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
-                    }
+                    ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
                     break;
                 case R.id.row_blog_posts:
                     ActivityLauncher.viewCurrentBlogPosts(getActivity(), DualPaneHelper.getDashboard(MySiteFragment.this));
@@ -256,13 +261,14 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                     ActivityLauncher.viewCurrentBlogThemes(getActivity());
                     break;
                 case R.id.row_settings:
-                    ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
+                    ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getBlog(mBlogLocalId));
                     break;
                 case R.id.row_admin:
-                    ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
+                    ActivityLauncher.viewBlogAdmin(getActivity(), WordPress.getBlog(mBlogLocalId));
                     break;
             }
-            if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(MySiteFragment.this)) {
+            if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(MySiteFragment
+                    .this)) {
                 selectView(v.getId());
             }
         }
@@ -270,19 +276,17 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
 
     private void showSitePicker() {
         if (isAdded()) {
-            int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
-            ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
+            ActivityLauncher.showSitePickerForResult(getActivity(), mBlogLocalId);
         }
     }
 
-    private void resetContentState(){
+    private void resetContentState() {
         DualPaneDashboard dashboard = DualPaneHelper.getDashboard(MySiteFragment.this);
         if (dashboard != null) {
             dashboard.removeContentFragment();
             clearSelectedView();
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -310,10 +314,9 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                 break;
 
             case RequestCodes.CREATE_BLOG:
-                // if the user created a new blog refresh the blog details
                 resetContentState();
-                mBlog = WordPress.getCurrentBlog();
-                refreshBlogDetails();
+                // user created a new blog so, use and show that new one
+                setBlog(WordPress.getCurrentBlog());
                 break;
         }
     }
@@ -342,12 +345,12 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         }
     }
 
-    private void refreshBlogDetails() {
+    private void refreshBlogDetails(@Nullable final Blog blog) {
         if (!isAdded()) {
             return;
         }
 
-        if (mBlog == null) {
+        if (blog == null) {
             mScrollView.setVisibility(View.GONE);
             mFabView.setVisibility(View.GONE);
             mNoSiteView.setVisibility(View.VISIBLE);
@@ -372,20 +375,20 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        int settingsVisibility = mBlog.isAdmin() || !mBlog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        int settingsVisibility = blog.isAdmin() || !blog.isDotcomFlag() ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
         mSettingsView.setVisibility(settingsVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz),
-                WPNetworkImageView.ImageType.BLAVATAR);
+        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(blog.getUrl(), mBlavatarSz), WPNetworkImageView
+                .ImageType.BLAVATAR);
 
-        String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
+        String blogName = StringUtils.unescapeHTML(blog.getBlogName());
         String homeURL;
-        if (!TextUtils.isEmpty(mBlog.getHomeURL())) {
-            homeURL = UrlUtils.removeScheme(mBlog.getHomeURL());
+        if (!TextUtils.isEmpty(blog.getHomeURL())) {
+            homeURL = UrlUtils.removeScheme(blog.getHomeURL());
             homeURL = StringUtils.removeTrailingSlash(homeURL);
         } else {
-            homeURL = UrlUtils.getHost(mBlog.getUrl());
+            homeURL = UrlUtils.getHost(blog.getUrl());
         }
         String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
 
@@ -422,12 +425,11 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.BlogListChanged event) {
-        if (!isAdded() || (mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId())) == null) return;
-
-        // Update view if blog has a new name
-        if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
-            mBlogTitleTextView.setText(mBlog.getBlogName());
+        if (!isAdded()) {
+            return;
         }
+
+        refreshBlogDetails(WordPress.getBlog(mBlogLocalId));
     }
 
     @Override
