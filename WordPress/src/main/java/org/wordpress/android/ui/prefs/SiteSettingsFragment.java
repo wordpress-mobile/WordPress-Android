@@ -1144,16 +1144,18 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void deleteSite() {
         final Blog currentBlog = WordPress.getCurrentBlog();
-        WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        removeBlog();
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        handleDeleteSiteError();
-                    }
-                });
+        if (currentBlog.isDotcomFlag()) {
+            WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            removeBlog();
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            handleDeleteSiteError();
+                        }
+                    });
+        }
     }
 }
