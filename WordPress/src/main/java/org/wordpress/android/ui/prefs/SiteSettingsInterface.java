@@ -282,11 +282,6 @@ public abstract class SiteSettingsInterface {
         return mSettings.postFormats;
     }
 
-    public @NonNull String[] getFormatKeys() {
-        if (mSettings.postFormatKeys == null) mSettings.postFormatKeys = new String[0];
-        return mSettings.postFormatKeys;
-    }
-
     public @NonNull CategoryModel[] getCategories() {
         if (mSettings.categories == null) mSettings.categories = new CategoryModel[0];
         return mSettings.categories;
@@ -768,8 +763,6 @@ public abstract class SiteSettingsInterface {
                     }
                     mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
                     String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
-                    mRemoteSettings.postFormatKeys = mRemoteSettings.postFormats.keySet().toArray(formatKeys);
-                    mSettings.postFormatKeys = mRemoteSettings.postFormatKeys.clone();
                     SiteSettingsTable.saveSettings(mSettings);
 
                     notifyUpdatedOnUiThread(null);

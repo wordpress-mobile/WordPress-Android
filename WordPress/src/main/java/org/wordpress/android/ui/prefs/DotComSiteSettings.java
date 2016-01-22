@@ -136,14 +136,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mRemoteSettings.localTableId = mBlog.getRemoteBlogId();
                         deserializeDotComRestResponse(mBlog, response);
                         if (!mRemoteSettings.equals(mSettings)) {
-                            // postFormats and postFormatKeys are not returned by this api call so copy it over
+                            // postFormats setting is not returned by this api call so copy it over
                             final Map<String, String> currentPostFormats = mSettings.postFormats;
-                            final String[] currentPostFormatKeys = mSettings.postFormatKeys;
 
                             mSettings.copyFrom(mRemoteSettings);
 
                             mSettings.postFormats = currentPostFormats;
-                            mSettings.postFormatKeys = currentPostFormatKeys;
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
