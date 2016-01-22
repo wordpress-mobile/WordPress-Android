@@ -770,6 +770,7 @@ public abstract class SiteSettingsInterface {
                     String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
                     mRemoteSettings.postFormatKeys = mRemoteSettings.postFormats.keySet().toArray(formatKeys);
                     mSettings.postFormatKeys = mRemoteSettings.postFormatKeys.clone();
+                    SiteSettingsTable.saveSettings(mSettings);
 
                     notifyUpdatedOnUiThread(null);
                 }
