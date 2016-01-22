@@ -157,17 +157,10 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     // helper method to create onClickListener to avoid code duplication
-<<<<<<< HEAD
-    private View.OnClickListener createOnClickListener(final String dialogTitle, final String hint, final WPTextView textView) {
-        mDialogTitle = dialogTitle;
-        mHint = hint;
-        mTextView = textView;
-=======
     private View.OnClickListener createOnClickListener(final String dialogTitle,
                                                        final String hint,
                                                        final WPTextView textView,
                                                        final boolean isMultiline) {
->>>>>>> 05d2f3bfb85d6df31840e9e2f9f92b002a1fd58f
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
