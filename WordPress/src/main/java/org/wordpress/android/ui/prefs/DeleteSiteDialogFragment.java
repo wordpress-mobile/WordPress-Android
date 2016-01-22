@@ -43,7 +43,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (isUrlConfimationTextValid()) {
+        if (isUrlConfirmationTextValid()) {
             mDeleteButton.setEnabled(true);
         } else {
             mDeleteButton.setEnabled(false);
@@ -101,7 +101,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
         mUrlConfirmation.setHint(siteDomain);
     }
 
-    private boolean isUrlConfimationTextValid() {
+    private boolean isUrlConfirmationTextValid() {
         String confirmationText = mUrlConfirmation.getText().toString().trim().toLowerCase();
         String hintText = mUrlConfirmation.getHint().toString().toLowerCase();
 
