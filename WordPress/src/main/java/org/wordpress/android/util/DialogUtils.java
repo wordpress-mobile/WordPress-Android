@@ -12,7 +12,12 @@ import org.wordpress.android.widgets.OpenSansEditText;
 import org.wordpress.android.widgets.WPTextView;
 
 public class DialogUtils {
-    public static void showMyProfileDialog(Context context, String title, String initialText, String hint, final Callback callback) {
+    public static void showMyProfileDialog(Context context,
+                                           String title,
+                                           String initialText,
+                                           String hint,
+                                           boolean isMultiline,
+                                           final Callback callback) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View promptView = layoutInflater.inflate(R.layout.my_profile_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -25,11 +30,13 @@ public class DialogUtils {
         textView.setText(title);
         if (!TextUtils.isEmpty(hint)) {
             hintView.setText(hint);
-        }
-        else {
+        } else {
             hintView.setVisibility(View.GONE);
         }
 
+        if (!isMultiline) {
+            editText.setMaxLines(1);
+        }
         if (!TextUtils.isEmpty(initialText)) {
             editText.setText(initialText);
             editText.setSelection(0, initialText.length());
