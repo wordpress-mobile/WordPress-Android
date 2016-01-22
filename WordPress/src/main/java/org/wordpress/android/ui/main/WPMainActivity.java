@@ -494,8 +494,8 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         } else {
             MySiteFragment mySiteFragment = getMySiteFragment();
             if (mySiteFragment != null) {
-                List<Map<String, Object>> allBlogs = WordPress.wpDB.getAllBlogs();
-                if (allBlogs.isEmpty()) {
+                int allBlogsCount = WordPress.wpDB.getAllBlogsCount();
+                if (allBlogsCount == 0) {
                     mySiteFragment.setBlog(null);
                 } else {
                     showSitePickerWithCurrentBlog();
@@ -506,10 +506,14 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
     private void showSitePickerWithCurrentBlog() {
         Blog currentBlog = WordPress.getCurrentBlog();
-        int currentBlogId = 0;
+
+        int currentBlogId;
         if (currentBlog != null) {
             currentBlogId = currentBlog.getLocalTableBlogId();
+        } else {
+            currentBlogId = WordPress.wpDB.getAllBlogsIDs().get(0);
         }
+
         ActivityLauncher.showSitePickerForResult(this, currentBlogId);
     }
 
