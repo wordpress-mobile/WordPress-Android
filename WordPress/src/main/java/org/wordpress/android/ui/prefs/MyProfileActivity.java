@@ -31,11 +31,13 @@ public class MyProfileActivity extends AppCompatActivity {
     private  String mDialogTitle;
     private  String mHint;
     private  WPTextView mTextView;
+    private boolean mIsMultiline;
 
     private final String TITLE_TAG = "TITLE";
     private final String HINT_TAG = "HINT";
     private final String TEXT_VIEW_TAG = "TEXT-VIEW";
     private final String DIALOG_TEXT_TAG = "DIALOG-TEXT";
+    private final String IS_MULTILINE_TAG = "IS-MULTILINE";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,9 +90,10 @@ public class MyProfileActivity extends AppCompatActivity {
             String title = savedInstanceState.getString(TITLE_TAG);
             String hint = savedInstanceState.getString(HINT_TAG);
             String dialogText = savedInstanceState.getString(DIALOG_TEXT_TAG);
+            boolean isMultiline = savedInstanceState.getBoolean(IS_MULTILINE_TAG);
 
             DialogUtils.showMyProfileDialog(MyProfileActivity.this, title,
-                    dialogText, hint, new DialogUtils.Callback() {
+                    dialogText, hint, isMultiline, new DialogUtils.Callback() {
                         @Override
                         public void onSuccessfulInput(String input) {
                             updateLabel(textView, input);
@@ -161,6 +164,10 @@ public class MyProfileActivity extends AppCompatActivity {
                                                        final String hint,
                                                        final WPTextView textView,
                                                        final boolean isMultiline) {
+        mDialogTitle = dialogTitle;
+        mHint = hint;
+        mTextView = textView;
+        mIsMultiline = isMultiline;
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,6 +215,7 @@ public class MyProfileActivity extends AppCompatActivity {
         outState.putString(TITLE_TAG, mDialogTitle);
         outState.putString(HINT_TAG, mHint);
         outState.putInt(TEXT_VIEW_TAG, mTextView.getId());
+        outState.putBoolean(IS_MULTILINE_TAG, mIsMultiline);
         outState.putString(DIALOG_TEXT_TAG, DialogUtils.getMyProfileDialogText(MyProfileActivity.this));
     }
 }
