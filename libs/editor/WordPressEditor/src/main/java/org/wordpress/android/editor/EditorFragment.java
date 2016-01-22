@@ -237,6 +237,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (mDomHasLoaded) {
+            mWebView.notifyVisibilityChanged(isVisibleToUser);
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putCharSequence(KEY_TITLE, getTitle());
         outState.putCharSequence(KEY_CONTENT, getContent());
@@ -1031,6 +1039,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG)
                         .addToBackStack(null)
                         .commit();
+
+                mWebView.notifyVisibilityChanged(false);
                 break;
         }
     }
