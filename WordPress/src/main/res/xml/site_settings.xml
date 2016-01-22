@@ -286,7 +286,7 @@
 
         <PreferenceScreen
             android:id="@+id/pref_start_screen"
-            android:key="wp_pref_key_site_start_over_screen"
+            android:key="@string/pref_key_site_start_over_screen"
             android:title="@string/start_over"
             app:longClickHint="@string/site_settings_start_over_hint">
 
