@@ -293,7 +293,7 @@
             <org.wordpress.android.ui.prefs.WPIconWidgetPreference
                 android:id="@+id/pref_start_over"
                 android:key="@string/pref_key_site_start_over"
-                android:icon="@drawable/ic_business"
+                android:icon="@drawable/gridicons_history"
                 android:title="@string/let_us_help"
                 android:summary="@string/start_over_text"
                 android:widgetLayout="@layout/delete_site_preference_button"
