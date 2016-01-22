@@ -328,6 +328,14 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             String title = getString(R.string.site_settings_delete_site_title);
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
+            Dialog dialog = ((PreferenceScreen) preference).getDialog();
+            if (dialog == null) return false;
+
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+
+            String title = getString(R.string.start_over);
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
 
         return false;
@@ -352,7 +360,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     R.string.site_settings_blacklist_description);
             return true;
         } else if (preference == mStartOverPref) {
-            showStartOverDialog();
+            HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_START_OVER);
             return true;
         } else if (preference == mCloseAfterPref) {
             showCloseAfterDialog();
@@ -864,22 +872,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mWhitelistPref,
                 String.valueOf(val),
                 getWhitelistSummary(val));
-    }
-
-    private void showStartOverDialog() {
-        Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
-        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
-        View view = View.inflate(themer, R.layout.start_over_view, null);
-        Button contactSupportButton = (Button) view.findViewById(R.id.contact_support_button);
-        contactSupportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_START_OVER);
-            }
-        });
-        dialog.setContentView(view);
-        dialog.show();
-        WPActivityUtils.addToolbarToDialog(this, dialog, getString(R.string.start_over));
     }
 
     private void showListEditorDialog(int titleRes, int footerRes) {
