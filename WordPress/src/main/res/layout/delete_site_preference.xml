@@ -4,8 +4,9 @@
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
-    android:paddingEnd="?android:attr/scrollbarSize"
-    android:background="?android:attr/selectableItemBackground">
+    android:paddingRight="?android:attr/scrollbarSize"
+    android:background="?android:attr/selectableItemBackground"
+    android:baselineAligned="false">
 
     <RelativeLayout
         android:layout_width="@dimen/margin_none"
