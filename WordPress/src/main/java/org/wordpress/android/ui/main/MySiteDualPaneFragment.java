@@ -4,17 +4,17 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.DualPaneDashboardHostFragment;
+import org.wordpress.android.ui.DualPaneHostFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
 /**
  * Dashboard fragment that shows dual pane layout for tablets and single pane for smartphones.
  */
 
-public class MySiteDashboardFragment extends DualPaneDashboardHostFragment {
+public class MySiteDualPaneFragment extends DualPaneHostFragment {
 
-    public static MySiteDashboardFragment newInstance() {
-        return new MySiteDashboardFragment();
+    public static MySiteDualPaneFragment newInstance() {
+        return new MySiteDualPaneFragment();
     }
 
     @Override

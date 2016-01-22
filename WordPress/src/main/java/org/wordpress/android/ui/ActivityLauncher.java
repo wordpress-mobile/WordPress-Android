@@ -40,6 +40,7 @@ import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DualPaneHelper;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
@@ -75,16 +76,16 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewCurrentBlogPosts(Context context, @Nullable DualPaneDashboard dashboard) {
+    public static void viewCurrentBlogPosts(Context context, @Nullable DualPaneHost dashboard) {
         Intent intent = new Intent(context, PostsListActivity.class);
 
         if (dashboard != null) {
             intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, true);
 
-            if (dashboard.isInDualPaneMode()) {
+            if (DualPaneHelper.isInDualPaneMode(context)) {
                 Fragment contentPaneFragment = dashboard.getContentPaneFragment();
                 if (contentPaneFragment == null || contentPaneFragment.getClass() != PostsListFragment.class) {
-                    dashboard.showContentInDashboard(PostsListFragment.class, intent);
+                    dashboard.showContent(PostsListFragment.class, intent);
                     AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
                 }
                 return;
@@ -95,6 +96,9 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
     }
+
+
+
 
     public static void viewCurrentBlogMedia(Context context) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);

@@ -410,8 +410,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
      */
     private MySiteFragment getMySiteFragment() {
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
-        if (fragment instanceof MySiteDashboardFragment) {
-            return ((MySiteDashboardFragment) fragment).getMySiteFragment();
+        if (fragment instanceof MySiteDualPaneFragment) {
+            return ((MySiteDualPaneFragment) fragment).getMySiteFragment();
         }
         return null;
     }

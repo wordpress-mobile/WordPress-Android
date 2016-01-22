@@ -12,15 +12,16 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.DualPaneContentState;
+import org.wordpress.android.util.DualPaneHelper;
 
 import de.greenrobot.event.EventBus;
 
 /**
  * Abstract fragment that implements core Dual Pane layout functionality
  */
-public abstract class DualPaneDashboardHostFragment extends Fragment implements DualPaneDashboard {
+public abstract class DualPaneHostFragment extends Fragment implements DualPaneHost {
 
-    private final static String TAG = DualPaneDashboardHostFragment.class.getSimpleName();
+    private final static String TAG = DualPaneHostFragment.class.getSimpleName();
 
     private final static int SIDEBAR_FRAGMENT_CONTAINER_ID = R.id.sidebar_fragment_container;
     private final static int CONTENT_FRAGMENT_CONTAINER_ID = R.id.content_fragment_container;
@@ -28,6 +29,8 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     private final static String SIDEBAR_FRAGMENT_TAG = "sidebar_fragment";
     private final static String DEFAULT_FRAGMENT_TAG = "default_fragment";
 
+    private final static String START_ACTIVITY_FOR_RESULT_KEY = "start_activity_for_result";
+    private final static String START_ACTIVITY_FOR_RESULT_REQUEST_CODE_KEY = "start_activity_for_result_request_code";
     private final static String CONTENT_FRAGMENT_TAG_PARAMETER_KEY = "content_fragment_tag";
     private final static String CONTENT_FRAGMENT_STATE_PARAMETER_KEY = "single_pane_content_fragment_is_hidden";
 
@@ -36,10 +39,23 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
 
     private DualPaneContentState mContentState;
 
+    /**
+     * <p>Gives you a chance to initialize a Sidebar fragment.</p>
+     * This method will only be called if sidebar fragment does not exist in fragment manager
+     */
     protected abstract Fragment initializeSidebarFragment();
 
+    /**
+     * <p>Gives you a chance to initialize default content fragment.</p>
+     * Default content fragment would be displayed in dual pane mode, when thre is no content fragment selected
+     * This method will only be called if default content fragment does not exist in fragment manager
+     */
     protected abstract Fragment initializeDefaultFragment();
 
+    /**
+     * This method let's you implement custom logic that will decide, should content fragment be displayed in activity
+     * after switching from dual to single pane mode or not.
+     */
     protected abstract boolean shouldOpenActivityAfterSwitchToSinglePane();
 
     @Override
@@ -49,7 +65,7 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
             mContentFragmentTag = savedInstanceState.getString(CONTENT_FRAGMENT_TAG_PARAMETER_KEY);
             mIsSinglePaneContentFragmentHidden = savedInstanceState.getBoolean(CONTENT_FRAGMENT_STATE_PARAMETER_KEY);
             mContentState = savedInstanceState.getParcelable(DualPaneContentState.KEY);
-            Log.v(TAG, "Dashboard state was restored");
+            Log.v(TAG, "Dual pane state was restored");
         }
     }
 
@@ -91,8 +107,8 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     }
 
     private void showContent() {
-        if (isInDualPaneMode()) {
-            Log.v(TAG, "Dashboard is in dual pane mode.");
+        if (DualPaneHelper.isInDualPaneMode(getActivity())) {
+            Log.v(TAG, "Host fragment is in dual pane mode.");
             if (stickyDualPaneActivityStateAvailable()) {
                 removeDefaultContentFragment();
                 showContentFragment();
@@ -104,7 +120,7 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
             mIsSinglePaneContentFragmentHidden = false;
         } else {
             if (mContentState == null) return;
-            Log.v(TAG, "Dashboard is in single pane mode.");
+            Log.v(TAG, "Host fragment is in single pane mode.");
             //Do nothing if no Intent was provided.
             if (!mContentState.isActivityIntentAvailable()) {
                 Log.v(TAG, "No intent to start single pane activity.");
@@ -140,7 +156,7 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     }
 
     private void showDefaultContentFragment() {
-        if (!isInDualPaneMode()) return;
+        if (!DualPaneHelper.isInDualPaneMode(getActivity())) return;
 
         Fragment defaultFragment = getChildFragmentManager().findFragmentByTag(DEFAULT_FRAGMENT_TAG);
 
@@ -167,7 +183,7 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // we are using generic dual pane fragment layout, later if the need will arise we could pass custom layout along
         // with sidebar/container ID's
-        return inflater.inflate(R.layout.dual_pane_dashboard_fragment, container, false);
+        return inflater.inflate(R.layout.dual_pane_host_fragment, container, false);
     }
 
     private void showContentFragment() {
@@ -190,15 +206,65 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     private void openContentActivity() {
         Intent intent = mContentState.getOriginalIntent();
         intent.putExtra(DualPaneContentActivity.FRAGMENT_STATE_KEY, mContentState.getFragmentState());
-        startActivity(intent);
+
+        if (intent.getBooleanExtra(START_ACTIVITY_FOR_RESULT_KEY, false)) {
+            startActivity(intent);
+        } else {
+            startActivityForResult(intent, intent.getIntExtra(START_ACTIVITY_FOR_RESULT_REQUEST_CODE_KEY, -1));
+        }
     }
 
+    /**
+     * Adds fragment to content pane of DualPaneHostFragment
+     * Content activity in single pane mode would be launched using {@code startActivityForResult()}
+     * {@code onActivityResult} will be propagated to fragments inside dual pane host
+     *
+     * @param contentFragmentClass {@code Class} of a fragment you want to show
+     * @param activityIntent       Intent that contains bundle with parameters you would like to pass to fragment
+     *                             and that would also be used to start content activity for result in single pane
+     * @param requestCode          Request code that will be used with startActivityForResult
+     */
     @Override
-    public void showContentInDashboard(Class contentFragmentClass, Intent intent) {
-        if (!isInDualPaneMode()) return;
+    public void showContentForResult(Class contentFragmentClass, Intent activityIntent, int requestCode) {
+        if (activityIntent == null) {
+            throw new IllegalArgumentException("activityIntent cannot be null if you want to use showContentForResult()");
+        }
+
+        //For easy handling we store startActivityForResult parameters within intent
+        activityIntent.putExtra(START_ACTIVITY_FOR_RESULT_KEY, true);
+        activityIntent.putExtra(START_ACTIVITY_FOR_RESULT_REQUEST_CODE_KEY, requestCode);
+
+        showContent(contentFragmentClass, null, activityIntent);
+    }
+
+    /**
+     * Adds fragment to content pane of DualPaneHostFragment
+     *
+     * @param contentFragmentClass {@code Class} of a fragment you want to show
+     * @param fragmentArgs         Arguments that you would like to pass to fragment
+     */
+    @Override
+    public void showContent(Class contentFragmentClass, Bundle fragmentArgs) {
+        showContent(contentFragmentClass, fragmentArgs, null);
+    }
+
+    /**
+     * Adds fragment to content pane of DualPaneHostFragment
+     *
+     * @param contentFragmentClass {@code Class} of a fragment you want to show
+     * @param intent               {@code Intent} that contains bundle with parameters you would like to pass to fragment
+     *                             and that would also be used to start content activity in single pane
+     */
+    @Override
+    public void showContent(Class contentFragmentClass, Intent intent) {
+        showContent(contentFragmentClass, null, intent);
+    }
+
+    private void showContent(Class contentFragmentClass, Bundle args, Intent intent) {
+        if (!DualPaneHelper.isInDualPaneMode(getActivity())) return;
 
         if (contentFragmentClass == null || !Fragment.class.isAssignableFrom(contentFragmentClass)) {
-            throw new IllegalArgumentException("You need to pass a Fragment class as a parameter.");
+            throw new IllegalArgumentException("You need to pass a Fragment class to showContent() method!");
         }
 
         Log.v(TAG, "Showing content in single pane.");
@@ -206,13 +272,18 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
         mContentState = new DualPaneContentState(intent, contentFragmentClass, null);
         mContentFragmentTag = contentFragmentClass.getSimpleName();
 
-        Bundle parameters = intent.getExtras();
+        Bundle fragmentArgs;
+        if (intent == null) {
+            fragmentArgs = args;
+        } else {
+            fragmentArgs = intent.getExtras();
+        }
 
         Fragment fragment = getChildFragmentManager().findFragmentByTag(mContentFragmentTag);
 
         if (fragment == null) {
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-            fragment = Fragment.instantiate(getActivity(), contentFragmentClass.getName(), parameters);
+            fragment = Fragment.instantiate(getActivity(), contentFragmentClass.getName(), fragmentArgs);
             fragmentTransaction.replace(CONTENT_FRAGMENT_CONTAINER_ID, fragment, mContentFragmentTag);
             // Remember that commit() is an async method! Fragment might not be immediately available after this call.
             fragmentTransaction.commit();
@@ -221,6 +292,9 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
         mIsSinglePaneContentFragmentHidden = false;
     }
 
+    /**
+     * Used to notify DualPaneHostFragment that contentActivity started.
+     */
     @Override
     public void onContentActivityStarted() {
         Log.v(TAG, "Single pane content activity started.");
@@ -232,7 +306,7 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //pass onActivityResult to fragments inside the dashboard.
+        //pass onActivityResult to fragments inside the host fragment.
         Fragment sidebarFragment = getChildFragmentManager().findFragmentByTag(SIDEBAR_FRAGMENT_TAG);
         sidebarFragment.onActivityResult(requestCode, resultCode, data);
 
@@ -242,10 +316,10 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
         }
     }
 
-    public boolean isInDualPaneMode() {
-        return getResources().getBoolean(R.bool.dual_pane);
-    }
-
+    /**
+     * Removes content fragment from content pane.
+     * If default fragment is set it will be displayed instead.
+     */
     @Override
     public void removeContentFragment() {
         Fragment contentFragment = getAttachedContentFragment();
@@ -272,7 +346,7 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.v(TAG, "Saving dashboard content state.");
+        Log.v(TAG, "Saving host fragment's content state.");
         super.onSaveInstanceState(outState);
         outState.putString(CONTENT_FRAGMENT_TAG_PARAMETER_KEY, mContentFragmentTag);
         outState.putBoolean(CONTENT_FRAGMENT_STATE_PARAMETER_KEY, mIsSinglePaneContentFragmentHidden);
@@ -299,6 +373,7 @@ public abstract class DualPaneDashboardHostFragment extends Fragment implements 
     }
 
     //Content activity is about to be closed and and passing it's fragment state
+    @SuppressWarnings("unused")
     public void onEvent(DualPaneContentState event) {
         mContentState = event;
     }

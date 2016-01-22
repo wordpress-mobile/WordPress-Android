@@ -23,7 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.DualPaneDashboard;
+import org.wordpress.android.ui.DualPaneHost;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -107,7 +107,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         clearSelectedView();
 
         if (DualPaneHelper.isInDualPaneMode(getActivity())) {
-            DualPaneDashboard dashboard = DualPaneHelper.getDashboard(this);
+            DualPaneHost dashboard = DualPaneHelper.getDashboard(this);
 
             if (dashboard == null) return;
 
@@ -177,7 +177,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(this)) {
+        if (DualPaneHelper.isSpecificDualPaneActionRequired(this)) {
             ScrollView.LayoutParams lp = (ScrollView.LayoutParams) rootView.findViewById(R.id.content_container)
                     .getLayoutParams();
             lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
@@ -279,8 +279,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                     ActivityLauncher.viewBlogAdmin(getActivity(), WordPress.getBlog(mBlogLocalId));
                     break;
             }
-            if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(MySiteFragment
-                    .this)) {
+            if (DualPaneHelper.isSpecificDualPaneActionRequired(MySiteFragment.this)) {
                 selectView(v);
             }
         }
@@ -293,7 +292,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     }
 
     private void removeContentFragment() {
-        DualPaneDashboard dashboard = DualPaneHelper.getDashboard(MySiteFragment.this);
+        DualPaneHost dashboard = DualPaneHelper.getDashboard(MySiteFragment.this);
         if (dashboard != null) {
             dashboard.removeContentFragment();
         }

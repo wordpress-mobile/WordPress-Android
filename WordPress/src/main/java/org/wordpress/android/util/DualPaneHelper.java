@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.DualPaneDashboard;
+import org.wordpress.android.ui.DualPaneHost;
 
 public class DualPaneHelper {
 
@@ -14,14 +14,18 @@ public class DualPaneHelper {
     }
 
     @Nullable
-    public static DualPaneDashboard getDashboard(Fragment fragment) {
+    public static DualPaneHost getDashboard(Fragment fragment) {
         if (!isPartOfDualPaneDashboard(fragment)) {
             return null;
         }
-        return (DualPaneDashboard) fragment.getParentFragment();
+        return (DualPaneHost) fragment.getParentFragment();
     }
 
     public static boolean isPartOfDualPaneDashboard(Fragment fragment) {
-        return fragment.getParentFragment() != null && fragment.getParentFragment() instanceof DualPaneDashboard;
+        return fragment.getParentFragment() != null && fragment.getParentFragment() instanceof DualPaneHost;
+    }
+
+    public static boolean isSpecificDualPaneActionRequired(Fragment fragment) {
+        return fragment.isAdded() && isInDualPaneMode(fragment.getActivity()) && isPartOfDualPaneDashboard(fragment);
     }
 }
