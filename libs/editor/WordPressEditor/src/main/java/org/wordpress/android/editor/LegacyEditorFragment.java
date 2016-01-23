@@ -1131,6 +1131,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
+    public void setUrlForVideoPressId(String videoPressId, String url, String posterUrl) {
+
+    }
+
+    @Override
     public boolean hasFailedMediaUploads() {
         return false;
     }

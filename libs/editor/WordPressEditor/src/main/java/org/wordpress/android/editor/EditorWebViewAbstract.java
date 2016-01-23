@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
 import android.webkit.URLUtil;
@@ -146,6 +147,27 @@ public abstract class EditorWebViewAbstract extends WebView {
     @Override
     public boolean onCheckIsTextEditor() {
         return true;
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        notifyVisibilityChanged(visibility == View.VISIBLE);
+        super.setVisibility(visibility);
+    }
+
+    /**
+     * Handles events that should be triggered when the WebView is hidden or is shown to the user
+     * @param visible the new visibility status of the WebView
+     */
+    public void notifyVisibilityChanged(boolean visible) {
+        if (!visible) {
+            this.post(new Runnable() {
+                @Override
+                public void run() {
+                    execJavaScriptFromString("ZSSEditor.pauseAllVideos();");
+                }
+            });
+        }
     }
 
     public void setOnImeBackListener(OnImeBackListener listener) {

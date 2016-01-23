@@ -155,6 +155,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // -1=no response yet, 0=unavailable, 1=available
     private int mBlogMediaStatus = -1;
     private boolean mMediaUploadServiceStarted;
+    private List<String> mPendingVideoPressInfoRequests;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -1814,6 +1815,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 @Override
                 public void onSuccess(int count) {
                     mBlogMediaStatus = 1;
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
+                                // If there are pending requests for video URLs from VideoPress ids, query the DB for
+                                // them again and notify the editor
+                                String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
+                                for (String videoId : mPendingVideoPressInfoRequests) {
+                                    String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
+                                    String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+
+                                    mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
+                                }
+
+                                mPendingVideoPressInfoRequests.clear();
+                            }
+                        }
+                    });
                 }
 
                 @Override
@@ -1949,6 +1969,31 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onFeaturedImageChanged(int mediaId) {
         mPost.setFeaturedImageId(mediaId);
         mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+    }
+
+    @Override
+    public void onVideoPressInfoRequested(final String videoId) {
+        String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
+        String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
+
+        if (videoUrl.isEmpty()) {
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mPendingVideoPressInfoRequests == null) {
+                            mPendingVideoPressInfoRequests = new ArrayList<>();
+                        }
+                        mPendingVideoPressInfoRequests.add(videoId);
+                        refreshBlogMedia();
+                    }
+                });
+            }
+        }
+
+        String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+
+        mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
     }
 
     @Override

@@ -21,6 +21,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
+    public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
     public abstract boolean hasFailedMediaUploads();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
@@ -126,6 +127,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
         void onFeaturedImageChanged(int mediaId);
+        void onVideoPressInfoRequested(String videoId);
         String onAuthHeaderRequested(String url);
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);

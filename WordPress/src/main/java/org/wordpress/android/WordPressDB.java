@@ -1580,6 +1580,20 @@ public class WordPressDB {
         return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
 
+
+    /**
+     * Given a VideoPress id, returns the corresponding remote video URL stored in the DB
+     */
+    public String getMediaUrlByVideoPressId(String blogId, String videoId) {
+        if (TextUtils.isEmpty(blogId) || TextUtils.isEmpty(videoId)) {
+            return "";
+        }
+
+        String shortcode = "[wpvideo " + videoId + "]";
+        String query = "SELECT " + COLUMN_NAME_FILE_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND videoPressShortcode=?";
+        return SqlUtils.stringForQuery(db, query, new String[]{blogId, shortcode});
+    }
+
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
         String query = "SELECT " + COLUMN_NAME_THUMBNAIL_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?";
         return SqlUtils.stringForQuery(db, query, new String[]{Integer.toString(blogId), Long.toString(mediaId)});
