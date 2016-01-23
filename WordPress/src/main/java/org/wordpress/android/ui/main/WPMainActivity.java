@@ -492,29 +492,21 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         if (!AccountHelper.isSignedIn()) {
             ActivityLauncher.showSignInForResult(this);
         } else {
-            MySiteFragment mySiteFragment = getMySiteFragment();
-            if (mySiteFragment != null) {
-                int allBlogsCount = WordPress.wpDB.getNumBlogs();
-                if (allBlogsCount == 0) {
-                    mySiteFragment.setBlog(null);
-                } else {
-                    showSitePickerWithCurrentBlog();
-                }
-            }
+            showSitePickerWithNowCurrentBlog();
         }
     }
 
-    private void showSitePickerWithCurrentBlog() {
-        Blog currentBlog = WordPress.getCurrentBlog();
+    private void showSitePickerWithNowCurrentBlog() {
+        MySiteFragment mySiteFragment = getMySiteFragment();
+        if (mySiteFragment != null) {
+            Blog blog = WordPress.getCurrentBlog();
+            int blogId = 0;
+            if (blog != null) {
+                blogId = blog.getLocalTableBlogId();
+            }
 
-        int currentBlogId;
-        if (currentBlog != null) {
-            currentBlogId = currentBlog.getLocalTableBlogId();
-        } else {
-            currentBlogId = WordPress.wpDB.getAllBlogsIDs().get(0);
+            ActivityLauncher.showSitePickerForResult(this, blogId);
         }
-
-        ActivityLauncher.showSitePickerForResult(this, currentBlogId);
     }
 
     /*
