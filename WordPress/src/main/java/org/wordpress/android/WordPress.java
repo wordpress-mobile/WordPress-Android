@@ -639,24 +639,15 @@ public class WordPress extends Application {
 
     private static void attemptToRestoreLastActiveBlog() {
         if (setCurrentBlogToLastActive() == null) {
-            // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-            if (accounts.size() > 0) {
-                int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                setCurrentBlog(id);
-                wpDB.updateLastBlogId(id);
-            } else {
-                attemptToRestoreHiddenBlog();
+            int blogId = 0;
+            if (WordPress.wpDB.getNumVisibleBlogs() > 0) {
+                blogId = WordPress.wpDB.getFirstVisibleBlogId();
+            } else if (WordPress.wpDB.getNumHiddenBlogs() > 0) {
+                blogId = WordPress.wpDB.getFirstHiddenBlog();
             }
-        }
-    }
 
-    private static void attemptToRestoreHiddenBlog() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAllBlogs();
-        if (accounts.size() > 0) {
-            Blog firstHiddenBlog = (Blog) accounts.get(0);
-            firstHiddenBlog.setHidden(false);
-            setCurrentBlog(firstHiddenBlog.getLocalTableBlogId());
+            setCurrentBlogAndSetVisible(blogId);
+            wpDB.updateLastBlogId(blogId);
         }
     }
 
