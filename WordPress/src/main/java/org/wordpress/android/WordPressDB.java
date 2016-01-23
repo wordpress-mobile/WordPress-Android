@@ -619,10 +619,6 @@ public class WordPressDB {
         }
     }
 
-    public int getAllBlogsCount() {
-        return  getAllBlogs().size();
-    }
-
     public List<Map<String, Object>> getAllBlogs() {
         return getBlogsBy(null, null);
     }

@@ -494,7 +494,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         } else {
             MySiteFragment mySiteFragment = getMySiteFragment();
             if (mySiteFragment != null) {
-                int allBlogsCount = WordPress.wpDB.getAllBlogsCount();
+                int allBlogsCount = WordPress.wpDB.getNumBlogs();
                 if (allBlogsCount == 0) {
                     mySiteFragment.setBlog(null);
                 } else {
