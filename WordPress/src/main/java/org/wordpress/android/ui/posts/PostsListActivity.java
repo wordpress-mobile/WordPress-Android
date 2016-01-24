@@ -5,7 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -41,10 +44,21 @@ public class PostsListActivity extends DualPaneContentActivity {
 
         mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         if (savedInstanceState == null) {
             FragmentManager fm = getSupportFragmentManager();
 
-            mPostList = PostsListFragment.newInstance();
+            mPostList = (PostsListFragment) Fragment.instantiate(this, PostsListFragment.class.getName(), getIntent()
+                    .getExtras());
             if (getFragmentSavedState() != null) {
                 mPostList.setInitialSavedState(getFragmentSavedState());
             }

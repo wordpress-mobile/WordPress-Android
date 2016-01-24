@@ -8,11 +8,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,25 +68,14 @@ public class PostsListFragment extends Fragment
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
-    public static PostsListFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        PostsListFragment fragment = new PostsListFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (isAdded()) {
-            Bundle extras = getActivity().getIntent().getExtras();
-            if (extras != null) {
-                mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
-            }
+        Bundle extras = getArguments();
+        if (extras != null) {
+            mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
         }
     }
 
@@ -111,24 +97,11 @@ public class PostsListFragment extends Fragment
         int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         int spacingHorizontal;
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
-        if (DualPaneHelper.isInDualPaneMode(getActivity()) && DualPaneHelper.isPartOfDualPaneDashboard(this)) {
-            //hide toolbar in dual pane mode
-            toolbar.setVisibility(View.GONE);
-
+        if (DualPaneHelper.isSpecificDualPaneActionRequired(this)) {
             //Use normal margin (instead of wide, tablet one) while in dual pane mode.
-            //Setting margin through different resource qualifiers in this case
-            //is too complicated and harder to follow.
+            //Setting margin through different resource qualifiers in this case is more complicated and harder to follow.
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
         } else {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         }
 
@@ -543,6 +516,10 @@ public class PostsListFragment extends Fragment
 
     @Override
     public int getSelectorId() {
-        return R.id.row_blog_posts;
+        if (mIsPage) {
+            return R.id.row_pages;
+        } else {
+            return R.id.row_blog_posts;
+        }
     }
 }

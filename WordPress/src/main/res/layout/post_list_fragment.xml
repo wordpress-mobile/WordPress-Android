@@ -6,15 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
-
     <LinearLayout
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
         android:animateLayoutChanges="true"
         android:gravity="center"
         android:orientation="vertical"
@@ -44,8 +39,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_height="match_parent">
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/ptr_layout"
