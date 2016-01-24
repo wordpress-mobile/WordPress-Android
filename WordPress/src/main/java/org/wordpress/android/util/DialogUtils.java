@@ -3,7 +3,9 @@ package org.wordpress.android.util;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -12,8 +14,6 @@ import org.wordpress.android.widgets.OpenSansEditText;
 import org.wordpress.android.widgets.WPTextView;
 
 public class DialogUtils {
-
-    private static OpenSansEditText editText;
 
     public static void showMyProfileDialog(Context context,
                                            String title,
@@ -27,9 +27,8 @@ public class DialogUtils {
         alertDialogBuilder.setView(promptView);
 
         final WPTextView textView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_label);
+        final OpenSansEditText editText = (OpenSansEditText) promptView.findViewById(R.id.my_profile_dialog_input);
         final WPTextView hintView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_hint);
-
-        editText = (OpenSansEditText) promptView.findViewById(R.id.my_profile_dialog_input);
 
         textView.setText(title);
         if (!TextUtils.isEmpty(hint)) {
@@ -56,18 +55,42 @@ public class DialogUtils {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
+                                callback.onUnSuccessfulInput();
                             }
                         });
 
         AlertDialog alert = alertDialogBuilder.create();
+        alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                callback.setDialogState();
+            }
+        });
         alert.show();
-    }
 
-    public static String getMyProfileDialogText(Context context) {
-        return editText.getText().toString();
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                callback.onInputChanged(s.toString());
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // DO NOTHING
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                callback.onInputChanged(s.toString());
+            }
+        });
+
     }
 
     public interface Callback {
         void onSuccessfulInput(String input);
+        void onUnSuccessfulInput();
+        void onInputChanged(String input);
+        void setDialogState();
     }
 }
