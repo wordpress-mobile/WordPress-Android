@@ -76,29 +76,40 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewCurrentBlogPosts(Context context, @Nullable DualPaneHost dashboard) {
+    public static void viewCurrentBlogPosts(Context context, @Nullable DualPaneHost dualPaneHost) {
         Intent intent = new Intent(context, PostsListActivity.class);
-
-        if (dashboard != null) {
-            intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, true);
-
-            if (DualPaneHelper.isInDualPaneMode(context)) {
-                Fragment contentPaneFragment = dashboard.getContentPaneFragment();
-                if (contentPaneFragment == null || contentPaneFragment.getClass() != PostsListFragment.class) {
-                    dashboard.showContent(PostsListFragment.class, intent);
-                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
-                }
-                return;
-            } else {
-                dashboard.onContentActivityStarted();
-            }
+        if (dualPaneHost != null) {
+            showDualPaneContent(context, PostsListFragment.class, intent, dualPaneHost, AnalyticsTracker.Stat.OPENED_POSTS);
+        } else {
+            slideInFromRight(context, intent);
+            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
         }
-        slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
     }
 
+    private static void showDualPaneContent(Context context, Class fragmentClass, Intent intent, DualPaneHost
+            dualPaneHost, AnalyticsTracker.Stat stat) {
+        if (intent != null) {
+            intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, true);
+        }
 
+        if (DualPaneHelper.isInDualPaneMode(context)) {
+            Fragment contentPaneFragment = dualPaneHost.getContentPaneFragment();
 
+            //only add fragment if it's not already added
+            if (contentPaneFragment == null || contentPaneFragment.getClass() != fragmentClass) {
+                dualPaneHost.showContent(fragmentClass, intent);
+                if (stat != null) {
+                    AnalyticsUtils.trackWithCurrentBlogDetails(stat);
+                }
+            }
+        } else {
+            dualPaneHost.onContentActivityStarted();
+            if (stat != null) {
+                AnalyticsUtils.trackWithCurrentBlogDetails(stat);
+            }
+            slideInFromRight(context, intent);
+        }
+    }
 
     public static void viewCurrentBlogMedia(Context context) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
