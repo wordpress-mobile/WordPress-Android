@@ -29,8 +29,6 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     private final static String SIDEBAR_FRAGMENT_TAG = "sidebar_fragment";
     private final static String DEFAULT_FRAGMENT_TAG = "default_fragment";
 
-    private final static String START_ACTIVITY_FOR_RESULT_KEY = "start_activity_for_result";
-    private final static String START_ACTIVITY_FOR_RESULT_REQUEST_CODE_KEY = "start_activity_for_result_request_code";
     private final static String CONTENT_FRAGMENT_TAG_PARAMETER_KEY = "content_fragment_tag";
     private final static String CONTENT_FRAGMENT_STATE_PARAMETER_KEY = "single_pane_content_fragment_is_hidden";
 
@@ -47,14 +45,15 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
 
     /**
      * <p>Gives you a chance to initialize default content fragment.</p>
-     * Default content fragment would be displayed in dual pane mode, when thre is no content fragment selected
-     * This method will only be called if default content fragment does not exist in fragment manager
+     * Default content fragment would be displayed in dual pane mode, when there is no content fragment selected or it was
+     * removed.<br>
+     * This method will only be called if default content fragment does not exist in fragment manager.
      */
     protected abstract Fragment initializeDefaultFragment();
 
     /**
-     * This method let's you implement custom logic that will decide, should content fragment be displayed in activity
-     * after switching from dual to single pane mode or not.
+     * This method let's you implement custom logic that will decide, should content activity be started after switching
+     * from dual to single pane mode or not.
      */
     protected abstract boolean shouldOpenActivityAfterSwitchToSinglePane();
 
@@ -148,7 +147,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     private void removeDefaultContentFragment() {
         Fragment defaultFragment = getChildFragmentManager().findFragmentByTag(DEFAULT_FRAGMENT_TAG);
         if (defaultFragment != null) {
-            Log.v(TAG, "Removing deafault fragment.");
+            Log.v(TAG, "Removing default fragment.");
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
             fragmentTransaction.remove(defaultFragment);
             fragmentTransaction.commit();
@@ -206,55 +205,14 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     private void openContentActivity() {
         Intent intent = mContentState.getOriginalIntent();
         intent.putExtra(DualPaneContentActivity.FRAGMENT_STATE_KEY, mContentState.getFragmentState());
-
-        if (intent.getBooleanExtra(START_ACTIVITY_FOR_RESULT_KEY, false)) {
-            startActivity(intent);
-        } else {
-            startActivityForResult(intent, intent.getIntExtra(START_ACTIVITY_FOR_RESULT_REQUEST_CODE_KEY, -1));
-        }
+        startActivity(intent);
     }
 
-    /**
-     * Adds fragment to content pane of DualPaneHostFragment
-     * Content activity in single pane mode would be launched using {@code startActivityForResult()}
-     * {@code onActivityResult} will be propagated to fragments inside dual pane host
-     *
-     * @param contentFragmentClass {@code Class} of a fragment you want to show
-     * @param activityIntent       Intent that contains bundle with parameters you would like to pass to fragment
-     *                             and that would also be used to start content activity for result in single pane
-     * @param requestCode          Request code that will be used with startActivityForResult
-     */
-    @Override
-    public void showContentForResult(Class contentFragmentClass, Intent activityIntent, int requestCode) {
-        if (activityIntent == null) {
-            throw new IllegalArgumentException("activityIntent cannot be null if you want to use showContentForResult()");
-        }
-
-        //For easy handling we store startActivityForResult parameters within intent
-        activityIntent.putExtra(START_ACTIVITY_FOR_RESULT_KEY, true);
-        activityIntent.putExtra(START_ACTIVITY_FOR_RESULT_REQUEST_CODE_KEY, requestCode);
-
-        showContent(contentFragmentClass, null, activityIntent);
-    }
-
-    /**
-     * Adds fragment to content pane of DualPaneHostFragment
-     *
-     * @param contentFragmentClass {@code Class} of a fragment you want to show
-     * @param fragmentArgs         Arguments that you would like to pass to fragment
-     */
     @Override
     public void showContent(Class contentFragmentClass, Bundle fragmentArgs) {
         showContent(contentFragmentClass, fragmentArgs, null);
     }
 
-    /**
-     * Adds fragment to content pane of DualPaneHostFragment
-     *
-     * @param contentFragmentClass {@code Class} of a fragment you want to show
-     * @param intent               {@code Intent} that contains bundle with parameters you would like to pass to fragment
-     *                             and that would also be used to start content activity in single pane
-     */
     @Override
     public void showContent(Class contentFragmentClass, Intent intent) {
         showContent(contentFragmentClass, null, intent);
@@ -279,27 +237,20 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
             fragmentArgs = intent.getExtras();
         }
 
-        Fragment fragment = getChildFragmentManager().findFragmentByTag(mContentFragmentTag);
-
-        if (fragment == null) {
-            FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-            fragment = Fragment.instantiate(getActivity(), contentFragmentClass.getName(), fragmentArgs);
-            fragmentTransaction.replace(CONTENT_FRAGMENT_CONTAINER_ID, fragment, mContentFragmentTag);
-            // Remember that commit() is an async method! Fragment might not be immediately available after this call.
-            fragmentTransaction.commit();
-        }
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        Fragment fragment = Fragment.instantiate(getActivity(), contentFragmentClass.getName(), fragmentArgs);
+        fragmentTransaction.replace(CONTENT_FRAGMENT_CONTAINER_ID, fragment, mContentFragmentTag);
+        // Remember that commit() is an async method! Fragment might not be immediately available after this call.
+        fragmentTransaction.commit();
 
         mIsSinglePaneContentFragmentHidden = false;
     }
 
-    /**
-     * Used to notify DualPaneHostFragment that contentActivity started.
-     */
     @Override
     public void onContentActivityStarted() {
         Log.v(TAG, "Single pane content activity started.");
         mIsSinglePaneContentFragmentHidden = false;
-        removeContentFragment();
+        removeContentPaneFragment();
     }
 
     @Override
@@ -316,12 +267,8 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         }
     }
 
-    /**
-     * Removes content fragment from content pane.
-     * If default fragment is set it will be displayed instead.
-     */
     @Override
-    public void removeContentFragment() {
+    public void removeContentPaneFragment() {
         Fragment contentFragment = getAttachedContentFragment();
 
         if (contentFragment != null) {
