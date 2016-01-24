@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -1145,14 +1146,17 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void deleteSite() {
         final Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog.isDotcomFlag()) {
+            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.delete_site_progress), true, false);
             WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            progressDialog.dismiss();
                             removeBlog();
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
                             handleDeleteSiteError();
                         }
                     });
