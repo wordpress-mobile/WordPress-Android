@@ -120,6 +120,7 @@
         <!-- Comments activities -->
         <activity
             android:name=".ui.comments.CommentsActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.comments.CommentDetailActivity"
