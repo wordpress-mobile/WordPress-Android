@@ -48,10 +48,30 @@ public class MyProfileActivity extends AppCompatActivity {
 
         refreshDetails();
 
-        findViewById(R.id.first_name_row).setOnClickListener(createOnClickListener(getString(R.string.first_name), null, mFirstName));
-        findViewById(R.id.last_name_row).setOnClickListener(createOnClickListener(getString(R.string.last_name), null, mLastName));
-        findViewById(R.id.display_name_row).setOnClickListener(createOnClickListener(getString(R.string.public_display_name), getString(R.string.public_display_name_hint), mDisplayName));
-        findViewById(R.id.about_me_row).setOnClickListener(createOnClickListener(getString(R.string.about_me), getString(R.string.about_me_hint), mAboutMe));
+        findViewById(R.id.first_name_row).setOnClickListener(
+                createOnClickListener(
+                        getString(R.string.first_name),
+                        null,
+                        mFirstName,
+                        false));
+        findViewById(R.id.last_name_row).setOnClickListener(
+                createOnClickListener(
+                        getString(R.string.last_name),
+                        null,
+                        mLastName,
+                        false));
+        findViewById(R.id.display_name_row).setOnClickListener(
+                createOnClickListener(
+                        getString(R.string.public_display_name),
+                        getString(R.string.public_display_name_hint),
+                        mDisplayName,
+                        false));
+        findViewById(R.id.about_me_row).setOnClickListener(
+                createOnClickListener(
+                        getString(R.string.about_me),
+                        getString(R.string.about_me_hint),
+                        mAboutMe,
+                        true));
     }
 
     @Override
@@ -111,17 +131,25 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     // helper method to create onClickListener to avoid code duplication
-    private View.OnClickListener createOnClickListener(final String dialogTitle, final String hint, final WPTextView textView) {
+    private View.OnClickListener createOnClickListener(final String dialogTitle,
+                                                       final String hint,
+                                                       final WPTextView textView,
+                                                       final boolean isMultiline) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.showMyProfileDialog(MyProfileActivity.this, dialogTitle, textView.getText().toString(), hint, new DialogUtils.Callback() {
-                    @Override
-                    public void onSuccessfulInput(String input) {
-                        updateLabel(textView, input);
-                        updateMyProfileForLabel(textView);
-                    }
-                });
+                DialogUtils.showMyProfileDialog(MyProfileActivity.this,
+                        dialogTitle,
+                        textView.getText().toString(),
+                        hint,
+                        isMultiline,
+                        new DialogUtils.Callback() {
+                            @Override
+                            public void onSuccessfulInput(String input) {
+                                updateLabel(textView, input);
+                                updateMyProfileForLabel(textView);
+                            }
+                        });
             }
         };
     }

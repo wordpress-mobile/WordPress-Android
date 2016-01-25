@@ -499,6 +499,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
         mBlog.setBlogName(mSiteSettings.getTitle());
         WordPress.wpDB.saveBlog(mBlog);
+
+        // update the global current Blog so WordPress.getCurrentBlog() callers will get the updated object
+        WordPress.setCurrentBlog(mBlog.getLocalTableBlogId());
+
         EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
 
