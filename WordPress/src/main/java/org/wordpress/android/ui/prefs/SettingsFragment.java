@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -44,6 +46,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private EditTextPreference mEmailPreference;
     private DetailListPreference mLanguagePreference;
     private Snackbar mEmailSnackbar;
+    private SharedPreferences mSettings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
 
+        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         checkWordPressComOnlyFields();
     }
 
@@ -218,6 +222,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         Locale newLocale = WPPrefUtils.languageLocale(languageCode);
         conf.locale = newLocale;
         res.updateConfiguration(conf, res.getDisplayMetrics());
+        mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
 
         // Track the change only if the user selected a non default Device language. This is only used in
         // Mixpanel, because we have both the device language and app selected language data in Tracks
