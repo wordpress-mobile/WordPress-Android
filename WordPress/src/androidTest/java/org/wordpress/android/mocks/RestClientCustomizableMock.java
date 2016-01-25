@@ -122,10 +122,7 @@ public class RestClientCustomizableMock extends RestClient {
         String data = fileToString(filename);
         if (data == null) {
             AppLog.e(T.TESTS, "Can't read file: " + filename);
-            if (errorListener != null) {
-                errorListener.onErrorResponse(new VolleyError("Can't read file: " + filename));
-            }
-            return dummyReturnValue;
+            throw new RuntimeException("Can't read file: " + filename);
         }
 
         try {
