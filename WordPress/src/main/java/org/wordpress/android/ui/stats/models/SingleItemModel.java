@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.models;
 
+import android.webkit.URLUtil;
+
 import org.wordpress.android.ui.stats.StatsUtils;
 
 import java.io.Serializable;
@@ -27,7 +29,7 @@ public class SingleItemModel implements Serializable {
         this.mTotals = totals;
 
         // We could get invalid data back from the server. Check that URL is OK.
-        if (url == null || "null".equals(url) || "false".equals(url)) {
+        if (!URLUtil.isValidUrl(url)) {
             this.mUrl = "";
         } else {
             this.mUrl = url;
