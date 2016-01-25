@@ -5,10 +5,11 @@ import android.support.v4.app.Fragment;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.DualPaneHostFragment;
+import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
 /**
- * Dashboard fragment that shows dual pane layout for tablets and single pane for smartphones.
+ * Concrete implementation of dual pane fragment.
  */
 
 public class MySiteDualPaneFragment extends DualPaneHostFragment {
@@ -28,7 +29,8 @@ public class MySiteDualPaneFragment extends DualPaneHostFragment {
             return null;
         }
 
-        return MeFragment.newInstance();
+//        return MeFragment.newInstance();
+        return Fragment.instantiate(getActivity(), PostsListFragment.class.getName(), null);
     }
 
     @Override

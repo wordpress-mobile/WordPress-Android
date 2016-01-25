@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,8 +72,17 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // Reason we perform initial fragment transactions in onActivityCreated instead of onCreate, is because in some
+        // cases (like when this fragment is a part of ViewPager) child FragmentManger will not restore it's state until
+        // ViewPager is done restoring it's own.
         showSidebarFragment();
         showContent();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // we are using generic dual pane fragment layout
+        return inflater.inflate(R.layout.dual_pane_host_fragment, container, false);
     }
 
     private void showSidebarFragment() {
@@ -85,7 +95,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
 
         if (!sidebarFragment.isAdded()) {
             Log.v(TAG, "Adding sidebar fragment.");
-            fragmentTransaction.replace(SIDEBAR_FRAGMENT_CONTAINER_ID, sidebarFragment, SIDEBAR_FRAGMENT_TAG);
+            fragmentTransaction.replace(SIDEBAR_FRAGMENT_CONTAINER_ID, sidebarFragment, getSidebarFragmentTag());
         } else if (sidebarFragment.isDetached()) {
             Log.v(TAG, "Sidebar fragment already exist. Attaching to layout.");
             fragmentTransaction.attach(sidebarFragment);
@@ -94,8 +104,12 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         fragmentTransaction.commit();
     }
 
+    /**
+     * Tries to get sidebar from fragment manager, and if it's not there tries to initialize and return new from concrete
+     * class
+     */
     protected Fragment getSidebarFragment() {
-        Fragment sidebarFragment = getChildFragmentManager().findFragmentByTag(SIDEBAR_FRAGMENT_TAG);
+        Fragment sidebarFragment = getChildFragmentManager().findFragmentByTag(getSidebarFragmentTag());
 
         if (sidebarFragment == null) {
             sidebarFragment = initializeSidebarFragment();
@@ -105,47 +119,64 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         return sidebarFragment;
     }
 
+    /**
+     * Starts content activity in single pane mode.
+     * In dual pane mode show's retained/default content fragment in content pane.
+     */
     private void showContent() {
         if (DualPaneHelper.isInDualPaneMode(getActivity())) {
             Log.v(TAG, "Host fragment is in dual pane mode.");
-            if (stickyDualPaneActivityStateAvailable()) {
+
+            if (hasRetainedDualPaneActivityState()) {
                 removeDefaultContentFragment();
-                showContentFragment();
+                showRestoredContentFragment();
             } else if (mContentState == null) {
                 Log.v(TAG, "No saved content state.");
-                showDefaultContentFragment();
+                showDefaultContentFragment(false);
             }
 
-            mIsSinglePaneContentFragmentHidden = false;
+            mIsSinglePaneContentFragmentHidden = false; //content pane is always visible in dual pane mode
         } else {
             if (mContentState == null) return;
+
             Log.v(TAG, "Host fragment is in single pane mode.");
-            //Do nothing if no Intent was provided.
+
+            //Do nothing if no Intent was provided when adding content.
             if (!mContentState.isActivityIntentAvailable()) {
-                Log.v(TAG, "No intent to start single pane activity.");
+                Log.v(TAG, "No intent to start a single pane activity.");
                 return;
             }
+
             if (shouldOpenActivityAfterSwitchToSinglePane() && !mIsSinglePaneContentFragmentHidden) {
                 Log.v(TAG, "Starting single pane activity.");
+
                 openContentActivity();
                 onContentActivityStarted();
             } else {
                 Log.v(TAG, "Cant start single pane activity yet.");
+
                 mIsSinglePaneContentFragmentHidden = true;
             }
         }
     }
 
-    private boolean stickyDualPaneActivityStateAvailable() {
+    /**
+     * @return true if {@link DualPaneContentActivity} has passed us it's fragment's state when going into dual pane mode
+     */
+    private boolean hasRetainedDualPaneActivityState() {
         return EventBus.getDefault().getStickyEvent(DualPaneContentState.class) != null;
     }
 
+    /**
+     * @return {@link DualPaneContentState} from {@link DualPaneContentActivity}
+     */
     private DualPaneContentState getStickyContentState() {
         return EventBus.getDefault().getStickyEvent(DualPaneContentState.class);
     }
 
     private void removeDefaultContentFragment() {
-        Fragment defaultFragment = getChildFragmentManager().findFragmentByTag(DEFAULT_FRAGMENT_TAG);
+        Fragment defaultFragment = getChildFragmentManager().findFragmentByTag(getDefaultFragmentTag());
+
         if (defaultFragment != null) {
             Log.v(TAG, "Removing default fragment.");
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -154,12 +185,12 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         }
     }
 
-    private void showDefaultContentFragment() {
+    private void showDefaultContentFragment(boolean forceRecreation) {
         if (!DualPaneHelper.isInDualPaneMode(getActivity())) return;
 
-        Fragment defaultFragment = getChildFragmentManager().findFragmentByTag(DEFAULT_FRAGMENT_TAG);
+        Fragment defaultFragment = getChildFragmentManager().findFragmentByTag(getDefaultFragmentTag());
 
-        if (defaultFragment == null) {
+        if (defaultFragment == null || forceRecreation) {
             defaultFragment = initializeDefaultFragment();
         }
 
@@ -169,32 +200,21 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         Log.v(TAG, "Showing default fragment.");
 
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.replace(CONTENT_FRAGMENT_CONTAINER_ID, defaultFragment, DEFAULT_FRAGMENT_TAG);
+        fragmentTransaction.replace(CONTENT_FRAGMENT_CONTAINER_ID, defaultFragment, getDefaultFragmentTag());
         fragmentTransaction.commit();
     }
 
-    @Nullable
-    private Fragment getAttachedContentFragment() {
-        return getChildFragmentManager().findFragmentByTag(mContentFragmentTag);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // we are using generic dual pane fragment layout, later if the need will arise we could pass custom layout along
-        // with sidebar/container ID's
-        return inflater.inflate(R.layout.dual_pane_host_fragment, container, false);
-    }
-
-    private void showContentFragment() {
+    /**
+     * Show's content fragment with initial state passed from {@link DualPaneContentActivity}
+     */
+    private void showRestoredContentFragment() {
         Log.v(TAG, "Showing restored content fragment.");
 
         mContentState = getStickyContentState();
         EventBus.getDefault().removeStickyEvent(DualPaneContentState.class);
 
-        mContentFragmentTag = mContentState.getFragmentClass().getSimpleName();
-
-        Fragment fragment = Fragment.instantiate(getActivity(), mContentState.getFragmentClass().getName(), null);
-
+        Fragment fragment = Fragment.instantiate(getActivity(), mContentState.getFragmentClass().getName(), mContentState
+                .getOriginalIntent().getExtras());
         fragment.setInitialSavedState(mContentState.getFragmentState());
 
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -202,6 +222,10 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         fragmentTransaction.commit();
     }
 
+    /**
+     * Open's content activity and passes content fragment state to it.
+     * Setting initial state of fragment inside activity is up to that activity.
+     */
     private void openContentActivity() {
         Intent intent = mContentState.getOriginalIntent();
         intent.putExtra(DualPaneContentActivity.FRAGMENT_STATE_KEY, mContentState.getFragmentState());
@@ -209,26 +233,32 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     @Override
-    public void showContent(Class contentFragmentClass, Bundle fragmentArgs) {
-        showContent(contentFragmentClass, fragmentArgs, null);
+    public void showContent(Class contentFragmentClass, String tag, Bundle fragmentArgs) {
+        showContent(contentFragmentClass, tag, fragmentArgs, null);
     }
 
     @Override
-    public void showContent(Class contentFragmentClass, Intent intent) {
-        showContent(contentFragmentClass, null, intent);
+    public void showContent(Class contentFragmentClass, String tag, Intent intent) {
+        showContent(contentFragmentClass, tag, null, intent);
     }
 
-    private void showContent(Class contentFragmentClass, Bundle args, Intent intent) {
-        if (!DualPaneHelper.isInDualPaneMode(getActivity())) return;
+    private void showContent(Class contentFragmentClass, String tag, Bundle args, Intent intent) {
+        if (!DualPaneHelper.isInDualPaneMode(getActivity()) || !isAdded()) return;
 
         if (contentFragmentClass == null || !Fragment.class.isAssignableFrom(contentFragmentClass)) {
             throw new IllegalArgumentException("You need to pass a Fragment class to showContent() method!");
         }
 
-        Log.v(TAG, "Showing content in single pane.");
+        Log.v(TAG, "Showing fragment in content pane.");
 
         mContentState = new DualPaneContentState(intent, contentFragmentClass, null);
-        mContentFragmentTag = contentFragmentClass.getSimpleName();
+
+        //if no tag is specified we will ju
+        if (TextUtils.isEmpty(tag)) {
+            mContentFragmentTag = contentFragmentClass.getSimpleName();
+        } else {
+            mContentFragmentTag = tag;
+        }
 
         Bundle fragmentArgs;
         if (intent == null) {
@@ -248,9 +278,11 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
 
     @Override
     public void onContentActivityStarted() {
+        if (!isAdded()) return;
+
         Log.v(TAG, "Single pane content activity started.");
-        mIsSinglePaneContentFragmentHidden = false;
         removeContentPaneFragment();
+        resetContentPaneState();
     }
 
     @Override
@@ -258,29 +290,33 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         super.onActivityResult(requestCode, resultCode, data);
 
         //pass onActivityResult to fragments inside the host fragment.
-        Fragment sidebarFragment = getChildFragmentManager().findFragmentByTag(SIDEBAR_FRAGMENT_TAG);
+        Fragment sidebarFragment = getChildFragmentManager().findFragmentByTag(getSidebarFragmentTag());
         sidebarFragment.onActivityResult(requestCode, resultCode, data);
 
-        Fragment contentFragment = getAttachedContentFragment();
+        Fragment contentFragment = getContentPaneFragment();
         if (contentFragment != null) {
             contentFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    @Override
-    public void removeContentPaneFragment() {
-        Fragment contentFragment = getAttachedContentFragment();
-
+    private void removeContentPaneFragment() {
+        Fragment contentFragment = getContentPaneFragment();
         if (contentFragment != null) {
-            Log.v(TAG, "Removing content fragment.");
+            Log.v(TAG, "Removing content pane fragment.");
             getChildFragmentManager().beginTransaction().remove(contentFragment).commit();
-            resetContentPaneState();
-            showDefaultContentFragment();
         }
     }
 
+    @Override
+    public void resetContentPane() {
+        if (!isAdded()) return;
+
+        removeContentPaneFragment();
+        resetContentPaneState();
+        showDefaultContentFragment(true);
+    }
+
     private void resetContentPaneState() {
-        mContentFragmentTag = null;
         mIsSinglePaneContentFragmentHidden = false;
         mContentState = null;
     }
@@ -288,7 +324,15 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     @Nullable
     @Override
     public Fragment getContentPaneFragment() {
-        return getAttachedContentFragment();
+        return getChildFragmentManager().findFragmentById(R.id.content_fragment_container);
+    }
+
+    @Override
+    public boolean isFragmentWithTagAdded(String tag) {
+        if (getContentPaneFragment() == null || TextUtils.isEmpty(tag)) return false;
+
+        String contentFragmentTag = getContentPaneFragment().getTag();
+        return !TextUtils.isEmpty(contentFragmentTag) && contentFragmentTag.equals(tag);
     }
 
     @Override
@@ -298,13 +342,19 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         outState.putString(CONTENT_FRAGMENT_TAG_PARAMETER_KEY, mContentFragmentTag);
         outState.putBoolean(CONTENT_FRAGMENT_STATE_PARAMETER_KEY, mIsSinglePaneContentFragmentHidden);
 
-        Fragment contentFragment = getAttachedContentFragment();
-        if (contentFragment != null && mContentState != null) {
+        Fragment contentFragment = getContentPaneFragment();
+        if (contentFragment != null && mContentState != null && !isDefaultFragment(contentFragment)) {
             SavedState savedState = getChildFragmentManager().saveFragmentInstanceState(contentFragment);
             mContentState.setFragmentState(savedState);
             outState.putParcelable(DualPaneContentState.KEY, mContentState);
         }
         outState.putParcelable(DualPaneContentState.KEY, mContentState);
+    }
+
+    private boolean isDefaultFragment(Fragment fragment) {
+        if (fragment == null || TextUtils.isEmpty(fragment.getTag())) return false;
+
+        return fragment.getTag().equals(getDefaultFragmentTag());
     }
 
     @Override
@@ -323,5 +373,13 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     @SuppressWarnings("unused")
     public void onEvent(DualPaneContentState event) {
         mContentState = event;
+    }
+
+    protected String getSidebarFragmentTag() {
+        return SIDEBAR_FRAGMENT_TAG;
+    }
+
+    protected String getDefaultFragmentTag() {
+        return DEFAULT_FRAGMENT_TAG;
     }
 }
