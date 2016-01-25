@@ -14,7 +14,7 @@ public class DualPaneHelper {
     }
 
     @Nullable
-    public static DualPaneHost getDashboard(Fragment fragment) {
+    public static DualPaneHost getDualPaneHost(Fragment fragment) {
         if (!isPartOfDualPaneDashboard(fragment)) {
             return null;
         }

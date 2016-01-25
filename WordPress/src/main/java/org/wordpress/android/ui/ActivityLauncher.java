@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -78,26 +77,29 @@ public class ActivityLauncher {
 
     public static void viewCurrentBlogPosts(Context context, @Nullable DualPaneHost dualPaneHost) {
         Intent intent = new Intent(context, PostsListActivity.class);
+
         if (dualPaneHost != null) {
-            showDualPaneContent(context, PostsListFragment.class, intent, dualPaneHost, AnalyticsTracker.Stat.OPENED_POSTS);
+            showDualPaneContent(context,
+                    PostsListFragment.class,
+                    "current_blog_posts",
+                    intent,
+                    dualPaneHost,
+                    AnalyticsTracker.Stat.OPENED_POSTS);
         } else {
             slideInFromRight(context, intent);
             AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
         }
     }
 
-    private static void showDualPaneContent(Context context, Class fragmentClass, Intent intent, DualPaneHost
+    private static void showDualPaneContent(Context context, Class fragmentClass, String tag, Intent intent, DualPaneHost
             dualPaneHost, AnalyticsTracker.Stat stat) {
         if (intent != null) {
             intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, true);
         }
 
         if (DualPaneHelper.isInDualPaneMode(context)) {
-            Fragment contentPaneFragment = dualPaneHost.getContentPaneFragment();
-
-            //only add fragment if it's not already added
-            if (contentPaneFragment == null || contentPaneFragment.getClass() != fragmentClass) {
-                dualPaneHost.showContent(fragmentClass, intent);
+            if (!dualPaneHost.isFragmentWithTagAdded(tag)) {
+                dualPaneHost.showContent(fragmentClass, tag, intent);
                 if (stat != null) {
                     AnalyticsUtils.trackWithCurrentBlogDetails(stat);
                 }
@@ -117,11 +119,21 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
 
-    public static void viewCurrentBlogPages(Context context) {
+    public static void viewCurrentBlogPages(Context context, @Nullable DualPaneHost dualPaneHost) {
         Intent intent = new Intent(context, PostsListActivity.class);
+
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
-        slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
+        if (dualPaneHost != null) {
+            showDualPaneContent(context,
+                    PostsListFragment.class,
+                    "current_blog_pages",
+                    intent,
+                    dualPaneHost,
+                    AnalyticsTracker.Stat.OPENED_PAGES);
+        } else {
+            slideInFromRight(context, intent);
+            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
+        }
     }
 
     public static void viewCurrentBlogComments(Context context) {
