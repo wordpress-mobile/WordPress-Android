@@ -29,7 +29,6 @@ public class MySiteDualPaneFragment extends DualPaneHostFragment {
             return null;
         }
 
-//        return MeFragment.newInstance();
         return Fragment.instantiate(getActivity(), PostsListFragment.class.getName(), null);
     }
 
