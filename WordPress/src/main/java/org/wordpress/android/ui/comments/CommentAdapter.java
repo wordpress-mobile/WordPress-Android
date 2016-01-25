@@ -65,7 +65,8 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private boolean mEnableSelection;
 
-    class CommentHolder extends RecyclerView.ViewHolder {
+    class CommentHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener {
         private final TextView txtTitle;
         private final TextView txtComment;
         private final TextView txtStatus;
@@ -85,6 +86,24 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.avatar);
             progressBar = view.findViewById(R.id.moderate_progress);
             containerView = (ViewGroup) view.findViewById(R.id.layout_container);
+
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnCommentPressedListener != null) {
+                mOnCommentPressedListener.onCommentPressed(getAdapterPosition(), v);
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if (mOnCommentPressedListener != null) {
+                mOnCommentPressedListener.onCommentLongPressed(getAdapterPosition(), v);
+            }
+            return true;
         }
     }
 
@@ -132,7 +151,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         Comment comment = mComments.get(position);
         CommentHolder holder = (CommentHolder) viewHolder;
 
@@ -191,25 +210,6 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             params.addRule(RelativeLayout.LEFT_OF, 0);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnCommentPressedListener != null) {
-                    mOnCommentPressedListener.onCommentPressed(position, v);
-                }
-            }
-        });
-
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mOnCommentPressedListener != null) {
-                    mOnCommentPressedListener.onCommentLongPressed(position, v);
-                }
-                return true;
-            }
-        });
-
         // request to load more comments when we near the end
         if (mOnLoadMoreListener != null && position >= getItemCount()-1) {
             mOnLoadMoreListener.onLoadMore();
@@ -217,7 +217,11 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public Comment getItem(int position) {
-        return mComments.get(position);
+        if (isPositionValid(position)) {
+            return mComments.get(position);
+        } else {
+            return null;
+        }
     }
 
     @Override
