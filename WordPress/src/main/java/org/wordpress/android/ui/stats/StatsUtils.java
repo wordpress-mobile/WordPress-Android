@@ -50,12 +50,13 @@ import java.util.concurrent.TimeUnit;
 public class StatsUtils {
     @SuppressLint("SimpleDateFormat")
     private static long toMs(String date, String pattern) {
-        if (date == null) {
+        if (date == null || date.equals("null")) {
+            AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
             return -1;
         }
 
         if (pattern == null) {
-            AppLog.w(T.UTILS, "Trying to parse with a null pattern");
+            AppLog.w(T.UTILS, "Trying to parse a Stats date with a null pattern");
             return -1;
         }
 
