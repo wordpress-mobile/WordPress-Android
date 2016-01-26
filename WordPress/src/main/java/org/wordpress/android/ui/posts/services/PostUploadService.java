@@ -941,7 +941,7 @@ public class PostUploadService extends Service {
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
             if (largeIcon == null) {
                 notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.drawable.app_icon));
+                        R.mipmap.app_icon));
             } else {
                 notificationBuilder.setLargeIcon(largeIcon);
             }

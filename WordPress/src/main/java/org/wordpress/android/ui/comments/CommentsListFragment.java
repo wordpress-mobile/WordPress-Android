@@ -111,12 +111,15 @@ public class CommentsListFragment extends Fragment {
             CommentAdapter.OnCommentPressedListener pressedListener = new CommentAdapter.OnCommentPressedListener() {
                 @Override
                 public void onCommentPressed(int position, View view) {
-                    long commentId = getAdapter().getItem(position).commentID;
+                    Comment comment = getAdapter().getItem(position);
+                    if (comment == null) {
+                        return;
+                    }
                     if (mActionMode == null) {
-                        if (!getAdapter().isModeratingCommentId(commentId)) {
+                        if (!getAdapter().isModeratingCommentId(comment.commentID)) {
                             mRecycler.invalidate();
                             if (getActivity() instanceof OnCommentSelectedListener) {
-                                ((OnCommentSelectedListener) getActivity()).onCommentSelected(commentId);
+                                ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.commentID);
                             }
                         }
                     } else {

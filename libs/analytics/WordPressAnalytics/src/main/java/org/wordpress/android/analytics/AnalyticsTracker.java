@@ -68,8 +68,8 @@ public final class AnalyticsTracker {
         EDITOR_ENABLED_NEW_VERSION, // Visual editor only
         EDITOR_TOGGLED_OFF, // Visual editor only
         EDITOR_TOGGLED_ON, // Visual editor only
-        EDITOR_UPDLOAD_MEDIA_FAILED, // Visual editor only
-        EDITOR_UPDLOAD_MEDIA_RETRIED, // Visual editor only
+        EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
+        EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,
         EDITOR_TAPPED_BOLD,
         EDITOR_TAPPED_HTML, // Visual editor only
@@ -225,4 +225,3 @@ public final class AnalyticsTracker {
         }
     }
 }
-
