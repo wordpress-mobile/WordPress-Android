@@ -234,7 +234,6 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     private void openContentActivity() {
         Intent intent = mContentState.getOriginalIntent();
         intent.setExtrasClassLoader(DualPaneContentState.class.getClassLoader());
-
         intent.putExtra(DualPaneContentActivity.FRAGMENT_STATE_KEY, mContentState.getFragmentState());
         startActivity(intent);
     }
@@ -260,7 +259,6 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         Log.v(TAG, "Showing fragment in content pane.");
 
         mContentState = new DualPaneContentState(intent, contentFragmentClass, null);
-
         mContentFragmentTag = tag;
 
         Bundle fragmentArgs;
