@@ -56,6 +56,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(BUNDLE_LAST_SEARCH)) {
                 mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
+                configureSearchView();
             }
         }
     }
@@ -113,14 +114,20 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        search(query);
+        if (!mLastSearch.equals(query)) {
+            mLastSearch = query;
+            search(query);
+        }
         clearFocus(mSearchView);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        search(newText);
+        if (!mLastSearch.equals(newText) && !newText.equals("")) {
+            mLastSearch = newText;
+            search(newText);
+        }
         return true;
     }
 
