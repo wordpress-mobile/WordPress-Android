@@ -1292,5 +1292,6 @@
     <string name="are_you_sure">Are You Sure?</string>
     <string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
     <string name="delete_site_hint">Delete your site</string>
+    <string name="delete_site_progress">Deleting site...</string>
 
 </resources>

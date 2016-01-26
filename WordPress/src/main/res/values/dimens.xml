@@ -249,5 +249,9 @@
     <dimen name="delete_site_preference_margin_large">15dp</dimen>
     <dimen name="delete_site_preference_margin_medium">6dp</dimen>
     <dimen name="delete_site_preference_margin_small">4dp</dimen>
+    <dimen name="delete_site_icon_padding">2dp</dimen>
+    <dimen name="delete_site_text_margin_left">37dp</dimen>
+    <dimen name="delete_site_icon_size">24dp</dimen>
+    <dimen name="delete_site_icon_margin_right">13dp</dimen>
 
 </resources>

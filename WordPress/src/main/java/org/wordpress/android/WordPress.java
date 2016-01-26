@@ -386,8 +386,9 @@ public class WordPress extends Application {
      * Get the currently active blog.
      * <p/>
      * If the current blog is not already set, try and determine the last active blog from the last
-     * time the application was used. If we're not able to determine the last active blog, just
-     * select the first one.
+     * time the application was used. If we're not able to determine the last active blog, try to
+     * select the first visible blog. If there are no more visible blogs, try to select the first
+     * hidden blog. If there are no blogs at all, return null.
      */
     public static Blog getCurrentBlog() {
         if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
@@ -638,13 +639,13 @@ public class WordPress extends Application {
 
     private static void attemptToRestoreLastActiveBlog() {
         if (setCurrentBlogToLastActive() == null) {
-            // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-            if (accounts.size() > 0) {
-                int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                setCurrentBlog(id);
-                wpDB.updateLastBlogId(id);
+            int blogId = WordPress.wpDB.getFirstVisibleBlogId();
+            if (blogId == 0) {
+                blogId = WordPress.wpDB.getFirstHiddenBlogId();
             }
+
+            setCurrentBlogAndSetVisible(blogId);
+            wpDB.updateLastBlogId(blogId);
         }
     }
 
