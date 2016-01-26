@@ -18,7 +18,6 @@
     <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
     <string name="pref_key_shared_pref_section" translatable="false">wp_share_pref</string>
     <string name="pref_key_reset_shared_pref" translatable="false">wp_reset_share_pref</string>
-    <string name="pref_key_privacy_section" translatable="false">wp_privacy</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>

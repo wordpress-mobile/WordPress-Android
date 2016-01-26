@@ -13,6 +13,16 @@
         android:key="@string/pref_key_email"
         android:title="@string/email" />
 
+    <org.wordpress.android.ui.prefs.DetailListPreference
+        android:key="@string/pref_key_language"
+        android:title="@string/language" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_key_send_usage"
+        android:title="@string/preference_send_usage_stats"
+        android:summary="@string/preference_send_usage_stats_summary" />
+
     <PreferenceCategory
         android:key="@string/pref_key_passlock_section"
         android:persistent="false"
@@ -31,18 +41,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/preference_privacy"
-        android:key="@string/pref_key_privacy_section">
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/pref_key_send_usage"
-            android:title="@string/preference_send_usage_stats"
-            android:summary="@string/preference_send_usage_stats_summary" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:key="@string/pref_key_about_section"
         android:title="@string/about">
 
@@ -51,10 +49,6 @@
 
         <Preference android:title="@string/open_source_licenses"
                     android:key="@string/pref_key_oss_licenses" />
-
-        <org.wordpress.android.ui.prefs.DetailListPreference
-            android:key="@string/pref_key_language"
-            android:title="@string/language" />
 
     </PreferenceCategory>
 
