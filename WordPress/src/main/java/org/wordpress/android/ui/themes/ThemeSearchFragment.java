@@ -27,8 +27,8 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public static ThemeSearchFragment newInstance() {
         return new ThemeSearchFragment();
     }
-    private static String mLastSearch = "";
 
+    private String mLastSearch = "";
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
 
