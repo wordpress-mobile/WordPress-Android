@@ -639,11 +639,9 @@ public class WordPress extends Application {
 
     private static void attemptToRestoreLastActiveBlog() {
         if (setCurrentBlogToLastActive() == null) {
-            int blogId = 0;
-            if (WordPress.wpDB.getNumVisibleBlogs() > 0) {
-                blogId = WordPress.wpDB.getFirstVisibleBlogId();
-            } else if (WordPress.wpDB.getNumHiddenBlogs() > 0) {
-                blogId = WordPress.wpDB.getFirstHiddenBlog();
+            int blogId = WordPress.wpDB.getFirstVisibleBlogId();
+            if (blogId == 0) {
+                blogId = WordPress.wpDB.getFirstHiddenBlogId();
             }
 
             setCurrentBlogAndSetVisible(blogId);

@@ -582,13 +582,11 @@ public class WordPressDB {
     }
 
     public int getFirstVisibleBlogId() {
-        String[] args = { "0", "1" };
-        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = ? LIMIT ?", args);
+        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 LIMIT 1", null);
     }
 
-    public int getFirstHiddenBlog() {
-        String[] args = { "1", "1" };
-        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = ? LIMIT ?", args);
+    public int getFirstHiddenBlogId() {
+        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 1 LIMIT 1", null);
     }
 
     public List<Map<String, Object>> getVisibleDotComBlogs() {
