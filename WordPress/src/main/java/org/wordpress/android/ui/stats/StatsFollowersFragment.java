@@ -86,7 +86,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean hasDataAvailable() {
-        return mFollowersWPCOM != null && mFollowersEmail != null;
+        return mFollowersWPCOM != null || mFollowersEmail != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
@@ -144,7 +144,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (mFollowersWPCOM == null && mFollowersEmail == null) {
+        if (!hasDataAvailable()) {
             showHideNoResultsUI(true);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
             return;
