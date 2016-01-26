@@ -6,11 +6,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 
+/**
+ * Used to store and transport dual pane content state.
+ */
 public class DualPaneContentState implements Parcelable {
 
     public final static String KEY = "dual_pane_fragment_state";
 
-    private final static String ORIGINAL_INTENT = "original_intent";
+    private final static String ORIGINAL_INTENT_KEY = "original_intent";
     private final static String FRAGMENT_CLASS_KEY = "fragment_class";
     private final static String FRAGMENT_STATE_KEY = "fragment_state";
 
@@ -19,7 +22,7 @@ public class DualPaneContentState implements Parcelable {
     public DualPaneContentState(Intent originalIntent, Class fragmentClass, Fragment.SavedState fragmentState) {
         //we are using bundle to transport both parcelable and serializable objects
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ORIGINAL_INTENT, originalIntent);
+        bundle.putParcelable(ORIGINAL_INTENT_KEY, originalIntent);
         bundle.putSerializable(FRAGMENT_CLASS_KEY, fragmentClass);
         bundle.putParcelable(FRAGMENT_STATE_KEY, fragmentState);
 
@@ -37,7 +40,7 @@ public class DualPaneContentState implements Parcelable {
     }
 
     public Intent getOriginalIntent() {
-        return getState().getParcelable(ORIGINAL_INTENT);
+        return getState().getParcelable(ORIGINAL_INTENT_KEY);
     }
 
     public Class getFragmentClass() {

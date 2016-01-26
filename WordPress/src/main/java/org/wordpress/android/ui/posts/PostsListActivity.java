@@ -18,10 +18,9 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.DualPaneContentActivity;
 import org.wordpress.android.util.ToastUtils;
 
-/*
- * Serves as the host for PostsListFragment when showing uploaded posts.
+/**
+ * Serves as the host for {@link PostsListFragment} when showing uploaded posts/pages.
  */
-
 public class PostsListActivity extends DualPaneContentActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
@@ -55,14 +54,15 @@ public class PostsListActivity extends DualPaneContentActivity {
         }
 
         if (savedInstanceState == null) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
 
-            mPostList = (PostsListFragment) Fragment.instantiate(this, PostsListFragment.class.getName(), getIntent()
-                    .getExtras());
+            mPostList = (PostsListFragment) Fragment.instantiate(this, PostsListFragment.class.getName(),
+                    getIntent().getExtras());
+
             if (getFragmentSavedState() != null) {
                 mPostList.setInitialSavedState(getFragmentSavedState());
             }
-            fm.beginTransaction().replace(R.id.fragment_container, mPostList, getContentFragmentTag()).commit();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, mPostList, getContentFragmentTag()).commit();
         }
 
         showErrorDialogIfNeeded(getIntent().getExtras());

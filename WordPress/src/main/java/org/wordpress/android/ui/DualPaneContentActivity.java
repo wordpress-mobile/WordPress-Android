@@ -20,9 +20,12 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
     public final static String ARG_LAUNCHED_FROM_DUAL_PANE_HOST = "launched_from_dual_pane_dashboard";
     public final static String FRAGMENT_STATE_KEY = "fragment_state";
 
-    protected abstract String getContentFragmentTag();
-
     private Fragment.SavedState mFragmentSavedState;
+
+    /**
+     * @return tag of fragment that this activity hosts. Used only internaly and can be anything you like.
+     */
+    protected abstract String getContentFragmentTag();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
