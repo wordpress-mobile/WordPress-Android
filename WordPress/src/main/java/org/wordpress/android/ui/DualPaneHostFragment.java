@@ -114,7 +114,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     /**
-     * Tries to get sidebar from fragment manager. If it's not relies return fragment provided by concrete class.
+     * Try to get sidebar from fragment manager. If it's not there return's fragment provided by concrete class.
      */
     protected Fragment getSidebarFragment() {
         Fragment sidebarFragment = getChildFragmentManager().findFragmentByTag(getSidebarFragmentTag());
@@ -128,8 +128,8 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     /**
-     * In single pane mode tries to show available content in activity.
-     * In dual pane mode tries to show retained/default content fragment in content pane.
+     * In single pane mode try to show available content in activity.
+     * In dual pane mode try to show retained/default content fragment in content pane.
      */
     private void showContent() {
         if (DualPaneHelper.isInDualPaneConfiguration(getActivity())) {
@@ -166,7 +166,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     /**
-     * @return true if {@link DualPaneContentActivity} has passed us it's fragment's state when going into dual pane mode
+     * @return true if {@link DualPaneContentActivity} has passed us its fragment's state when going into dual pane mode
      */
     private boolean hasRetainedDualPaneActivityState() {
         return EventBus.getDefault().getStickyEvent(DualPaneContentState.class) != null;
@@ -210,7 +210,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     /**
-     * Show's content fragment with initial state passed from {@link DualPaneContentActivity}
+     * Show content fragment with initial state passed from {@link DualPaneContentActivity}
      */
     private void showRestoredContentFragment() {
         Log.v(TAG, "Showing restored content fragment.");
@@ -228,7 +228,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     /**
-     * Open's content activity and passes content fragment state to it.
+     * Open content activity and pass content fragment state to it.
      * Setting initial state of fragment inside activity is up to that activity.
      */
     private void openContentActivity() {
