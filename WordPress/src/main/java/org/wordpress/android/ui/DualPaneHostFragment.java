@@ -27,8 +27,8 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     private final static int SIDEBAR_FRAGMENT_CONTAINER_ID = R.id.sidebar_fragment_container;
     private final static int CONTENT_FRAGMENT_CONTAINER_ID = R.id.content_fragment_container;
 
-    private final static String SIDEBAR_FRAGMENT_TAG = "sidebar_fragment";
-    private final static String DEFAULT_FRAGMENT_TAG = "default_fragment";
+    private final static String SIDEBAR_FRAGMENT_TAG = "dual_pane_sidebar_fragment";
+    private final static String DEFAULT_FRAGMENT_TAG = "dual_pane_default_fragment";
 
     private final static String CONTENT_FRAGMENT_TAG_PARAMETER_KEY = "content_fragment_tag";
     private final static String CONTENT_FRAGMENT_STATE_PARAMETER_KEY = "single_pane_content_fragment_is_hidden";
@@ -240,16 +240,17 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     @Override
-    public void showContent(Class contentFragmentClass, String tag, Bundle fragmentArgs) {
+    public void showContent(Class contentFragmentClass, @Nullable String tag, @Nullable Bundle fragmentArgs) {
         showContent(contentFragmentClass, tag, fragmentArgs, null);
     }
 
     @Override
-    public void showContent(Class contentFragmentClass, String tag, Intent intent) {
+    public void showContent(Class contentFragmentClass, @Nullable String tag, @Nullable Intent intent) {
         showContent(contentFragmentClass, tag, null, intent);
     }
 
-    private void showContent(Class contentFragmentClass, String tag, Bundle args, Intent intent) {
+    private void showContent(Class contentFragmentClass, @Nullable String tag, @Nullable Bundle args, @Nullable Intent
+            intent) {
         if (!DualPaneHelper.isInDualPaneConfiguration(getActivity()) || !isAdded()) return;
 
         if (contentFragmentClass == null || !Fragment.class.isAssignableFrom(contentFragmentClass)) {
@@ -260,11 +261,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
 
         mContentState = new DualPaneContentState(intent, contentFragmentClass, null);
 
-        if (TextUtils.isEmpty(tag)) {
-            mContentFragmentTag = contentFragmentClass.getSimpleName();
-        } else {
-            mContentFragmentTag = tag;
-        }
+        mContentFragmentTag = tag;
 
         Bundle fragmentArgs;
         if (intent == null) {
@@ -319,6 +316,8 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
         removeContentPaneFragment();
         resetContentPaneState();
         showDefaultContentFragment(true);
+
+        mContentFragmentTag = null;
     }
 
     private void resetContentPaneState() {

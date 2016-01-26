@@ -3,7 +3,6 @@ package org.wordpress.android.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.ui.posts.PostsListFragment;
@@ -39,33 +38,24 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
         // it grabs nested fragment's state and broadcasts it using EventBus. Dual pane host get's it and use's it to show
         // fragment in dual pane mode.
         if (DualPaneHelper.isInDualPaneConfiguration(this) && isLaunchedFromDualPaneDashboard) {
-            if (savedInstanceState != null) {
-                Fragment.SavedState fragmentState = savedInstanceState.getParcelable(FRAGMENT_STATE_KEY);
 
-                if (fragmentState != null) {
-                    EventBus.getDefault().postSticky(new DualPaneContentState(getIntent(), PostsListFragment.class,
-                            fragmentState));
-                }
+            Fragment hostedFragment = getHostedFragment();
+
+            if (hostedFragment != null) {
+                Fragment.SavedState savedState = getSupportFragmentManager().saveFragmentInstanceState(hostedFragment);
+                EventBus.getDefault().postSticky(new DualPaneContentState(getIntent(), PostsListFragment.class,
+                        savedState));
             }
 
             finish();
         }
     }
 
-    protected Fragment.SavedState getFragmentSavedState() {
-        return mFragmentSavedState;
+    private Fragment getHostedFragment() {
+        return getSupportFragmentManager().findFragmentByTag(getContentFragmentTag());
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment contentFragment = fm.findFragmentByTag(getContentFragmentTag());
-
-        if (contentFragment != null) {
-            Fragment.SavedState savedState = fm.saveFragmentInstanceState(contentFragment);
-            outState.putParcelable(FRAGMENT_STATE_KEY, savedState);
-        }
+    protected Fragment.SavedState getFragmentSavedState() {
+        return mFragmentSavedState;
     }
 }

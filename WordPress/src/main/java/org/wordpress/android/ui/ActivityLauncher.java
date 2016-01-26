@@ -91,30 +91,6 @@ public class ActivityLauncher {
         }
     }
 
-    private static void showDualPaneContent(Context context, Class fragmentClass, String tag, Intent intent,
-                                            DualPaneHost dualPaneHost, AnalyticsTracker.Stat stat) {
-        // letting activity know that it was started from dual pane host
-        if (intent != null) {
-            intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_HOST, true);
-        }
-
-        if (DualPaneHelper.isInDualPaneConfiguration(context)) {
-            //do nothing if fragment already added
-            if (!dualPaneHost.isFragmentAdded(tag)) {
-                dualPaneHost.showContent(fragmentClass, tag, intent);
-                if (stat != null) {
-                    AnalyticsUtils.trackWithCurrentBlogDetails(stat);
-                }
-            }
-        } else {
-            slideInFromRight(context, intent);
-            dualPaneHost.onContentActivityStarted();
-            if (stat != null) {
-                AnalyticsUtils.trackWithCurrentBlogDetails(stat);
-            }
-        }
-    }
-
     public static void viewCurrentBlogMedia(Context context) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         slideInFromRight(context, intent);
@@ -329,6 +305,30 @@ public class ActivityLauncher {
                 R.anim.activity_slide_in_from_right,
                 R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, intent, requestCode, options.toBundle());
+    }
+
+    private static void showDualPaneContent(Context context, Class fragmentClass, String tag, Intent intent,
+                                            DualPaneHost dualPaneHost, AnalyticsTracker.Stat stat) {
+        // letting activity know that it was started from dual pane host
+        if (intent != null) {
+            intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_HOST, true);
+        }
+
+        if (DualPaneHelper.isInDualPaneConfiguration(context)) {
+            //do nothing if fragment already added
+            if (!dualPaneHost.isFragmentAdded(tag)) {
+                dualPaneHost.showContent(fragmentClass, tag, intent);
+                if (stat != null) {
+                    AnalyticsUtils.trackWithCurrentBlogDetails(stat);
+                }
+            }
+        } else {
+            slideInFromRight(context, intent);
+            dualPaneHost.onContentActivityStarted();
+            if (stat != null) {
+                AnalyticsUtils.trackWithCurrentBlogDetails(stat);
+            }
+        }
     }
 
     /*
