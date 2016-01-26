@@ -53,15 +53,13 @@ public class PostsListActivity extends DualPaneContentActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        if (savedInstanceState == null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mPostList = (PostsListFragment) fragmentManager.findFragmentByTag(getContentFragmentTag());
 
+        if (mPostList == null) {
             mPostList = (PostsListFragment) Fragment.instantiate(this, PostsListFragment.class.getName(),
                     getIntent().getExtras());
-
-            if (getFragmentSavedState() != null) {
-                mPostList.setInitialSavedState(getFragmentSavedState());
-            }
+            mPostList.setInitialSavedState(getFragmentSavedState());
             fragmentManager.beginTransaction().replace(R.id.fragment_container, mPostList, getContentFragmentTag()).commit();
         }
 

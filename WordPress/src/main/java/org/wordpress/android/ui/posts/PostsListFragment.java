@@ -101,7 +101,8 @@ public class PostsListFragment extends Fragment
             //Use normal margin (instead of wide, tablet one) while in dual pane mode.
             //Setting margin through different resource qualifiers in this case is more complicated and harder to follow.
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
-        } else {
+        }
+        else {
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         }
 
