@@ -252,7 +252,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY,
         };

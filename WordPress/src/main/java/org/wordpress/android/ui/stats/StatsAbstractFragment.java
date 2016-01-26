@@ -34,7 +34,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     private String mDate;
     private StatsTimeframe mStatsTimeframe = StatsTimeframe.DAY;
 
-    protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
+    protected abstract StatsService.StatsEndpointsEnum[] sectionsToUpdate();
     protected abstract void showPlaceholderUI();
     protected abstract void updateUI();
     protected abstract void showErrorUI(String label);
@@ -70,7 +70,7 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         // if no sections to update is passed to the method, default to fragment
         if (sections == null) {
-            sections = getSectionsToUpdate();
+            sections = sectionsToUpdate();
         }
 
         //AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
@@ -242,20 +242,15 @@ public abstract class StatsAbstractFragment extends Fragment {
         }
 
         StatsService.StatsEndpointsEnum sectionToUpdate = errorEvent.mEndPointName;
-        StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
-        int indexOfDatamodelMatch = -1;
-        for (int i = 0; i < getSectionsToUpdate().length; i++) {
+        StatsService.StatsEndpointsEnum[] sectionsToUpdate = sectionsToUpdate();
+
+        for (int i = 0; i < sectionsToUpdate().length; i++) {
             if (sectionToUpdate == sectionsToUpdate[i]) {
-                indexOfDatamodelMatch = i;
-                break;
+                return true;
             }
         }
 
-        if (-1 == indexOfDatamodelMatch) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     public static StatsAbstractFragment newVisitorsAndViewsInstance(StatsViewType viewType, int localTableBlogID,

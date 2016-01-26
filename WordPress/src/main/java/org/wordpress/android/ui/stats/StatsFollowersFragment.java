@@ -191,7 +191,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 setNavigationButtonsEnabled(false);
                                 refreshStats(
                                         followersModel.getPage() - 1,
-                                        new StatsService.StatsEndpointsEnum[]{getSectionsToUpdate()[mTopPagerSelectedButtonIndex]}
+                                        new StatsService.StatsEndpointsEnum[]{sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
                                 );
                             }
                         };
@@ -211,7 +211,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 setNavigationButtonsEnabled(false);
                                 refreshStats(
                                         followersModel.getPage() + 1,
-                                        new StatsService.StatsEndpointsEnum[]{getSectionsToUpdate()[mTopPagerSelectedButtonIndex]}
+                                        new StatsService.StatsEndpointsEnum[]{sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
                                 );
                             }
                         };
@@ -436,7 +436,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.FOLLOWERS_WPCOM, StatsService.StatsEndpointsEnum.FOLLOWERS_EMAIL
         };

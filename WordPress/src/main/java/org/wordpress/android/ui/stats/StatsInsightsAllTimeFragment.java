@@ -85,7 +85,7 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
 
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.INSIGHTS_ALL_TIME
         };

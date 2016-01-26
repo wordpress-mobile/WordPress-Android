@@ -136,7 +136,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.INSIGHTS_POPULAR
         };

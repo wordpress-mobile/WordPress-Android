@@ -836,7 +836,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.VISITS
         };
