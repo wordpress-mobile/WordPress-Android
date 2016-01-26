@@ -65,8 +65,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(BUNDLE_LAST_SEARCH, mLastSearch);
-        mSavedInstanceState = outState;
         saveState(outState);
     }
 
