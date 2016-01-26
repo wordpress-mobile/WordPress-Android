@@ -8,11 +8,9 @@
         android:layout_width="@dimen/my_site_sidebar_width"
         android:layout_height="match_parent" />
 
-
     <FrameLayout
         android:id="@+id/content_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
 </LinearLayout>

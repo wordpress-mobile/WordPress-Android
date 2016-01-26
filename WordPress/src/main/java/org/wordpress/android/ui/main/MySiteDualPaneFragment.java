@@ -51,7 +51,7 @@ public class MySiteDualPaneFragment extends DualPaneHostFragment {
     }
 
     // We do not want to show content activity when switching to single pane mode in case we are not inside MySite tab or
-    // when we switched blog (oppened site picker in dual pane, switched to single and picked a site)
+    // when we changed blog (oppened site picker in dual pane, switched to single and picked a site)
     @Override
     protected boolean canOpenActivityAfterSwitchToSinglePaneMode() {
         boolean isSameBlog = isSameBlog();

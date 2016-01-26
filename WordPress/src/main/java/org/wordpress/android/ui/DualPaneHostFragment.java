@@ -18,7 +18,7 @@ import org.wordpress.android.util.DualPaneHelper;
 import de.greenrobot.event.EventBus;
 
 /**
- * Abstract fragment that implements core Dual Pane layout functionality
+ * Abstract fragment that provides core Dual Pane layout functionality
  */
 public abstract class DualPaneHostFragment extends Fragment implements DualPaneHost {
 
@@ -46,8 +46,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
 
     /**
      * <p>Gives you a chance to initialize default content fragment.</p>
-     * Default content fragment would be displayed in dual pane mode, when there is no content fragment selected or it was
-     * removed.<br>
+     * Default content fragment would be displayed in dual pane mode, when there is no content fragment.<br>
      * This method will only be called if default content fragment does not exist in fragment manager.
      */
     protected abstract Fragment initializeDefaultFragment();
@@ -75,7 +74,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
             mContentFragmentTag = savedInstanceState.getString(CONTENT_FRAGMENT_TAG_PARAMETER_KEY);
             mIsSinglePaneContentFragmentHidden = savedInstanceState.getBoolean(CONTENT_FRAGMENT_STATE_PARAMETER_KEY);
             mContentState = savedInstanceState.getParcelable(DualPaneContentState.KEY);
-            Log.v(TAG, "Dual pane state was restored");
+            Log.v(TAG, "Host fragment is restored");
         }
     }
 
@@ -115,8 +114,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     /**
-     * Tries to get sidebar from fragment manager, and if it's not there tries to initialize and return new from concrete
-     * class
+     * Tries to get sidebar from fragment manager. If it's not relies return fragment provided by concrete class.
      */
     protected Fragment getSidebarFragment() {
         Fragment sidebarFragment = getChildFragmentManager().findFragmentByTag(getSidebarFragmentTag());
@@ -130,8 +128,8 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     /**
-     * Starts content activity in single pane mode.
-     * In dual pane mode show's retained/default content fragment in content pane.
+     * In single pane mode tries to show available content in activity.
+     * In dual pane mode tries to show retained/default content fragment in content pane.
      */
     private void showContent() {
         if (DualPaneHelper.isInDualPaneConfiguration(getActivity())) {
@@ -175,7 +173,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
     }
 
     /**
-     * @return {@link DualPaneContentState} from {@link DualPaneContentActivity}
+     * @return {@link DualPaneContentState} passed from {@link DualPaneContentActivity}
      */
     private DualPaneContentState getStickyContentState() {
         return EventBus.getDefault().getStickyEvent(DualPaneContentState.class);

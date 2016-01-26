@@ -108,12 +108,11 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     private void updateRowSelection() {
         if (!isAdded()) return;
 
-        if (DualPaneHelper.isInDualPaneConfiguration(getActivity())) {
+        if (DualPaneHelper.isInDualPaneMode(this)) {
             DualPaneHost dashboard = DualPaneHelper.getDualPaneHost(this);
-            if (dashboard == null) return;
+            if (dashboard == null) return; //sanity check
 
             Fragment fragment = dashboard.getContentPaneFragment();
-
             if (fragment instanceof MySiteContentFragment) {
                 selectRow(((MySiteContentFragment) fragment).getMatchingRowViewId());
             }
@@ -142,7 +141,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
 
         if (rowView != null) {
             View selectableChildView = rowView.findViewWithTag(getString(R.string
-                    .my_site_list_row_selectable_layer_tag));
+                    .my_site_list_row_selectable_layer_tag)); //looking for view that we can select
 
             if (selectableChildView != null) {
                 mSelectedRowViewId = rowView.getId();
@@ -152,7 +151,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     }
 
     private void selectDefaultRow() {
-        if (DualPaneHelper.isInDualPaneConfiguration(getActivity())) {
+        if (DualPaneHelper.isInDualPaneMode(this)) {
             selectRow(DEFAULT_SELECTED_ROW_ID);
         }
     }
@@ -297,8 +296,8 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                 default:
                     break;
             }
-            resetRowSelection();
             if (DualPaneHelper.isInDualPaneMode(MySiteFragment.this)) {
+                resetRowSelection();
                 selectRow(v.getId());
             }
         }

@@ -253,4 +253,5 @@
 
     <!-- Other -->
     <string name="my_site_list_row_selectable_layer_tag" translatable="false">selectable_layer</string>
+
 </resources>

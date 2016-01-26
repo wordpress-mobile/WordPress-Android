@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 /**
- * Exposes {@link DualPaneHostFragment} functionality
+ * Exposes functionality of {@link DualPaneHostFragment}.
  */
 public interface DualPaneHost {
 
@@ -36,7 +36,7 @@ public interface DualPaneHost {
 
     /**
      * @param tag of a {@code Fragment} you want to check
-     * @return true if the  exists and attached to content pane
+     * @return true if the {@code Fragment} exists and attached to content pane
      */
     boolean isFragmentAdded(String tag);
 
