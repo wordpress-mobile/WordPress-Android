@@ -272,7 +272,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
+        }
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
         outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
         outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
