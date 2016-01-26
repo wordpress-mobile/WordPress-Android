@@ -44,6 +44,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private PreferenceScreen mPreferenceScreen;
     private Preference mUsernamePreference;
     private EditTextPreference mEmailPreference;
+    private EditTextPreference mWebAddressPreference;
     private DetailListPreference mLanguagePreference;
     private Snackbar mEmailSnackbar;
     private SharedPreferences mSettings;
@@ -58,9 +59,13 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
         mEmailPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_email));
+        mWebAddressPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_web_address));
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
 
+        mWebAddressPreference.setSummary(mWebAddressPreference.getText());
+
         mEmailPreference.setOnPreferenceChangeListener(this);
+        mWebAddressPreference.setOnPreferenceChangeListener(this);
         mLanguagePreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -136,6 +141,8 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 showPendingEmailChangeSnackbar(newValue.toString());
             }
             return false;
+        } else if (preference == mWebAddressPreference) {
+            mWebAddressPreference.setSummary(newValue.toString());
         } else if (preference == mLanguagePreference) {
             changeLanguage(newValue.toString());
         }
