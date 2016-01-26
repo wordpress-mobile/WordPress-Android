@@ -711,18 +711,12 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Map<String, String> formats = mSiteSettings.getFormats();
-        String[] formatKeys = mSiteSettings.getFormatKeys();
-        String[] entries = new String[formatKeys.length];
-        String[] values = new String[formatKeys.length];
+        // clone the post formats map
+        final Map<String, String> postFormats = new HashMap<>(mSiteSettings.getFormats());
 
-        for (int i = 0; i < entries.length; ++i) {
-            entries[i] = formats.get(formatKeys[i]);
-            values[i] = formatKeys[i];
-        }
-
-        mFormatPref.setEntries(entries);
-        mFormatPref.setEntryValues(values);
+        // transform the keys and values into arrays and set the ListPreference's data
+        mFormatPref.setEntries(postFormats.values().toArray(new String[0]));
+        mFormatPref.setEntryValues(postFormats.keySet().toArray(new String[0]));
         mFormatPref.setValue(String.valueOf(mSiteSettings.getDefaultPostFormat()));
         mFormatPref.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
     }

@@ -193,7 +193,14 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 credentialsVerified(true);
 
                 deserializeOptionsResponse(mRemoteSettings, (Map) result);
+
+                // postFormats setting is not returned by this api call so copy it over
+                final Map<String, String> currentPostFormats = mSettings.postFormats;
+
                 mSettings.copyFrom(mRemoteSettings);
+
+                mSettings.postFormats = currentPostFormats;
+
                 SiteSettingsTable.saveSettings(mSettings);
                 notifyUpdatedOnUiThread(null);
             } else {
