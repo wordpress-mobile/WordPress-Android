@@ -398,6 +398,13 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
     }
 
     class DownloadExportFileTask extends AsyncTask<String, Void, Void> {
+        private DownloadManager downloadManager;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        }
+
         @Override
         protected Void doInBackground(String... exportUrls) {
             try {
@@ -421,6 +428,8 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
                 }
                 //close the output stream when done
                 fileOutput.close();
+
+                downloadManager.addCompletedDownload("Downloa", "Yuppers", true, "string/xml", file.getPath(), file.length(), true);
 
             } catch (java.io.IOException e) {
                 e.printStackTrace();
