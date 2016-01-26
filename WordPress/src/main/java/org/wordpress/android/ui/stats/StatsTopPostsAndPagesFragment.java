@@ -16,22 +16,22 @@ import java.util.List;
 public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsTopPostsAndPagesFragment.class.getSimpleName();
 
-    private TopPostsAndPagesModel topPostsAndPagesModel = null;
+    private TopPostsAndPagesModel mTopPostsAndPagesModel = null;
 
     @Override
     protected boolean hasDataAvailable() {
-        return topPostsAndPagesModel != null;
+        return mTopPostsAndPagesModel != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
-            outState.putSerializable(ARG_REST_RESPONSE, topPostsAndPagesModel);
+            outState.putSerializable(ARG_REST_RESPONSE, mTopPostsAndPagesModel);
         }
     }
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-            topPostsAndPagesModel = (TopPostsAndPagesModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+            mTopPostsAndPagesModel = (TopPostsAndPagesModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
     }
 
@@ -42,7 +42,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         }
 
         mGroupIdToExpandedMap.clear();
-        topPostsAndPagesModel = event.mTopPostsAndPagesModel;
+        mTopPostsAndPagesModel = event.mTopPostsAndPagesModel;
 
         updateUI();
     }
@@ -53,7 +53,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
             return;
         }
 
-        topPostsAndPagesModel = null;
+        mTopPostsAndPagesModel = null;
         mGroupIdToExpandedMap.clear();
         showErrorUI(event.mError);
     }
@@ -65,7 +65,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         }
 
         if (hasTopPostsAndPages()) {
-            List<PostModel> postViews = topPostsAndPagesModel.getTopPostsAndPages();
+            List<PostModel> postViews = mTopPostsAndPagesModel.getTopPostsAndPages();
             ArrayAdapter adapter = new PostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -75,14 +75,14 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasTopPostsAndPages() {
-        return topPostsAndPagesModel != null && topPostsAndPagesModel.hasTopPostsAndPages();
+        return mTopPostsAndPagesModel != null && mTopPostsAndPagesModel.hasTopPostsAndPages();
     }
 
     private List<PostModel> getTopPostsAndPages() {
         if (!hasTopPostsAndPages()) {
             return new ArrayList<PostModel>(0);
         }
-        return topPostsAndPagesModel.getTopPostsAndPages();
+        return mTopPostsAndPagesModel.getTopPostsAndPages();
     }
 
     @Override
