@@ -46,6 +46,9 @@ public class AppPrefs {
 
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
+
+        // Store if the Stats Widget promo was previously displayed to the user
+        STATS_WIDGET_PROMO_SHOWN,
     }
 
     /**
@@ -253,5 +256,14 @@ public class AppPrefs {
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
         }
+    }
+
+    // Store whether the Stats Widget promo was previously shown to the user
+    public static boolean isStatsWidgetPromoDisplayed() {
+        return getBoolean(DeletablePrefKey.STATS_WIDGET_PROMO_SHOWN, false);
+    }
+    public static void setStatsWidgetPromoDisplayed(boolean displayed) {
+        //setBoolean(DeletablePrefKey.STATS_WIDGET_PROMO_SHOWN, displayed); // TODO: enable this
+        setBoolean(DeletablePrefKey.STATS_WIDGET_PROMO_SHOWN, false);
     }
 }

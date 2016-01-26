@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -95,6 +96,9 @@ public class StatsActivity extends AppCompatActivity
     private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
+
+    // Shortcut to the App Preference that holds if the Stats Widget was previously displayed to the user.
+    private boolean mIsStatsWidgetDisplayed = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -267,6 +271,9 @@ public class StatsActivity extends AppCompatActivity
             AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_ACCESSED, currentBlog);
             trackStatsAnalytics();
         }
+
+        // Read from preferece the value when the activity is started and use it later.
+        mIsStatsWidgetDisplayed = AppPrefs.isStatsWidgetPromoDisplayed();
     }
 
     private void trackStatsAnalytics() {
@@ -748,6 +755,49 @@ public class StatsActivity extends AppCompatActivity
         return true;
     }
 
+    public static class MyAlertDialogFragment extends DialogFragment {
+
+        public static MyAlertDialogFragment newInstance(int title) {
+            MyAlertDialogFragment frag = new MyAlertDialogFragment();
+            Bundle args = new Bundle();
+            args.putInt("title", title);
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.stats_widget_promote_dialog, container);
+        }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            // Fetch arguments from bundle and set title
+            String title = getArguments().getString("title", "Enter Name");
+            getDialog().setTitle(title);
+        }
+
+        /*
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            int title = getArguments().getInt("title");
+
+            return new AlertDialog.Builder(getActivity())
+                    .setIcon(R.drawable.ic_action_video)
+                    .setTitle(title)
+                    .setPositiveButton(R.string.ok,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int whichButton) {
+
+                                }
+                            })
+                    .create();
+        }*/
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
         if (isFinishing() || !mIsInFront) {
@@ -755,6 +805,15 @@ public class StatsActivity extends AppCompatActivity
         }
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
         mIsUpdatingStats = event.mUpdating;
+
+        // Should we display the widget promo?
+        if (!mIsUpdatingStats && !mIsStatsWidgetDisplayed) {
+            AppPrefs.setStatsWidgetPromoDisplayed(true);
+            mIsStatsWidgetDisplayed = true;
+            DialogFragment newFragment = MyAlertDialogFragment
+                    .newInstance(R.string.invalid_password_title);
+            newFragment.show(getFragmentManager(), "dialog");
+        }
     }
 
     @SuppressWarnings("unused")
