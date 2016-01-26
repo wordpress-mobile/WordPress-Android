@@ -15,17 +15,18 @@ public class DualPaneHelper {
 
     @Nullable
     public static DualPaneHost getDualPaneHost(Fragment fragment) {
-        if (!isPartOfDualPaneDashboard(fragment)) {
+        if (!isPartOfDualPaneHost(fragment)) {
             return null;
         }
         return (DualPaneHost) fragment.getParentFragment();
     }
 
-    public static boolean isPartOfDualPaneDashboard(Fragment fragment) {
+    public static boolean isPartOfDualPaneHost(Fragment fragment) {
         return fragment.getParentFragment() != null && fragment.getParentFragment() instanceof DualPaneHost;
     }
 
+    //To be in dual pane mode, we need to be able to access dual pane resource qualifier AND be a part of dual pane host
     public static boolean isInDualPaneMode(Fragment fragment) {
-        return fragment.isAdded() && isInDualPaneConfiguration(fragment.getActivity()) && isPartOfDualPaneDashboard(fragment);
+        return fragment.isAdded() && isInDualPaneConfiguration(fragment.getActivity()) && isPartOfDualPaneHost(fragment);
     }
 }

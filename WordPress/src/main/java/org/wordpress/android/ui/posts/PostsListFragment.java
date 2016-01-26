@@ -515,7 +515,7 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public int getMySiteListRowId() {
+    public int getMatchingRowViewId() {
         if (mIsPage) {
             return R.id.row_pages;
         } else {

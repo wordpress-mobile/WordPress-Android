@@ -38,7 +38,7 @@ public interface DualPaneHost {
      * @param tag of a {@code Fragment} you want to check
      * @return true if the  exists and attached to content pane
      */
-    boolean isFragmentWithTagAdded(String tag);
+    boolean isFragmentAdded(String tag);
 
     /**
      * Used to notify {@code DualPaneHost} that content activity started.

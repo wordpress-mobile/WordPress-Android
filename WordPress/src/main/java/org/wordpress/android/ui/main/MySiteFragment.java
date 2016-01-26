@@ -46,12 +46,12 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
 
     private static final String SELECTED_ROW_VIEW_ID = "selected_category_id";
-    private static final String CACHED_BLOG_LOCAL_ID = "cached_blog_local_id";
+    private static final String PREVIOUS_BLOG_LOCAL_ID = "previous_blog_local_id";
 
     private static final int DEFAULT_SELECTED_ROW_ID = R.id.row_blog_posts;
 
     private int mSelectedRowViewId;
-    private int mCachedBlogLocalId = -1;
+    private int mPreviousBlogId = -1;
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -73,7 +73,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     private boolean mIsContentFragmentRemovalRequired = false;
 
     public interface MySiteContentFragment {
-        int getMySiteListRowId();
+        int getMatchingRowViewId();
     }
 
     public static MySiteFragment newInstance() {
@@ -93,7 +93,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
 
         if (savedInstanceState != null) {
             mSelectedRowViewId = savedInstanceState.getInt(SELECTED_ROW_VIEW_ID);
-            mCachedBlogLocalId = savedInstanceState.getInt(CACHED_BLOG_LOCAL_ID, -1);
+            mPreviousBlogId = savedInstanceState.getInt(PREVIOUS_BLOG_LOCAL_ID, -1);
         }
     }
 
@@ -105,7 +105,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         }
     }
 
-    private void updateSelectedRowState() {
+    private void updateRowSelection() {
         if (!isAdded()) return;
 
         if (DualPaneHelper.isInDualPaneConfiguration(getActivity())) {
@@ -113,13 +113,14 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
             if (dashboard == null) return;
 
             Fragment fragment = dashboard.getContentPaneFragment();
+
             if (fragment instanceof MySiteContentFragment) {
-                selectRow(((MySiteContentFragment) fragment).getMySiteListRowId());
+                selectRow(((MySiteContentFragment) fragment).getMatchingRowViewId());
             }
         }
     }
 
-    private void resetRowSelectionState() {
+    private void resetRowSelection() {
         if (getView() == null || !isAdded()) return;
 
         View selectedView = getView().findViewById(mSelectedRowViewId);
@@ -160,18 +161,17 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     public void onResume() {
         super.onResume();
 
-        resetRowSelectionState();
+        resetRowSelection();
         if (mIsContentFragmentRemovalRequired || !isSameBlog()) {
             removeContentFragment();
 
             // we have to manually select default row to avoid race condition between removeContentFragment(), which is
-            // asynchronous, and updateSelectedRowState()
+            // asynchronous, and updateRowSelection()
             selectDefaultRow();
         } else {
-            updateSelectedRowState();
+            updateRowSelection();
         }
-
-        mCachedBlogLocalId = mBlogLocalId;
+        mPreviousBlogId = mBlogLocalId;
 
         final Blog blog = WordPress.getBlog(mBlogLocalId);
 
@@ -199,7 +199,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     //fragment was destroyed while we picked a blog). So the only way for us to know for sure that the blog has been changed
     //is to store local blog id onSaveInstanceState and compare it to the current one
     private boolean isSameBlog() {
-        return mCachedBlogLocalId == -1 || mCachedBlogLocalId == mBlogLocalId;
+        return mPreviousBlogId == -1 || mPreviousBlogId == mBlogLocalId;
     }
 
     @Override
@@ -297,7 +297,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                 default:
                     break;
             }
-            resetRowSelectionState();
+            resetRowSelection();
             if (DualPaneHelper.isInDualPaneMode(MySiteFragment.this)) {
                 selectRow(v.getId());
             }
@@ -466,6 +466,6 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_ROW_VIEW_ID, mSelectedRowViewId);
-        outState.putInt(CACHED_BLOG_LOCAL_ID, mBlogLocalId);
+        outState.putInt(PREVIOUS_BLOG_LOCAL_ID, mBlogLocalId);
     }
 }

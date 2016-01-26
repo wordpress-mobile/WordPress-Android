@@ -17,7 +17,7 @@ import de.greenrobot.event.EventBus;
  */
 public abstract class DualPaneContentActivity extends AppCompatActivity {
 
-    public final static String ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD = "launched_from_dual_pane_dashboard";
+    public final static String ARG_LAUNCHED_FROM_DUAL_PANE_HOST = "launched_from_dual_pane_dashboard";
     public final static String FRAGMENT_STATE_KEY = "fragment_state";
 
     protected abstract String getContentFragmentTag();
@@ -30,7 +30,7 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
 
         mFragmentSavedState = getIntent().getParcelableExtra(FRAGMENT_STATE_KEY);
 
-        boolean isLaunchedFromDualPaneDashboard = getIntent().getBooleanExtra(ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, false);
+        boolean isLaunchedFromDualPaneDashboard = getIntent().getBooleanExtra(ARG_LAUNCHED_FROM_DUAL_PANE_HOST, false);
 
         // When activity launched from dual pane host gets recreated in dual pane mode it calls finish(), but before that,
         // it grabs nested fragment's state and broadcasts it using EventBus. Dual pane host get's it and use's it to show

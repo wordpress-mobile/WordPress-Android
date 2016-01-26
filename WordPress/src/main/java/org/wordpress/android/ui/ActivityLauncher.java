@@ -81,7 +81,7 @@ public class ActivityLauncher {
         if (dualPaneHost != null) {
             showDualPaneContent(context,
                     PostsListFragment.class,
-                    "current_blog_posts",
+                    context.getString(R.string.fragment_tag_blog_post_list),
                     intent,
                     dualPaneHost,
                     AnalyticsTracker.Stat.OPENED_POSTS);
@@ -91,25 +91,27 @@ public class ActivityLauncher {
         }
     }
 
-    private static void showDualPaneContent(Context context, Class fragmentClass, String tag, Intent intent, DualPaneHost
-            dualPaneHost, AnalyticsTracker.Stat stat) {
+    private static void showDualPaneContent(Context context, Class fragmentClass, String tag, Intent intent,
+                                            DualPaneHost dualPaneHost, AnalyticsTracker.Stat stat) {
+        // letting activity know that it was started from dual pane host
         if (intent != null) {
-            intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, true);
+            intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_HOST, true);
         }
 
         if (DualPaneHelper.isInDualPaneConfiguration(context)) {
-            if (!dualPaneHost.isFragmentWithTagAdded(tag)) {
+            //do nothing if fragment already added
+            if (!dualPaneHost.isFragmentAdded(tag)) {
                 dualPaneHost.showContent(fragmentClass, tag, intent);
                 if (stat != null) {
                     AnalyticsUtils.trackWithCurrentBlogDetails(stat);
                 }
             }
         } else {
+            slideInFromRight(context, intent);
             dualPaneHost.onContentActivityStarted();
             if (stat != null) {
                 AnalyticsUtils.trackWithCurrentBlogDetails(stat);
             }
-            slideInFromRight(context, intent);
         }
     }
 
@@ -126,7 +128,7 @@ public class ActivityLauncher {
         if (dualPaneHost != null) {
             showDualPaneContent(context,
                     PostsListFragment.class,
-                    "current_blog_pages",
+                    context.getString(R.string.fragment_tag_blog_pages_list),
                     intent,
                     dualPaneHost,
                     AnalyticsTracker.Stat.OPENED_PAGES);
