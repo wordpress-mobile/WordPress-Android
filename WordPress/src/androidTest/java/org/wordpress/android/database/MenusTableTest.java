@@ -32,17 +32,43 @@ public class MenusTableTest extends InstrumentationTestCase {
     }
 
     public void testUniqueTableNames() {
-        assertFalse(MenuModel.MENUS_TABLE_NAME == MenuItemModel.MENU_ITEMS_TABLE_NAME);
-        assertFalse(MenuModel.MENUS_TABLE_NAME == MenuLocationModel.MENU_LOCATIONS_TABLE_NAME);
-        assertFalse(MenuItemModel.MENU_ITEMS_TABLE_NAME == MenuLocationModel.MENU_LOCATIONS_TABLE_NAME);
+        assertFalse(MenuModel.MENUS_TABLE_NAME.equals(MenuItemModel.MENU_ITEMS_TABLE_NAME));
+        assertFalse(MenuModel.MENUS_TABLE_NAME.equals(MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
+        assertFalse(MenuItemModel.MENU_ITEMS_TABLE_NAME.equals(MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
+    }
+
+    public void testInvalidMenuLocation() {
+        assertNull(MenusTable.getMenuLocationFromId(-1));
     }
 
     public void testInvalidMenu() {
-        assertNull(MenusTable.getMenuForMenuId(null));
+        assertNull(MenusTable.getMenuForMenuId(-1));
     }
 
     public void testInvalidMenuItem() {
         assertNull(MenusTable.getMenuItemForId(-1));
+    }
+
+    public void testSaveLoadMenuLocation() {
+        MenuLocationModel testLocation = getTestLocation();
+        assertTrue(MenusTable.saveMenuLocation(testLocation));
+        MenuLocationModel savedLocation = MenusTable.getMenuLocationFromId(testLocation.locationId);
+        assertEquals(testLocation.locationId, savedLocation.locationId);
+        assertEquals(testLocation.name, savedLocation.name);
+        assertEquals(testLocation.details, savedLocation.details);
+        assertEquals(testLocation.defaultState, savedLocation.defaultState);
+        assertEquals(testLocation.menuId, savedLocation.menuId);
+    }
+
+    public void testSaveLoadMenu() {
+        MenuModel testMenu = getTestMenu();
+        assertTrue(MenusTable.saveMenu(testMenu));
+        MenuModel savedMenu = MenusTable.getMenuForMenuId(testMenu.menuId);
+        assertEquals(testMenu.menuId, savedMenu.menuId);
+        assertEquals(testMenu.name, savedMenu.name);
+        assertEquals(testMenu.details, savedMenu.details);
+        assertEquals(testMenu.locations, savedMenu.locations);
+        assertEquals(testMenu.menuItems, savedMenu.menuItems);
     }
 
     public void testSaveLoadMenuItem() {
@@ -62,6 +88,26 @@ public class MenusTableTest extends InstrumentationTestCase {
         assertEquals(testItem.url, savedItem.url);
         assertEquals(testItem.menuId, TEST_ID);
         assertEquals(testItem.parentId, TEST_ID);
+    }
+
+    public MenuLocationModel getTestLocation() {
+        MenuLocationModel testLocation = new MenuLocationModel();
+        testLocation.locationId = 0;
+        testLocation.name = TEST_NAME;
+        testLocation.details = TEST_DETAILS;
+        testLocation.defaultState  = "def";
+        testLocation.menuId = TEST_ID;
+        return testLocation;
+    }
+
+    public MenuModel getTestMenu() {
+        MenuModel testMenu = new MenuModel();
+        testMenu.menuId = 0;
+        testMenu.name = TEST_NAME;
+        testMenu.details = TEST_DETAILS;
+        testMenu.setLocationsFromStringList("1,2,3");
+        testMenu.setItemsFromStringList("111,112,113");
+        return testMenu;
     }
 
     private MenuItemModel getTestMenuItem() {

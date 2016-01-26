@@ -3,7 +3,6 @@ package org.wordpress.android.datasets;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuItemModel;
@@ -19,6 +18,8 @@ import static org.wordpress.android.util.DatabaseUtils.*;
 public class MenusTable {
     public static final String SELECT_ALL_LOCATION_SQL =
             "SELECT * FROM " + MenuLocationModel.MENU_LOCATIONS_TABLE_NAME + " ";
+    public static final String SELECT_ALL_MENU_SQL =
+            "SELECT * FROM " + MenuModel.MENUS_TABLE_NAME + " ";
     public static final String SELECT_ALL_ITEM_SQL =
             "SELECT * FROM " + MenuItemModel.MENU_ITEMS_TABLE_NAME + " ";
 
@@ -33,29 +34,35 @@ public class MenusTable {
         }
     }
 
+    public static void deleteTable(SQLiteDatabase db) {
+        if (db != null) {
+            db.execSQL("DELETE * FROM " + MenuModel.MENUS_TABLE_NAME);
+            db.execSQL("DELETE * FROM " + MenuLocationModel.MENU_LOCATIONS_TABLE_NAME);
+            db.execSQL("DELETE * FROM " + MenuItemModel.MENU_ITEMS_TABLE_NAME);
+        }
+    }
+
     /**
-     * Pass-through to {@link MenusTable#getMenuLocationFromName(SQLiteDatabase, String)} using
+     * Pass-through to {@link MenusTable#getMenuLocationFromId(SQLiteDatabase, long)} using
      * {@link WordPress#wpDB} as the database argument.
      */
-    public static MenuLocationModel getMenuLocationFromName(String name) {
-        return getMenuLocationFromName(WordPress.wpDB.getDatabase(), name);
+    public static MenuLocationModel getMenuLocationFromId(long id) {
+        return getMenuLocationFromId(WordPress.wpDB.getDatabase(), id);
     }
 
     /**
      * Attempts to load a {@link MenuLocationModel} from a database.
      *
-     * @param name
-     *  name of the Menu Location to load
+     * @param id
+     *  id of the Menu Location to load
      * @return
      *  a {@link MenuLocationModel} deserialized from the database, null if name is not recognized
      */
-    public static MenuLocationModel getMenuLocationFromName(SQLiteDatabase db, String name) {
-        String sqlQuery = SELECT_ALL_LOCATION_SQL + where(MenuLocationModel.NAME_COLUMN_NAME) + ";";
-        Cursor cursor = db.rawQuery(sqlQuery, new String[]{ name });
+    public static MenuLocationModel getMenuLocationFromId(SQLiteDatabase db, long id) {
+        String sqlQuery = SELECT_ALL_LOCATION_SQL + where(MenuLocationModel.ID_COLUMN_NAME) + ";";
+        Cursor cursor = db.rawQuery(sqlQuery, new String[]{ String.valueOf(id) });
         MenuLocationModel location = cursor.getCount() > 0 ? new MenuLocationModel() : null;
-        if (location != null) {
-            location.deserializeFromDatabase(cursor);
-        }
+        if (location != null) location.deserializeFromDatabase(cursor);
         cursor.close();
         return location;
     }
@@ -80,18 +87,25 @@ public class MenusTable {
         String sqlQuery = SELECT_ALL_ITEM_SQL + where(MenuItemModel.ID_COLUMN_NAME) + ";";
         Cursor cursor = db.rawQuery(sqlQuery, new String[]{ String.valueOf(id) });
         MenuItemModel item = cursor.getCount() > 0 ? new MenuItemModel() : null;
-        if (item != null) {
-            item.deserializeFromDatabase(cursor);
-        }
+        if (item != null) item.deserializeFromDatabase(cursor);
+        cursor.close();
         return item;
     }
 
-    public static MenuModel getMenuForMenuId(String id) {
-        if (TextUtils.isEmpty(id)) return null;
-        String sqlCommand = "";
-        MenuModel menu = new MenuModel();
-        menu.deserializeFromDatabase(WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null));
+    public static MenuModel getMenuFromId(long id) {
+        return getMenuFromId(WordPress.wpDB.getDatabase(), id);
+    }
+
+    public static MenuModel getMenuFromId(SQLiteDatabase db, long id) {
+        String sqlQuery = SELECT_ALL_MENU_SQL + where(MenuModel.ID_COLUMN_NAME) + ";";
+        Cursor cursor = db.rawQuery(sqlQuery, new String[]{ String.valueOf(id) });
+        MenuModel menu = cursor.getCount() > 0 ? new MenuModel() : null;
+        if (menu != null) menu.deserializeFromDatabase(cursor);
         return menu;
+    }
+
+    public static MenuModel getMenuForMenuId(long id) {
+        return getMenuFromId(WordPress.wpDB.getDatabase(), id);
     }
 
     public static MenuItemModel getMenuItemForId(long id) {
@@ -148,8 +162,6 @@ public class MenusTable {
         if (menu == null) return false;
 
 //        for (MenuItemModel item : menu.menuItems) {
-//            saveMenuItem(item);
-//        }
 
         return true;
     }
