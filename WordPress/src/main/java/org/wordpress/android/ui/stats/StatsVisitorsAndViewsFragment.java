@@ -833,16 +833,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         public String getLabel() {
             return WordPress.getContext().getString(mLabelResId).toUpperCase();
         }
-
-        public static String[] toStringArray(OverviewLabel[] timeframes) {
-            String[] titles = new String[timeframes.length];
-
-            for (int i = 0; i < timeframes.length; i++) {
-                titles[i] = timeframes[i].getLabel();
-            }
-
-            return titles;
-        }
     }
 
     @Override
