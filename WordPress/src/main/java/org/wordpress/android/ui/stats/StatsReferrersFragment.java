@@ -39,7 +39,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-          mReferrers = (ReferrersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+            mReferrers = (ReferrersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
     }
 
