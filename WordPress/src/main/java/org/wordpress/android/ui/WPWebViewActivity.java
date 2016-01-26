@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -37,8 +38,15 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
 
@@ -343,6 +351,8 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
         exportUrl = url;
@@ -370,17 +380,52 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
     }
 
     private void downloadURL() {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(exportUrl));
-        request.allowScanningByMediaScanner();
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        request.setMimeType("text/xml");
-        request.setTitle("yup");
-        request.setDescription("WordPress backup");
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "dd");
-        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        dm.enqueue(request);
-        Toast.makeText(this, "Downloading File", //To notify the Client that the file is being downloaded
-                Toast.LENGTH_LONG).show();
+        new DownloadExportFileTask().execute(exportUrl);
+
+
+//        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(exportUrl));
+//        request.allowScanningByMediaScanner();
+//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+//        request.setMimeType("text/xml");
+//        request.setTitle("yup");
+//        request.setDescription("WordPress backup");
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "dd");
+//        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//        dm.enqueue(request);
+//        Toast.makeText(this, "Downloading File", //To notify the Client that the file is being downloaded
+//                Toast.LENGTH_LONG).show();
+    }
+
+    class DownloadExportFileTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... exportUrls) {
+            try {
+                URL url = new URL(exportUrl);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+                File SDCardRoot = Environment.getExternalStorageDirectory();
+                File file = new File(SDCardRoot, "Downloadsxx.xml");
+
+                FileOutputStream fileOutput = new FileOutputStream(file);
+                InputStream inputStream = urlConnection.getInputStream();
+
+                byte[] buffer = new byte[1024];
+                int bufferLength = 0; //used to store a temporary size of the buffer
+
+                //now, read through the input buffer and write the contents to the file
+                while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
+                    //add the data in the buffer to the file in the file output stream (the file on the sd card
+                    fileOutput.write(buffer, 0, bufferLength);
+
+                }
+                //close the output stream when done
+                fileOutput.close();
+
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }
