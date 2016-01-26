@@ -198,7 +198,7 @@ public abstract class StatsAbstractFragment extends Fragment {
             return false;
         }
 
-        if (event.mTimeframe != getTimeframe()) {
+        if (!event.mTimeframe.equals(getTimeframe())) {
             return false;
         }
 
