@@ -48,8 +48,8 @@ public class DualPaneContentState implements Parcelable {
         return getState().getParcelable(FRAGMENT_STATE_KEY);
     }
 
-    protected DualPaneContentState(Parcel in) {
-        mState = in.readBundle(getClass().getClassLoader());
+    public DualPaneContentState(Parcel in) {
+        mState = in.readBundle(DualPaneContentState.class.getClassLoader());
     }
 
     @Override

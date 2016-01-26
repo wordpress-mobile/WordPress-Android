@@ -35,7 +35,7 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
         // When activity launched from dual pane host gets recreated in dual pane mode it calls finish(), but before that,
         // it grabs nested fragment's state and broadcasts it using EventBus. Dual pane host get's it and use's it to show
         // fragment in dual pane mode.
-        if (DualPaneHelper.isInDualPaneMode(this) && isLaunchedFromDualPaneDashboard) {
+        if (DualPaneHelper.isInDualPaneConfiguration(this) && isLaunchedFromDualPaneDashboard) {
             if (savedInstanceState != null) {
                 Fragment.SavedState fragmentState = savedInstanceState.getParcelable(FRAGMENT_STATE_KEY);
 

@@ -97,7 +97,7 @@ public class PostsListFragment extends Fragment
         int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         int spacingHorizontal;
 
-        if (DualPaneHelper.isSpecificDualPaneActionRequired(this)) {
+        if (DualPaneHelper.isInDualPaneMode(this)) {
             //Use normal margin (instead of wide, tablet one) while in dual pane mode.
             //Setting margin through different resource qualifiers in this case is more complicated and harder to follow.
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
@@ -515,7 +515,7 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public int getSelectorId() {
+    public int getMySiteListRowId() {
         if (mIsPage) {
             return R.id.row_pages;
         } else {

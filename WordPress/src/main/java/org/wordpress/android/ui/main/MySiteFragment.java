@@ -72,6 +72,10 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
 
     private boolean mIsContentFragmentRemovalRequired = false;
 
+    public interface MySiteContentFragment {
+        int getMySiteListRowId();
+    }
+
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
     }
@@ -104,13 +108,13 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     private void updateSelectedRowState() {
         if (!isAdded()) return;
 
-        if (DualPaneHelper.isInDualPaneMode(getActivity())) {
+        if (DualPaneHelper.isInDualPaneConfiguration(getActivity())) {
             DualPaneHost dashboard = DualPaneHelper.getDualPaneHost(this);
             if (dashboard == null) return;
 
             Fragment fragment = dashboard.getContentPaneFragment();
             if (fragment instanceof MySiteContentFragment) {
-                selectRow(((MySiteContentFragment) fragment).getSelectorId());
+                selectRow(((MySiteContentFragment) fragment).getMySiteListRowId());
             }
         }
     }
@@ -147,7 +151,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     }
 
     private void selectDefaultRow() {
-        if (DualPaneHelper.isInDualPaneMode(getActivity())) {
+        if (DualPaneHelper.isInDualPaneConfiguration(getActivity())) {
             selectRow(DEFAULT_SELECTED_ROW_ID);
         }
     }
@@ -155,6 +159,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     @Override
     public void onResume() {
         super.onResume();
+
         resetRowSelectionState();
         if (mIsContentFragmentRemovalRequired || !isSameBlog()) {
             removeContentFragment();
@@ -201,7 +206,7 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        if (DualPaneHelper.isSpecificDualPaneActionRequired(this)) {
+        if (DualPaneHelper.isInDualPaneMode(this)) {
             ScrollView.LayoutParams lp = (ScrollView.LayoutParams) rootView.findViewById(R.id.content_container)
                     .getLayoutParams();
             lp.leftMargin = getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
@@ -256,7 +261,6 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     private View.OnClickListener mMySiteMenuClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            resetRowSelectionState();
             switch (v.getId()) {
                 case R.id.switch_site:
                     showSitePicker();
@@ -268,15 +272,15 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                     ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
                     break;
                 case R.id.row_blog_posts:
-                    ActivityLauncher.viewCurrentBlogPosts(getActivity(), DualPaneHelper.getDualPaneHost(MySiteFragment
-                            .this));
+                    ActivityLauncher.viewCurrentBlogPosts(getActivity(),
+                            DualPaneHelper.getDualPaneHost(MySiteFragment.this));
                     break;
                 case R.id.row_media:
                     ActivityLauncher.viewCurrentBlogMedia(getActivity());
                     break;
                 case R.id.row_pages:
-                    ActivityLauncher.viewCurrentBlogPages(getActivity(), DualPaneHelper.getDualPaneHost(MySiteFragment
-                            .this));
+                    ActivityLauncher.viewCurrentBlogPages(getActivity(),
+                            DualPaneHelper.getDualPaneHost(MySiteFragment.this));
                     break;
                 case R.id.row_comments:
                     ActivityLauncher.viewCurrentBlogComments(getActivity());
@@ -290,8 +294,11 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
                 case R.id.row_admin:
                     ActivityLauncher.viewBlogAdmin(getActivity(), WordPress.getBlog(mBlogLocalId));
                     break;
+                default:
+                    break;
             }
-            if (DualPaneHelper.isSpecificDualPaneActionRequired(MySiteFragment.this)) {
+            resetRowSelectionState();
+            if (DualPaneHelper.isInDualPaneMode(MySiteFragment.this)) {
                 selectRow(v.getId());
             }
         }
@@ -460,9 +467,5 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_ROW_VIEW_ID, mSelectedRowViewId);
         outState.putInt(CACHED_BLOG_LOCAL_ID, mBlogLocalId);
-    }
-
-    public interface MySiteContentFragment {
-        int getSelectorId();
     }
 }

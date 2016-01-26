@@ -97,7 +97,7 @@ public class ActivityLauncher {
             intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_DASHBOARD, true);
         }
 
-        if (DualPaneHelper.isInDualPaneMode(context)) {
+        if (DualPaneHelper.isInDualPaneConfiguration(context)) {
             if (!dualPaneHost.isFragmentWithTagAdded(tag)) {
                 dualPaneHost.showContent(fragmentClass, tag, intent);
                 if (stat != null) {

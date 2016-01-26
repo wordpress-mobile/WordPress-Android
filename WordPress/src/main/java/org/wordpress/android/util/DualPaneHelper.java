@@ -9,8 +9,8 @@ import org.wordpress.android.ui.DualPaneHost;
 
 public class DualPaneHelper {
 
-    public static boolean isInDualPaneMode(Context content) {
-        return content.getResources().getBoolean(R.bool.dual_pane);
+    public static boolean isInDualPaneConfiguration(Context context) {
+        return context.getResources().getBoolean(R.bool.dual_pane);
     }
 
     @Nullable
@@ -25,7 +25,7 @@ public class DualPaneHelper {
         return fragment.getParentFragment() != null && fragment.getParentFragment() instanceof DualPaneHost;
     }
 
-    public static boolean isSpecificDualPaneActionRequired(Fragment fragment) {
-        return fragment.isAdded() && isInDualPaneMode(fragment.getActivity()) && isPartOfDualPaneDashboard(fragment);
+    public static boolean isInDualPaneMode(Fragment fragment) {
+        return fragment.isAdded() && isInDualPaneConfiguration(fragment.getActivity()) && isPartOfDualPaneDashboard(fragment);
     }
 }
