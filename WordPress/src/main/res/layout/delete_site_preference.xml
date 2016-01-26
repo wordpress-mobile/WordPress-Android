@@ -2,30 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
     android:paddingRight="?android:attr/scrollbarSize"
+    android:paddingLeft="@dimen/delete_site_preference_margin_large"
+    android:paddingTop="@dimen/delete_site_preference_margin_large"
+    android:paddingBottom="@dimen/delete_site_preference_margin_large"
     android:background="?android:attr/selectableItemBackground"
     android:baselineAligned="false">
 
-    <RelativeLayout
-        android:layout_width="@dimen/margin_none"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/delete_site_preference_margin_large"
-        android:layout_marginStart="@dimen/delete_site_preference_margin_large"
-        android:layout_marginRight="@dimen/delete_site_preference_margin_medium"
-        android:layout_marginEnd="@dimen/delete_site_preference_margin_medium"
-        android:layout_marginTop="@dimen/delete_site_preference_margin_large"
-        android:layout_marginBottom="@dimen/delete_site_preference_margin_medium"
-        android:layout_weight="1">
-
+        android:orientation="horizontal"
+        android:minHeight="24dp">
 
         <ImageView
             android:id="@+android:id/icon"
-            android:layout_width="@dimen/delete_site_preference_margin_large"
-            android:layout_height="@dimen/delete_site_preference_margin_large"
-            android:layout_marginRight="@dimen/delete_site_preference_margin_medium"
-            android:layout_gravity="center"
+            android:layout_width="@dimen/delete_site_text_margin"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            android:layout_gravity="center_vertical"
             android:tint="@color/grey_darken_30"/>
 
         <TextView
@@ -34,33 +32,30 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:paddingLeft="@dimen/delete_site_preference_margin_small"
-            android:layout_toRightOf="@android:id/icon"
-            android:layout_alignBottom="@android:id/icon"
+            android:layout_gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal" />
 
-        <TextView
-            android:id="@android:id/summary"
-            android:layout_marginTop="@dimen/delete_site_preference_margin_medium"
-            android:layout_marginBottom="@dimen/delete_site_preference_margin_medium"
-            android:paddingLeft="@dimen/delete_site_preference_margin_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@android:id/title"
-            android:layout_alignLeft="@android:id/title"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorSecondary" />
+    </LinearLayout>
 
-        <LinearLayout
-            android:id="@android:id/widget_frame"
-            android:layout_below="@android:id/summary"
-            android:layout_alignLeft="@android:id/summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical" />
+    <TextView
+        android:id="@android:id/summary"
+        android:layout_marginTop="@dimen/delete_site_preference_margin_medium"
+        android:layout_marginBottom="@dimen/delete_site_preference_margin_medium"
+        android:layout_marginLeft="@dimen/delete_site_text_margin"
+        android:paddingLeft="@dimen/delete_site_preference_margin_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorSecondary" />
 
-    </RelativeLayout>
+    <LinearLayout
+        android:id="@android:id/widget_frame"
+        android:layout_marginLeft="@dimen/delete_site_text_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical" />
 
 </LinearLayout>
