@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
-import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.DualPaneContentState;
 import org.wordpress.android.util.DualPaneHelper;
 
@@ -43,7 +42,7 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
 
             if (hostedFragment != null) {
                 Fragment.SavedState savedState = getSupportFragmentManager().saveFragmentInstanceState(hostedFragment);
-                EventBus.getDefault().postSticky(new DualPaneContentState(getIntent(), PostsListFragment.class,
+                EventBus.getDefault().postSticky(new DualPaneContentState(getIntent(), hostedFragment.getClass(),
                         savedState));
             }
 
