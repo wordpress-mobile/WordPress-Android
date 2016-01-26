@@ -13,6 +13,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
+/**
+ * Calypso-style Preference that has an icon and a widget in the correct place. If there is a button
+ * with id R.id.button, an onPreferenceClick listener is added.
+ */
+
 public class WPIconWidgetPreference extends WPPreference {
     private String mButtonText;
     private int mButtonTextColor;
