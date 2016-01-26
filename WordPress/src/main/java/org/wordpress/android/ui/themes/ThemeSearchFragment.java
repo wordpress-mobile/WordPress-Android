@@ -31,7 +31,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-    private Bundle mSavedInstanceState;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
