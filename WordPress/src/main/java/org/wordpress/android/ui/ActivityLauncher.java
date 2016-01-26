@@ -323,8 +323,8 @@ public class ActivityLauncher {
                 }
             }
         } else {
-            slideInFromRight(context, intent);
             dualPaneHost.onContentActivityStarted();
+            slideInFromRight(context, intent);
             if (stat != null) {
                 AnalyticsUtils.trackWithCurrentBlogDetails(stat);
             }
