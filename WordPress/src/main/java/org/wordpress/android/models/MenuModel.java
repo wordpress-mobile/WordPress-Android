@@ -69,7 +69,7 @@ public class MenuModel {
      * Sets values from a local database {@link Cursor}.
      */
     public MenuModel deserializeFromDatabase(Cursor cursor) {
-        if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
+        if (cursor != null && !cursor.isBeforeFirst() && !cursor.isAfterLast()) {
             menuId = getLongFromCursor(cursor, ID_COLUMN_NAME);
             name = getStringFromCursor(cursor, NAME_COLUMN_NAME);
             details = getStringFromCursor(cursor, DETAILS_COLUMN_NAME);

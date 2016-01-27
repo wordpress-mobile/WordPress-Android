@@ -62,7 +62,10 @@ public class MenusTable {
         String sqlQuery = SELECT_ALL_LOCATION_SQL + where(MenuLocationModel.ID_COLUMN_NAME) + ";";
         Cursor cursor = db.rawQuery(sqlQuery, new String[]{ String.valueOf(id) });
         MenuLocationModel location = cursor.getCount() > 0 ? new MenuLocationModel() : null;
-        if (location != null) location.deserializeFromDatabase(cursor);
+        if (location != null) {
+            cursor.moveToFirst();
+            location.deserializeFromDatabase(cursor);
+        }
         cursor.close();
         return location;
     }
@@ -87,7 +90,10 @@ public class MenusTable {
         String sqlQuery = SELECT_ALL_ITEM_SQL + where(MenuItemModel.ID_COLUMN_NAME) + ";";
         Cursor cursor = db.rawQuery(sqlQuery, new String[]{ String.valueOf(id) });
         MenuItemModel item = cursor.getCount() > 0 ? new MenuItemModel() : null;
-        if (item != null) item.deserializeFromDatabase(cursor);
+        if (item != null) {
+            cursor.moveToFirst();
+            item.deserializeFromDatabase(cursor);
+        }
         cursor.close();
         return item;
     }
@@ -100,7 +106,11 @@ public class MenusTable {
         String sqlQuery = SELECT_ALL_MENU_SQL + where(MenuModel.ID_COLUMN_NAME) + ";";
         Cursor cursor = db.rawQuery(sqlQuery, new String[]{ String.valueOf(id) });
         MenuModel menu = cursor.getCount() > 0 ? new MenuModel() : null;
-        if (menu != null) menu.deserializeFromDatabase(cursor);
+        if (menu != null) {
+            cursor.moveToFirst();
+            menu.deserializeFromDatabase(cursor);
+        }
+        cursor.close();
         return menu;
     }
 
@@ -108,13 +118,21 @@ public class MenusTable {
         return getMenuFromId(WordPress.wpDB.getDatabase(), id);
     }
 
-    public static MenuItemModel getMenuItemForId(long id) {
+    public static MenuItemModel getMenuItemForId(SQLiteDatabase db, long id) {
         if (id < 0) return null;
         String sqlCommand = "SELECT * FROM " + MenuItemModel.MENU_ITEMS_TABLE_NAME + " WHERE " + MenuItemModel.ID_COLUMN_NAME + "=?";
-        String[] args = new String[] { String.valueOf(id) };
-        MenuItemModel item = new MenuItemModel();
-        item.deserializeFromDatabase(WordPress.wpDB.getDatabase().rawQuery(sqlCommand, args));
+        Cursor cursor = db.rawQuery(sqlCommand, new String[]{String.valueOf(id)});
+        MenuItemModel item = cursor.getCount() > 0 ? new MenuItemModel() : null;
+        if (item != null) {
+            cursor.moveToFirst();
+            item.deserializeFromDatabase(cursor);
+        }
+        cursor.close();
         return item;
+    }
+
+    public static MenuItemModel getMenuItemForId(long id) {
+        return getMenuItemFromId(WordPress.wpDB.getDatabase(), id);
     }
 
     public static boolean saveMenu(MenuModel menu) {
@@ -135,7 +153,7 @@ public class MenusTable {
 
         ContentValues values = location.serializeToDatabase();
         boolean saved = WordPress.wpDB.getDatabase().insertWithOnConflict(
-                MenuItemModel.MENU_ITEMS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
+                MenuLocationModel.MENU_LOCATIONS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
         return saved;
     }
 
