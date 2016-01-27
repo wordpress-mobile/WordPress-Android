@@ -101,7 +101,8 @@ public class Account extends AccountModel {
         DISPLAY_NAME("display_name"),
         ABOUT_ME("description"),
         EMAIL("user_email"),
-        EMAIL_CHANGE_PENDING("user_email_change_pending");
+        EMAIL_CHANGE_PENDING("user_email_change_pending"),
+        WEB_ADDRESS("user_URL");
 
         private String description;
 

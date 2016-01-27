@@ -143,6 +143,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             return false;
         } else if (preference == mWebAddressPreference) {
             mWebAddressPreference.setSummary(newValue.toString());
+            updateWebAddress(newValue.toString());
         } else if (preference == mLanguagePreference) {
             changeLanguage(newValue.toString());
         }
@@ -284,6 +285,13 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         Account account = AccountHelper.getDefaultAccount();
         Map<String, String> params = new HashMap<>();
         params.put(Account.RestParam.toString(Account.RestParam.EMAIL), newEmail);
+        account.postAccountSettings(params);
+    }
+
+    public void updateWebAddress(String newWebAddress) {
+        Account account = AccountHelper.getDefaultAccount();
+        Map<String, String> params = new HashMap<>();
+        params.put(Account.RestParam.toString(Account.RestParam.WEB_ADDRESS), newWebAddress);
         account.postAccountSettings(params);
     }
 
