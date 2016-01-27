@@ -53,6 +53,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
         addPreferencesFromResource(R.xml.settings);
 
         mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));

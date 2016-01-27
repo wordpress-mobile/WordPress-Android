@@ -81,7 +81,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             if (siteSettingsFragment == null) {
                 siteSettingsFragment = new SiteSettingsFragment();
                 siteSettingsFragment.setArguments(getIntent().getExtras());
-                getFragmentManager().beginTransaction()
+                fragmentManager.beginTransaction()
                         .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
                         .commit();
             }
