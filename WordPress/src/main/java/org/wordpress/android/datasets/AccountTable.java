@@ -43,9 +43,10 @@ public class AccountTable {
         db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD about_me TEXT DEFAULT '';");
     }
 
-    public static void migrationAddNewEmailPendingEmailChangeFields(SQLiteDatabase db) {
+    public static void migrationAddAccountSettingsFields(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD new_email TEXT DEFAULT '';");
         db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD pending_email_change BOOLEAN DEFAULT false;");
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD web_address TEXT DEFAULT '';");
     }
 
     private static void dropTables(SQLiteDatabase db) {
@@ -75,6 +76,7 @@ public class AccountTable {
         values.put("about_me", account.getAboutMe());
         values.put("new_email", account.getNewEmail());
         values.put("pending_email_change", account.getPendingEmailChange());
+        values.put("web_address", account.getPendingEmailChange());
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -105,6 +107,7 @@ public class AccountTable {
                 account.setAboutMe(c.getString(c.getColumnIndex("about_me")));
                 account.setNewEmail(c.getString(c.getColumnIndex("new_email")));
                 account.setPendingEmailChange(c.getInt(c.getColumnIndex("pending_email_change")) > 0);
+                account.setWebAddress(c.getString(c.getColumnIndex("web_address")));
             }
             return account;
         } finally {
