@@ -170,18 +170,20 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
-        // redisplay hidden fab after a short delay
-        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (isAdded()
-                        && blog != null
-                        && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
-                    AniUtils.showFab(mFabView, true);
+        // while in single pane mode, redisplay hidden fab after a short delay
+        if (!DualPaneHelper.isInDualPaneMode(this)) {
+            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAdded()
+                            && blog != null
+                            && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                        AniUtils.showFab(mFabView, true);
+                    }
                 }
-            }
-        }, delayMs);
+            }, delayMs);
+        }
     }
 
     //onActivityResult is not guaranteed to be called every time the blog is changed (ex. when host activity of this
@@ -218,6 +220,10 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
+
+        if (DualPaneHelper.isInDualPaneMode(this)) {
+            mFabView.setVisibility(View.GONE);
+        }
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
