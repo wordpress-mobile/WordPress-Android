@@ -1,17 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Calypso.AlertDialog"
     android:id="@+id/dialog_outer_container"
-    android:layout_width="wrap_content"
+    android:layout_width="280dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/lbl_your_name" android:text="Your name"
-        android:layout_width="wrap_content" android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/lbl_your_name2" android:text="Your name2"
-        android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/gravatar_placeholder" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:orientation="vertical">
+        <org.wordpress.android.widgets.WPTextView
+            style="@style/StatsModuleTitle"
+            android:layout_width="wrap_content"
+            android:text="@string/stats_widget_promo_title" />
+        <org.wordpress.android.widgets.WPTextView
+            android:textColor="@color/grey_darken_30"
+            android:textSize="@dimen/text_sz_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="@string/stats_widget_promo_desc" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:padding="8dp"
+        android:gravity="right|end">
+        <Button
+            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:textColor="@color/stats_link_text_color"
+            android:layout_width="wrap_content"
+            android:text="@string/stats_widget_promo_ok_btn_label"
+            android:layout_height="36dp"
+            android:id="@+id/got_it_btn" />
+    </LinearLayout>
 
 </LinearLayout>
+

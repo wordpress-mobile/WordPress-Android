@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -16,8 +17,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -757,12 +760,19 @@ public class StatsActivity extends AppCompatActivity
 
     public static class StatsWidgetPromoDialogFragment extends DialogFragment {
 
-        public static StatsWidgetPromoDialogFragment newInstance(int title) {
+        public static StatsWidgetPromoDialogFragment newInstance() {
             StatsWidgetPromoDialogFragment frag = new StatsWidgetPromoDialogFragment();
-           /* Bundle args = new Bundle();
-            args.putInt("title", title);
-            frag.setArguments(args);*/
             return frag;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Dialog dialog = super.onCreateDialog(savedInstanceState);
+            // request a window without the title
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false); // No back key
+            return dialog;
         }
 
         @Override
@@ -771,31 +781,18 @@ public class StatsActivity extends AppCompatActivity
             return inflater.inflate(R.layout.stats_widget_promote_dialog, container);
         }
 
+
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            // Fetch arguments from bundle and set title
-            /*String title = getArguments().getString("title", "Enter Name");
-            getDialog().setTitle(title);*/
+            Button btn = (Button)view.findViewById(R.id.got_it_btn);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getDialog().cancel();
+                }
+            });
         }
-
-        /*
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            int title = getArguments().getInt("title");
-
-            return new AlertDialog.Builder(getActivity())
-                    .setIcon(R.drawable.ic_action_video)
-                    .setTitle(title)
-                    .setPositiveButton(R.string.ok,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int whichButton) {
-
-                                }
-                            })
-                    .create();
-        }*/
     }
 
     @SuppressWarnings("unused")
@@ -810,9 +807,8 @@ public class StatsActivity extends AppCompatActivity
         if (!mIsUpdatingStats && mShouldDisplayStatsWidgetPromo) {
             AppPrefs.setStatsWidgetPromoDisplayed(true);
             mShouldDisplayStatsWidgetPromo = false;
-            DialogFragment newFragment = StatsWidgetPromoDialogFragment
-                    .newInstance(R.string.invalid_password_title);
-            newFragment.show(getFragmentManager(), "dialog");
+            DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
+            newFragment.show(getFragmentManager(), "promote_widget_dialog");
         }
     }
 
