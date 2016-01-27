@@ -6,19 +6,21 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v7.app.ActionBarActivity;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-
-import com.cocosw.undobar.UndoBarController;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
@@ -26,9 +28,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
-import javax.annotation.Nonnull;
-
-public class CommentsActivity extends ActionBarActivity
+public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentActionListener,
@@ -38,6 +38,7 @@ public class CommentsActivity extends ActionBarActivity
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private long mSelectedCommentId;
+    private final CommentList mTrashedComments = new CommentList();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,12 @@ public class CommentsActivity extends ActionBarActivity
                 showReaderFragment(selectedPostId.getRemoteBlogId(), selectedPostId.getId());
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ActivityId.trackLastActivity(ActivityId.COMMENTS);
     }
 
     @Override
@@ -142,9 +149,8 @@ public class CommentsActivity extends ActionBarActivity
     public void onCommentSelected(long commentId) {
         mSelectedCommentId = commentId;
         FragmentManager fm = getFragmentManager();
-        if (fm == null) {
-            return;
-        }
+        if (fm == null) return;
+
         fm.executePendingTransactions();
         CommentsListFragment listFragment = getListFragment();
 
@@ -190,14 +196,14 @@ public class CommentsActivity extends ActionBarActivity
     }
 
     @Override
-    public void onSaveInstanceState(@Nonnull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         // https://code.google.com/p/android/issues/detail?id=19917
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
 
         // retain the id of the highlighted and selected comments
-        if (mSelectedCommentId != 0) {
+        if (mSelectedCommentId != 0 && hasDetailFragment()) {
             outState.putLong(KEY_SELECTED_COMMENT_ID, mSelectedCommentId);
         }
 
@@ -237,7 +243,7 @@ public class CommentsActivity extends ActionBarActivity
                     getListFragment().setCommentIsModerating(comment.commentID, false);
 
                     if (succeeded) {
-                        getListFragment().updateComments(false);
+                        reloadCommentList();
                     } else {
                         ToastUtils.showToast(CommentsActivity.this,
                                 R.string.error_moderate_comment,
@@ -247,57 +253,70 @@ public class CommentsActivity extends ActionBarActivity
                 }
             });
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH) {
-            // Remove comment from comments list
+            mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
 
-            new UndoBarController.UndoBar(this)
-                    .message(newStatus == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
-                    .listener(new UndoBarController.AdvancedUndoListener() {
+            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : getString(R.string.comment_spammed));
+            View.OnClickListener undoListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTrashedComments.remove(comment);
+                    getListFragment().setCommentIsModerating(comment.commentID, false);
+                    getListFragment().loadComments();
+                }
+            };
+
+            Snackbar snackbar = Snackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, undoListener);
+
+            // do the actual moderation once the undo bar has been hidden
+            snackbar.setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    super.onDismissed(snackbar, event);
+
+                    // comment will no longer exist in moderating list if action was undone
+                    if (!mTrashedComments.contains(comment)) {
+                        return;
+                    }
+                    mTrashedComments.remove(comment);
+
+                    CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override
-                        public void onHide(Parcelable parcelable) {
-                            CommentActions.moderateComment(accountId, comment, newStatus,
-                                    new CommentActions.CommentActionListener() {
-                                @Override
-                                public void onActionResult(boolean succeeded) {
-                                    if (isFinishing() || !hasListFragment()) {
-                                        return;
-                                    }
-
-                                    getListFragment().setCommentIsModerating(comment.commentID, false);
-
-                                    if (!succeeded) {
-                                        // show comment again upon error
-                                        getListFragment().loadComments();
-                                        ToastUtils.showToast(CommentsActivity.this,
-                                                R.string.error_moderate_comment,
-                                                ToastUtils.Duration.LONG
-                                        );
-                                    }
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onClear(Parcelable[] token) {
-                            //noop
-                        }
-
-                        @Override
-                        public void onUndo(Parcelable parcelable) {
+                        public void onActionResult(boolean succeeded) {
+                            if (isFinishing() || !hasListFragment()) {
+                                return;
+                            }
                             getListFragment().setCommentIsModerating(comment.commentID, false);
-                            // On undo load from the db to show the comment again
-                            getListFragment().loadComments();
+                            if (!succeeded) {
+                                // show comment again upon error
+                                getListFragment().loadComments();
+                                ToastUtils.showToast(CommentsActivity.this,
+                                        R.string.error_moderate_comment,
+                                        ToastUtils.Duration.LONG
+                                );
+                            }
                         }
-                    }).show();
+                    });
+                }
+            });
+
+            snackbar.show();
         }
     }
 
     @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
-        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL
-                && changeType == CommentActions.ChangeType.EDITED) {
-            reloadCommentList();
+        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
+            switch (changeType) {
+                case EDITED:
+                    reloadCommentList();
+                    break;
+                case REPLIED:
+                    updateCommentList();
+                    break;
+            }
         }
     }
 

@@ -1,11 +1,18 @@
 package org.wordpress.android.ui.notifications.utils;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -18,9 +25,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.google.android.gcm.GCMRegistrar;
-import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -29,8 +33,15 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationStatusChanged;
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteVisibilityChanged;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -39,115 +50,48 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 public class NotificationsUtils {
+    public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
+    public static final String ARG_PUSH_AUTH_TITLE = "arg_push_auth_title";
+    public static final String ARG_PUSH_AUTH_MESSAGE = "arg_push_auth_message";
+    public static final String ARG_PUSH_AUTH_EXPIRES = "arg_push_auth_expires";
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
-    private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
+    public static final String WPCOM_PUSH_DEVICE_TOKEN = "wp_pref_notifications_token";
 
-    private static final String WPCOM_PUSH_KEY_MUTED_BLOGS = "muted_blogs";
-    private static final String WPCOM_PUSH_KEY_MUTE_UNTIL = "mute_until";
-    private static final String WPCOM_PUSH_KEY_VALUE = "value";
+    public static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
+    private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
+
+    private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
+    private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
+
+    private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
+
+    private static boolean mSnackbarDidUndo;
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
         if (!AccountHelper.isSignedInWordPressDotCom()) {
             return;
         }
-
-        String gcmToken = GCMRegistrar.getRegistrationId(context);
-        if (TextUtils.isEmpty(gcmToken)) {
-            AppLog.e(T.NOTIFS, "can't get push notification settings, gcm token is null.");
-            return;
-        }
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
-        if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "device_ID is null in preferences. Get device settings skipped.");
-            return;
+        String settingsEndpoint = WPCOM_SETTINGS_ENDPOINT;
+        if (!TextUtils.isEmpty(deviceID)) {
+            settingsEndpoint += "?device_id=" + deviceID;
         }
-
-        WordPress.getRestClientUtils().get("/device/" + deviceID, listener, errorListener);
-    }
-
-    public static void setPushNotificationSettings(Context context) {
-        if (context == null || !AccountHelper.isSignedInWordPressDotCom()) {
-            return;
-        }
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
-        if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "device_ID is null in preferences. Set device settings skipped.");
-            return;
-        }
-
-        String settingsJson = settings.getString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
-        if (settingsJson == null) {
-            AppLog.e(T.NOTIFS, "Notifications settings JSON not found in app preferences.");
-            return;
-        }
-
-        Gson gson = new Gson();
-        Map notificationSettings = gson.fromJson(settingsJson, HashMap.class);
-        Map<String, Object> updatedSettings = new HashMap<>();
-        ArrayList<StringMap> mutedBlogsList = new ArrayList<>();
-        if (notificationSettings == null || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS) instanceof StringMap)
-                || !(notificationSettings.get(WPCOM_PUSH_KEY_MUTE_UNTIL) instanceof StringMap)) {
-            return;
-        }
-
-        StringMap<?> mutedBlogsMap = (StringMap)notificationSettings.get(WPCOM_PUSH_KEY_MUTED_BLOGS);
-        StringMap<?> muteUntilMap = (StringMap)notificationSettings.get(WPCOM_PUSH_KEY_MUTE_UNTIL);
-
-        // Remove entries that we don't want to loop through
-        notificationSettings.remove(WPCOM_PUSH_KEY_MUTED_BLOGS);
-        notificationSettings.remove(WPCOM_PUSH_KEY_MUTE_UNTIL);
-
-        for (Object entry : notificationSettings.entrySet())
-        {
-            if (entry instanceof Map.Entry) {
-                Map.Entry hashMapEntry = (Map.Entry)entry;
-                if (hashMapEntry.getValue() instanceof StringMap && hashMapEntry.getKey() instanceof String) {
-                    StringMap setting = (StringMap)hashMapEntry.getValue();
-                    updatedSettings.put((String)hashMapEntry.getKey(), setting.get(WPCOM_PUSH_KEY_VALUE));
-                }
-            }
-        }
-
-        if (muteUntilMap != null && muteUntilMap.get(WPCOM_PUSH_KEY_VALUE) != null) {
-            updatedSettings.put(WPCOM_PUSH_KEY_MUTE_UNTIL, muteUntilMap.get(WPCOM_PUSH_KEY_VALUE));
-        }
-
-        if (mutedBlogsMap.get(WPCOM_PUSH_KEY_VALUE) instanceof ArrayList) {
-            ArrayList blogsList = (ArrayList)mutedBlogsMap.get(WPCOM_PUSH_KEY_VALUE);
-            for (Object userBlog : blogsList) {
-                if (userBlog instanceof StringMap) {
-                    StringMap userBlogMap = (StringMap)userBlog;
-                    if (MapUtils.getMapBool(userBlogMap, WPCOM_PUSH_KEY_VALUE)) {
-                        mutedBlogsList.add(userBlogMap);
-                    }
-                }
-            }
-        }
-
-        if (updatedSettings.size() == 0 && mutedBlogsList.size() == 0) {
-            return;
-        }
-
-        updatedSettings.put(WPCOM_PUSH_KEY_MUTED_BLOGS, mutedBlogsList);
-
-        Map<String, String> contentStruct = new HashMap<>();
-        contentStruct.put("settings", gson.toJson(updatedSettings));
-        WordPress.getRestClientUtils().post("/device/"+deviceID, contentStruct, null, null, null);
+        WordPress.getRestClientUtilsV1_1().get(settingsEndpoint, listener, errorListener);
     }
 
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
@@ -162,9 +106,9 @@ public class NotificationsUtils {
         contentStruct.put("device_family", "android");
         contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
         contentStruct.put("device_name", deviceName);
-        contentStruct.put("device_model",  Build.MANUFACTURER + " " + Build.MODEL);
+        contentStruct.put("device_model", Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
-        contentStruct.put("os_version",  Build.VERSION.RELEASE);
+        contentStruct.put("os_version", Build.VERSION.RELEASE);
         contentStruct.put("device_uuid", uuid);
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -179,12 +123,10 @@ public class NotificationsUtils {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceID);
-                    JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                    editor.putString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
                     editor.apply();
-                    AppLog.d(T.NOTIFS, "Server response OK. The device_id : " + deviceID);
+                    AppLog.d(T.NOTIFS, "Server response OK. The device_id: " + deviceID);
                 } catch (JSONException e1) {
-                    AppLog.e(T.NOTIFS, "Server response is NOT ok. Registration skipped!!", e1);
+                    AppLog.e(T.NOTIFS, "Server response is NOT ok, registration skipped.", e1);
                 }
             }
         };
@@ -205,8 +147,8 @@ public class NotificationsUtils {
                 AppLog.d(T.NOTIFS, "Unregister token action succeeded");
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
                 editor.remove(WPCOM_PUSH_DEVICE_SERVER_ID);
-                editor.remove(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
                 editor.remove(WPCOM_PUSH_DEVICE_UUID);
+                editor.remove(WPCOM_PUSH_DEVICE_TOKEN);
                 editor.apply();
             }
         };
@@ -456,5 +398,149 @@ public class NotificationsUtils {
 
     public static boolean spannableHasCharacterAtIndex(Spannable spannable, char character, int index) {
         return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
+    }
+
+
+    public static void showPushAuthAlert(Context context, final String token, String title, String message) {
+        if (context == null ||
+                TextUtils.isEmpty(token) ||
+                TextUtils.isEmpty(title) ||
+                TextUtils.isEmpty(message)) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title).setMessage(message);
+
+        builder.setPositiveButton(R.string.mnu_comment_approve, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                Map<String, String> tokenMap = new HashMap<>();
+                tokenMap.put("action", "authorize_login");
+                tokenMap.put("push_token", token);
+                WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
+                        new RestRequest.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_FAILED);
+                            }
+                        });
+
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
+            }
+        });
+
+        builder.setNegativeButton(R.string.ignore, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private static void showUndoBarForNote(final Note note,
+                                           final CommentStatus status,
+                                           final View parentView) {
+        Resources resources = parentView.getContext().getResources();
+        String message = (status == CommentStatus.TRASH ? resources.getString(R.string.comment_trashed) : resources.getString(R.string.comment_spammed));
+        View.OnClickListener undoListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSnackbarDidUndo = true;
+                EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
+            }
+        };
+
+        mSnackbarDidUndo = false;
+        Snackbar snackbar = Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener);
+
+        // Deleted notifications in Simperium never come back, so we won't
+        // make the request until the undo bar fades away
+        snackbar.setCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
+                if (mSnackbarDidUndo) {
+                    return;
+                }
+                CommentActions.moderateCommentForNote(note, status,
+                        new CommentActions.CommentActionListener() {
+                            @Override
+                            public void onActionResult(boolean succeeded) {
+                                if (!succeeded) {
+                                    EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
+                                    EventBus.getDefault().postSticky(new NoteModerationFailed());
+                                }
+                            }
+                        });
+            }
+        });
+
+        snackbar.show();
+    }
+
+    /**
+     * Moderate a comment from a WPCOM notification.
+     * Broadcast EventBus events on update/success/failure and show an undo bar if new status is Trash or Spam
+     */
+    public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
+        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
+            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
+            note.save();
+            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
+            CommentActions.moderateCommentForNote(note, newStatus,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
+                            if (!succeeded) {
+                                note.setLocalStatus(null);
+                                note.save();
+                                EventBus.getDefault().postSticky(new NoteModerationFailed());
+                            }
+                        }
+                    });
+        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
+            // Post as sticky, so that NotificationsListFragment can pick it up after it's created
+            EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), true));
+            // Show undo bar for trash or spam actions
+            showUndoBarForNote(note, newStatus, parentView);
+        }
+    }
+
+    // Checks if global notifications toggle is enabled in the Android app settings
+    // See: https://code.google.com/p/android/issues/detail?id=38482#c15
+    @SuppressWarnings("unchecked")
+    @TargetApi(19)
+    public static boolean isNotificationsEnabled(Context context) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+            ApplicationInfo appInfo = context.getApplicationInfo();
+            String pkg = context.getApplicationContext().getPackageName();
+            int uid = appInfo.uid;
+
+            Class appOpsClass;
+            try {
+                appOpsClass = Class.forName(AppOpsManager.class.getName());
+
+                Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
+
+                Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
+                int value = (int) opPostNotificationValue.get(Integer.class);
+
+                return ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
+            } catch (ClassNotFoundException | NoSuchFieldException | NoSuchMethodException |
+                    IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Default to assuming notifications are enabled
+        return true;
     }
 }

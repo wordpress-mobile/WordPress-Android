@@ -1,38 +1,20 @@
 package org.wordpress.android.ui.reader;
 
-import android.animation.Animator;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.TextUtils;
-import android.view.Gravity;
+import android.support.v7.widget.ListPopupWindow;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -40,40 +22,43 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderTagSpinnerAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
-import org.wordpress.android.ui.reader.views.ReaderRecyclerView.ReaderItemDecoration;
+import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -83,25 +68,16 @@ public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
                    ReaderInterfaces.OnTagSelectedListener,
                    ReaderInterfaces.OnPostPopupListener,
+                   ReaderTagToolbar.OnTagChangedListener,
                    WPMainActivity.OnScrollToTopListener {
-
-    private Toolbar mTagToolbar;
-    private Spinner mTagSpinner;
-    private ReaderTagSpinnerAdapter mSpinnerAdapter;
 
     private ReaderPostAdapter mPostAdapter;
     private ReaderRecyclerView mRecyclerView;
-
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private CustomSwipeRefreshLayout mSwipeToRefreshLayout;
 
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-
-    private ViewGroup mTagInfoView;
-    private ReaderBlogInfoView mBlogInfoView;
-    private ReaderFollowButton mFollowButton;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -109,17 +85,20 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
-    private int mTagToolbarOffset;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
+    private boolean mHasUpdatedPosts;
     private boolean mIsAnimatingOutNewPostsBar;
+
+    private static boolean mHasPurgedReaderDb;
+    private static Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     private static class HistoryStack extends Stack<String> {
         private final String keyName;
-        HistoryStack(String keyName) {
+        HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
             this.keyName = keyName;
         }
         void restoreInstance(Bundle bundle) {
@@ -238,6 +217,7 @@ public class ReaderPostListFragment extends Fragment
             }
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
+            mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
     }
 
@@ -250,35 +230,51 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        checkAdapter();
 
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
-            // refresh the posts in case the user returned from an activity that
-            // changed one (or more) of the posts
-            refreshPosts();
-            // likewise for tags
-            refreshTags();
-
-            // auto-update the current tag if it's time
-            if (!isUpdating()
-                    && getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                    && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
-                updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+            if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
+                resumeFollowedTag();
+            } else {
+                refreshPosts();
             }
+        }
+    }
+
+    /*
+     * called when fragment is resumed and we're looking at posts in a followed tag
+     */
+    private void resumeFollowedTag() {
+        Object event = EventBus.getDefault().getStickyEvent(ReaderEvents.TagAdded.class);
+        if (event != null) {
+            // user just added a tag so switch to it.
+            String tagName = ((ReaderEvents.TagAdded) event).getTagName();
+            EventBus.getDefault().removeStickyEvent(event);
+            ReaderTag newTag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+            setCurrentTag(newTag);
+        } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
+            // current tag no longer exists, revert to default
+            AppLog.d(T.READER, "reader post list > current tag no longer valid");
+            setCurrentTag(ReaderTag.getDefaultTag());
+        } else {
+            // otherwise, refresh posts to make sure any changes are reflected and auto-update
+            // posts in the current tag if it's time
+            refreshPosts();
+            updateCurrentTagIfTime();
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
         EventBus.getDefault().register(this);
 
-        purgeDatabaseIfNeeded();
-        performInitialUpdateIfNeeded();
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+        // purge database and update followed tags/blog if necessary - note that we don't purge unless
+        // there's a connection to avoid removing posts the user would expect to see offline
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && NetworkUtils.isNetworkAvailable(getActivity())) {
+            purgeDatabaseIfNeeded();
             updateFollowedTagsAndBlogsIfNeeded();
         }
     }
@@ -289,11 +285,27 @@ public class ReaderPostListFragment extends Fragment
         EventBus.getDefault().unregister(this);
     }
 
+    /*
+     * ensures the adapter is created and posts are updated if they haven't already been
+     */
+    private void checkAdapter()  {
+        if (isAdded() && mRecyclerView.getAdapter() == null) {
+            mRecyclerView.setAdapter(getPostAdapter());
+
+            if (!mHasUpdatedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
+                mHasUpdatedPosts = true;
+                if (getPostListType().isTagType()) {
+                    updateCurrentTagIfTime();
+                } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                    updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-            // list fragment is viewing followed tags, tell it to refresh the list of tags
-            refreshTags();
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
             if (isPostAdapterEmpty()) {
@@ -304,10 +316,10 @@ public class ReaderPostListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
-        // refresh posts if user is viewing "Blogs I Follow"
+        // refresh posts if user is viewing "Followed Sites"
         if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
                 && hasCurrentTag()
-                && getCurrentTag().isBlogsIFollow()) {
+                && getCurrentTag().isFollowedSites()) {
             refreshPosts();
         }
     }
@@ -326,6 +338,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -336,7 +349,7 @@ public class ReaderPostListFragment extends Fragment
         if (mRecyclerView != null && hasPostAdapter()) {
             return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
-            return 0;
+            return -1;
         }
     }
 
@@ -346,9 +359,14 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
 
         Context context = container.getContext();
-        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
+
+        // add the item decoration (dividers) to the recycler, skipping the first item if the first
+        // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
+        // having the tag toolbar take up more vertical space than necessary
+        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-        mRecyclerView.addItemDecoration(new ReaderItemDecoration(spacingHorizontal, spacingVertical));
+        boolean skipFirstItem = (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, skipFirstItem));
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
@@ -361,22 +379,6 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-        // add the tag/blog header - note that this remains invisible until animated in
-        ViewGroup header = (ViewGroup) rootView.findViewById(R.id.frame_header);
-        switch (getPostListType()) {
-            case TAG_PREVIEW:
-                mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
-                header.addView(mTagInfoView);
-                header.setVisibility(View.INVISIBLE);
-                break;
-
-            case BLOG_PREVIEW:
-                mBlogInfoView = new ReaderBlogInfoView(context);
-                header.addView(mBlogInfoView);
-                header.setVisibility(View.INVISIBLE);
-                break;
-        }
-
         // view that appears when current tag/blog has no posts - box images in this view are
         // displayed and animated for tags only
         mEmptyView = rootView.findViewById(R.id.empty_view);
@@ -387,9 +389,8 @@ public class ReaderPostListFragment extends Fragment
         mProgress.setVisibility(View.GONE);
 
         // swipe to refresh setup
-        mSwipeToRefreshLayout = (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout);
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
-                mSwipeToRefreshLayout,
+                (CustomSwipeRefreshLayout) rootView.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -418,224 +419,38 @@ public class ReaderPostListFragment extends Fragment
         return rootView;
     }
 
-    /*
-     * animate in the blog/tag info header after a brief delay
-     */
-    @SuppressLint("NewApi")
-    private void animateHeaderDelayed() {
-        if (!isAdded()) {
-            return;
-        }
-
-        final ViewGroup header = (ViewGroup) getView().findViewById(R.id.frame_header);
-        if (header == null || header.getVisibility() == View.VISIBLE) {
-            return;
-        }
-
-        // must wait for header to be fully laid out (ie: measured) or else we risk
-        // "IllegalStateException: Cannot start this animator on a detached view"
-        header.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                header.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        header.setVisibility(View.VISIBLE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            Animator animator = ViewAnimationUtils.createCircularReveal(
-                                    header,
-                                    header.getWidth() / 2,
-                                    0,
-                                    0,
-                                    (float) Math.hypot(header.getWidth(), header.getHeight()));
-                            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                            animator.start();
-                        } else {
-                            AniUtils.startAnimation(header, R.anim.reader_top_bar_in);
-                        }
-                    }
-                }, 250);
-            }
-        });
-    }
-
     private void scrollRecycleViewToPosition(int position) {
         if (!isAdded() || mRecyclerView == null) return;
 
         mRecyclerView.scrollToPosition(position);
-
-        // we need to reposition the tag toolbar here, but we need to wait for the
-        // recycler to settle before doing so - note that RecyclerView doesn't
-        // fire it's scroll listener when scrollToPosition() is called, so we
-        // can't rely on that to position the toolbar in this situation
-        if (shouldShowTagToolbar()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    positionTagToolbar();
-                }
-            }, 250);
-        }
     }
 
     /*
-     * position the tag toolbar based on the recycler's scroll position - this will make it
-     * appear to scroll along with the recycler
+     * called when user taps follow item in popup menu for a post
      */
-    private void positionTagToolbar() {
-        if (!isAdded() || mTagToolbar == null) return;
-
-        int distance = mRecyclerView.getVerticalScrollOffset();
-        int newVisibility;
-        if (distance <= mTagToolbarOffset) {
-            newVisibility = View.VISIBLE;
-            mTagToolbar.setTranslationY(-distance);
-        } else {
-            newVisibility = View.GONE;
-        }
-        if (mTagToolbar.getVisibility() != newVisibility) {
-            mTagToolbar.setVisibility(newVisibility);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // configure the toolbar for posts in followed tags (shown in main viewpager activity)
-        if (shouldShowTagToolbar()) {
-            mTagToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_reader);
-
-            // the toolbar is hidden by the layout, so we need to show it here unless we know we're
-            // going to restore the list position once the adapter is loaded (which will take care
-            // of showing/hiding the toolbar)
-            mTagToolbar.setVisibility(mRestorePosition == 0 ? View.VISIBLE : View.GONE);
-
-            mTagToolbar.inflateMenu(R.menu.reader_list);
-            mTagToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    if (menuItem.getItemId() == R.id.menu_tags) {
-                        ReaderActivityLauncher.showReaderSubsForResult(getActivity());
-                        return true;
-                    }
-                    return false;
-                }
-            });
-
-            // scroll the tag toolbar with the recycler
-            int toolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-            mTagToolbarOffset = (int) (toolbarHeight + (toolbarHeight * 0.25));
-            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    positionTagToolbar();
-                }
-            });
-
-            // create the tag spinner in the toolbar
-            if (mTagSpinner == null) {
-                enableTagSpinner();
-            }
-            selectTagInSpinner(getCurrentTag());
-        }
-
-        boolean adapterAlreadyExists = hasPostAdapter();
-        mRecyclerView.setAdapter(getPostAdapter());
-
-        // if adapter didn't already exist, populate it now then update the tag - this
-        // check is important since without it the adapter would be reset and posts would
-        // be updated every time the user moves between fragments
-        if (!adapterAlreadyExists && getPostListType().isTagType()) {
-            boolean isRecreated = (savedInstanceState != null);
-            getPostAdapter().setCurrentTag(mCurrentTag);
-            if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
-            }
-        }
-
-        if (getPostListType().isPreviewType()) {
-            createFollowButton();
-        }
-
-        switch (getPostListType()) {
-            case BLOG_PREVIEW:
-                loadBlogOrFeedInfo();
-                animateHeaderDelayed();
-                break;
-            case TAG_PREVIEW:
-                updateTagPreviewHeader();
-                animateHeaderDelayed();
-                break;
-        }
-    }
-
-    /*
-     * adds a follow button to the activity toolbar for tag/blog preview
-     */
-    private void createFollowButton() {
-        if (!isAdded()) {
+    private void toggleFollowStatusForPost(final ReaderPost post) {
+        if (post == null
+                || !hasPostAdapter()
+                || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        if (toolbar == null) {
-            return;
-        }
+        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(post);
 
-        Context context = toolbar.getContext();
-        int padding = context.getResources().getDimensionPixelSize(R.dimen.margin_small);
-        int paddingRight = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding);
-        int marginRight = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
-
-        mFollowButton = new ReaderFollowButton(context);
-        mFollowButton.setPadding(padding, padding, paddingRight, padding);
-
-        Toolbar.LayoutParams params =
-                new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                             ViewGroup.LayoutParams.WRAP_CONTENT,
-                                             Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-        params.setMargins(0, 0, marginRight, 0);
-        mFollowButton.setLayoutParams(params);
-
-        toolbar.addView(mFollowButton);
-        updateFollowButton();
-
-        mFollowButton.setOnClickListener(new View.OnClickListener() {
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
-            public void onClick(View v) {
-                if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                    toggleBlogFollowStatus();
-                } else {
-                    toggleTagFollowStatus();
+            public void onActionResult(boolean succeeded) {
+                if (isAdded() && !succeeded) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(getActivity(), resId);
+                    getPostAdapter().setFollowStatusForBlog(post.blogId, !isAskingToFollow);
                 }
             }
-        });
-    }
+        };
 
-    private void updateFollowButton() {
-        if (!isAdded() || mFollowButton == null) {
-            return;
+        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
+            getPostAdapter().setFollowStatusForBlog(post.blogId, isAskingToFollow);
         }
-        boolean isFollowing;
-        switch (getPostListType()) {
-            case BLOG_PREVIEW:
-                if (mCurrentFeedId != 0) {
-                    isFollowing = ReaderBlogTable.isFollowedFeed(mCurrentFeedId);
-                } else {
-                    isFollowing = ReaderBlogTable.isFollowedBlog(mCurrentBlogId);
-                }
-                break;
-            default:
-                isFollowing = ReaderTagTable.isFollowedTagName(getCurrentTagName());
-                break;
-        }
-        mFollowButton.setIsFollowed(isFollowing);
     }
 
     /*
@@ -643,11 +458,10 @@ public class ReaderPostListFragment extends Fragment
      * from the adapter
      */
     private void blockBlogForPost(final ReaderPost post) {
-        if (post == null || !hasPostAdapter()) {
-            return;
-        }
-
-        if (!NetworkUtils.checkConnection(getActivity())) {
+        if (post == null
+                || !isAdded()
+                || !hasPostAdapter()
+                || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
@@ -655,7 +469,6 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && isAdded()) {
-                    hideUndoBar();
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
                 }
             }
@@ -663,75 +476,27 @@ public class ReaderPostListFragment extends Fragment
 
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
-        final ReaderBlogActions.BlockedBlogResult blockResult =
-                ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
+        final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+        // Only pass the blogID if available. Do not track feedID
+        AnalyticsUtils.trackWithBlogDetails(
+                AnalyticsTracker.Stat.READER_BLOG_BLOCKED,
+                mCurrentBlogId != 0 ? mCurrentBlogId : null
+        );
 
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
 
-        // show the undo bar enabling the user to undo the block
-        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+        // show the undo snackbar enabling the user to undo the block
+        View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
-            public void onUndo(Parcelable parcelable) {
+            public void onClick(View v) {
                 ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 refreshPosts();
             }
         };
-        new UndoBarController.UndoBar(getActivity())
-                .message(getString(R.string.reader_toast_blog_blocked))
-                .listener(undoListener)
-                .translucent(true)
+        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener)
                 .show();
-
-    }
-
-    private void hideUndoBar() {
-        if (isAdded()) {
-            UndoBarController.clear(getActivity());
-        }
-    }
-
-    /*
-     * enables the tag spinner in the toolbar, used only for posts in followed tags
-     */
-    private void enableTagSpinner() {
-        if (!isAdded()) return;
-
-        mTagSpinner = (Spinner) mTagToolbar.findViewById(R.id.reader_spinner);
-        mTagSpinner.setAdapter(getSpinnerAdapter());
-        mTagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                final ReaderTag tag = (ReaderTag) getSpinnerAdapter().getItem(position);
-                if (tag == null) {
-                    return;
-                }
-                if (!isCurrentTag(tag)) {
-                    Map<String, String> properties = new HashMap<>();
-                    properties.put("tag", tag.getTagName());
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-                    if (tag.isFreshlyPressed()) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
-                    }
-                }
-                setCurrentTag(tag, true);
-                AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // nop
-            }
-        });
-    }
-
-    /*
-     * returns true if the fragment should have it's own toolbar - used when showing posts in
-     * followed tags so user can select a different tag from the toolbar spinner
-     */
-    private boolean shouldShowTagToolbar() {
-        return (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
     }
 
     /*
@@ -771,9 +536,14 @@ public class ReaderPostListFragment extends Fragment
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             titleResId = R.string.reader_empty_posts_in_blog;
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
-            if (getCurrentTag().isBlogsIFollow()) {
-                titleResId = R.string.reader_empty_followed_blogs_title;
-                descriptionResId = R.string.reader_empty_followed_blogs_description;
+            if (getCurrentTag().isFollowedSites()) {
+                if (ReaderBlogTable.hasFollowedBlogs()) {
+                    titleResId = R.string.reader_empty_followed_blogs_no_recent_posts_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_no_recent_posts_description;
+                } else {
+                    titleResId = R.string.reader_empty_followed_blogs_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_description;
+                }
             } else if (getCurrentTag().isPostsILike()) {
                 titleResId = R.string.reader_empty_posts_liked;
             } else {
@@ -859,18 +629,6 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    /*
-     * called by post adapter when user requests to reblog a post
-     */
-    private final ReaderInterfaces.RequestReblogListener mRequestReblogListener = new ReaderInterfaces.RequestReblogListener() {
-        @Override
-        public void onRequestReblog(ReaderPost post, View view) {
-            if (isAdded()) {
-                ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, view);
-            }
-        }
-    };
-
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
@@ -878,12 +636,18 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnTagSelectedListener(this);
+            mPostAdapter.setOnTagChangedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
-            mPostAdapter.setOnReblogRequestedListener(mRequestReblogListener);
-            // show spacer above the first post to accommodate toolbar
-            mPostAdapter.setShowToolbarSpacer(shouldShowTagToolbar());
+            if (getActivity() instanceof ReaderBlogInfoView.OnBlogInfoLoadedListener) {
+                mPostAdapter.setOnBlogInfoLoadedListener((ReaderBlogInfoView.OnBlogInfoLoadedListener) getActivity());
+            }
+            if (getPostListType().isTagType()) {
+                mPostAdapter.setCurrentTag(getCurrentTag());
+            } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
+            }
         }
         return mPostAdapter;
     }
@@ -915,14 +679,12 @@ public class ReaderPostListFragment extends Fragment
         return mCurrentTag != null;
     }
 
-    private void setCurrentTag(final ReaderTag tag, boolean allowAutoUpdate) {
+    private void setCurrentTag(final ReaderTag tag) {
         if (tag == null) {
             return;
         }
 
-        // skip if this is already the current tag and the post adapter is already showing it - this
-        // will happen when the list fragment is restored and the current tag is re-selected in the
-        // toolbar dropdown
+        // skip if this is already the current tag and the post adapter is already showing it
         if (isCurrentTag(tag)
                 && hasPostAdapter()
                 && getPostAdapter().isCurrentTag(tag)) {
@@ -943,18 +705,9 @@ public class ReaderPostListFragment extends Fragment
 
         getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
-        hideUndoBar();
         showLoadingProgress(false);
 
-        if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-            updateTagPreviewHeader();
-            updateFollowButton();
-        }
-
-        // update posts in this tag if it's time to do so
-        if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
-            updatePostsWithTag(tag, UpdateAction.REQUEST_NEWER);
-        }
+        updateCurrentTagIfTime();
     }
 
     /*
@@ -975,26 +728,10 @@ public class ReaderPostListFragment extends Fragment
             tagName = mTagPreviewHistory.pop();
         }
 
-        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), false);
-        updateFollowButton();
+        ReaderTag newTag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+        setCurrentTag(newTag);
 
         return true;
-    }
-
-    /*
-     * if we're previewing a tag, show the current tag name in the header and update the
-     * follow button to show the correct follow state for the tag
-     */
-    private void updateTagPreviewHeader() {
-        if (mTagInfoView == null) {
-            return;
-        }
-
-        final TextView txtTagName = (TextView) mTagInfoView.findViewById(R.id.text_tag_name);
-        String color = HtmlUtils.colorResToHtmlColor(getActivity(), R.color.white);
-        String htmlTag = "<font color=" + color + ">" + getCurrentTagName() + "</font>";
-        String htmlLabel = getString(R.string.reader_label_tag_preview, htmlTag);
-        txtTagName.setText(Html.fromHtml(htmlLabel));
     }
 
     /*
@@ -1008,12 +745,12 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * tell the adapter to reload a single post - called when user returns from detail, where the
-     * post may have been changed (either by the user, or because it updated)
+     * same as above but clears posts before refreshing
      */
-    private void reloadPost(ReaderPost post) {
-        if (post != null && hasPostAdapter()) {
-            getPostAdapter().reloadPost(post);
+    private void reloadPosts() {
+        hideNewPostsBar();
+        if (hasPostAdapter()) {
+            getPostAdapter().reload();
         }
     }
 
@@ -1064,6 +801,12 @@ public class ReaderPostListFragment extends Fragment
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
             setEmptyTitleAndDescription(requestFailed);
+            // if we requested posts in order to fill a gap but the request failed or didn't
+            // return any posts, reload the adapter so the gap marker is reset (hiding its
+            // progress bar)
+            if (event.getAction() == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                reloadPosts();
+            }
         }
     }
 
@@ -1086,15 +829,42 @@ public class ReaderPostListFragment extends Fragment
      * get latest posts for this tag from the server
      */
     private void updatePostsWithTag(ReaderTag tag, UpdateAction updateAction) {
+        if (!isAdded()) return;
+
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
             return;
         }
+        AppLog.d(T.READER, "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
         ReaderPostService.startServiceForTag(getActivity(), tag, updateAction);
     }
 
     private void updateCurrentTag() {
         updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+    }
+
+    /*
+     * update the current tag if it's time to do so - note that the check is done in the
+     * background since it can be expensive and this is called when the fragment is
+     * resumed, which on slower devices can result in a janky experience
+     */
+    private void updateCurrentTagIfTime() {
+        if (!isAdded() || !hasCurrentTag()) {
+            return;
+        }
+        new Thread() {
+            @Override
+            public void run() {
+                if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateCurrentTag();
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     private boolean isUpdating() {
@@ -1137,6 +907,12 @@ public class ReaderPostListFragment extends Fragment
             showSwipeToRefreshProgress(false);
         }
         mIsUpdating = isUpdating;
+
+        // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
+        // doing a refresh while another update is already in progress
+        if (mSwipeToRefreshHelper != null && !mSwipeToRefreshHelper.isRefreshing()) {
+            mSwipeToRefreshHelper.setEnabled(!isUpdating);
+        }
     }
 
     /*
@@ -1153,6 +929,9 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+
+        // remove the gap marker if it's showing, since it's no longer valid
+        getPostAdapter().removeGapMarker();
     }
 
     private void hideNewPostsBar() {
@@ -1179,41 +958,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * make sure current tag still exists, reset to default if it doesn't
-     */
-    private void checkCurrentTag() {
-        if (hasCurrentTag()
-                && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                && !ReaderTagTable.tagExists(getCurrentTag())) {
-            mCurrentTag = ReaderTag.getDefaultTag();
-        }
-    }
-
-    /*
-     * refresh the list of tags shown in the toolbar spinner
-     */
-    private void refreshTags() {
-        if (!isAdded()) {
-            return;
-        }
-        checkCurrentTag();
-        if (hasSpinnerAdapter()) {
-            getSpinnerAdapter().refreshTags();
-        }
-    }
-
-    /*
-     * called from host activity after user adds/removes tags
-     */
-    private void doTagsChanged(final String newCurrentTag) {
-        checkCurrentTag();
-        getSpinnerAdapter().reloadTags();
-        if (!TextUtils.isEmpty(newCurrentTag)) {
-            setCurrentTag(new ReaderTag(newCurrentTag, ReaderTagType.FOLLOWED), true);
-        }
-    }
-
-    /*
      * are we showing all posts with a specific tag (followed or previewed), or all
      * posts in a specific blog?
      */
@@ -1222,132 +966,36 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * toolbar spinner adapter which shows list of tags
-     */
-    private ReaderTagSpinnerAdapter getSpinnerAdapter() {
-        if (mSpinnerAdapter == null) {
-            AppLog.d(T.READER, "reader post list > creating spinner adapter");
-            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (isAdded()) {
-                        AppLog.d(T.READER, "reader post list > spinner adapter loaded");
-                        selectTagInSpinner(getCurrentTag());
-                    }
-                }
-            };
-            mSpinnerAdapter = new ReaderTagSpinnerAdapter(getActivity(), dataListener);
-        }
-
-        return mSpinnerAdapter;
-    }
-
-    private boolean hasSpinnerAdapter() {
-        return (mSpinnerAdapter != null);
-    }
-
-    /*
-     * make sure the passed tag is the one selected in the spinner
-     */
-    private void selectTagInSpinner(final ReaderTag tag) {
-        if (mTagSpinner == null || !hasSpinnerAdapter()) {
-            return;
-        }
-        int position = getSpinnerAdapter().getIndexOfTag(tag);
-        if (position > -1 && position != mTagSpinner.getSelectedItemPosition()) {
-            mTagSpinner.setSelection(position);
-        }
-    }
-
-    /*
-     * used by blog preview - tell the blog info view to show the current blog/feed
-     * if it's not already loaded, then shows/updates posts once the info is loaded
-     */
-    private void loadBlogOrFeedInfo() {
-        if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
-            AppLog.d(T.READER, "reader post list > loading blogInfo");
-            ReaderBlogInfoView.BlogInfoListener listener = new ReaderBlogInfoView.BlogInfoListener() {
-                @Override
-                public void onBlogInfoLoaded(ReaderBlog blogInfo) {
-                    if (isAdded()) {
-                        mCurrentBlogId = blogInfo.blogId;
-                        mCurrentFeedId = blogInfo.feedId;
-                        if (isPostAdapterEmpty()) {
-                            getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                            updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
-                        }
-                        if (mFollowButton != null) {
-                            mFollowButton.setIsFollowed(blogInfo.isFollowing);
-                        }
-                    }
-                }
-                @Override
-                public void onBlogInfoFailed() {
-                    if (isAdded()) {
-                        ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info, ToastUtils.Duration.LONG);
-                    }
-                }
-            };
-            if (mCurrentFeedId != 0) {
-                mBlogInfoView.loadFeedInfo(mCurrentFeedId, listener);
-            } else {
-                mBlogInfoView.loadBlogInfo(mCurrentBlogId, listener);
-            }
-        }
-    }
-
-    /*
-    * user tapped follow button in toolbar to follow/unfollow the current blog
-    */
-    private void toggleBlogFollowStatus() {
-        if (!isAdded() || mFollowButton == null) {
-            return;
-        }
-
-        final boolean isAskingToFollow;
-        if (mCurrentFeedId != 0) {
-            isAskingToFollow = !ReaderBlogTable.isFollowedFeed(mCurrentFeedId);
-        } else {
-            isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mCurrentBlogId);
-        }
-
-        ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!succeeded && isAdded()) {
-                    mFollowButton.setIsFollowed(!isAskingToFollow);
-                }
-            }
-        };
-
-        mFollowButton.setIsFollowedAnimated(isAskingToFollow);
-        if (mCurrentFeedId != 0) {
-            ReaderBlogActions.followFeedById(mCurrentFeedId, isAskingToFollow, followListener);
-        } else {
-            ReaderBlogActions.followBlogById(mCurrentBlogId, isAskingToFollow, followListener);
-        }
-    }
-
-    /*
-     * user tapped follow button in toolbar to follow/unfollow the current tag
-     */
-    private void toggleTagFollowStatus() {
-        if (!isAdded() || mFollowButton == null) {
-            return;
-        }
-
-        boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
-        mFollowButton.setIsFollowedAnimated(isAskingToFollow);
-        ReaderTagActions.TagAction action = (isAskingToFollow ? ReaderTagActions.TagAction.ADD : ReaderTagActions.TagAction.DELETE);
-        ReaderTagActions.performTagAction(getCurrentTag(), action, null);
-    }
-
-    /*
      * called from adapter when user taps a post
      */
     @Override
-    public void onPostSelected(long blogId, long postId) {
-        if (!isAdded()) return;
+    public void onPostSelected(ReaderPost post) {
+        if (!isAdded() || post == null) return;
+
+        // "discover" posts that highlight another post should open the original (source) post when tapped
+        if (post.isDiscoverPost()) {
+            ReaderPostDiscoverData discoverData = post.getDiscoverData();
+            if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
+                if (discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
+                    ReaderActivityLauncher.showReaderPostDetail(
+                            getActivity(),
+                            discoverData.getBlogId(),
+                            discoverData.getPostId());
+                    return;
+                } else if (discoverData.hasPermalink()) {
+                    // if we don't have a blogId/postId, we sadly resort to showing the post
+                    // in a WebView activity - this will happen for non-JP self-hosted
+                    ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
+                    return;
+                }
+            }
+        }
+
+        // if this is a cross-post, we want to show the original post
+        if (post.isXpost()) {
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.xpostBlogId, post.xpostPostId);
+            return;
+        }
 
         ReaderPostListType type = getPostListType();
         Map<String, Object> analyticsProperties = new HashMap<>();
@@ -1363,23 +1011,22 @@ public class ReaderPostListFragment extends Fragment
                         getActivity(),
                         getCurrentTag(),
                         getPostListType(),
-                        blogId,
-                        postId);
+                        post.blogId,
+                        post.postId);
                 break;
             case BLOG_PREVIEW:
                 analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
                         AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
-                        blogId,
-                        postId);
+                        post.blogId,
+                        post.postId);
                 break;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE, analyticsProperties);
     }
 
     /*
-     * called from adapter when user taps a tag on a post
+     * called from adapter when user taps a tag on a post to display tag preview
      */
     @Override
     public void onTagSelected(String tagName) {
@@ -1388,7 +1035,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
-            setCurrentTag(tag, true);
+            setCurrentTag(tag);
         } else {
             // user isn't previewing a tag, so open in tag preview
             ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
@@ -1396,8 +1043,38 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called when user taps dropdown arrow icon next to a post - shows a popup menu
-     * that enables blocking the blog the post is in
+     * called from adapter when user selects a tag from the tag toolbar
+     */
+    @Override
+    public void onTagChanged(ReaderTag tag) {
+        if (!isAdded() || isCurrentTag(tag)) return;
+
+        trackTagLoaded(tag);
+        AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
+        setCurrentTag(tag);
+    }
+
+    private void trackTagLoaded(ReaderTag tag) {
+        AnalyticsTracker.Stat stat = null;
+
+        if (tag.isDiscover()) {
+            stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
+        } else if (tag.isTagTopic()) {
+            stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
+        } else if (tag.isListTopic()) {
+            stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
+        }
+
+        if (stat == null) return;
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("tag", tag.getTagName());
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /*
+     * called when user taps "..." icon next to a post
      */
     @Override
     public void onShowPostPopup(View view, final ReaderPost post) {
@@ -1405,79 +1082,51 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        PopupMenu popup = new PopupMenu(getActivity(), view);
-        MenuItem menuItem = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
-        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        Context context = view.getContext();
+        final ListPopupWindow listPopup = new ListPopupWindow(context);
+        listPopup.setAnchorView(view);
+        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
+        listPopup.setModal(true);
+
+        List<Integer> menuItems = new ArrayList<>();
+        boolean isFollowed = ReaderPostTable.isPostFollowed(post);
+        if (isFollowed) {
+            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
+        } else {
+            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
+        }
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
+        }
+        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
+        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                blockBlogForPost(post);
-                return true;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (!isAdded()) return;
+
+                listPopup.dismiss();
+                switch((int) id) {
+                    case ReaderMenuAdapter.ITEM_FOLLOW:
+                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
+                        toggleFollowStatusForPost(post);
+                        break;
+                    case ReaderMenuAdapter.ITEM_BLOCK:
+                        blockBlogForPost(post);
+                        break;
+                }
             }
         });
-        popup.show();
+        listPopup.show();
     }
 
     /*
-     * called from activity to handle reader-related onActivityResult
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            // user just returned from the tags/subs activity
-            case RequestCodes.READER_SUBS:
-                if (data != null) {
-                    boolean tagsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false);
-                    boolean blogsChanged = data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false);
-                    // reload tags if they were changed, and set the last tag added as the current one
-                    if (tagsChanged) {
-                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
-                        doTagsChanged(lastAddedTag);
-                    }
-                    // refresh posts if blogs changed and user is viewing "Blogs I Follow"
-                    if (blogsChanged
-                            && getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                            && hasCurrentTag()
-                            && getCurrentTag().isBlogsIFollow()) {
-                        refreshPosts();
-                    }
-                }
-                break;
-
-            // user just returned from reblogging activity, reload the displayed post if reblogging
-            // succeeded
-            case RequestCodes.READER_REBLOG:
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    reloadPost(ReaderPostTable.getPost(blogId, postId, true));
-                }
-                break;
-        }
-    }
-
-    /*
-     * purge reader db if it hasn't been done yet, but only if there's an active connection
-     * since we don't want to purge posts that the user would expect to see when offline
+     * purge reader db if it hasn't been done yet
      */
     private void purgeDatabaseIfNeeded() {
-        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPurgedDatabase.class) == null
-                && NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!mHasPurgedReaderDb) {
             AppLog.d(T.READER, "reader post list > purging database");
+            mHasPurgedReaderDb = true;
             ReaderDatabase.purgeAsync();
-            EventBus.getDefault().postSticky(new ReaderEvents.HasPurgedDatabase());
-        }
-    }
-
-    /*
-     * initial update performed the first time the user opens the reader
-     */
-    private void performInitialUpdateIfNeeded() {
-        if (EventBus.getDefault().getStickyEvent(ReaderEvents.HasPerformedInitialUpdate.class) == null
-                && NetworkUtils.isNetworkAvailable(getActivity())) {
-            // update current user to ensure we have their user_id as well as their latest info
-            // in case they changed their avatar, name, etc. since last time
-            AppLog.d(T.READER, "reader post list > updating current user");
-            EventBus.getDefault().postSticky(new ReaderEvents.HasPerformedInitialUpdate());
         }
     }
 
@@ -1485,18 +1134,16 @@ public class ReaderPostListFragment extends Fragment
      * start background service to get the latest followed tags and blogs if it's time to do so
      */
     private void updateFollowedTagsAndBlogsIfNeeded() {
-        ReaderEvents.UpdatedFollowedTagsAndBlogs lastUpdateEvent =
-                EventBus.getDefault().getStickyEvent(ReaderEvents.UpdatedFollowedTagsAndBlogs.class);
-        if (lastUpdateEvent != null && lastUpdateEvent.minutesSinceLastUpdate() < 120) {
-            return;
+        if (mLastAutoUpdateDt != null) {
+            int minutesSinceLastUpdate = DateTimeUtils.minutesBetween(mLastAutoUpdateDt, new Date());
+            if (minutesSinceLastUpdate < 120) {
+                return;
+            }
         }
 
         AppLog.d(T.READER, "reader post list > updating tags and blogs");
-        EventBus.getDefault().postSticky(new ReaderEvents.UpdatedFollowedTagsAndBlogs());
-
-        ReaderUpdateService.startService(getActivity(),
-                EnumSet.of(ReaderUpdateService.UpdateTask.TAGS,
-                           ReaderUpdateService.UpdateTask.FOLLOWED_BLOGS));
+        mLastAutoUpdateDt = new Date();
+        ReaderUpdateService.startService(getActivity(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
     @Override
@@ -1505,4 +1152,9 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, 0);
         }
     }
+
+    public static void resetLastUpdateDate() {
+        mLastAutoUpdateDt = null;
+    }
 }
+

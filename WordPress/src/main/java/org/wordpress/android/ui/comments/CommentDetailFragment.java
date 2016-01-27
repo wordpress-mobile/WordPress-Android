@@ -34,11 +34,13 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
@@ -55,7 +57,6 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -91,7 +92,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private TextView mTxtStatus;
     private TextView mTxtContent;
-    private ImageView mImgSubmitReply;
+    private View mSubmitReplyBtn;
     private SuggestionAutoCompleteText mEditReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
@@ -108,6 +109,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mBtnTrashComment;
 
     private String mRestoredReplyText;
+    private String mRestoredNoteId;
 
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
@@ -170,7 +172,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
-                setNoteWithNoteId(savedInstanceState.getString(KEY_NOTE_ID));
+                // The note will be set in onResume() because Simperium will be running there
+                // See WordPress.deferredInit()
+                mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {
                 int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
@@ -228,7 +232,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
                 getRemoteBlogId(), getCommentId()));
 
-        mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
+        mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
         mBtnLikeComment.setVisibility(View.GONE);
@@ -255,7 +259,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mRestoredReplyText = null;
         }
 
-        mImgSubmitReply.setOnClickListener(new View.OnClickListener() {
+        mSubmitReplyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitReply();
@@ -265,6 +269,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnSpamComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!hasComment()) return;
+
                 if (mComment.getStatusEnum() == CommentStatus.SPAM) {
                     moderateComment(CommentStatus.APPROVED);
                 } else {
@@ -290,6 +296,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setupSuggestionServiceAndAdapter();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
+
+        // Set the note if we retrieved the noteId from savedInstanceState
+        if (!TextUtils.isEmpty(mRestoredNoteId)) {
+            setNoteWithNoteId(mRestoredNoteId);
+            mRestoredNoteId = null;
+        }
     }
 
     private void setupSuggestionServiceAndAdapter() {
@@ -576,7 +594,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // make sure reply box is showing
         if (mLayoutReply.getVisibility() != View.VISIBLE && canReply()) {
-            AniUtils.flyIn(mLayoutReply);
+            AniUtils.animateBottomBar(mLayoutReply, true);
             if (mEditReply != null && mShouldFocusReplyField) {
                 mEditReply.requestFocus();
                 setShouldFocusReplyField(false);
@@ -658,22 +676,27 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
-                    @Override
-                    public void onActionResult(boolean succeeded) {
-                        if (!isAdded())
-                            return;
-                        // update title if it wasn't set above
-                        if (!hasTitle) {
-                            String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
-                            if (!TextUtils.isEmpty(postTitle)) {
-                                setPostTitle(txtPostTitle, postTitle, true);
-                            } else {
-                                txtPostTitle.setText(R.string.untitled);
+                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.OnRequestListener() {
+                            @Override
+                            public void onSuccess() {
+                                if (!isAdded()) return;
+
+                                // update title if it wasn't set above
+                                if (!hasTitle) {
+                                    String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
+                                    if (!TextUtils.isEmpty(postTitle)) {
+                                        setPostTitle(txtPostTitle, postTitle, true);
+                                    } else {
+                                        txtPostTitle.setText(R.string.untitled);
+                                    }
+                                }
                             }
-                        }
-                    }
-                });
+
+                            @Override
+                            public void onFailure(int statusCode) {
+                                // noop
+                            }
+                        });
             }
 
             txtPostTitle.setOnClickListener(new View.OnClickListener() {
@@ -752,7 +775,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * post comment box text as a reply to the current comment
      */
     private void submitReply() {
-        if (!isAdded() || mIsSubmittingReply)
+        if (!hasComment() || !isAdded() || mIsSubmittingReply)
             return;
 
         if (!NetworkUtils.checkConnection(getActivity()))
@@ -765,7 +788,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // disable editor, hide soft keyboard, hide submit icon, and show progress spinner while submitting
         mEditReply.setEnabled(false);
         EditTextUtils.hideSoftInput(mEditReply);
-        mImgSubmitReply.setVisibility(View.GONE);
+        mSubmitReplyBtn.setVisibility(View.GONE);
         final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
@@ -777,7 +800,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
                 if (isAdded()) {
                     mEditReply.setEnabled(true);
-                    mImgSubmitReply.setVisibility(View.VISIBLE);
+                    mSubmitReplyBtn.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
                     updateStatusViews();
                     if (succeeded) {
@@ -861,7 +884,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mTxtStatus.setTextColor(statusColor);
             if (mTxtStatus.getVisibility() != View.VISIBLE) {
                 mTxtStatus.clearAnimation();
-                AniUtils.fadeIn(mTxtStatus);
+                AniUtils.fadeIn(mTxtStatus, AniUtils.Duration.LONG);
             }
         } else {
             mTxtStatus.setVisibility(View.GONE);
@@ -1011,6 +1034,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         toggleLikeButton(!mBtnLikeComment.isActivated());
 
         ReaderAnim.animateLikeButton(mBtnLikeIcon, mBtnLikeComment.isActivated());
+
+        // Bump analytics
+        AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED :  Stat.NOTIFICATION_UNLIKED);
 
         boolean commentWasUnapproved = false;
         if (mNotificationsDetailListFragment != null && mComment != null) {

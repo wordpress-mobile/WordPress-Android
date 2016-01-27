@@ -10,6 +10,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.Set;
 
 public class BlogUtils {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
+
+    public static final int BLOG_ID_INVALID = 0;
 
     /**
      * Remove blogs that are not in the list and add others
@@ -112,7 +115,7 @@ public class BlogUtils {
             // deprecated
             blog.setMaxImageWidthId(0);
             blog.setRemoteBlogId(Integer.parseInt(blogId));
-            blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
+            blog.setDotcomFlag(WPUrlUtils.isWordPressCom(xmlRpcUrl));
             // assigned later in getOptions call
             blog.setWpVersion("");
             blog.setAdmin(isAdmin);
@@ -139,5 +142,14 @@ public class BlogUtils {
 
     public static boolean addBlogs(List<Map<String, Object>> userBlogList, String username) {
         return addBlogs(userBlogList, username, null, null, null);
+    }
+
+    /**
+     * Get a Blog's local Id.
+     * @param blog The Blog to get its local ID
+     * @return Blog's local id or {@value BlogUtils#BLOG_ID_INVALID} if null
+     */
+    public static int getBlogLocalId(final Blog blog) {
+        return (blog != null ? blog.getLocalTableBlogId() : BLOG_ID_INVALID);
     }
 }

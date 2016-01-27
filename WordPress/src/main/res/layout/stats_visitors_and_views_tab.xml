@@ -32,7 +32,7 @@
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/stats_visitors_and_views_tab_label"
-                android:textColor="@color/grey_darken_20"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -44,6 +44,8 @@
             android:id="@+id/stats_visitors_and_views_tab_value"
             android:textColor="@color/blue_wordpress"
             android:textSize="@dimen/text_sz_small"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_extra_small"
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_width="wrap_content"

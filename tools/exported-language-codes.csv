@@ -3,6 +3,7 @@ az,az,Azerbaijani
 de,de,German
 el,el,Greek
 es,es,Spanish
+es-cl,es-rCL,Spanish(Chile)
 fr,fr,French
 gd,gd,Scottish-Gaelic
 hi,hi,Hindi
@@ -34,3 +35,7 @@ sr,sr,Serbian
 sk,sk,Slovak
 cy,cy,Welch
 da,da,Danish
+bg,bg,Bulgarian
+sq,sq,Albanian
+hr,hr,Croatian
+cs,cs,Czech

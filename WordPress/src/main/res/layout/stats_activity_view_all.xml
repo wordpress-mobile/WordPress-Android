@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,20 +23,21 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_summary_date"
                 android:textAppearance="?android:attr/textAppearance"
+                android:textSize="@dimen/text_sz_large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:textColor="@color/stats_blue_labels"
                 android:gravity="center"
-                android:text="Date"/>
+                tools:text="Date"/>
 
             <FrameLayout
                 android:id="@+id/stats_single_view_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"/>
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginRight="@dimen/content_margin" />
 
         </LinearLayout>
     </org.wordpress.android.ui.stats.ScrollViewExt>

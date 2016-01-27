@@ -3,8 +3,12 @@ jdk: oraclejdk7
 
 android:
   components:
-    - build-tools-21.1.1
-    - android-19
+    - extra-android-m2repository
+    - extra-android-support
+    - platform-tools
+    - tools
+    - build-tools-23.0.2
+    - android-23
 
 env:
   global:
@@ -13,4 +17,4 @@ env:
     - ANDROID_TARGET=android-14
 
 script:
-  - ./gradlew -PdisablePreDex build
+  - ./gradlew build

@@ -63,7 +63,7 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
-                    List<Map<String, Object>> userBlogListReceiver = convertJSONObjectToSiteList(response, false);
+                    List<Map<String, Object>> userBlogListReceiver = convertJSONObjectToSiteList(response, true);
                     callback.onSuccess(userBlogListReceiver);
                 } else {
                     callback.onSuccess(null);

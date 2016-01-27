@@ -5,4 +5,6 @@
     <dimen name="theme_details_dialog_min_width">650dp</dimen>
     <dimen name="theme_details_dialog_height">500dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_tablet_large</dimen>
+    <dimen name="stats_barchart_height">200dp</dimen>
+    <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_tablet_large</dimen>
 </resources>

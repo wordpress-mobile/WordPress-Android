@@ -17,22 +17,17 @@ import org.wordpress.android.ui.stats.models.FollowDataModel;
 import org.wordpress.android.ui.stats.models.FollowerModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 public class StatsFollowersFragment extends StatsAbstractListFragment {
@@ -238,11 +233,15 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     private String getTotalFollowersLabel(int total) {
-        if ( mTopPagerSelectedButtonIndex == 0 ) {
-            return getString(R.string.stats_followers_total_wpcom, FormatUtils.formatDecimal(total));
+        final String totalFollowersLabel;
+
+        if (mTopPagerSelectedButtonIndex == 0) {
+            totalFollowersLabel = getString(R.string.stats_followers_total_wpcom);
+        } else {
+            totalFollowersLabel = getString(R.string.stats_followers_total_email);
         }
 
-        return  getString(R.string.stats_followers_total_email, FormatUtils.formatDecimal(total));
+        return String.format(totalFollowersLabel, FormatUtils.formatDecimal(total));
     }
 
     @Override
@@ -325,7 +324,12 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             }
 
             // since date
-            holder.totalsTextView.setText(getSinceLabel(currentRowData.getDateSubscribed()));
+            holder.totalsTextView.setText(
+                    StatsUtils.getSinceLabel(
+                            context,
+                            currentRowData.getDateSubscribed()
+                    )
+            );
 
             // Avatar
             holder.networkImageView.setImageUrl(
@@ -350,94 +354,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             return rowView;
         }
 
-        private int roundUp(double num, double divisor) {
-            double unrounded = num / divisor;
-            return (int) (unrounded + 0.5);
-        }
 
-        private String getSinceLabel(String dataSubscribed) {
-
-            Date currentDateTime = new Date();
-
-            try {
-                SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-                Date date = from.parse(dataSubscribed);
-
-                // See http://momentjs.com/docs/#/displaying/fromnow/
-                long currentDifference = Math.abs(
-                        StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS)
-                );
-
-                if (currentDifference <= 45 ) {
-                    return getString(R.string.stats_followers_seconds_ago);
-                }
-                if (currentDifference < 90 ) {
-                    return getString(R.string.stats_followers_a_minute_ago);
-                }
-
-                // 90 seconds to 45 minutes
-                if (currentDifference <= 2700 ) {
-                    long minutes = this.roundUp(currentDifference, 60);
-                    String followersMinutes = getString(R.string.stats_followers_minutes);
-                    return String.format(followersMinutes, minutes);
-                }
-
-                // 45 to 90 minutes
-                if (currentDifference <= 5400 ) {
-                    return getString(R.string.stats_followers_an_hour_ago);
-                }
-
-                // 90 minutes to 22 hours
-                if (currentDifference <= 79200 ) {
-                    long hours = this.roundUp(currentDifference, 60*60);
-                    String followersHours = getString(R.string.stats_followers_hours);
-                    return String.format(followersHours, hours);
-                }
-
-                // 22 to 36 hours
-                if (currentDifference <= 129600 ) {
-                    return getString(R.string.stats_followers_a_day);
-                }
-
-                // 36 hours to 25 days
-                // 86400 secs in a day -  2160000 secs in 25 days
-                if (currentDifference <= 2160000 ) {
-                    long days = this.roundUp(currentDifference, 86400);
-                    String followersDays = getString(R.string.stats_followers_days);
-                    return String.format(followersDays, days);
-                }
-
-                // 25 to 45 days
-                // 3888000 secs in 45 days
-                if (currentDifference <= 3888000 ) {
-                    return getString(R.string.stats_followers_a_month);
-                }
-
-                // 45 to 345 days
-                // 2678400 secs in a month - 29808000 secs in 345 days
-                if (currentDifference <= 29808000 ) {
-                    long months = this.roundUp(currentDifference, 2678400);
-                    String followersMonths = getString(R.string.stats_followers_months);
-                    return String.format(followersMonths, months);
-                }
-
-                // 345 to 547 days (1.5 years)
-                if (currentDifference <= 47260800 ) {
-                    return getString(R.string.stats_followers_a_year);
-                }
-
-                // 548 days+
-                // 31536000 secs in a year
-                long years = this.roundUp(currentDifference, 31536000);
-                String followersYears = getString(R.string.stats_followers_years);
-                return String.format(followersYears, years);
-
-            } catch (ParseException e) {
-                AppLog.e(AppLog.T.STATS, e);
-            }
-
-            return "";
-        }
     }
 
     private static String normalizeAndRemoveScheme(String url) {

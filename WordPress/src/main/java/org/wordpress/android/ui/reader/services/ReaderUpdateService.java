@@ -131,7 +131,7 @@ public class ReaderUpdateService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
-        WordPress.getRestClientUtilsV1_1().get("read/menu", null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get("read/menu", null, null, listener, errorListener);
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -202,6 +202,11 @@ public class ReaderUpdateService extends Service {
             if (jsonTopic != null) {
                 String tagName = JSONUtils.getStringDecoded(jsonTopic, "title");
                 String endpoint = JSONUtils.getString(jsonTopic, "URL");
+                // rename "Blogs I Follow" to "Followed Sites"
+                if (topicType == ReaderTagType.DEFAULT
+                        && tagName.equals(ReaderTag.TAG_NAME_FOLLOWED_SITES_OLD)) {
+                    tagName = ReaderTag.TAG_NAME_FOLLOWED_SITES;
+                }
                 topics.add(new ReaderTag(tagName, endpoint, topicType));
             }
         }

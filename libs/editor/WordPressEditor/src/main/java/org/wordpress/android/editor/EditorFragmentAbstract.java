@@ -18,6 +18,9 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
+    public abstract boolean hasFailedMediaUploads();
+    public abstract void setTitlePlaceholder(CharSequence text);
+    public abstract void setContentPlaceholder(CharSequence text);
 
     // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
     public abstract Spanned getSpannedContent();
@@ -27,8 +30,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected boolean mFeaturedImageSupported;
+    protected int mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
+    protected boolean mDebugModeEnabled;
 
     @Override
     public void onAttach(Activity activity) {
@@ -74,6 +79,14 @@ public abstract class EditorFragmentAbstract extends Fragment {
         mBlogSettingMaxImageWidth = blogSettingMaxImageWidth;
     }
 
+    public void setFeaturedImageId(int featuredImageId) {
+        mFeaturedImageId = featuredImageId;
+    }
+
+    public void setDebugModeEnabled(boolean debugModeEnabled) {
+        mDebugModeEnabled = debugModeEnabled;
+    }
+
     /**
      * Called by the activity when back button is pressed.
      */
@@ -94,11 +107,13 @@ public abstract class EditorFragmentAbstract extends Fragment {
      * Callbacks used to communicate with the parent Activity
      */
     public interface EditorFragmentListener {
-        public void onEditorFragmentInitialized();
-        public void onSettingsClicked();
-        public void onAddMediaClicked();
-        // TODO: remove saveMediaFile, it's currently needed for the legacy editor - we should have something like
-        // "EditorFragmentAbstract.getFeaturedImage()" returning the remote id
-        public void saveMediaFile(MediaFile mediaFile);
+        void onEditorFragmentInitialized();
+        void onSettingsClicked();
+        void onAddMediaClicked();
+        void onMediaRetryClicked(String mediaId);
+        void onMediaUploadCancelClicked(String mediaId, boolean delete);
+        void onFeaturedImageChanged(int mediaId);
+        // TODO: remove saveMediaFile, it's currently needed for the legacy editor
+        void saveMediaFile(MediaFile mediaFile);
     }
 }

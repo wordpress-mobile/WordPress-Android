@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="stats_months_and_years">Месеци и години</string>
-	<string name="reader_page_recommended_blogs">Блогови што можеби ви се допаѓаат</string>
 	<string name="error_copy_to_clipboard">Се случи грешка при копирање на текстот во клипбордот</string>
 	<string name="stats_recent_weeks">Последни недели</string>
 	<string name="stats_average_per_day">Средна вредност на ден</string>
@@ -29,7 +28,6 @@
 	<string name="stats_empty_video_desc">Доколку прикачувате видеа со VideoPress, дознајте колку пати се гледани.</string>
 	<string name="stats_empty_publicize">Нема записи за следбеници на објавата</string>
 	<string name="stats_followers_months">%1$d месеци</string>
-	<string name="stats_comments_total_comments_followers">Вкупен број на следбеници на коментарот: %1$s</string>
 	<string name="stats_view_top_posts_and_pages">Написи и страници</string>
 	<string name="stats_empty_top_posts_desc">Откријте која содржина е најгледана и како индивидуални написи и страници се извршуваат од време на време.</string>
 	<string name="stats_empty_tags_and_categories_desc">Земете преглед на најпопуларните теми на вашата веб страница врз база на најдобрите написи од минатата недела.</string>
@@ -79,7 +77,6 @@
 	<string name="cab_selected">%d слекетирано</string>
 	<string name="media_gallery_date_range">Покажи медиа од %1$s до %2$s</string>
 	<string name="delete_sure_page">Избриши оваа страница</string>
-	<string name="reader_empty_followed_blogs_title">Сеуште не следите блог написи</string>
 	<string name="reader_empty_posts_liked">Сеуште немате допаднити написи</string>
 	<string name="faq_button">ЧПП</string>
 	<string name="nux_help_description">Посети го центарот за помош за да добиеш одговори на веќе поставени прашања или посети го форумот за да поставиш нови</string>
@@ -88,14 +85,10 @@
 	<string name="new_blog_wpcom_created">WordPress.com блог создаден!</string>
 	<string name="reader_empty_comments">Нема коментари сеуште</string>
 	<string name="agree_terms_of_service">Со креирање на сметка вие се согласувате на фасцинирачките %1$sУслови за користење%2$s</string>
-	<string name="reader_likes_multi_short">%,d луѓе</string>
 	<string name="reader_label_comment_count_multi">%,d коментари</string>
 	<string name="reader_label_view_original">Види ја оригиналната статија</string>
 	<string name="reader_empty_posts_in_tag">Нема постови со оваа ознака</string>
 	<string name="reader_label_like">Сака</string>
-	<string name="reader_label_liked_by">Допаднато од</string>
-	<string name="reader_label_liked_by_you">Ти се допаѓа</string>
-	<string name="reader_likes_one_short">едно лице</string>
 	<string name="reader_label_comment_count_single">Еден коментар</string>
 	<string name="reader_label_comments_closed">Коментари затворени</string>
 	<string name="reader_label_comments_on">Коментари на</string>
@@ -105,7 +98,6 @@
 	<string name="error_refresh_unauthorized_posts">Немате дозвола за гледање или уредување на написи</string>
 	<string name="error_publish_empty_post">Неможе да се објави празен напис</string>
 	<string name="reader_title_photo_viewer">%1$d of %2$d</string>
-	<string name="overwrite_local_changes">Направивте измени на напис кој сеуште не е качен. Продолжи со освежување и презапиши ги локалните промени?</string>
 	<string name="older_month">Постари од месец</string>
 	<string name="older_two_days">Постари од 2 дена</string>
 	<string name="older_last_week">Постари од седмица</string>
@@ -141,18 +133,10 @@
 	<string name="preference_privacy">Приватност</string>
 	<string name="preference_send_usage_stats">Испрати статистика</string>
 	<string name="preference_send_usage_stats_summary">Автоматски испраќај статистика од употребата да ни помогнеш да го подобриме WordPress за Андроид</string>
-	<string name="reader_hint_reblog_comment">Додади твое мислење (изборно)</string>
-	<string name="reader_title_reblog">Реблог напис</string>
-	<string name="reader_label_reblog_to">Реблог до</string>
 	<string name="update_verb">Ажурирај</string>
 	<string name="schedule_verb">Закажи</string>
-	<string name="reader_title_blog_preview">Прегледај го блогот</string>
-	<string name="reader_title_tag_preview">Прегледај ја ознаката</string>
 	<string name="reader_title_subs">Ознаки и Блогови</string>
 	<string name="reader_page_followed_tags">Проследени ознаки</string>
-	<string name="reader_page_popular_tags">Популарни ознаки</string>
-	<string name="reader_page_followed_blogs">Проследени блогови</string>
-	<string name="reader_hint_add_tag_or_url">Внеси ознака или URL за следење</string>
 	<string name="reader_label_followed_blog">Блогот се следи</string>
 	<string name="reader_label_tag_preview">Означени написи %s</string>
 	<string name="reader_toast_err_get_blog_info">Неможе да се прикаже овој блог</string>
@@ -168,11 +152,9 @@
 	<string name="help_center">Центар за помош</string>
 	<string name="forums">Форуми</string>
 	<string name="ssl_certificate_error">Невалиден SSl сертификат</string>
-	<string name="reader_label_reblog_empty">Немате видливе WordPress.com блогови оваа мислење може да биде реблогирано исто така</string>
 	<string name="ssl_certificate_ask_trust">Доколку вообичаено се поврзувате на страницата без проблеми, оваа грешка може да значи дека некој се обидува да ја имитира вашата страница и не треба да продолжите. Дали му верувате на сертификатот и покрај тоа?</string>
 	<string name="comments_empty_list">Нема коментари</string>
 	<string name="mnu_comment_unspam">Не е спам</string>
-	<string name="theme_no_search_result_found">Не се пронајдени резултати</string>
 	<string name="adding_cat_success">Категоријата е успешно додадена</string>
 	<string name="stats_empty_comments">Сеуште нема коментари</string>
 	<string name="notifications_empty_list">Нема известувања</string>
@@ -240,7 +222,6 @@
 	<string name="connection_error">Грешка во поврзувањето</string>
 	<string name="cancel_edit">Откажи промени</string>
 	<string name="location_not_found">Непозната локација</string>
-	<string name="stats_view_tags_and_categories">Етикети и категори</string>
 	<string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
 	<string name="learn_more">Научи повеќе</string>
 	<string name="theme_current_theme">Сегашна тема</string>
@@ -268,9 +249,7 @@
 	<string name="toast_comment_unedited">Коментарот не е променет</string>
 	<string name="delete_draft">Избриши нацрт</string>
 	<string name="preview_page">Прегледај страница</string>
-	<string name="page_deleted">Страницата е избришана успешно</string>
 	<string name="preview_post">Прегледај напис</string>
-	<string name="post_deleted">Написот е избришан успешно</string>
 	<string name="image_settings">Подесувања на сликата</string>
 	<string name="add_account_blog_url">Адреса на блогот</string>
 	<string name="wordpress_blog">WordPress блог</string>
@@ -281,7 +260,6 @@
 	<string name="jetpack_message_not_admin">Jetpack додатокот е задолжителен за статистика. Контактирајте го администраторот на страницата.</string>
 	<string name="reader_title_applog">Дневник на апликацијата</string>
 	<string name="reader_share_link">Сподели врска</string>
-	<string name="reader_toast_err_reblog_requires_blog">Избери блог</string>
 	<string name="reader_toast_err_add_tag">Неможе да се додаде оваа обележување</string>
 	<string name="reader_toast_err_remove_tag">Неможе да се отстрани оваа обележување</string>
 	<string name="required_field">Задолжително поле</string>
@@ -366,7 +344,6 @@
 	<string name="validating_user_data">Валидација на кориснички податоци</string>
 	<string name="reader_likes_you_and_one">На вас и на уште еден му се допаѓа ова</string>
 	<string name="select_time">Избери време</string>
-	<string name="reader_empty_followed_blogs_description">Не грижете се, само допрете ја иконата за означување за да започнете со истражувањето!</string>
 	<string name="select_date">Избери дата</string>
 	<string name="account_two_step_auth_enabled">Оваа корисничка сметка има вклучено автентикација во два чекори. Посетете ги вашите безбедносни подесувања на WordPress.com за да генерирате лозинка за специфичната апликација.</string>
 	<string name="signing_in">Најавување...</string>
@@ -376,7 +353,6 @@
 	<string name="password_invalid">Потребна ви е посигурна лозинка. Употребете 7 или повеќе карактери помешани со големи и мали букви, бројки и специјални карактери.</string>
 	<string name="nux_add_selfhosted_blog">Додади автономна страница</string>
 	<string name="reader_label_removed_tag">Одстранети %s</string>
-	<string name="reader_menu_tags">Етикети</string>
 	<string name="media_add_popup_title">Додади во медиа библиотеката</string>
 	<string name="media_add_new_media_gallery">Креирај галерија</string>
 	<string name="empty_list_default">Оваа листа е празна</string>
@@ -389,27 +365,21 @@
 	<string name="reader_btn_share">Сподели</string>
 	<string name="reader_btn_follow">Следи</string>
 	<string name="reader_toast_err_comment_failed">Неможе да се испрати вашиот коментар</string>
-	<string name="reader_toast_err_reblog_failed">Неможе да се реблогира овој напис</string>
-	<string name="reader_toast_err_already_reblogged">Веќе го имате реблогирано овој напис</string>
 	<string name="reader_toast_err_tag_exists">Веќе го следите ова обележување</string>
 	<string name="reader_toast_err_tag_invalid">Тоа не е валидно обележување</string>
 	<string name="reader_toast_err_share_intent">Неможе да се сподели</string>
 	<string name="reader_toast_err_view_image">Неможе да се види сликата</string>
 	<string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>
 	<string name="reader_empty_followed_tags">Вие не следите ниту едно обележување</string>
-	<string name="reader_empty_popular_tags">Нема популарни обележувања</string>
 	<string name="create_account_wpcom">Креирајте корисничка сметка на WordPress.com</string>
 	<string name="connecting_wpcom">Поврзување со WordPress.com</string>
 	<string name="username_invalid">Невалидно корисничко име</string>
 	<string name="limit_reached">Ограничувањето е достигнато. Може да се обидете повторно за 1 минута. Доколку се обидете повторно пред тоа време, ќе го зголемите времето за чекање пред да биде отстранета забраната. Доколку мислите дека ова е грешка, контактирајте ја поддршката.</string>
 	<string name="nux_tutorial_get_started_title">Започнете!</string>
 	<string name="reader_btn_unfollow">Следење</string>
-	<string name="reader_hint_comment_on_post">Додади коментар</string>
-	<string name="reader_hint_comment_on_comment">Одговори на коментар</string>
 	<string name="reader_label_added_tag">Додадено %s</string>
 	<string name="reader_likes_one">На едно лице му се допаѓа ова</string>
 	<string name="reader_likes_only_you">На тебе ти се допаѓа ова</string>
-	<string name="reader_toast_reblog_success">Написот е реблогиран</string>
 	<string name="stats_timeframe_yesterday">Вчера</string>
 	<string name="stats_totals_plays">Пуштени</string>
 	<string name="stats_entry_posts_and_pages">Наслов</string>
@@ -451,7 +421,6 @@
 	<string name="share_action_title">Додади на ...</string>
 	<string name="share_action">Сподели</string>
 	<string name="stats">Статистики</string>
-	<string name="view_stats_full_site">Види ја целата страница</string>
 	<string name="stats_view_visitors_and_views">Посетители и прегледи</string>
 	<string name="stats_view_clicks">Кликнувања</string>
 	<string name="stats_view_comments">Коментари</string>
@@ -474,14 +443,7 @@
 	<string name="media_add_popup_capture_video">Снимање</string>
 	<string name="unattached">Неприкачени</string>
 	<string name="upload">Качување</string>
-	<string name="options">Опции</string>
 	<string name="notifications">Известувања</string>
-	<string name="manage_notifications">Управувај со известувања</string>
-	<string name="enable_notifications">Овозможи известувања</string>
-	<string name="types">Типови</string>
-	<string name="notifications_turn_off">Исклучи</string>
-	<string name="notifications_turn_off_1hr">Исклучи за 1 час</string>
-	<string name="notifications_turn_off_8hr">Исклучи за 8 часа</string>
 	<string name="new_notifications">%d нови известувања</string>
 	<string name="more_notifications">и уште %d .</string>
 	<string name="sign_in">Најави се</string>
@@ -530,6 +492,7 @@
 	<string name="post_password">Лозинка (опционално)</string>
 	<string name="immediately">Веднаш</string>
 	<string name="quickpress_add_alert_title">Постави име на кратенка</string>
+	<string name="today">Денес</string>
 	<string name="settings">Поставувања</string>
 	<string name="share_url">URL за споделување</string>
 	<string name="quickpress_add_error">Името на кратенката не смее да биде празно</string>

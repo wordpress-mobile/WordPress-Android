@@ -25,10 +25,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
+import org.xmlrpc.android.ApiHelper.Method;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -60,6 +62,8 @@ import de.greenrobot.event.EventBus;
  */
 
 public class XMLRPCClient implements XMLRPCClientInterface {
+    public static final int DEFAULT_CONNECTION_TIMEOUT = 30000;
+    public static final int DEFAULT_SOCKET_TIMEOUT = 60000;
 
     public interface OnBytesUploadedListener {
         public void onBytesUploaded(long uploadedBytes);
@@ -73,8 +77,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
-    private static final int DEFAULT_CONNECTION_TIMEOUT = 30000;
-    private static final int DEFAULT_SOCKET_TIMEOUT = 60000;
 
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
@@ -128,10 +130,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
         DefaultHttpClient client = null;
-        if (uri != null && uri.getHost() != null && uri.getHost().endsWith("wordpress.com")) {
+        if (WPUrlUtils.isWordPressCom(uri)) {
             mIsWpcom = true;
         }
-        if (mIsWpcom || (uri == null || uri.getScheme() == null || uri.getScheme().equals("http"))) {
+        if (mIsWpcom) {
             //wpcom blog or self-hosted blog on plain HTTP
             client = new DefaultHttpClient();
         } else {
@@ -143,10 +145,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             try {
                 client = new ConnectionClient(port);
             } catch (GeneralSecurityException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustUserSSLCertsSocketFactory", e);
                 client = null;
             } catch (IOException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustUserSSLCertsSocketFactory", e);
                 client = null;
             }
 
@@ -337,7 +339,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException, IllegalArgumentException, IllegalStateException {
         // prepare POST body
-        if (method.equals("wp.uploadFile")) {
+        if (method.equals(Method.UPLOAD_FILE)) {
             if (!tempFile.exists() && !tempFile.mkdirs()) {
                 throw new XMLRPCException("Path to file could not be created.");
             }
@@ -511,7 +513,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                         if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") &&
                                 responseString.contains("bytes exhausted")) {
                             String newErrorMsg;
-                            if (method.equals("wp.uploadFile")) {
+                            if (method.equals(Method.UPLOAD_FILE)) {
                                 newErrorMsg =
                                         "The server doesn't have enough memory to upload this file. You may need to increase the PHP memory limit on your site.";
                             } else {
@@ -534,6 +536,12 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 // Detect login issues and broadcast a message if the error is known
                 switch (e.getFaultCode()) {
                     case 403:
+                        // Ignore 403 error from certain methods known for replying with incorrect error code on
+                        // lacking permissions
+                        if ("wp.getPostFormats".equals(method) || "wp.getCommentStatusList".equals(method)
+                            || "wp.getPostStatusList".equals(method) || "wp.getPageStatusList".equals(method)) {
+                            break;
+                        }
                         EventBus.getDefault().post(new CoreEvents.InvalidCredentialsDetected());
                         break;
                     case 425:
@@ -613,7 +621,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     private void deleteTempFile(String method, File tempFile) {
         if (tempFile != null) {
-            if ((method.equals("wp.uploadFile"))){ //get rid of the temp file
+            if ((method.equals(Method.UPLOAD_FILE))){ //get rid of the temp file
                 tempFile.delete();
             }
         }
@@ -642,7 +650,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             return false;
         }
 
-        return path.equals("/xmlrpc.php") && host.endsWith("wordpress.com") && protocol.equals("https");
+        return path.equals("/xmlrpc.php") && WPUrlUtils.safeToAddWordPressComAuthToken(clientUri) && protocol.equals("https");
     }
 
     private class CancelException extends RuntimeException {

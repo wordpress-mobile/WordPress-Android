@@ -1,13 +1,19 @@
 package org.wordpress.android.ui.reader.utils;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 public class ReaderUtils {
@@ -53,16 +59,18 @@ public class ReaderUtils {
     /*
      * returns the passed string formatted for use with our API - see sanitize_title_with_dashes
      * https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php#L1258
+     * http://stackoverflow.com/a/1612015/1673548
      */
     public static String sanitizeWithDashes(final String title) {
         if (title == null) {
             return "";
         }
+
         return title.trim()
-                .replaceAll("&[^\\s]*;", "")        // remove html entities
-                .replaceAll("[\\.\\s]+", "-")       // replace periods and whitespace with a dash
-                .replaceAll("[^A-Za-z0-9\\-]", "")  // remove remaining non-alphanum/non-dash chars
-                .replaceAll("--", "-");             // reduce double dashes potentially added above
+                .replaceAll("&[^\\s]*;", "")            // remove html entities
+                .replaceAll("[\\.\\s]+", "-")           // replace periods and whitespace with a dash
+                .replaceAll("[^\\p{L}\\p{Nd}\\-]+", "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                .replaceAll("--", "-");                 // reduce double dashes potentially added above
     }
 
     /*
@@ -76,17 +84,47 @@ public class ReaderUtils {
                 case 2:
                     return context.getString(R.string.reader_likes_you_and_one);
                 default:
-                    return context.getString(R.string.reader_likes_you_and_multi, numLikes - 1);
+                    String youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi);
+                    return String.format(youAndMultiLikes, numLikes - 1);
             }
         } else {
-            return (numLikes == 1 ?
-                    context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
+            if (numLikes == 1) {
+                return context.getString(R.string.reader_likes_one);
+            } else {
+                String likes = context.getString(R.string.reader_likes_multi);
+                return String.format(likes, numLikes);
+            }
         }
     }
 
     /*
-     * returns true if the reader should provide a "logged out" experience - no likes, comments,
-     * reblogs, or anything else that requires an account
+     * short like text ("1 like," "5 likes," etc.)
+     */
+    public static String getShortLikeLabelText(Context context, int numLikes) {
+        switch (numLikes) {
+            case 0:
+                return context.getString(R.string.reader_short_like_count_none);
+            case 1:
+                return context.getString(R.string.reader_short_like_count_one);
+            default:
+                String count = FormatUtils.formatInt(numLikes);
+                return String.format(context.getString(R.string.reader_short_like_count_multi), count);
+        }
+    }
+
+    public static String getShortCommentLabelText(Context context, int numComments) {
+        switch (numComments) {
+            case 1:
+                return context.getString(R.string.reader_short_comment_count_one);
+            default:
+                String count = FormatUtils.formatInt(numComments);
+                return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
+        }
+    }
+
+    /*
+     * returns true if the reader should provide a "logged out" experience - no likes,
+     * comments, or anything else that requires a wp.com account
      */
     public static boolean isLoggedOutReader() {
         return !AccountHelper.isSignedInWordPressDotCom();
@@ -98,5 +136,51 @@ public class ReaderUtils {
     public static boolean postAndCommentExists(long blogId, long postId, long commentId) {
         return ReaderPostTable.postExists(blogId, postId) &&
                 ReaderCommentTable.commentExists(blogId, postId, commentId);
+    }
+
+    /*
+     * used by Discover site picks to add a "Visit [BlogName]" link which shows the
+     * native blog preview for that blog
+     */
+    public static String makeBlogPreviewUrl(long blogId) {
+        return "wordpress://blogpreview?blogId=" + Long.toString(blogId);
+    }
+
+    public static boolean isBlogPreviewUrl(String url) {
+        return (url != null && url.startsWith("wordpress://blogpreview"));
+    }
+
+    public static long getBlogIdFromBlogPreviewUrl(String url) {
+        if (isBlogPreviewUrl(url)) {
+            String strBlogId = Uri.parse(url).getQueryParameter("blogId");
+            return StringUtils.stringToLong(strBlogId);
+        } else {
+            return 0;
+        }
+    }
+
+    /*
+     * returns the passed string prefixed with a "#" if it's non-empty and isn't already
+     * prefixed with a "#"
+     */
+    public static String makeHashTag(String tagName) {
+        if (TextUtils.isEmpty(tagName)) {
+            return "";
+        } else if (tagName.startsWith("#")) {
+            return tagName;
+        } else {
+            return "#" + tagName;
+        }
+    }
+
+    /*
+     * set the background of the passed view to the round ripple drawable - only works on
+     * Lollipop or later, does nothing on earlier Android versions
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setBackgroundToRoundRipple(View view) {
+        if (view != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setBackgroundResource(R.drawable.ripple_oval);
+        }
     }
 }

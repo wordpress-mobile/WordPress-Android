@@ -1,0 +1,36 @@
+/*
+ * CSS to enable WebViews to use Merriweather font assets, ex:
+ * <link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>
+ */
+
+/* normal */
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Merriweather Regular'), local('Merriweather-Regular'), url(file:///android_asset/fonts/Merriweather-Regular.ttf);
+}
+
+/* bold */
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Merriweather Bold'), local('Merriweather-Bold'), url(file:///android_asset/fonts/Merriweather-Bold.ttf);
+}
+
+/* italic */
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Merriweather Italic'), local('Merriweather-Italic'), url(file:///android_asset/fonts/Merriweather-Italic.ttf);
+}
+
+/* bold italic */
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Merriweather Bold Italic'), local('Merriweather-BoldItalic'), url(file:///android_asset/fonts/Merriweather-BoldItalic.ttf);
+}

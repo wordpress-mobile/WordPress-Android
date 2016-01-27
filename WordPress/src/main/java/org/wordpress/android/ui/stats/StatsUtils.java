@@ -6,6 +6,7 @@ import android.content.Context;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -21,6 +22,10 @@ import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
+import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
+import org.wordpress.android.ui.stats.models.InsightsPopularModel;
+import org.wordpress.android.ui.stats.models.InsightsTodayModel;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
@@ -116,7 +121,7 @@ public class StatsUtils {
     /**
      * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
-    private static String getCurrentDate() {
+    public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
         return sdf.format(new Date());
     }
@@ -167,7 +172,7 @@ public class StatsUtils {
            UTC-0:30   ----> -1.0
         */
 
-        AppLog.d(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
+        AppLog.v(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
         String timezoneNormalized;
         if (blogTimeZoneOption.equals("0") || blogTimeZoneOption.equals("0.0")) {
             timezoneNormalized = "GMT";
@@ -188,7 +193,7 @@ public class StatsUtils {
             }
         }
 
-        AppLog.d(T.STATS, "Setting the following Timezone: " + timezoneNormalized);
+        AppLog.v(T.STATS, "Setting the following Timezone: " + timezoneNormalized);
         gmtDf.setTimeZone(TimeZone.getTimeZone(timezoneNormalized));
         return gmtDf.format(date);
     }
@@ -286,52 +291,20 @@ public class StatsUtils {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 
-    /**
-     * Return the credentials for the  blog or null if not available.
-     *
-     * 1. Read the credentials at blog level (Jetpack connected with a wpcom account != main account)
-     * 2. If credentials are empty read the global wpcom credentials
-     * 3. Check that credentials are not empty before launching the activity
-     *
-     */
-    public static String getBlogStatsUsername(int localTableBlogID) {
-        Blog currentBlog = WordPress.getBlog(localTableBlogID);
-        if (currentBlog == null) {
-            return null;
-        }
-        String statsAuthenticatedUser = currentBlog.getDotcom_username();
-
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-            // Let's try the global wpcom credentials
-            statsAuthenticatedUser = AccountHelper.getDefaultAccount().getUserName();
+    public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
+        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
+        // the current wpcom account. We need to load the correct localID here, otherwise options are
+        // blank
+        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
+                remoteBlogID,
+                null);
+        if (localId == 0) {
+            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                    remoteBlogID
+            );
         }
 
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-            AppLog.e(AppLog.T.STATS, "WPCOM Credentials for the current blog are null!");
-            return null;
-        }
-
-        return statsAuthenticatedUser;
-    }
-
-    /**
-     * Return the remote blogId as stored on the wpcom backend.
-     * <p>
-     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
-     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
-     * </p>
-     * @return String  blogId or null
-     */
-    public static String getBlogId(int localTableBlogID) {
-        Blog currentBlog = WordPress.getBlog(localTableBlogID);
-        if (currentBlog == null) {
-            return null;
-        }
-        if (currentBlog.isDotcomFlag()) {
-            return String.valueOf(currentBlog.getRemoteBlogId());
-        } else {
-            return currentBlog.getApi_blogid();
-        }
+        return localId;
     }
 
     public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
@@ -346,7 +319,21 @@ public class StatsUtils {
                 AppLog.e(T.STATS, "Network data: " + new String(networkResponse.data));
             }
         }
-        AppLog.e(T.STATS, "Volley Error details: " + volleyError.getMessage(), volleyError);
+        AppLog.e(T.STATS, "Volley Error Message: " + volleyError.getMessage(), volleyError);
+    }
+
+    public static synchronized boolean isRESTDisabledError(final Serializable error) {
+        if (error == null || !(error instanceof com.android.volley.AuthFailureError)) {
+            return false;
+        }
+        com.android.volley.AuthFailureError volleyError = (com.android.volley.AuthFailureError) error;
+        if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            return errorMessage.contains("api calls") && errorMessage.contains("disabled");
+        } else {
+            AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
+            return false;
+        }
     }
 
     public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
@@ -395,16 +382,37 @@ public class StatsUtils {
             case SEARCH_TERMS:
                 model = new SearchTermsModel(blogID, response);
                 break;
+            case INSIGHTS_ALL_TIME:
+                model = new InsightsAllTimeModel(blogID, response);
+                break;
+            case INSIGHTS_POPULAR:
+                model = new InsightsPopularModel(blogID, response);
+                break;
+            case INSIGHTS_TODAY:
+                model = new InsightsTodayModel(blogID, response);
+                break;
+            case INSIGHTS_LATEST_POST_SUMMARY:
+                model = new InsightsLatestPostModel(blogID, response);
+                break;
+            case INSIGHTS_LATEST_POST_VIEWS:
+                model = response.getInt("views");
+                break;
         }
         return model;
     }
 
-    public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
-        final String postType = post.getPostType();
-        final String url = post.getUrl();
-        final long blogID = Long.parseLong(post.getBlogID());
-        final long itemID = Long.parseLong(post.getItemID());
-        if (postType.equals("post") || postType.equals("page")) {
+    public static void openPostInReaderOrInAppWebview(Context ctx, final String remoteBlogID,
+                                                      final String remoteItemID,
+                                                      final String itemType,
+                                                      final String itemURL) {
+        final long blogID = Long.parseLong(remoteBlogID);
+        final long itemID = Long.parseLong(remoteItemID);
+        if (itemType == null) {
+            // If we don't know the type of the item, open it with the browser.
+            AppLog.d(AppLog.T.UTILS, "Type of the item is null. Opening it in the in-app browser: " + itemURL);
+            WPWebViewActivity.openURL(ctx, itemURL);
+        } else if (itemType.equals(StatsConstants.ITEM_TYPE_POST)
+                || itemType.equals(StatsConstants.ITEM_TYPE_PAGE)) {
             // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
             // otherwise 404 is returned if we try to show the post in the reader
             if (itemID == 0) {
@@ -419,15 +427,23 @@ public class StatsUtils {
                         itemID
                 );
             }
-        } else if (postType.equals("homepage")) {
+        } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     blogID
             );
         } else {
-            AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
-            WPWebViewActivity.openURL(ctx, url);
+            AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
+            WPWebViewActivity.openURL(ctx, itemURL);
         }
+    }
+
+    public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
+        final String postType = post.getPostType();
+        final String url = post.getUrl();
+        final String blogID = post.getBlogID();
+        final String itemID = post.getItemID();
+        openPostInReaderOrInAppWebview(ctx, blogID, itemID, postType, url);
     }
 
     /*
@@ -446,5 +462,96 @@ public class StatsUtils {
 
         // Error string should be localized here, but don't want to pass a context
         return new StatsError("Stats couldn't be refreshed at this time");
+    }
+
+
+    private static int roundUp(double num, double divisor) {
+        double unrounded = num / divisor;
+        //return (int) Math.ceil(unrounded);
+        return (int) (unrounded + 0.5);
+    }
+
+    public static String getSinceLabel(Context ctx, String dataSubscribed) {
+
+        Date currentDateTime = new Date();
+
+        try {
+            SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            Date date = from.parse(dataSubscribed);
+
+            // See http://momentjs.com/docs/#/displaying/fromnow/
+            long currentDifference = Math.abs(
+                    StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS)
+            );
+
+            if (currentDifference <= 45 ) {
+                return ctx.getString(R.string.stats_followers_seconds_ago);
+            }
+            if (currentDifference < 90 ) {
+                return ctx.getString(R.string.stats_followers_a_minute_ago);
+            }
+
+            // 90 seconds to 45 minutes
+            if (currentDifference <= 2700 ) {
+                long minutes = StatsUtils.roundUp(currentDifference, 60);
+                String followersMinutes = ctx.getString(R.string.stats_followers_minutes);
+                return String.format(followersMinutes, minutes);
+            }
+
+            // 45 to 90 minutes
+            if (currentDifference <= 5400 ) {
+                return ctx.getString(R.string.stats_followers_an_hour_ago);
+            }
+
+            // 90 minutes to 22 hours
+            if (currentDifference <= 79200 ) {
+                long hours = StatsUtils.roundUp(currentDifference, 60 * 60);
+                String followersHours = ctx.getString(R.string.stats_followers_hours);
+                return String.format(followersHours, hours);
+            }
+
+            // 22 to 36 hours
+            if (currentDifference <= 129600 ) {
+                return ctx.getString(R.string.stats_followers_a_day);
+            }
+
+            // 36 hours to 25 days
+            // 86400 secs in a day -  2160000 secs in 25 days
+            if (currentDifference <= 2160000 ) {
+                long days = StatsUtils.roundUp(currentDifference, 86400);
+                String followersDays = ctx.getString(R.string.stats_followers_days);
+                return String.format(followersDays, days);
+            }
+
+            // 25 to 45 days
+            // 3888000 secs in 45 days
+            if (currentDifference <= 3888000 ) {
+                return ctx.getString(R.string.stats_followers_a_month);
+            }
+
+            // 45 to 345 days
+            // 2678400 secs in a month - 29808000 secs in 345 days
+            if (currentDifference <= 29808000 ) {
+                long months = StatsUtils.roundUp(currentDifference, 2678400);
+                String followersMonths = ctx.getString(R.string.stats_followers_months);
+                return String.format(followersMonths, months);
+            }
+
+            // 345 to 547 days (1.5 years)
+            if (currentDifference <= 47260800 ) {
+                return ctx.getString(R.string.stats_followers_a_year);
+            }
+
+            // 548 days+
+            // 31536000 secs in a year
+            long years = StatsUtils.roundUp(currentDifference, 31536000);
+            String followersYears = ctx.getString(R.string.stats_followers_years);
+            return String.format(followersYears, years);
+
+        } catch (ParseException e) {
+            AppLog.e(AppLog.T.STATS, e);
+        }
+
+        return "";
     }
 }

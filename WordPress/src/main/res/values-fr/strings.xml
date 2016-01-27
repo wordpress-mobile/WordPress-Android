@@ -1,5 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Cet article n’existe plus</string>
+	<string name="reader_err_get_post_not_authorized">Vous n’avez pas les droits nécessaires pour voir cet article</string>
+	<string name="reader_err_get_post_generic">Impossible de retrouver cet article</string>
+	<string name="blog_name_no_spaced_allowed">L\'adresse du site ne peut pas contenir d\'espaces.</string>
+	<string name="invalid_username_no_spaces">Le nom d\'utilisateur ne peut pas contenir d\'espaces.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Les sites que vous suivez n\'ont rien publié récemment.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Pas d\'articles récents.</string>
+	<string name="media_details_copy_url_toast">URL copiée dans le presse-papiers.</string>
+	<string name="edit_media">Modifier le média.</string>
+	<string name="media_details_copy_url">Copier l\'URL.</string>
+	<string name="media_details_label_date_uploaded">Envoyé</string>
+	<string name="media_details_label_date_added">Ajouté</string>
+	<string name="selected_theme">Thème sélectionné</string>
+	<string name="could_not_load_theme">Impossible de charger le thème</string>
+	<string name="theme_activation_error">Quelque chose s\'est mal passé. Impossible d&amp;rsquo;activer le thème.</string>
+	<string name="theme_by_author_prompt_append">par %1$s</string>
+	<string name="theme_prompt">Merci d\'avoir choisi %1$s</string>
+	<string name="theme_details">Détails</string>
+	<string name="theme_support">Support</string>
+	<string name="theme_done">FAIT</string>
+	<string name="theme_manage_site">GÉRER LE SITE</string>
+	<string name="theme_try_and_customize">Essayer et personnaliser</string>
+	<string name="theme_view">Afficher</string>
+	<string name="title_activity_theme_support">Thèmes</string>
+	<string name="theme_activate">Activer</string>
+	<string name="date_range_end_date">Date de fin</string>
+	<string name="current_theme">Thème actuel</string>
+	<string name="customize">Personnaliser</string>
+	<string name="details">Détails</string>
+	<string name="support">Support</string>
+	<string name="active">Actif</string>
+	<string name="date_range_start_date">Date de début</string>
+	<string name="stats_referrers_spam_generic_error">Une erreur a eu lieu durant l\'opération. L\'élément n\'a pas été marqué comme indésirable.</string>
+	<string name="stats_referrers_marking_not_spam">Retirer l\'état d\'indésirable</string>
+	<string name="stats_referrers_marking_spam">Marquer comme indésirable</string>
+	<string name="stats_referrers_unspam">Pas un indésirable</string>
+	<string name="post_published">Article publié</string>
+	<string name="page_published">Page publiée</string>
+	<string name="post_updated">Article mis à jour</string>
+	<string name="page_updated">Page mise à jour</string>
+	<string name="theme_auth_error_authenticate">Impossible de récupérer les thèmes&amp;nbsp;: échec de l&amp;rsquo;authentification de l&amp;rsquo;utilisateur</string>
+	<string name="stats_referrers_spam">Indésirable</string>
+	<string name="theme_no_search_result_found">Désolé, pas de thème trouvé.</string>
+	<string name="media_file_name">Nom du fichier&amp;nbsp;: %s</string>
+	<string name="media_dimensions">Dimensions&amp;nbsp;: %s</string>
+	<string name="media_uploaded_on">Mis en ligne le&amp;nbsp;: %s</string>
+	<string name="upload_queued">En file d&amp;rsquo;attente</string>
+	<string name="media_file_type">Type du fichier&amp;nbsp;: %s</string>
+	<string name="reader_label_gap_marker">Charger plus d\'artilces</string>
+	<string name="notifications_no_search_results">Aucun site ne correspond à \'%s\'</string>
+	<string name="search_sites">Rechercher les sites</string>
+	<string name="notifications_empty_view_reader">Voir le Lecteur</string>
+	<string name="unread">Non lus</string>
+	<string name="notifications_empty_action_followers_likes">Soyez remarqué : commentez les articles que vous avez lus.</string>
+	<string name="notifications_empty_action_comments">Rejoignez une conversation : commentez les articles des sites que vous suivez.</string>
+	<string name="notifications_empty_action_unread">Rallumez la conversation : écrivez un nouvel article.</string>
+	<string name="notifications_empty_action_all">Soyez actif! Commentez les articles des sites que vous suivez.</string>
+	<string name="notifications_empty_likes">Pas (encore) de nouveaux "j\'aime" à afficher.</string>
+	<string name="notifications_empty_followers">Pas (encore) de nouveaux followers.</string>
+	<string name="notifications_empty_comments">Pas (encore) de nouveaux commentaires.</string>
+	<string name="notifications_empty_unread">Vous êtes à jour!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Vous devez d\'abord aller sur l\'écran Stats dans l\'appli, réessayez d\'ajouter le Widget ensuite.</string>
+	<string name="stats_widget_error_readd_widget">Veuillez retirer le widget et le rajouter ensuite.</string>
+	<string name="stats_widget_error_no_visible_blog">Les Stats ne sont pas accessibles sans un Site visible</string>
+	<string name="stats_widget_error_no_permissions">Votre compte WordPress.com n\'a pas accès aux Stats sur ce site.</string>
+	<string name="stats_widget_error_no_account">Veuillez vous connecter à WordPress</string>
+	<string name="stats_widget_error_generic">Les Stats ne peuvent pas être chargées</string>
+	<string name="stats_widget_loading_data">Chargement des données…</string>
+	<string name="stats_widget_name_for_blog">Stats du jour pour %1$s</string>
+	<string name="stats_widget_name">Stats du jour WordPress</string>
+	<string name="add_location_permission_required">Permission nécessaire pour ajouter la Geolocalisation</string>
+	<string name="add_media_permission_required">Droits requis pour ajouter du contenu multimédia</string>
+	<string name="access_media_permission_required">Droits requis pour accéder au contenu multimédia</string>
+	<string name="stats_enable_rest_api_in_jetpack">Pour voir vos stats, vous devez d\'abord activer le module Jetpack nommé JSON API.</string>
+	<string name="error_open_list_from_notification">Cet article ou cette page à été publié sur un autre site</string>
+	<string name="reader_short_comment_count_multi">%s Commentaires</string>
+	<string name="reader_short_comment_count_one">1 Commentaire</string>
+	<string name="reader_label_submit_comment">ENVOYER</string>
+	<string name="reader_hint_comment_on_post">Répondre à l\'article...</string>
+	<string name="reader_discover_visit_blog">Visiter %s</string>
+	<string name="reader_discover_attribution_blog">Publié à l\'origine sur %s</string>
+	<string name="reader_discover_attribution_author">Publié à l\'origine par %s</string>
+	<string name="reader_discover_attribution_author_and_blog">Publié à l\'origine par %1$s sur %2$s</string>
+	<string name="reader_short_like_count_multi">%s Likes</string>
+	<string name="reader_short_like_count_one">1 Like</string>
+	<string name="reader_label_follow_count">%,d abonnés</string>
+	<string name="reader_short_like_count_none">Like</string>
+	<string name="reader_label_reading_time_in_minutes">%,d min</string>
+	<string name="reader_label_word_count">%,d mots</string>
+	<string name="reader_menu_tags">Éditer les tags et les blogs</string>
+	<string name="reader_title_post_detail">Article du Reader</string>
+	<string name="local_draft_explainer">Cet article est un brouillon local qui n\'a pas été publié</string>
+	<string name="local_changes_explainer">Cet article contient des modifications locales qui n\'ont pas été publiées</string>
+	<string name="notifications_push_summary">Paramètres de notifications qui apparaissent sur votre appareil.</string>
+	<string name="notifications_email_summary">Paramètres de notifications qui vous sont envoyé par email.</string>
+	<string name="notifications_tab_summary">Paramètres de notifications qui apparaissent dans le tab Notifications.</string>
+	<string name="notifications_disabled">Les notifications de l\'Appli ont été désactivées. Toucher ici pour les activer dans les Paramètres.</string>
+	<string name="notification_types">Types de notifications</string>
+	<string name="error_loading_notifications">Les paramètres de notifications ne peuvent pas être chargés.</string>
+	<string name="replies_to_your_comments">Réponses à vos commentaires</string>
+	<string name="comment_likes">Likes de commentaires</string>
+	<string name="app_notifications">Notifications de l\'Appli</string>
+	<string name="notifications_tab">Tab de notifications</string>
+	<string name="email">Email</string>
+	<string name="notifications_comments_other_blogs">Commentaires sur d\'autres sites</string>
+	<string name="notifications_wpcom_updates">Mis à jour WordPress.com</string>
+	<string name="notifications_other">Autre</string>
+	<string name="notifications_account_emails">Email de WordPress.com</string>
+	<string name="notifications_account_emails_summary">Nous vous enverrons des emails importants concernant votre compte, mais vous pouvez aussi recevoir des extras très utiles.</string>
+	<string name="your_sites">Vos Sites</string>
+	<string name="notifications_sights_and_sounds">Vues et Sons</string>
+	<string name="stats_insights_latest_post_trend">Cela fait %1$s que %2$s a été publié. Comment l\'article a évolué jusqu\'à maintenant…</string>
+	<string name="stats_insights_latest_post_summary">Résumé du dernier article</string>
+	<string name="button_revert">Annuler modifications</string>
+	<string name="yesterday">Hier</string>
+	<string name="days_ago">il y a %d jours</string>
+	<string name="connectionbar_no_connection">Pas de connexion</string>
+	<string name="trashed">À la corbeille</string>
+	<string name="page_trashed">Page envoyée à la corbeille</string>
+	<string name="post_trashed">Article envoyé à la corbeille</string>
+	<string name="page_deleted">Page supprimée</string>
+	<string name="button_more">Plus</string>
+	<string name="button_stats">Stats</string>
+	<string name="button_trash">Corbeille</string>
+	<string name="button_preview">Aperçu</string>
+	<string name="button_view">Vue</string>
+	<string name="button_edit">Editer</string>
+	<string name="button_publish">Publier</string>
+	<string name="button_delete">Supprimer</string>
+	<string name="post_deleted">Article supprimé</string>
+	<string name="stats_no_activity_this_period">Pas d\'activité durant cette période</string>
+	<string name="button_back">Retour</string>
+	<string name="my_site_no_sites_view_subtitle">Voulez-vous en ajouter un ?</string>
+	<string name="my_site_no_sites_view_title">Vous n\'avez aucun site WordPress pour le moment.</string>
+	<string name="my_site_no_sites_view_drake">Illustration</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Vous n\'êtes pas autorisé à accéder à ce blog</string>
+	<string name="reader_toast_err_follow_blog_not_found">Ce blog est introuvable</string>
+	<string name="undo">Annuler</string>
+	<string name="tabbar_accessibility_label_me">Moi</string>
+	<string name="tabbar_accessibility_label_my_site">Mon site</string>
+	<string name="editor_toast_changes_saved">Modifications enregistrées</string>
+	<string name="passcodelock_prompt_message">Entrer votre PIN</string>
+	<string name="push_auth_expired">La requête a expiré. Inscrivez-vous sur WordPress.com et réessayez.</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% de vues</string>
+	<string name="ignore">Ignorer</string>
+	<string name="stats_insights_best_ever">Record de vues absolu</string>
+	<string name="stats_insights_most_popular_hour">Heure la plus prisée</string>
+	<string name="stats_insights_most_popular_day">Jour le plus prisé</string>
+	<string name="stats_insights_today">Statistiques du jour</string>
+	<string name="stats_insights_popular">Jour et heure les plus prisés</string>
+	<string name="stats_insights_all_time">Articles, vues et visiteurs depuis la création</string>
+	<string name="stats_insights">Tendances</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Pour afficher vos statistiques, connectez-vous au compte WordPress.com que vous avez utilisé pour vous connecter à Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Vous recherchez vos autres statistiques récentes ? Elles se trouvent désormais sur la page Tendances.</string>
 	<string name="me_disconnect_from_wordpress_com">Se déconnecter de WordPress.com</string>
 	<string name="me_btn_login_logout">Se Connecter/Déconnecter</string>
 	<string name="me_connect_to_wordpress_com">Se connecter à WordPress.com</string>
@@ -58,12 +212,7 @@
 	<string name="editor_toast_invalid_path">Chemin de fichier invalide</string>
 	<string name="error_publish_no_network">Impossible de publier quand il n\'y a pas de connexion. Brouillon sauvegardé.</string>
 	<string name="device">Appareil</string>
-	<string name="media_details_dimensions">Dimensions:</string>
-	<string name="media_details_file_url">URL du fichier</string>
-	<string name="media_details_file_type">Type de fichier:</string>
-	<string name="media_details_file_name">Nom de fichier:</string>
-	<string name="media_details_uploaded_on">Uploadé le:</string>
-	<string name="media_details_added_on">Ajouté le:</string>
+	<string name="media_details_label_file_type">Type de fichier:</string>
 	<string name="tab_title_site_videos">Videos du site</string>
 	<string name="tab_title_site_images">Images du site</string>
 	<string name="tab_title_device_videos">Vidéos de l\'appareil</string>
@@ -73,6 +222,7 @@
 	<string name="media_picker_title">Sélectionner un média</string>
 	<string name="add_to_post">Ajouter à l\'article</string>
 	<string name="language">Langue</string>
+	<string name="media_details_label_file_name">Nom de fichier :</string>
 	<string name="posts_fetching">Récupération des articles…</string>
 	<string name="media_fetching">Récupération des médias…</string>
 	<string name="stats_view_search_terms">Termes de Recherche</string>
@@ -90,7 +240,6 @@
 	<string name="publisher">Editeur:</string>
 	<string name="reader_empty_posts_request_failed">Impossible de récupérer les articles</string>
 	<string name="stats_months_and_years">Mois et années</string>
-	<string name="reader_page_recommended_blogs">Blogs que vous aimerez</string>
 	<string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
 	<string name="stats_recent_weeks">Semaines récentes</string>
 	<string name="stats_average_per_day">Moyenne par jour</string>
@@ -101,6 +250,8 @@
 	<string name="stats_overall">Global</string>
 	<string name="stats_total">Total</string>
 	<string name="post_uploading">En cours d\'upload</string>
+	<string name="reader_page_recommended_blogs">Sites que vous aimerez</string>
+	<string name="stats_comments_total_comments_followers">Nombre d’articles commentés par les abonnés : %1$s</string>
 	<string name="stats_visitors">Visiteurs</string>
 	<string name="stats_views">Visites</string>
 	<string name="stats_timeframe_years">Années</string>
@@ -139,7 +290,6 @@
 	<string name="stats_empty_followers">Aucun abonné</string>
 	<string name="stats_comments_by_authors">Par auteurs</string>
 	<string name="stats_comments_by_posts_and_pages">Par articles et pages</string>
-	<string name="stats_comments_total_comments_followers">Total des abonnés ayant commenté : %1$s</string>
 	<string name="stats_followers_total_wpcom">Total des abonnés WordPress.com : %1$s</string>
 	<string name="stats_followers_email_selector">Email</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -170,7 +320,6 @@
 	<string name="cab_selected">%d sélectionnés</string>
 	<string name="media_gallery_date_range">Affiche les médias entre %1$s et %2$s</string>
 	<string name="faq_button">FAQ</string>
-	<string name="reader_empty_followed_blogs_title">Vous ne suivez aucun blog pour le moment</string>
 	<string name="reader_empty_posts_liked">Vous n\'aimez aucun article</string>
 	<string name="browse_our_faq_button">Feuilleter notre FAQ</string>
 	<string name="nux_help_description">Visitez le centre d\'aide pour obtenir des réponses aux questions les plus communes ou bien visitez le forum pour en poser de nouvelles.</string>
@@ -178,14 +327,10 @@
 	<string name="create_new_blog_wpcom">Créer votre blog WordPress.com</string>
 	<string name="new_blog_wpcom_created">Blog WordPress.com créé!</string>
 	<string name="reader_empty_comments">Pas encore de commentaires</string>
-	<string name="reader_likes_multi_short">%,d personne</string>
 	<string name="reader_empty_posts_in_tag">Pas d\'articles avec ce tag</string>
 	<string name="reader_label_comment_count_multi">%,d commentaires</string>
 	<string name="reader_label_view_original">Voir l\'article original</string>
 	<string name="reader_label_like">Aime</string>
-	<string name="reader_label_liked_by">Aimé par</string>
-	<string name="reader_label_liked_by_you">Vous aimez</string>
-	<string name="reader_likes_one_short">1 personne</string>
 	<string name="reader_label_comment_count_single">Un commentaire</string>
 	<string name="reader_label_comments_closed">Les commentaires sont fermés</string>
 	<string name="reader_label_comments_on">Commentaires sur</string>
@@ -195,7 +340,6 @@
 	<string name="error_refresh_unauthorized_posts">Vous n\'avez pas la permission de voir ou éditer les articles</string>
 	<string name="error_refresh_unauthorized_pages">Vous n\'avez pas la permission de voir ou éditer les pages</string>
 	<string name="error_refresh_unauthorized_comments">Vous n\'avez pas la permission de voir ou éditer les commentaires</string>
-	<string name="overwrite_local_changes">Vous avez fait des changements sur un article qui n\'a par encore été uploadé. Voulez-vous continuer à rafraichir et potentiellement perdre les changements locaux?</string>
 	<string name="older_month">Plus d\'un mois</string>
 	<string name="older_two_days">Plus de 2 jours</string>
 	<string name="older_last_week">Plus d\'une semaine</string>
@@ -212,6 +356,7 @@
 	<string name="media_empty_list_custom_date">Pas de média dans cet interval de temps</string>
 	<string name="posting_post">Publication de "%s"</string>
 	<string name="signing_out">Déconnexion…</string>
+	<string name="reader_empty_followed_blogs_title">Vous ne suivez aucun site pour le moment</string>
 	<string name="reader_menu_block_blog">Bloquer ce blog</string>
 	<string name="reader_toast_blog_blocked">Les articles de ce blog ne seront plus affichés</string>
 	<string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
@@ -231,18 +376,10 @@
 	<string name="preference_privacy">Données personnelles</string>
 	<string name="preference_send_usage_stats">Envoyer statistiques</string>
 	<string name="preference_send_usage_stats_summary">Envoyer automatiquement des statistiques d\'utilisation pour nous aider à améliorer WordPress pour Android</string>
-	<string name="reader_hint_reblog_comment">Ajouter un commentaire (optionnel)</string>
-	<string name="reader_label_reblog_to">Reblogger sur</string>
-	<string name="reader_title_reblog">Reblogger l\'article</string>
 	<string name="update_verb">Mettre à jour</string>
 	<string name="schedule_verb">Programmer</string>
-	<string name="reader_title_blog_preview">Prévisualisation du blog</string>
-	<string name="reader_title_tag_preview">Prévisualisation du tag</string>
 	<string name="reader_title_subs">Tags &amp; blogs</string>
 	<string name="reader_page_followed_tags">Tags suivis</string>
-	<string name="reader_page_popular_tags">Tags populaires</string>
-	<string name="reader_page_followed_blogs">Blogs suivis</string>
-	<string name="reader_hint_add_tag_or_url">Entrer un tag ou une URL à suivre</string>
 	<string name="reader_label_followed_blog">Abonné au blog</string>
 	<string name="reader_label_tag_preview">Posts tagués %s</string>
 	<string name="reader_toast_err_get_blog_info">Impossible d\'afficher ce blog</string>
@@ -250,6 +387,10 @@
 	<string name="reader_toast_err_follow_blog">Impossible de s\'abonner à ce blog</string>
 	<string name="reader_toast_err_unfollow_blog">Impossible de se désabonner de ce blog</string>
 	<string name="reader_empty_recommended_blogs">Pas de blogs recommandés</string>
+	<string name="reader_title_blog_preview">Blog du Reader</string>
+	<string name="reader_title_tag_preview">Tag du Reader</string>
+	<string name="reader_page_followed_blogs">Sites suivis</string>
+	<string name="reader_hint_add_tag_or_url">Saisissez une étiquette ou une adresse web à suivre</string>
 	<string name="ptr_tip_message">Tip: Tirer vers le bas pour rafraichir</string>
 	<string name="media_empty_list">Pas de media</string>
 	<string name="saving">Sauvegarde...</string>
@@ -259,11 +400,9 @@
 	<string name="help_center">Centre d\'aide</string>
 	<string name="ssl_certificate_error">Certificat SSL invalide</string>
 	<string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
-	<string name="reader_label_reblog_empty">Vous n\'avez pas de blogs WordPress.com visibles pour rebloguer cet article</string>
 	<string name="out_of_memory">L\'appareil n\'a plus assez de mémoire</string>
 	<string name="gallery_error">Le média ne peut pas être récupéré</string>
 	<string name="blog_not_found">Une erreur s\'est produite en accédant à ce blog</string>
-	<string name="theme_no_search_result_found">Aucun résultat trouvé</string>
 	<string name="stats_empty_comments">Aucun commentaire</string>
 	<string name="no_network_message">Aucun réseau disponible</string>
 	<string name="comments_empty_list">Aucun commentaire</string>
@@ -363,8 +502,6 @@
 	<string name="page_settings">Paramètres de page</string>
 	<string name="upload_failed">Échec du chargement</string>
 	<string name="horizontal_alignment">Alignement horizontal</string>
-	<string name="page_deleted">Page supprimée avec succès</string>
-	<string name="post_deleted">Article supprimé avec succès</string>
 	<string name="link_enter_url_text">Texte du lien (optionnel)</string>
 	<string name="comment_status_trash">À la corbeille</string>
 	<string name="trash">Corbeille</string>
@@ -386,14 +523,12 @@
 	<string name="post_not_published">L\'état de l\'article n\'est pas publié</string>
 	<string name="page_not_published">L\'état de la page n\'est pas publiée</string>
 	<string name="category_slug">Identifiant de la catégorie (optionnel)</string>
-	<string name="stats_view_tags_and_categories">Mots-clés et catégories</string>
 	<string name="http_authorization_required">Autorisation requise</string>
 	<string name="post_format">Format d\'article</string>
 	<string name="new_media">Nouveau média</string>
 	<string name="view_site">Voir le site</string>
 	<string name="privacy_policy">Vie privée</string>
 	<string name="reader_share_link">Lien partagé</string>
-	<string name="reader_toast_err_reblog_requires_blog">Sélectionnez un blog</string>
 	<string name="reader_toast_err_add_tag">Impossible d\'ajouter ce mot-clé</string>
 	<string name="reader_toast_err_remove_tag">Impossible de supprimer ce mot-clé </string>
 	<string name="required_field">Champs requis</string>
@@ -432,6 +567,7 @@
 	<string name="dlg_unapproving_comments">Désapprobation</string>
 	<string name="remove_account">Supprimer le site</string>
 	<string name="blog_removed_successfully">Site supprimé avec succès</string>
+	<string name="notifications_empty_all">Pas (encore) de notifications.</string>
 	<string name="deleting_page">Suppression de la page</string>
 	<string name="deleting_post">Suppression de l\'article</string>
 	<string name="share_url_page">Partager la page</string>
@@ -461,7 +597,7 @@
 	<string name="validating_user_data">Validation des données utilisateur</string>
 	<string name="validating_site_data">Validation des données du site</string>
 	<string name="account_two_step_auth_enabled">Ce compte a activé la vérification en deux étapes. Rendez-vous sur les réglages de sécurité sur WordPress.com et générez un mot de passe propre à cette application.</string>
-	<string name="reader_empty_followed_blogs_description">Mais ne vous inquiétez pas, appuyer sur l\'icône tag pour commencer a explorer!</string>
+	<string name="reader_empty_followed_blogs_description">Mais ne vous inquiétez pas, appuyer sur l\'icône en haut à droite pour commencer a explorer!</string>
 	<string name="nux_welcome_create_account">Créer un compte</string>
 	<string name="nux_add_selfhosted_blog">Ajouter un site auto-hébergé</string>
 	<string name="nux_oops_not_selfhosted_blog">Se connecter à WordPress.com</string>
@@ -476,33 +612,27 @@
 	<string name="reader_timespan_now">actuellement</string>
 	<string name="reader_untitled_post">(Sans Titre)</string>
 	<string name="reader_share_subject">Partagé depuis %s</string>
-	<string name="reader_menu_tags">Tags</string>
 	<string name="reader_btn_share">Partager</string>
 	<string name="reader_btn_follow">Suivre</string>
-	<string name="reader_hint_comment_on_post">Ajouter votre commentaire</string>
-	<string name="reader_hint_comment_on_comment">Répondre au commentaire</string>
 	<string name="reader_label_added_tag">%s Ajouté</string>
 	<string name="reader_label_removed_tag">%s Retiré</string>
-	<string name="reader_toast_err_already_reblogged">Vous avez déjà reblogué cet article</string>
 	<string name="reader_toast_err_tag_exists">Vous suivez déjà ce tag</string>
 	<string name="reader_toast_err_tag_invalid">Ce n\'est pas un tag valide</string>
 	<string name="reader_toast_err_share_intent">Impossible de partager</string>
 	<string name="reader_toast_err_view_image">Impossible de voir l\'image</string>
 	<string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>
 	<string name="reader_empty_followed_tags">Vous ne suivez aucun tag</string>
-	<string name="reader_empty_popular_tags">Pas de tags populaires</string>
 	<string name="create_account_wpcom">Créer un compte sur WordPress.com</string>
 	<string name="connecting_wpcom">Connection à WordPress.com</string>
 	<string name="reader_likes_one">Une personne aime ça</string>
 	<string name="reader_likes_only_you">Vous aimez ça</string>
-	<string name="reader_toast_reblog_success">L\'article à été reblogué</string>
 	<string name="reader_toast_err_comment_failed">Impossible d\'envoyer votre commentaire</string>
-	<string name="reader_toast_err_reblog_failed">Impossible de rebloguer ce post</string>
 	<string name="nux_tutorial_get_started_title">Démarrez!</string>
 	<string name="username_invalid">Nom d\'utilisateur invalide</string>
 	<string name="limit_reached">Limite atteinte. Vous pouvez réessayer dans 1 minute. Si vous pensez que c\'est une erreur, contacter le support.</string>
 	<string name="reader_btn_unfollow">Abonné</string>
 	<string name="media_add_new_media_gallery">Créer une galerie</string>
+	<string name="reader_hint_comment_on_comment">Répondre au commentaire…</string>
 	<string name="themes">Thèmes</string>
 	<string name="media_gallery_image_order_random">Aléatoire</string>
 	<string name="media_gallery_type">Catégorie</string>
@@ -528,7 +658,6 @@
 	<string name="stats_timeframe_days">Jours</string>
 	<string name="stats_timeframe_weeks">Semaines</string>
 	<string name="stats_timeframe_months">Mois</string>
-	<string name="view_stats_full_site">Voir le site complet</string>
 	<string name="stats_view_clicks">Clicks</string>
 	<string name="media_no_video_title">VideoPress indisponible</string>
 	<string name="media_gallery_type_slideshow">Diaporama</string>
@@ -543,6 +672,7 @@
 	<string name="theme_activate_button">Activer</string>
 	<string name="theme_activating_button">Activation</string>
 	<string name="stats_view_visitors_and_views">Visiteurs et Vues</string>
+	<string name="stats_view_tags_and_categories">Tags et Catégories</string>
 	<string name="stats_entry_country">Pays</string>
 	<string name="stats_entry_posts_and_pages">Titre</string>
 	<string name="stats_entry_tags_and_categories">Sujet</string>
@@ -569,16 +699,10 @@
 	<string name="upload">Envoyer</string>
 	<string name="sign_in">Se connecter</string>
 	<string name="notifications">Notifications</string>
-	<string name="types">Types</string>
-	<string name="manage_notifications">Gérer les notifications</string>
-	<string name="enable_notifications">Activer les notifications</string>
-	<string name="options">Options</string>
-	<string name="notifications_turn_off_1hr">Désactiver pour une heure</string>
 	<string name="note_reply_successful">Réponse envoyée</string>
 	<string name="new_notifications">%d nouvelles notifications</string>
-	<string name="notifications_turn_off">Désactiver</string>
-	<string name="notifications_turn_off_8hr">Désactiver pour 8 heures</string>
 	<string name="more_notifications">et %d autres.</string>
+	<string name="follows">Suit</string>
 	<string name="loading">Chargement…</string>
 	<string name="post_signature">Signature des articles</string>
 	<string name="add_tagline">Ajouter une signature aux articles</string>
@@ -624,6 +748,7 @@
 	<string name="immediately">Immédiatement</string>
 	<string name="quickpress_add_alert_title">Choisir le nom du raccourci</string>
 	<string name="settings">Paramètres</string>
+	<string name="today">Aujourd\'hui</string>
 	<string name="share_url">Partager cette URL</string>
 	<string name="quickpress_window_title">Sélectionner le blog pour le raccourci QuickPress</string>
 	<string name="quickpress_add_error">Le nom du raccourci ne peut pas être vide</string>
@@ -657,11 +782,40 @@
 	<string name="reply">Répondre</string>
 	<string name="yes">Oui</string>
 	<string name="no">Non</string>
+	<string name="notification_settings">Paramètres de Notification</string>
 	<string-array name="alignment_array">
 		<item>Aucun</item>
 		<item>Gauche</item>
 		<item>Centre</item>
 		<item>Droite</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>Commentaires sur mon site</item>
+		<item>Likes sur mes commentaires</item>
+		<item>Likes sur mes articles</item>
+		<item>Suivi de site</item>
+		<item>Achievements de site</item>
+		<item>Mentions de mon nom d\'utilisateur</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>Réponses à mes commentaires</item>
+		<item>Likes sur mes commentaires</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>Suggestions</item>
+		<item>Étude</item>
+		<item>Communauté</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>Astuces pour tirer le maximum de WordPress.com.</item>
+		<item>Opportunités de participer aux sondages et études WordPress.com.</item>
+		<item>Informations sur les cours et les événement WordPress.com (en ligne &amp; en personne).</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Publié</item>
+		<item>Brouillons</item>
+		<item>Programmé</item>
+		<item>À la corbeille</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>En passant</item>
@@ -674,5 +828,10 @@
 		<item>Standard</item>
 		<item>État</item>
 		<item>Vidéo</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratuit</item>
+		<item>Tous</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

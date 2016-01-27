@@ -5,5 +5,6 @@
 -->
 <org.wordpress.android.widgets.WPNetworkImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/image_like_avatar"
-    style="@style/ReaderImageView.Avatar.Like"
+    android:layout_width="@dimen/avatar_sz_small"
+    android:layout_height="@dimen/avatar_sz_small"
     android:layout_marginRight="@dimen/margin_small" />

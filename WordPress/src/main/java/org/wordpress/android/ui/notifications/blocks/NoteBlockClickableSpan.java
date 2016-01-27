@@ -3,17 +3,16 @@ package org.wordpress.android.ui.notifications.blocks;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtils;
-import org.wordpress.android.R;
-
-import javax.annotation.Nonnull;
 
 /**
  * A clickable span that includes extra ids/urls
@@ -61,9 +60,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             mUrl = JSONUtils.queryJSON(mBlockData, "url", "");
             mIndices = NotificationsUtils.getIndicesForRange(mBlockData);
 
-            // Don't link certain range types, or unknown ones, unless we have a URL
-            mShouldLink = mShouldLink && mRangeType != NoteBlockRangeType.BLOCKQUOTE &&
-                    (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
+            mShouldLink = shouldLinkRangeType();
 
             // Apply grey color to some types
             if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
@@ -72,8 +69,16 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         }
     }
 
+    // Don't link certain range types, or unknown ones, unless we have a URL
+    private boolean shouldLinkRangeType() {
+        return  mShouldLink &&
+                mRangeType != NoteBlockRangeType.BLOCKQUOTE &&
+                mRangeType != NoteBlockRangeType.MATCH &&
+                (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
+    }
+
     @Override
-    public void updateDrawState(@Nonnull TextPaint textPaint) {
+    public void updateDrawState(@NonNull TextPaint textPaint) {
         // Set background color
         textPaint.bgColor = mShouldLink && mPressed && !isBlockquoteType() ?
                 mBackgroundColor : Color.TRANSPARENT;
@@ -94,6 +99,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
         switch (getRangeType()) {
             case USER:
+            case MATCH:
                 return Typeface.BOLD;
             case SITE:
             case POST:

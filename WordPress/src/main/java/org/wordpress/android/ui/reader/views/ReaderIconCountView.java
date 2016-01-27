@@ -2,15 +2,13 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderAnim;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.FormatUtils;
 
 /*
@@ -19,7 +17,7 @@ import org.wordpress.android.util.FormatUtils;
 public class ReaderIconCountView extends LinearLayout {
     private ImageView mImageView;
     private TextView mTextCount;
-    private int mCurrentCount;
+    private int mIconType;
 
     // these must match the same values in attrs.xml
     private static final int ICON_LIKE = 0;
@@ -52,8 +50,8 @@ public class ReaderIconCountView extends LinearLayout {
                     R.styleable.ReaderIconCountView,
                     0, 0);
             try {
-                int icon = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
-                switch (icon) {
+                mIconType = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
+                switch (mIconType) {
                     case ICON_LIKE :
                         mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_like));
                         break;
@@ -67,9 +65,7 @@ public class ReaderIconCountView extends LinearLayout {
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mImageView.setBackgroundResource(R.drawable.ripple_oval);
-        }
+        ReaderUtils.setBackgroundToRoundRipple(mImageView);
     }
 
     public ImageView getImageView() {
@@ -78,6 +74,7 @@ public class ReaderIconCountView extends LinearLayout {
 
     public void setSelected(boolean selected) {
         mImageView.setSelected(selected);
+        mTextCount.setSelected(selected);
     }
 
     @Override
@@ -87,23 +84,11 @@ public class ReaderIconCountView extends LinearLayout {
         mTextCount.setEnabled(enabled);
     }
 
-    public void setCount(int count, boolean animateChanges) {
-        if (count != 0) {
+    public void setCount(int count) {
+        if (mIconType == ICON_LIKE) {
+            mTextCount.setText(ReaderUtils.getShortLikeLabelText(getContext(), count));
+        } else {
             mTextCount.setText(FormatUtils.formatInt(count));
         }
-
-        if (animateChanges && count != mCurrentCount) {
-            if (count == 0 && mTextCount.getVisibility() == View.VISIBLE) {
-                ReaderAnim.scaleOut(mTextCount, View.GONE, ReaderAnim.Duration.LONG, null);
-            } else if (mCurrentCount == 0 && mTextCount.getVisibility() != View.VISIBLE) {
-                ReaderAnim.scaleIn(mTextCount, ReaderAnim.Duration.LONG);
-            } else {
-                mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-            }
-        } else {
-            mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        }
-
-        mCurrentCount = count;
     }
 }

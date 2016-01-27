@@ -19,9 +19,11 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPRestClient;
+import org.wordpress.android.util.WPUrlUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /*
@@ -53,6 +55,7 @@ public class ReaderWebView extends WebView {
 
     private static String mToken;
     private static boolean mIsPrivatePost;
+    private static boolean mBlogSchemeIsHttps;
 
     private boolean mIsDestroyed;
 
@@ -139,9 +142,13 @@ public class ReaderWebView extends WebView {
         mIsPrivatePost = isPrivatePost;
     }
 
+    public void setBlogSchemeIsHttps(boolean blogSchemeIsHttps) {
+        mBlogSchemeIsHttps = blogSchemeIsHttps;
+    }
+
     private static boolean isValidClickedUrl(String url) {
         // only return true for http(s) urls so we avoid file: and data: clicks
-        return (url != null && url.startsWith("http"));
+        return (url != null && (url.startsWith("http") || url.startsWith("wordpress:")));
     }
 
     public boolean isCustomViewShowing() {
@@ -155,21 +162,21 @@ public class ReaderWebView extends WebView {
     }
 
     /*
-     * detect when an image is tapped
+     * detect when a link is tapped
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {
             HitTestResult hr = getHitTestResult();
-            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE
-                            || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                String imageUrl = hr.getExtra();
-                if (isValidClickedUrl(imageUrl) ) {
+            if (hr != null && isValidClickedUrl(hr.getExtra())) {
+                if (UrlUtils.isImageUrl(hr.getExtra())) {
                     return mUrlClickListener.onImageUrlClick(
-                            imageUrl,
+                            hr.getExtra(),
                             this,
                             (int) event.getX(),
                             (int) event.getY());
+                } else {
+                    return mUrlClickListener.onUrlClick(hr.getExtra());
                 }
             }
         }
@@ -210,10 +217,18 @@ public class ReaderWebView extends WebView {
 
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            // Intercept requests for private images and add the WP.com authorization header
-            if (mIsPrivatePost && !TextUtils.isEmpty(mToken) && UrlUtils.isImageUrl(url)) {
+            URL imageUrl  = null;
+            if (mIsPrivatePost && mBlogSchemeIsHttps && UrlUtils.isImageUrl(url)) {
                 try {
-                    URL imageUrl = new URL(url);
+                    imageUrl = new URL(UrlUtils.makeHttps(url));
+                } catch (MalformedURLException e) {
+                    AppLog.e(AppLog.T.READER, e);
+                }
+            }
+            // Intercept requests for private images and add the WP.com authorization header
+            if (imageUrl != null && WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl) &&
+                    !TextUtils.isEmpty(mToken)) {
+                try {
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);

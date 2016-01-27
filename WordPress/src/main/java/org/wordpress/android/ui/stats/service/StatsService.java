@@ -1,30 +1,38 @@
 package org.wordpress.android.ui.stats.service;
 
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.ui.stats.exceptions.StatsError;
+import org.wordpress.android.ui.stats.models.VisitModel;
+import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -61,7 +69,12 @@ public class StatsService extends Service {
         COMMENT_FOLLOWERS,
         TAGS_AND_CATEGORIES,
         PUBLICIZE,
-        SEARCH_TERMS;
+        SEARCH_TERMS,
+        INSIGHTS_POPULAR,
+        INSIGHTS_ALL_TIME,
+        INSIGHTS_TODAY,
+        INSIGHTS_LATEST_POST_SUMMARY,
+        INSIGHTS_LATEST_POST_VIEWS;
 
         public String getRestEndpointPath() {
             switch (this) {
@@ -93,6 +106,16 @@ public class StatsService extends Service {
                     return "publicize";
                 case SEARCH_TERMS:
                     return "search-terms";
+                case INSIGHTS_POPULAR:
+                    return "insights";
+                case INSIGHTS_ALL_TIME:
+                    return "";
+                case INSIGHTS_TODAY:
+                    return "summary";
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    return "posts";
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    return "post";
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + this.name());
                     return "";
@@ -220,6 +243,7 @@ public class StatsService extends Service {
                     mResponseObjectModel = StatsUtils.parseResponse(sectionToUpdate, blogId, response);
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(sectionToUpdate, blogId, timeframe, date,
                             maxResultsRequested, pageRequested, mResponseObjectModel));
+                    updateWidgetsUI(blogId, sectionToUpdate, timeframe, date, pageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(null);
                     return;
                 } catch (JSONException e) {
@@ -243,7 +267,7 @@ public class StatsService extends Service {
         synchronized (mStatsNetworkRequests) {
             switch (sectionToUpdate) {
                 case VISITS:
-                    path = String.format(path + "?unit=%s&quantity=10&date=%s", period, date);
+                    path = String.format(path + "?unit=%s&quantity=15&date=%s", period, date);
                     break;
                 case TOP_POSTS:
                 case REFERRERS:
@@ -284,6 +308,21 @@ public class StatsService extends Service {
                         path = String.format(path + "?period=%s&date=%s&max=%s&page=%s", period,
                                 date, maxResultsRequested, pageRequested);
                     }
+                    break;
+                case INSIGHTS_ALL_TIME:
+                case INSIGHTS_POPULAR:
+                    break;
+                case INSIGHTS_TODAY:
+                    path = String.format(path + "?period=day&date=%s", date);
+                    break;
+                case INSIGHTS_LATEST_POST_SUMMARY:
+                    // This is an edge cases since  we're not loading stats but posts
+                    path = String.format("/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath()
+                            + "?order_by=date&number=1&type=post&fields=ID,title,URL,discussion,like_count,date");
+                    break;
+                case INSIGHTS_LATEST_POST_VIEWS:
+                    // This is a kind of edge case, since we used the pageRequested parameter to request a single postID
+                    path = String.format(path + "/%s?fields=views", pageRequested);
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
@@ -331,6 +370,55 @@ public class StatsService extends Service {
         return true;
     }
 
+    // Call an updates on the installed widgets if the blog is the primary, the endpoint is Visits
+    // the timeframe is DAY or INSIGHTS, and the date = TODAY
+    private void updateWidgetsUI(String blogId, final StatsEndpointsEnum endpointName,
+                                 StatsTimeframe timeframe, String date, int pageRequested,
+                                 Serializable responseObjectModel) {
+        if (pageRequested != -1) {
+            return;
+        }
+        if (endpointName != StatsEndpointsEnum.VISITS) {
+            return;
+        }
+        if (timeframe != StatsTimeframe.DAY && timeframe != StatsTimeframe.INSIGHTS) {
+            return;
+        }
+
+        int parsedBlogID = Integer.parseInt(blogId);
+        int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
+        // make sure the data is for the current date
+        if (!date.equals(StatsUtils.getCurrentDateTZ(localTableBlogId))) {
+            return;
+        }
+
+        if (responseObjectModel == null) {
+            // TODO What we want to do here?
+            return;
+        }
+
+        if (!StatsWidgetProvider.isBlogDisplayedInWidget(parsedBlogID)) {
+            AppLog.d(AppLog.T.STATS, "The blog with remoteID " + parsedBlogID + " is NOT displayed in any widget. Stats Service doesn't call an update of the widget.");
+            return;
+        }
+
+        if (responseObjectModel instanceof VisitsModel) {
+            VisitsModel visitsModel = (VisitsModel) responseObjectModel;
+            if (visitsModel.getVisits() == null || visitsModel.getVisits().size() == 0) {
+                return;
+            }
+            List<VisitModel> visits = visitsModel.getVisits();
+            VisitModel data = visits.get(visits.size() - 1);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, data);
+        } else if (responseObjectModel instanceof VolleyError) {
+            VolleyError error = (VolleyError) responseObjectModel;
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, error);
+        } else if (responseObjectModel instanceof StatsError) {
+            StatsError statsError = (StatsError) responseObjectModel;
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, statsError);
+        }
+    }
+
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         final String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
@@ -373,6 +461,7 @@ public class StatsService extends Service {
                     }
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
+                    updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
             });
@@ -388,23 +477,23 @@ public class StatsService extends Service {
 
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
-                    if (volleyError.networkResponse != null) {
-                        NetworkResponse networkResponse = volleyError.networkResponse;
-                        if (networkResponse.statusCode == 403 && networkResponse.data != null) {
-                            if (new String(networkResponse.data).contains("unauthorized")) {
-                                int localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                                        Integer.parseInt(mRequestBlogId)
-                                );
-                                Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
-                                if (blog != null && blog.isJetpackPowered()) {
-                                    EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
-                                }
+                    if (volleyError instanceof com.android.volley.AuthFailureError) {
+                        int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(
+                                Integer.parseInt(mRequestBlogId)
+                        );
+                        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
+                        if (blog != null && blog.isJetpackPowered()) {
+                            // It's a kind of edge case, but the Jetpack site could have REST Disabled
+                            // In that case (only used in insights for now) shows the error in the module that use the REST API
+                            if (!StatsUtils.isRESTDisabledError(volleyError)) {
+                                EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
                             }
                         }
                     }
                     mResponseObjectModel = volleyError;
                     EventBus.getDefault().post(new StatsEvents.SectionUpdated(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, mResponseObjectModel));
+                    updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
             });

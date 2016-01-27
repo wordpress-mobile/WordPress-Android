@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.reader.actions;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -14,18 +19,22 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class ReaderPostActions {
+
+    private static final String TRACKING_REFERRER = "https://wordpress.com/";
+    private static final Random mRandom = new Random();
 
     private ReaderPostActions() {
         throw new AssertionError();
@@ -44,7 +53,11 @@ public class ReaderPostActions {
         }
 
         // update like status and like count in local db
-        int newNumLikes = (isAskingToLike ? post.numLikes + 1 : post.numLikes - 1);
+        int numCurrentLikes = ReaderPostTable.getNumLikesForPost(post.blogId, post.postId);
+        int newNumLikes = (isAskingToLike ? numCurrentLikes + 1 : numCurrentLikes - 1);
+        if (newNumLikes < 0) {
+            newNumLikes = 0;
+        }
         ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
         ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
 
@@ -83,67 +96,17 @@ public class ReaderPostActions {
     }
 
     /*
-     * reblogs the passed post to the passed destination with optional comment
-     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/reblogs/new/
-     */
-    public static void reblogPost(final ReaderPost post,
-                                  long destinationBlogId,
-                                  final String optionalComment,
-                                  final ActionListener actionListener) {
-        if (post == null) {
-            if (actionListener != null) {
-                actionListener.onActionResult(false);
-            }
-            return;
-        }
-
-        Map<String, String> params = new HashMap<>();
-        params.put("destination_site_id", Long.toString(destinationBlogId));
-        if (!TextUtils.isEmpty(optionalComment)) {
-            params.put("note", optionalComment);
-        }
-
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                boolean isReblogged = (jsonObject != null && JSONUtils.getBool(jsonObject, "is_reblogged"));
-                if (isReblogged) {
-                    ReaderPostTable.setPostReblogged(post, true);
-                }
-                if (actionListener != null) {
-                    actionListener.onActionResult(isReblogged);
-                }
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
-                }
-
-            }
-        };
-
-        String path = "sites/" + post.blogId
-                    + "/posts/" + post.postId
-                    + "/reblogs/new";
-        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
-    }
-
-    /*
      * get the latest version of this post - note that the post is only considered changed if the
      * like/comment count has changed, or if the current user's like/follow status has changed
      */
-    public static void updatePost(final ReaderPost originalPost,
+    public static void updatePost(final ReaderPost localPost,
                                   final UpdateResultListener resultListener) {
-        String path = "sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
+        String path = "read/sites/" + localPost.blogId + "/posts/" + localPost.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostResponse(originalPost, jsonObject, resultListener);
+                handleUpdatePostResponse(localPost, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -156,10 +119,10 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating post");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleUpdatePostResponse(final ReaderPost originalPost,
+    private static void handleUpdatePostResponse(final ReaderPost localPost,
                                                  final JSONObject jsonObject,
                                                  final UpdateResultListener resultListener) {
         if (jsonObject == null) {
@@ -174,36 +137,28 @@ public class ReaderPostActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderPost updatedPost = ReaderPost.fromJson(jsonObject);
-                boolean hasChanges = !originalPost.isSamePost(updatedPost);
+                ReaderPost serverPost = ReaderPost.fromJson(jsonObject);
+                boolean hasChanges = !serverPost.isSamePost(localPost);
 
                 if (hasChanges) {
                     AppLog.d(T.READER, "post updated");
-                    // set the featured image for the updated post to that of the original
-                    // post - this should be done even if the updated post has a featured
-                    // image since that may have been set by ReaderPost.findFeaturedImage()
-                    if (originalPost.hasFeaturedImage()) {
-                        updatedPost.setFeaturedImage(originalPost.getFeaturedImage());
-                    }
-
-                    // likewise for featured video
-                    if (originalPost.hasFeaturedVideo()) {
-                        updatedPost.setFeaturedVideo(originalPost.getFeaturedVideo());
-                        updatedPost.isVideoPress = originalPost.isVideoPress;
-                    }
-
-                    // retain the pubDate and timestamp of the original post - this is important
-                    // since these control how the post is sorted in the list view, and we don't
-                    // want that sorting to change
-                    updatedPost.timestamp = originalPost.timestamp;
-                    updatedPost.setPublished(originalPost.getPublished());
-
-                    ReaderPostTable.addOrUpdatePost(updatedPost);
+                    // copy changes over to the local post - this is done instead of simply overwriting
+                    // the local post with the server post because the server post was retrieved using
+                    // the read/sites/$siteId/posts/$postId endpoint which is missing some information
+                    // https://github.com/wordpress-mobile/WordPress-Android/issues/3164
+                    localPost.numReplies = serverPost.numReplies;
+                    localPost.numLikes = serverPost.numLikes;
+                    localPost.isFollowedByCurrentUser = serverPost.isFollowedByCurrentUser;
+                    localPost.isLikedByCurrentUser = serverPost.isLikedByCurrentUser;
+                    localPost.isCommentsOpen = serverPost.isCommentsOpen;
+                    localPost.setTitle(serverPost.getTitle());
+                    localPost.setText(serverPost.getText());
+                    ReaderPostTable.addOrUpdatePost(localPost);
                 }
 
                 // always update liking users regardless of whether changes were detected - this
                 // ensures that the liking avatars are immediately available to post detail
-                if (handlePostLikes(updatedPost, jsonObject)) {
+                if (handlePostLikes(serverPost, jsonObject)) {
                     hasChanges = true;
                 }
 
@@ -249,20 +204,19 @@ public class ReaderPostActions {
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestPost(final long blogId, final long postId, final ActionListener actionListener) {
-        String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
+    public static void requestPost(final long blogId,
+                                   final long postId,
+                                   final ReaderActions.OnRequestListener requestListener) {
+        String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
-                // make sure the post has the passed blogId so it's saved correctly - necessary
-                // since the /sites/ endpoints return site_id="1" for Jetpack-powered blogs
-                post.blogId = blogId;
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
-                if (actionListener != null) {
-                    actionListener.onActionResult(true);
+                if (requestListener != null) {
+                    requestListener.onSuccess();
                 }
             }
         };
@@ -270,12 +224,76 @@ public class ReaderPostActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
+                if (requestListener != null) {
+                    int statusCode = 0;
+                    // first try to get the error code from the JSON response, example:
+                    //   {"code":403,"headers":[{"name":"Content-Type","value":"application\/json"}],
+                    //    "body":{"error":"unauthorized","message":"User cannot access this private blog."}}
+                    JSONObject jsonObject = VolleyUtils.volleyErrorToJSON(volleyError);
+                    if (jsonObject != null && jsonObject.has("code")) {
+                        statusCode = jsonObject.optInt("code");
+                    }
+                    if (statusCode == 0) {
+                        statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                    }
+                    requestListener.onFailure(statusCode);
                 }
             }
         };
         AppLog.d(T.READER, "requesting post");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+    }
+
+    private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
+        return "https://pixel.wp.com/g.gif?v=wpcom&reader=1"
+                + "&blog=" + post.blogId
+                + "&post=" + post.postId
+                + "&host=" + UrlUtils.urlEncode(UrlUtils.getHost(post.getBlogUrl()))
+                + "&ref="  + UrlUtils.urlEncode(TRACKING_REFERRER)
+                + "&t="    + mRandom.nextInt();
+    }
+
+    public static void bumpPageViewForPost(long blogId, long postId) {
+        ReaderPost post = ReaderPostTable.getPost(blogId, postId, true);
+        if (post == null) {
+            return;
+        }
+
+        // don't bump stats for posts in blogs the current user is an admin of, unless
+        // this is a private post since we count views for private posts from admins
+        if (!post.isPrivate && WordPress.wpDB.isCurrentUserAdminOfRemoteBlogId(post.blogId)) {
+            AppLog.d(T.READER, "skipped bump page view - user is admin");
+            return;
+        }
+
+        Response.Listener<String> listener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                AppLog.d(T.READER, "bump page view succeeded");
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                AppLog.w(T.READER, "bump page view failed");
+            }
+        };
+
+        Request request = new StringRequest(
+                Request.Method.GET,
+                getTrackingPixelForPost(post),
+                listener,
+                errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                // call will fail without correct refer(r)er
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Referer", TRACKING_REFERRER);
+                return headers;
+            }
+        };
+
+        WordPress.requestQueue.add(request);
     }
 }

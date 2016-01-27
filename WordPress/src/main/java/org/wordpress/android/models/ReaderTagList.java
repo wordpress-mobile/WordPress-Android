@@ -4,12 +4,7 @@ import java.util.ArrayList;
 
 public class ReaderTagList extends ArrayList<ReaderTag> {
 
-    @Override
-    public Object clone() {
-        return super.clone();
-    }
-
-    public int indexOfTagName(final String tagName) {
+    public int indexOfTagName(String tagName) {
         if (tagName == null || isEmpty()) {
             return -1;
         }
@@ -23,27 +18,30 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         return -1;
     }
 
-    private boolean hasSameTag(ReaderTag tag) {
+    private int indexOfTag(ReaderTag tag) {
         if (tag == null || isEmpty()) {
-            return false;
+            return -1;
         }
 
-        for (ReaderTag thisTag : this) {
-            if (ReaderTag.isSameTag(thisTag, tag)) {
-                return true;
+        for (int i = 0; i < this.size(); i++) {
+            if (ReaderTag.isSameTag(tag, this.get(i))) {
+                return i;
             }
         }
 
-        return false;
+        return -1;
     }
 
-    public boolean isSameList(ReaderTagList tagList) {
-        if (tagList == null || tagList.size() != this.size()) {
+    public boolean isSameList(ReaderTagList otherList) {
+        if (otherList == null || otherList.size() != this.size()) {
             return false;
         }
 
-        for (ReaderTag thisTag: tagList) {
-            if (!hasSameTag(thisTag)) {
+        for (ReaderTag otherTag: otherList) {
+            int i = this.indexOfTag(otherTag);
+            if (i == -1) {
+                return false;
+            } else if (!otherTag.getEndpoint().equals(this.get(i).getEndpoint())) {
                 return false;
             }
         }
@@ -54,14 +52,14 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
     /*
      * returns a list of tags that are in this list but not in the passed list
      */
-    public ReaderTagList getDeletions(ReaderTagList tagList) {
+    public ReaderTagList getDeletions(ReaderTagList otherList) {
         ReaderTagList deletions = new ReaderTagList();
-        if (tagList == null) {
+        if (otherList == null) {
             return deletions;
         }
 
         for (ReaderTag thisTag: this) {
-            if (!tagList.hasSameTag(thisTag)) {
+            if (otherList.indexOfTag(thisTag) == -1) {
                 deletions.add(thisTag);
             }
         }

@@ -4,11 +4,16 @@
     <dimen name="format_bar_height">40dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
+
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_content_offset">72dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
+
+    <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
+    <dimen name="appbar_elevation">8dp</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
@@ -16,8 +21,8 @@
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
 
-	<dimen name="media_grid_local_image_width">160dp</dimen>
-	<dimen name="media_grid_progress_height">50dp</dimen>
+    <dimen name="media_grid_local_image_width">160dp</dimen>
+    <dimen name="media_grid_progress_height">50dp</dimen>
 
     <dimen name="theme_details_fragment_width">650dp</dimen>
     <dimen name="theme_details_fragment_height">450dp</dimen>
@@ -33,7 +38,13 @@
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
 
-    <!-- left/right margin for content such as Me fragment, My Site fragment, reader posts -->
+    <!-- featured image in post list -->
+    <dimen name="postlist_featured_image_height_normal">128dp</dimen>
+    <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
+    <dimen name="postlist_featured_image_height_tablet_large">280dp</dimen>
+    <dimen name="postlist_featured_image_height">@dimen/postlist_featured_image_height_normal</dimen>
+
+    <!-- left/right margin for content such as Me fragment, My Site fragment -->
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
     <dimen name="content_margin_normal_landscape">48dp</dimen>
     <dimen name="content_margin_tablet">48dp</dimen>
@@ -43,32 +54,35 @@
     <!-- spacing between icons in main tab strip -->
     <dimen name="tabstrip_icon_spacing_normal">0dp</dimen>
     <dimen name="tabstrip_icon_spacing_landscape">24dp</dimen>
+    <dimen name="tabstrip_icon_spacing_tablet">24dp</dimen>
     <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_normal</dimen>
-
-    <!-- spacing between first tab and left edge -->
-    <dimen name="tabstrip_padding_normal">0dp</dimen>
-    <dimen name="tabstrip_padding_tablet">@dimen/content_margin</dimen>
-    <dimen name="tabstrip_padding_landscape">@dimen/content_margin</dimen>
-    <dimen name="tabstrip_padding">@dimen/tabstrip_padding_normal</dimen>
 
     <!--
         native reader dimens
     -->
+    <dimen name="margin_none">0dp</dimen>
     <dimen name="margin_extra_small">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
 
+    <!-- left/right margin for reader cards -->
+    <dimen name="reader_card_margin_normal">0dp</dimen>
+    <dimen name="reader_card_margin_normal_landscape">48dp</dimen>
+    <dimen name="reader_card_margin_tablet">48dp</dimen>
+    <dimen name="reader_card_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_card_margin">@dimen/reader_card_margin_normal</dimen>
+
     <!-- left/right margin for reader detail -->
-    <dimen name="reader_detail_margin_normal">12dp</dimen>
+    <dimen name="reader_detail_margin_normal">24dp</dimen>
     <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
     <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
     <!-- height of divider between cards -->
-    <dimen name="reader_card_gutters">8dp</dimen>
+    <dimen name="reader_card_gutters">12dp</dimen>
 
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
@@ -78,24 +92,27 @@
     <dimen name="text_sz_medium">14sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
+    <dimen name="text_sz_double_extra_large">24sp</dimen>
+    <dimen name="text_sz_triple_extra_large">26sp</dimen>
 
+    <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
-    <dimen name="avatar_sz_medium">48dp</dimen>
+    <dimen name="avatar_sz_medium">38dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
-    <dimen name="reader_button_icon">48dp</dimen>
+    <dimen name="reader_button_icon">24dp</dimen>
+    <dimen name="reader_follow_icon">16dp</dimen>
+    <dimen name="reader_more_icon">48dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
 
-    <dimen name="reader_header_divider_height">2dp</dimen>
-
     <!-- margin to use when indenting comment replies under their parents -->
-    <dimen name="reader_comment_indent_per_level">@dimen/avatar_sz_small</dimen>
+    <dimen name="reader_comment_indent_per_level">24dp</dimen>
 
     <!-- max size for images in Reader comments -->
     <dimen name="reader_comment_max_image_size">160dp</dimen>
@@ -109,7 +126,9 @@
 
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
-    <dimen name="nux_button_height">50dp</dimen>
+    <dimen name="nux_main_button_height">48dp</dimen>
+    <dimen name="nux_secondary_button_height">36dp</dimen>
+
     <dimen name="nux_width">600dp</dimen>
 
     <!-- notifications -->
@@ -117,13 +136,44 @@
     <dimen name="comment_avatar_margin_top">6dp</dimen>
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
+    <dimen name="notifications_content_margin">0dp</dimen>
+    <dimen name="notifications_avatar_sz">48dp</dimen>
+    <dimen name="notifications_text_indent_sz">22dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
+
+    <!-- DetailListPreference -->
+    <dimen name="dlp_padding_start">20dp</dimen>
+    <dimen name="dlp_padding_end">24dp</dimen>
+    <dimen name="dlp_padding_top">6dp</dimen>
+    <dimen name="dlp_padding_bottom">6dp</dimen>
+    <dimen name="dlp_radio_margin_top">4dp</dimen>
+    <dimen name="dlp_text_margin_start">4dp</dimen>
+    <dimen name="dlp_text_margin_end">4dp</dimen>
+    <dimen name="dlp_title_padding_start">24dp</dimen>
+    <dimen name="dlp_title_padding_end">24dp</dimen>
+    <dimen name="dlp_title_padding_top">24dp</dimen>
+    <dimen name="dlp_title_padding_bottom">16dp</dimen>
+    <dimen name="dlp_title_logo_padding">8dp</dimen>
+    <dimen name="dlp_title_logo_width">36dp</dimen>
+    <dimen name="dlp_title_logo_height">36dp</dimen>
 
     <!-- stats -->
     <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
     <dimen name="stats_barchart_legend_item">12dp</dimen>
+
+    <!-- stats widget-->
+    <dimen name="stats_widget_icon_size">18dp</dimen>
+    <dimen name="stats_widget_text_sz">14dp</dimen>
+    <dimen name="stats_widget_text_sz_small">10dp</dimen>
+    <dimen name="stats_widget_min_height">62dp</dimen>
+    <dimen name="stats_widget_main_container_min_size">38dp</dimen>
+    <dimen name="stats_widget_main_container_size">48dp</dimen>
+    <dimen name="stats_widget_four_cells">250dp</dimen>
+    <dimen name="stats_widget_five_cells">320dp</dimen>
+    <dimen name="stats_widget_image_layout_size">12dp</dimen>
+    <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
     <!-- MediaPicker -->
     <dimen name="media_padding_left">2dp</dimen>
@@ -145,16 +195,15 @@
     <!-- my site -->
     <dimen name="my_site_add_button_padding_bottom">5dp</dimen>
     <dimen name="my_site_blog_name_margin_top">11dp</dimen>
-    <dimen name="my_site_list_row_height">48dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
+    <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
     <dimen name="me_list_margin_top">20dp</dimen>
-    <dimen name="me_list_row_height">56dp</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
 
     <!--site picker-->
@@ -162,5 +211,35 @@
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
     <dimen name="site_picker_container_padding_bottom">11dp</dimen>
     <dimen name="site_picker_container_padding_top">10dp</dimen>
+
+    <dimen name="menu_item_height">48dp</dimen>
+    <dimen name="menu_item_width">168dp</dimen>
+    <dimen name="menu_item_margin_normal">16dp</dimen>
+    <dimen name="menu_item_margin_tablet">24dp</dimen>
+    <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <!-- Site Settings -->
+    <dimen name="site_settings_divider_height">1dp</dimen>
+    <dimen name="related_posts_dialog_padding_left">24dp</dimen>
+    <dimen name="related_posts_dialog_padding_top">12dp</dimen>
+    <dimen name="related_posts_dialog_padding_right">24dp</dimen>
+    <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
+    <dimen name="text_sz_related_post_small">11sp</dimen>
+
+    <!--empty lists-->
+    <dimen name="empty_list_button_top_margin">32dp</dimen>
+
+    <!--theme browser-->
+    <dimen name="theme_browser_default_column_width">320dp</dimen>
+    <dimen name="theme_browser_cardview_margin_large">5dp</dimen>
+    <dimen name="theme_browser_cardview_margin_small">2dp</dimen>
+    <dimen name="theme_browser_cardview_header_margin">10dp</dimen>
+    <dimen name="theme_browser_separator_thickness">1dp</dimen>
+    <dimen name="theme_browser_more_button_height">40dp</dimen>
+    <dimen name="theme_browser_more_button_width">48dp</dimen>
+    <dimen name="theme_browser_header_button_height">50dp</dimen>
+    <dimen name="theme_browser_header_button_width">100dp</dimen>
+    <dimen name="theme_browser_more_button_padding">8dp</dimen>
+    <dimen name="drake_themes_width">400dp</dimen>
 
 </resources>

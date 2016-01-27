@@ -51,13 +51,12 @@ public abstract class StatsAbstractFragment extends Fragment {
             return;
         }
 
-        final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
         final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-
         if (currentBlog == null) {
             AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
             return;
         }
+        final String blogId = currentBlog.getDotComBlogId();
 
         // Make sure the blogId is available.
         if (blogId == null) {
@@ -131,6 +130,14 @@ public abstract class StatsAbstractFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    public static StatsAbstractFragment newVisitorsAndViewsInstance(StatsViewType viewType, int localTableBlogID,
+                                                    StatsTimeframe timeframe, String date,  StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
+
+        StatsVisitorsAndViewsFragment fragment = (StatsVisitorsAndViewsFragment) newInstance(viewType, localTableBlogID, timeframe, date);
+        fragment.setSelectedOverviewItem(itemToSelect);
+        return fragment;
+    }
+
     public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID,
                                                     StatsTimeframe timeframe, String date ) {
         StatsAbstractFragment fragment = null;
@@ -175,6 +182,18 @@ public abstract class StatsAbstractFragment extends Fragment {
             case SEARCH_TERMS:
                 fragment = new StatsSearchTermsFragment();
                 break;
+            case INSIGHTS_MOST_POPULAR:
+                fragment = new StatsInsightsMostPopularFragment();
+                break;
+            case INSIGHTS_ALL_TIME:
+                fragment = new StatsInsightsAllTimeFragment();
+                break;
+            case INSIGHTS_TODAY:
+                fragment = new StatsInsightsTodayFragment();
+                break;
+            case INSIGHTS_LATEST_POST_SUMMARY:
+                fragment = new StatsInsightsLatestPostSummaryFragment();
+                break;
         }
 
         fragment.setTimeframe(timeframe);
@@ -217,4 +236,12 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     protected abstract String getTitle();
+
+    boolean isSameBlog(StatsEvents.SectionUpdated event) {
+        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
+        if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
+            return event.mRequestBlogId.equals(currentBlog.getDotComBlogId());
+        }
+        return false;
+    }
 }

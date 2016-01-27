@@ -16,6 +16,10 @@ public class AccountModel {
     private int mSiteCount;
     private int mVisibleSiteCount;
     private String mAccessToken;
+    private String mEmail;
+    private String mFirstName;
+    private String mLastName;
+    private String mAboutMe;
 
     public AccountModel() {
         init();
@@ -31,6 +35,10 @@ public class AccountModel {
         mSiteCount = 0;
         mVisibleSiteCount = 0;
         mAccessToken = "";
+        mEmail = "";
+        mFirstName = "";
+        mLastName = "";
+        mAboutMe = "";
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -42,6 +50,14 @@ public class AccountModel {
         mPrimaryBlogId = json.optLong("primary_blog");
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
+        mEmail = json.optString("email");
+    }
+
+    public void updateAccountSettingsFromRestResponse(JSONObject json) {
+        mFirstName = json.optString("first_name");
+        mLastName = json.optString("last_name");
+        mDisplayName = json.optString("display_name");
+        mAboutMe = json.optString("description");
     }
 
     public long getUserId() {
@@ -118,5 +134,37 @@ public class AccountModel {
 
     public void setVisibleSiteCount(int visibleSiteCount) {
         mVisibleSiteCount = visibleSiteCount;
+    }
+
+    public void setEmail(String email) {
+        mEmail = email;
+    }
+
+    public String getEmail() {
+        return StringUtils.notNullStr(mEmail);
+    }
+
+    public String getFirstName() {
+        return StringUtils.notNullStr(mFirstName);
+    }
+
+    public void setFirstName(String firstName) {
+        mFirstName = firstName;
+    }
+
+    public String getLastName() {
+        return StringUtils.notNullStr(mLastName);
+    }
+
+    public void setLastName(String lastName) {
+        mLastName = lastName;
+    }
+
+    public String getAboutMe() {
+        return StringUtils.notNullStr(mAboutMe);
+    }
+
+    public void setAboutMe(String aboutMe) {
+        mAboutMe = aboutMe;
     }
 }

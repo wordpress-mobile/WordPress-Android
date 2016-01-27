@@ -6,7 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
-    app:contentInsetLeft="72dp"
-    app:contentInsetStart="72dp"
+    android:elevation="@dimen/appbar_elevation"
+    app:contentInsetLeft="@dimen/toolbar_content_offset"
+    app:contentInsetStart="@dimen/toolbar_content_offset"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_sz_extra_large"
+        app:fontFamily="openSans"
+        app:fontVariation="light" />
+
+</android.support.v7.widget.Toolbar>

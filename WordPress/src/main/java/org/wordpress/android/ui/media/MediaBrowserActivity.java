@@ -7,12 +7,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.annotation.NonNull;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +23,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,15 +36,18 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -52,13 +57,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * The main activity in which the user can browse their media.
  */
-public class MediaBrowserActivity extends ActionBarActivity implements MediaGridListener,
+public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, MediaAddFragmentCallback {
+        MediaEditFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
+    public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
@@ -88,6 +96,12 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // This should be removed when #2734 is fixed
+        if (WordPress.getCurrentBlog() == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
 
         setContentView(R.layout.media_browser_activity);
 
@@ -112,7 +126,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
             ft.hide(mMediaItemFragment);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
 
         setupAddMenuPopup();
 
@@ -133,10 +147,12 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
     public void onStart() {
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         super.onStop();
     }
@@ -250,6 +266,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         super.onResume();
         startMediaDeleteService();
         getFeatureSet();
+        ActivityId.trackLastActivity(ActivityId.MEDIA);
     }
 
     /** Get the feature set for a wordpress.com hosted blog **/
@@ -275,7 +292,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         super.onPause();
 
         if (mSearchMenuItem != null) {
-            mSearchMenuItem.collapseActionView();
+            MenuItemCompat.collapseActionView(mSearchMenuItem);
         }
     }
 
@@ -286,7 +303,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         }
 
         if (mSearchMenuItem != null) {
-            mSearchMenuItem.collapseActionView();
+            MenuItemCompat.collapseActionView(mSearchMenuItem);
         }
 
         FragmentManager fm = getFragmentManager();
@@ -312,29 +329,38 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MEDIA_PERMISSION_REQUEST_CODE:
+                for (int grantResult : grantResults) {
+                    if (grantResult == PackageManager.PERMISSION_DENIED) {
+                        ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
+                        return;
+                    }
+                }
+                showNewMediaMenu();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             onBackPressed();
             return true;
         } else if (i == R.id.menu_new_media) {
-            View view = findViewById(R.id.menu_new_media);
-            if (view != null) {
-                int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
-                int[] loc = new int[2];
-                view.getLocationOnScreen(loc);
-                mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
-                        loc[1] + view.getHeight() + y_offset);
-            } else {
-                // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
-                View gridView = findViewById(R.id.media_gridview);
-                mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                showNewMediaMenu();
             }
             return true;
         } else if (i == R.id.menu_search) {
             mSearchMenuItem = item;
-            mSearchMenuItem.setOnActionExpandListener(this);
-            mSearchMenuItem.expandActionView();
+            MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+            MenuItemCompat.expandActionView(mSearchMenuItem);
 
             mSearchView = (SearchView) item.getActionView();
             mSearchView.setOnQueryTextListener(this);
@@ -359,7 +385,7 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
                 mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
-                ft.commit();
+                ft.commitAllowingStateLoss();
             } else {
                 // tablet layout: update edit fragment
                 mMediaEditFragment.loadMedia(mediaId);
@@ -478,18 +504,30 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         }
     }
 
-    @Override
-    public void onMediaAdded(String mediaId) {
-        if (WordPress.getCurrentBlog() == null || mediaId == null) {
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaChanged event) {
+        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaUploadSucceed event) {
+        updateOnMediaChanged(event.mLocalBlogId, event.mLocalMediaId);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
+        ToastUtils.showToast(this, event.mErrorMessage, ToastUtils.Duration.LONG);
+    }
+
+    public void updateOnMediaChanged(String blogId, String mediaId) {
+        if (mediaId == null) {
             return;
         }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
 
-        if (cursor == null || !cursor.moveToFirst()) {
+        // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
+        // view (if it was the one displayed)
+        if (!WordPress.wpDB.mediaFileExists(blogId, mediaId)) {
             mMediaGridFragment.removeFromMultiSelect(mediaId);
-            mMediaGridFragment.refreshMediaFromDB();
-
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                     && mediaId.equals(mMediaEditFragment.getMediaId())) {
                 if (mMediaEditFragment.isInLayout()) {
@@ -498,12 +536,14 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
                     getFragmentManager().popBackStack();
                 }
             }
-        } else {
-            mMediaGridFragment.refreshMediaFromDB();
         }
-        if (cursor != null) {
-            cursor.close();
-        }
+
+        // Update Grid view
+        mMediaGridFragment.refreshMediaFromDB();
+
+        // Update Spinner views
+        mMediaGridFragment.updateFilterText();
+        mMediaGridFragment.updateSpinnerAdapter();
     }
 
     @Override
@@ -540,6 +580,21 @@ public class MediaBrowserActivity extends ActionBarActivity implements MediaGrid
         if (mMediaGridFragment != null) {
             mMediaGridFragment.clearSelectedItems();
             mMediaGridFragment.refreshMediaFromDB();
+        }
+    }
+
+    private void showNewMediaMenu() {
+        View view = findViewById(R.id.menu_new_media);
+        if (view != null) {
+            int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
+            int[] loc = new int[2];
+            view.getLocationOnScreen(loc);
+            mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
+                    loc[1] + view.getHeight() + y_offset);
+        } else {
+            // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
+            View gridView = findViewById(R.id.media_gridview);
+            mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
         }
     }
 }

@@ -1,5 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Dit bericht bestaat niet meer</string>
+	<string name="reader_err_get_post_not_authorized">Je hebt geen rechten om dit bericht te lezen</string>
+	<string name="reader_err_get_post_generic">Kan dit bericht niet ophalen</string>
+	<string name="blog_name_no_spaced_allowed">Het adres van de site mag geen spaties bevatten</string>
+	<string name="invalid_username_no_spaces">De gebruikersnaam mag geen spaties bevatten</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">De sites die je volgt hebben recent niets geplaatst</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
+	<string name="media_details_copy_url_toast">URL gekopieerd naar klembord</string>
+	<string name="edit_media">Media bewerken</string>
+	<string name="media_details_copy_url">URL kopiëren</string>
+	<string name="media_details_label_date_uploaded">Geüpload</string>
+	<string name="media_details_label_date_added">Toegevoegd</string>
+	<string name="selected_theme">Geselecteerd thema</string>
+	<string name="could_not_load_theme">Kan thema niet laden</string>
+	<string name="theme_activation_error">Er is iets fout gegaan. Kan thema niet activeren</string>
+	<string name="theme_by_author_prompt_append"> door %1$s</string>
+	<string name="theme_prompt">Bedankt dat je hebt gekozen voor %1$s</string>
+	<string name="theme_try_and_customize">Uitproberen en aanpassen</string>
+	<string name="theme_view">Weergeven</string>
+	<string name="theme_details">Details</string>
+	<string name="theme_support">Ondersteuning</string>
+	<string name="theme_done">GEREED</string>
+	<string name="theme_manage_site">SITE BEHEREN</string>
+	<string name="title_activity_theme_support">Thema\'s</string>
+	<string name="theme_activate">Activeren</string>
+	<string name="date_range_start_date">Startdatum</string>
+	<string name="date_range_end_date">Einddatum</string>
+	<string name="current_theme">Huidig thema</string>
+	<string name="customize">Aanpassen</string>
+	<string name="details">Details</string>
+	<string name="support">Ondersteuning</string>
+	<string name="active">Actief</string>
+	<string name="stats_referrers_spam_generic_error">Er is iets fout gegaan tijdens deze handeling. De status van de spam is ongewijzigd gebleven.</string>
+	<string name="stats_referrers_marking_not_spam">Markeren als geen spam</string>
+	<string name="stats_referrers_unspam">Geen spam</string>
+	<string name="stats_referrers_marking_spam">Markeren als spam</string>
+	<string name="theme_auth_error_authenticate">Fout bij het ophalen van thema\'s: authenticatie van gebruiker mislukt</string>
+	<string name="post_published">Bericht gepubliceerd</string>
+	<string name="page_published">Pagina gepubliceerd</string>
+	<string name="post_updated">Bericht bijgewerkt</string>
+	<string name="page_updated">Pagina bijgewerkt</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Helaas, geen thema\'s gevonden.</string>
+	<string name="media_file_name">Bestandsnaam: %s</string>
+	<string name="media_uploaded_on">Geüpload op: %s</string>
+	<string name="media_dimensions">Afmetingen: %s</string>
+	<string name="upload_queued">In wachtrij geplaatst</string>
+	<string name="media_file_type">Bestandstype: %s</string>
+	<string name="reader_label_gap_marker">Meer berichten laden</string>
+	<string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
+	<string name="search_sites">Zoek sites</string>
+	<string name="notifications_empty_view_reader">Reader weergeven</string>
+	<string name="unread">Ongelezen</string>
+	<string name="notifications_empty_action_followers_likes">Trek de aandacht: reageer op berichten die je hebt gelezen.</string>
+	<string name="notifications_empty_action_comments">Deelnemen aan een gesprek: reageer op berichten uit blogs die je volgt.</string>
+	<string name="notifications_empty_action_unread">Breng het gesprek weer op gang: schrijf een nieuw bericht.</string>
+	<string name="notifications_empty_action_all">Ga aan de slag! Reageer op berichten uit blogs die je volgt.</string>
+	<string name="notifications_empty_likes">Er zijn nog geen nieuwe likes.</string>
+	<string name="notifications_empty_followers">Er zijn nog geen nieuwe volgers.</string>
+	<string name="notifications_empty_comments">Nog geen nieuwe reacties.</string>
+	<string name="notifications_empty_unread">Je bent helemaal bij!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Bekijk de statistieken in de app en probeer later de widget toe te voegen</string>
+	<string name="stats_widget_error_readd_widget">Verwijder de widget en voeg deze opnieuw in</string>
+	<string name="stats_widget_error_no_visible_blog">Je hebt geen toegang tot de statistieken zonder een zichtbare blog</string>
+	<string name="stats_widget_error_no_permissions">Je account van WordPress.com heeft geen toegang tot de statistieken van deze blog</string>
+	<string name="stats_widget_error_no_account">Login bij WordPress</string>
+	<string name="stats_widget_error_generic">Statistieken kunnen niet worden geladen</string>
+	<string name="stats_widget_loading_data">Gegevens laden…</string>
+	<string name="stats_widget_name_for_blog">Huidige statistieken voor %1$s</string>
+	<string name="stats_widget_name">Huidige statistieken van WordPress</string>
+	<string name="add_location_permission_required">Toestemming vereist om locatie toe te voegen</string>
+	<string name="add_media_permission_required">Toestemming vereist om media toe te voegen</string>
+	<string name="access_media_permission_required">Toestemming vereist om media toe te voegen</string>
+	<string name="stats_enable_rest_api_in_jetpack">Om je statistieken te bekijken moet je de JSON API module in Jetpack activeren.</string>
+	<string name="error_open_list_from_notification">Dit bericht of deze pagina is gepubliceerd op een andere site</string>
+	<string name="reader_short_comment_count_multi">%s Reacties</string>
+	<string name="reader_short_comment_count_one">1 Reactie</string>
+	<string name="reader_label_submit_comment">VERSTUUR</string>
+	<string name="reader_hint_comment_on_post">Reageer op bericht…</string>
+	<string name="reader_discover_visit_blog">%s bezoeken</string>
+	<string name="reader_discover_attribution_blog">Oorspronkelijk geplaatst op %s</string>
+	<string name="reader_discover_attribution_author">Oorspronkelijk geplaatst door %s</string>
+	<string name="reader_discover_attribution_author_and_blog">Oorspronkelijk geplaatst door %1$s op %2$s</string>
+	<string name="reader_short_like_count_multi">%s likes</string>
+	<string name="reader_short_like_count_one">1 like</string>
+	<string name="reader_label_follow_count">%,d volgers</string>
+	<string name="reader_short_like_count_none">Like</string>
+	<string name="reader_label_reading_time_in_minutes">%,d min</string>
+	<string name="reader_menu_tags">Tags en blogs bijwerken</string>
+	<string name="reader_label_word_count">%,d woorden</string>
+	<string name="reader_title_post_detail">Reader-bericht</string>
+	<string name="local_draft_explainer">Dit bericht is een lokaal concept dat niet is gepubliceerd</string>
+	<string name="local_changes_explainer">Dit bericht bevat lokale wijzigingen die niet zijn gepubliceerd</string>
+	<string name="notifications_push_summary">Instellingen voor meldingen die op je apparaat verschijnen.</string>
+	<string name="notifications_email_summary">Instellingen voor meldingen die worden verstuurd naar het e-mailadres dat bij je account hoort.</string>
+	<string name="notifications_tab_summary">Instellingen voor meldingen die verschijnen in het tabblad Meldingen.</string>
+	<string name="notifications_disabled">Appmeldingen zijn uitgeschakeld. Tik hier om ze in te schakelen in Instellingen.</string>
+	<string name="notification_types">Soorten meldingen</string>
+	<string name="error_loading_notifications">Kan meldingsinstellingen niet laden</string>
+	<string name="replies_to_your_comments">Antwoorden op je reacties</string>
+	<string name="comment_likes">Likes voor reactie</string>
+	<string name="app_notifications">Appmeldingen</string>
+	<string name="notifications_tab">Tabblad Meldingen</string>
+	<string name="email">E-mailadres</string>
+	<string name="notifications_comments_other_blogs">Reacties op andere sites</string>
+	<string name="notifications_other">Anders</string>
+	<string name="notifications_wpcom_updates">Nieuws WordPress.com</string>
+	<string name="notifications_account_emails">E-mail van WordPress.com</string>
+	<string name="notifications_account_emails_summary">We sturen altijd belangrijke e-mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
+	<string name="notifications_sights_and_sounds">Beelden en geluiden</string>
+	<string name="your_sites">Jouw sites</string>
+	<string name="stats_insights_latest_post_trend">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan ...</string>
+	<string name="stats_insights_latest_post_summary">Samenvatting laatste bericht</string>
+	<string name="button_revert">Terugzetten</string>
+	<string name="days_ago">%d dagen geleden</string>
+	<string name="yesterday">Gisteren</string>
+	<string name="connectionbar_no_connection">Geen verbinging</string>
+	<string name="button_delete">Verwijderen</string>
+	<string name="button_publish">Publiceren</string>
+	<string name="post_deleted">Bericht verwijderd</string>
+	<string name="post_trashed">Bericht naar de prullenbak verplaatst</string>
+	<string name="page_trashed">Pagina naar de prullenbak verplaatst.</string>
+	<string name="button_back">Terug</string>
+	<string name="page_deleted">Pagina verwijderd</string>
+	<string name="button_more">Meer</string>
+	<string name="button_stats">Statistieken</string>
+	<string name="button_trash">Prullenbak</string>
+	<string name="button_edit">Bewerken</string>
+	<string name="stats_no_activity_this_period">Geen activiteit deze periode</string>
+	<string name="trashed">Verwijderd</string>
+	<string name="button_preview">Voorbeeld</string>
+	<string name="button_view">Bekijk</string>
+	<string name="my_site_no_sites_view_subtitle">Wil je er één toevoegen?</string>
+	<string name="my_site_no_sites_view_title">Je hebt nog geen WordPress-sites.</string>
+	<string name="my_site_no_sites_view_drake">Illustratie</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">Je hebt geen rechten om dit blog te openen</string>
+	<string name="reader_toast_err_follow_blog_not_found">Dit blog kon niet worden gevonden</string>
+	<string name="undo">Ongedaan maken</string>
+	<string name="tabbar_accessibility_label_my_site">Mijn site</string>
+	<string name="tabbar_accessibility_label_me">Ik</string>
+	<string name="passcodelock_prompt_message">Je PIN invullen.</string>
+	<string name="editor_toast_changes_saved">De wijzigingen zijn opgeslagen.</string>
+	<string name="push_auth_expired">Je verzoek is verlopen. Je bij WordPress.com aanmelden en opnieuw proberen.</string>
+	<string name="stats_insights_best_ever">Best bekeken ooit</string>
+	<string name="stats_insights_most_popular_percent_views">%1$d%% van weergaven</string>
+	<string name="ignore">Negeren</string>
+	<string name="stats_insights_most_popular_hour">De meest populaire tijd.</string>
+	<string name="stats_insights_most_popular_day">De meest populaire dag.</string>
+	<string name="stats_insights_today">De statistieken van vandaag.</string>
+	<string name="stats_insights_popular">De meest populaire dag en tijd.</string>
+	<string name="stats_insights_all_time">Alle berichten, weergaven en bezoekers</string>
+	<string name="stats_insights">Inzichten</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Om de statistieken te bekijken moet je bij je WordPress.com account aanmelden en deze verbinden met Jetpack.</string>
+	<string name="stats_other_recent_stats_moved_label">Op zoek naar je andere recente statistieken? We hebben ze verplaatst naar de pagina Inzichten.</string>
+	<string name="me_disconnect_from_wordpress_com">Loskoppelen van WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Verbinden met WordPress.com</string>
+	<string name="me_btn_login_logout">Inloggen/uitloggen</string>
+	<string name="site_picker_cant_hide_current_site">"%s" was niet verborgen omdat het de huidige site is</string>
+	<string name="me_btn_support">Help &amp; Support</string>
+	<string name="me_btn_settings">Accountinstellingen</string>
+	<string name="site_picker_create_dotcom">WordPress.com site maken</string>
+	<string name="site_picker_edit_visibility">Sites tonen/verbergen</string>
+	<string name="site_picker_add_self_hosted">Een zelf-gehoste site toevoegen</string>
+	<string name="site_picker_add_site">Site toevoegen</string>
+	<string name="my_site_btn_switch_site">Site wisselen</string>
+	<string name="site_picker_title">Site kiezen</string>
+	<string name="my_site_btn_view_admin">Beheer bekijken</string>
+	<string name="my_site_btn_view_site">Bekijk site</string>
+	<string name="my_site_header_publish">Publiceren</string>
+	<string name="my_site_header_look_and_feel">Look and feel</string>
+	<string name="my_site_btn_comments">Reacties</string>
+	<string name="my_site_btn_blog_posts">Blogberichten</string>
+	<string name="my_site_btn_site_settings">Instellingen</string>
+	<string name="reader_label_new_posts_subtitle">Tik om ze te tonen</string>
+	<string name="my_site_header_admin">Beheer</string>
+	<string name="my_site_header_configuration">Configuratie</string>
+	<string name="notifications_account_required">Meld je aan bij WordPress.com voor meldingen</string>
+	<string name="stats_unknown_author">Onbekende auteur</string>
+	<string name="signout">Verbinding verbreken</string>
+	<string name="image_added">Afbeelding toegevoegd</string>
+	<string name="sign_out_wpcom_confirm">Als je je account loskoppelt, worden alle WordPress.com gegevens van @%s verwijderd van dit apparaat, inclusief lokale concepten en lokale wijzigingen.</string>
+	<string name="select_all">Alles selecteren</string>
+	<string name="hide">Verbergen</string>
+	<string name="show">Tonen</string>
+	<string name="deselect_all">Alles deselecteren</string>
 	<string name="select_from_new_picker">Meerdere selecteren met de nieuwe picker </string>
 	<string name="stats_generic_error">Benodigde statistieken konden niet geladen worden</string>
 	<string name="no_media_sources">Media ophalen mislukt</string>
@@ -26,12 +211,6 @@
 	<string name="tab_title_device_videos">Apparaatvideo\'s</string>
 	<string name="tab_title_site_images">Siteafbeeldingen</string>
 	<string name="tab_title_site_videos">Sitevideo\'s</string>
-	<string name="media_details_added_on">Toegevoegd op:</string>
-	<string name="media_details_uploaded_on">Geüpload op:</string>
-	<string name="media_details_file_name">Bestandsnaam:</string>
-	<string name="media_details_file_type">Bestandstype:</string>
-	<string name="media_details_file_url">Bestands-URL:</string>
-	<string name="media_details_dimensions">Afmetingen:</string>
 	<string name="error_publish_no_network">Kan niet publiceren als er geen verbinding is. Opgeslagen als concept.</string>
 	<string name="editor_toast_invalid_path">Ongeldig bestandspad</string>
 	<string name="verification_code">Verificatiecode</string>
@@ -59,7 +238,6 @@
 	<string name="error_notification_open">Could not open notification</string>
 	<string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
 	<string name="stats_months_and_years">Maanden en jaren</string>
-	<string name="reader_page_recommended_blogs">Blogs die je misschien ook leuk vindt</string>
 	<string name="stats_recent_weeks">Laatste weken</string>
 	<string name="error_copy_to_clipboard">Er is een fout opgetreden tijdens het kopiëren van de tekst naar het klembord</string>
 	<string name="reader_label_new_posts">Nieuwe berichten</string>
@@ -70,6 +248,8 @@
 	<string name="stats_total">Totaal</string>
 	<string name="stats_overall">Totaal</string>
 	<string name="post_uploading">Uploaden</string>
+	<string name="reader_page_recommended_blogs">Sites die je misschien ook leuk vindt</string>
+	<string name="stats_comments_total_comments_followers">Totaalaantal berichten met reactievolgers: %1$s</string>
 	<string name="stats_visitors">Bezoekers</string>
 	<string name="stats_likes">Waarderingen</string>
 	<string name="stats_comments">Reacties</string>
@@ -105,7 +285,6 @@
 	<string name="stats_empty_publicize">Geen Publicize-volgers geregistreerd</string>
 	<string name="stats_empty_publicize_desc">Houd je volgers van verschillende sociale netwerkservices bij met behulp van Publicize.</string>
 	<string name="stats_empty_followers">Geen volgers</string>
-	<string name="stats_comments_total_comments_followers">Totaal aantal reactievolgers: %1$s</string>
 	<string name="stats_comments_by_authors">Op auteurs</string>
 	<string name="stats_comments_by_posts_and_pages">Op berichten en pagina\'s</string>
 	<string name="stats_empty_followers_desc">Houd je totaal aantal volgers bij en hoe lang elke volger je site al volgt.</string>
@@ -130,6 +309,7 @@
 	<string name="themes_fetching">Thema\'s ophalen …</string>
 	<string name="stats_for">Statistieken voor %s</string>
 	<string name="ssl_certificate_details">Details</string>
+	<string name="sure_to_remove_account">Deze site verwijderen?</string>
 	<string name="delete_sure_post">Dit bericht verwijderen</string>
 	<string name="delete_sure">Dit concept verwijderen</string>
 	<string name="delete_sure_page">Deze pagina verwijderen</string>
@@ -139,9 +319,7 @@
 	<string name="media_gallery_date_range">Media van %1$s tot %2$s weergeven</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Bekijk onze FAQ</string>
-	<string name="reader_likes_one_short">1 persoon</string>
 	<string name="reader_label_comment_count_single">Eén reactie</string>
-	<string name="reader_empty_followed_blogs_title">Je volgt nog geen enkele blog</string>
 	<string name="reader_empty_posts_liked">Je hebt nog geen enkel bericht geliked</string>
 	<string name="nux_help_description">Bezoek het help centrum voor antwoorden op algemene vragen or bezoek de forums om nieuwe te stellen</string>
 	<string name="agree_terms_of_service">Door het aanmaken van een account ga je akkoord met de fascinerende %1$sTerms of Service%2$s</string>
@@ -150,8 +328,6 @@
 	<string name="reader_empty_posts_in_tag">Geen berichten met deze tag</string>
 	<string name="reader_label_view_original">Bekijk oorspronkelijk artikel</string>
 	<string name="reader_label_like">Like</string>
-	<string name="reader_label_liked_by">Geliked door</string>
-	<string name="reader_label_liked_by_you">Geliked door jou</string>
 	<string name="reader_title_comments">Reacties</string>
 	<string name="reader_label_comments_on">Reacties op</string>
 	<string name="error_refresh_unauthorized_posts">Je hebt geen rechten om berichten te bekijken of te bewerken</string>
@@ -161,7 +337,6 @@
 	<string name="signing_out">Uitloggen…</string>
 	<string name="comment">Reactie</string>
 	<string name="comment_trashed">Reactie verwijderd</string>
-	<string name="overwrite_local_changes">Je hebt wijzigingen aangebracht aan een bericht die nog niet zijn opgeslagen. Doorgaan met verversen en de lokale wijzigingen overschrijven?</string>
 	<string name="older_month">Ouder dan een maand</string>
 	<string name="older_two_days">Ouder dan 2 dagen</string>
 	<string name="older_last_week">Ouder dan een week</string>
@@ -176,10 +351,10 @@
 	<string name="pages_empty_list">Nog geen pagina\'s. Waarom maak je er niet een?</string>
 	<string name="posts_empty_list">Nog geen berichten. Waarom maak je er niet een?</string>
 	<string name="reader_empty_comments">Nog geen reacties</string>
-	<string name="reader_likes_multi_short">%,d mensen</string>
 	<string name="reader_label_comment_count_multi">%,d reacties</string>
 	<string name="reader_label_comments_closed">Reacties zijn gesloten</string>
 	<string name="error_refresh_unauthorized_comments">Je hebt geen rechten om reacties te bekijken of te bewerken</string>
+	<string name="reader_empty_followed_blogs_title">Je volgt nog geen sites</string>
 	<string name="reader_menu_block_blog">Blokkeer deze blog</string>
 	<string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
 	<string name="reader_toast_err_block_blog">Blokkeren van deze blog is mislukt</string>
@@ -199,17 +374,10 @@
 	<string name="preference_privacy">Privacy</string>
 	<string name="preference_send_usage_stats">Verstuur statistieken</string>
 	<string name="preference_send_usage_stats_summary">Stuur automatisch gebruiksstatistieken om ons te helpen WordPress voor Android te verbeteren</string>
-	<string name="reader_title_reblog">Post rebloggen</string>
-	<string name="reader_hint_reblog_comment">Voeg jouw mening toe (optioneel)</string>
-	<string name="reader_label_reblog_to">Rebloggen naar</string>
 	<string name="update_verb">Bijwerken</string>
 	<string name="schedule_verb">Inplannen</string>
-	<string name="reader_title_blog_preview">Voorbeeld blog</string>
-	<string name="reader_title_tag_preview">Voorbeeld tag</string>
 	<string name="reader_title_subs">Tags &amp; Blogs</string>
 	<string name="reader_page_followed_tags">Gevolgde tags</string>
-	<string name="reader_page_popular_tags">Populaire tags</string>
-	<string name="reader_page_followed_blogs">Gevolgde blogs</string>
 	<string name="reader_hint_add_tag_or_url">Voer een tag of URL in om te volgen</string>
 	<string name="reader_label_followed_blog">Blog gevolgd</string>
 	<string name="reader_label_tag_preview">Posts getagd %s</string>
@@ -218,6 +386,9 @@
 	<string name="reader_toast_err_follow_blog">Kan deze blog niet volgen</string>
 	<string name="reader_toast_err_unfollow_blog">Kan deze blog niet ontvolgen</string>
 	<string name="reader_empty_recommended_blogs">Geen aanbevolen blogs</string>
+	<string name="reader_title_blog_preview">Reader-blog</string>
+	<string name="reader_title_tag_preview">Reader-tag</string>
+	<string name="reader_page_followed_blogs">Gevolgde sites</string>
 	<string name="saving">Aan het opslaan...</string>
 	<string name="media_empty_list">Geen media</string>
 	<string name="ptr_tip_message">Tip: schuif omlaag om te vernieuwen</string>
@@ -226,8 +397,8 @@
 	<string name="forums">Forums</string>
 	<string name="help_center">Helpcentrum</string>
 	<string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>
-	<string name="reader_label_reblog_empty">Je hebt geen zichtbare WordPress.com-blogs waarnaar dit bericht opnieuw geblogd kan worden</string>
 	<string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
+	<string name="could_not_remove_account">Kon site niet verwijderen</string>
 	<string name="out_of_memory">Apparaatgeheugen vol</string>
 	<string name="no_network_message">Er is geen netwerk beschikbaar</string>
 	<string name="no_site_error">Kan niet verbinden met de WordPress-site</string>
@@ -253,7 +424,6 @@
 	<string name="theme_fetch_failed">Fout bij het ophalen van thema\'s</string>
 	<string name="theme_set_failed">Fout bij het instellen van het thema</string>
 	<string name="theme_auth_error_message">Controleer of je rechten hebt om thema\'s in te stellen</string>
-	<string name="theme_no_search_result_found">Geen resultaten gevonden </string>
 	<string name="comments_empty_list">Geen reacties</string>
 	<string name="mnu_comment_unspam">Geen spam</string>
 	<string name="gallery_error">Media-item kan niet worden opgehaald</string>
@@ -293,6 +463,8 @@
 	<string name="blog_name_reserved_but_may_be_available">Die site is momenteel gereserveerd, maar is mogelijk binnen een paar dagen beschikbaar</string>
 	<string name="username_or_password_incorrect">De gebruikersnaam of het wachtwoord is niet correct</string>
 	<string name="nux_cannot_log_in">We kunnen je niet aanmelden</string>
+	<string name="blog_removed_successfully">Site is verwijderd</string>
+	<string name="remove_account">Site verwijderen</string>
 	<string name="xmlrpc_error">Verbinding mislukt. Voer het volledig pad in naar xmlrpc.php op je site en probeer het opnieuw.</string>
 	<string name="select_categories">Categorieën selecteren</string>
 	<string name="account_details">Accountgegevens</string>
@@ -350,9 +522,7 @@
 	<string name="toast_comment_unedited">Reactie is niet gewijzigd</string>
 	<string name="delete_draft">Concept verwijderen</string>
 	<string name="preview_page">Voorbeeld van pagina bekijken</string>
-	<string name="page_deleted">Pagina verwijderd</string>
 	<string name="preview_post">Voorbeeld van bericht bekijken</string>
-	<string name="post_deleted">Bericht verwijderd</string>
 	<string name="comment_added">Reactie toegevoegd</string>
 	<string name="post_not_published">Berichtstatus is niet gepubliceerd</string>
 	<string name="page_not_published">Paginastatus is niet gepubliceerd</string>
@@ -367,7 +537,6 @@
 	<string name="file_error_create">Kan geen tijdelijk bestand maken voor het uploaden van media. Controleer of er genoeg vrije ruimte is op je apparaat.</string>
 	<string name="location_not_found">Onbekende locatie</string>
 	<string name="open_source_licenses">Open-sourcelicenties</string>
-	<string name="stats_view_tags_and_categories">Tags &amp; categorieën</string>
 	<string name="pending_review">In afwachting van controle</string>
 	<string name="http_credentials">HTTP-verificatiegegevens (optioneel)</string>
 	<string name="http_authorization_required">Autorisatie vereist</string>
@@ -385,7 +554,6 @@
 	<string name="jetpack_message_not_admin">De Jetpack-plugin is vereist voor statistieken. Neem contact op met de sitebeheerder.</string>
 	<string name="reader_title_applog">Applicatielogboek</string>
 	<string name="reader_share_link">Link delen</string>
-	<string name="reader_toast_err_reblog_requires_blog">Een blog selecteren</string>
 	<string name="reader_toast_err_add_tag">Deze tag kan niet worden toegevoegd</string>
 	<string name="reader_toast_err_remove_tag">Deze tag kan niet worden verwijderd</string>
 	<string name="required_field">Vereist veld</string>
@@ -397,6 +565,7 @@
 	<string name="blog_name_must_include_letters">Site-adres moet ten minste 1 letter (a-z) bevatten</string>
 	<string name="blog_name_invalid">Ongeldig site-adres</string>
 	<string name="blog_title_invalid">Ongeldige sitetitel</string>
+	<string name="notifications_empty_all">Nog geen meldingen.</string>
 	<string name="share_url_page">Deel pagina</string>
 	<string name="share_url_post">Deel bericht</string>
 	<string name="deleting_page">Verwijderen van pagina</string>
@@ -436,21 +605,17 @@
 	<string name="select_from_media_library">Selecteer uit de mediabibliotheek</string>
 	<string name="media_add_popup_title">Toevoegen aan mediabibliotheek</string>
 	<string name="reader_untitled_post">(geen titel)</string>
-	<string name="reader_menu_tags">Tags</string>
 	<string name="reader_btn_share">Delen</string>
 	<string name="reader_btn_follow">Volg</string>
-	<string name="reader_hint_comment_on_post">Voeg je reactie toe</string>
 	<string name="reader_label_added_tag">%s toegevoegd</string>
 	<string name="reader_label_removed_tag">%s verwijderd</string>
 	<string name="reader_toast_err_url_intent">Onmogelijk %s te openen</string>
-	<string name="reader_empty_popular_tags">Geen populaire tags</string>
 	<string name="create_account_wpcom">Maak een account op Wordpress.com aan</string>
 	<string name="connecting_wpcom">Verbinden met Wordpress.com</string>
 	<string name="reader_toast_err_share_intent">Onmogelijk te delen</string>
 	<string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>
 	<string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
 	<string name="reader_timespan_now">Nu</string>
-	<string name="reader_hint_comment_on_comment">Beantwoord reactie</string>
 	<string name="jetpack_message">De Jetpack plugin is nodig voor statistieken. Wil je Jetpack installeren?</string>
 	<string name="empty_list_default">Deze lijst is leeg</string>
 	<string name="media_add_new_media_gallery">Een nieuwe galerij aanmaken</string>
@@ -458,16 +623,14 @@
 	<string name="reader_share_subject">gedeeld van %s</string>
 	<string name="reader_likes_one">1 persoon vindt dit leuk</string>
 	<string name="reader_likes_only_you">Je vindt dit leuk</string>
-	<string name="reader_toast_reblog_success">Bericht is herblogd</string>
 	<string name="reader_toast_err_comment_failed">Je reactie kon niet gepost worden</string>
-	<string name="reader_toast_err_reblog_failed">Dit bericht kon niet herblogd worden</string>
-	<string name="reader_toast_err_already_reblogged">Je hebt dit bericht al herblogd</string>
 	<string name="reader_toast_err_tag_exists">Je volgt deze tag al</string>
 	<string name="reader_toast_err_tag_invalid">Dat is geen geldige tag</string>
 	<string name="nux_tutorial_get_started_title">Begin!</string>
 	<string name="username_invalid">Ongeldige gebruikersnaam</string>
 	<string name="reader_btn_unfollow">Volgend</string>
 	<string name="limit_reached">Limiet bereikt. Je kan het na 1 minuut nogmaals proberen. Als je het eerder probeert dan zul je langer moeten wachten totdat de ban wordt opgeheven. Neem contact op met de helpdesk wanneer je denk dat dit niet klopt.</string>
+	<string name="reader_hint_comment_on_comment">Beantwoord reactie...</string>
 	<string name="images">Afbeeldingen</string>
 	<string name="media_add_popup_capture_photo">Maak een nieuwe foto</string>
 	<string name="media_add_popup_capture_video">Maak een nieuwe video</string>
@@ -494,9 +657,9 @@
 	<string name="theme_activate_button">Activeren</string>
 	<string name="share_action">Deel</string>
 	<string name="stats">Statistieken</string>
-	<string name="view_stats_full_site">Bekijk site</string>
 	<string name="stats_view_visitors_and_views">Bezoekers en views</string>
 	<string name="stats_view_clicks">Kliks</string>
+	<string name="stats_view_tags_and_categories">Tags en categorieën </string>
 	<string name="stats_entry_country">Land</string>
 	<string name="stats_entry_posts_and_pages">Titel</string>
 	<string name="stats_entry_tags_and_categories">Onderwerp</string>
@@ -534,16 +697,10 @@
 	<string name="upload">Upload</string>
 	<string name="sign_in">Inloggen</string>
 	<string name="notifications">Notificaties</string>
-	<string name="manage_notifications">Notificaties beheren</string>
-	<string name="enable_notifications">Notificaties activeren</string>
-	<string name="types">Types</string>
-	<string name="options">Opties</string>
-	<string name="notifications_turn_off">Uitschakelen</string>
-	<string name="notifications_turn_off_1hr">Uitschakelen voor 1 uur</string>
-	<string name="notifications_turn_off_8hr">Uitschakelen voor 8 uur</string>
 	<string name="note_reply_successful">Reactie gepubliceerd</string>
 	<string name="new_notifications">%d nieuwe notificaties</string>
 	<string name="more_notifications">en %d extra.</string>
+	<string name="follows">Volgt</string>
 	<string name="loading">Laden...</string>
 	<string name="httpuser">HTTP gebruikersnaam</string>
 	<string name="httppassword">HTTP wachtwoord</string>
@@ -588,6 +745,7 @@
 	<string name="post_password">Wachtwoord (optioneel) </string>
 	<string name="immediately">Direct</string>
 	<string name="quickpress_add_alert_title">Geef een snelkoppelingsnaam</string>
+	<string name="today">Vandaag</string>
 	<string name="settings">Instellingen</string>
 	<string name="share_url">Deel URL</string>
 	<string name="quickpress_window_title">Selecteer een blog voor de QuickPress snelkoppeling</string>
@@ -622,11 +780,40 @@
 	<string name="save">Bewaar</string>
 	<string name="category_refresh_error">Categorie vernieuwen fout</string>
 	<string name="preview">Voorbeeld</string>
+	<string name="notification_settings">Meldingsinstellingen</string>
 	<string-array name="alignment_array">
 		<item>Geen</item>
 		<item>Links</item>
 		<item>Midden</item>
 		<item>Rechts</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>Reacties op mijn site</item>
+		<item>Likes voor mijn reacties</item>
+		<item>Likes voor mijn berichten</item>
+		<item>Volgers van site</item>
+		<item>Prestaties voor de site</item>
+		<item>Vermeldingen van gebruikersnaam</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>Antwoorden op mijn reacties</item>
+		<item>Likes voor mijn reacties</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>Suggesties</item>
+		<item>Onderzoek</item>
+		<item>Community</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>Tips om WordPress.com optimaal te benutten.</item>
+		<item>Mogelijkheden om deel te nemen aan onderzoeken en enquêtes van WordPress.com.</item>
+		<item>Informatie over cursussen en evenementen van WordPress.com (online en op locatie).</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>Gepuliceerd</item>
+		<item>Concept</item>
+		<item>Ingepland</item>
+		<item>Weggegooid</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Aside</item>
@@ -639,5 +826,10 @@
 		<item>Standaard</item>
 		<item>Status</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratis</item>
+		<item>Alles</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

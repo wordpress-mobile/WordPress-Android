@@ -3,24 +3,30 @@ package org.wordpress.android;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
-import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteException;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.AndroidRuntimeException;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
@@ -31,9 +37,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Post;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
@@ -43,11 +49,9 @@ import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdat
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -61,20 +65,20 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -83,12 +87,14 @@ import io.fabric.sdk.android.Fabric;
 public class WordPress extends Application {
     public static String versionName;
     public static Blog currentBlog;
-    public static Post currentPost;
     public static WordPressDB wpDB;
-    public static RestClientUtils mRestClientUtils;
-    public static RestClientUtils mRestClientUtilsVersion1_1;
+
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
+
+    private static RestClientUtils mRestClientUtils;
+    private static RestClientUtils mRestClientUtilsVersion1_1;
+    private static RestClientUtils mRestClientUtilsVersion1_2;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -156,17 +162,20 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        long startDate = SystemClock.elapsedRealtime();
+
         mContext = this;
 
-        ProfilingUtils.start("WordPress.onCreate");
+        ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);
+        AppLog.i(T.UTILS, "WordPress.onCreate");
+
         if (!PackageUtils.isDebugBuild()) {
             Fabric.with(this, new Crashlytics());
         }
 
         versionName = PackageUtils.getVersionName(this);
-        HelpshiftHelper.init(this);
         initWpDb();
         enableHttpResponseCache(mContext);
 
@@ -181,17 +190,8 @@ public class WordPress extends Application {
 
         RestClientUtils.setUserAgent(getUserAgent());
 
-        configureSimperium();
-
         // Volley networking setup
         setupVolleyQueue();
-
-        // Refresh account informations
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            AccountHelper.getDefaultAccount().fetchAccountDetails();
-        }
-
-        ABTestingUtils.init();
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
@@ -201,20 +201,57 @@ public class WordPress extends Application {
 
         HelpshiftHelper.init(this);
 
+        ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
+        registerComponentCallbacks(applicationLifecycleMonitor);
+        registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
+
+        initAnalytics(SystemClock.elapsedRealtime() - startDate);
+    }
+
+    private void initAnalytics(final long elapsedTimeOnCreate) {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
         AnalyticsUtils.refreshMetadata();
-        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
-        registerForCloudMessaging(this);
+        // Track app upgrade and install
+        int versionCode = PackageUtils.getVersionCode(getContext());
 
-        ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
-        registerComponentCallbacks(pnBackendMonitor);
-        registerActivityLifecycleCallbacks(pnBackendMonitor);
+        int oldVersionCode = AppPrefs.getLastAppVersionCode();
+        if (oldVersionCode == 0) {
+            // Track application installed if there isn't old version code
+            AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
+        }
+        if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+            Map<String, Long> properties = new HashMap<String, Long>(1);
+            properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
+            // app upgraded
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
+        }
+        AppPrefs.setLastAppVersionCode(versionCode);
+    }
 
-        // we want to reset the suggestion table in every launch so we can get a fresh list
-        SuggestionTable.reset(wpDB.getDatabase());
+    /**
+     * Application.onCreate is called before any activity, service, or receiver - it can be called while the app
+     * is in background by a sticky service or a receiver, so we don't want Application.onCreate to make network request
+     * or other heavy tasks.
+     *
+     * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
+     * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
+     */
+    public void deferredInit(Activity activity) {
+        AppLog.i(T.UTILS, "Deferred Initialisation");
+
+        if (checkPlayServices(activity)) {
+            // Register for Cloud messaging
+            startService(new Intent(this, GCMRegistrationIntentService.class));
+        }
+        configureSimperium();
+
+        // Refresh account informations
+        if (AccountHelper.isSignedInWordPressDotCom()) {
+            AccountHelper.getDefaultAccount().fetchAccountDetails();
+        }
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -249,19 +286,12 @@ public class WordPress extends Application {
     private boolean createAndVerifyWpDb() {
         try {
             wpDB = new WordPressDB(this);
-            // verify account data
-            List<Map<String, Object>> accounts = wpDB.getAllBlogs();
-            for (Map<String, Object> account : accounts) {
-                if (account == null || account.get("blogName") == null || account.get("url") == null) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (SQLiteException sqle) {
-            AppLog.e(T.DB, sqle);
-            return false;
-        } catch (RuntimeException re) {
-            AppLog.e(T.DB, re);
+            // verify account data - query will return 1 if any blog names or urls are null
+            int result = SqlUtils.intForQuery(wpDB.getDatabase(),
+                    "SELECT 1 FROM accounts WHERE blogName IS NULL OR url IS NULL LIMIT 1", null);
+            return result != 1;
+        } catch (RuntimeException e) {
+            AppLog.e(T.DB, e);
             return false;
         }
     }
@@ -295,6 +325,14 @@ public class WordPress extends Application {
         return mRestClientUtilsVersion1_1;
     }
 
+    public static RestClientUtils getRestClientUtilsV1_2() {
+        if (mRestClientUtilsVersion1_2 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion1_2 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_2);
+        }
+        return mRestClientUtilsVersion1_2;
+    }
+
     /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
@@ -325,54 +363,23 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    /**
-     * Register the device to Google Cloud Messaging service or return registration id if it's already registered.
-     *
-     * @return registration id or empty string if it's not registered.
-     */
-    private static String gcmRegisterIfNot(Context context) {
-        String regId = "";
-        try {
-            GCMRegistrar.checkDevice(context);
-            GCMRegistrar.checkManifest(context);
-            regId = GCMRegistrar.getRegistrationId(context);
-            String gcmId = BuildConfig.GCM_ID;
-            if (gcmId != null && TextUtils.isEmpty(regId)) {
-                GCMRegistrar.register(context, gcmId);
-            }
-        } catch (UnsupportedOperationException e) {
-            // GCMRegistrar.checkDevice throws an UnsupportedOperationException if the device
-            // doesn't support GCM (ie. non-google Android)
-            AppLog.e(T.NOTIFS, "Device doesn't support GCM: " + e.getMessage());
-        } catch (IllegalStateException e) {
-            // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
-            // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
-            AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
-        } catch (Exception e) {
-            // SecurityException can happen on some devices without Google services (these devices probably strip
-            // the AndroidManifest.xml and remove unsupported permissions).
-            AppLog.e(T.NOTIFS, e);
+    public boolean checkPlayServices(Activity activity) {
+        int connectionResult = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+        switch (connectionResult) {
+            // Success: return true
+            case ConnectionResult.SUCCESS:
+                return true;
+            // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                GooglePlayServicesUtil.getErrorDialog(connectionResult, activity, 0);
+            default:
+            case ConnectionResult.SERVICE_MISSING:
+            case ConnectionResult.SERVICE_DISABLED:
+            case ConnectionResult.SERVICE_INVALID:
+                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
+                        + GooglePlayServicesUtil.getErrorString(connectionResult));
         }
-        return regId;
-    }
-
-    public static void registerForCloudMessaging(Context context) {
-        String regId = gcmRegisterIfNot(context);
-
-        // Register to WordPress.com notifications
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            if (!TextUtils.isEmpty(regId)) {
-                // Send the token to WP.com in case it was invalidated
-                NotificationsUtils.registerDeviceForPushNotifications(context, regId);
-                AppLog.v(T.NOTIFS, "Already registered for GCM");
-            }
-        }
-
-        // Register to Helpshift notifications
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        }
-        AnalyticsTracker.registerPushNotificationToken(regId);
+        return false;
     }
 
     /**
@@ -384,16 +391,7 @@ public class WordPress extends Application {
      */
     public static Blog getCurrentBlog() {
         if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
-            // attempt to restore the last active blog
-            if (setCurrentBlogToLastActive() == null) {
-                // fallback to just using the first blog
-                List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-                if (accounts.size() > 0) {
-                    int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                    setCurrentBlog(id);
-                    wpDB.updateLastBlogId(id);
-                }
-            }
+            attemptToRestoreLastActiveBlog();
         }
 
         return currentBlog;
@@ -440,38 +438,44 @@ public class WordPress extends Application {
      * Set the blog with the specified id as the current blog.
      *
      * @param id id of the blog to set as current
-     * @return the current blog
      */
-    public static Blog setCurrentBlog(int id) {
-        currentBlog = wpDB.instantiateBlogByLocalId(id);
-        return currentBlog;
+    public static void setCurrentBlog(int id) {
+        currentBlog = getBlog(id);
+    }
+
+    public static void setCurrentBlogAndSetVisible(int id) {
+        setCurrentBlog(id);
+
+        if (currentBlog != null && currentBlog.isHidden()) {
+            wpDB.setDotComBlogsVisibility(id, true);
+        }
     }
 
     /**
-     * returns the blogID of the current blog or -1 if current blog is null
+     * returns the blogID of the current blog or null if current blog is null or remoteID is null.
      */
-    public static int getCurrentRemoteBlogId() {
-        return (getCurrentBlog() != null ? getCurrentBlog().getRemoteBlogId() : -1);
+    public static String getCurrentRemoteBlogId() {
+        return (getCurrentBlog() != null ? getCurrentBlog().getDotComBlogId() : null);
     }
 
     public static int getCurrentLocalTableBlogId() {
         return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
 
-    public static void signOutWordPressComAsyncWithProgressBar(Context context) {
-        new SignOutWordPressComAsync(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     /**
-     * Sign out from wpcom account
+     * Sign out from wpcom account.
+     * Note: This method must not be called on UI Thread.
      */
     public static void WordPressComSignOut(Context context) {
+        // Keep the analytics tracking at the beginning, before the account data is actual removed.
+        AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
+
         removeWpComUserRelatedData(context);
 
         // broadcast an event: wpcom user signed out
         EventBus.getDefault().post(new UserSignedOutWordPressCom());
 
-        // broadcast an event only if the user is completly signed out
+        // broadcast an event only if the user is completely signed out
         if (!AccountHelper.isSignedIn()) {
             EventBus.getDefault().post(new UserSignedOutCompletely());
         }
@@ -503,40 +507,6 @@ public class WordPress extends Application {
         wpDB.dangerouslyDeleteAllContent();
     }
 
-    public static class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
-        ProgressDialog mProgressDialog;
-        WeakReference<Context> mWeakContext;
-
-        public SignOutWordPressComAsync(Context context) {
-            mWeakContext = new WeakReference<Context>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Context context = mWeakContext.get();
-            if (context != null) {
-                mProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out));
-            }
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Context context = mWeakContext.get();
-            if (context != null) {
-                WordPressComSignOut(context);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (mProgressDialog != null) {
-                mProgressDialog.dismiss();
-            }
-        }
-    }
 
     public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
@@ -545,10 +515,12 @@ public class WordPress extends Application {
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
         try {
-            GCMRegistrar.checkDevice(context);
-            GCMRegistrar.unregister(context);
+            String gcmId = BuildConfig.GCM_ID;
+            if (!TextUtils.isEmpty(gcmId)) {
+                InstanceID.getInstance(context).deleteToken(gcmId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+            }
         } catch (Exception e) {
-            AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
+            AppLog.e(T.NOTIFS, "Could not delete GCM Token", e);
         }
 
         // delete wpcom blogs
@@ -563,6 +535,7 @@ public class WordPress extends Application {
 
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
+        StatsWidgetProvider.updateWidgetsOnLogout(context);
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
@@ -593,21 +566,51 @@ public class WordPress extends Application {
     }
 
     /**
+     * Device's default User-Agent string.
+     * E.g.:
+     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     *    Safari/537.36"
+     */
+    private static String mDefaultUserAgent;
+    public static String getDefaultUserAgent() {
+        if (mDefaultUserAgent == null) {
+            try {
+                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
+                } else {
+                    mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
+                }
+            } catch (AndroidRuntimeException e) {
+                // init with the empty string, it's a rare issue
+                mDefaultUserAgent = "";
+            }
+        }
+        return mDefaultUserAgent;
+    }
+
+    /**
      * User-Agent string when making HTTP connections, for both API traffic and WebViews.
-     * Follows the format detailed at http://tools.ietf.org/html/rfc2616#section-14.43,
-     * ie: "AppName/AppVersion (OS Version; Locale; Device)"
-     *    "wp-android/2.6.4 (Android 4.3; en_US; samsung GT-I9505/jfltezh)"
-     *    "wp-android/2.6.3 (Android 4.4.2; en_US; LGE Nexus 5/hammerhead)"
+     * Appends "wp-android/version" to WebView's default User-Agent string for the webservers
+     * to get the full feature list of the browser and serve content accordingly, e.g.:
+     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     *    Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
     private static final String USER_AGENT_APPNAME = "wp-android";
     private static String mUserAgent;
     public static String getUserAgent() {
         if (mUserAgent == null) {
-            mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext())
-                       + " (Android " + Build.VERSION.RELEASE + "; "
-                       + Locale.getDefault().toString() + "; "
-                       + Build.MANUFACTURER + " " + Build.MODEL + "/" + Build.PRODUCT + ")";
+            String defaultUserAgent = getDefaultUserAgent();
+            if (TextUtils.isEmpty(defaultUserAgent)) {
+                mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
+            } else {
+                mUserAgent = defaultUserAgent + " "+ USER_AGENT_APPNAME + "/"
+                        + PackageUtils.getVersionName(getContext());
+            }
         }
         return mUserAgent;
     }
@@ -633,6 +636,18 @@ public class WordPress extends Application {
         }
     }
 
+    private static void attemptToRestoreLastActiveBlog() {
+        if (setCurrentBlogToLastActive() == null) {
+            // fallback to just using the first blog
+            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
+            if (accounts.size() > 0) {
+                int id = Integer.valueOf(accounts.get(0).get("id").toString());
+                setCurrentBlog(id);
+                wpDB.updateLastBlogId(id);
+            }
+        }
+    }
+
     /**
      * Detect when the app goes to the background and come back to the foreground.
      *
@@ -645,9 +660,13 @@ public class WordPress extends Application {
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
-        private Date lastPingDate;
+        private Date mLastPingDate;
         private Date mApplicationOpenedDate;
-        boolean isInBackground = true;
+        boolean mIsInBackground = true;
+        boolean mFirstActivityResumed = true;
+
+        private Class<?> mClass;
+        private int mOrientation = -1;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -661,7 +680,7 @@ public class WordPress extends Application {
         public void onTrimMemory(final int level) {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
-                isInBackground = true;
+                mIsInBackground = true;
                 String lastActivityString = AppPrefs.getLastActivityStr();
                 ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
                 Map<String, Object> properties = new HashMap<String, Object>();
@@ -673,8 +692,9 @@ public class WordPress extends Application {
                 }
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                 AnalyticsTracker.endSession(false);
+                onAppGoesToBackground();
             } else {
-                isInBackground = false;
+                mIsInBackground = false;
             }
 
             boolean evictBitmaps = false;
@@ -696,14 +716,14 @@ public class WordPress extends Application {
         }
 
         private boolean isPushNotificationPingNeeded() {
-            if (lastPingDate == null) {
+            if (mLastPingDate == null) {
                 // first startup
                 return false;
             }
 
             Date now = new Date();
-            if (DateTimeUtils.secondsBetween(now, lastPingDate) >= DEFAULT_TIMEOUT) {
-                lastPingDate = now;
+            if (DateTimeUtils.secondsBetween(now, mLastPingDate) >= DEFAULT_TIMEOUT) {
+                mLastPingDate = now;
                 return true;
             }
             return false;
@@ -716,31 +736,24 @@ public class WordPress extends Application {
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
             if (isPushNotificationPingNeeded() && AccountHelper.isSignedInWordPressDotCom()) {
-                String token = null;
-                try {
-                    // Register for Google Cloud Messaging
-                    GCMRegistrar.checkDevice(mContext);
-                    GCMRegistrar.checkManifest(mContext);
-                    token = GCMRegistrar.getRegistrationId(mContext);
-                    String gcmId = BuildConfig.GCM_ID;
-                    if (gcmId == null || token == null || token.equals("") ) {
-                        AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
-                    } else {
-                        // Send the token to WP.com
-                        NotificationsUtils.registerDeviceForPushNotifications(mContext, token);
-                    }
-                } catch (Exception e) {
-                    AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
-                }
+                // Register for Cloud messaging
+                startService(new Intent(getContext(), GCMRegistrationIntentService.class));
             }
+        }
+
+        public void onAppGoesToBackground() {
+            AppLog.i(T.UTILS, "App goes to background");
+            ConnectionChangeReceiver.setEnabled(WordPress.this, false);
         }
 
         /**
          * This method is called when:
-         * 1. the app starts (but it's not opened by a service, i.e. an activity is resumed)
+         * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        public void onFromBackground() {
+        public void onAppComesFromBackground() {
+            AppLog.i(T.UTILS, "App comes from background");
+            ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata();
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
@@ -754,17 +767,31 @@ public class WordPress extends Application {
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
-
             sDeleteExpiredStats.runIfNotLimited();
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
-            if (isInBackground) {
-                // was in background before
-                onFromBackground();
+            // Need to track orientation to apply preferred language on rotation
+            int orientation = activity.getResources().getConfiguration().orientation;
+            boolean shouldRestart =
+                    mOrientation == -1 || mOrientation != orientation || !mClass.equals(activity.getClass());
+
+            if (shouldRestart) {
+                mOrientation = orientation;
+                mClass = activity.getClass();
             }
-            isInBackground = false;
+            WPActivityUtils.applyLocale(activity, shouldRestart);
+
+            if (mIsInBackground) {
+                // was in background before
+                onAppComesFromBackground();
+            }
+            mIsInBackground = false;
+            if (mFirstActivityResumed) {
+                deferredInit(activity);
+            }
+            mFirstActivityResumed = false;
         }
 
         @Override
@@ -777,7 +804,7 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityPaused(Activity arg0) {
-            lastPingDate = new Date();
+            mLastPingDate = new Date();
         }
 
         @Override

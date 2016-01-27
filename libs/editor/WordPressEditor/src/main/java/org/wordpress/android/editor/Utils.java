@@ -1,16 +1,27 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
+import android.net.Uri;
 
 import org.wordpress.android.util.AppLog;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -42,11 +53,24 @@ public class Utils {
     }
 
     public static String escapeHtml(String html) {
-        html = html.replace("\\", "\\\\");
-        html = html.replace("\"", "\\\"");
-        html = html.replace("'", "\\'");
-        html = html.replace("\r", "\\r");
-        html = html.replace("\n", "\\n");
+        if (html != null) {
+            html = html.replace("\\", "\\\\");
+            html = html.replace("\"", "\\\"");
+            html = html.replace("'", "\\'");
+            html = html.replace("\r", "\\r");
+            html = html.replace("\n", "\\n");
+        }
+        return html;
+    }
+
+    public static String decodeHtml(String html) {
+        if (html != null) {
+            try {
+                html = URLDecoder.decode(html, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                AppLog.e(AppLog.T.EDITOR, "Unsupported encoding exception while decoding HTML.");
+            }
+        }
         return html;
     }
 
@@ -67,6 +91,26 @@ public class Utils {
     }
 
     /**
+     * Splits a delimited string of value pairs (of the form identifier=value) into a set of strings.
+     * @param string the delimited string to split
+     * @param delimiter the string delimiter
+     * @param identifiers the identifiers to match for in the string
+     */
+    public static Set<String> splitValuePairDelimitedString(String string, String delimiter, List<String> identifiers) {
+        String identifierSegment = "";
+        for (String identifier : identifiers) {
+            if (identifierSegment.length() != 0) {
+                identifierSegment += "|";
+            }
+            identifierSegment += identifier;
+        }
+
+        String regex = delimiter + "(?=(" + identifierSegment + ")=)";
+
+        return new HashSet<>(Arrays.asList(string.split(regex)));
+    }
+
+    /**
      * Accepts a set of strings, each string being a key-value pair (<code>id=5</code>,
      * <code>name=content-filed</code>). Returns a map of all the key-value pairs in the set.
      * @param keyValueSet the set of key-value pair strings
@@ -74,9 +118,9 @@ public class Utils {
     public static Map<String, String> buildMapFromKeyValuePairs(Set<String> keyValueSet) {
         Map<String, String> selectionArgs = new HashMap<>();
         for (String pair : keyValueSet) {
-            String[] splitString = pair.split("=");
-            if (splitString.length == 2) {
-                selectionArgs.put(splitString[0], splitString[1]);
+            int delimLoc = pair.indexOf("=");
+            if (delimLoc != -1) {
+                selectionArgs.put(pair.substring(0, delimLoc), pair.substring(delimLoc + 1));
             }
         }
         return selectionArgs;
@@ -110,5 +154,50 @@ public class Utils {
         }
 
         return changeMap;
+    }
+
+    public static Uri downloadExternalMedia(Context context, Uri imageUri) {
+        if(context != null && imageUri != null) {
+            File cacheDir = null;
+
+            if(context.getApplicationContext() != null) {
+                cacheDir = context.getCacheDir();
+            }
+
+            try {
+                InputStream inputStream;
+                if(imageUri.toString().startsWith("content://")) {
+                    inputStream = context.getContentResolver().openInputStream(imageUri);
+                    if(inputStream == null) {
+                        AppLog.e(AppLog.T.UTILS, "openInputStream returned null");
+                        return null;
+                    }
+                } else {
+                    inputStream = (new URL(imageUri.toString())).openStream();
+                }
+
+                String fileName = "thumb-" + System.currentTimeMillis();
+
+                File f = new File(cacheDir, fileName);
+                FileOutputStream output = new FileOutputStream(f);
+                byte[] data = new byte[1024];
+
+                int count;
+                while((count = inputStream.read(data)) != -1) {
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                inputStream.close();
+                return Uri.fromFile(f);
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.UTILS, e);
+            }
+
+            return null;
+        } else {
+            return null;
+        }
     }
 }

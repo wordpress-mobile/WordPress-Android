@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
@@ -23,8 +22,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashSet;
@@ -41,7 +40,8 @@ public class WPNetworkImageView extends ImageView {
         PHOTO,
         VIDEO,
         AVATAR,
-        BLAVATAR
+        BLAVATAR,
+        GONE_UNTIL_AVAILABLE,
     }
 
     private ImageType mImageType = ImageType.NONE;
@@ -72,27 +72,44 @@ public class WPNetworkImageView extends ImageView {
     }
 
     /*
+     * determine whether we can show a thumbnail image for the passed video - currently
+     * we support YouTube, Vimeo & standard images
+     */
+    public static boolean canShowVideoThumbnail(String videoUrl) {
+        return ReaderVideoUtils.isVimeoLink(videoUrl)
+                || ReaderVideoUtils.isYouTubeVideoLink(videoUrl)
+                || MediaUtils.isValidImage(videoUrl);
+    }
+
+    /*
      * retrieves and displays the thumbnail for the passed video
      */
     public void setVideoUrl(final long postId, final String videoUrl) {
         mImageType = ImageType.VIDEO;
 
         if (TextUtils.isEmpty(videoUrl)) {
+            showErrorImage();
+            return;
+        }
+
+        // if this is a YouTube video we can determine the thumbnail url from the passed url,
+        // otherwise check if we've already cached the thumbnail url for this video
+        String thumbnailUrl;
+        if (ReaderVideoUtils.isYouTubeVideoLink(videoUrl)) {
+            thumbnailUrl = ReaderVideoUtils.getYouTubeThumbnailUrl(videoUrl);
+        } else {
+            thumbnailUrl = ReaderThumbnailTable.getThumbnailUrl(videoUrl);
+        }
+        if (!TextUtils.isEmpty(thumbnailUrl)) {
+            setImageUrl(thumbnailUrl, ImageType.VIDEO);
+            return;
+        }
+
+        if (MediaUtils.isValidImage(videoUrl)) {
+            setImageUrl(videoUrl, ImageType.VIDEO);
+        } else if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
+            // vimeo videos require network request to get thumbnail
             showDefaultImage();
-            return;
-        }
-
-        // if we already have a cached thumbnail for this video, show it immediately
-        String cachedThumbnail = ReaderThumbnailTable.getThumbnailUrl(videoUrl);
-        if (!TextUtils.isEmpty(cachedThumbnail)) {
-            setImageUrl(cachedThumbnail, ImageType.VIDEO);
-            return;
-        }
-
-        showDefaultImage();
-
-        // vimeo videos require network request to get thumbnail
-        if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
             ReaderVideoUtils.requestVimeoThumbnail(videoUrl, new ReaderVideoUtils.VideoThumbnailListener() {
                 @Override
                 public void onResponse(boolean successful, String thumbnailUrl) {
@@ -102,6 +119,9 @@ public class WPNetworkImageView extends ImageView {
                     }
                 }
             });
+        } else {
+            AppLog.d(AppLog.T.UTILS, "no video thumbnail for " + videoUrl);
+            showErrorImage();
         }
     }
 
@@ -117,13 +137,18 @@ public class WPNetworkImageView extends ImageView {
 
         int width = getWidth();
         int height = getHeight();
+        ScaleType scaleType = getScaleType();
 
-        boolean isFullyWrapContent = getLayoutParams() != null
-                && getLayoutParams().height == LayoutParams.WRAP_CONTENT
-                && getLayoutParams().width == LayoutParams.WRAP_CONTENT;
+        boolean wrapWidth = false, wrapHeight = false;
+        if (getLayoutParams() != null) {
+            wrapWidth = getLayoutParams().width == LayoutParams.WRAP_CONTENT;
+            wrapHeight = getLayoutParams().height == LayoutParams.WRAP_CONTENT;
+        }
+
         // if the view's bounds aren't known yet, and this is not a wrap-content/wrap-content
         // view, hold off on loading the image.
-        if (width == 0 && height == 0 && !isFullyWrapContent) {
+        boolean isFullyWrapContent = wrapWidth && wrapHeight;
+        if (width == 0 && height == 0 && !isFullyWrapContent && mImageType != ImageType.GONE_UNTIL_AVAILABLE) {
             return;
         }
 
@@ -141,8 +166,12 @@ public class WPNetworkImageView extends ImageView {
         // if there was an old request in this view, check if it needs to be canceled.
         if (mImageContainer != null && mImageContainer.getRequestUrl() != null) {
             if (mImageContainer.getRequestUrl().equals(mUrl)) {
-                // if the request is from the same URL, return.
-                return;
+                // if the request is from the same URL and it's not GONE_UNTIL_AVAILABLE, return.
+                if (mImageType != ImageType.GONE_UNTIL_AVAILABLE) {
+                    // GONE_UNTIL_AVAILABLE image type will make a new request if the previous response wasn't a 404 response,
+                    // Volley usually returns it from cache.
+                    return;
+                }
             } else {
                 // if there is a pre-existing request, cancel it if it's fetching a different URL.
                 mImageContainer.cancelRequest();
@@ -152,18 +181,18 @@ public class WPNetworkImageView extends ImageView {
 
         // skip this URL if a previous request for it returned a 404
         if (mUrlSkipList.contains(mUrl)) {
-            AppLog.d(AppLog.T.READER, "skipping image request " + mUrl);
+            AppLog.d(AppLog.T.UTILS, "skipping image request " + mUrl);
             showErrorImage();
             return;
         }
 
-        // enforce a max size to reduce memory usage
-        Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
-        int maxSize = Math.max(pt.x, pt.y);
+        // Calculate the max image width / height to use while ignoring WRAP_CONTENT dimens.
+        int maxWidth = wrapWidth ? 0 : width;
+        int maxHeight = wrapHeight ? 0 : height;
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        mImageContainer = WordPress.imageLoader.get(mUrl,
+        ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -185,15 +214,17 @@ public class WPNetworkImageView extends ImageView {
                             post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    // don't fade in the image since we know it's cached
-                                    handleResponse(response, true, false);
+                                    handleResponse(response, true);
                                 }
                             });
                         } else {
-                            handleResponse(response, isImmediate, true);
+                            handleResponse(response, isImmediate);
                         }
                     }
-                }, maxSize, maxSize);
+                }, maxWidth, maxHeight, scaleType);
+
+        // update the ImageContainer to be the new bitmap container.
+        mImageContainer = newContainer;
     }
 
     private static boolean canFadeInImageType(ImageType imageType) {
@@ -201,11 +232,13 @@ public class WPNetworkImageView extends ImageView {
             || imageType == ImageType.VIDEO;
     }
 
-    private void handleResponse(ImageLoader.ImageContainer response,
-                                boolean isCached,
-                                boolean allowFadeIn) {
+    private void handleResponse(ImageLoader.ImageContainer response, boolean isCached) {
         if (response.getBitmap() != null) {
             Bitmap bitmap = response.getBitmap();
+
+            if (mImageType == ImageType.GONE_UNTIL_AVAILABLE) {
+                setVisibility(View.VISIBLE);
+            }
 
             // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
@@ -216,7 +249,7 @@ public class WPNetworkImageView extends ImageView {
             setImageBitmap(bitmap);
 
             // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
-            if (!isCached && allowFadeIn && canFadeInImageType(mImageType)) {
+            if (!isCached && canFadeInImageType(mImageType)) {
                 fadeIn();
             }
         } else {
@@ -238,7 +271,7 @@ public class WPNetworkImageView extends ImageView {
             // If the view was bound to an image request, cancel it and clear
             // out the image from the view.
             mImageContainer.cancelRequest();
-            setImageDrawable(null);
+            setImageBitmap(null);
             // also clear out the container so we can reload the image if necessary.
             mImageContainer = null;
         }
@@ -263,7 +296,7 @@ public class WPNetworkImageView extends ImageView {
         mErrorImageResId = resourceId;
     }
 
-    private void showDefaultImage() {
+    public void showDefaultImage() {
         // use default image resource if one was supplied...
         if (mDefaultImageResId != 0) {
             setImageResource(mDefaultImageResId);
@@ -272,6 +305,9 @@ public class WPNetworkImageView extends ImageView {
 
         // ... otherwise use built-in default
         switch (mImageType) {
+            case GONE_UNTIL_AVAILABLE:
+                this.setVisibility(View.GONE);
+                break;
             case NONE:
                 // do nothing
                 break;
@@ -293,6 +329,9 @@ public class WPNetworkImageView extends ImageView {
         }
 
         switch (mImageType) {
+            case GONE_UNTIL_AVAILABLE:
+                this.setVisibility(View.GONE);
+                break;
             case NONE:
                 // do nothing
                 break;
@@ -301,7 +340,7 @@ public class WPNetworkImageView extends ImageView {
                 showDefaultGravatarImage();
                 break;
             case BLAVATAR:
-                setImageResource(R.drawable.blavatar_placeholder);
+                showDefaultBlavatarImage();
                 break;
             default :
                 // grey box for all others
@@ -316,6 +355,10 @@ public class WPNetworkImageView extends ImageView {
                 getContext().getResources(),
                 R.drawable.gravatar_placeholder
         ));
+    }
+
+    public void showDefaultBlavatarImage() {
+        setImageResource(R.drawable.blavatar_placeholder);
     }
 
     // --------------------------------------------------------------------------------------------------

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/stats_insights_header_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:padding="@dimen/margin_extra_large"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_medium"
+            android:gravity="center_vertical|center_horizontal" >
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                style="@style/StatsInsightsLabel"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_insights_most_popular_day"
+                android:textAllCaps="true" />
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                style="@style/StatsInsightsLabel"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/stats_insights_most_popular_hour"
+                android:textAllCaps="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|center_horizontal">
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/stats_most_popular_day"
+                style="@style/StatsInsightsValues"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_default_number_zero"
+                android:textColor="@color/grey_darken_30" />
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/stats_most_popular_hour"
+                style="@style/StatsInsightsValues"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_default_number_zero"
+                android:textColor="@color/grey_darken_30" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_medium"
+            android:gravity="center_vertical|center_horizontal" >
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                style="@style/StatsInsightsLabel"
+                android:id="@+id/stats_most_popular_day_percent"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_insights_most_popular_percent_views"
+                android:textColor="@color/grey_darken_10" />
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                style="@style/StatsInsightsLabel"
+                android:id="@+id/stats_most_popular_hour_percent"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/stats_insights_most_popular_percent_views"
+                android:textColor="@color/grey_darken_10" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

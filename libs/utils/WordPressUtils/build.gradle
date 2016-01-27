@@ -1,9 +1,9 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.5.0'
     }
 }
 
@@ -12,25 +12,29 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    compile 'commons-lang:commons-lang:2.6'
-    compile 'com.mcxiaoke.volley:library:1.0.10'
-    compile 'com.android.support:support-v13:21.0.3'
+    compile('commons-lang:commons-lang:2.6') {
+        exclude group: 'commons-logging'
+    }
+    compile 'com.mcxiaoke.volley:library:1.0.18'
+    compile 'com.android.support:support-v13:23.1.1'
 }
 
 android {
+    useLibrary 'org.apache.http.legacy'
+
     publishNonDefault true
 
-    compileSdkVersion 19
-    buildToolsVersion "21.1.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
-        versionName "1.5.0"
+        versionName "1.8.0"
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 23
     }
 }
 
@@ -85,5 +89,19 @@ uploadArchives {
                 }
             }
         }
+    }
+}
+
+android.libraryVariants.all { variant ->
+
+    task("generate${variant.name}Javadoc", type: Javadoc) {
+        description "Generates Javadoc for $variant.name."
+        source = variant.javaCompile.source
+        classpath = files(variant.javaCompile.classpath.files, android.getBootClasspath())
+
+        options {
+            links "http://docs.oracle.com/javase/7/docs/api/"
+        }
+        exclude '**/R.java'
     }
 }

@@ -14,6 +14,7 @@ public class StatsTable {
 
     private static final String TABLE_NAME = "tbl_stats";
     public static final int CACHE_TTL_MINUTES = 10;
+    private static final int MAX_RESPONSE_LEN = (int) (1024 * 1024 * 1.8); // 1.8 MB Approx
 
     static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_NAME + " ("
@@ -107,6 +108,21 @@ public class StatsTable {
             return;
         }
 
+        /*
+         * Android's CursorWindow has a max size of 2MB per row which can be exceeded
+         * with a very large text column, causing an IllegalStateException when the
+         * row is read - prevent this by limiting the amount of text that's stored in
+         * the text column - note that this situation very rarely occurs
+         * https://github.com/android/platform_frameworks_base/blob/master/core/res/res/values/config.xml#L1268
+         * https://github.com/android/platform_frameworks_base/blob/3bdbf644d61f46b531838558fabbd5b990fc4913/core/java/android/database/CursorWindow.java#L103
+         */
+
+        //Check if the response document from the server is less than 1.8MB. getBytes uses UTF-8 on Android.
+        if (jsonResponse.getBytes().length > MAX_RESPONSE_LEN) {
+            AppLog.w(AppLog.T.STATS, "Stats JSON response length > max allowed length of 1.8MB. Current response will not be stored in cache.");
+            return;
+        }
+
         SQLiteDatabase db = StatsDatabaseHelper.getWritableDb(ctx);
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement("INSERT INTO " + TABLE_NAME + " (blogID, type, timeframe, date, " +
@@ -169,6 +185,28 @@ public class StatsTable {
             db.endTransaction();
         }
     }
+
+    public static boolean deleteStatsForBlog(final Context ctx, final int blogId, final StatsEndpointsEnum sectionToUpdate ) {
+        if (ctx == null) {
+            AppLog.e(AppLog.T.STATS, "Cannot delete stats since the passed context is null. Context is required " +
+                    "to access the DB.");
+            return false;
+        }
+
+        SQLiteDatabase db = StatsDatabaseHelper.getWritableDb(ctx);
+        try {
+            db.beginTransaction();
+            int rowDeleted = db.delete(TABLE_NAME, "blogID=? AND type=?",
+                    new String[] {Integer.toString(blogId), Integer.toString(sectionToUpdate.ordinal())}
+            );
+            db.setTransactionSuccessful();
+            AppLog.d(AppLog.T.STATS, "Stats deleted for localBlogID " + blogId + " and type " + sectionToUpdate.getRestEndpointPath());
+            return rowDeleted > 1;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
 
     public static void purgeAll(Context ctx) {
         if (ctx == null) {

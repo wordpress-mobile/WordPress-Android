@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
@@ -32,6 +33,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
     static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
+    private static final String ARGS_EXPANDED_ROWS = "ARGS_EXPANDED_ROWS";
     private static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST = 1000;
     static final int MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST = 10;
 
@@ -130,6 +132,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                     mDatamodels = (Serializable[]) oldData;
                 }
             }
+            if (savedInstanceState.containsKey(ARGS_EXPANDED_ROWS)) {
+                mGroupIdToExpandedMap = savedInstanceState.getParcelable(ARGS_EXPANDED_ROWS);
+            }
         }
     }
 
@@ -145,6 +150,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                     mDatamodels[i] = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
                 }
             }
+        }
+
+        if (mGroupIdToExpandedMap.size() > 0) {
+            outState.putParcelable(ARGS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mGroupIdToExpandedMap));
         }
 
         outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
@@ -171,13 +180,16 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         if (mDatamodels != null) {
             updateUI();
         } else {
-            //showHideNoResultsUI(true);
-            showEmptyUI();
-            refreshStats();
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                showPlaceholderUI();
+                refreshStats();
+            } else {
+                showErrorUI(new NoConnectionError());
+            }
         }
     }
 
-    private void showEmptyUI() {
+    private void showPlaceholderUI() {
         mTopPagerContainer.setVisibility(View.GONE);
         mEmptyLabel.setVisibility(View.GONE);
         mListContainer.setVisibility(View.GONE);
@@ -405,7 +417,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             return;
         }
 
-        if (!event.mRequestBlogId.equals(StatsUtils.getBlogId(getLocalTableBlogID()))) {
+        if (!isSameBlog(event)) {
             return;
         }
 

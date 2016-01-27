@@ -2,10 +2,12 @@ package org.wordpress.android.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -16,12 +18,14 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -34,14 +38,17 @@ import java.util.Map;
  * It lists what actions that the user can perform and redirects them to the activity,
  * along with the content passed in the intent
  */
-public class ShareIntentReceiverActivity extends ActionBarActivity implements OnItemSelectedListener {
+public class ShareIntentReceiverActivity extends AppCompatActivity implements OnItemSelectedListener {
     public static final String SHARE_TEXT_BLOG_ID_KEY = "wp-settings-share-text-blogid";
     public static final String SHARE_IMAGE_BLOG_ID_KEY = "wp-settings-share-image-blogid";
     public static final String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";
     public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
+
     public static final int ADD_TO_NEW_POST = 0;
     public static final int ADD_TO_MEDIA_LIBRARY = 1;
+    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
+
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
     private CheckBox mAlwaysUseCheckBox;
@@ -151,14 +158,15 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
     }
 
     private String[] getBlogNames() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
+        String[] extraFields = {"homeURL"};
+        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("isHidden = 0", extraFields);
         if (accounts.size() > 0) {
             final String blogNames[] = new String[accounts.size()];
             mAccountIDs = new int[accounts.size()];
             Blog blog;
             for (int i = 0; i < accounts.size(); i++) {
                 Map<String, Object> account = accounts.get(i);
-                blogNames[i] = BlogUtils.getBlogNameOrHostNameFromAccountMap(account);
+                blogNames[i] = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
                 mAccountIDs[i] = (Integer) account.get("id");
                 blog = WordPress.wpDB.instantiateBlogByLocalId(mAccountIDs[i]);
                 if (blog == null) {
@@ -198,6 +206,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
             intent.setAction(action);
             intent.setType(getIntent().getType());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
             intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
@@ -219,8 +228,19 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
         shareIt();
     }
 
-    private void shareIt() {
+    /**
+     * Start the correct activity if permissions are granted
+     *
+     * @return true if the activity has been started, false else.
+     */
+    private boolean shareIt() {
         Intent intent = null;
+        if (!isSharingText()) {
+            // If we're sharing media, we must check we have Storage permission (needed for media upload).
+            if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
+                return false;
+            }
+        }
         if (mActionIndex == ADD_TO_NEW_POST) {
             // new post
             intent = new Intent(this, EditPostActivity.class);
@@ -229,6 +249,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
             intent = new Intent(this, MediaBrowserActivity.class);
         }
         startActivityAndFinish(intent);
+        return true;
     }
 
     private boolean autoShareIfEnabled() {
@@ -245,8 +266,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
         if (blogId != -1) {
             mActionIndex = ADD_TO_NEW_POST;
             if (selectBlog(blogId)) {
-                shareIt();
-                return true;
+                return shareIt();
             } else {
                 // blog is hidden or has been deleted, reset settings
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
@@ -266,8 +286,7 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
         if (blogId != -1 && addTo != -1) {
             mActionIndex = addTo;
             if (selectBlog(blogId)) {
-                shareIt();
-                return true;
+                return shareIt();
             } else {
                 // blog is hidden or has been deleted, reset settings
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
@@ -303,5 +322,23 @@ public class ShareIntentReceiverActivity extends ActionBarActivity implements On
             }
         }
         editor.commit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case SHARE_MEDIA_PERMISSION_REQUEST_CODE:
+                for (int grantResult : grantResults) {
+                    if (grantResult == PackageManager.PERMISSION_DENIED) {
+                        ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
+                        return;
+                    }
+                }
+                shareIt();
+                break;
+            default:
+                break;
+        }
     }
 }

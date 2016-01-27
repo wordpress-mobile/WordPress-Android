@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_control_activated">@color/wp_blue_light</color>
+</resources>

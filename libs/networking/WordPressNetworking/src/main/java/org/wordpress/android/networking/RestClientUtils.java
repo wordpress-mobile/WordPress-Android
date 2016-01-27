@@ -9,6 +9,7 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.RequestFuture;
+import com.wordpress.rest.JsonRestRequest;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 import com.wordpress.rest.RestRequest.ErrorListener;
@@ -73,6 +74,11 @@ public class RestClientUtils {
 
     public RestClient getRestClient() {
         return mRestClient;
+    }
+
+    public void getCategories(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/categories", siteId);
+        get(path, null, null, listener, errorListener);
     }
 
     /**
@@ -192,11 +198,24 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
+    public void getFreeSearchThemes(String siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
+        getSearchThemes("free", siteId, limit, offset, searchTerm, listener, errorListener);
+    }
+
+    public void getSearchThemes(String tier, String siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/themes?tier=" + tier + "&number=%d&offset=%d&search=%s", siteId, limit, offset, searchTerm);
+        get(path, listener, errorListener);
+    }
+
+    public void getFreeThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
+        getThemes("free", siteId, limit, offset, listener, errorListener);
+    }
+
     /**
      * Get all a site's themes
      */
-    public void getThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes?limit=%d&offset=%d", siteId, limit, offset);
+    public void getThemes(String tier, String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/themes/?tier=" + tier + "&number=%d&offset=%d", siteId, limit, offset);
         get(path, listener, errorListener);
     }
 
@@ -204,7 +223,7 @@ public class RestClientUtils {
      * Set a site's theme
      */
     public void setTheme(String siteId, String themeId, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("theme", themeId);
         String path = String.format("sites/%s/themes/mine", siteId);
         post(path, params, null, listener, errorListener);
@@ -216,6 +235,18 @@ public class RestClientUtils {
     public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format("sites/%s/themes/mine", siteId);
         get(path, listener, errorListener);
+    }
+
+    public void getGeneralSettings(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/settings", siteId);
+        Map<String, String> params = new HashMap<String, String>();
+        get(path, params, null, listener, errorListener);
+    }
+
+    public void setGeneralSiteSettings(String siteId, Listener listener, ErrorListener errorListener,
+                                       Map<String, String> params) {
+        String path = String.format("sites/%s/settings", siteId);
+        post(path, params, null, listener, errorListener);
     }
 
     /**
@@ -281,7 +312,8 @@ public class RestClientUtils {
      * Make POST request
      */
     public void post(String path, Listener listener, ErrorListener errorListener) {
-        post(path, null, null, listener, errorListener);
+        Map<String, String> params = null;
+        post(path, params, null, listener, errorListener);
     }
 
     /**
@@ -290,10 +322,26 @@ public class RestClientUtils {
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
         final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params,
-                                                            listener, errorListener);
+                listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
-                                                 REST_BACKOFF_MULT); //Do not retry on failure
+                    REST_BACKOFF_MULT); //Do not retry on failure
+        }
+        request.setRetryPolicy(retryPolicy);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        authCheck.send();
+    }
+
+    /**
+     * Make a JSON POST request
+     */
+    public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
+                     ErrorListener errorListener) {
+        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path), params,
+                listener, errorListener);
+        if (retryPolicy == null) {
+            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
+                    REST_BACKOFF_MULT); //Do not retry on failure
         }
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);

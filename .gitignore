@@ -29,6 +29,7 @@ local.properties
 *.ipr
 *.iws
 .idea/
+captures/
 
 # Gradle
 .gradle/
@@ -46,6 +47,7 @@ WordPress/src/main/res/values/com_crashlytics_export_strings.xml
 # Monkey runner settings
 WordPress/src/androidTest/monkeys/settings.py
 *.pyc
+WordPress/src/androidTest/monkeys/*.png
 
 # Buck
 .buckd

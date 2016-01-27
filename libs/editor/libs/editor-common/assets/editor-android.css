@@ -1,0 +1,24 @@
+@media screen and (min-width: 720px) and (max-width: 1279px) {
+    body {
+        padding-left:90px;
+        padding-right:90px;
+    }
+}
+
+@media screen and (min-width: 1280px){
+    body {
+        padding-left:170px;
+        padding-right:170px;
+    }
+}
+
+/* Used only on older APIs (API<19), which don't support CSS filter effects (specifically, blur). */
+.edit-container .edit-overlay-bg {
+    position: absolute;
+    top: -6px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5);
+}

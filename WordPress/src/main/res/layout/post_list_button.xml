@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingTop="@dimen/margin_large">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginRight="@dimen/margin_extra_small"
+        tools:src="@drawable/noticon_more" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="none"
+        android:maxLines="1"
+        android:textColor="@color/blue_wordpress"
+        android:textSize="@dimen/text_sz_small"
+        tools:text="text" />
+
+</LinearLayout>

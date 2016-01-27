@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/stats_widget_layout"
+    android:minHeight="@dimen/stats_widget_min_height"
+    android:configure="org.wordpress.android.ui.stats.StatsWidgetConfigureActivity"
+    android:resizeMode="horizontal"
+    android:minWidth="@dimen/stats_widget_five_cells"
+    android:minResizeWidth="@dimen/stats_widget_four_cells"
+    android:previewImage="@drawable/stats_widget_preview"
+    android:updatePeriodMillis="3600000">
+</appwidget-provider>

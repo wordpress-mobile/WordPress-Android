@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/margin_medium"
@@ -74,6 +75,8 @@
 
             <org.wordpress.android.widgets.FlowLayout
                 android:id="@+id/sectionCategories"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -81,6 +84,8 @@
                 android:id="@+id/tags"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_sz_large"
                 android:hint="@string/tags_separate_with_commas"
@@ -92,6 +97,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
             android:textSize="@dimen/text_sz_large"
             android:gravity="top"
             android:hint="@string/post_excerpt"
@@ -101,6 +108,8 @@
         <org.wordpress.android.widgets.OpenSansEditText
             android:id="@+id/post_password"
             android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"

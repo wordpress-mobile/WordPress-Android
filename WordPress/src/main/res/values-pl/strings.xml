@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="show">Pokaż</string>
+	<string name="hide">Ukryj</string>
+	<string name="select_all">Wybierz wszystko</string>
 	<string name="select_from_new_picker">Wielokrotny wybór nowym narzędziem</string>
 	<string name="no_media_sources">Nie udało się załadować mediów</string>
 	<string name="loading_blog_videos">Ładowanie filmów</string>
@@ -22,7 +25,6 @@
 	<string name="two_step_sms_sent">Sprawdź swoje SMSy w poszukiwaniu kodu weryfikacyjnego.</string>
 	<string name="two_step_footer_label">Wprowadź kod z aplikacji do uwierzytelniania.</string>
 	<string name="device">Urządzenie</string>
-	<string name="media_details_file_name">Nazwa pliku:</string>
 	<string name="media_picker_title">Wybierz media</string>
 	<string name="add_to_post">Dodaj do wpisu</string>
 	<string name="tab_title_device_images">Zdjęcia z urządzenia</string>
@@ -30,16 +32,11 @@
 	<string name="take_video">Nagraj film</string>
 	<string name="tab_title_site_videos">Filmy z witryny</string>
 	<string name="tab_title_site_images">Zdjęcia z witryny</string>
-	<string name="media_details_dimensions">Wymiary:</string>
-	<string name="media_details_file_url">Adres URL pliku:</string>
-	<string name="media_details_added_on">Dodane:</string>
-	<string name="media_details_uploaded_on">Wgrane:</string>
 	<string name="verify">Weryfikuj</string>
 	<string name="error_publish_no_network">Publikacja nie jest możliwa bez połączenia z Internetem. Treść zapisano jako szkic.</string>
 	<string name="editor_toast_invalid_path">Niewłaściwa ścieżka do pliku</string>
 	<string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
 	<string name="verification_code">Kod weryfikacyjny</string>
-	<string name="media_details_file_type">Typ pliku:</string>
 	<string name="take_photo">Zrób zdjęcie</string>
 	<string name="language">Język</string>
 	<string name="media_fetching">Ładowanie mediów...</string>
@@ -68,7 +65,6 @@
 	<string name="reader_empty_posts_in_blog">Ten blog jest pusty</string>
 	<string name="stats_period">Okres</string>
 	<string name="stats_overall">Ogólnie</string>
-	<string name="reader_page_recommended_blogs">Blogi, które mogą Cię zainteresować</string>
 	<string name="post_uploading">Dodawanie</string>
 	<string name="stats_views">Wyświetleń</string>
 	<string name="stats_visitors">Odwiedzających</string>
@@ -98,7 +94,6 @@
 	<string name="stats_empty_top_authors_desc">Śledź liczby wyświetleń wpisów każdego autora i przyjrzyj się dokładnie, by poznać najpopularniejszą treść danego autora.</string>
 	<string name="stats_followers_months">%1$d miesięcy</string>
 	<string name="stats_followers_total_wpcom">Liczba śledzących z WordPress.com: %1$s</string>
-	<string name="stats_comments_total_comments_followers">Liczba śledzących komentarze: %1$s</string>
 	<string name="stats_comments_by_posts_and_pages">Wg Wpisów i Stron</string>
 	<string name="stats_comments_by_authors">Wg Autorów</string>
 	<string name="stats_followers_total_email">Śledzących przez e-mail: %1$s</string>
@@ -137,21 +132,16 @@
 	<string name="confirm_delete_media">Usunąć zaznaczony element?</string>
 	<string name="cab_selected">Liczba zaznaczonych: %d</string>
 	<string name="media_gallery_date_range">Wyświetlanie mediów z okresu od %1$s do %2$s</string>
-	<string name="reader_empty_followed_blogs_title">Nie obserwujesz jeszcze żadnych blogów</string>
 	<string name="reader_empty_comments">Nie ma jeszcze komentarzy</string>
 	<string name="reader_empty_posts_in_tag">Brak wpisów z tym tagiem</string>
 	<string name="reader_label_view_original">Zobacz oryginalny artykuł</string>
 	<string name="reader_label_like">Lubię to</string>
-	<string name="reader_label_liked_by">Polubiony przez</string>
-	<string name="reader_label_liked_by_you">Polubiony przez ciebie</string>
 	<string name="reader_label_comment_count_single">Jeden komentarz</string>
 	<string name="reader_title_comments">Komentarze</string>
 	<string name="create_new_blog_wpcom">Stwórz blog na WordPress.com</string>
 	<string name="reader_title_photo_viewer">%1$d z %2$d</string>
 	<string name="error_publish_empty_post">Nie można opublikować pustego wpisu</string>
-	<string name="reader_likes_multi_short">Liczba osób: %,d</string>
 	<string name="reader_label_comment_count_multi">Liczba komentarzy: %,d</string>
-	<string name="reader_likes_one_short">1 osobę</string>
 	<string name="reader_label_comments_closed">Możliwość komentowania jest wyłączona</string>
 	<string name="signing_out">Wylogowywanie się...</string>
 	<string name="reader_empty_posts_liked">Nie lubisz jeszcze żadnych wpisów</string>
@@ -167,7 +157,6 @@
 	<string name="error_refresh_unauthorized_posts">Nie masz uprawnień, by oglądać lub edytować wpisy</string>
 	<string name="error_refresh_unauthorized_pages">Nie masz uprawnień, by oglądać lub edytować strony</string>
 	<string name="error_refresh_unauthorized_comments">Nie masz uprawnień, by oglądać lub edytować komentarze</string>
-	<string name="overwrite_local_changes">Dokonałeś zmian we wpisie, który nie został jeszcze przesłany na serwer. Czy mimo to odświeżyć i nadpisać dokonane lokalne zmiany?</string>
 	<string name="stats_no_blog">Nie udało się załadować statystyk dla wskazanego bloga</string>
 	<string name="select_a_blog">Wybierz witrynę WordPressa</string>
 	<string name="sending_content">Wysyłanie %s treści</string>
@@ -199,21 +188,13 @@
 	<string name="preference_send_usage_stats_summary">Automatycznie wysyłaj statystyki użytkowania, by pomóc nam ulepszać WordPressa dla Androida</string>
 	<string name="preference_send_usage_stats">Wysyłaj statystyki</string>
 	<string name="preference_privacy">Prywatność</string>
-	<string name="reader_title_reblog">Rebloguj wpis</string>
-	<string name="reader_hint_reblog_comment">Dodaj swoją opinię (opcjonalne) </string>
-	<string name="reader_label_reblog_to">Rebloguj na</string>
 	<string name="update_verb">Zaktualizuj</string>
 	<string name="schedule_verb">Zaplanuj</string>
-	<string name="reader_title_tag_preview">Podgląd tagu</string>
 	<string name="reader_title_subs">Tagi i blogi</string>
 	<string name="reader_page_followed_tags">Obserwowane tagi</string>
-	<string name="reader_page_popular_tags">Popularne tagi</string>
 	<string name="reader_toast_err_already_follow_blog">Już śledzisz ten blog</string>
-	<string name="reader_page_followed_blogs">Obserwowane blogi</string>
 	<string name="reader_label_tag_preview">Wpisy otagowane %s</string>
 	<string name="reader_empty_recommended_blogs">Brak polecanych blogów</string>
-	<string name="reader_title_blog_preview">Podgląd blogu</string>
-	<string name="reader_hint_add_tag_or_url">Wpisz tag lub adres blogu, który chcesz obserwować</string>
 	<string name="reader_label_followed_blog">Blog śledzony</string>
 	<string name="reader_toast_err_get_blog_info">Nie udało się pobrać informacji o blogu</string>
 	<string name="reader_toast_err_follow_blog">Nie udało się śledzić tego bloga</string>
@@ -226,11 +207,9 @@
 	<string name="forums">Fora</string>
 	<string name="help_center">Centrum pomocy</string>
 	<string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>
-	<string name="reader_label_reblog_empty">Nie masz żadnych widocznych blogów na WordPress.com, na których można opublikować ten wpis</string>
 	<string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
 	<string name="out_of_memory">Brak pamięci</string>
 	<string name="theme_auth_error_message">Upewnij się, że masz uprawnienia do zmiany motywu</string>
-	<string name="theme_no_search_result_found">Niczego nie znaleziono</string>
 	<string name="comments_empty_list">Brak komentarzy</string>
 	<string name="mnu_comment_unspam">To nie jest spam</string>
 	<string name="adding_cat_failed">Nie udało się dodać kategorii</string>
@@ -299,7 +278,6 @@
 	<string name="blog_name_invalid">Nieprawidłowy adres strony</string>
 	<string name="blog_name_must_include_letters">Adres strony musi zawierać przynajmniej jedną literę (a-z)</string>
 	<string name="email_reserved">Ten adres email został już użyty. Sprawdź czy nie masz w skrzynce odbiorczej maila aktywacyjnego. Jeśli go nie aktywujesz możesz spróbować znów za klika dni.</string>
-	<string name="reader_toast_err_reblog_requires_blog">Wybierz blog</string>
 	<string name="required_field">Wymagane pole</string>
 	<string name="email_hint">Adres email</string>
 	<string name="username_email">Nazwa użytkownika lub email</string>
@@ -315,7 +293,6 @@
 	<string name="wordpress_blog">WordPress blog</string>
 	<string name="error_blog_hidden">Ten blog jest ukryty i nie mógł zostać wczytany. Włącz go ponownie w ustawieniach i spróbuj ponownie.</string>
 	<string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
-	<string name="stats_view_tags_and_categories">Tagi i kategorie</string>
 	<string name="view_in_browser">Zobacz w przeglądarce</string>
 	<string name="add_new_category">Dodaj nową kategorię</string>
 	<string name="category_name">Nazwa kategorii</string>
@@ -386,9 +363,7 @@
 	<string name="dlg_confirm_trash_comments">Wyrzucić do kosza?</string>
 	<string name="dlg_unapproving_comments">Cofanie zatwierdzenia</string>
 	<string name="preview_page">Podejrzyj stronę</string>
-	<string name="page_deleted">Strona została usunięta</string>
 	<string name="preview_post">Podejrzyj wpis</string>
-	<string name="post_deleted">Wpis został usunięty</string>
 	<string name="comment_added">Komentarz został dodany</string>
 	<string name="post_not_published">Wpis nie jest opublikowany</string>
 	<string name="location_not_found">Nieznana lokalizacja</string>
@@ -426,7 +401,6 @@
 	<string name="pick_video">Wybierz wideo</string>
 	<string name="validating_user_data">Sprawdzanie danych użytkownika</string>
 	<string name="validating_site_data">Sprawdzanie danych strony</string>
-	<string name="reader_empty_followed_blogs_description">Nie martw się - kliknij ikonę tagu, by zacząć przeglądać blogi!</string>
 	<string name="password_invalid">Potrzebujesz bardziej bezpiecznego hasła. Upewnij się, że użyłeś 7 lub więcej znaków, wielkich i małych liter, liczb albo znaków specjalnych.</string>
 	<string name="nux_tap_continue">Kontynuuj</string>
 	<string name="nux_welcome_create_account">Utwórz konto</string>
@@ -441,13 +415,10 @@
 	<string name="reader_untitled_post">(Brak tytułu)</string>
 	<string name="reader_timespan_now">teraz</string>
 	<string name="jetpack_message">Wtyczka Jetpack jest wymagana, aby uzyskać dostęp do statystyk. Zainstalować wtyczkę?</string>
-	<string name="reader_menu_tags">Tagi</string>
 	<string name="reader_share_subject">Udostępnione przez %s</string>
 	<string name="reader_btn_share">Udostępnij</string>
 	<string name="reader_btn_follow">Śledź</string>
 	<string name="reader_btn_unfollow">Śledzone</string>
-	<string name="reader_hint_comment_on_post">Dodaj komentarz</string>
-	<string name="reader_hint_comment_on_comment">Odpowiedz na komentarz</string>
 	<string name="reader_label_removed_tag">Usunięto %s</string>
 	<string name="reader_label_added_tag">Dodano %s</string>
 	<string name="username_invalid">Nieprawidłowa nazwa użytkownika</string>
@@ -456,7 +427,6 @@
 	<string name="nux_tutorial_get_started_title">Rozpocznij!</string>
 	<string name="reader_toast_err_view_image">Nie można zobaczyć obrazu</string>
 	<string name="reader_toast_err_url_intent">Nie można otworzyć %s</string>
-	<string name="reader_empty_popular_tags">Brak popularnych tagów</string>
 	<string name="reader_empty_followed_tags">Nie śledzisz żadnych tagów</string>
 	<string name="limit_reached">Wykorzystano limit. Spróbuj ponownie za 1 minutę. Podjęcie ponownej próby przed upływem podanego czasu spowoduj jedynie wydłużenie czasu oczekiwania. Jeśli uważasz, że jest to błąd, skontaktuj się z nami.</string>
 	<string name="reader_likes_one">Jedna osoba lubi to</string>
@@ -464,9 +434,6 @@
 	<string name="reader_toast_err_tag_exists">Śledzisz już ten tag</string>
 	<string name="reader_toast_err_tag_invalid">To nie jest poprawny tag</string>
 	<string name="reader_toast_err_share_intent">Nie udało się udostępnić</string>
-	<string name="reader_toast_reblog_success">Wpis został przedrukowany</string>
-	<string name="reader_toast_err_reblog_failed">Nie udało się przedrukować wpisu</string>
-	<string name="reader_toast_err_already_reblogged">Już przedrukowałeś ten wpis</string>
 	<string name="create_account_wpcom">Stwórz konto na WordPress.com</string>
 	<string name="themes">Motywy</string>
 	<string name="all">Wszystkie</string>
@@ -488,9 +455,9 @@
 	<string name="themes_features_label">Funkcje</string>
 	<string name="share_action">Udostępnij</string>
 	<string name="stats">Statystyki</string>
-	<string name="view_stats_full_site">Zobacz całą witrynę</string>
 	<string name="stats_view_visitors_and_views">Odwiedzający i wyświetlenia</string>
 	<string name="stats_view_clicks">Kliknięcia</string>
+	<string name="stats_view_tags_and_categories">Tagi i kategorie</string>
 	<string name="stats_view_comments">Komentarze</string>
 	<string name="stats_timeframe_today">Dzisiaj</string>
 	<string name="stats_timeframe_yesterday">Wczoraj</string>
@@ -533,13 +500,6 @@
 	<string name="passcode_turn_on">Włącz blokadę PIN</string>
 	<string name="upload">Załaduj</string>
 	<string name="notifications">Powiadomienia</string>
-	<string name="manage_notifications">Zarzadzaj powiadomieniami</string>
-	<string name="enable_notifications">Włącz powiadomienia</string>
-	<string name="types">Typy</string>
-	<string name="options">Opcje</string>
-	<string name="notifications_turn_off">Wyłącz</string>
-	<string name="notifications_turn_off_1hr">Wyłącz na godzinę</string>
-	<string name="notifications_turn_off_8hr">Wyłącz na 8 godzin</string>
 	<string name="note_reply_successful">Odpowiedź opublikowana</string>
 	<string name="new_notifications">%d nowych powiadomień</string>
 	<string name="more_notifications">i %d więcej.</string>
@@ -588,6 +548,7 @@
 	<string name="post_password">Hasło (opcjonalnie)</string>
 	<string name="immediately">Natychmiast</string>
 	<string name="quickpress_add_alert_title">Wpisz nazwę skrótu</string>
+	<string name="today">Dzisiaj</string>
 	<string name="settings">Ustawienia</string>
 	<string name="share_url">Udostępnij URL</string>
 	<string name="quickpress_window_title">Wybierz blog dla skrótu QuickPress</string>

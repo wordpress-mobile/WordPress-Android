@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -23,13 +21,14 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * users to display
  */
 public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
-    private ReaderUserList mUsers = new ReaderUserList();
+    private final ReaderUserList mUsers = new ReaderUserList();
     private DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;
 
     public ReaderUserAdapter(Context context) {
         super();
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+        setHasStableIds(true);
     }
 
     public void setDataLoadedListener(DataLoadedListener listener) {
@@ -63,7 +62,9 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
                 @Override
                 public void onClick(View v) {
                     if (user.hasBlogId()) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), user.blogId);
+                        ReaderActivityLauncher.showReaderBlogPreview(
+                                v.getContext(),
+                                user.blogId);
                     }
                 }
             });
@@ -72,7 +73,13 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
             holder.itemView.setOnClickListener(null);
         }
 
-        holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
+        if (user.hasAvatarUrl()) {
+            holder.imgAvatar.setImageUrl(
+                    GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz),
+                    WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            holder.imgAvatar.showDefaultGravatarImage();
+        }
     }
 
     @Override
@@ -93,45 +100,14 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
         }
     }
 
-    private void clear() {
-        if (mUsers.size() > 0) {
-            mUsers.clear();
-            notifyDataSetChanged();
-        }
-    }
-
     public void setUsers(final ReaderUserList users) {
-        if (users == null || users.size() == 0) {
-            clear();
-            return;
+        mUsers.clear();
+        if (users != null && users.size() > 0) {
+            mUsers.addAll(users);
         }
-
-        mUsers = (ReaderUserList) users.clone();
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                // flag followed users, set avatar urls for use with photon, and pre-load
-                // user domains so we can avoid having to do this for each user when getView()
-                // is called
-                ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
-                for (ReaderUser user: mUsers) {
-                    user.isFollowed = user.hasUrl() && followedBlogUrls.contains(user.getUrl());
-                    user.setAvatarUrl(GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz));
-                    user.getUrlDomain();
-                }
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyDataSetChanged();
-                        if (mDataLoadedListener != null) {
-                            mDataLoadedListener.onDataLoaded(isEmpty());
-                        }
-                    }
-                });
-            }
-        }.start();
+        notifyDataSetChanged();
+        if (mDataLoadedListener != null) {
+            mDataLoadedListener.onDataLoaded(isEmpty());
+        }
     }
 }

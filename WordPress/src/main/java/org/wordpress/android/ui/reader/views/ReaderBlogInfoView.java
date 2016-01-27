@@ -1,174 +1,194 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
-import android.os.Handler;
-import android.view.LayoutInflater;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
-/*
- * header view showing blog name, description, and blavatar (if it exists) for a
- * blog - designed for use in ReaderPostListFragment when previewing posts in a
- * blog (blog preview) but can be reused elsewhere - call loadBlogInfo() to show
- * the info for a specific blog
+/**
+ * topmost view in post adapter when showing blog preview - displays description, follower
+ * count, and follow button
  */
-public class ReaderBlogInfoView extends FrameLayout {
+public class ReaderBlogInfoView extends LinearLayout {
 
-    public interface BlogInfoListener {
+    public interface OnBlogInfoLoadedListener {
         void onBlogInfoLoaded(ReaderBlog blogInfo);
-        void onBlogInfoFailed();
     }
 
-    private BlogInfoListener mBlogInfoListener;
+    private long mBlogId;
+    private long mFeedId;
+    private ReaderFollowButton mFollowButton;
     private ReaderBlog mBlogInfo;
+    private OnBlogInfoLoadedListener mBlogInfoListener;
 
-    public ReaderBlogInfoView(Context context){
+    public ReaderBlogInfoView(Context context) {
         super(context);
-
-        View view = LayoutInflater.from(context).inflate(R.layout.reader_blog_info_view, this, true);
-        view.setId(R.id.layout_blog_info_view);
+        initView(context);
     }
 
-    /*
-     * shows the blogInfo from local db (if available) then request latest blogInfo from server
-     */
-    public void loadBlogInfo(long blogId, BlogInfoListener blogInfoListener) {
-        mBlogInfoListener = blogInfoListener;
-        showBlogInfo(ReaderBlogTable.getBlogInfo(blogId), false);
-        requestBlogInfo(blogId);
-    }
-    public void loadFeedInfo(long feedId, BlogInfoListener blogInfoListener) {
-        mBlogInfoListener = blogInfoListener;
-        showBlogInfo(ReaderBlogTable.getFeedInfo(feedId), false);
-        requestFeedInfo(feedId);
+    public ReaderBlogInfoView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initView(context);
     }
 
-    /*
-     * show blog header with info from passed blog filled in
-     */
-    private void showBlogInfo(final ReaderBlog blogInfo, boolean animateIn) {
-        // this is the layout containing the blog info views
-        final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_inner);
+    public ReaderBlogInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initView(context);
+    }
 
-        if (blogInfo == null) {
-            layoutInner.setVisibility(View.INVISIBLE);
+    private void initView(Context context) {
+        View view = inflate(context, R.layout.reader_blog_info_view, this);
+        mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
+    }
+
+    public void setOnBlogInfoLoadedListener(OnBlogInfoLoadedListener listener) {
+        mBlogInfoListener = listener;
+    }
+
+    public void loadBlogInfo(long blogId, long feedId) {
+        mBlogId = blogId;
+        mFeedId = feedId;
+
+        // first get info from local db
+        final ReaderBlog localBlogInfo;
+        if (mBlogId != 0) {
+            localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
+        } else if (mFeedId != 0) {
+            localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
+        } else {
+            ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog_info);
+            return;
+        }
+        if (localBlogInfo != null) {
+            showBlogInfo(localBlogInfo);
+        }
+
+        // then get from server if doesn't exist locally or is time to update it
+        if (localBlogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(localBlogInfo)) {
+            ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
+                @Override
+                public void onResult(ReaderBlog serverBlogInfo) {
+                    showBlogInfo(serverBlogInfo);
+                }
+            };
+            if (mFeedId != 0) {
+                ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
+            } else {
+                ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
+            }
+        }
+    }
+
+    private void showBlogInfo(ReaderBlog blogInfo) {
+        // do nothing if unchanged
+        if (blogInfo == null || blogInfo.isSameAs(mBlogInfo)) {
             return;
         }
 
-        // do nothing if blogInfo hasn't changed
-        if (mBlogInfo != null && mBlogInfo.isSameAs(blogInfo)) {
-            return;
-        }
-
-        boolean wasEmpty = (mBlogInfo == null);
         mBlogInfo = blogInfo;
 
-        final TextView txtBlogName = (TextView) layoutInner.findViewById(R.id.text_blog_name);
-        final TextView txtDescription = (TextView) layoutInner.findViewById(R.id.text_blog_description);
-        final WPNetworkImageView imgBlavatar = (WPNetworkImageView) layoutInner.findViewById(R.id.image_blavatar);
-
-        if (blogInfo.hasUrl()) {
-            // clicking the blog name shows the blog in the browser
-            txtBlogName.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
-                }
-            });
-        }
+        ViewGroup layoutInfo = (ViewGroup) findViewById(R.id.layout_blog_info);
+        ViewGroup layoutDescription = (ViewGroup) layoutInfo.findViewById(R.id.layout_blog_description);
+        TextView txtBlogName = (TextView) layoutInfo.findViewById(R.id.text_blog_name);
+        TextView txtDomain = (TextView) layoutInfo.findViewById(R.id.text_domain);
+        TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
+        TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
 
         if (blogInfo.hasName()) {
             txtBlogName.setText(blogInfo.getName());
-        } else if (blogInfo.hasUrl()) {
-            txtBlogName.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
         } else {
-            txtBlogName.setText(getContext().getString(R.string.reader_untitled_post));
+            txtBlogName.setText(R.string.reader_untitled_post);
+        }
+
+        if (blogInfo.hasUrl()) {
+            txtDomain.setText(UrlUtils.getHost(blogInfo.getUrl()));
+            txtDomain.setVisibility(View.VISIBLE);
+        } else {
+            txtDomain.setVisibility(View.GONE);
         }
 
         if (blogInfo.hasDescription()) {
             txtDescription.setText(blogInfo.getDescription());
-            txtDescription.setVisibility(View.VISIBLE);
-        } else if (blogInfo.hasUrl()) {
-            txtDescription.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
-            txtDescription.setVisibility(View.VISIBLE);
+            layoutDescription.setVisibility(View.VISIBLE);
         } else {
-            txtDescription.setVisibility(View.GONE);
+            layoutDescription.setVisibility(View.GONE);
         }
 
-        int imageSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-        String imageUrl = "";
-        if (blogInfo.hasImageUrl()) {
-            imageUrl = GravatarUtils.fixGravatarUrl(blogInfo.getImageUrl(), imageSz);
+        txtFollowCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
+
+        if (ReaderUtils.isLoggedOutReader()) {
+            mFollowButton.setVisibility(View.GONE);
         } else {
-            if (blogInfo.getUrl() != null) {
-                imageUrl = GravatarUtils.blavatarFromUrl(blogInfo.getUrl(), imageSz);
-            }
-        }
-        imgBlavatar.setImageUrl(imageUrl, ImageType.BLAVATAR);
-
-        // layout is invisible at design time
-        if (layoutInner.getVisibility() != View.VISIBLE) {
-            if (animateIn) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (layoutInner.getVisibility() != View.VISIBLE) {
-                            ReaderAnim.fadeIn(layoutInner, ReaderAnim.Duration.SHORT);
-                        }
-                    }
-                }, 500);
-            } else {
-                layoutInner.setVisibility(View.VISIBLE);
-            }
+            mFollowButton.setVisibility(View.VISIBLE);
+            mFollowButton.setIsFollowed(blogInfo.isFollowing);
+            mFollowButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFollowStatus();
+                }
+            });
         }
 
-        // fire listener the first time info is loaded
-        if (wasEmpty && mBlogInfoListener != null) {
+        if (layoutInfo.getVisibility() != View.VISIBLE) {
+            layoutInfo.setVisibility(View.VISIBLE);
+        }
+
+        if (mBlogInfoListener != null) {
             mBlogInfoListener.onBlogInfoLoaded(blogInfo);
         }
     }
 
-    public boolean isEmpty() {
-        return mBlogInfo == null;
-    }
-
-    private void requestBlogInfo(long blogId) {
-        ReaderBlogActions.updateBlogInfo(blogId, null, mInfoListener);
-    }
-
-    private void requestFeedInfo(long feedId) {
-        ReaderBlogActions.updateFeedInfo(feedId, null, mInfoListener);
-    }
-
-    private final ReaderActions.UpdateBlogInfoListener mInfoListener = new ReaderActions.UpdateBlogInfoListener() {
-        @Override
-        public void onResult(ReaderBlog blogInfo) {
-            if (blogInfo != null) {
-                // animate it in if it wasn't already loaded from local db
-                boolean animateIn = isEmpty();
-                showBlogInfo(blogInfo, animateIn);
-            } else if (isEmpty() && mBlogInfoListener != null) {
-                // only fire the failed event if blogInfo is empty - we don't want to fire
-                // the failed event if the blogInfo successfully loaded from the local db
-                // already, since ReaderPostListFragment interprets failure here to mean
-                // the blog is invalid
-                mBlogInfoListener.onBlogInfoFailed();
-            }
+    private void toggleFollowStatus() {
+        if (!NetworkUtils.checkConnection(getContext())) {
+            return;
         }
-    };
 
+        final boolean isAskingToFollow;
+        if (mFeedId != 0) {
+            isAskingToFollow = !ReaderBlogTable.isFollowedFeed(mFeedId);
+        } else {
+            isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mBlogId);
+        }
+
+        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (getContext() == null) {
+                    return;
+                }
+                mFollowButton.setEnabled(true);
+                if (!succeeded) {
+                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    ToastUtils.showToast(getContext(), errResId);
+                    mFollowButton.setIsFollowed(!isAskingToFollow);
+                }
+            }
+        };
+
+        // disable follow button until API call returns
+        mFollowButton.setEnabled(false);
+
+        boolean result;
+        if (mFeedId != 0) {
+            result = ReaderBlogActions.followFeedById(mFeedId, isAskingToFollow, listener);
+        } else {
+            result = ReaderBlogActions.followBlogById(mBlogId, isAskingToFollow, listener);
+        }
+
+        if (result) {
+            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+        }
+    }
 }

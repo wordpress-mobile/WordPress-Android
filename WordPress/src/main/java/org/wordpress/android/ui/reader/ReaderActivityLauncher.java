@@ -8,20 +8,25 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReaderActivityLauncher {
 
@@ -34,22 +39,6 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
-
-        if (context instanceof Activity) {
-            // For ActionBarActivity subclasses, we need to pull the title from the Toolbar
-            CharSequence title = null;
-            if (context instanceof ActionBarActivity && ((ActionBarActivity) context).getSupportActionBar() != null) {
-                title = ((ActionBarActivity) context).getSupportActionBar().getTitle();
-            }
-
-            if (title == null) {
-                // Not an ActionBarActivity, or getSupportActionBar().getTitle() returned null.
-                // Try to read the title from the Activity
-                title = ((Activity)context).getTitle();
-            }
-            intent.putExtra(ReaderConstants.ARG_TITLE, title);
-        }
-
         ActivityLauncher.slideInFromRight(context, intent);
     }
 
@@ -69,7 +58,6 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getCapitalizedTagName());
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
@@ -84,7 +72,6 @@ public class ReaderActivityLauncher {
                                                   long postId) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
-        intent.putExtra(ReaderConstants.ARG_TITLE, context.getString(R.string.reader_title_blog_preview));
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
 
@@ -98,7 +85,8 @@ public class ReaderActivityLauncher {
         if (blogId == 0) {
             return;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
+
+        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, blogId);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
@@ -120,7 +108,8 @@ public class ReaderActivityLauncher {
         if (feedId == 0) {
             return;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEW);
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
@@ -134,7 +123,9 @@ public class ReaderActivityLauncher {
         if (tag == null) {
             return;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEW);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("tag", tag.getTagName());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
@@ -185,9 +176,9 @@ public class ReaderActivityLauncher {
     /*
      * show followed tags & blogs
      */
-    public static void showReaderSubsForResult(Activity activity) {
-        Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        ActivityLauncher.slideInFromRightForResult(activity, intent, RequestCodes.READER_SUBS);
+    public static void showReaderSubs(Context context) {
+        Intent intent = new Intent(context, ReaderSubsActivity.class);
+        context.startActivity(intent);
     }
 
     /*
@@ -227,30 +218,11 @@ public class ReaderActivityLauncher {
             context.startActivity(intent);
         }
     }
-
-    /*
-     * show the reblog activity for the passed post
-     */
-    public static void showReaderReblogForResult(Activity activity, ReaderPost post, View source) {
-        if (activity == null || post == null) {
-            return;
-        }
-        Intent intent = new Intent(activity, ReaderReblogActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
-        ActivityOptionsCompat options;
-        if (source != null) {
-            int startX = source.getLeft();
-            int startY = source.getTop();
-            options = ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, 0, 0);
-        } else {
-            options = ActivityOptionsCompat.makeCustomAnimation(activity, R.anim.reader_flyin, 0);
-        }
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.READER_REBLOG, options.toBundle());
-
+    public static void showReaderPhotoViewer(Context context, String imageUrl, boolean isPrivate) {
+        showReaderPhotoViewer(context, imageUrl, null, null, isPrivate, 0, 0);
     }
 
-    public static enum OpenUrlType { INTERNAL, EXTERNAL }
+    public enum OpenUrlType { INTERNAL, EXTERNAL }
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
@@ -260,17 +232,20 @@ public class ReaderActivityLauncher {
         }
 
         if (openUrlType == OpenUrlType.INTERNAL) {
-            // Open the URL by using the internal browser without authenticating to wpcom.
-            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1921
-            // If you pass a wpcom URL that needs authentication to be viewed, it will work since
-            // the reader authenticates to wpcom at startup by calling ReaderAuthActions.updateCookies
-            WPWebViewActivity.openURL(context, url);
+            // That won't work on wpcom sites with custom urls
+            if (WPUrlUtils.isWordPressCom(url)) {
+                WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
+                        AccountHelper.getDefaultAccount().getUserName());
+            } else {
+                WPWebViewActivity.openURL(context, url);
+            }
         } else {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 context.startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                ToastUtils.showToast(context, context.getString(R.string.reader_toast_err_url_intent, url), ToastUtils.Duration.LONG);
+                String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
+                ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
             }
         }
     }

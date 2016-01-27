@@ -4,7 +4,7 @@ package org.wordpress.android.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * Activity to view the WordPress blog in a WebView
  */
-public class ViewSiteActivity extends ActionBarActivity {
+public class ViewSiteActivity extends AppCompatActivity {
     /**
      * Blog for which this activity is loading content.
      */
@@ -67,6 +67,8 @@ public class ViewSiteActivity extends ActionBarActivity {
 
         setTitle(StringUtils.unescapeHTML(mBlog.getBlogName()));
         loadSiteURL();
+
+        ActivityId.trackLastActivity(ActivityId.VIEW_SITE);
     }
 
     @Override

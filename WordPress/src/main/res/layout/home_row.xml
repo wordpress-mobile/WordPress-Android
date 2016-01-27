@@ -12,7 +12,7 @@
         android:layout_marginTop="12dip"
         android:gravity="center|center"
         android:scaleType="centerCrop"
-        android:src="@drawable/app_icon" />
+        android:src="@mipmap/app_icon" />
 
     <LinearLayout
         android:layout_width="fill_parent"

@@ -14,6 +14,8 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UrlUtils {
     public static String urlEncode(final String text) {
@@ -33,18 +35,16 @@ public class UrlUtils {
     }
 
     /**
-     *
-     * @param urlString url to get domain from
-     * @return domain of uri if available. Empty string otherwise.
+     * @param urlString url to get host from
+     * @return host of uri if available. Empty string otherwise.
      */
-    public static String getDomainFromUrl(final String urlString) {
+    public static String getHost(final String urlString) {
         if (urlString != null) {
             Uri uri = Uri.parse(urlString);
             if (uri.getHost() != null) {
                 return uri.getHost();
             }
         }
-
         return "";
     }
 
@@ -137,6 +137,25 @@ public class UrlUtils {
         }
     }
 
+
+    /**
+     * returns the passed url without the scheme
+     */
+    public static String removeScheme(final String urlString) {
+        if (urlString == null) {
+            return null;
+        }
+
+        int doubleslash = urlString.indexOf("//");
+        if (doubleslash == -1) {
+            doubleslash = 0;
+        } else {
+            doubleslash += 2;
+        }
+
+        return urlString.substring(doubleslash, urlString.length());
+    }
+
     /**
      * returns the passed url without the query parameters
      */
@@ -144,11 +163,7 @@ public class UrlUtils {
         if (urlString == null) {
             return null;
         }
-        int pos = urlString.indexOf("?");
-        if (pos == -1) {
-            return urlString;
-        }
-        return urlString.substring(0, pos);
+        return Uri.parse(urlString).buildUpon().clearQuery().toString();
     }
 
     /**
@@ -156,6 +171,17 @@ public class UrlUtils {
      */
     public static boolean isHttps(final String urlString) {
         return (urlString != null && urlString.startsWith("https:"));
+    }
+
+    public static boolean isHttps(URL url) {
+        return url != null && "https".equals(url.getProtocol());
+    }
+
+    public static boolean isHttps(URI uri) {
+        if (uri == null) return false;
+
+        String protocol = uri.getScheme();
+        return protocol != null && protocol.equals("https");
     }
 
     /**
@@ -213,5 +239,19 @@ public class UrlUtils {
 
         return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
                 cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
+    }
+
+    public static String appendUrlParameter(String url, String paramName, String paramValue) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(paramName, paramValue);
+        return appendUrlParameters(url, parameters);
+    }
+
+    public static String appendUrlParameters(String url, Map<String, String> parameters) {
+        Uri.Builder uriBuilder = Uri.parse(url).buildUpon();
+        for (Map.Entry<String, String> parameter : parameters.entrySet()) {
+            uriBuilder.appendQueryParameter(parameter.getKey(), parameter.getValue());
+        }
+        return uriBuilder.build().toString();
     }
 }

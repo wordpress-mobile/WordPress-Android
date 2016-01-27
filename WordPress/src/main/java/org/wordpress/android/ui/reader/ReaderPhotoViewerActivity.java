@@ -4,9 +4,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -16,21 +17,21 @@ import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-
-import javax.annotation.Nonnull;
+import org.wordpress.android.widgets.WPViewPager;
 
 /**
  * Full-screen photo viewer - uses a ViewPager to enable scrolling between images in a blog
  * post, but also supports viewing a single image
  */
-public class ReaderPhotoViewerActivity extends ActionBarActivity
+public class ReaderPhotoViewerActivity extends AppCompatActivity
         implements PhotoViewListener {
 
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private String mContent;
-    private ViewPager mViewPager;
+    private WPViewPager mViewPager;
     private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
     private boolean mIsTitleVisible;
@@ -40,7 +41,7 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_photo_viewer);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mTxtTitle = (TextView) findViewById(R.id.text_title);
 
         // title is hidden until we know we can show it
@@ -98,7 +99,7 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
     }
 
     @Override
-    public void onSaveInstanceState(@Nonnull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (hasAdapter()) {
             String imageUrl = getAdapter().getImageUrl(mViewPager.getCurrentItem());
             outState.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
@@ -123,7 +124,8 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
             return;
         }
 
-        final String title = getString(R.string.reader_title_photo_viewer, position + 1, getImageCount());
+        String titlePhotoViewer = getString(R.string.reader_title_photo_viewer);
+        String title = String.format(titlePhotoViewer, position + 1, getImageCount());
         if (title.equals(mTxtTitle.getText())) {
             return;
         }
@@ -145,9 +147,9 @@ public class ReaderPhotoViewerActivity extends ActionBarActivity
 
         mTxtTitle.clearAnimation();
         if (mIsTitleVisible) {
-            ReaderAnim.fadeOut(mTxtTitle, ReaderAnim.Duration.SHORT);
+            AniUtils.fadeOut(mTxtTitle, AniUtils.Duration.SHORT);
         } else {
-            ReaderAnim.fadeIn(mTxtTitle, ReaderAnim.Duration.SHORT);
+            AniUtils.fadeIn(mTxtTitle, AniUtils.Duration.SHORT);
         }
         mIsTitleVisible = !mIsTitleVisible;
     }

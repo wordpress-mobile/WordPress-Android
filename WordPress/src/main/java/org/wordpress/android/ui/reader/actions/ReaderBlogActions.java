@@ -19,6 +19,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
@@ -50,7 +51,9 @@ public class ReaderBlogActions {
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         if (isAskingToFollow) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId);
+        } else {
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -166,7 +169,9 @@ public class ReaderBlogActions {
         }
 
         if (isAskingToFollow) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -307,9 +312,9 @@ public class ReaderBlogActions {
         };
 
         if (hasBlogId) {
-            WordPress.getRestClientUtilsV1_1().get("sites/" + blogId, listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("read/sites/" + blogId, listener, errorListener);
         } else {
-            WordPress.getRestClientUtilsV1_1().get("sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener, errorListener);
         }
     }
     public static void updateFeedInfo(long feedId, String feedUrl, final UpdateBlogInfoListener infoListener) {
@@ -356,27 +361,36 @@ public class ReaderBlogActions {
      * tests whether the passed url can be reached - does NOT use authentication, and does not
      * account for 404 replacement pages used by ISPs such as Charter
      */
-    public static void checkBlogUrlReachable(final String blogUrl, final ActionListener actionListener) {
-        // ActionListener is required
-        if (actionListener == null) {
-            return;
-        }
-        if (TextUtils.isEmpty(blogUrl)) {
-            actionListener.onActionResult(false);
-            return;
-        }
+    public static void checkUrlReachable(final String blogUrl,
+                                         final ReaderActions.OnRequestListener requestListener) {
+        // listener is required
+        if (requestListener == null) return;
 
         Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                actionListener.onActionResult(true);
+                requestListener.onSuccess();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                actionListener.onActionResult(false);
+                int statusCode;
+                // check specifically for auth failure class rather than relying on status code
+                // since a redirect to an unauthorized url may return a 301 rather than a 401
+                if (volleyError instanceof com.android.volley.AuthFailureError) {
+                    statusCode = 401;
+                } else {
+                    statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                }
+                // Volley treats a 301 redirect as a failure here, we should treat it as
+                // success since it means the blog url is reachable
+                if (statusCode == 301) {
+                    requestListener.onSuccess();
+                } else {
+                    requestListener.onFailure(statusCode);
+                }
             }
         };
 
@@ -401,22 +415,14 @@ public class ReaderBlogActions {
         blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
 
         ReaderPostTable.deletePostsInBlog(blogId);
+        ReaderBlogTable.setIsFollowedBlogId(blogId, false);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
-                if (success) {
-                    // blocking endpoint unfollows the blog, so do the same here
-                    ReaderBlogTable.setIsFollowedBlogId(blogId, false);
-                } else {
-                    AppLog.w(T.READER, "failed to block blog " + blogId);
-                    ReaderPostTable.addOrUpdatePosts(null, blockResult.deletedPosts);
+               if (actionListener != null) {
+                    actionListener.onActionResult(true);
                 }
-                if (actionListener != null) {
-                    actionListener.onActionResult(success);
-                }
-
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -424,6 +430,9 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.addOrUpdatePosts(null, blockResult.deletedPosts);
+                if (blockResult.wasFollowing) {
+                    ReaderBlogTable.setIsFollowedBlogId(blogId, true);
+                }
                 if (actionListener != null) {
                     actionListener.onActionResult(false);
                 }

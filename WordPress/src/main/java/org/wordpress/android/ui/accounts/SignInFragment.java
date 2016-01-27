@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,8 +46,7 @@ import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -56,6 +57,7 @@ import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
@@ -301,7 +303,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private boolean isWPComLogin() {
         String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
-        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || selfHostedUrl.contains("wordpress.com");
+        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || WPUrlUtils.isWordPressCom(selfHostedUrl);
     }
 
     private boolean isJetpackAuth() {
@@ -377,7 +379,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             String primaryBlogId = jsonObject.getString("primary_blog");
             // Look for a visible blog with this id in the DB
             List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("isHidden = 0 AND blogId = " + primaryBlogId,
-                    null, 1);
+                    null, 1, true);
             if (blogs != null && !blogs.isEmpty()) {
                 Map<String, Object> primaryBlog = blogs.get(0);
                 // Ask for a refresh and select it
@@ -390,10 +392,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void trackAnalyticsSignIn() {
+        AnalyticsUtils.refreshMetadata();
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
-        AnalyticsUtils.refreshMetadata();
         if (!isWPComLogin()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
@@ -428,8 +430,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
                 }
 
-                // refresh first blog
-                refreshFirstBlogContent();
+                // refresh the first 5 blogs
+                refreshFirstFiveBlogsContent();
             }
 
             trackAnalyticsSignIn();
@@ -441,6 +443,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     EnumSet.of(UpdateTask.TAGS));
 
             if (isWPComLogin()) {
+                //Update previous stats widgets
+                StatsWidgetProvider.updateWidgetsOnLogin(getActivity().getApplicationContext());
+
                 // Fire off a synchronous request to get the primary blog
                 WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
                     @Override
@@ -512,10 +517,22 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (isVisible) {
             mTwoStepEditText.requestFocus();
             mTwoStepEditText.setText("");
+            showSoftKeyboard();
         } else {
             mTwoStepEditText.setText("");
             mTwoStepEditText.clearFocus();
         }
+    }
+
+    private void showSoftKeyboard() {
+        if (!hasHardwareKeyboard()) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    private boolean hasHardwareKeyboard() {
+        return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
     private void signInAndFetchBlogListWPCom() {
@@ -637,17 +654,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         final String password = EditTextUtils.getText(mPasswordEditText).trim();
         boolean retValue = true;
 
+        if (password.equals("")) {
+            mPasswordEditText.setError(getString(R.string.required_field));
+            mPasswordEditText.requestFocus();
+            retValue = false;
+        }
+
         if (username.equals("")) {
             mUsernameEditText.setError(getString(R.string.required_field));
             mUsernameEditText.requestFocus();
             retValue = false;
         }
 
-        if (password.equals("")) {
-            mPasswordEditText.setError(getString(R.string.required_field));
-            mPasswordEditText.requestFocus();
-            retValue = false;
-        }
         return retValue;
     }
 
@@ -675,8 +693,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         switch (getErrorType(messageId)) {
             case USERNAME:
             case PASSWORD:
-                showUsernameError(messageId);
                 showPasswordError(messageId);
+                showUsernameError(messageId);
                 return true;
             default:
                 return false;
@@ -761,24 +779,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Show a dialog
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
-            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(org.wordpress.android.R.string.username_or_password_incorrect),
-                    org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
-                            org.wordpress.android.R.string.cancel), getString(
-                            org.wordpress.android.R.string.forgot_password), getString(
-                            org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
-                    SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
-        } else {
-            // create a 2 buttons dialog ("Forget your password?" and "Cancel")
-            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(org.wordpress.android.R.string.username_or_password_incorrect),
-                    org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
-                            org.wordpress.android.R.string.cancel), getString(
-                            org.wordpress.android.R.string.forgot_password), null, SignInDialogFragment.ACTION_OPEN_URL,
-                    0);
-        }
+        // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
+        nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                getString(org.wordpress.android.R.string.username_or_password_incorrect),
+                org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
+                        org.wordpress.android.R.string.cancel), getString(
+                        org.wordpress.android.R.string.forgot_password), getString(
+                        org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
+                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
 
         // Put entered url and entered username args, that could help our support team
         Bundle bundle = nuxAlert.getArguments();
@@ -798,8 +806,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mUsernameEditText.setError(null);
             showInvalidUsernameOrPasswordDialog();
         } else {
-            showUsernameError(messageId);
             showPasswordError(messageId);
+            showUsernameError(messageId);
         }
         endProgress();
     }
@@ -845,16 +853,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     /**
-     * Get first blog and call RefreshBlogContentTask. First blog will be autoselected when user login.
+     * Get the first five blogs and call RefreshBlogContentTask. First blog will be autoselected when user login.
      * Also when a user add a new self hosted blog, userBlogList contains only one element.
      * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
      * user selects it.
      */
-    private void refreshFirstBlogContent() {
-        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1);
+    private void refreshFirstFiveBlogsContent() {
+        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 5, true);
         if (visibleBlogs != null && !visibleBlogs.isEmpty()) {
-            Map<String, Object> firstBlog = visibleBlogs.get(0);
-            refreshBlogContent(firstBlog);
+            int numberOfBlogsBeingRefreshed = Math.min(5, visibleBlogs.size());
+            for (int i = 0; i < numberOfBlogsBeingRefreshed; i++) {
+                Map<String, Object> currentBlog = visibleBlogs.get(i);
+                refreshBlogContent(currentBlog);
+            }
         }
     }
 }

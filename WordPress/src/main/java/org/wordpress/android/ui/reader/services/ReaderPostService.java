@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -39,7 +40,11 @@ public class ReaderPostService extends Service {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_FEED_ID = "feed_id";
 
-    public static enum UpdateAction {REQUEST_NEWER, REQUEST_OLDER}
+    public enum UpdateAction {
+        REQUEST_NEWER,          // request the newest posts for this tag/blog/feed
+        REQUEST_OLDER,          // request posts older than the oldest existing one for this tag/blog/feed
+        REQUEST_OLDER_THAN_GAP  // request posts older than the one with the gap marker for this tag (not supported for blog/feed)
+    }
 
     /*
      * update posts with the passed tag
@@ -117,7 +122,7 @@ public class ReaderPostService extends Service {
         return START_NOT_STICKY;
     }
 
-    void updatePostsWithTag(final ReaderTag tag, final UpdateAction action) {
+    private void updatePostsWithTag(final ReaderTag tag, final UpdateAction action) {
         requestPostsWithTag(
                 tag,
                 action,
@@ -130,7 +135,7 @@ public class ReaderPostService extends Service {
                 });
     }
 
-    void updatePostsInBlog(long blogId, final UpdateAction action) {
+    private void updatePostsInBlog(long blogId, final UpdateAction action) {
         UpdateResultListener listener = new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
@@ -141,7 +146,7 @@ public class ReaderPostService extends Service {
         requestPostsForBlog(blogId, action, listener);
     }
 
-    void updatePostsInFeed(long feedId, final UpdateAction action) {
+    private void updatePostsInFeed(long feedId, final UpdateAction action) {
         UpdateResultListener listener = new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
@@ -155,13 +160,13 @@ public class ReaderPostService extends Service {
     private static void requestPostsWithTag(final ReaderTag tag,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
-        String endpoint = getEndpointForTag(tag);
-        if (TextUtils.isEmpty(endpoint)) {
+        String path = getRelativeEndpointForTag(tag);
+        if (TextUtils.isEmpty(path)) {
             resultListener.onUpdateResult(UpdateResult.FAILED);
             return;
         }
 
-        StringBuilder sb = new StringBuilder(endpoint);
+        StringBuilder sb = new StringBuilder(path);
 
         // append #posts to retrieve
         sb.append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
@@ -169,12 +174,22 @@ public class ReaderPostService extends Service {
         // return newest posts first (this is the default, but make it explicit since it's important)
         sb.append("&order=DESC");
 
-        // if older posts are being requested, add the &before param based on the oldest existing post
-        if (updateAction == UpdateAction.REQUEST_OLDER) {
-            String dateOldest = ReaderPostTable.getOldestPubDateWithTag(tag);
-            if (!TextUtils.isEmpty(dateOldest)) {
-                sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-            }
+        String beforeDate;
+        switch (updateAction) {
+            case REQUEST_OLDER:
+                // request posts older than the oldest existing post with this tag
+                beforeDate = ReaderPostTable.getOldestPubDateWithTag(tag);
+                break;
+            case REQUEST_OLDER_THAN_GAP:
+                // request posts older than the post with the gap marker for this tag
+                beforeDate = ReaderPostTable.getGapMarkerPubDateForTag(tag);
+                break;
+            default:
+                beforeDate = null;
+                break;
+        }
+        if (!TextUtils.isEmpty(beforeDate)) {
+            sb.append("&before=").append(UrlUtils.urlEncode(beforeDate));
         }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -184,7 +199,7 @@ public class ReaderPostService extends Service {
                 if (updateAction == UpdateAction.REQUEST_NEWER) {
                     ReaderTagTable.setTagLastUpdated(tag);
                 }
-                handleUpdatePostsResponse(tag, jsonObject, resultListener);
+                handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -195,14 +210,13 @@ public class ReaderPostService extends Service {
             }
         };
 
-        WordPress.getRestClientUtilsV1_1().get(sb.toString(), null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
     }
-
 
     private static void requestPostsForBlog(final long blogId,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
-        String path = "sites/" + blogId + "/posts/?meta=site,likes";
+        String path = "read/sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == UpdateAction.REQUEST_OLDER) {
@@ -215,7 +229,7 @@ public class ReaderPostService extends Service {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsResponse(null, jsonObject, resultListener);
+                handleUpdatePostsResponse(null, jsonObject, updateAction, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -226,7 +240,7 @@ public class ReaderPostService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "updating posts in blog " + blogId);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     private static void requestPostsForFeed(final long feedId,
@@ -243,7 +257,7 @@ public class ReaderPostService extends Service {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsResponse(null, jsonObject, resultListener);
+                handleUpdatePostsResponse(null, jsonObject, updateAction, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -255,14 +269,15 @@ public class ReaderPostService extends Service {
         };
 
         AppLog.d(AppLog.T.READER, "updating posts in feed " + feedId);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     /*
-     * called after requesting posts with a specific tag or in a specific blog
+     * called after requesting posts with a specific tag or in a specific blog/feed
      */
     private static void handleUpdatePostsResponse(final ReaderTag tag,
                                                   final JSONObject jsonObject,
+                                                  final UpdateAction updateAction,
                                                   final UpdateResultListener resultListener) {
         if (jsonObject == null) {
             resultListener.onUpdateResult(UpdateResult.FAILED);
@@ -275,7 +290,46 @@ public class ReaderPostService extends Service {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
                 if (updateResult.isNewOrChanged()) {
+                    // gap detection - only applies to posts with a specific tag
+                    ReaderPost postWithGap = null;
+                    if (tag != null) {
+                        switch (updateAction) {
+                            case REQUEST_NEWER:
+                                // if there's no overlap between server and local (ie: all server
+                                // posts are new), assume there's a gap between server and local
+                                // provided that local posts exist
+                                int numServerPosts = serverPosts.size();
+                                if (numServerPosts >= 2
+                                        && ReaderPostTable.getNumPostsWithTag(tag) > 0
+                                        && !ReaderPostTable.hasOverlap(serverPosts)) {
+                                    // treat the second to last server post as having a gap
+                                    postWithGap = serverPosts.get(numServerPosts - 2);
+                                    // remove the last server post to deal with the edge case of
+                                    // there actually not being a gap between local & server
+                                    serverPosts.remove(numServerPosts - 1);
+                                    AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
+                                }
+                                ReaderPostTable.removeGapMarkerForTag(tag);
+                                break;
+                            case REQUEST_OLDER_THAN_GAP:
+                                // if service was started as a request to fill a gap, delete existing posts
+                                // older than the one with the gap marker, then remove the existing gap marker
+                                ReaderPostTable.deletePostsOlderThanGapMarkerForTag(tag);
+                                ReaderPostTable.removeGapMarkerForTag(tag);
+                                break;
+                        }
+                    }
+
                     ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
+
+                    // gap marker must be set after saving server posts
+                    if (postWithGap != null) {
+                        ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag);
+                    }
+                } else if (updateResult == UpdateResult.UNCHANGED && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                    // edge case - request to fill gap returned nothing new, so remove the gap marker
+                    ReaderPostTable.removeGapMarkerForTag(tag);
+                    AppLog.w(AppLog.T.READER, "attempt to fill gap returned nothing new");
                 }
                 AppLog.d(AppLog.T.READER, "requested posts response = " + updateResult.toString());
                 resultListener.onUpdateResult(updateResult);
@@ -286,7 +340,7 @@ public class ReaderPostService extends Service {
     /*
      * returns the endpoint to use when requesting posts with the passed tag
      */
-    private static String getEndpointForTag(ReaderTag tag) {
+    private static String getRelativeEndpointForTag(ReaderTag tag) {
         if (tag == null) {
             return null;
         }

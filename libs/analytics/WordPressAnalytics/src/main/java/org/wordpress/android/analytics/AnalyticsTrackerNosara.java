@@ -1,8 +1,6 @@
 package org.wordpress.android.analytics;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.automattic.android.tracks.TracksClient;
 
@@ -12,9 +10,8 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
-public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
+public class AnalyticsTrackerNosara extends Tracker {
 
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
@@ -22,19 +19,15 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
-    private String mWpcomUserName = null;
-    private String mAnonID = null; // do not access this variable directly. Use methods.
-
     private TracksClient mNosaraClient;
-    private Context mContext;
 
-    public AnalyticsTrackerNosara(Context context) {
-        if (null == context) {
-            mNosaraClient = null;
-            return;
-        }
-        mContext = context;
+    public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
+        super(context);
         mNosaraClient = TracksClient.getClient(context);
+    }
+
+    String getAnonIdPrefKey() {
+        return TRACKS_ANON_ID;
     }
 
     @Override
@@ -52,65 +45,74 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         String eventName;
 
         switch (stat) {
-            case APPLICATION_STARTED:
-                eventName = "application_started";
-                break;
             case APPLICATION_OPENED:
                 eventName = "application_opened";
                 break;
             case APPLICATION_CLOSED:
                 eventName = "application_closed";
                 break;
-            case THEMES_ACCESSED_THEMES_BROWSER:
-                eventName = "themes_theme_browser_accessed";
+            case APPLICATION_INSTALLED:
+                eventName = "application_installed";
                 break;
-            case THEMES_CHANGED_THEME:
-                eventName = "themes_theme_changed";
-                break;
-            case THEMES_PREVIEWED_SITE:
-                eventName = "themes_theme_for_site_previewed";
+            case APPLICATION_UPGRADED:
+                eventName = "application_upgraded";
                 break;
             case READER_ACCESSED:
                 eventName = "reader_accessed";
                 break;
-            case READER_OPENED_ARTICLE:
-                eventName = "reader_article_opened";
+            case READER_ARTICLE_COMMENTED_ON:
+                eventName = "reader_article_commented_on";
                 break;
-            case READER_LIKED_ARTICLE:
+            case READER_ARTICLE_LIKED:
                 eventName = "reader_article_liked";
                 break;
-            case READER_REBLOGGED_ARTICLE:
-                eventName = "reader_article_reblogged";
+            case READER_ARTICLE_OPENED:
+                eventName = "reader_article_opened";
+                break;
+            case READER_ARTICLE_UNLIKED:
+                eventName = "reader_article_unliked";
+                break;
+            case READER_BLOG_BLOCKED:
+                eventName = "reader_blog_blocked";
+                break;
+            case READER_BLOG_FOLLOWED:
+                eventName = "reader_site_followed";
+                break;
+            case READER_BLOG_PREVIEWED:
+                eventName = "reader_blog_previewed";
+                break;
+            case READER_BLOG_UNFOLLOWED:
+                eventName = "reader_site_unfollowed";
+                break;
+            case READER_DISCOVER_VIEWED:
+                eventName = "reader_discover_viewed";
                 break;
             case READER_INFINITE_SCROLL:
                 eventName = "reader_infinite_scroll_performed";
                 break;
-            case READER_FOLLOWED_READER_TAG:
+            case READER_LIST_FOLLOWED:
+                eventName = "reader_list_followed";
+                break;
+            case READER_LIST_LOADED:
+                eventName = "reader_list_loaded";
+                break;
+            case READER_LIST_PREVIEWED:
+                eventName = "reader_list_previewed";
+                break;
+            case READER_LIST_UNFOLLOWED:
+                eventName = "reader_list_unfollowed";
+                break;
+            case READER_TAG_FOLLOWED:
                 eventName = "reader_reader_tag_followed";
                 break;
-            case READER_UNFOLLOWED_READER_TAG:
-                eventName = "reader_reader_tag_unfollowed";
-                break;
-            case READER_LOADED_TAG:
+            case READER_TAG_LOADED:
                 eventName = "reader_tag_loaded";
                 break;
-            case READER_LOADED_FRESHLY_PRESSED:
-                eventName = "reader_freshly_pressed_loaded";
-                break;
-            case READER_COMMENTED_ON_ARTICLE:
-                eventName = "reader_article_commented_on";
-                break;
-            case READER_FOLLOWED_SITE:
-                eventName = "reader_site_followed";
-                break;
-            case READER_BLOCKED_BLOG:
-                eventName = "reader_blog_blocked";
-                break;
-            case READER_BLOG_PREVIEW:
-                eventName = "reader_blog_previewed";
-                break;
-            case READER_TAG_PREVIEW:
+            case READER_TAG_PREVIEWED:
                 eventName = "reader_tag_previewed";
+                break;
+            case READER_TAG_UNFOLLOWED:
+                eventName = "reader_reader_tag_unfollowed";
                 break;
             case EDITOR_CREATED_POST:
                 eventName = "editor_post_created";
@@ -118,7 +120,28 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case EDITOR_SAVED_DRAFT:
                 eventName = "editor_draft_saved";
                 break;
-            case EDITOR_CLOSED_POST:
+            case EDITOR_DISCARDED_CHANGES:
+                eventName = "editor_discarded_changes";
+                break;
+            case EDITOR_EDITED_IMAGE:
+                eventName = "editor_image_edited";
+                break;
+            case EDITOR_ENABLED_NEW_VERSION:
+                eventName = "editor_enabled_new_version";
+                break;
+            case EDITOR_TOGGLED_OFF:
+                eventName = "editor_toggled_off";
+                break;
+            case EDITOR_TOGGLED_ON:
+                eventName = "editor_toggled_on";
+                break;
+            case EDITOR_UPLOAD_MEDIA_FAILED:
+                eventName = "editor_upload_media_failed";
+                break;
+            case EDITOR_UPLOAD_MEDIA_RETRIED:
+                eventName = "editor_upload_media_retried";
+                break;
+            case EDITOR_CLOSED:
                 eventName = "editor_closed";
                 break;
             case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
@@ -127,7 +150,15 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
                 eventName = "editor_photo_added";
-                predefinedEventProperties.put("via", "wp_media_library");
+                predefinedEventProperties.put("via", "media_library");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+                eventName = "editor_video_added";
+                predefinedEventProperties.put("via", "local_library");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
+                eventName = "editor_video_added";
+                predefinedEventProperties.put("via", "media_library");
                 break;
             case EDITOR_PUBLISHED_POST:
                 eventName = "editor_post_published";
@@ -137,22 +168,6 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
             case EDITOR_SCHEDULED_POST:
                 eventName = "editor_post_scheduled";
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_PHOTO:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_photos", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_VIDEO:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_videos", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_categories", true);
-                break;
-            case EDITOR_PUBLISHED_POST_WITH_TAGS:
-                eventName = "editor_post_published";
-                predefinedEventProperties.put("with_tags", true);
                 break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 eventName = "editor_button_tapped";
@@ -185,6 +200,22 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case EDITOR_TAPPED_UNDERLINE:
                 eventName = "editor_button_tapped";
                 predefinedEventProperties.put("button", "underline");
+                break;
+            case EDITOR_TAPPED_HTML:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "html");
+                break;
+            case EDITOR_TAPPED_ORDERED_LIST:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "ordered_list");
+                break;
+            case EDITOR_TAPPED_UNLINK:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "unlink");
+                break;
+            case EDITOR_TAPPED_UNORDERED_LIST:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "unordered_list");
                 break;
             case NOTIFICATIONS_ACCESSED:
                 eventName = "notifications_accessed";
@@ -223,7 +254,7 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 break;
             case OPENED_COMMENTS:
                 eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "media_library");
+                predefinedEventProperties.put("menu_item", "comments");
                 break;
             case OPENED_VIEW_SITE:
                 eventName = "site_menu_opened";
@@ -237,9 +268,15 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "media_library");
                 break;
-            case OPENED_SETTINGS:
+            case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "settings");
+                predefinedEventProperties.put("menu_item", "site_settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                eventName = "me_opened_account_settings";
+                break;
+            case OPENED_MY_PROFILE:
+                eventName = "me_opened_my_profile";
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
@@ -256,20 +293,39 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case SIGNED_INTO_JETPACK:
                 eventName = "signed_into_jetpack";
                 break;
+            case ACCOUNT_LOGOUT:
+                eventName = "account_logout";
+                break;
             case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
                 eventName = "stats_screen_signed_into_jetpack";
                 break;
             case STATS_ACCESSED:
                 eventName = "stats_accessed";
                 break;
+            case STATS_INSIGHTS_ACCESSED:
+                eventName = "stats_insights_accessed";
+                break;
+            case STATS_PERIOD_DAYS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "days");
+                break;
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "weeks");
+                break;
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "months");
+                break;
+            case STATS_PERIOD_YEARS_ACCESSED:
+                eventName = "stats_period_accessed";
+                predefinedEventProperties.put("period", "years");
+                break;
             case STATS_VIEW_ALL_ACCESSED:
                 eventName = "stats_view_all_accessed";
                 break;
             case STATS_SINGLE_POST_ACCESSED:
                 eventName = "stats_single_post_accessed";
-                break;
-            case STATS_OPENED_WEB_VERSION:
-                eventName = "stats_web_version_accessed";
                 break;
             case STATS_TAPPED_BAR_CHART:
                 eventName = "stats_bar_chart_tapped";
@@ -280,8 +336,20 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 eventName = "stats_install_jetpack_selected";
                 break;
+            case STATS_WIDGET_ADDED:
+                eventName = "stats_widget_added";
+                break;
+            case STATS_WIDGET_REMOVED:
+                eventName = "stats_widget_removed";
+                break;
+            case STATS_WIDGET_TAPPED:
+                eventName = "stats_widget_tapped";
+                break;
             case PUSH_NOTIFICATION_RECEIVED:
                 eventName = "push_notification_received";
+                break;
+            case PUSH_NOTIFICATION_TAPPED:
+                eventName = "push_notification_alert_tapped";
                 break;
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 eventName = "support_helpshift_screen_opened";
@@ -295,6 +363,84 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 eventName = "login_failed_to_guess_xmlrpc";
                 break;
+            case PUSH_AUTHENTICATION_APPROVED:
+                eventName = "push_authentication_approved";
+                break;
+            case PUSH_AUTHENTICATION_EXPIRED:
+                eventName = "push_authentication_expired";
+                break;
+            case PUSH_AUTHENTICATION_FAILED:
+                eventName = "push_authentication_failed";
+                break;
+            case PUSH_AUTHENTICATION_IGNORED:
+                eventName = "push_authentication_ignored";
+                break;
+            case NOTIFICATION_SETTINGS_LIST_OPENED:
+                eventName = "notification_settings_list_opened";
+                break;
+            case NOTIFICATION_SETTINGS_STREAMS_OPENED:
+                eventName = "notification_settings_streams_opened";
+                break;
+            case NOTIFICATION_SETTINGS_DETAILS_OPENED:
+                eventName = "notification_settings_details_opened";
+                break;
+            case ME_ACCESSED:
+                eventName = "me_tab_accessed";
+                break;
+            case MY_SITE_ACCESSED:
+                eventName = "my_site_tab_accessed";
+                break;
+            case THEMES_ACCESSED_THEMES_BROWSER:
+                eventName = "themes_theme_browser_accessed";
+                break;
+            case THEMES_ACCESSED_SEARCH:
+                eventName = "themes_search_accessed";
+                break;
+            case THEMES_CHANGED_THEME:
+                eventName = "themes_theme_changed";
+                break;
+            case THEMES_PREVIEWED_SITE:
+                eventName = "themes_theme_for_site_previewed";
+                break;
+            case THEMES_DEMO_ACCESSED:
+                eventName = "themes_demo_accessed";
+                break;
+            case THEMES_CUSTOMIZE_ACCESSED:
+                eventName = "themes_customize_accessed";
+                break;
+            case THEMES_SUPPORT_ACCESSED:
+                eventName = "themes_support_accessed";
+                break;
+            case THEMES_DETAILS_ACCESSED:
+                eventName = "themes_details_accessed";
+                break;
+            case ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED:
+                eventName = "account_settings_language_selection_forced";
+                break;
+            case SITE_SETTINGS_ACCESSED:
+                eventName = "site_settings_accessed";
+                break;
+            case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
+                eventName = "site_settings_more_settings_accessed";
+                break;
+            case SITE_SETTINGS_ADDED_LIST_ITEM:
+                eventName = "site_settings_added_list_item";
+                break;
+            case SITE_SETTINGS_DELETED_LIST_ITEMS:
+                eventName = "site_settings_deleted_list_items";
+                break;
+            case SITE_SETTINGS_HINT_TOAST_SHOWN:
+                eventName = "site_settings_hint_toast_shown";
+                break;
+            case SITE_SETTINGS_LEARN_MORE_CLICKED:
+                eventName = "site_settings_learn_more_clicked";
+                break;
+            case SITE_SETTINGS_LEARN_MORE_LOADED:
+                eventName = "site_settings_learn_more_loaded";
+                break;
+            case SITE_SETTINGS_SAVED_REMOTELY:
+                eventName = "site_settings_saved_remotely";
+                break;
             default:
                 eventName = null;
                 break;
@@ -307,8 +453,8 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
 
         final String user;
         final TracksClient.NosaraUserType userType;
-        if (mWpcomUserName != null) {
-            user = mWpcomUserName;
+        if (getWordPressComUserName() != null) {
+            user = getWordPressComUserName();
             userType = TracksClient.NosaraUserType.WPCOM;
         } else {
             // This is just a security checks since the anonID is already available here.
@@ -352,44 +498,15 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         }
     }
 
-    private void clearAnonID() {
-        mAnonID = null;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        if (preferences.contains(TRACKS_ANON_ID)) {
-            final SharedPreferences.Editor editor = preferences.edit();
-            editor.remove(TRACKS_ANON_ID);
-            editor.commit();
-        }
-    }
 
-    private String getAnonID() {
-        if (mAnonID == null) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            mAnonID = preferences.getString(TRACKS_ANON_ID, null);
-        }
-        return mAnonID;
-    }
-
-    private String generateNewAnonID() {
-        String uuid = UUID.randomUUID().toString();
-        String[] uuidSplitted = uuid.split("-");
-        StringBuilder builder = new StringBuilder();
-        for (String currentPart : uuidSplitted) {
-            builder.append(currentPart);
-        }
-        uuid = builder.toString();
-        AppLog.d(AppLog.T.STATS, "New anon ID generated: " + uuid);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(TRACKS_ANON_ID, uuid);
-        editor.commit();
-
-        mAnonID = uuid;
-        return uuid;
-    }
 
     @Override
     public void endSession() {
+        this.flush();
+    }
+
+    @Override
+    public void flush() {
         if (mNosaraClient == null) {
             return;
         }
@@ -403,21 +520,6 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
             return;
         }
 
-        if (isUserConnected && isWordPressComUser) {
-            mWpcomUserName = username;
-            // Re-unify the user
-            if (getAnonID() != null) {
-                mNosaraClient.trackAliasUser(mWpcomUserName, getAnonID());
-                clearAnonID();
-            }
-        } else {
-            // Not wpcom connected. Check if anonID is already present
-            mWpcomUserName = null;
-            if (getAnonID() == null) {
-                generateNewAnonID();
-            }
-        }
-
         try {
             JSONObject properties = new JSONObject();
             properties.put(JETPACK_USER, isJetpackUser);
@@ -426,18 +528,33 @@ public class AnalyticsTrackerNosara implements AnalyticsTracker.Tracker {
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
+
+        if (isUserConnected && isWordPressComUser) {
+            setWordPressComUserName(username);
+            // Re-unify the user
+            if (getAnonID() != null) {
+                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);
+                clearAnonID();
+            }
+        } else {
+            // Not wpcom connected. Check if anonID is already present
+            setWordPressComUserName(null);
+            if (getAnonID() == null) {
+                generateNewAnonID();
+            }
+        }
+
+
     }
 
 
     @Override
     public void clearAllData() {
+        super.clearAllData();
         if (mNosaraClient == null) {
             return;
         }
         mNosaraClient.clearUserProperties();
-        // Reset the anon ID here
-        clearAnonID();
-        mWpcomUserName = null;
     }
 
     @Override

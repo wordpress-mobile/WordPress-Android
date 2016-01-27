@@ -19,7 +19,6 @@ public class ReaderConstants {
     static final String ARG_IMAGE_URL         = "image_url";
     static final String ARG_IS_PRIVATE        = "is_private";
     static final String ARG_POST_LIST_TYPE    = "post_list_type";
-    static final String ARG_TITLE             = "title";
     static final String ARG_CONTENT           = "content";
     static final String ARG_IS_SINGLE_POST    = "is_single_post";
 
@@ -27,4 +26,5 @@ public class ReaderConstants {
     static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_RESTORE_POSITION  = "restore_position";
     static final String KEY_WAS_PAUSED        = "was_paused";
+    static final String KEY_ERROR_MESSAGE     = "error_message";
 }

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -10,11 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +27,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -44,6 +43,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -59,31 +59,42 @@ import de.greenrobot.event.EventBus;
  * By pressing a spinner on the action bar, the user can select which timeframe they wish to see.
  * </p>
  */
-public class StatsActivity extends ActionBarActivity
+public class StatsActivity extends AppCompatActivity
         implements ScrollViewExt.ScrollViewListener,
-                StatsVisitorsAndViewsFragment.OnDateChangeListener {
+                StatsVisitorsAndViewsFragment.OnDateChangeListener,
+                StatsVisitorsAndViewsFragment.OnOverviewItemChangeListener,
+                StatsInsightsTodayFragment.OnInsightsTodayClickListener {
 
-    private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
-    private static final String SAVED_STATS_REQUESTED_DATE= "SAVED_STATS_REQUESTED_DATE";
+    private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
+    private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
     private Spinner mSpinner;
+    private ScrollViewExt mOuterScrollView;
 
     private static final int REQUEST_JETPACK = 7000;
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
-    private int mNavPosition = 0;
-    private Dialog mSignInDialog;
+    public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
+    public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
+
+    public enum StatsLaunchedFrom {
+        STATS_WIDGET,
+        NOTIFICATIONS
+    }
 
     private int mResultCode = -1;
     private boolean mIsInFront;
     private int mLocalBlogID = -1;
-    private StatsTimeframe mCurrentTimeframe = StatsTimeframe.DAY;
+    private StatsTimeframe mCurrentTimeframe = StatsTimeframe.INSIGHTS;
     private String mRequestedDate;
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
+    private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
+            StatsTimeframe.MONTH, StatsTimeframe.YEAR};
+    private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,10 +104,6 @@ public class StatsActivity extends ActionBarActivity
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
             finish();
             return;
-        }
-
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
         }
 
         setContentView(R.layout.stats_activity);
@@ -134,20 +141,42 @@ public class StatsActivity extends ActionBarActivity
 
         setTitle(R.string.stats);
 
+        mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
+        mOuterScrollView.setScrollViewListener(this);
+
         if (savedInstanceState != null) {
-            mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
+            final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
+            if(yScrollPosition != 0) {
+                mOuterScrollView.postDelayed(new Runnable() {
+                    public void run() {
+                        if (!isFinishing()) {
+                            mOuterScrollView.scrollTo(0, yScrollPosition);
+                        }
+                    }
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
+            }
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
+            } else if (getIntent().hasExtra(ARG_DESIRED_TIMEFRAME)) {
+                mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(ARG_DESIRED_TIMEFRAME);
             } else {
-                mCurrentTimeframe = StatsTimeframe.DAY;
+                // Read the value from app preferences here. Default to 0 - Insights
+                mCurrentTimeframe = AppPrefs.getStatsTimeframe();
             }
             mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+
+            if (getIntent().hasExtra(ARG_LAUNCHED_FROM)) {
+                StatsLaunchedFrom from = (StatsLaunchedFrom) getIntent().getSerializableExtra(ARG_LAUNCHED_FROM);
+                if (from == StatsLaunchedFrom.STATS_WIDGET) {
+                    AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, WordPress.getBlog(mLocalBlogID));
+                }
+            }
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
@@ -165,17 +194,11 @@ public class StatsActivity extends ActionBarActivity
         // if its internal datamodel is empty.
         createFragments(false);
 
-        ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
-        if (scrollView != null) {
-            scrollView.setScrollViewListener(this);
-        }
-
         if (mSpinner == null && toolbar != null) {
             View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
             mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
 
-            StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
-                    StatsTimeframe.MONTH, StatsTimeframe.YEAR};
+
             mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
 
             mSpinner.setAdapter(mTimeframeSpinnerAdapter);
@@ -194,13 +217,19 @@ public class StatsActivity extends ActionBarActivity
 
                     AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
                     mCurrentTimeframe = selectedTimeframe;
+                    AppPrefs.setStatsTimeframe(mCurrentTimeframe);
                     mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                    if (NetworkUtils.checkConnection(StatsActivity.this)) {
-                        mSwipeToRefreshHelper.setRefreshing(true);
-                    } else {
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                    }
                     createFragments(true); // Need to recreate fragment here, since a new timeline was selected.
+                    mSpinner.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isFinishing()) {
+                                scrollToTop();
+                            }
+                        }
+                    }, StatsConstants.STATS_SCROLL_TO_DELAY);
+
+                    trackStatsAnalytics();
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -210,6 +239,56 @@ public class StatsActivity extends ActionBarActivity
         }
 
         selectCurrentTimeframeInActionBar();
+
+        TextView otherRecentStatsMovedLabel = (TextView) findViewById(R.id.stats_other_recent_stats_moved);
+        otherRecentStatsMovedLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < timeframes.length; i++) {
+                    if (timeframes[i] ==  StatsTimeframe.INSIGHTS) {
+                        mSpinner.setSelection(i);
+                        break;
+                    }
+                }
+
+                mSpinner.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isFinishing()) {
+                            scrollToTop();
+                        }
+                    }
+                }, StatsConstants.STATS_SCROLL_TO_DELAY);
+            }
+        });
+
+        // Track usage here
+        if (savedInstanceState == null) {
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_ACCESSED, currentBlog);
+            trackStatsAnalytics();
+        }
+    }
+
+    private void trackStatsAnalytics() {
+        // Track usage here
+        Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        switch (mCurrentTimeframe) {
+            case INSIGHTS:
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED, currentBlog);
+                break;
+            case DAY:
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED, currentBlog);
+                break;
+            case WEEK:
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED, currentBlog);
+                break;
+            case MONTH:
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED, currentBlog);
+                break;
+            case YEAR:
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED, currentBlog);
+                break;
+        }
     }
 
     @Override
@@ -239,6 +318,7 @@ public class StatsActivity extends ActionBarActivity
         } else {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
+        ActivityId.trackLastActivity(ActivityId.STATS);
     }
 
     @Override
@@ -251,11 +331,13 @@ public class StatsActivity extends ActionBarActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
+        if (mOuterScrollView.getScrollY() != 0) {
+            outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -263,90 +345,146 @@ public class StatsActivity extends ActionBarActivity
         if (isFinishing()) {
             return;
         }
+
+        // Make the labels invisible see: https://github.com/wordpress-mobile/WordPress-Android/issues/3279
+        findViewById(R.id.stats_other_recent_stats_label_insights).setVisibility(View.INVISIBLE);
+        findViewById(R.id.stats_other_recent_stats_label_timeline).setVisibility(View.INVISIBLE);
+        findViewById(R.id.stats_other_recent_stats_moved).setVisibility(View.INVISIBLE);
+
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         StatsAbstractFragment fragment;
 
-        if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
-        }
+        if (mCurrentTimeframe != StatsTimeframe.INSIGHTS) {
+            findViewById(R.id.stats_timeline_fragments_container).setVisibility(View.VISIBLE);
+            findViewById(R.id.stats_insights_fragments_container).setVisibility(View.GONE);
 
-        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newVisitorsAndViewsInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate,
+                        mTabToSelectOnGraph);
+                ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
-        }
+        } else {
+            findViewById(R.id.stats_timeline_fragments_container).setVisibility(View.GONE);
+            findViewById(R.id.stats_insights_fragments_container).setVisibility(View.VISIBLE);
 
-        if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
-        }
+            if (fm.findFragmentByTag(StatsInsightsMostPopularFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_MOST_POPULAR, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_insights_most_popular_container, fragment, StatsInsightsMostPopularFragment.TAG);
+            }
 
-        if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
-            ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
+            if (fm.findFragmentByTag(StatsInsightsAllTimeFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_ALL_TIME, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_insights_all_time_container, fragment, StatsInsightsAllTimeFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsInsightsTodayFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_TODAY, mLocalBlogID, StatsTimeframe.DAY, mRequestedDate);
+                ft.replace(R.id.stats_insights_today_container, fragment, StatsInsightsTodayFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsInsightsLatestPostSummaryFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_LATEST_POST_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_insights_latest_post_summary_container, fragment, StatsInsightsLatestPostSummaryFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
+            }
+
+            if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
+            }
         }
 
         ft.commitAllowingStateLoss();
+
+        // Slightly delayed labels setup: see https://github.com/wordpress-mobile/WordPress-Android/issues/3279
+        mOuterScrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isFinishing()) {
+                    return;
+                }
+                boolean isInsights = mCurrentTimeframe == StatsTimeframe.INSIGHTS;
+                findViewById(R.id.stats_other_recent_stats_label_insights).setVisibility(isInsights ? View.VISIBLE : View.GONE);
+                findViewById(R.id.stats_other_recent_stats_label_timeline).setVisibility(isInsights ? View.GONE : View.VISIBLE);
+                findViewById(R.id.stats_other_recent_stats_moved).setVisibility(isInsights ? View.GONE : View.VISIBLE);
+            }
+        }, StatsConstants.STATS_LABELS_SETUP_DELAY);
     }
 
-    private void updateTimeframeAndDateAndStartRefreshOfFragments(boolean includeGraphAndTimelessFragments) {
+    private void updateTimeframeAndDateAndStartRefreshOfFragments(boolean includeGraph) {
         if (isFinishing()) {
             return;
         }
         FragmentManager fm = getFragmentManager();
 
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTopPostsAndPagesFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsReferrersFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsClicksFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsGeoviewsFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsAuthorsFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVideoplaysFragment.TAG);
-        updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsSearchTermsFragment.TAG);
-
-        if (includeGraphAndTimelessFragments) {
-            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVisitorsAndViewsFragment.TAG);
+        if (mCurrentTimeframe != StatsTimeframe.INSIGHTS) {
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTopPostsAndPagesFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsReferrersFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsClicksFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsGeoviewsFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsAuthorsFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVideoplaysFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsSearchTermsFragment.TAG);
+            if (includeGraph) {
+                updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsVisitorsAndViewsFragment.TAG);
+            }
+        } else {
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsTodayFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsAllTimeFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsMostPopularFragment.TAG);
+            updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsInsightsLatestPostSummaryFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsCommentsFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsTagsAndCategoriesFragment.TAG);
             updateTimeframeAndDateAndStartRefreshInFragment(fm, StatsPublicizeFragment.TAG);
@@ -386,7 +524,7 @@ public class StatsActivity extends ActionBarActivity
             mResultCode = resultCode;
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
-                if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+                if (currentBlog.getDotComBlogId() == null) {
                     final Handler handler = new Handler();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
@@ -401,10 +539,10 @@ public class StatsActivity extends ActionBarActivity
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
                                 AnalyticsUtils.refreshMetadata();
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
-                                AnalyticsTracker.track(
-                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
-                                if (!isFinishing()) {
+                                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, currentBlog);
+                                AnalyticsUtils.trackWithBlogDetails(
+                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN, currentBlog);
+                                if (isFinishing()) {
                                     return;
                                 }
                                 // We have the blogID now, but we need to re-check if the network connection is available
@@ -436,7 +574,7 @@ public class StatsActivity extends ActionBarActivity
                                 }
                             });
                         }
-                    }, "wp.getOptions", params);
+                    }, Method.GET_OPTIONS, params);
                 } else {
                     mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
                     createFragments(true); // Recreate the fragment and start a refresh of Stats
@@ -506,45 +644,29 @@ public class StatsActivity extends ActionBarActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.stats, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (i == R.id.menu_view_stats_full_site) {
-            final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-            if (blogId == null) {
-                showJetpackMissingAlert();
-                return true;
-            }
-
-            String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
-            if (statsAuthenticatedUser == null) {
-                Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
-                return true;
-            }
-
-            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
-
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
-            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
     private void scrollToTop() {
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view_stats);
-        if (scrollView != null) {
-            scrollView.fullScroll(ScrollView.FOCUS_UP);
+        mOuterScrollView.fullScroll(ScrollView.FOCUS_UP);
+    }
+
+    // StatsInsightsTodayFragment calls this when the user taps on a item in Today's Stats
+    @Override
+    public void onInsightsTodayClicked(final StatsVisitorsAndViewsFragment.OverviewLabel item) {
+        mTabToSelectOnGraph = item;
+        for (int i = 0; i < timeframes.length; i++) {
+            if (timeframes[i] ==  StatsTimeframe.DAY) {
+                mSpinner.setSelection(i);
+                break;
+            }
         }
     }
 
@@ -563,18 +685,25 @@ public class StatsActivity extends ActionBarActivity
         }
     }
 
+    // StatsVisitorsAndViewsFragment calls this when the user taps on the tab bar to change the type of the graph
+    @Override
+    public void onOverviewItemChanged(StatsVisitorsAndViewsFragment.OverviewLabel newItem) {
+        mTabToSelectOnGraph = newItem;
+    }
+
     private boolean checkCredentials() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
             return false;
         }
-        final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             return false;
         }
+
+        final String blogId = currentBlog.getDotComBlogId();
 
         // blogId is always available for dotcom blogs. It could be null on Jetpack blogs...
         if (blogId != null) {
@@ -636,17 +765,17 @@ public class StatsActivity extends ActionBarActivity
         mSwipeToRefreshHelper.setRefreshing(false);
 
         if (!event.isError) {
-            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+            final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+            if (currentBlog == null) {
+                return;
+            }
+            if (currentBlog.getDotComBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 showJetpackMissingAlert();
             } else {
-                mSwipeToRefreshHelper.setRefreshing(true);
                 checkCredentials();
             }
         } else {
-            if (mSignInDialog != null && mSignInDialog.isShowing()) {
-                return;
-            }
             Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
         }
     }

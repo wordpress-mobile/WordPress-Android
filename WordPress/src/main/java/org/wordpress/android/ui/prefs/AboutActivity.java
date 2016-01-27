@@ -3,7 +3,7 @@ package org.wordpress.android.ui.prefs;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +15,7 @@ import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.Calendar;
 
-public class AboutActivity extends ActionBarActivity implements OnClickListener {
+public class AboutActivity extends AppCompatActivity implements OnClickListener {
     private static final String URL_TOS = "http://en.wordpress.com/tos";
     private static final String URL_AUTOMATTIC = "http://automattic.com";
     private static final String URL_PRIVACY_POLICY = "/privacy";

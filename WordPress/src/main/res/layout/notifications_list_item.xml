@@ -32,9 +32,10 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="-3dp"
                 android:layout_marginStart="-3dp"
+                android:layout_marginBottom="-1dp"
                 android:textColor="@color/grey_lighten_10"
                 android:textSize="18sp"
-                tools:text="\uf303" />
+                android:text="@string/noticon_clock" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/header_date_text"
@@ -44,6 +45,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
+                android:textAllCaps="true"
                 tools:text="TODAY" />
         </LinearLayout>
 
@@ -78,16 +80,16 @@
 
                 <org.wordpress.android.widgets.WPNetworkImageView
                     android:id="@+id/note_avatar"
-                    android:layout_width="@dimen/avatar_sz_medium"
-                    android:layout_height="@dimen/avatar_sz_medium"
+                    android:layout_width="@dimen/notifications_avatar_sz"
+                    android:layout_height="@dimen/notifications_avatar_sz"
                     android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginTop="@dimen/margin_small" />
 
                 <LinearLayout
                     android:id="@+id/moderate_progress"
-                    android:layout_width="@dimen/avatar_sz_medium"
-                    android:layout_height="@dimen/avatar_sz_medium"
+                    android:layout_width="@dimen/notifications_avatar_sz"
+                    android:layout_height="@dimen/notifications_avatar_sz"
                     android:layout_marginTop="@dimen/margin_small"
                     android:background="@drawable/shape_oval_translucent"
                     android:gravity="center"
@@ -113,7 +115,7 @@
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="14sp"
-                    tools:text="\uf814" />
+                    tools:text="@string/noticon_note" />
             </FrameLayout>
 
 

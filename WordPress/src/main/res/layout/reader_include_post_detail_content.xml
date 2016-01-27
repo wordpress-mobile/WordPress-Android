@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    included by ReaderPostDetailFragment
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/margin_large">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
+        style="@style/ReaderTextView.Post.Title.Detail"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
+        tools:text="text_title" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="text_author" />
+
+    <org.wordpress.android.ui.reader.views.ReaderWebView
+        android:id="@+id/reader_webview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginTop="@dimen/margin_large"
+        android:scrollbars="none" />
+
+    <View
+        android:id="@+id/layout_liking_users_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/reader_divider_grey"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <!-- liking avatars are inserted into this view at runtime -->
+    <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
+        android:id="@+id/layout_liking_users_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/avatar_sz_small"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="?android:selectableItemBackground"
+        android:paddingLeft="@dimen/reader_detail_margin"
+        android:paddingRight="@dimen/reader_detail_margin"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

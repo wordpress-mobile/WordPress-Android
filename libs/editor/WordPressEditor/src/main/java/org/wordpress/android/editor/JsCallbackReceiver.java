@@ -2,9 +2,15 @@ package org.wordpress.android.editor;
 
 import android.webkit.JavascriptInterface;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.JSONUtils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class JsCallbackReceiver {
@@ -26,6 +32,8 @@ public class JsCallbackReceiver {
 
     private static final String CALLBACK_LOG = "callback-log";
 
+    private static final String CALLBACK_RESPONSE_STRING = "callback-response-string";
+
     private final OnJsEditorStateChangedListener mListener;
 
     private Set<String> mPreviousStyleSet = new HashSet<>();
@@ -42,9 +50,19 @@ public class JsCallbackReceiver {
                 break;
             case CALLBACK_SELECTION_STYLE:
                 // Compare the new styles to the previous ones, and notify the JsCallbackListener of the changeset
-                Set<String> newStyleSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
-                mListener.onSelectionStyleChanged(Utils.getChangeMapFromSets(mPreviousStyleSet,
-                        newStyleSet));
+                Set<String> rawStyleSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
+
+                // Strip link details from active style set
+                Set<String> newStyleSet = new HashSet<>();
+                for (String element : rawStyleSet) {
+                    if (element.matches("link:(.*)")) {
+                        newStyleSet.add("link");
+                    } else if (!element.matches("link-title:(.*)")) {
+                        newStyleSet.add(element);
+                    }
+                }
+
+                mListener.onSelectionStyleChanged(Utils.getChangeMapFromSets(mPreviousStyleSet, newStyleSet));
                 mPreviousStyleSet = newStyleSet;
                 break;
             case CALLBACK_SELECTION_CHANGED:
@@ -75,16 +93,100 @@ public class JsCallbackReceiver {
                 AppLog.d(AppLog.T.EDITOR, "Image replaced, " + params);
                 break;
             case CALLBACK_IMAGE_TAP:
-                // TODO: Notifies that an image was tapped
                 AppLog.d(AppLog.T.EDITOR, "Image tapped, " + params);
+
+                String uploadStatus = "";
+
+                List<String> mediaIds = new ArrayList<>();
+                mediaIds.add("id");
+                mediaIds.add("url");
+                mediaIds.add("meta");
+
+                Set<String> mediaDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, mediaIds);
+                Map<String, String> mediaDataMap = Utils.buildMapFromKeyValuePairs(mediaDataSet);
+
+                String mediaId = mediaDataMap.get("id");
+
+                String mediaUrl = mediaDataMap.get("url");
+                if (mediaUrl != null) {
+                    mediaUrl = Utils.decodeHtml(mediaUrl);
+                }
+
+                String mediaMeta = mediaDataMap.get("meta");
+                JSONObject mediaMetaJson = new JSONObject();
+
+                if (mediaMeta != null) {
+                    mediaMeta = Utils.decodeHtml(mediaMeta);
+
+                    try {
+                        mediaMetaJson = new JSONObject(mediaMeta);
+                        String classes = JSONUtils.getString(mediaMetaJson, "classes");
+                        Set<String> classesSet = Utils.splitDelimitedString(classes, ", ");
+
+                        if (classesSet.contains("uploading")) {
+                            uploadStatus = "uploading";
+                        } else if (classesSet.contains("failed")) {
+                            uploadStatus = "failed";
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        AppLog.d(AppLog.T.EDITOR, "Media meta data from callback-image-tap was not JSON-formatted");
+                    }
+                }
+
+                mListener.onMediaTapped(mediaId, mediaUrl, mediaMetaJson, uploadStatus);
                 break;
             case CALLBACK_LINK_TAP:
-                // TODO: Notifies that a link was tapped
+                // Extract and HTML-decode the link data from the callback params
                 AppLog.d(AppLog.T.EDITOR, "Link tapped, " + params);
+
+                List<String> linkIds = new ArrayList<>();
+                linkIds.add("url");
+                linkIds.add("title");
+
+                Set<String> linkDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, linkIds);
+                Map<String, String> linkDataMap = Utils.buildMapFromKeyValuePairs(linkDataSet);
+
+                String url = linkDataMap.get("url");
+                if (url != null) {
+                    url = Utils.decodeHtml(url);
+                }
+
+                String title = linkDataMap.get("title");
+                if (title != null) {
+                    title = Utils.decodeHtml(title);
+                }
+
+                mListener.onLinkTapped(url, title);
                 break;
             case CALLBACK_LOG:
                 // Strip 'msg=' from beginning of string
                 AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params.substring(4));
+                break;
+            case CALLBACK_RESPONSE_STRING:
+                AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
+                Set<String> responseDataSet;
+                if (params.startsWith("function=")) {
+                    String functionName = params.substring("function=".length(), params.indexOf(JS_CALLBACK_DELIMITER));
+
+                    List<String> responseIds = new ArrayList<>();
+                    switch (functionName) {
+                        case "getHTMLForCallback":
+                            responseIds.add("id");
+                            responseIds.add("contents");
+                            break;
+                        case "getSelectedText":
+                            responseIds.add("result");
+                            break;
+                        case "getFailedImages":
+                            responseIds.add("ids");
+                    }
+
+                    responseDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, responseIds);
+                } else {
+                    responseDataSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
+                }
+                mListener.onGetHtmlResponse(Utils.buildMapFromKeyValuePairs(responseDataSet));
                 break;
             default:
                 AppLog.d(AppLog.T.EDITOR, "Unhandled callback: " + callbackId + ":" + params);

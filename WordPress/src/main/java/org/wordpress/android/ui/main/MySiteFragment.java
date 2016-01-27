@@ -2,9 +2,10 @@ package org.wordpress.android.ui.main;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -21,15 +23,17 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaAddFragment;
+import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -38,7 +42,6 @@ import de.greenrobot.event.EventBus;
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
 
-    public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
     private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
     private static final long ALERT_ANIM_DURATION_MS = 1000l;
 
@@ -47,34 +50,67 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private View mConfigurationHeader;
+    private View mSettingsView;
     private View mFabView;
+    private LinearLayout mNoSiteView;
+    private ScrollView mScrollView;
+    private ImageView mNoSiteDrakeImageView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
 
-    private Blog mBlog;
+    private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
     }
 
-    public void setBlog(Blog blog) {
-        mBlog = blog;
-        refreshBlogDetails();
+    public void setBlog(@Nullable final Blog blog) {
+        mBlogLocalId = BlogUtils.getBlogLocalId(blog);
+
+        refreshBlogDetails(blog);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBlog = WordPress.getCurrentBlog();
+
+        mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mFabView.getVisibility() == View.VISIBLE) {
+            AniUtils.showFab(mFabView, false);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        final Blog blog = WordPress.getBlog(mBlogLocalId);
+
+        // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
+        refreshBlogDetails(blog);
+
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
+        // redisplay hidden fab after a short delay
+        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()
+                        && blog != null
+                        && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                    AniUtils.showFab(mFabView, true);
+                }
+            }
+        }, delayMs);
     }
 
     @Override
@@ -82,10 +118,7 @@ public class MySiteFragment extends Fragment
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
-
-        int fabHeight = getResources().getDimensionPixelSize(com.getbase.floatingactionbutton.R.dimen.fab_size_normal);
+        int fabHeight = getResources().getDimensionPixelSize(android.support.design.R.dimen.design_fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
@@ -95,12 +128,17 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
+        mSettingsView = rootView.findViewById(R.id.row_settings);
+        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+        mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
+        mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getBlog(mBlogLocalId), false);
             }
         });
 
@@ -121,9 +159,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBlog != null) {
-                    ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
-                }
+                ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
             }
         });
 
@@ -162,30 +198,33 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
+        mSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
+                ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getBlog(mBlogLocalId));
             }
         });
 
         rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
+                ActivityLauncher.viewBlogAdmin(getActivity(), WordPress.getBlog(mBlogLocalId));
             }
         });
 
-        refreshBlogDetails();
+        rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SitePickerActivity.addSite(getActivity());
+            }
+        });
 
         return rootView;
     }
 
     private void showSitePicker() {
         if (isAdded()) {
-            ReaderAnim.showFab(mFabView, false);
-            int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
-            ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
+            ActivityLauncher.showSitePickerForResult(getActivity(), mBlogLocalId);
         }
     }
 
@@ -194,22 +233,11 @@ public class MySiteFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RequestCodes.PICTURE_LIBRARY:
-                FragmentManager fm = getFragmentManager();
-                Fragment addFragment = fm.findFragmentByTag(ADD_MEDIA_FRAGMENT_TAG);
-                if (addFragment != null) {
-                    addFragment.onActivityResult(requestCode, resultCode, data);
-                }
-                break;
-
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
                     setBlog(WordPress.getCurrentBlog());
                 }
-                // redisplay the hidden fab after a short delay
-                long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-                ReaderAnim.showFabDelayed(mFabView, true, delayMs);
                 break;
 
             case RequestCodes.EDIT_POST:
@@ -222,6 +250,11 @@ public class MySiteFragment extends Fragment
                         && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
+                break;
+
+            case RequestCodes.CREATE_BLOG:
+                // user created a new blog so, use and show that new one
+                setBlog(WordPress.getCurrentBlog());
                 break;
         }
     }
@@ -250,30 +283,60 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void refreshBlogDetails() {
-        if (!isAdded() || mBlog == null) {
+    private void refreshBlogDetails(@Nullable final Blog blog) {
+        if (!isAdded()) {
             return;
         }
+
+        if (blog == null) {
+            mScrollView.setVisibility(View.GONE);
+            mFabView.setVisibility(View.GONE);
+            mNoSiteView.setVisibility(View.VISIBLE);
+
+            // if the screen height is too short, we can just hide the drake illustration
+            Activity activity = getActivity();
+            boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
+            if (drakeVisibility) {
+                mNoSiteDrakeImageView.setVisibility(View.VISIBLE);
+            } else {
+                mNoSiteDrakeImageView.setVisibility(View.GONE);
+            }
+
+            return;
+        }
+
+        mScrollView.setVisibility(View.VISIBLE);
+        mNoSiteView.setVisibility(View.GONE);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
+        // show settings for all self-hosted to expose Delete Site
+        int settingsVisibility = blog.isAdmin() || !blog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        mConfigurationHeader.setVisibility(settingsVisibility);
+        mSettingsView.setVisibility(settingsVisibility);
 
-        String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
-        String hostName = StringUtils.getHost(mBlog.getUrl());
-        String blogTitle = TextUtils.isEmpty(blogName) ? hostName : blogName;
+        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(blog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
+
+        String blogName = StringUtils.unescapeHTML(blog.getBlogName());
+        String homeURL;
+        if (!TextUtils.isEmpty(blog.getHomeURL())) {
+            homeURL = UrlUtils.removeScheme(blog.getHomeURL());
+            homeURL = StringUtils.removeTrailingSlash(homeURL);
+        } else {
+            homeURL = UrlUtils.getHost(blog.getUrl());
+        }
+        String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
 
         mBlogTitleTextView.setText(blogTitle);
-        mBlogSubtitleTextView.setText(hostName);
+        mBlogSubtitleTextView.setText(homeURL);
     }
 
     @Override
     public void onScrollToTop() {
         if (isAdded()) {
-            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
-            scrollView.smoothScrollTo(0, 0);
+            mScrollView.smoothScrollTo(0, 0);
         }
     }
 
@@ -295,5 +358,14 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
         mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+        if (!isAdded()) {
+            return;
+        }
+
+        refreshBlogDetails(WordPress.getBlog(mBlogLocalId));
     }
 }

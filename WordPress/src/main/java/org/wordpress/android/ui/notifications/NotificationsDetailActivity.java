@@ -4,13 +4,13 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMIntentService;
+import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
@@ -19,7 +19,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
-import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -39,9 +38,10 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class NotificationsDetailActivity extends ActionBarActivity implements
+public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener {
     private static final String ARG_TITLE = "activityTitle";
+    private static final String DOMAIN_WPCOM = "wordpress.com";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,6 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setElevation(0.0f);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -74,7 +73,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
                     Fragment detailFragment = getDetailFragmentForNote(note);
                     getFragmentManager().beginTransaction()
                             .add(R.id.notifications_detail_container, detailFragment)
-                            .commit();
+                            .commitAllowingStateLoss();
 
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(note.getTitle());
@@ -100,7 +99,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
-        GCMIntentService.clearNotificationsMap();
+        GCMMessageService.clearNotifications();
     }
 
     @Override
@@ -112,7 +111,7 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            finish();
             return true;
         }
 
@@ -193,7 +192,11 @@ public class NotificationsDetailActivity extends ActionBarActivity implements
     public void showWebViewActivityForUrl(String url) {
         if (isFinishing() || url == null) return;
 
-        WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
+        if (url.contains(DOMAIN_WPCOM)) {
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
+        } else {
+            WPWebViewActivity.openURL(this, url);
+        }
     }
 
     public void showReaderPostLikeUsers(long blogId, long postId) {

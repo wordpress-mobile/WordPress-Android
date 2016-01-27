@@ -1,29 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-    header used by reader post list when previewing posts with a specific tag
--->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_tag_info_view"
+    android:id="@+id/layout_tag_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_primary"
-    android:orientation="horizontal">
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_tag_name"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginLeft="@dimen/content_margin"
-        android:layout_marginRight="@dimen/content_margin"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:paddingLeft="@dimen/reader_card_content_padding"
-        android:paddingRight="@dimen/reader_card_content_padding"
-        android:textColor="@color/blue_light"
-        android:textSize="@dimen/text_sz_large"
-        tools:text="@string/reader_label_tag_preview" />
+        android:layout_marginLeft="@dimen/reader_card_content_padding"
+        android:layout_marginRight="@dimen/reader_card_content_padding"
+        android:minHeight="@dimen/toolbar_height"
+        android:paddingLeft="@dimen/reader_card_margin"
+        android:paddingRight="@dimen/reader_card_margin">
 
-</FrameLayout>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/follow_button"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="text_tag" />
+
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/follow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_lighten_20" />
+
+</LinearLayout>

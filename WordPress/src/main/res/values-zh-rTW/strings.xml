@@ -1,5 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">此文章已不存在</string>
+	<string name="reader_err_get_post_not_authorized">你未獲授權無法檢視此文章</string>
+	<string name="reader_err_get_post_generic">無法擷取此文章</string>
+	<string name="blog_name_no_spaced_allowed">網站位址不可包含空格</string>
+	<string name="invalid_username_no_spaces">使用者名稱不可包含空格</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">您所關注的網站最近未發表任何文章</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">沒有近期文章</string>
+	<string name="media_details_copy_url_toast">URL 已複製到剪貼簿</string>
+	<string name="edit_media">編輯媒體</string>
+	<string name="media_details_copy_url">複製 URL</string>
+	<string name="media_details_label_date_uploaded">已上傳</string>
+	<string name="media_details_label_date_added">已新增</string>
+	<string name="selected_theme">選取的佈景主題</string>
+	<string name="could_not_load_theme">無法載入佈景主題</string>
+	<string name="theme_activation_error">發生了點錯誤。無法啟用佈景主題</string>
+	<string name="theme_by_author_prompt_append">作者：%1$s</string>
+	<string name="theme_prompt">感謝你選擇 %1$s</string>
+	<string name="theme_try_and_customize">試用與自訂</string>
+	<string name="theme_view">檢視</string>
+	<string name="theme_details">詳細資料</string>
+	<string name="theme_support">支援</string>
+	<string name="theme_done">完成</string>
+	<string name="theme_manage_site">管理網站</string>
+	<string name="title_activity_theme_support">佈景主題</string>
+	<string name="theme_activate">啟用</string>
+	<string name="date_range_start_date">開始日期</string>
+	<string name="date_range_end_date">結束日期</string>
+	<string name="current_theme">目前佈景主題</string>
+	<string name="customize">自訂</string>
+	<string name="details">詳細資料</string>
+	<string name="support">支援</string>
+	<string name="active">已啟用</string>
+	<string name="stats_referrers_spam_generic_error">操作期間發生錯誤。垃圾留言狀態並未變更。</string>
+	<string name="stats_referrers_marking_not_spam">標記為非垃圾留言</string>
+	<string name="stats_referrers_unspam">非垃圾留言</string>
+	<string name="stats_referrers_marking_spam">標記為垃圾留言</string>
+	<string name="theme_auth_error_authenticate">佈景主題擷取失敗：使用者授權失敗</string>
+	<string name="post_published">文章已發表</string>
+	<string name="page_published">頁面已發表</string>
+	<string name="post_updated">文章已更新</string>
+	<string name="page_updated">頁面已更新</string>
+	<string name="stats_referrers_spam">垃圾郵件</string>
+	<string name="theme_no_search_result_found">很抱歉，找不到佈景主題。</string>
+	<string name="media_file_name">檔案名稱：%s</string>
+	<string name="media_uploaded_on">上傳時間：%s</string>
+	<string name="media_dimensions">尺寸：%s</string>
+	<string name="upload_queued">已排進佇列</string>
+	<string name="media_file_type">檔案類型：%s</string>
+	<string name="reader_label_gap_marker">載入更多文章</string>
+	<string name="notifications_no_search_results">沒有網站符合「%s」</string>
+	<string name="search_sites">搜尋網站</string>
+	<string name="notifications_empty_view_reader">檢視讀取器</string>
+	<string name="unread">未讀</string>
+	<string name="notifications_empty_action_followers_likes">取得通知：在已閱讀的文章上留言。</string>
+	<string name="notifications_empty_action_comments">加入討論：在關注的網誌文章上留言。</string>
+	<string name="notifications_empty_action_unread">再度展開討論：撰寫新文章。</string>
+	<string name="notifications_empty_action_all">動起來吧！立即在你關注的網誌文章上留言。</string>
+	<string name="notifications_empty_likes">尚未有新的讚。</string>
+	<string name="notifications_empty_followers">尚未有新的關注者。</string>
+	<string name="notifications_empty_comments">尚未有新的留言。</string>
+	<string name="notifications_empty_unread">你已追上最新進度！</string>
+	<string name="stats_widget_error_jetpack_no_blogid">請先存取應用程式中的統計資料，稍後再試著新增小工具</string>
+	<string name="stats_widget_error_readd_widget">請移除小工具，然後再新增一次</string>
+	<string name="stats_widget_error_no_visible_blog">在未開放網誌的情況下無法存取統計資料</string>
+	<string name="stats_widget_error_no_permissions">你的 WordPress.com 帳號無法存取此網誌的統計資料</string>
+	<string name="stats_widget_error_no_account">請登入 WordPress</string>
+	<string name="stats_widget_error_generic">無法載入統計資料</string>
+	<string name="stats_widget_loading_data">正在載入資料…</string>
+	<string name="stats_widget_name_for_blog">%1$s 的本日統計資料</string>
+	<string name="stats_widget_name">WordPress 本日統計</string>
+	<string name="add_location_permission_required">需要擁有權限才能新增位置</string>
+	<string name="add_media_permission_required">需要擁有權限才能新增媒體</string>
+	<string name="access_media_permission_required">需要擁有權限才能存取媒體</string>
+	<string name="stats_enable_rest_api_in_jetpack">若要查看統計資料，請啟用 Jetpack 的 JSON API 模組。</string>
+	<string name="error_open_list_from_notification">此文章或頁面已發表於其他網站</string>
+	<string name="reader_short_comment_count_multi">%s評論</string>
+	<string name="reader_short_comment_count_one">1評論</string>
+	<string name="reader_label_submit_comment">發送</string>
+	<string name="reader_hint_comment_on_post">回复文章...</string>
+	<string name="reader_discover_visit_blog">造訪 %s</string>
+	<string name="reader_discover_attribution_blog">原始發表位置：%s</string>
+	<string name="reader_discover_attribution_author">原始作者：%s</string>
+	<string name="reader_discover_attribution_author_and_blog">原始作者：%1$s，發表位置：%2$s</string>
+	<string name="reader_short_like_count_multi">%s 個讚</string>
+	<string name="reader_short_like_count_one">1 個讚</string>
+	<string name="reader_label_follow_count">%,d 個關注者</string>
+	<string name="reader_short_like_count_none">讚</string>
+	<string name="reader_label_reading_time_in_minutes">%,d 分鐘</string>
+	<string name="reader_menu_tags">編輯標籤和網誌</string>
+	<string name="reader_label_word_count">%,d 字</string>
+	<string name="reader_title_post_detail">讀者文章</string>
+	<string name="local_draft_explainer">這篇文章是儲存在本機上的草稿，尚未發表</string>
+	<string name="local_changes_explainer">這篇文章的本機存檔經過變更，變更內容尚未發表</string>
+	<string name="notifications_push_summary">在裝置上顯示通知的相關設定。</string>
+	<string name="notifications_email_summary">將通知傳送至帳號所繫結之電子郵件地址的相關設定。</string>
+	<string name="notifications_tab_summary">在通知索引標籤中顯示通知的相關設定。</string>
+	<string name="notifications_disabled">應用程式通知已停用。點選這裡，即可在「設定」中啟用通知。</string>
+	<string name="notification_types">通知類型</string>
+	<string name="error_loading_notifications">無法載入通知設定</string>
+	<string name="replies_to_your_comments">留言的回覆</string>
+	<string name="comment_likes">按讚的留言</string>
+	<string name="app_notifications">應用程式通知</string>
+	<string name="notifications_tab">通知索引標籤</string>
+	<string name="email">電子郵件</string>
+	<string name="notifications_comments_other_blogs">其他網站上的留言</string>
+	<string name="notifications_other">其他</string>
+	<string name="notifications_wpcom_updates">WordPress.com 消息更新</string>
+	<string name="notifications_account_emails">WordPress.com 寄送的電子郵件</string>
+	<string name="notifications_account_emails_summary">我們會隨時傳送與帳號資訊相關的重要電子郵件，除此之外，你也能獲得實用的額外內容。</string>
+	<string name="your_sites">你的網站</string>
+	<string name="notifications_sights_and_sounds">提示與音效</string>
+	<string name="stats_insights_latest_post_trend">自從 %2$s 發表以來已經過了 %1$s。文章截至目前為止獲得的迴響如下…</string>
+	<string name="stats_insights_latest_post_summary">最新文章摘要</string>
+	<string name="button_revert">還原</string>
+	<string name="days_ago">%d 天前</string>
+	<string name="yesterday">昨天</string>
+	<string name="connectionbar_no_connection">沒有連線</string>
+	<string name="page_trashed">頁面已移至垃圾桶</string>
+	<string name="post_deleted">文章已刪除</string>
+	<string name="post_trashed">文章已移至垃圾桶</string>
+	<string name="stats_no_activity_this_period">此期間沒有任何活動</string>
+	<string name="trashed">已移至垃圾桶</string>
+	<string name="button_back">返回</string>
+	<string name="page_deleted">頁面已刪除</string>
+	<string name="button_more">更多</string>
+	<string name="button_stats">統計</string>
+	<string name="button_trash">垃圾桶</string>
+	<string name="button_preview">預覽</string>
+	<string name="button_view">檢視</string>
+	<string name="button_edit">編輯</string>
+	<string name="button_publish">發表</string>
+	<string name="button_delete">刪除</string>
+	<string name="my_site_no_sites_view_subtitle">你希望加入一個嗎?</string>
+	<string name="my_site_no_sites_view_title">你還沒有任何 WordPress 網站。</string>
+	<string name="my_site_no_sites_view_drake">圖示</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">你沒有存取此網誌的權限</string>
+	<string name="reader_toast_err_follow_blog_not_found">無法找到這個部落格</string>
+	<string name="undo">復原</string>
+	<string name="tabbar_accessibility_label_my_site">我的網站</string>
+	<string name="tabbar_accessibility_label_me">我</string>
+	<string name="passcodelock_prompt_message">輸入 PIN 碼</string>
+	<string name="editor_toast_changes_saved">變更已儲存</string>
+	<string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
+	<string name="stats_insights_best_ever">最佳的瀏覽次數</string>
+	<string name="ignore">忽略</string>
+	<string name="stats_insights_most_popular_percent_views">瀏覽次數：%1$d%%</string>
+	<string name="stats_insights_most_popular_hour">最熱門的時段</string>
+	<string name="stats_insights_most_popular_day">最熱門的日子</string>
+	<string name="stats_insights_popular">最熱門的日子及時段</string>
+	<string name="stats_insights_today">本日統計</string>
+	<string name="stats_insights_all_time">有史以來的文章數、瀏覽次數與訪客數</string>
+	<string name="stats_insights">Insights</string>
+	<string name="stats_sign_in_jetpack_different_com_account">若要檢視統計資料，請使用連線 Jetpack 的帳號登入 WordPress.com。</string>
+	<string name="stats_other_recent_stats_moved_label">正在尋找其他近期統計資料嗎？我們已將統計資料移至「Insights」頁面。</string>
+	<string name="me_disconnect_from_wordpress_com">中斷與 WordPress.com 的連線</string>
+	<string name="me_btn_login_logout">登入/登出</string>
+	<string name="me_connect_to_wordpress_com">連線 WordPress.com</string>
+	<string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
+	<string name="me_btn_support">說明與客戶服務</string>
+	<string name="me_btn_settings">帳號設定</string>
+	<string name="site_picker_create_dotcom">建立 WordPress.com 網站</string>
+	<string name="site_picker_edit_visibility">顯示/隱藏網站</string>
+	<string name="site_picker_add_self_hosted">新增自助託管的網站</string>
+	<string name="site_picker_add_site">新增網站</string>
+	<string name="my_site_btn_switch_site">切換網站</string>
+	<string name="site_picker_title">選擇網站</string>
+	<string name="my_site_btn_view_site">檢視網站</string>
+	<string name="my_site_btn_view_admin">檢視管理員</string>
+	<string name="my_site_header_publish">發表</string>
+	<string name="my_site_header_look_and_feel">外觀和風格</string>
+	<string name="my_site_btn_site_settings">設定</string>
+	<string name="my_site_btn_comments">留言</string>
+	<string name="my_site_btn_blog_posts">網誌文章</string>
+	<string name="my_site_header_admin">管理</string>
+	<string name="reader_label_new_posts_subtitle">點選以顯示</string>
+	<string name="my_site_header_configuration">組態</string>
+	<string name="notifications_account_required">登入 WordPress.com 以接收通知</string>
+	<string name="stats_unknown_author">不明作者</string>
+	<string name="signout">中斷連結</string>
+	<string name="image_added">已新增圖片</string>
+	<string name="select_all">全部選取</string>
+	<string name="sign_out_wpcom_confirm">中斷帳號連結將會移除此裝置上 @%s 的所有 WordPress.com 資料，包括本機草稿及變更項目。</string>
+	<string name="show">顯示</string>
+	<string name="hide">隱藏</string>
+	<string name="deselect_all">取消全選</string>
 	<string name="select_from_new_picker">使用全新挑選器一次選取多個項目</string>
 	<string name="loading_blog_videos">正在擷取影片</string>
 	<string name="no_media_sources">無法擷取媒體</string>
@@ -26,12 +211,6 @@
 	<string name="tab_title_device_videos">裝置影片</string>
 	<string name="tab_title_site_images">網站圖片</string>
 	<string name="tab_title_site_videos">網站影片</string>
-	<string name="media_details_added_on">已新增於：</string>
-	<string name="media_details_uploaded_on">已上傳於：</string>
-	<string name="media_details_file_name">檔案名稱：</string>
-	<string name="media_details_file_type">檔案類型：</string>
-	<string name="media_details_file_url">檔案 URL：</string>
-	<string name="media_details_dimensions">尺寸：</string>
 	<string name="error_publish_no_network">未連線時無法發表。已儲存為草稿。</string>
 	<string name="editor_toast_invalid_path">檔案路徑無效</string>
 	<string name="verification_code">驗證碼</string>
@@ -58,7 +237,6 @@
 	<string name="publisher">發佈者：</string>
 	<string name="error_notification_open">無法開啟通知</string>
 	<string name="reader_empty_posts_request_failed">無法擷取文章</string>
-	<string name="reader_page_recommended_blogs">你可能會喜歡的部落格</string>
 	<string name="stats_months_and_years">月份與年份</string>
 	<string name="stats_average_per_day">每天平均</string>
 	<string name="stats_recent_weeks">最近幾星期</string>
@@ -70,6 +248,8 @@
 	<string name="stats_total">總計</string>
 	<string name="stats_overall">整體</string>
 	<string name="post_uploading">正在上傳</string>
+	<string name="reader_page_recommended_blogs">你或許也會喜歡以下網站：</string>
+	<string name="stats_comments_total_comments_followers">含有留言關注者的文章總數：%1$s</string>
 	<string name="stats_visitors">訪客</string>
 	<string name="stats_timeframe_years">年</string>
 	<string name="stats_views">點閱數</string>
@@ -107,7 +287,6 @@
 	<string name="stats_empty_publicize_desc">使用 Publicize 追蹤來自不同社交網路服務的關注者。</string>
 	<string name="stats_comments_by_posts_and_pages">依文章與頁面</string>
 	<string name="stats_empty_followers_desc">追蹤關注者總人數，以及這些關注者分別已關注你的網站多久時間。</string>
-	<string name="stats_comments_total_comments_followers">留言關注者總數：%1$s</string>
 	<string name="stats_comments_by_authors">依作者</string>
 	<string name="stats_followers_email_selector">電子郵件</string>
 	<string name="stats_followers_total_wpcom">WordPress.com 關注者總數：%1$s</string>
@@ -130,6 +309,7 @@
 	<string name="stats_other_recent_stats_label">其他近期統計資料</string>
 	<string name="themes_fetching">正在擷取佈景主題...</string>
 	<string name="ssl_certificate_details">詳細資料</string>
+	<string name="sure_to_remove_account">移除此網站？</string>
 	<string name="delete_sure_post">刪除此文章</string>
 	<string name="delete_sure">刪除此草稿</string>
 	<string name="delete_sure_page">刪除此頁面</string>
@@ -137,7 +317,6 @@
 	<string name="confirm_delete_media">要刪除選取的項目嗎？</string>
 	<string name="cab_selected">已選取：%d</string>
 	<string name="media_gallery_date_range">顯示自 %1$s 到 %2$s 的媒體</string>
-	<string name="reader_empty_followed_blogs_title">你尚未關注任何網誌</string>
 	<string name="reader_empty_posts_liked">你未對任何文章按讚</string>
 	<string name="faq_button">常見問題集</string>
 	<string name="browse_our_faq_button">瀏覽常見問題集</string>
@@ -146,14 +325,10 @@
 	<string name="create_new_blog_wpcom">建立 WordPress.com 網誌</string>
 	<string name="new_blog_wpcom_created">WordPress.com 網誌已建立！</string>
 	<string name="reader_empty_comments">尚未有留言</string>
-	<string name="reader_likes_multi_short">%,d 個人</string>
 	<string name="reader_empty_posts_in_tag">沒有任何含有此標籤的文章</string>
 	<string name="reader_label_comment_count_multi">%,d 則留言</string>
 	<string name="reader_label_view_original">查看原始文章</string>
 	<string name="reader_label_like">按讚</string>
-	<string name="reader_label_liked_by">按讚的人：</string>
-	<string name="reader_label_liked_by_you">你已按讚的內容</string>
-	<string name="reader_likes_one_short">1 個人</string>
 	<string name="reader_label_comment_count_single">一則留言</string>
 	<string name="reader_label_comments_closed">留言已關閉</string>
 	<string name="reader_label_comments_on">以下內容的留言：</string>
@@ -163,7 +338,6 @@
 	<string name="error_refresh_unauthorized_posts">你沒有查看或編輯文章的權限</string>
 	<string name="error_refresh_unauthorized_pages">你沒有查看或編輯頁面的權限</string>
 	<string name="error_refresh_unauthorized_comments">你沒有查看或編輯留言的權限</string>
-	<string name="overwrite_local_changes">你已針對尚未上傳的文章進行變更。繼續重新整理並覆寫本機變更？</string>
 	<string name="older_month">超過一個月</string>
 	<string name="older_two_days">超過 2 天</string>
 	<string name="older_last_week">超過一週</string>
@@ -180,6 +354,7 @@
 	<string name="media_empty_list_custom_date">此時間間隔內沒有媒體</string>
 	<string name="posting_post">正在發表「%s」</string>
 	<string name="signing_out">正在登出…</string>
+	<string name="reader_empty_followed_blogs_title">你尚未關注任何網站</string>
 	<string name="reader_toast_err_generic">無法執行此動作</string>
 	<string name="reader_toast_err_block_blog">無法封鎖此網誌</string>
 	<string name="reader_toast_blog_blocked">將不再顯示此網誌的文章</string>
@@ -199,18 +374,10 @@
 	<string name="preference_privacy">隱私</string>
 	<string name="preference_send_usage_stats">傳送統計資料</string>
 	<string name="preference_send_usage_stats_summary">自動傳送使用統計資料，協助我們改善 Android 版 WordPress</string>
-	<string name="reader_title_reblog">轉發文章</string>
-	<string name="reader_hint_reblog_comment">新增你的想法 (選填)</string>
-	<string name="reader_label_reblog_to">轉發至</string>
 	<string name="update_verb">更新</string>
 	<string name="schedule_verb">排程</string>
-	<string name="reader_title_blog_preview">預覽網誌</string>
-	<string name="reader_title_tag_preview">預覽標籤</string>
 	<string name="reader_title_subs">標籤和網誌</string>
 	<string name="reader_page_followed_tags">關注的標籤</string>
-	<string name="reader_page_popular_tags">熱門標籤</string>
-	<string name="reader_page_followed_blogs">關注的網誌</string>
-	<string name="reader_hint_add_tag_or_url">輸入要關注的標籤或網址</string>
 	<string name="reader_label_followed_blog">網誌已關注</string>
 	<string name="reader_label_tag_preview">已下標籤的文章 %s</string>
 	<string name="reader_toast_err_get_blog_info">無法顯示此網誌</string>
@@ -218,16 +385,20 @@
 	<string name="reader_toast_err_follow_blog">無法關注此網誌</string>
 	<string name="reader_toast_err_unfollow_blog">無法取消關注此網誌</string>
 	<string name="reader_empty_recommended_blogs">沒有推薦的網誌</string>
+	<string name="reader_title_blog_preview">讀者網誌</string>
+	<string name="reader_title_tag_preview">讀者標籤</string>
+	<string name="reader_page_followed_blogs">關注的網站</string>
+	<string name="reader_hint_add_tag_or_url">輸入要關注的 URL 或標籤</string>
 	<string name="saving">儲存中…</string>
 	<string name="media_empty_list">沒有媒體</string>
 	<string name="ptr_tip_message">秘訣：下拉即可重新整理</string>
-	<string name="reader_label_reblog_empty">你沒有能夠轉發此文章的可見 WordPress.com 目標網誌</string>
 	<string name="help">說明</string>
 	<string name="forgot_password">忘記密碼？</string>
 	<string name="forums">論壇</string>
 	<string name="help_center">說明中心</string>
 	<string name="ssl_certificate_error">無效的 SSL 憑證</string>
 	<string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>
+	<string name="could_not_remove_account">無法移除網站</string>
 	<string name="out_of_memory">裝置記憶體不足</string>
 	<string name="no_network_message">沒有可用的網路</string>
 	<string name="gallery_error">無法擷取媒體項目</string>
@@ -236,7 +407,6 @@
 	<string name="theme_fetch_failed">無法擷取佈景主題</string>
 	<string name="theme_set_failed">無法設定佈景主題</string>
 	<string name="theme_auth_error_message">確認你有設定佈景主題的權限</string>
-	<string name="theme_no_search_result_found">找不到結果</string>
 	<string name="comments_empty_list">無回應</string>
 	<string name="mnu_comment_unspam">非垃圾</string>
 	<string name="no_site_error">無法連線至 WordPress 網站</string>
@@ -293,6 +463,8 @@
 	<string name="blog_name_reserved_but_may_be_available">該網站目前已被預定，但可能幾天後便可供使用</string>
 	<string name="username_or_password_incorrect">你輸入的使用者名稱或密碼不正確</string>
 	<string name="nux_cannot_log_in">我們無法將你登入</string>
+	<string name="blog_removed_successfully">已成功移除網站</string>
+	<string name="remove_account">移除網站</string>
 	<string name="xmlrpc_error">無法連線。在你的網站上輸入 xmlrpc.php 的完整路徑，然後再試一次。</string>
 	<string name="select_categories">選取類別</string>
 	<string name="account_details">帳號詳細資料</string>
@@ -350,9 +522,7 @@
 	<string name="toast_comment_unedited">回應尚未變更</string>
 	<string name="delete_draft">刪除草稿</string>
 	<string name="preview_page">預覽頁面</string>
-	<string name="page_deleted">頁面已成功刪除</string>
 	<string name="preview_post">預覽文章</string>
-	<string name="post_deleted">文章已成功刪除</string>
 	<string name="comment_added">回應已成功新增</string>
 	<string name="post_not_published">文章狀態未發佈</string>
 	<string name="page_not_published">頁面狀態未發佈</string>
@@ -367,7 +537,6 @@
 	<string name="file_error_create">無法建立暫存檔進行媒體上傳。確認裝置上有足夠的可用空間。</string>
 	<string name="location_not_found">未知的位置</string>
 	<string name="open_source_licenses">開啟來源授權</string>
-	<string name="stats_view_tags_and_categories">標籤和類別</string>
 	<string name="pending_review">待審中</string>
 	<string name="http_credentials">HTTP 憑證 (選填)</string>
 	<string name="http_authorization_required">需要授權</string>
@@ -385,7 +554,6 @@
 	<string name="jetpack_message_not_admin">統計需要 Jetpack 外掛程式。請聯絡網站管理員。</string>
 	<string name="reader_title_applog">應用程式記錄檔</string>
 	<string name="reader_share_link">分享連結</string>
-	<string name="reader_toast_err_reblog_requires_blog">選取網誌</string>
 	<string name="reader_toast_err_add_tag">無法新增此標籤</string>
 	<string name="reader_toast_err_remove_tag">無法移除此標籤</string>
 	<string name="required_field">必填欄位</string>
@@ -397,6 +565,7 @@
 	<string name="blog_name_must_include_letters">網站位址必須至少有 1 個字母 (a-z)</string>
 	<string name="blog_name_invalid">無效的網站位址</string>
 	<string name="blog_title_invalid">無效的網站標題</string>
+	<string name="notifications_empty_all">尚未有任何通知。</string>
 	<string name="deleting_page">正在刪除頁面</string>
 	<string name="deleting_post">正在刪除文章</string>
 	<string name="share_url_post">分享文章</string>
@@ -426,7 +595,7 @@
 	<string name="reader_toast_err_get_post">無法擷取此文章</string>
 	<string name="validating_user_data">正在驗證使用者資料</string>
 	<string name="validating_site_data">正在驗證網站資料</string>
-	<string name="reader_empty_followed_blogs_description">但是請放心，只要點選標籤圖示即可開始探索！</string>
+	<string name="reader_empty_followed_blogs_description">不過別擔心，只要點選右上方的圖示即可開始探索！</string>
 	<string name="password_invalid">你需要一組更安全的密碼。請務必使用 7 個或更多字元，並混合使用大小寫字母、數字或特殊字元。</string>
 	<string name="nux_tap_continue">繼續</string>
 	<string name="nux_welcome_create_account">建立帳號</string>
@@ -443,18 +612,11 @@
 	<string name="reader_untitled_post">（未命名）</string>
 	<string name="reader_share_subject">從 %s 分享</string>
 	<string name="reader_btn_unfollow">追蹤</string>
-	<string name="reader_hint_comment_on_post">新增你的迴響</string>
-	<string name="reader_hint_comment_on_comment">回應該迴響</string>
 	<string name="reader_label_added_tag">新增 %s</string>
 	<string name="reader_label_removed_tag">移除 %s</string>
-	<string name="reader_toast_reblog_success">文章已被轉載</string>
-	<string name="reader_toast_err_reblog_failed">無法轉載該文章</string>
-	<string name="reader_toast_err_already_reblogged">你已經轉載該文章</string>
-	<string name="reader_menu_tags">標籤</string>
 	<string name="reader_btn_share">分享</string>
 	<string name="reader_btn_follow">追蹤</string>
 	<string name="reader_toast_err_url_intent">無法開啟 %s</string>
-	<string name="reader_empty_popular_tags">沒有受歡迎的標籤</string>
 	<string name="connecting_wpcom">連結至 WordPress.com</string>
 	<string name="username_invalid">無效的使用者名稱</string>
 	<string name="reader_likes_one">1 人說這個讚</string>
@@ -468,6 +630,7 @@
 	<string name="nux_tutorial_get_started_title">開始使用！</string>
 	<string name="reader_empty_followed_tags">你未關注任何標籤</string>
 	<string name="create_account_wpcom">在 WordPress.com 上建立帳號</string>
+	<string name="reader_hint_comment_on_comment">回應評論</string>
 	<string name="themes">佈景主題</string>
 	<string name="all">全部</string>
 	<string name="images">圖片</string>
@@ -495,7 +658,7 @@
 	<string name="media_edit_success">更新</string>
 	<string name="media_edit_failure">更新失敗</string>
 	<string name="themes_details_label">細節</string>
-	<string name="view_stats_full_site">檢視全站</string>
+	<string name="stats_view_tags_and_categories">標籤與分類</string>
 	<string name="media_no_video_message">取得 VideoPress 升級以上傳影片！</string>
 	<string name="themes_features_label">功能</string>
 	<string name="theme_activate_button">啟用</string>
@@ -534,16 +697,10 @@
 	<string name="upload">上傳</string>
 	<string name="sign_in">登入</string>
 	<string name="notifications">通知</string>
-	<string name="manage_notifications">通知設定</string>
-	<string name="enable_notifications">啓用通知</string>
-	<string name="types">類型</string>
-	<string name="options">選項</string>
-	<string name="notifications_turn_off">關閉</string>
-	<string name="notifications_turn_off_1hr">關閉1小時</string>
-	<string name="notifications_turn_off_8hr">關閉8小時</string>
 	<string name="note_reply_successful">回覆已發佈</string>
 	<string name="new_notifications">%d 個新通知</string>
 	<string name="more_notifications">還有 %d 個。</string>
+	<string name="follows">關注者</string>
 	<string name="loading">載入中...</string>
 	<string name="post_signature">文章簽名</string>
 	<string name="add_tagline">為新文章新增一個簽名</string>
@@ -588,6 +745,7 @@
 	<string name="post_password">密碼（非必要）</string>
 	<string name="immediately">立即</string>
 	<string name="quickpress_add_alert_title">設定捷徑名稱</string>
+	<string name="today">今天</string>
 	<string name="settings">設定</string>
 	<string name="share_url">分享網址</string>
 	<string name="quickpress_add_error">捷徑名稱不能為空</string>
@@ -622,11 +780,40 @@
 	<string name="no">否</string>
 	<string name="preview">預覽</string>
 	<string name="tab_comments">迴響</string>
+	<string name="notification_settings">通知設定</string>
 	<string-array name="alignment_array">
 		<item>無</item>
 		<item>靠左</item>
 		<item>置中</item>
 		<item>靠右</item>
+	</string-array>
+	<string-array name="notifications_blog_settings">
+		<item>網站留言</item>
+		<item>按讚的留言</item>
+		<item>按讚的文章</item>
+		<item>網站關注</item>
+		<item>網站成就</item>
+		<item>使用者名稱標記</item>
+	</string-array>
+	<string-array name="notifications_other_settings">
+		<item>留言的回覆</item>
+		<item>按讚的留言</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings">
+		<item>建議</item>
+		<item>研究</item>
+		<item>社群</item>
+	</string-array>
+	<string-array name="notifications_wpcom_settings_summaries">
+		<item>讓 WordPress.com 發揮最大功效的秘訣。</item>
+		<item>參與 WordPress.com 研究與調查的機會。</item>
+		<item>WordPress.com 課程與活動相關資訊 (線上和專人洽詢)。</item>
+	</string-array>
+	<string-array name="post_filters_array">
+		<item>已發表</item>
+		<item>草稿</item>
+		<item>已排程</item>
+		<item>已移至垃圾桶</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>註記</item>
@@ -639,5 +826,10 @@
 		<item>標準</item>
 		<item>狀態</item>
 		<item>影片</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>免費</item>
+		<item>所有</item>
+		<item>進階</item>
 	</string-array>
 </resources>

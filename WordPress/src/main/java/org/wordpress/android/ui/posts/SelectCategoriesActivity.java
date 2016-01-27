@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +29,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -39,7 +40,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class SelectCategoriesActivity extends ActionBarActivity {
+public class SelectCategoriesActivity extends AppCompatActivity {
     String finalResult = "";
     private final Handler mHandler = new Handler();
     private Blog blog;
@@ -61,7 +62,6 @@ public class SelectCategoriesActivity extends ActionBarActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setElevation(0.0f);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -176,7 +176,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
         mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         boolean success = false;
         try {
-            result = (Object[]) mClient.call("wp.getCategories", params);
+            result = (Object[]) mClient.call(Method.GET_CATEGORIES, params);
             success = true;
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
@@ -225,7 +225,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
 
         Object result = null;
         try {
-            result = mClient.call("wp.newCategory", params);
+            result = mClient.call(Method.NEW_CATEGORY, params);
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
         } catch (IOException e) {
@@ -332,7 +332,7 @@ public class SelectCategoriesActivity extends ActionBarActivity {
         Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
         mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         try {
-            result = (Map<?, ?>) mClient.call("wp.getTerm", params);
+            result = (Map<?, ?>) mClient.call(Method.GET_TERM, params);
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
         } catch (IOException e) {

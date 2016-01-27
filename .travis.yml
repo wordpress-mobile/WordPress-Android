@@ -1,5 +1,6 @@
 language: android
 jdk: oraclejdk7
+sudo: false
 
 notifications:
   # Slack notification on failure (secured token).
@@ -11,8 +12,13 @@ notifications:
 
 android:
   components:
-    - build-tools-21.1.1
-    - android-21
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - extra-android-support
+    - platform-tools
+    - tools
+    - build-tools-23.0.2
+    - android-23
 
 env:
   global:

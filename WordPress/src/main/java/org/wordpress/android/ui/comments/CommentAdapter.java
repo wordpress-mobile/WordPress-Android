@@ -2,17 +2,16 @@ package org.wordpress.android.ui.comments;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
@@ -25,205 +24,136 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-class CommentAdapter extends BaseAdapter {
-    static interface DataLoadedListener {
-        public void onDataLoaded(boolean isEmpty);
+class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    interface OnDataLoadedListener {
+        void onDataLoaded(boolean isEmpty);
     }
 
-    static interface OnLoadMoreListener {
-        public void onLoadMore();
+    interface OnLoadMoreListener {
+        void onLoadMore();
     }
 
-    static interface OnSelectedItemsChangeListener {
-        public void onSelectedItemsChanged();
+    interface OnSelectedItemsChangeListener {
+        void onSelectedItemsChanged();
+    }
+
+    interface OnCommentPressedListener {
+        void onCommentPressed(int position, View view);
+        void onCommentLongPressed(int position, View view);
     }
 
     private final LayoutInflater mInflater;
-    private final DataLoadedListener mDataLoadedListener;
-    private final OnLoadMoreListener mOnLoadMoreListener;
-    private final OnSelectedItemsChangeListener mOnSelectedChangeListener;
 
-    private CommentList mComments = new CommentList();
-    private final HashSet<Integer> mSelectedPositions = new HashSet<Integer>();
-    private final List<Long> mModeratingCommentsIds = new ArrayList<Long>();
+    private final CommentList mComments = new CommentList();
+    private final HashSet<Integer> mSelectedPositions = new HashSet<>();
+    private final List<Long> mModeratingCommentsIds = new ArrayList<>();
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
 
+    private final int mLocalBlogId;
     private final int mAvatarSz;
-
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
-    private final int mSelectionColor;
+    private final int mSelectedColor;
+    private final int mUnselectedColor;
+
+    private OnDataLoadedListener mOnDataLoadedListener;
+    private OnCommentPressedListener mOnCommentPressedListener;
+    private OnLoadMoreListener mOnLoadMoreListener;
+    private OnSelectedItemsChangeListener mOnSelectedChangeListener;
 
     private boolean mEnableSelection;
 
-    CommentAdapter(Context context,
-                   DataLoadedListener onDataLoadedListener,
-                   OnLoadMoreListener onLoadMoreListener,
-                   OnSelectedItemsChangeListener onChangeListener) {
+    class CommentHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener {
+        private final TextView txtTitle;
+        private final TextView txtComment;
+        private final TextView txtStatus;
+        private final TextView txtDate;
+        private final WPNetworkImageView imgAvatar;
+        private final ImageView imgCheckmark;
+        private final View progressBar;
+        private final ViewGroup containerView;
+
+        public CommentHolder(View view) {
+            super(view);
+            txtTitle = (TextView) view.findViewById(R.id.title);
+            txtComment = (TextView) view.findViewById(R.id.comment);
+            txtStatus = (TextView) view.findViewById(R.id.status);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            imgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.avatar);
+            progressBar = view.findViewById(R.id.moderate_progress);
+            containerView = (ViewGroup) view.findViewById(R.id.layout_container);
+
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnCommentPressedListener != null) {
+                mOnCommentPressedListener.onCommentPressed(getAdapterPosition(), v);
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if (mOnCommentPressedListener != null) {
+                mOnCommentPressedListener.onCommentLongPressed(getAdapterPosition(), v);
+            }
+            return true;
+        }
+    }
+
+    CommentAdapter(Context context, int localBlogId) {
         mInflater = LayoutInflater.from(context);
 
-        mDataLoadedListener = onDataLoadedListener;
-        mOnLoadMoreListener = onLoadMoreListener;
-        mOnSelectedChangeListener = onChangeListener;
+        mLocalBlogId = localBlogId;
 
         mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
         mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
-        mSelectionColor = context.getResources().getColor(R.color.semi_transparent_blue_light);
+
+        mUnselectedColor = context.getResources().getColor(R.color.white);
+        mSelectedColor = context.getResources().getColor(R.color.translucent_grey_lighten_20);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+
+        setHasStableIds(true);
+    }
+
+    void setOnDataLoadedListener(OnDataLoadedListener listener) {
+        mOnDataLoadedListener = listener;
+    }
+
+    void setOnLoadMoreListener(OnLoadMoreListener listener) {
+        mOnLoadMoreListener = listener;
+    }
+
+    void setOnCommentPressedListener(OnCommentPressedListener listener) {
+        mOnCommentPressedListener = listener;
+    }
+
+    void setOnSelectedItemsChangeListener(OnSelectedItemsChangeListener listener) {
+        mOnSelectedChangeListener = listener;
     }
 
     @Override
-    public int getCount() {
-        return (mComments != null ? mComments.size() : 0);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.comment_listitem, null);
+        CommentHolder holder = new CommentHolder(view);
+        view.setTag(holder);
+        return holder;
     }
 
     @Override
-    public Object getItem(int position) {
-        return mComments.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    void clear() {
-        if (mComments.size() > 0) {
-            mComments.clear();
-            notifyDataSetChanged();
-        }
-    }
-
-    void setEnableSelection(boolean enable) {
-        if (enable == mEnableSelection)
-            return;
-
-        mEnableSelection = enable;
-        if (mEnableSelection) {
-            notifyDataSetChanged();
-        } else {
-            clearSelectedComments();
-        }
-    }
-
-    void clearSelectedComments() {
-        if (mSelectedPositions.size() > 0) {
-            mSelectedPositions.clear();
-            notifyDataSetChanged();
-            if (mOnSelectedChangeListener != null)
-                mOnSelectedChangeListener.onSelectedItemsChanged();
-        }
-    }
-
-    int getSelectedCommentCount() {
-        return mSelectedPositions.size();
-    }
-
-    CommentList getSelectedComments() {
-        CommentList comments = new CommentList();
-        if (!mEnableSelection)
-            return comments;
-
-        for (Integer position: mSelectedPositions) {
-            if (isPositionValid(position))
-                comments.add(mComments.get(position));
-        }
-
-        return comments;
-    }
-
-    private boolean isItemSelected(int position) {
-        return mSelectedPositions.contains(position);
-    }
-
-    void setItemSelected(int position, boolean isSelected, View view) {
-        if (isItemSelected(position) == isSelected)
-            return;
-
-        if (isSelected) {
-            mSelectedPositions.add(position);
-        } else {
-            mSelectedPositions.remove(position);
-        }
-
-        notifyDataSetChanged();
-
-        if (view != null && view.getTag() instanceof CommentHolder) {
-            CommentHolder holder = (CommentHolder) view.getTag();
-            // animate the selection change on ICS or later (looks wonky on Gingerbread)
-            holder.imgCheckmark.clearAnimation();
-            AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-            holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-        }
-
-        if (mOnSelectedChangeListener != null)
-            mOnSelectedChangeListener.onSelectedItemsChanged();
-    }
-
-    void toggleItemSelected(int position, View view) {
-        setItemSelected(position, !isItemSelected(position), view);
-    }
-
-    public void addModeratingCommentId(long commentId) {
-        mModeratingCommentsIds.add(commentId);
-        notifyDataSetChanged();
-    }
-
-    public void removeModeratingCommentId(long commentId) {
-        mModeratingCommentsIds.remove(commentId);
-        notifyDataSetChanged();
-    }
-
-    public boolean isModeratingCommentId(long commentId) {
-        return mModeratingCommentsIds.size() > 0 && mModeratingCommentsIds.contains(commentId);
-    }
-
-    public int indexOfCommentId(long commentId) {
-        return mComments.indexOfCommentId(commentId);
-    }
-
-    private boolean isPositionValid(int position) {
-        return (position >= 0 && position < mComments.size());
-    }
-
-    void replaceComments(final CommentList comments) {
-        mComments.replaceComments(comments);
-        notifyDataSetChanged();
-    }
-
-    void deleteComments(final CommentList comments) {
-        mComments.deleteComments(comments);
-        notifyDataSetChanged();
-        if (mDataLoadedListener != null) {
-            mDataLoadedListener.onDataLoaded(isEmpty());
-        }
-    }
-
-    public void removeComment(Comment comment) {
-        int commentIndex = indexOfCommentId(comment.commentID);
-        if (commentIndex >= 0) {
-            mComments.remove(commentIndex);
-            notifyDataSetChanged();
-        }
-    }
-
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        final Comment comment = mComments.get(position);
-        final CommentHolder holder;
-
-        if (convertView == null || convertView.getTag() == null) {
-            convertView = mInflater.inflate(R.layout.comment_listitem, null);
-            holder = new CommentHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (CommentHolder) convertView.getTag();
-        }
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        Comment comment = mComments.get(position);
+        CommentHolder holder = (CommentHolder) viewHolder;
 
         if (isModeratingCommentId(comment.commentID)) {
             holder.progressBar.setVisibility(View.VISIBLE);
@@ -254,21 +184,18 @@ class CommentAdapter extends BaseAdapter {
         }
         holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
-        boolean useSelectionBackground = false;
+        int checkmarkVisibility;
         if (mEnableSelection && isItemSelected(position)) {
-            useSelectionBackground = true;
-            if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
-                holder.imgCheckmark.setVisibility(View.VISIBLE);
+            checkmarkVisibility = View.VISIBLE;
+            holder.containerView.setBackgroundColor(mSelectedColor);
         } else {
-            if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
-                holder.imgCheckmark.setVisibility(View.GONE);
+            checkmarkVisibility = View.GONE;
             holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+            holder.containerView.setBackgroundColor(mUnselectedColor);
         }
 
-        if (useSelectionBackground) {
-            convertView.setBackgroundColor(mSelectionColor);
-        } else {
-            convertView.setBackgroundDrawable(null);
+        if (holder.imgCheckmark.getVisibility() != checkmarkVisibility) {
+            holder.imgCheckmark.setVisibility(checkmarkVisibility);
         }
 
         // comment text needs to be to the left of date/status when the title is a single line and
@@ -284,29 +211,150 @@ class CommentAdapter extends BaseAdapter {
         }
 
         // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= getCount()-1)
+        if (mOnLoadMoreListener != null && position >= getItemCount()-1) {
             mOnLoadMoreListener.onLoadMore();
-
-        return convertView;
+        }
     }
 
-    private class CommentHolder {
-        private final TextView txtTitle;
-        private final TextView txtComment;
-        private final TextView txtStatus;
-        private final TextView txtDate;
-        private final WPNetworkImageView imgAvatar;
-        private final ImageView imgCheckmark;
-        private final View progressBar;
+    public Comment getItem(int position) {
+        if (isPositionValid(position)) {
+            return mComments.get(position);
+        } else {
+            return null;
+        }
+    }
 
-        private CommentHolder(View row) {
-            txtTitle = (TextView) row.findViewById(R.id.title);
-            txtComment = (TextView) row.findViewById(R.id.comment);
-            txtStatus = (TextView) row.findViewById(R.id.status);
-            txtDate = (TextView) row.findViewById(R.id.text_date);
-            imgCheckmark = (ImageView) row.findViewById(R.id.image_checkmark);
-            imgAvatar = (WPNetworkImageView) row.findViewById(R.id.avatar);
-            progressBar = row.findViewById(R.id.moderate_progress);
+    @Override
+    public long getItemId(int position) {
+        return mComments.get(position).commentID;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mComments.size();
+    }
+
+    boolean isEmpty() {
+        return getItemCount() == 0;
+    }
+
+    void setEnableSelection(boolean enable) {
+        if (enable == mEnableSelection) return;
+
+        mEnableSelection = enable;
+        if (mEnableSelection) {
+            notifyDataSetChanged();
+        } else {
+            clearSelectedComments();
+        }
+    }
+
+    void clearSelectedComments() {
+        if (mSelectedPositions.size() > 0) {
+            mSelectedPositions.clear();
+            notifyDataSetChanged();
+            if (mOnSelectedChangeListener != null) {
+                mOnSelectedChangeListener.onSelectedItemsChanged();
+            }
+        }
+    }
+
+    int getSelectedCommentCount() {
+        return mSelectedPositions.size();
+    }
+
+    CommentList getSelectedComments() {
+        CommentList comments = new CommentList();
+        if (!mEnableSelection) {
+            return comments;
+        }
+
+        for (Integer position: mSelectedPositions) {
+            if (isPositionValid(position))
+                comments.add(mComments.get(position));
+        }
+
+        return comments;
+    }
+
+    private boolean isItemSelected(int position) {
+        return mSelectedPositions.contains(position);
+    }
+
+    void setItemSelected(int position, boolean isSelected, View view) {
+        if (isItemSelected(position) == isSelected) return;
+
+        if (isSelected) {
+            mSelectedPositions.add(position);
+        } else {
+            mSelectedPositions.remove(position);
+        }
+
+        notifyItemChanged(position);
+
+        if (view != null && view.getTag() instanceof CommentHolder) {
+            CommentHolder holder = (CommentHolder) view.getTag();
+            // animate the selection change
+            AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
+            holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+        }
+
+        if (mOnSelectedChangeListener != null) {
+            mOnSelectedChangeListener.onSelectedItemsChanged();
+        }
+    }
+
+    void toggleItemSelected(int position, View view) {
+        setItemSelected(position, !isItemSelected(position), view);
+    }
+
+    public void addModeratingCommentId(long commentId) {
+        mModeratingCommentsIds.add(commentId);
+        int position = indexOfCommentId(commentId);
+        if (position >= 0) {
+            notifyItemChanged(position);
+        }
+    }
+
+    public void removeModeratingCommentId(long commentId) {
+        mModeratingCommentsIds.remove(commentId);
+        int position = indexOfCommentId(commentId);
+        if (position >= 0) {
+            notifyItemChanged(position);
+        }
+    }
+
+    public boolean isModeratingCommentId(long commentId) {
+        return mModeratingCommentsIds.size() > 0
+                && mModeratingCommentsIds.contains(commentId);
+    }
+
+    private int indexOfCommentId(long commentId) {
+        return mComments.indexOfCommentId(commentId);
+    }
+
+    private boolean isPositionValid(int position) {
+        return (position >= 0 && position < mComments.size());
+    }
+
+    void replaceComments(CommentList comments) {
+        mComments.replaceComments(comments);
+        notifyDataSetChanged();
+    }
+
+    void deleteComments(CommentList comments) {
+        mComments.deleteComments(comments);
+        notifyDataSetChanged();
+        if (mOnDataLoadedListener != null) {
+            mOnDataLoadedListener.onDataLoaded(isEmpty());
+        }
+    }
+
+    public void removeComment(Comment comment) {
+        int position = indexOfCommentId(comment.commentID);
+        if (position >= 0) {
+            mComments.remove(position);
+            notifyItemRemoved(position);
         }
     }
 
@@ -316,8 +364,9 @@ class CommentAdapter extends BaseAdapter {
     void loadComments() {
         if (mIsLoadTaskRunning) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
+        } else {
+            new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
@@ -336,12 +385,12 @@ class CommentAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            int localBlogId = WordPress.getCurrentLocalTableBlogId();
-            tmpComments = CommentTable.getCommentsForBlog(localBlogId);
-            if (mComments.isSameList(tmpComments))
+            tmpComments = CommentTable.getCommentsForBlog(mLocalBlogId);
+            if (mComments.isSameList(tmpComments)) {
                 return false;
+            }
 
-            // pre-calc transient values so they're cached when used by getView()
+            // pre-calc transient values so they're cached prior to display
             for (Comment comment: tmpComments) {
                 comment.getDatePublished();
                 comment.getUnescapedCommentText();
@@ -355,12 +404,13 @@ class CommentAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mComments = (CommentList)(tmpComments.clone());
+                mComments.clear();
+                mComments.addAll(tmpComments);
                 notifyDataSetChanged();
             }
 
-            if (mDataLoadedListener != null) {
-                mDataLoadedListener.onDataLoaded(isEmpty());
+            if (mOnDataLoadedListener != null) {
+                mOnDataLoadedListener.onDataLoaded(isEmpty());
             }
 
             mIsLoadTaskRunning = false;
