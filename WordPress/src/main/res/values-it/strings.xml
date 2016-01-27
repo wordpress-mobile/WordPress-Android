@@ -1,9 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Questo articolo non esiste più</string>
+	<string name="reader_err_get_post_not_authorized">Non disponi del permesso per visualizzare questo articolo</string>
+	<string name="reader_err_get_post_generic">Impossibile recuperare questo articolo</string>
+	<string name="blog_name_no_spaced_allowed">L\'indirizzo del sito non può contenere spazi</string>
+	<string name="invalid_username_no_spaces">Il nome utente non può contenere spazi</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">I siti che segui non hanno pubblicato nulla recentemente</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nessun articolo recente</string>
+	<string name="media_details_copy_url_toast">URL copiata negli appunti</string>
+	<string name="edit_media">Modifica media</string>
+	<string name="media_details_copy_url">Copia URL</string>
+	<string name="media_details_label_date_uploaded">Caricato</string>
+	<string name="media_details_label_date_added">Aggiunto</string>
+	<string name="selected_theme">Tema selezionato</string>
+	<string name="could_not_load_theme">Impossibile caricare il tema</string>
+	<string name="theme_activation_error">Qualche cosa è andato storto. Impossibile attivare il tema.</string>
+	<string name="theme_by_author_prompt_append">di %1$s</string>
+	<string name="theme_prompt">Grazie per aver scelto %1$s</string>
+	<string name="theme_try_and_customize">Prova e personalizza</string>
+	<string name="theme_view">Visualizza</string>
+	<string name="theme_details">Dettagli</string>
+	<string name="theme_support">Supporto</string>
+	<string name="theme_done">FATTO</string>
+	<string name="theme_manage_site">GESTISCI SITO</string>
+	<string name="title_activity_theme_support">Temi</string>
+	<string name="theme_activate">Attiva</string>
+	<string name="date_range_start_date">Data di inizio</string>
+	<string name="date_range_end_date">Data di fine</string>
+	<string name="current_theme">Tema corrente</string>
+	<string name="customize">Personalizza</string>
+	<string name="details">Dettagli</string>
+	<string name="support">Supporto</string>
+	<string name="active">Attivo</string>
+	<string name="stats_referrers_spam_generic_error">Qualche cosa è andato storto durante l\'operazione. Lo stato dello spam non è cambiato.</string>
+	<string name="stats_referrers_marking_not_spam">Contrassegna come non spam</string>
+	<string name="stats_referrers_unspam">Non spam</string>
+	<string name="stats_referrers_marking_spam">Contrassegna come spam</string>
+	<string name="theme_auth_error_authenticate">Impossibile recuperare il tema: autenticazione utente fallita</string>
+	<string name="post_published">Articolo pubblicato</string>
+	<string name="page_published">Pagina pubblicata</string>
+	<string name="post_updated">Articolo aggiornato</string>
+	<string name="page_updated">Pagina aggiornata</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Nessun tema trovato.</string>
+	<string name="media_file_name">Nome del file: %s</string>
+	<string name="media_uploaded_on">Aggiornato il: %s</string>
+	<string name="media_dimensions">Dimensioni: %s</string>
+	<string name="upload_queued">Accodato</string>
+	<string name="media_file_type">Tipo di file: %s</string>
+	<string name="reader_label_gap_marker">Carica altri articoli</string>
+	<string name="notifications_no_search_results">Nessun sito corrisponde a \'%s\'</string>
+	<string name="search_sites">Ricerca siti</string>
+	<string name="notifications_empty_view_reader">Visualizza nel Reader</string>
+	<string name="unread">Non letto</string>
+	<string name="notifications_empty_action_followers_likes">Ottieni notifiche: commenti ad articoli che hai letto.</string>
+	<string name="notifications_empty_action_comments">Unisciti ad una conversazione: commenti su articoli di blog che segui.</string>
+	<string name="notifications_empty_action_unread">Ravviva la conversazione: scrivi un nuovo articolo.</string>
+	<string name="notifications_empty_action_all">Sii attivo! Commenta articoli dei blog che segui.</string>
+	<string name="notifications_empty_likes">Nessun nuovo mi piace da mostrare... per ora.</string>
+	<string name="notifications_empty_followers">Nessun nuovo utente ti segue... per ora.</string>
+	<string name="notifications_empty_comments">Nessun nuovo commento... per ora.</string>
+	<string name="notifications_empty_unread">Nessun articolo non letto!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Accedi alla Statistiche nella app e quindi successivamente prova ad aggiungere il widget</string>
+	<string name="stats_widget_error_readd_widget">Rimuovi il widget e aggiungilo nuovamente</string>
+	<string name="stats_widget_error_no_visible_blog">Le statistiche non sono accessibili senza un blog visibile</string>
+	<string name="stats_widget_error_no_permissions">Il tuo account WordPress.com non può accedere alle Statistiche di questo blog</string>
+	<string name="stats_widget_error_no_account">Effettua il login su WordPress</string>
+	<string name="stats_widget_error_generic">Le Statistiche non possno essere caricate</string>
+	<string name="stats_widget_loading_data">Caricamento dati...</string>
+	<string name="stats_widget_name_for_blog">Statistiche di oggi per %1$s</string>
+	<string name="stats_widget_name">Statistiche di oggi di WordPress</string>
+	<string name="add_location_permission_required">Per aggiungere una località occorre disporre dei permessi appositi</string>
+	<string name="add_media_permission_required">Autorizzazioni richieste per aggiungere file multimediali</string>
+	<string name="access_media_permission_required">Autorizzazioni richieste per accedere a file multimediali</string>
 	<string name="stats_enable_rest_api_in_jetpack">Per visualizzare le tue statistiche, abilita il modulo JSON API di Jetpack.</string>
 	<string name="error_open_list_from_notification">Questo articolo o questa pagina sono state pubblicate su un altro sito</string>
-	<string name="post_uploaded">Articolo caricato</string>
-	<string name="page_uploaded">Pagina caricata</string>
 	<string name="reader_short_comment_count_multi">%s commenti</string>
 	<string name="reader_short_comment_count_one">1 Commento</string>
 	<string name="reader_label_submit_comment">SPEDISCI</string>
@@ -140,12 +211,6 @@
 	<string name="take_video">Fai un video</string>
 	<string name="tab_title_site_images">Immagini sito</string>
 	<string name="tab_title_site_videos">Video sito</string>
-	<string name="media_details_added_on">Aggiunto il:</string>
-	<string name="media_details_uploaded_on">Caricato il:</string>
-	<string name="media_details_file_name">Nome fiel:</string>
-	<string name="media_details_file_type">Tipo file:</string>
-	<string name="media_details_file_url">URL file:</string>
-	<string name="media_details_dimensions">Dimensioni:</string>
 	<string name="error_publish_no_network">Impossibile pubblicare perchè non c\'è una connessione. Salva come bozza.</string>
 	<string name="editor_toast_invalid_path">Percorso file non valido</string>
 	<string name="verification_code">Codice di verifica</string>
@@ -156,6 +221,8 @@
 	<string name="two_step_sms_sent">Verifica i messaggi di testo per il codice di verifica.</string>
 	<string name="sign_in_jetpack">Autentificati al tuo account WordPress.com  per connetterti a Jetpack.</string>
 	<string name="auth_required">Autentificati nuovamente per continuare.</string>
+	<string name="media_details_label_file_name">Nome file</string>
+	<string name="media_details_label_file_type">Tipo file</string>
 	<string name="media_fetching">Recupero file multimediali in corso…</string>
 	<string name="posts_fetching">Recupero degli articoli in corso...</string>
 	<string name="toast_err_post_uploading">Impossibile aprire l\'articolo durante il suo caricamento</string>
@@ -342,7 +409,6 @@
 	<string name="theme_fetch_failed">Impossibile recuperare i temi</string>
 	<string name="theme_set_failed">Impossibile impostare il tema</string>
 	<string name="theme_auth_error_message">Assicurati di disporre dei privilegi per impostare i temi</string>
-	<string name="theme_no_search_result_found">Nessun risultato trovato</string>
 	<string name="comments_empty_list">Nessun commento</string>
 	<string name="mnu_comment_unspam">Non spam</string>
 	<string name="no_site_error">Impossibile connettersi al sito WordPress</string>
@@ -501,6 +567,7 @@
 	<string name="blog_name_must_include_letters">L\'indirizzo del sito deve includere almeno 1 lettera (a-z)</string>
 	<string name="blog_name_invalid">Indirizzo del sito non valido</string>
 	<string name="blog_title_invalid">Titolo del sito non valido</string>
+	<string name="notifications_empty_all">Nessuna notifica... per ora.</string>
 	<string name="deleting_page">Eliminando la pagina</string>
 	<string name="deleting_post">Eliminando l\'articolo</string>
 	<string name="share_url_post">Condividi l\'articolo</string>
@@ -591,7 +658,6 @@
 	<string name="media_gallery_image_order_random">Casuale</string>
 	<string name="media_gallery_image_order_reverse">Invertito</string>
 	<string name="media_gallery_type">Tipo</string>
-	<string name="view_stats_full_site">Visualizza sito completo</string>
 	<string name="stats_entry_country">Paese</string>
 	<string name="stats_entry_posts_and_pages">Titolo</string>
 	<string name="media_edit_failure">Aggiornamento fallito</string>
@@ -634,6 +700,7 @@
 	<string name="sign_in">Accedi</string>
 	<string name="notifications">Notifiche</string>
 	<string name="note_reply_successful">Risposta pubblicata</string>
+	<string name="follows">Segui</string>
 	<string name="new_notifications">%d nuove notifiche</string>
 	<string name="more_notifications">e altre %d.</string>
 	<string name="loading">Caricamento in corso…</string>
@@ -761,5 +828,10 @@
 		<item>Predefinito</item>
 		<item>Stato</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratuito</item>
+		<item>Tutti</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

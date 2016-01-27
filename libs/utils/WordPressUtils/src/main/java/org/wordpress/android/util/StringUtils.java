@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class StringUtils {
     public static String[] mergeStringArrays(String array1[], String array2[]) {
@@ -197,24 +198,6 @@ public class StringUtils {
         return "http://i0.wp.com/" + imageUrl + "?w=" + size;
     }
 
-    public static String getHost(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return "";
-        }
-
-        int doubleslash = url.indexOf("//");
-        if (doubleslash == -1) {
-            doubleslash = 0;
-        } else {
-            doubleslash += 2;
-        }
-
-        int end = url.indexOf('/', doubleslash);
-        end = (end >= 0) ? end : url.length();
-
-        return url.substring(doubleslash, end);
-    }
-
     public static String replaceUnicodeSurrogateBlocksWithHTMLEntities(final String inputString) {
         final int length = inputString.length();
         StringBuilder out = new StringBuilder(); // Used to hold the output.
@@ -234,6 +217,28 @@ public class StringUtils {
             offset += Character.charCount(codepoint);
         }
         return out.toString();
+    }
+
+    /**
+     * Used to convert a language code ([lc]_[rc] where lc is language code (en, fr, es, etc...)
+     * and rc is region code (zh-CN, zh-HK, zh-TW, etc...) to a displayable string with the languages
+     * name.
+     *
+     * The input string must be between 2 and 6 characters, inclusive. An empty string is returned
+     * if that is not the case.
+     *
+     * If the input string is recognized by {@link Locale} the result of this method is the given
+     *
+     * @return
+     *  non-null
+     */
+    public static String getLanguageString(String languagueCode, Locale displayLocale) {
+        if (languagueCode == null || languagueCode.length() < 2 || languagueCode.length() > 6) {
+            return "";
+        }
+
+        Locale languageLocale = new Locale(languagueCode.substring(0, 2));
+        return languageLocale.getDisplayLanguage(displayLocale) + languagueCode.substring(2);
     }
 
     /**

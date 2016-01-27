@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -475,7 +477,11 @@ public class ReaderPostListFragment extends Fragment
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
         final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_BLOCKED);
+        // Only pass the blogID if available. Do not track feedID
+        AnalyticsUtils.trackWithBlogDetails(
+                AnalyticsTracker.Stat.READER_BLOG_BLOCKED,
+                mCurrentBlogId != 0 ? mCurrentBlogId : null
+        );
 
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
@@ -531,8 +537,13 @@ public class ReaderPostListFragment extends Fragment
             titleResId = R.string.reader_empty_posts_in_blog;
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
             if (getCurrentTag().isFollowedSites()) {
-                titleResId = R.string.reader_empty_followed_blogs_title;
-                descriptionResId = R.string.reader_empty_followed_blogs_description;
+                if (ReaderBlogTable.hasFollowedBlogs()) {
+                    titleResId = R.string.reader_empty_followed_blogs_no_recent_posts_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_no_recent_posts_description;
+                } else {
+                    titleResId = R.string.reader_empty_followed_blogs_title;
+                    descriptionResId = R.string.reader_empty_followed_blogs_description;
+                }
             } else if (getCurrentTag().isPostsILike()) {
                 titleResId = R.string.reader_empty_posts_liked;
             } else {
@@ -980,6 +991,12 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
+        // if this is a cross-post, we want to show the original post
+        if (post.isXpost()) {
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.xpostBlogId, post.xpostPostId);
+            return;
+        }
+
         ReaderPostListType type = getPostListType();
         Map<String, Object> analyticsProperties = new HashMap<>();
 
@@ -1006,7 +1023,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, analyticsProperties);
     }
 
     /*
@@ -1041,8 +1057,8 @@ public class ReaderPostListFragment extends Fragment
     private void trackTagLoaded(ReaderTag tag) {
         AnalyticsTracker.Stat stat = null;
 
-        if (tag.isFreshlyPressed()) {
-            stat = AnalyticsTracker.Stat.READER_FRESHLY_PRESSED_LOADED;
+        if (tag.isDiscover()) {
+            stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
         } else if (tag.isTagTopic()) {
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {

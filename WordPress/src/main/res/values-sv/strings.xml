@@ -1,8 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Detta inlägg finns inte längre</string>
+	<string name="reader_err_get_post_not_authorized">Du har inte behörighet att se detta inlägg</string>
+	<string name="reader_err_get_post_generic">Kunde inte hämta detta inlägg</string>
+	<string name="blog_name_no_spaced_allowed">En webbadress kan inte innehålla mellanslag</string>
+	<string name="invalid_username_no_spaces">Ett användarnamn kan inte innehålla mellanslag</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">De webbplatser du följer har inte publicerat något nyligen</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Inga nya inlägg</string>
+	<string name="media_details_copy_url_toast">URL kopierad till urklipp</string>
+	<string name="edit_media">Redigera media</string>
+	<string name="media_details_copy_url">Kopiera URL</string>
+	<string name="media_details_label_date_uploaded">Uppladdad</string>
+	<string name="media_details_label_date_added">Lade till</string>
+	<string name="selected_theme">Valt tema</string>
+	<string name="could_not_load_theme">Kunde inte ladda tema</string>
+	<string name="theme_activation_error">Något gick fel. Kunde inte aktivera tema</string>
+	<string name="theme_by_author_prompt_append"> av %1$s</string>
+	<string name="theme_prompt">Tack för att du väljer %1$s</string>
+	<string name="theme_try_and_customize">Testa &amp; anpassa</string>
+	<string name="theme_view">Visa</string>
+	<string name="theme_details">Information</string>
+	<string name="theme_support">Support</string>
+	<string name="theme_done">KLART</string>
+	<string name="theme_manage_site">HANTERA WEBBPLATS</string>
+	<string name="title_activity_theme_support">Teman</string>
+	<string name="theme_activate">Aktivera</string>
+	<string name="date_range_start_date">Startdatum</string>
+	<string name="date_range_end_date">Slutdatum</string>
+	<string name="current_theme">Nuvarande tema</string>
+	<string name="customize">Anpassa</string>
+	<string name="details">Information</string>
+	<string name="support">Support</string>
+	<string name="active">Aktiv</string>
+	<string name="stats_referrers_spam_generic_error">Något gick fel under processen. Skräppoststatus ändrades inte.</string>
+	<string name="stats_referrers_marking_not_spam">Markerar som inte skräppost</string>
+	<string name="stats_referrers_unspam">Inte skräppost</string>
+	<string name="stats_referrers_marking_spam">Markerar som skräppost</string>
+	<string name="theme_auth_error_authenticate">Kunde inte hämta teman: kunde inte autentisera användare</string>
+	<string name="post_published">Inlägg publicerat</string>
+	<string name="page_published">Sida publicerad</string>
+	<string name="post_updated">Inlägg uppdaterat</string>
+	<string name="page_updated">Sida uppdaterad</string>
+	<string name="stats_referrers_spam">Skräppost</string>
+	<string name="theme_no_search_result_found">Tyvärr hittades inga teman.</string>
+	<string name="media_file_name">Filnamn: %s</string>
+	<string name="media_uploaded_on">Laddades upp den: %s</string>
+	<string name="media_dimensions">Storlek: %s</string>
+	<string name="upload_queued">Köad</string>
+	<string name="media_file_type">Filtyp: %s</string>
+	<string name="reader_label_gap_marker">Ladda fler inlägg</string>
+	<string name="notifications_no_search_results">Inga webbplatser matchade "%s"</string>
+	<string name="search_sites">Sök webbplatser</string>
+	<string name="notifications_empty_view_reader">Visa Läsare</string>
+	<string name="unread">Olästa</string>
+	<string name="notifications_empty_action_followers_likes">Se till att synas: kommentera inlägg som du läst.</string>
+	<string name="notifications_empty_action_comments">Gå med i en diskussion: kommentera inlägg från bloggar som du följer.</string>
+	<string name="notifications_empty_action_unread">Starta upp diskussionen igen: skriv ett nytt inlägg.</string>
+	<string name="notifications_empty_action_all">Aktivera dig! Kommentera inlägg från bloggar som du följer.</string>
+	<string name="notifications_empty_likes">Inga nya gillar att visa ... ännu.</string>
+	<string name="notifications_empty_followers">Inga nya följare att visa ... ännu.</string>
+	<string name="notifications_empty_comments">Inga nya kommentarer … ännu.</string>
+	<string name="notifications_empty_unread">Du har läst allt!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Gå till statistik i appen och försök att lägga till denna widget senare</string>
+	<string name="stats_widget_error_readd_widget">Ta bort denna widget och lägg till den igen</string>
+	<string name="stats_widget_error_no_visible_blog">Statistik kunde inte visas utan en synlig blogg</string>
+	<string name="stats_widget_error_no_permissions">Ditt konto hos WordPress.com kan inte visa statistik för denna blogg</string>
+	<string name="stats_widget_error_no_account">Logga in på WordPress</string>
+	<string name="stats_widget_error_generic">Statistik kunde inte laddas</string>
+	<string name="stats_widget_loading_data">Laddar data…</string>
+	<string name="stats_widget_name_for_blog">Dagens statistik för %1$s</string>
+	<string name="stats_widget_name">WordPress dagens status</string>
+	<string name="add_location_permission_required">Behörighet krävs för att lägga till plats</string>
+	<string name="add_media_permission_required">Behörighet krävs för att lägga till media</string>
+	<string name="access_media_permission_required">Behörighet krävs för åtkomst till media</string>
+	<string name="stats_enable_rest_api_in_jetpack">Aktivera JSON API-modulen i Jetpack för att visa din statistik.</string>
 	<string name="error_open_list_from_notification">Detta inlägg eller sida har publicerats på en annan webbplats</string>
-	<string name="page_uploaded">Sida uppladdad</string>
-	<string name="post_uploaded">Inlägg uppladdat</string>
 	<string name="reader_short_comment_count_multi">%s kommentarer</string>
 	<string name="reader_short_comment_count_one">1 kommentar</string>
 	<string name="reader_label_submit_comment">SKICKA</string>
@@ -139,13 +211,7 @@
 	<string name="verify">Verifiera</string>
 	<string name="editor_toast_invalid_path">Ogiltig sökväg till fil</string>
 	<string name="error_publish_no_network">Kunde inte publicera eftersom det into fanns någon nätanslutning. Sparat som utkast.</string>
-	<string name="media_details_dimensions">Storlek:</string>
-	<string name="media_details_file_url">Filens URL:</string>
-	<string name="media_details_file_type">Filtyp:</string>
 	<string name="tab_title_site_videos">Videoklipp på webbplats</string>
-	<string name="media_details_added_on">Tillagd:</string>
-	<string name="media_details_uploaded_on">Uppladdad:</string>
-	<string name="media_details_file_name">Filnamn:</string>
 	<string name="tab_title_site_images">Bilder på webbplats</string>
 	<string name="tab_title_device_videos">Videoklipp på enhet</string>
 	<string name="tab_title_device_images">Bilder på enhet</string>
@@ -379,7 +445,6 @@
 	<string name="blog_name_reserved">Webbplatsen är reserverad</string>
 	<string name="blog_name_reserved_but_may_be_available">Webbplatsen är reserverad men kan bli tillgänglig om ett par dagar</string>
 	<string name="nux_cannot_log_in">Vi kan inte logga in dig</string>
-	<string name="theme_no_search_result_found">Inga resultat hittades</string>
 	<string name="no_site_error">Det gick inte att ansluta till WordPress-webbplatsen</string>
 	<string name="reply_failed">Svara misslyckades</string>
 	<string name="error_refresh_comments">Kommentarerna kan inte uppdateras just nu</string>
@@ -500,6 +565,7 @@
 	<string name="site_address">Adress till din WordPress-installation (URL)</string>
 	<string name="email_reserved">E-postadressen har redan använts. Kolla efter ett aktiveringsmail i din inbox. Om du inte aktiverar kan du försöka igen om några dagar.</string>
 	<string name="email_cant_be_used_to_signup">Du kan inte använda den e-postadressen för att registrera dig. Vi har problem med att de blockerar viss av våra e-post. Använd en annan e-postleverantör.</string>
+	<string name="notifications_empty_all">Inga notiser … ännu.</string>
 	<string name="deleting_page">Tar bort sida</string>
 	<string name="deleting_post">Tar bort inlägg</string>
 	<string name="share_url_post">Dela inlägg</string>
@@ -599,7 +665,6 @@
 	<string name="share_action_title">Lägg till...</string>
 	<string name="share_action">Dela</string>
 	<string name="stats">Statistik</string>
-	<string name="view_stats_full_site">Visa hela webbplatsen</string>
 	<string name="stats_view_visitors_and_views">Besökare och visningar</string>
 	<string name="stats_view_clicks">Klick</string>
 	<string name="stats_view_tags_and_categories">Etiketter och kategorier</string>
@@ -635,6 +700,7 @@
 	<string name="more_notifications">och %d mer.</string>
 	<string name="notifications">Notifieringar</string>
 	<string name="new_notifications">%d nya notifieringar</string>
+	<string name="follows">Följer</string>
 	<string name="loading">Laddar...</string>
 	<string name="post_signature">Inläggssignatur</string>
 	<string name="add_tagline">Lägg till en signatur till nya inlägg</string>
@@ -760,5 +826,10 @@
 		<item>Standard</item>
 		<item>Status</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratis</item>
+		<item>Alla</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

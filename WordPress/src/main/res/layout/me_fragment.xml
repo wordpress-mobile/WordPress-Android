@@ -53,15 +53,34 @@
             tools:text="username" />
 
         <LinearLayout
-            android:id="@+id/row_settings"
+            android:id="@+id/row_my_profile"
             style="@style/MeListRowLayout"
             android:layout_marginTop="@dimen/me_list_margin_top">
+
+            <ImageView
+                android:id="@+id/me_my_profile_icon"
+                style="@style/MeListRowIcon"
+                android:contentDescription="@string/my_profile"
+                android:src="@drawable/me_icon_my_profile" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/me_my_profile_text_view"
+                style="@style/MeListRowTextView"
+                android:text="@string/my_profile" />
+
+        </LinearLayout>
+
+        <View style="@style/MeListSectionDividerView" />
+
+        <LinearLayout
+            android:id="@+id/row_settings"
+            style="@style/MeListRowLayout">
 
             <ImageView
                 android:id="@+id/me_settings_icon"
                 style="@style/MeListRowIcon"
                 android:contentDescription="@string/me_btn_settings"
-                android:src="@drawable/me_icon_settings" />
+                android:src="@drawable/me_icon_account_settings" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_settings_text_view"

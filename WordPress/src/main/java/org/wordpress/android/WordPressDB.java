@@ -16,6 +16,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
@@ -24,6 +25,7 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -32,6 +34,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.FileInputStream;
@@ -54,7 +57,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
+import de.greenrobot.event.EventBus;
+
 public class WordPressDB {
+    public static final String COLUMN_NAME_ID                    = "_id";
     public static final String COLUMN_NAME_POST_ID               = "postID";
     public static final String COLUMN_NAME_FILE_PATH             = "filePath";
     public static final String COLUMN_NAME_FILE_NAME             = "fileName";
@@ -76,15 +82,18 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 35;
+    private static final int DATABASE_VERSION = 40;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
     public static final String BLOGS_TABLE = "accounts";
+
+    // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
     private static final String MEDIA_TABLE = "media";
+    private static final String NOTES_TABLE = "notes";
 
     private static final String CREATE_TABLE_POSTS =
         "create table if not exists posts ("
@@ -122,8 +131,18 @@ public class WordPressDB {
     private static final String POSTS_TABLE = "posts";
 
     private static final String THEMES_TABLE = "themes";
-    private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
-            + "themeId text, name text, description text, screenshotURL text, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrent boolean default false, isPremium boolean default false, features text);";
+    private static final String CREATE_TABLE_THEMES = "create table if not exists themes ("
+            + COLUMN_NAME_ID + " integer primary key autoincrement, "
+            + Theme.ID + " text, "
+            + Theme.AUTHOR + " text, "
+            + Theme.SCREENSHOT + " text, "
+            + Theme.AUTHOR_URI + " text, "
+            + Theme.DEMO_URI + " text, "
+            + Theme.NAME + " text, "
+            + Theme.STYLESHEET + " text, "
+            + Theme.PRICE + " text, "
+            + Theme.BLOG_ID + " text, "
+            + Theme.IS_CURRENT + " boolean default false);";
 
     // categories
     private static final String CREATE_TABLE_CATEGORIES = "create table if not exists cats (id integer primary key autoincrement, "
@@ -202,6 +221,8 @@ public class WordPressDB {
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
 
+    private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
+
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
@@ -218,6 +239,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
+        SiteSettingsTable.createTable(db);
         CommentTable.createTables(db);
         SuggestionTable.createTables(db);
 
@@ -312,7 +334,7 @@ public class WordPressDB {
                 currentVersion++;
             case 26:
                 // Drop the notes table, no longer needed with Simperium.
-                db.execSQL("DROP TABLE IF EXISTS notes;");
+                db.execSQL(DROP_TABLE_PREFIX + NOTES_TABLE);
                 currentVersion++;
             case 27:
                 // versions prior to v4.5 added an "isUploading" column here, but that's no longer used
@@ -348,8 +370,44 @@ public class WordPressDB {
             case 34:
                 AccountTable.migrationAddEmailAddressField(db);
                 currentVersion++;
+            case 35:
+                // Delete simperium DB - from 4.6 to 4.6.1
+                // Fix an issue when note id > MAX_INT
+                ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 36:
+                // Delete simperium DB again - from 4.6.1 to 4.7
+                // Fix a sync issue happening for users who have both wpios and wpandroid active clients
+                ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 37:
+                resetThemeTable();
+                currentVersion++;
+            case 38:
+                updateDotcomFlag();
+                currentVersion++;
+            case 39:
+                AccountTable.migrationAddFirstNameLastNameAboutMeFields(db);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
+    }
+
+    private void updateDotcomFlag() {
+        // Loop over all .com blogs in the app and check that are really hosted on wpcom
+        List<Map<String, Object>> allBlogs = getBlogsBy("dotcomFlag=1", null, 0, false);
+        for (Map<String, Object> blog : allBlogs) {
+            String xmlrpcURL = MapUtils.getMapStr(blog, "url");
+            if (!WPUrlUtils.isWordPressCom(xmlrpcURL)) {
+                // .org blog marked as .com. Fix it.
+                int blogID = MapUtils.getMapInt(blog, "id");
+                if (blogID > 0) {
+                    ContentValues values = new ContentValues();
+                    values.put("dotcomFlag", false); // Mark as .org blog
+                    db.update(BLOGS_TABLE, values, "id=" + blogID, null);
+                }
+            }
+        }
     }
 
     /*
@@ -367,6 +425,11 @@ public class WordPressDB {
         } catch (SQLiteException e) {
             // ignore - "uploaded" column doesn't exist
         }
+    }
+
+    private void resetThemeTable() {
+        db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
+        db.execSQL(CREATE_TABLE_THEMES);
     }
 
     private void migratePreferencesToAccountTable(Context context) {
@@ -1233,7 +1296,7 @@ public class WordPressDB {
 
     public List<String> loadCategories(int id) {
         Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id",
-                "category_name" }, "blog_id=" + id, null, null, null, null);
+                "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
         List<String> returnVector = new Vector<String>();
@@ -1508,7 +1571,7 @@ public class WordPressDB {
         // We'll match this.
 
         String term = searchTerm.toLowerCase(Locale.getDefault());
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND title LIKE ? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "%" + term + "%", "uploading" });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND title LIKE ? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "%" + term + "%", "uploading"});
     }
 
     /** For a given blogId, get the media file with the given media_id **/
@@ -1528,10 +1591,14 @@ public class WordPressDB {
         return count;
     }
 
+    public boolean mediaFileExists(String blogId, String mediaId) {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?",
+                new String[]{blogId, mediaId});
+    }
 
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
-                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "image%", "uploading" });
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
     }
 
     /** Ids in the filteredIds will not be selected **/
@@ -1629,18 +1696,30 @@ public class WordPressDB {
 
     /** Update a media file to a new upload state **/
     public void updateMediaUploadState(String blogId, String mediaId, String uploadState) {
-        if (blogId == null || blogId.equals(""))
+        if (blogId == null || blogId.equals("")) {
             return;
+        }
 
         ContentValues values = new ContentValues();
-        if (uploadState == null) values.putNull("uploadState");
-        else values.put("uploadState", uploadState);
+        if (uploadState == null) {
+            values.putNull("uploadState");
+        } else {
+            values.put("uploadState", uploadState);
+        }
 
         if (mediaId == null) {
-            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[]{blogId});
+            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')",
+                    new String[]{blogId});
         } else {
             db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
+            EventBus.getDefault().post(new MediaChanged(blogId, mediaId));
         }
+    }
+
+    public void updateMediaLocalToRemoteId(String blogId, String localMediaId, String remoteMediaId) {
+        ContentValues values = new ContentValues();
+        values.put("mediaId", remoteMediaId);
+        db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{blogId, localMediaId});
     }
 
     public void updateMediaFile(String blogId, String mediaId, String title, String description, String caption) {
@@ -1681,7 +1760,7 @@ public class WordPressDB {
 
         ContentValues values = new ContentValues();
         values.put("uploadState", "failed");
-        db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[] { blogId, "uploading" });
+        db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[]{blogId, "uploading"});
     }
 
     /** For a given blogId, clear the upload states in the upload queue **/
@@ -1698,6 +1777,7 @@ public class WordPressDB {
     public void deleteMediaFile(String blogId, String mediaId) {
         db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
+
 
     /** Mark media files for deletion without actually deleting them. **/
     public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {
@@ -1774,25 +1854,23 @@ public class WordPressDB {
         boolean returnValue = false;
 
         ContentValues values = new ContentValues();
-        values.put("themeId", theme.getThemeId());
-        values.put("name", theme.getName());
-        values.put("description", theme.getDescription());
-        values.put("screenshotURL", theme.getScreenshotURL());
-        values.put("trendingRank", theme.getTrendingRank());
-        values.put("popularityRank", theme.getPopularityRank());
-        values.put("launchDate", theme.getLaunchDateMs());
-        values.put("previewURL", theme.getPreviewURL());
-        values.put("blogId", theme.getBlogId());
-        values.put("isCurrent", theme.isCurrent());
-        values.put("isPremium", theme.isPremium());
-        values.put("features", theme.getFeatures());
+        values.put(Theme.ID, theme.getId());
+        values.put(Theme.AUTHOR, theme.getAuthor());
+        values.put(Theme.SCREENSHOT, theme.getScreenshot());
+        values.put(Theme.AUTHOR_URI, theme.getAuthorURI());
+        values.put(Theme.DEMO_URI, theme.getDemoURI());
+        values.put(Theme.NAME, theme.getName());
+        values.put(Theme.STYLESHEET, theme.getStylesheet());
+        values.put(Theme.PRICE, theme.getPrice());
+        values.put(Theme.BLOG_ID, theme.getBlogId());
+        values.put(Theme.IS_CURRENT, theme.getIsCurrent() ? 1 : 0);
 
         synchronized (this) {
             int result = db.update(
                     THEMES_TABLE,
                     values,
-                    "themeId=?",
-                    new String[]{ theme.getThemeId() });
+                    Theme.ID + "=?",
+                    new String[]{theme.getId()});
             if (result == 0)
                 returnValue = db.insert(THEMES_TABLE, null, values) > 0;
         }
@@ -1800,79 +1878,78 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public Cursor getThemesAtoZ(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY name COLLATE NOCASE ASC", new String[] { blogId });
+    public Cursor getThemesAll(String blogId) {
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
+        String[] selection = {blogId};
+
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=?", selection, null, null, null);
     }
 
-    public Cursor getThemesTrending(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY trendingRank ASC", new String[]{ blogId });
+    public Cursor getThemesFree(String blogId) {
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
+        String[] selection = {blogId, ""};
+
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "=?", selection, null, null, null);
     }
 
-    public Cursor getThemesPopularity(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY popularityRank ASC", new String[] { blogId });
-    }
+    public Cursor getThemesPremium(String blogId) {
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
+        String[] selection = {blogId, ""};
 
-    public Cursor getThemesNewest(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY launchDate DESC", new String[]{ blogId });
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.PRICE + "!=?", selection, null, null, null);
     }
-
-    /*public Cursor getThemesPremium(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND price > 0 ORDER BY name ASC", new String[] { blogId });
-    }
-
-    public Cursor getThemesFriendsOfWP(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND themeId LIKE ? ORDER BY popularityRank ASC", new String[] { blogId, "partner-%" });
-    }
-
-    public Cursor getCurrentTheme(String blogId) {
-        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrentTheme='true'", new String[] { blogId });
-    }*/
 
     public String getCurrentThemeId(String blogId) {
-        return DatabaseUtils.stringForQuery(db, "SELECT themeId FROM " + THEMES_TABLE + " WHERE blogId=? AND isCurrent='1'", new String[] { blogId });
+        String[] selection = {blogId, String.valueOf(1)};
+        String currentThemeId;
+        try {
+            currentThemeId = DatabaseUtils.stringForQuery(db, "SELECT " + Theme.ID + " FROM " + THEMES_TABLE + " WHERE " + Theme.BLOG_ID + "=? and " + Theme.IS_CURRENT + "=?", selection);
+        } catch (SQLiteException e) {
+            currentThemeId = "";
+        }
+
+        return currentThemeId;
     }
 
-    public void setCurrentTheme(String blogId, String themeId) {
+    public void setCurrentTheme(String blogId, String id) {
         // update any old themes that are set to true to false
         ContentValues values = new ContentValues();
-        values.put("isCurrent", false);
-        db.update(THEMES_TABLE, values, "blogID=? AND isCurrent='1'", new String[] { blogId });
+        values.put(Theme.IS_CURRENT, false);
+        db.update(THEMES_TABLE, values, Theme.BLOG_ID + "=?", new String[] { blogId });
 
         values = new ContentValues();
-        values.put("isCurrent", true);
-        db.update(THEMES_TABLE, values, "blogId=? AND themeId=?", new String[] { blogId, themeId });
+        values.put(Theme.IS_CURRENT, true);
+        db.update(THEMES_TABLE, values, Theme.BLOG_ID + "=? AND " + Theme.ID + "=?", new String[] { blogId, id });
     }
 
     public int getThemeCount(String blogId) {
-        return getThemesAtoZ(blogId).getCount();
+        return getThemesAll(blogId).getCount();
     }
 
     public Cursor getThemes(String blogId, String searchTerm) {
-        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"});
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.NAME, Theme.SCREENSHOT, Theme.PRICE, Theme.IS_CURRENT};
+        String[] selection = {blogId, "%" + searchTerm + "%"};
 
+        return db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.NAME + " LIKE ?", selection, null, null, null);
     }
 
     public Theme getTheme(String blogId, String themeId) {
-        Cursor cursor = db.rawQuery("SELECT name, description, screenshotURL, previewURL, isCurrent, isPremium, features FROM " + THEMES_TABLE + " WHERE blogId=? AND themeId=?", new String[]{blogId, themeId});
+        String[] columns = {COLUMN_NAME_ID, Theme.ID, Theme.AUTHOR, Theme.SCREENSHOT, Theme.AUTHOR_URI, Theme.DEMO_URI, Theme.NAME, Theme.STYLESHEET, Theme.PRICE, Theme.IS_CURRENT};
+        String[] selection = {blogId, themeId};
+        Cursor cursor = db.query(THEMES_TABLE, columns, Theme.BLOG_ID + "=? AND " + Theme.ID + "=?", selection, null, null, null);
+
         if (cursor.moveToFirst()) {
-            String name = cursor.getString(0);
-            String description = cursor.getString(1);
-            String screenshotURL = cursor.getString(2);
-            String previewURL = cursor.getString(3);
-            boolean isCurrent = cursor.getInt(4) == 1;
-            boolean isPremium = cursor.getInt(5) == 1;
-            String features = cursor.getString(6);
+            String id = cursor.getString(cursor.getColumnIndex(Theme.ID));
+            String author = cursor.getString(cursor.getColumnIndex(Theme.AUTHOR));
+            String screenshot = cursor.getString(cursor.getColumnIndex(Theme.SCREENSHOT));
+            String authorURI = cursor.getString(cursor.getColumnIndex(Theme.AUTHOR_URI));
+            String demoURI = cursor.getString(cursor.getColumnIndex(Theme.DEMO_URI));
+            String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
+            String stylesheet = cursor.getString(cursor.getColumnIndex(Theme.STYLESHEET));
+            String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
+            boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) > 0;
 
-            Theme theme = new Theme();
-            theme.setThemeId(themeId);
-            theme.setName(name);
-            theme.setDescription(description);
-            theme.setScreenshotURL(screenshotURL);
-            theme.setPreviewURL(previewURL);
-            theme.setCurrent(isCurrent);
-            theme.setPremium(isPremium);
-            theme.setFeatures(features);
-
+            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
             cursor.close();
 
             return theme;
@@ -1880,6 +1957,12 @@ public class WordPressDB {
             cursor.close();
             return null;
         }
+    }
+
+    public Theme getCurrentTheme(String blogId) {
+        String currentThemeId = getCurrentThemeId(blogId);
+
+        return getTheme(blogId, currentThemeId);
     }
 
     /*

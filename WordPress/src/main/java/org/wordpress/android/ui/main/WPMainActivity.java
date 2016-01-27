@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.main;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -17,7 +15,8 @@ import android.widget.TextView;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMIntentService;
+import org.wordpress.android.GCMMessageService;
+import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -29,15 +28,15 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
+import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -57,17 +56,14 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends Activity
-    implements MediaAddFragment.MediaAddFragmentCallback, Bucket.Listener<Note> {
+public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
-    private int mLastReselectedTabPosition = -1;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
-    private static final String KEY_LAST_RESELECTED_TAB_POSITION = "reselected_tab_position";
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -79,8 +75,6 @@ public class WPMainActivity extends Activity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setStatusBarColor();
-
         ProfilingUtils.split("WPMainActivity.onCreate");
 
         super.onCreate(savedInstanceState);
@@ -124,19 +118,10 @@ public class WPMainActivity extends Activity
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                // we want to scroll the active fragment's contents to the top when the user taps the currently
-                // selected tab, but a problem in the v22 and v23.0.1 support library causes onTabReselected() to be
-                // fired for every tab change rather than just when the active tab is tapped again - the workaround
-                // below, where we check whether the  tab has already been reselected, prevents the problem.
-                //
-                // Support library ticket: https://code.google.com/p/android/issues/detail?id=177189
-                if (tab.getPosition() == mLastReselectedTabPosition) {
-                    Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
-                    if (fragment instanceof OnScrollToTopListener) {
-                        ((OnScrollToTopListener) fragment).onScrollToTop();
-                    }
-                } else {
-                    mLastReselectedTabPosition = tab.getPosition();
+                //scroll the active fragment's contents to the top when user taps the current tab
+                Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
+                if (fragment instanceof OnScrollToTopListener) {
+                    ((OnScrollToTopListener) fragment).onScrollToTop();
                 }
             }
         });
@@ -152,7 +137,7 @@ public class WPMainActivity extends Activity
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         break;
                 }
-                trackLastVisibleTab(position);
+                trackLastVisibleTab(position, true);
             }
 
             @Override
@@ -188,21 +173,6 @@ public class WPMainActivity extends Activity
             } else {
                 ActivityLauncher.showSignInForResult(this);
             }
-        } else {
-            mLastReselectedTabPosition = savedInstanceState.getInt(KEY_LAST_RESELECTED_TAB_POSITION, -1);
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_LAST_RESELECTED_TAB_POSITION, mLastReselectedTabPosition);
-        super.onSaveInstanceState(outState);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.status_bar_tint));
         }
     }
 
@@ -244,14 +214,18 @@ public class WPMainActivity extends Activity
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-        if (GCMIntentService.getNotificationsCount() == 1) {
+        if (GCMMessageService.getNotificationsCount() == 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
+                GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
                 NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
             }
+        } else {
+          // mark all tapped here
+            GCMMessageService.bumpPushNotificationsTappedAllAnalytics();
         }
 
-        GCMIntentService.clearNotifications();
+        GCMMessageService.clearNotifications();
     }
 
     @Override
@@ -287,7 +261,7 @@ public class WPMainActivity extends Activity
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        trackLastVisibleTab(mViewPager.getCurrentItem());
+        trackLastVisibleTab(mViewPager.getCurrentItem(), false);
 
         checkConnection();
 
@@ -296,23 +270,31 @@ public class WPMainActivity extends Activity
         ProfilingUtils.stop();
     }
 
-    private void trackLastVisibleTab(int position) {
+    private void trackLastVisibleTab(int position, boolean trackAnalytics) {
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
+                if (trackAnalytics) {
+                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
+                }
                 break;
             case WPMainTabAdapter.TAB_READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+                if (trackAnalytics) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+                }
                 break;
             case WPMainTabAdapter.TAB_ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
+                if (trackAnalytics) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
+                }
                 break;
             case WPMainTabAdapter.TAB_NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+                if (trackAnalytics) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+                }
                 break;
             default:
                 break;
@@ -376,7 +358,8 @@ public class WPMainActivity extends Activity
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
-                    WordPress.registerForCloudMessaging(this);
+                    // Register for Cloud messaging
+                    startService(new Intent(this, GCMRegistrationIntentService.class));
                     resetFragments();
                 } else if (!AccountHelper.isSignedIn()) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
@@ -387,7 +370,8 @@ public class WPMainActivity extends Activity
                 if (resultCode == RESULT_CANCELED) {
                     ActivityLauncher.showSignInForResult(this);
                 } else {
-                    WordPress.registerForCloudMessaging(this);
+                    // Register for Cloud messaging
+                    startService(new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
@@ -401,7 +385,7 @@ public class WPMainActivity extends Activity
                 }
                 break;
             case RequestCodes.BLOG_SETTINGS:
-                if (resultCode == BlogPreferencesActivity.RESULT_BLOG_REMOVED) {
+                if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
                     // user removed the current (self-hosted) blog from blog settings
                     if (!AccountHelper.isSignedIn()) {
                         ActivityLauncher.showSignInForResult(this);
@@ -546,9 +530,5 @@ public class WPMainActivity extends Activity
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
-    }
-
-    @Override
-    public void onMediaAdded(String mediaId) {
     }
 }

@@ -76,7 +76,7 @@
             <org.wordpress.android.widgets.WPTextView
                 style="@style/WordPress.NUXGreyButtonNoBg"
                 android:id="@+id/about_url"
-                android:text="automattic.com"
+                android:text="@string/automattic_url"
                 android:clickable="true"
                 android:onClick="onClick"
                 android:layout_width="wrap_content"

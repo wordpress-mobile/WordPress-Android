@@ -37,6 +37,12 @@ public class AccountTable {
         db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD email TEXT DEFAULT '';");
     }
 
+    public static void migrationAddFirstNameLastNameAboutMeFields(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD first_name TEXT DEFAULT '';");
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD last_name TEXT DEFAULT '';");
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD about_me TEXT DEFAULT '';");
+    }
+
     private static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE);
     }
@@ -59,6 +65,9 @@ public class AccountTable {
         values.put("visible_site_count", account.getVisibleSiteCount());
         values.put("access_token", account.getAccessToken());
         values.put("email", account.getEmail());
+        values.put("first_name", account.getFirstName());
+        values.put("last_name", account.getLastName());
+        values.put("about_me", account.getAboutMe());
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -84,6 +93,9 @@ public class AccountTable {
                 account.setVisibleSiteCount(c.getInt(c.getColumnIndex("visible_site_count")));
                 account.setAccessToken(c.getString(c.getColumnIndex("access_token")));
                 account.setEmail(c.getString(c.getColumnIndex("email")));
+                account.setFirstName(c.getString(c.getColumnIndex("first_name")));
+                account.setLastName(c.getString(c.getColumnIndex("last_name")));
+                account.setAboutMe(c.getString(c.getColumnIndex("about_me")));
             }
             return account;
         } finally {

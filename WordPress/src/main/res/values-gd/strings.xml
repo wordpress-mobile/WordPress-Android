@@ -73,12 +73,6 @@
 	<string name="verification_code">Còd dearbhaidh</string>
 	<string name="editor_toast_invalid_path">Tha slighe an fhaidhle mì-dhligheach</string>
 	<string name="error_publish_no_network">Chan urrainn dhut foillseachadh mur eil ceangal ann. Chaidh dreachd dheth a shàbhaladh.</string>
-	<string name="media_details_dimensions">Meudachd:</string>
-	<string name="media_details_file_url">URL an fhaidhle:</string>
-	<string name="media_details_file_type">Seòrsa an fhaidhle:</string>
-	<string name="media_details_file_name">Ainm an fhaidhle:</string>
-	<string name="media_details_uploaded_on">Air a luchdadh suas:</string>
-	<string name="media_details_added_on">Air a chur ris:</string>
 	<string name="tab_title_site_videos">Videothan na làraich</string>
 	<string name="tab_title_device_videos">Videothan an uidheim</string>
 	<string name="tab_title_site_images">Dealbhan na làraich</string>
@@ -316,7 +310,6 @@
 	<string name="no_site_error">Cha b’ urrainn dhuinn ceangal ri làrach WordPress</string>
 	<string name="theme_set_failed">Cha b’ urrainn dhuinn an t-ùrlar a shuidheachadh</string>
 	<string name="theme_auth_error_message">Dèan cinnteach gu bheil cead agad ùrlaran a shuidheachadh</string>
-	<string name="theme_no_search_result_found">Cha deach toradh a lorg</string>
 	<string name="comments_empty_list">Gun bheachdan</string>
 	<string name="mnu_comment_unspam">Beachd còir</string>
 	<string name="gallery_error">Cha b’ urrainn dhuinn am meadhan fhaighinn</string>
@@ -525,7 +518,6 @@
 	<string name="share_action_title">Cuir ri ...</string>
 	<string name="share_action">Co-roinn</string>
 	<string name="stats">Stats</string>
-	<string name="view_stats_full_site">Seall an làrach shlàn</string>
 	<string name="stats_view_clicks">Briogaidhean</string>
 	<string name="stats_view_tags_and_categories">Tagaichean ⁊ roinnean-seòrsa</string>
 	<string name="stats_view_referrers">Ath-threòraichean</string>

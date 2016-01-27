@@ -1,9 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Επιλεγμένο Θέμα</string>
+	<string name="could_not_load_theme">Αποτυχία φόρτωσης θέματος</string>
+	<string name="theme_activation_error">Κάτι πήγε στραβά. Δεν ενεργοποιήθηκε το θέμα</string>
+	<string name="theme_by_author_prompt_append">κατά %1$s</string>
+	<string name="theme_prompt">Ευχαριστούμε που επιλέξατε το %1$s</string>
+	<string name="theme_manage_site">ΔΙΑΧΕΙΡΙΣΗ ΤΟΠΟΘΕΣΙΑΣ</string>
+	<string name="theme_done">ΕΓΙΝΕ</string>
+	<string name="theme_support">Υποστήριξη</string>
+	<string name="theme_details">Λεπτομέριες</string>
+	<string name="theme_view">Προβολή</string>
+	<string name="theme_try_and_customize">Δοκιμή &amp; Τροποποίηση</string>
+	<string name="theme_activate">Ενεργοποίηση</string>
+	<string name="title_activity_theme_support">Θέματα</string>
+	<string name="active">Ενεργό</string>
+	<string name="support">Υποστήριξη</string>
+	<string name="details">Λεπτομέριες</string>
+	<string name="customize">Τροποποίηση</string>
+	<string name="current_theme">Τρέχον Θέμα</string>
+	<string name="date_range_end_date">Ημερομηνία Λήξης</string>
+	<string name="date_range_start_date">Ημερομηνία Έναρξης</string>
+	<string name="stats_referrers_spam_generic_error">Κάτι πήγε στραβά κατά την εκτέλεση της λειτουργίας. Η κατάσταση ανεπιθύμητου δεν άλλαξε</string>
+	<string name="stats_referrers_marking_not_spam">Μη επισήμανση ως ανεπιθύμητο</string>
+	<string name="stats_referrers_unspam">Όχι ανεπιθύμητα</string>
+	<string name="stats_referrers_marking_spam">Επισήμανση ως ανεπιθύμητο</string>
+	<string name="stats_referrers_spam">Ανεπιθύμητα</string>
+	<string name="page_updated">Η σελίδα ανανεώθηκε</string>
+	<string name="page_published">Η σελίδα δημοσιεύθηκε</string>
+	<string name="post_published">Η δημοσίευση ολοκληρώθηκε</string>
+	<string name="post_updated">Η δημοσίευση ενημερώθηκε</string>
+	<string name="theme_auth_error_authenticate">Αποτυχία ανάκτησης θεμάτων: αποτυχία πιστοποίησης αυθεντικότητας χρήστη</string>
+	<string name="theme_no_search_result_found">Λυπούμαστε, δε βρέθηκαν θέματα.</string>
+	<string name="media_dimensions">Διαστάσεις: %s</string>
+	<string name="media_file_name">Όνομα αρχείου: %s</string>
+	<string name="media_uploaded_on">Μεταφορτώθηκε στο: %s</string>
+	<string name="media_file_type">Τύπος αρχείου: %s</string>
+	<string name="upload_queued">Στην ουρά</string>
+	<string name="reader_label_gap_marker">Φόρτωμα περισσότερων άρθρων</string>
+	<string name="notifications_no_search_results">Δεν βρέθηκαν ιστότοποι που να ταιριάζουν με την \'%s\'</string>
+	<string name="search_sites">Αναζήτηση ιστότοπων</string>
+	<string name="unread">Μη Αναγνωσμένα </string>
+	<string name="notifications_empty_view_reader">Προβολή Αναγνώστη</string>
+	<string name="notifications_empty_action_followers_likes">Λάβετε ειδοποιήσεις: σχολιάστε δημοσιεύσεις που έχετε διαβάσει.</string>
+	<string name="notifications_empty_action_comments">Συμμετέχετε σε συζήτηση: σχολιάστε δημοσιεύσεις των ιστολογίων που ακολουθείτε.</string>
+	<string name="notifications_empty_action_unread">Αναθερμάνετε τη συζήτηση: γράψτε ένα νέο post.</string>
+	<string name="notifications_empty_action_all">Δραστηριοποιηθείτε! Σχολιάστε σε αναρτήσεις από blogs που ακολουθείτε.</string>
+	<string name="notifications_empty_likes">Δεν υπάρχουν νέα like...ακόμα.</string>
+	<string name="notifications_empty_followers">Δεν έχετε νέους ακόλουθους... ακόμα.</string>
+	<string name="notifications_empty_comments">Δεν υπάρχουν νέα σχόλια...ακόμα.</string>
+	<string name="notifications_empty_unread">Δεν έχετε νέες ενημερώσεις!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Παρακαλούμε όπως προσπελάσετε τα Στατιστικά στην εφαρμογή και στη συνέχεια δοκιμάσετε να προσθέσετε την εφαρμογή-βοηθό</string>
+	<string name="stats_widget_error_readd_widget">Παρακαλούμε αφαιρέστε και προσθέστε ξανά την εφαρμογή</string>
+	<string name="stats_widget_error_no_visible_blog">Δεν μπορεί να γίνει προσπέλαση των στατιστικών χωρίς ένα φανερό ιστολόγιο</string>
+	<string name="stats_widget_error_no_permissions">Ο λογαριασμός σας WordPress.com δεν έχει πρόσβαση στα Στατιστικά σε αυτό το blog</string>
+	<string name="stats_widget_error_no_account">Παρακαλούμε συνδεθείτε στο WordPress</string>
+	<string name="stats_widget_error_generic">Τα στατιστικά δεν μπορούν να φορτωθούν</string>
+	<string name="stats_widget_loading_data">Φόρτωμα δεδομένων...</string>
+	<string name="stats_widget_name_for_blog">Σημερινά Στατιστικά για %1$s</string>
+	<string name="stats_widget_name">Σημερινά Στατιστικά του WordPress</string>
+	<string name="add_location_permission_required">Απαιτούνται δικαιώματα για να προσθέσετε τοποθεσία</string>
+	<string name="add_media_permission_required">Απαιτούνται δικαιώματα για να προσθέσετε πολυμέσα</string>
+	<string name="access_media_permission_required">Απαιτούνται δικαιώματα για να αποκτήσετε πρόσβαση στα πολυμέσα</string>
 	<string name="stats_enable_rest_api_in_jetpack">Για να δείτε τα στατιστικά σας, ενεργοποιήστε το πρόσθετο JSON API στο Jetpack.</string>
 	<string name="error_open_list_from_notification">Αυτό το άρθρο ή η σελίδα δημοσιεύτηκε σε άλλο ιστότοπο</string>
-	<string name="post_uploaded">Το άρθρο μεταφορτώθηκε</string>
-	<string name="page_uploaded">Η σελίδα μεταφορτώθηκε</string>
 	<string name="reader_short_comment_count_multi">%s Σχόλια</string>
 	<string name="reader_short_comment_count_one">1 Σχόλιο</string>
 	<string name="reader_label_submit_comment">ΑΠΟΣΤΟΛΗ</string>
@@ -36,6 +95,7 @@
 	<string name="notifications_comments_other_blogs">Σχόλια σε άλλους ιστότοπους</string>
 	<string name="notifications_wpcom_updates">Ενημερώσεις του WordPress.com</string>
 	<string name="notifications_other">Άλλα</string>
+	<string name="notifications_account_emails">Μήνυμα από το WordPress.com</string>
 	<string name="notifications_account_emails_summary">Θα σας στέλνουμε πάντα σημαντικά email σχετικά με το λογαριασμό σας αλλά μπορείτε να λαμβάνετε και μερικά χρήσιμα επιπλέον.</string>
 	<string name="notifications_sights_and_sounds">Εικόνες και Ήχοι</string>
 	<string name="your_sites">Οι ιστότοποί σας</string>
@@ -129,10 +189,6 @@
 	<string name="loading_videos">Φόρτωση βίντεο</string>
 	<string name="loading_images">Φόρτωση εικόνων</string>
 	<string name="no_media">Δεν βρέθηκαν πολυμέσα</string>
-	<string name="media_details_file_type">Τύπος αρχείου:</string>
-	<string name="media_details_file_name">Όνομα αρχείου:</string>
-	<string name="media_details_file_url">URL αρχείου:</string>
-	<string name="media_details_dimensions">Διαστάσεις:</string>
 	<string name="device">Συσκευή</string>
 	<string name="language">Γλώσσα</string>
 	<string name="tab_title_device_images">Εικόνες Συσκευής</string>
@@ -144,8 +200,6 @@
 	<string name="media_picker_title">Επιλογή μέσων</string>
 	<string name="take_photo">Βγάλε μια φωτογραφία</string>
 	<string name="take_video">Βγάλε ένα βίντεο</string>
-	<string name="media_details_added_on">Προστέθηκε στο:</string>
-	<string name="media_details_uploaded_on">Μεταφορτώθηκε στο:</string>
 	<string name="verification_code">Κωδικός επαλήθευσης</string>
 	<string name="invalid_verification_code">Μη έγκυρος κωδικός επαλήθευσης</string>
 	<string name="auth_required">Συνδεθείτε ξανά για να συνεχίσετε.</string>
@@ -165,12 +219,12 @@
 	<string name="error_notification_open">Αδύνατον να ανοιχτεί η ειδοποίηση</string>
 	<string name="stats_followers_total_email_paged">Κατάδειξη %1$d - %2$d από %3$ς Ακόλουθοι Email</string>
 	<string name="stats_search_terms_unknown_search_terms">Άγνωστοι όροι αναζήτησης</string>
-	<string name="stats_followers_total_wpcom_paged">Κατάδειξη %1$d - %2$d από %3$ς Ακόλουθοι WordPress.com</string>
 	<string name="stats_empty_search_terms_desc">Μάθετε περισσότερα για την κίνηση στην αναζήτηση σας εξετάζοντας τους όρους αναζήτησης που χρησιμοποίησαν οι χρήστες για να βρούν το site σας.</string>
 	<string name="reader_empty_posts_request_failed">Αδυναμία φόρτωσης των άρθρων</string>
 	<string name="publisher">Εκδότης:</string>
 	<string name="posts_fetching">Λήψη άρθρων...</string>
 	<string name="media_fetching">Λήψη πολυμέσων...</string>
+	<string name="stats_followers_total_wpcom_paged">Κατάδειξη %1$d - %2$d από %3$s Ακόλουθοι WordPress.com</string>
 	<string name="stats_months_and_years">Μήνες και Χρόνια</string>
 	<string name="reader_page_recommended_blogs">Ιστολόγια που μπορεί να σας αρέσουν</string>
 	<string name="post_uploading">Μεταφόρτωση</string>
@@ -336,7 +390,6 @@
 	<string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
 	<string name="comments_empty_list">Δεν υπάρχουν σχόλια</string>
 	<string name="stats_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
-	<string name="theme_no_search_result_found">Δεν βρέθηκαν αποτελέσματα</string>
 	<string name="passcode_wrong_passcode">Λάθος PIN</string>
 	<string name="invalid_email_message">Η διεύθυνση email σας δεν είναι έγκυρη</string>
 	<string name="invalid_username_too_short">Το όνομα χρήστη πρέπει να είναι μεγαλύτερο από 4 χαρακτήρες</string>
@@ -500,6 +553,7 @@
 	<string name="email_cant_be_used_to_signup">Δεν μπορείτε να χρησιμοποιήσετε αυτή τη διεύθυνση email για να συνδεθείτε. Έχουμε προβλήματα με αυτούς γιατί μπλοκάρουν μερικά από τα email μας. Χρησιμοποιήστε άλλο πάροχο email.</string>
 	<string name="email_reserved">Αυτή η διεύθυνση ηλ. ταχυδρομείου χρησιμοποιείται ήδη. Ελέγξτε τα εισερχόμενά σας για email ενεργοποίησης. Αν δεν ενεργοποιήσετε μπορείτε να δοκιμάσετε ξανά σε λίγες μέρες.</string>
 	<string name="blog_name_must_include_letters">Η διεύθυνση του ιστότοπου πρέπει να περιέχει τουλάχιστον 1 γράμμα (a-z)</string>
+	<string name="notifications_empty_all">Καμία ειδοποίηση...ακόμα.</string>
 	<string name="deleting_page">Γίνεται διαγραφή σελίδας</string>
 	<string name="deleting_post">Γίνεται διαγραφή  άρθρου</string>
 	<string name="share_url_post">Κοινοποίηση άρθρου</string>
@@ -529,6 +583,7 @@
 	<string name="reader_toast_err_get_post">Δεν είναι δυνατή η ανάκτηση αυτού του άρθρου.</string>
 	<string name="validating_user_data">Επικύρωση των στοιχείων του χρήστη.</string>
 	<string name="validating_site_data">Επικύρωση στοιχείων του ιστότοπου</string>
+	<string name="reader_empty_followed_blogs_description">Αλλά μην ανησυχείτε, απλά πατήστε το εικονίδιο επάνω δεξιά για να εξερευνήσετε!</string>
 	<string name="nux_welcome_create_account">Δημιουργία λογαριασμού</string>
 	<string name="password_invalid">Χρειάζεστε έναν πιο ασφαλή κωδικό πρόσβασης. Χρησιμοποιήστε 7 ή περισσότερους χαρακτήρες, μέσα στους οποίους υπάρχουν κεφαλαία και μικρά γράμματα, αριθμοί ή ειδικοί χαρακτήρες.</string>
 	<string name="nux_tap_continue">Συνέχεια</string>
@@ -556,7 +611,6 @@
 	<string name="connecting_wpcom">Σύνδεση με WordPress.com</string>
 	<string name="reader_toast_err_view_image">Αδυναμία προβολής της εικόνας</string>
 	<string name="reader_label_added_tag">Προστέθηκε η %s</string>
-	<string name="reader_label_removed_tag">Αφαιρέθηκε το</string>
 	<string name="reader_toast_err_tag_exists">Ακολουθείτε ήδη αυτή την ετικέτα</string>
 	<string name="reader_toast_err_tag_invalid">Αυτή η ετικέτα δεν είναι έγκυρη</string>
 	<string name="reader_toast_err_url_intent">Δε στάθηκε δυνατό να ανοιχθεί το %s</string>
@@ -564,6 +618,7 @@
 	<string name="create_account_wpcom">Δημιουργήστε έναν λογαριασμό στο WordPress.com</string>
 	<string name="reader_empty_followed_tags">Δεν ακολουθείτε καμία ετικέτα</string>
 	<string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο...</string>
+	<string name="reader_label_removed_tag">Αφαιρέθηκε το %s</string>
 	<string name="stats">Στατιστικά</string>
 	<string name="themes">Θέμα</string>
 	<string name="all">Όλα</string>
@@ -604,7 +659,6 @@
 	<string name="post_excerpt">Σύνοψη</string>
 	<string name="share_action_title">Προσθήκη στο ...</string>
 	<string name="share_action">Μοιραστείτε</string>
-	<string name="view_stats_full_site">Δείτε όλο τον ιστότοπο</string>
 	<string name="stats_view_referrers">Ιστότοποι που σας Αναφέρουν</string>
 	<string name="stats_timeframe_days">Ημέρες</string>
 	<string name="stats_timeframe_weeks">Εβδομάδες</string>
@@ -634,6 +688,7 @@
 	<string name="note_reply_successful">Η απάντηση δημοσιεύτηκε</string>
 	<string name="new_notifications">%d νέες ενημερώσεις</string>
 	<string name="more_notifications">και %d ακόμη.</string>
+	<string name="follows">Ακόλουθοι</string>
 	<string name="loading">Φορτώνει...</string>
 	<string name="post_signature">Υπογραφή άρθρου</string>
 	<string name="add_tagline">Προσθήκη υπογραφής στα νέα άρθρα</string>
@@ -759,5 +814,10 @@
 		<item>Κλασσικό</item>
 		<item>Κατάσταση</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Δωρεάν</item>
+		<item>Όλα</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

@@ -12,8 +12,10 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -96,7 +98,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         URI uri = URI.create(baseUrl);
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         try {
-            client.call(ApiHelper.Methods.LIST_METHODS);
+            client.call(Method.LIST_METHODS);
             xmlRpcUrl = baseUrl;
             return xmlRpcUrl;
         } catch (XMLRPCException e) {
@@ -105,13 +107,13 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 return null;
             }
         } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+            if (!WPUrlUtils.isWordPressCom(baseUrl)) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
             return null;
         } catch (SSLPeerUnverifiedException e) {
-            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+            if (!WPUrlUtils.isWordPressCom(baseUrl)) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
@@ -143,20 +145,20 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         uri = URI.create(guessURL);
         client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         try {
-            client.call(ApiHelper.Methods.LIST_METHODS);
+            client.call(Method.LIST_METHODS);
             xmlRpcUrl = guessURL;
             return xmlRpcUrl;
         } catch (XMLRPCException e) {
             AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+            if (!WPUrlUtils.isWordPressCom(baseUrl)) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
             return null;
         } catch (SSLPeerUnverifiedException e) {
-            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+            if (!WPUrlUtils.isWordPressCom(baseUrl)) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
@@ -195,7 +197,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         try {
             rsdUrl = UrlUtils.addUrlSchemeIfNeeded(getRsdUrl(url), false);
         } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+            if (!WPUrlUtils.isWordPressCom(url)) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
@@ -212,7 +214,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(getXmlrpcByUserEnteredPath(url), false);
             }
         } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+            if (!WPUrlUtils.isWordPressCom(url)) {
                 mErroneousSslCertificate = true;
             }
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
@@ -251,7 +253,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, mHttpUsername, mHttpPassword);
             Object[] params = {mUsername, mPassword};
             try {
-                Object[] userBlogs = (Object[]) client.call(ApiHelper.Methods.GET_BLOGS, params);
+                Object[] userBlogs = (Object[]) client.call(Method.GET_BLOGS, params);
                 if (userBlogs == null) {
                     // Could happen if the returned server response is truncated
                     mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
@@ -277,7 +279,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
                 mErrorMsgId = org.wordpress.android.R.string.no_site_error;
             } catch (SSLHandshakeException e) {
-                if (xmlrpcUri.getHost() != null && xmlrpcUri.getHost().endsWith("wordpress.com")) {
+                if (WPUrlUtils.isWordPressCom(xmlrpcUri)) {
                     mErroneousSslCertificate = true;
                 }
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");

@@ -58,7 +58,6 @@
 	<string name="help_center">Támogatói központ</string>
 	<string name="ssl_certificate_error">Érvénytelen SSL hitelesítés</string>
 	<string name="out_of_memory">Az eszköz memóriája megtelt</string>
-	<string name="theme_no_search_result_found">Nincsenek találatok</string>
 	<string name="comments_empty_list">Nincsenek hozzászólások</string>
 	<string name="mnu_comment_unspam">Nem spam</string>
 	<string name="no_network_message">Nincs elérehtő hálózat</string>
@@ -124,7 +123,6 @@
 	<string name="stats_timeframe_yesterday">Tegnap</string>
 	<string name="stats_view_clicks">Kattintások</string>
 	<string name="stats_view_tags_and_categories">Címkék és kategóriák</string>
-	<string name="view_stats_full_site">Teljes oldal megtekintése</string>
 	<string name="menu_search">Keresés</string>
 	<string name="stats_entry_tags_and_categories">Téma</string>
 	<string name="stats_entry_authors">Szerző</string>

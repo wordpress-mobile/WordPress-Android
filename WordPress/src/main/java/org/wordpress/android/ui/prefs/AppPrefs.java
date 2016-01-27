@@ -11,7 +11,17 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
 public class AppPrefs {
-    public enum PrefKey {
+    private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
+
+    public interface PrefKey {
+        String name();
+        String toString();
+    }
+
+    /**
+     * Application related preferences. When the user disconnects, these preferences are erased.
+     */
+    public enum DeletablePrefKey implements PrefKey {
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
@@ -31,14 +41,23 @@ public class AppPrefs {
         // index of the last active item in Stats activity
         STATS_ITEM_INDEX,
 
-        // index of the last app-version
-        LAST_APP_VERSION_INDEX,
-
         // Keep the associations between each widget_id/blog_id added to the app
         STATS_WIDGET_KEYS_BLOGS,
 
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
+    }
+
+    /**
+     * These preferences won't be deleted when the user disconnects. They should be used for device specifics or user
+     * independent prefs.
+     */
+    public enum UndeletablePrefKey implements PrefKey {
+        // Theme image size retrieval
+        THEME_IMAGE_SIZE_WIDTH,
+
+        // index of the last app-version
+        LAST_APP_VERSION_INDEX,
     }
 
     private static SharedPreferences prefs() {
@@ -105,28 +124,28 @@ public class AppPrefs {
      */
     public static void reset() {
         SharedPreferences.Editor editor = prefs().edit();
-        for (PrefKey key : PrefKey.values()) {
+        for (DeletablePrefKey key : DeletablePrefKey.values()) {
             editor.remove(key.name());
         }
         editor.apply();
     }
 
     public static ReaderTag getReaderTag() {
-        String tagName = getString(PrefKey.READER_TAG_NAME);
+        String tagName = getString(DeletablePrefKey.READER_TAG_NAME);
         if (TextUtils.isEmpty(tagName)) {
             return null;
         }
-        int tagType = getInt(PrefKey.READER_TAG_TYPE);
+        int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
         return new ReaderTag(tagName, ReaderTagType.fromInt(tagType));
     }
     public static void setReaderTag(ReaderTag tag) {
         if (tag != null && !TextUtils.isEmpty(tag.getTagName())) {
-            setString(PrefKey.READER_TAG_NAME, tag.getTagName());
-            setInt(PrefKey.READER_TAG_TYPE, tag.tagType.toInt());
+            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagName());
+            setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
         } else {
             prefs().edit()
-                   .remove(PrefKey.READER_TAG_NAME.name())
-                   .remove(PrefKey.READER_TAG_TYPE.name())
+                   .remove(DeletablePrefKey.READER_TAG_NAME.name())
+                   .remove(DeletablePrefKey.READER_TAG_TYPE.name())
                    .apply();
         }
     }
@@ -136,14 +155,14 @@ public class AppPrefs {
      * the index of the page so we can re-order pages without affecting this value
      */
     public static String getReaderSubsPageTitle() {
-        return getString(PrefKey.READER_SUBS_PAGE_TITLE);
+        return getString(DeletablePrefKey.READER_SUBS_PAGE_TITLE);
     }
     public static void setReaderSubsPageTitle(String pageTitle) {
-        setString(PrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
+        setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
     }
 
     public static StatsTimeframe getStatsTimeframe() {
-        int idx = getInt(PrefKey.STATS_ITEM_INDEX);
+        int idx = getInt(DeletablePrefKey.STATS_ITEM_INDEX);
         StatsTimeframe[] timeframeValues = StatsTimeframe.values();
         if (timeframeValues.length < idx) {
             return timeframeValues[0];
@@ -153,20 +172,20 @@ public class AppPrefs {
     }
     public static void setStatsTimeframe(StatsTimeframe timeframe) {
         if (timeframe != null) {
-            setInt(PrefKey.STATS_ITEM_INDEX, timeframe.ordinal());
+            setInt(DeletablePrefKey.STATS_ITEM_INDEX, timeframe.ordinal());
         } else {
             prefs().edit()
-                    .remove(PrefKey.STATS_ITEM_INDEX.name())
+                    .remove(DeletablePrefKey.STATS_ITEM_INDEX.name())
                     .apply();
         }
     }
 
     // Store the version code of the app. Used to check it the app was upgraded.
     public static int getLastAppVersionCode() {
-        return getInt(PrefKey.LAST_APP_VERSION_INDEX);
+        return getInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX);
     }
     public static void setLastAppVersionCode(int versionCode) {
-        setInt(PrefKey.LAST_APP_VERSION_INDEX, versionCode);
+        setInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX, versionCode);
     }
 
     /**
@@ -174,51 +193,65 @@ public class AppPrefs {
      * activity, also used by analytics tracker
      */
     public static String getLastActivityStr() {
-        return getString(PrefKey.LAST_ACTIVITY_STR, ActivityId.UNKNOWN.name());
+        return getString(DeletablePrefKey.LAST_ACTIVITY_STR, ActivityId.UNKNOWN.name());
     }
     public static void setLastActivityStr(String value) {
-        setString(PrefKey.LAST_ACTIVITY_STR, value);
+        setString(DeletablePrefKey.LAST_ACTIVITY_STR, value);
     }
     public static void resetLastActivityStr() {
-        remove(PrefKey.LAST_ACTIVITY_STR);
+        remove(DeletablePrefKey.LAST_ACTIVITY_STR);
     }
 
 
     // Mixpanel email retrieval check
 
     public static String getMixpanelUserEmail() {
-        return getString(PrefKey.MIXPANEL_EMAIL_ADDRESS, null);
+        return getString(DeletablePrefKey.MIXPANEL_EMAIL_ADDRESS, null);
     }
 
     public static void setMixpanelUserEmail(String email) {
-        setString(PrefKey.MIXPANEL_EMAIL_ADDRESS, email);
+        setString(DeletablePrefKey.MIXPANEL_EMAIL_ADDRESS, email);
     }
 
     public static int getMainTabIndex() {
-        return getInt(PrefKey.MAIN_TAB_INDEX);
+        return getInt(DeletablePrefKey.MAIN_TAB_INDEX);
     }
     public static void setMainTabIndex(int index) {
-        setInt(PrefKey.MAIN_TAB_INDEX, index);
+        setInt(DeletablePrefKey.MAIN_TAB_INDEX, index);
     }
 
 
     // Stats Widgets
     public static void resetStatsWidgetsKeys() {
-        remove(PrefKey.STATS_WIDGET_KEYS_BLOGS);
+        remove(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS);
     }
     public static String getStatsWidgetsKeys() {
-        return getString(PrefKey.STATS_WIDGET_KEYS_BLOGS);
+        return getString(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS);
     }
     public static void setStatsWidgetsKeys(String widgetData) {
-        setString(PrefKey.STATS_WIDGET_KEYS_BLOGS, widgetData);
+        setString(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS, widgetData);
     }
     public static String getStatsWidgetsData() {
-        return getString(PrefKey.STATS_WIDGET_DATA);
+        return getString(DeletablePrefKey.STATS_WIDGET_DATA);
     }
     public static void setStatsWidgetsData(String widgetData) {
-        setString(PrefKey.STATS_WIDGET_DATA, widgetData);
+        setString(DeletablePrefKey.STATS_WIDGET_DATA, widgetData);
     }
     public static void resetStatsWidgetsData() {
-        remove(PrefKey.STATS_WIDGET_DATA);
+        remove(DeletablePrefKey.STATS_WIDGET_DATA);
+    }
+
+    // Themes
+    public static void setThemeImageSizeWidth(int width) {
+        setInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH, width);
+    }
+
+    public static int getThemeImageSizeWidth() {
+        int value = getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
+        if (value == 0) {
+            return THEME_IMAGE_SIZE_WIDTH_DEFAULT;
+        } else {
+            return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
+        }
     }
 }

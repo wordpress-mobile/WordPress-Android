@@ -1,5 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">لم تعد هذه المقالة موجودة</string>
+	<string name="reader_err_get_post_not_authorized">لست مخولاً لعرض هذه المقالة</string>
+	<string name="reader_err_get_post_generic">يتعذر استرجاع هذه المقالة</string>
+	<string name="blog_name_no_spaced_allowed">لا يمكن أن يحتوي عنوان الموقع على مسافات</string>
+	<string name="invalid_username_no_spaces">لا يمكن أن يحتوي اسم المستخدم على مسافات</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">لم تنشر المواقع التي تتابعها أي شيء مؤخرًا</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">لا توجد مقالات حديثة</string>
+	<string name="media_details_copy_url_toast">تم نسخ عنوان URL إلى الحافظة</string>
+	<string name="edit_media">تحرير الوسائط</string>
+	<string name="media_details_copy_url">نسخ عنوان URL</string>
+	<string name="media_details_label_date_uploaded">تم التحميل</string>
+	<string name="media_details_label_date_added">تمت الإضافة</string>
+	<string name="selected_theme">تحديد قالب</string>
+	<string name="could_not_load_theme">يتعذر تحميل القالب</string>
+	<string name="theme_activation_error">حدث خطأ. يتعذر تنشيط القالب</string>
+	<string name="theme_by_author_prompt_append"> حسب %1$s</string>
+	<string name="theme_prompt">شكرًا لك على اختيار %1$s</string>
+	<string name="theme_try_and_customize">محاولة وتخصيص</string>
+	<string name="theme_view">عرض</string>
+	<string name="theme_details">تفاصيل</string>
+	<string name="theme_support">الدعم</string>
+	<string name="theme_done">تم</string>
+	<string name="theme_manage_site">إدارة الموقع</string>
+	<string name="title_activity_theme_support">القوالب</string>
+	<string name="theme_activate">تفعيل</string>
+	<string name="date_range_start_date">تاريخ البدء</string>
+	<string name="date_range_end_date">تاريخ الانتهاء</string>
+	<string name="current_theme">القالب الحالي</string>
+	<string name="customize">تخصيص</string>
+	<string name="details">تفاصيل</string>
+	<string name="support">الدعم</string>
+	<string name="active">مفعل</string>
+	<string name="stats_referrers_spam_generic_error">حدث خطأ أثناء التشغيل. لم تتغير حالة البريد المزعج</string>
+	<string name="stats_referrers_marking_not_spam">تحديد كغير مزعج</string>
+	<string name="stats_referrers_unspam">ليس بريدًا مزعجًا</string>
+	<string name="stats_referrers_marking_spam">تحديد كمزعج</string>
+	<string name="theme_auth_error_authenticate">فشل في إحضار القوالب: فشلت مصادقة المستخدم</string>
+	<string name="post_published">تم نشر المقالة</string>
+	<string name="page_published">تم نشر الصفحة</string>
+	<string name="post_updated">تم تحديث المقالة</string>
+	<string name="page_updated">تم تحديث الصفحة</string>
+	<string name="stats_referrers_spam">البريد المزعج</string>
+	<string name="theme_no_search_result_found">عذرًا، لم يتم العثور على أي قوالب.</string>
+	<string name="media_file_name">اسم الملف: %s</string>
+	<string name="media_uploaded_on">تم الرفع في: %s</string>
+	<string name="media_dimensions">أبعاد: %s</string>
+	<string name="upload_queued">تم الوضع في قائمة الانتظار</string>
+	<string name="media_file_type">نوع الملف: %s</string>
+	<string name="reader_label_gap_marker">تحميل المزيد من المقالات</string>
+	<string name="notifications_no_search_results">لا توجد مواقع مطابقة "%s"</string>
+	<string name="search_sites">بحث في المواقع</string>
+	<string name="notifications_empty_view_reader">عرض القارئ</string>
+	<string name="unread">غير مقروء</string>
+	<string name="notifications_empty_action_followers_likes">ملاحظة: التعليق على المقالات التي قرأتها.</string>
+	<string name="notifications_empty_action_comments">الانضمام إلى محادثة: التعليق على المقالات من المدونات التي تتابعها.</string>
+	<string name="notifications_empty_action_unread">إعادة بدء المحادثة: اكتب مقالة جديدة.</string>
+	<string name="notifications_empty_action_all">كن نشطًا! علّق على مقالات من المدونات التي تتابعها.</string>
+	<string name="notifications_empty_likes">لا توجد إعجابات جديدة لإظهارها…حتى الآن.</string>
+	<string name="notifications_empty_followers">ليس هناك متابعون جدد للإبلاغ عنهم…حتى الآن.</string>
+	<string name="notifications_empty_comments">ليست هناك تعليقات جديدة…حتى الآن.</string>
+	<string name="notifications_empty_unread">تمت قراءة الكل!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">يرجى الوصول إلى الإحصاءات في التطبيق، وجرب إضافة المربع الجانبي لاحقًا</string>
+	<string name="stats_widget_error_readd_widget">يرجى إزالة المربع الجانبي وإضافته مرة أخرى</string>
+	<string name="stats_widget_error_no_visible_blog">يتعذر الوصول إلى الإحصاءات بدون مدونة مرئية</string>
+	<string name="stats_widget_error_no_permissions">يتعذر على حسابك في وردبرس.كوم الوصول إلى الإحصاءات في هذه المدونة</string>
+	<string name="stats_widget_error_no_account">يرجى تسجيل الدخول إلى وردبرس</string>
+	<string name="stats_widget_error_generic">يتعذر تحميل الإحصاءات</string>
+	<string name="stats_widget_loading_data">جارٍ تحميل البيانات…</string>
+	<string name="stats_widget_name_for_blog">إحصاءات اليوم لـ %1$s</string>
+	<string name="stats_widget_name">إحصاءات وردبرس اليوم</string>
+	<string name="add_location_permission_required">يلزم وجود صلاحية لإضافة موقع</string>
+	<string name="add_media_permission_required">يلزم وجود أذونات لإضافة الوسائط</string>
+	<string name="access_media_permission_required">يلزم وجود أذونات للوصول إلى الوسائط</string>
+	<string name="stats_enable_rest_api_in_jetpack">لعرض الإحصائيات الخاصة بك، قم بتمكين وحدة JSON API في Jetpack.</string>
+	<string name="error_open_list_from_notification">تم نشر هذا المنشور أو هذه الصفحة في موقع آخر</string>
 	<string name="reader_short_comment_count_multi">%s تعليقات</string>
 	<string name="reader_short_comment_count_one">تعليق واحد</string>
 	<string name="reader_label_submit_comment">إرسال</string>
@@ -32,6 +107,7 @@
 	<string name="notifications_comments_other_blogs">التعليقات على المواقع الأخرى</string>
 	<string name="notifications_wpcom_updates">تحديثات وردبرس.كوم</string>
 	<string name="notifications_other">أخرى</string>
+	<string name="notifications_account_emails">بريد إلكتروني من WordPress.com</string>
 	<string name="notifications_account_emails_summary">نحن نرسل دومًا رسائل بريد إلكتروني مهمة بخصوص حسابك، ومع ذلك يمكنك الحصول على بعض الإضافات المفيدة أيضًا.</string>
 	<string name="notifications_sights_and_sounds">المناظر والأصوات</string>
 	<string name="your_sites">مواقعك</string>
@@ -131,7 +207,6 @@
 	<string name="tab_title_device_videos">مقاطع فيديو للأجهزة</string>
 	<string name="tab_title_site_images">صور المواقع</string>
 	<string name="tab_title_site_videos">مقاطع فيديو للمواقع</string>
-	<string name="media_details_dimensions">الأبعاد:</string>
 	<string name="error_publish_no_network">لا يمكن النشر في حالة عدم وجود اتصال. تم الحفظ كمسودة.</string>
 	<string name="editor_toast_invalid_path">مسار الملف غير صالح</string>
 	<string name="verification_code">رمز التحقق</string>
@@ -141,11 +216,6 @@
 	<string name="sign_in_jetpack">قم بتسجيل الدخول إلى حساب وردبرس.كوم للاتصال بـ Jetpack.</string>
 	<string name="auth_required">قم بتسجيل الدخول مرة أخرى للمتابعة.</string>
 	<string name="language">اللغة</string>
-	<string name="media_details_added_on"> أضيف في:</string>
-	<string name="media_details_uploaded_on">رفع في:</string>
-	<string name="media_details_file_name">اسم الملف:</string>
-	<string name="media_details_file_type">نوع الملف:</string>
-	<string name="media_details_file_url">وصلة الملف:</string>
 	<string name="verify">تحقق</string>
 	<string name="two_step_footer_button">إرسال الكود عن طريق رسالة نصية</string>
 	<string name="add_to_post">إضافة مقالة</string>
@@ -178,6 +248,7 @@
 	<string name="post_uploading">جارٍ الرفع</string>
 	<string name="stats_total">الإجمالي</string>
 	<string name="stats_overall">الكلي</string>
+	<string name="reader_page_recommended_blogs">مواقع قد تحوز إعجابك</string>
 	<string name="stats_comments_total_comments_followers">إجمالي المقالات مع متابعي التعليقات: %1$s</string>
 	<string name="stats_followers_wpcom_selector">ووردبريس.كوم</string>
 	<string name="stats_followers_total_wpcom">إجمالي متابعي ووردبريس.كوم: %1$s</string>
@@ -283,6 +354,7 @@
 	<string name="media_empty_list_custom_date">لا توجد وسائط في هذا الفاصل الزمني</string>
 	<string name="posting_post">نشر "%s"</string>
 	<string name="signing_out">جارٍ تسجيل الخروج…</string>
+	<string name="reader_empty_followed_blogs_title">لم تتابع أي مواقع حتى الآن</string>
 	<string name="reader_menu_block_blog">حظر هذه المدونة</string>
 	<string name="reader_toast_err_block_blog">غير قادر على حظر المدونة</string>
 	<string name="reader_toast_blog_blocked">لن يتم عرض مقالات هذه المدونة بعد الآن</string>
@@ -315,6 +387,8 @@
 	<string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
 	<string name="reader_title_blog_preview">مدوّنة القارئ</string>
 	<string name="reader_title_tag_preview">وسم القارئ</string>
+	<string name="reader_page_followed_blogs">المواقع المتابَعة</string>
+	<string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
 	<string name="saving">حفظ...</string>
 	<string name="media_empty_list">لا وسائط</string>
 	<string name="ptr_tip_message">نصيحة: اسحب للأسفل من أجل التحديث</string>
@@ -350,7 +424,6 @@
 	<string name="adding_cat_success">تم إضافة التصنيف بنجاح</string>
 	<string name="adding_cat_failed">إضافة التصنيف فشلت</string>
 	<string name="stats_empty_comments">لا تعليقات حتى الآن</string>
-	<string name="theme_no_search_result_found">لا توجد نتائج</string>
 	<string name="nux_cannot_log_in">نحن لا نستطيع تسجيل دخولك</string>
 	<string name="username_or_password_incorrect">اسم المستخدم أو كلمة المرور غير صحيحة</string>
 	<string name="passcode_wrong_passcode">مفتاح الـ PIN خاطئ</string>
@@ -492,6 +565,7 @@
 	<string name="media_gallery_image_order">طلب صورة</string>
 	<string name="comment_status_unapproved">معلق</string>
 	<string name="dlg_unapproving_comments">غير مصدق</string>
+	<string name="notifications_empty_all">ليست هناك تنبيهات…حتى الآن.</string>
 	<string name="share_url_post">مشاركة المقالة</string>
 	<string name="deleting_page">يتم الان حذف الصفحة</string>
 	<string name="deleting_post">يتم الان حذف المقالة</string>
@@ -521,6 +595,7 @@
 	<string name="reader_toast_err_get_post">غير قادر على استرجاع هذه المقالة</string>
 	<string name="validating_user_data">التحقق من صحة بيانات المستخدم</string>
 	<string name="validating_site_data">التحقق من صحة بيانات الموقع</string>
+	<string name="reader_empty_followed_blogs_description">ومع ذلك لا داعي للقلق، فما عليك سوى النقر على الأيقونة في أعلى اليمين لبدء الاستكشاف!</string>
 	<string name="nux_oops_not_selfhosted_blog">تسجيل الدخول إلى ووردبريس.كوم</string>
 	<string name="nux_welcome_create_account">انشئ حساب</string>
 	<string name="signing_in">جاري تسجيل الدخول...</string>
@@ -613,7 +688,6 @@
 	<string name="share_action">المشاركة</string>
 	<string name="theme_set_success">نجح في جعل الثيم افتراضي</string>
 	<string name="theme_auth_error_title">فشل في جلب القالب</string>
-	<string name="view_stats_full_site">رؤية الموقع كاملاً</string>
 	<string name="stats_view_referrers">إحالة الدعوات</string>
 	<string name="stats_totals_plays">يشغل</string>
 	<string name="media_gallery_type_tiled">متجانب</string>
@@ -626,6 +700,7 @@
 	<string name="note_reply_successful">تم نشر الرد</string>
 	<string name="new_notifications">%d تنبيهات جديدة</string>
 	<string name="more_notifications">و %d اكثر</string>
+	<string name="follows">متابعات</string>
 	<string name="loading">جاري التحميل...</string>
 	<string name="httppassword">كلمة مرور HTTP</string>
 	<string name="httpuser">اسم مستخدم HTTP</string>
@@ -751,5 +826,10 @@
 		<item>قياسي</item>
 		<item>حالة</item>
 		<item>فيديو</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>مجاني</item>
+		<item>الكل</item>
+		<item>الإصدار المميز</item>
 	</string-array>
 </resources>

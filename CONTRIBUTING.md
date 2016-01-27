@@ -26,13 +26,13 @@ Here's a quick guide to create a pull request for your WordPress-Android patch:
 [pr]: https://github.com/wordpress-mobile/WordPress-Android/compare/
 [style]: https://github.com/wordpress-mobile/WordPress-Android/CODESTYLE.md
 
-# Notes about versioning
+# Versioning
 
 * Version `x.y` (2.8 or 4.0 for instance) are major releases. There is no distinction between a 2.9 version or a 3.0 version, we want to avoid naming like 2.142 so the version after `x.9` (2.9) is simply `x+1.0` (3.0). A new major version is released every ~4 weeks.
 
 * Version `x.y.z` (2.8.1 or 4.0.2 for instance) are hotfix releases. We release them only when a blocking or major bug is found in the currently released version.
 
-# Notes about branching
+# Branching
 
 We use the [git flow branching model][git-flow].
 
@@ -57,6 +57,15 @@ Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a ne
 
 [git-flow]: http://nvie.com/posts/a-successful-git-branching-model/
 
+# Drawable Resources
+
+The Android build tools now allow drawable resources to be provided exclusively in vector format, PNG's are automatically generated at build time if necessary.
+
+From the [release notes](http://tools.android.com/tech-docs/new-build-system):
+`PNGs are generated for every vector drawable found in a resource directory that does not specify an API version (or specifies a version lower than 21).`
+
 # Contribute to translations
 
 We use a tool called GlotPress to manage translations. The WordPress-Android GlotPress instance lives here: http://translate.wordpress.org/projects/apps/android/dev. To add new translations or fix existing ones, create an account over at GlotPress and submit your changes over at the GlotPress site.
+
+To help ease the translation process we ask that you mark alias string resources - as well as other strings where appropriate - as not translatable. For example `<string name="foo" translatable="false">@string/bar</string>'

@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="selected_theme">Tema selecionado</string>
+	<string name="could_not_load_theme">Não foi possível carregar o tema</string>
+	<string name="theme_activation_error">Algo deu errado. Não foi possível ativar o tema</string>
+	<string name="theme_by_author_prompt_append"> por %1$s</string>
+	<string name="theme_prompt">Obrigado por escolher %1$s</string>
+	<string name="theme_try_and_customize">Testar &amp; Personalizar</string>
+	<string name="theme_view">Visualizar</string>
+	<string name="theme_details">Detalhes</string>
+	<string name="theme_support">Suporte</string>
+	<string name="theme_done">Pronto</string>
+	<string name="theme_manage_site">Gerenciar site</string>
+	<string name="title_activity_theme_support">Temas</string>
+	<string name="theme_activate">Ativar</string>
+	<string name="details">Detalhes</string>
+	<string name="support">Suporte</string>
+	<string name="active">Ativo</string>
+	<string name="date_range_start_date">Data inicial</string>
+	<string name="date_range_end_date">Data final</string>
+	<string name="current_theme">Tema atual</string>
+	<string name="customize">Personalizar</string>
+	<string name="stats_referrers_spam_generic_error">Algo de errado aconteceu durante a operação. O estado de spam não foi mudado.</string>
+	<string name="stats_referrers_marking_not_spam">Marcar como não spam</string>
+	<string name="stats_referrers_unspam">Não é spam</string>
+	<string name="stats_referrers_marking_spam">Marcar como spam</string>
+	<string name="post_published">Post publicado</string>
+	<string name="page_published">Página publicada</string>
+	<string name="post_updated">Post atualizado</string>
+	<string name="page_updated">Página atualizada</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_auth_error_authenticate">Falha ao carregar temas: autenticação de usuário falhou</string>
+	<string name="theme_no_search_result_found">Desculpe, nenhum tema encontrado.</string>
+	<string name="media_file_name">Nome do arquivo: %s</string>
+	<string name="media_dimensions">Dimensões: %s</string>
+	<string name="media_uploaded_on">Enviado em: %s</string>
+	<string name="media_file_type">Tipo de arquivo: %s</string>
+	<string name="upload_queued">Enfileirado</string>
+	<string name="reader_label_gap_marker">Carregar mais posts</string>
+	<string name="notifications_no_search_results">Nenhum site corresponde a \'%s\'</string>
+	<string name="search_sites">Pesquisar sites</string>
+	<string name="notifications_empty_view_reader">Visualizar Leitor</string>
+	<string name="unread">Não lida</string>
+	<string name="notifications_empty_action_followers_likes">Seja notado: comente em posts que você leu.</string>
+	<string name="notifications_empty_action_comments">Participe de uma conversa: comente em posts de blogs que você segue.</string>
+	<string name="notifications_empty_action_unread">Reinicie a conversa: escrever um novo post.</string>
+	<string name="notifications_empty_action_all">Seja ativo! Comente em posts de blogs que você segue.</string>
+	<string name="notifications_empty_likes">Nenhuma nova curtida para exibir... ainda.</string>
+	<string name="notifications_empty_followers">Nenhum novo seguidore para relatar... ainda.</string>
+	<string name="notifications_empty_comments">Nenhum novo comentário... ainda.</string>
+	<string name="notifications_empty_unread">Você está atualizado!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Por favor, acesse as Estatísticas no aplicativo e tente adicionar o widget mais tarde</string>
+	<string name="stats_widget_error_readd_widget">Por favor, remova o widget e adicione-o novamente</string>
+	<string name="stats_widget_error_no_visible_blog">Estatísticas não podem ser carregadas sem um blog visível</string>
+	<string name="stats_widget_error_no_permissions">Sua conta no WordPress.com não pode acessar as estatísticas deste blog</string>
+	<string name="stats_widget_error_no_account">Por favor, faça login no WordPress</string>
+	<string name="stats_widget_error_generic">As Estatísticas não puderam ser carregadas</string>
+	<string name="stats_widget_loading_data">Carregando dados...</string>
+	<string name="stats_widget_name_for_blog">Estatísticas de hoje para %1$s</string>
+	<string name="stats_widget_name">Estatísticas de hoje do WordPress</string>
+	<string name="add_location_permission_required">Permissões necessárias para adicionar localização</string>
+	<string name="add_media_permission_required">Permissões necessárias para adicionar mídia</string>
+	<string name="access_media_permission_required">Permissões necessárias para acessar mídia</string>
+	<string name="stats_enable_rest_api_in_jetpack">Para ver suas estatísticas, ative o modulo JSON API do Jetpack.</string>
+	<string name="error_open_list_from_notification">Este post ou página foi publicado em outro site</string>
 	<string name="reader_short_comment_count_multi">%s comentários</string>
 	<string name="reader_short_comment_count_one">1 comentário</string>
 	<string name="reader_label_submit_comment">ENVIAR</string>
@@ -32,6 +95,7 @@
 	<string name="notifications_comments_other_blogs">Comentários em outros sites</string>
 	<string name="notifications_other">Outro</string>
 	<string name="notifications_wpcom_updates">Novidades do WordPress.com</string>
+	<string name="notifications_account_emails">Email do WordPress.com</string>
 	<string name="notifications_account_emails_summary">Sempre enviaremos emails importantes sobre a sua conta, mas você também pode ter acesso a conteúdo extra.</string>
 	<string name="notifications_sights_and_sounds">Aparência e sons</string>
 	<string name="your_sites">Seus Sites</string>
@@ -133,9 +197,6 @@
 	<string name="verification_code">Código de verificação</string>
 	<string name="editor_toast_invalid_path">Caminho do arquivo inválido</string>
 	<string name="error_publish_no_network">Não é possível publicar enquanto não houver conexão. Salvo como rascunho.</string>
-	<string name="media_details_dimensions">Dimensões:</string>
-	<string name="media_details_file_name">Nome do arquivo:</string>
-	<string name="media_details_uploaded_on">Upload realizado em:</string>
 	<string name="tab_title_device_videos">Vídeos do dispositivo</string>
 	<string name="tab_title_device_images">Imagens do dispositivo</string>
 	<string name="take_video">Gravar um vídeo</string>
@@ -145,9 +206,6 @@
 	<string name="device">Dispositivo</string>
 	<string name="two_step_sms_sent">Verifique suas mensagens de texto para o código de verificação.</string>
 	<string name="invalid_verification_code">Código de verificação inválido</string>
-	<string name="media_details_file_url">URL do arquivo:</string>
-	<string name="media_details_file_type">Tipo de arquivo:</string>
-	<string name="media_details_added_on">Adicionado em:</string>
 	<string name="tab_title_site_videos">Vídeos do site</string>
 	<string name="tab_title_site_images">Imagens do site</string>
 	<string name="media_picker_title">Selecionar mídia</string>
@@ -178,6 +236,7 @@
 	<string name="stats_months_and_years">Meses e anos</string>
 	<string name="stats_overall">Geral</string>
 	<string name="stats_total">Total</string>
+	<string name="reader_page_recommended_blogs">Talvez você goste destes sites</string>
 	<string name="stats_comments_total_comments_followers">Total de posts com comentários de seguidores: %1$s</string>
 	<string name="stats_visitors">Visitantes</string>
 	<string name="stats_comments">Comentários</string>
@@ -283,6 +342,7 @@
 	<string name="browse_our_faq_button">Veja nossa seção de Perguntas Frequentes</string>
 	<string name="nux_help_description">Visite a central de ajuda para obter respostas para perguntas frequentes, ou visite os fóruns para fazer novas perguntas.</string>
 	<string name="sending_content">Fazendo upload do conteúdo de %s</string>
+	<string name="reader_empty_followed_blogs_title">Você ainda não está seguindo um site</string>
 	<string name="reader_menu_block_blog">Bloquear este blog</string>
 	<string name="reader_toast_err_block_blog">Não é possível bloquear este blog</string>
 	<string name="reader_toast_err_generic">Não é possível executar esta ação</string>
@@ -315,6 +375,8 @@
 	<string name="reader_empty_recommended_blogs">Nenhum blog recomendado</string>
 	<string name="reader_title_blog_preview">Blog do Leitor</string>
 	<string name="reader_title_tag_preview">Tag do Leitor</string>
+	<string name="reader_page_followed_blogs">Sites seguidos</string>
+	<string name="reader_hint_add_tag_or_url">Insira um URL ou tag para seguir</string>
 	<string name="saving">Salvando...</string>
 	<string name="media_empty_list">Nenhuma mídia</string>
 	<string name="ptr_tip_message">Dica: Arraste para baixo para atualizar</string>
@@ -332,7 +394,6 @@
 	<string name="wait_until_upload_completes">Aguarde até que o upload esteja completo</string>
 	<string name="comments_empty_list">Sem comentários</string>
 	<string name="mnu_comment_unspam">Não é spam</string>
-	<string name="theme_no_search_result_found">Não foram encontrados resultados</string>
 	<string name="theme_auth_error_message">Tenha certeza que você tem privilégio para definir um tema</string>
 	<string name="no_site_error">Não foi possível se conectar ao site do WordPress</string>
 	<string name="adding_cat_failed">Problema ao adicionar categoria</string>
@@ -492,6 +553,7 @@
 	<string name="email_reserved">Este endereço de email já está em uso Verifique se há um email de ativação na sua caixa de entrada. Se você não ativar, poderá tentar novamente em alguns dias.</string>
 	<string name="blog_name_must_include_letters">O endereço do site deve ter pelo menos uma letra (a-z)</string>
 	<string name="blog_title_invalid">Título do site inválido</string>
+	<string name="notifications_empty_all">Nenhuma notificação... ainda.</string>
 	<string name="deleting_page">Excluindo página</string>
 	<string name="deleting_post">Excluindo post</string>
 	<string name="share_url_post">Compartilhar post</string>
@@ -521,6 +583,7 @@
 	<string name="reader_toast_err_get_post">Não foi possível recuperar esse post</string>
 	<string name="validating_user_data">Validando dados de usuário</string>
 	<string name="validating_site_data">Validando dados do site</string>
+	<string name="reader_empty_followed_blogs_description">Não se preocupe! Toque no ícone na parte superior direita para começar a explorar!</string>
 	<string name="password_invalid">Você precisa de uma senha mais segura. Use mais de 7 caracteres, misture letras maiúsculas com minúsculas, números ou caracteres especiais.</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="nux_welcome_create_account">Criar conta</string>
@@ -598,7 +661,6 @@
 	<string name="post_excerpt">Resumo</string>
 	<string name="share_action">Compartilhar</string>
 	<string name="stats">Status</string>
-	<string name="view_stats_full_site">Ver site completo</string>
 	<string name="theme_activate_button">Ativado</string>
 	<string name="theme_activating_button">Ativando</string>
 	<string name="themes_features_label">Recursos</string>
@@ -626,6 +688,7 @@
 	<string name="new_notifications">%d novas notificações</string>
 	<string name="more_notifications">e %d mais.</string>
 	<string name="sign_in">Entrar</string>
+	<string name="follows">Segue</string>
 	<string name="loading">Carregando...</string>
 	<string name="httpuser">Usuário HTTP</string>
 	<string name="httppassword">Senha HTTP</string>
@@ -751,5 +814,10 @@
 		<item>Padrão</item>
 		<item>Status</item>
 		<item>Vídeo</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratuito</item>
+		<item>Todos</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

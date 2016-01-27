@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -26,14 +27,13 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.HashSet;
-
-import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
@@ -57,7 +57,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
 
-    private final HashSet<Integer> mBumpedPageViewPositions = new HashSet<>();
+    private final HashSet<Integer> mTrackedPositions = new HashSet<>();
 
     private static final String ARG_IS_SINGLE_POST = "is_single_post";
 
@@ -108,9 +108,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_OPENED);
                 onShowHideToolbar(true);
-                bumpPageViewIfNeeded(position);
+                trackPostAtPositionIfNeeded(position);
             }
 
             @Override
@@ -174,7 +173,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@Nonnull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
 
         if (hasCurrentTag()) {
@@ -207,17 +206,25 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     /*
-     * "bumps" the page view for the post at the passed position if it hasn't already been done
+     * perform analytics tracking and bump the page view for the post at the passed position
+     * if it hasn't already been done
      */
-    private void bumpPageViewIfNeeded(int position) {
-        if (!mBumpedPageViewPositions.contains(position) && hasPagerAdapter()) {
-            ReaderBlogIdPostId idPair = getPagerAdapter().getBlogIdPostIdAtPosition(position);
-            if (idPair != null) {
-                AppLog.d(AppLog.T.READER, "reader pager > bumping page view for position " + position);
-                mBumpedPageViewPositions.add(position);
-                ReaderPostActions.bumpPageViewForPost(idPair.getBlogId(), idPair.getPostId());
-            }
-        }
+    private void trackPostAtPositionIfNeeded(int position) {
+        if (!hasPagerAdapter() || mTrackedPositions.contains(position)) return;
+
+        ReaderBlogIdPostId idPair = getPagerAdapter().getBlogIdPostIdAtPosition(position);
+        if (idPair == null) return;
+
+        AppLog.d(AppLog.T.READER, "reader pager > tracking post at position " + position);
+        mTrackedPositions.add(position);
+
+        // bump the page view
+        ReaderPostActions.bumpPageViewForPost(idPair.getBlogId(), idPair.getPostId());
+
+        // analytics tracking
+        AnalyticsUtils.trackWithReaderPostDetails(
+                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
+                ReaderPostTable.getPost(idPair.getBlogId(), idPair.getPostId(), true));
     }
 
     /*
@@ -260,10 +267,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mViewPager.setAdapter(adapter);
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
-                            bumpPageViewIfNeeded(newPosition);
+                            trackPostAtPositionIfNeeded(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
-                            bumpPageViewIfNeeded(currentPosition);
+                            trackPostAtPositionIfNeeded(currentPosition);
                         }
                     }
                 });

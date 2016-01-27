@@ -1,9 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Dit bericht bestaat niet meer</string>
+	<string name="reader_err_get_post_not_authorized">Je hebt geen rechten om dit bericht te lezen</string>
+	<string name="reader_err_get_post_generic">Kan dit bericht niet ophalen</string>
+	<string name="blog_name_no_spaced_allowed">Het adres van de site mag geen spaties bevatten</string>
+	<string name="invalid_username_no_spaces">De gebruikersnaam mag geen spaties bevatten</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">De sites die je volgt hebben recent niets geplaatst</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
+	<string name="media_details_copy_url_toast">URL gekopieerd naar klembord</string>
+	<string name="edit_media">Media bewerken</string>
+	<string name="media_details_copy_url">URL kopiëren</string>
+	<string name="media_details_label_date_uploaded">Geüpload</string>
+	<string name="media_details_label_date_added">Toegevoegd</string>
+	<string name="selected_theme">Geselecteerd thema</string>
+	<string name="could_not_load_theme">Kan thema niet laden</string>
+	<string name="theme_activation_error">Er is iets fout gegaan. Kan thema niet activeren</string>
+	<string name="theme_by_author_prompt_append"> door %1$s</string>
+	<string name="theme_prompt">Bedankt dat je hebt gekozen voor %1$s</string>
+	<string name="theme_try_and_customize">Uitproberen en aanpassen</string>
+	<string name="theme_view">Weergeven</string>
+	<string name="theme_details">Details</string>
+	<string name="theme_support">Ondersteuning</string>
+	<string name="theme_done">GEREED</string>
+	<string name="theme_manage_site">SITE BEHEREN</string>
+	<string name="title_activity_theme_support">Thema\'s</string>
+	<string name="theme_activate">Activeren</string>
+	<string name="date_range_start_date">Startdatum</string>
+	<string name="date_range_end_date">Einddatum</string>
+	<string name="current_theme">Huidig thema</string>
+	<string name="customize">Aanpassen</string>
+	<string name="details">Details</string>
+	<string name="support">Ondersteuning</string>
+	<string name="active">Actief</string>
+	<string name="stats_referrers_spam_generic_error">Er is iets fout gegaan tijdens deze handeling. De status van de spam is ongewijzigd gebleven.</string>
+	<string name="stats_referrers_marking_not_spam">Markeren als geen spam</string>
+	<string name="stats_referrers_unspam">Geen spam</string>
+	<string name="stats_referrers_marking_spam">Markeren als spam</string>
+	<string name="theme_auth_error_authenticate">Fout bij het ophalen van thema\'s: authenticatie van gebruiker mislukt</string>
+	<string name="post_published">Bericht gepubliceerd</string>
+	<string name="page_published">Pagina gepubliceerd</string>
+	<string name="post_updated">Bericht bijgewerkt</string>
+	<string name="page_updated">Pagina bijgewerkt</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Helaas, geen thema\'s gevonden.</string>
+	<string name="media_file_name">Bestandsnaam: %s</string>
+	<string name="media_uploaded_on">Geüpload op: %s</string>
+	<string name="media_dimensions">Afmetingen: %s</string>
+	<string name="upload_queued">In wachtrij geplaatst</string>
+	<string name="media_file_type">Bestandstype: %s</string>
+	<string name="reader_label_gap_marker">Meer berichten laden</string>
+	<string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
+	<string name="search_sites">Zoek sites</string>
+	<string name="notifications_empty_view_reader">Reader weergeven</string>
+	<string name="unread">Ongelezen</string>
+	<string name="notifications_empty_action_followers_likes">Trek de aandacht: reageer op berichten die je hebt gelezen.</string>
+	<string name="notifications_empty_action_comments">Deelnemen aan een gesprek: reageer op berichten uit blogs die je volgt.</string>
+	<string name="notifications_empty_action_unread">Breng het gesprek weer op gang: schrijf een nieuw bericht.</string>
+	<string name="notifications_empty_action_all">Ga aan de slag! Reageer op berichten uit blogs die je volgt.</string>
+	<string name="notifications_empty_likes">Er zijn nog geen nieuwe likes.</string>
+	<string name="notifications_empty_followers">Er zijn nog geen nieuwe volgers.</string>
+	<string name="notifications_empty_comments">Nog geen nieuwe reacties.</string>
+	<string name="notifications_empty_unread">Je bent helemaal bij!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Bekijk de statistieken in de app en probeer later de widget toe te voegen</string>
+	<string name="stats_widget_error_readd_widget">Verwijder de widget en voeg deze opnieuw in</string>
+	<string name="stats_widget_error_no_visible_blog">Je hebt geen toegang tot de statistieken zonder een zichtbare blog</string>
+	<string name="stats_widget_error_no_permissions">Je account van WordPress.com heeft geen toegang tot de statistieken van deze blog</string>
+	<string name="stats_widget_error_no_account">Login bij WordPress</string>
+	<string name="stats_widget_error_generic">Statistieken kunnen niet worden geladen</string>
+	<string name="stats_widget_loading_data">Gegevens laden…</string>
+	<string name="stats_widget_name_for_blog">Huidige statistieken voor %1$s</string>
+	<string name="stats_widget_name">Huidige statistieken van WordPress</string>
+	<string name="add_location_permission_required">Toestemming vereist om locatie toe te voegen</string>
+	<string name="add_media_permission_required">Toestemming vereist om media toe te voegen</string>
+	<string name="access_media_permission_required">Toestemming vereist om media toe te voegen</string>
 	<string name="stats_enable_rest_api_in_jetpack">Om je statistieken te bekijken moet je de JSON API module in Jetpack activeren.</string>
 	<string name="error_open_list_from_notification">Dit bericht of deze pagina is gepubliceerd op een andere site</string>
-	<string name="post_uploaded">Bericht geüpload</string>
-	<string name="page_uploaded">Pagina geüpload</string>
 	<string name="reader_short_comment_count_multi">%s Reacties</string>
 	<string name="reader_short_comment_count_one">1 Reactie</string>
 	<string name="reader_label_submit_comment">VERSTUUR</string>
@@ -140,12 +211,6 @@
 	<string name="tab_title_device_videos">Apparaatvideo\'s</string>
 	<string name="tab_title_site_images">Siteafbeeldingen</string>
 	<string name="tab_title_site_videos">Sitevideo\'s</string>
-	<string name="media_details_added_on">Toegevoegd op:</string>
-	<string name="media_details_uploaded_on">Geüpload op:</string>
-	<string name="media_details_file_name">Bestandsnaam:</string>
-	<string name="media_details_file_type">Bestandstype:</string>
-	<string name="media_details_file_url">Bestands-URL:</string>
-	<string name="media_details_dimensions">Afmetingen:</string>
 	<string name="error_publish_no_network">Kan niet publiceren als er geen verbinding is. Opgeslagen als concept.</string>
 	<string name="editor_toast_invalid_path">Ongeldig bestandspad</string>
 	<string name="verification_code">Verificatiecode</string>
@@ -359,7 +424,6 @@
 	<string name="theme_fetch_failed">Fout bij het ophalen van thema\'s</string>
 	<string name="theme_set_failed">Fout bij het instellen van het thema</string>
 	<string name="theme_auth_error_message">Controleer of je rechten hebt om thema\'s in te stellen</string>
-	<string name="theme_no_search_result_found">Geen resultaten gevonden </string>
 	<string name="comments_empty_list">Geen reacties</string>
 	<string name="mnu_comment_unspam">Geen spam</string>
 	<string name="gallery_error">Media-item kan niet worden opgehaald</string>
@@ -501,6 +565,7 @@
 	<string name="blog_name_must_include_letters">Site-adres moet ten minste 1 letter (a-z) bevatten</string>
 	<string name="blog_name_invalid">Ongeldig site-adres</string>
 	<string name="blog_title_invalid">Ongeldige sitetitel</string>
+	<string name="notifications_empty_all">Nog geen meldingen.</string>
 	<string name="share_url_page">Deel pagina</string>
 	<string name="share_url_post">Deel bericht</string>
 	<string name="deleting_page">Verwijderen van pagina</string>
@@ -592,7 +657,6 @@
 	<string name="theme_activate_button">Activeren</string>
 	<string name="share_action">Deel</string>
 	<string name="stats">Statistieken</string>
-	<string name="view_stats_full_site">Bekijk site</string>
 	<string name="stats_view_visitors_and_views">Bezoekers en views</string>
 	<string name="stats_view_clicks">Kliks</string>
 	<string name="stats_view_tags_and_categories">Tags en categorieën </string>
@@ -636,6 +700,7 @@
 	<string name="note_reply_successful">Reactie gepubliceerd</string>
 	<string name="new_notifications">%d nieuwe notificaties</string>
 	<string name="more_notifications">en %d extra.</string>
+	<string name="follows">Volgt</string>
 	<string name="loading">Laden...</string>
 	<string name="httpuser">HTTP gebruikersnaam</string>
 	<string name="httppassword">HTTP wachtwoord</string>
@@ -761,5 +826,10 @@
 		<item>Standaard</item>
 		<item>Status</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratis</item>
+		<item>Alles</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

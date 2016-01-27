@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="theme_support">Dəstək</string>
+	<string name="theme_view">Bax</string>
+	<string name="title_activity_theme_support">Mövzular</string>
+	<string name="active">Aktiv</string>
+	<string name="support">Dəstək</string>
+	<string name="stats_referrers_unspam">Spam deyil</string>
+	<string name="page_updated">Səhifə yeniləndi</string>
+	<string name="post_updated">Yazı yeniləndi</string>
+	<string name="page_published">Səhifə dərc edildi</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="post_published">Yazı dərc edildi</string>
+	<string name="reader_short_comment_count_multi">%s Şərh</string>
+	<string name="reader_short_comment_count_one">1 Şərh</string>
+	<string name="reader_short_like_count_multi">%s Bəyənmə</string>
+	<string name="email">E-poçt</string>
+	<string name="notifications_other">Digər</string>
+	<string name="days_ago">%d gün öncə</string>
 	<string name="connectionbar_no_connection">Qoşulma yoxdur</string>
 	<string name="page_trashed">Səhifəni zibil qutusuna göndər</string>
 	<string name="post_deleted">Yazı silindi</string>
@@ -95,12 +112,6 @@
 	<string name="tab_title_device_videos">Cihaz Videoları</string>
 	<string name="tab_title_site_images">Sayt Təsvirləri</string>
 	<string name="tab_title_site_videos">Sayt Videoları</string>
-	<string name="media_details_added_on">Əlavə edilmə tarixi:</string>
-	<string name="media_details_uploaded_on">Yüklənmə tarixi:</string>
-	<string name="media_details_file_name">Fayl adı:</string>
-	<string name="media_details_file_type">Fayl növü:</string>
-	<string name="media_details_file_url">Fayl URL:</string>
-	<string name="media_details_dimensions">Ölçülər:</string>
 	<string name="error_publish_no_network">Qoşulma olmadığında dərc edilə bilmir. Qaralama olaraq qeyd edildi.</string>
 	<string name="editor_toast_invalid_path">Keçərsiz fayl yolu.</string>
 	<string name="verification_code">Təsdiqləmə kodu</string>
@@ -243,6 +254,7 @@
 	<string name="pages_empty_list">Hələlik səhifə yoxdur. Bir səhifə yaratmağa nə deyərsiniz?</string>
 	<string name="media_empty_list_custom_date">Bu zaman aralığında media yoxdur</string>
 	<string name="posting_post">Yazılan: "%s"</string>
+	<string name="reader_empty_followed_blogs_title">Hələki heç bir sayt izləmirsiniz</string>
 	<string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
 	<string name="reader_toast_err_block_blog">Bu bloq əngəllənə bilmir</string>
 	<string name="reader_toast_blog_blocked">Bu bloqdan yazılar artıq göstərilməyəcək</string>
@@ -271,8 +283,10 @@
 	<string name="reader_toast_err_get_blog_info">Bloqu göstərmək mümkün olmadı</string>
 	<string name="reader_toast_err_already_follow_blog">Bu bloqu artıq izləyirsiniz</string>
 	<string name="reader_toast_err_follow_blog">Bu bloqu izləmək mümkün deyil</string>
+	<string name="reader_hint_add_tag_or_url">İzləmək üçün etiket və ya URL daxil edin</string>
 	<string name="reader_toast_err_unfollow_blog">Bu bloqun izlənməsi ləğv edilə bilmir</string>
 	<string name="reader_empty_recommended_blogs">Məsləhət bilinən bloq yoxdur</string>
+	<string name="reader_page_followed_blogs">İzlənilən saytlar</string>
 	<string name="saving">Qeyd edilir…</string>
 	<string name="ptr_tip_message">Məsləhət: Yeniləmək üçün aşağı dartın</string>
 	<string name="media_empty_list">Mediafayl yoxdur</string>
@@ -282,7 +296,6 @@
 	<string name="help">Yardım</string>
 	<string name="forgot_password">Parolunuzu itirdinizmi?</string>
 	<string name="ssl_certificate_ask_trust">Əgər bu sayta əsasən problemsiz şəkildə qoşula bilirsinizsə, bu xəta başqalarının saytı təqlid etdiyi mənasına gəlir. yenə də sertifikata etibar etmək istəyirsinizmi?</string>
-	<string name="theme_no_search_result_found">Heç bir nəticə əldə edilmədi</string>
 	<string name="comments_empty_list">Şərh yoxdur</string>
 	<string name="mnu_comment_unspam">Spam deyil</string>
 	<string name="out_of_memory">Cihazın yaddaşı doldu</string>
@@ -450,6 +463,7 @@
 	<string name="create_a_link">Bağlantı yarat</string>
 	<string name="remove_account">Saytı sil</string>
 	<string name="blog_removed_successfully">Sayt uğurla silindi</string>
+	<string name="notifications_empty_all">Bildiriş yoxdur...</string>
 	<string name="deleting_page">Səhifə silinir</string>
 	<string name="deleting_post">Yazı silinir</string>
 	<string name="share_url_post">Yazını paylaş</string>
@@ -513,6 +527,7 @@
 	<string name="reader_toast_err_share_intent">Paylaşma baş tutmadı</string>
 	<string name="reader_toast_err_view_image">Təsviri görüntüləmək baş tutmadı</string>
 	<string name="reader_toast_err_url_intent">%s açmaq baş tutmadı</string>
+	<string name="reader_hint_comment_on_comment">Şərhə cavab yaz...</string>
 	<string name="themes">Mövzular</string>
 	<string name="images">Təsvirlər</string>
 	<string name="media_gallery_type_slideshow">Slaydşou</string>
@@ -542,7 +557,6 @@
 	<string name="media_edit_description_hint">Buraya bir açıqlama daxil edin</string>
 	<string name="post_excerpt">Çıxarış</string>
 	<string name="stats">Statistikalar</string>
-	<string name="view_stats_full_site">Saytı bütöv olaraq ziyarət et</string>
 	<string name="stats_view_visitors_and_views">Qonaqlar və Baxışlar</string>
 	<string name="stats_view_clicks">Tıklamalar</string>
 	<string name="unattached">Bərkidilməmiş</string>
@@ -583,6 +597,7 @@
 	<string name="note_reply_successful">Cavab dərc edildi</string>
 	<string name="more_notifications">və %d daha çox.</string>
 	<string name="new_notifications">%d yeni bildirişlər</string>
+	<string name="follows">İzləmələr</string>
 	<string name="loading">Yüklənir...</string>
 	<string name="httpuser">HTTP istifadəçi adı</string>
 	<string name="httppassword">HTTP parolu</string>
@@ -661,6 +676,7 @@
 	<string name="preview">Önizləmə</string>
 	<string name="category_refresh_error">Kateqoriya təzələnməsi əsnasında xəta baş verdi.</string>
 	<string name="on">tərəfndən</string>
+	<string name="notification_settings">Bildiriş Parametrləri</string>
 	<string-array name="alignment_array">
 		<item>Heç biri</item>
 		<item>Sol</item>
@@ -681,8 +697,11 @@
 		<item>Təsvir</item>
 		<item>Bağlantı</item>
 		<item>Kvota</item>
-		<item>Standart</item>
+		<item>Standard</item>
 		<item>Status</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Premium</item>
 	</string-array>
 </resources>

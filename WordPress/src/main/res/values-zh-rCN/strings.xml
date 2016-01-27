@@ -1,5 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">此文章不再存在</string>
+	<string name="reader_err_get_post_not_authorized">您不具备查看此文章的权限</string>
+	<string name="reader_err_get_post_generic">无法检索这篇文章</string>
+	<string name="blog_name_no_spaced_allowed">站点地址中不能包含空格</string>
+	<string name="invalid_username_no_spaces">用户名中不能包含空格</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">您关注的站点近期未发布任何内容</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">无近期文章</string>
+	<string name="media_details_copy_url_toast">已将 URL 复制到剪贴板</string>
+	<string name="edit_media">编辑媒体</string>
+	<string name="media_details_copy_url">复制 URL</string>
+	<string name="media_details_label_date_uploaded">已上传</string>
+	<string name="media_details_label_date_added">已添加</string>
+	<string name="selected_theme">选择的主题</string>
+	<string name="could_not_load_theme">无法加载主题</string>
+	<string name="theme_activation_error">出现错误。无法激活主题</string>
+	<string name="theme_by_author_prompt_append">作者：%1$s</string>
+	<string name="theme_prompt">感谢您选择 %1$s</string>
+	<string name="theme_try_and_customize">尝试与定制</string>
+	<string name="theme_view">查看</string>
+	<string name="theme_details">详细信息</string>
+	<string name="theme_support">支持</string>
+	<string name="theme_done">完成</string>
+	<string name="theme_manage_site">管理站点</string>
+	<string name="title_activity_theme_support">主题</string>
+	<string name="theme_activate">激活</string>
+	<string name="date_range_start_date">开始日期</string>
+	<string name="date_range_end_date">结束日期</string>
+	<string name="current_theme">当前主题</string>
+	<string name="customize">定制</string>
+	<string name="details">详细信息</string>
+	<string name="support">支持</string>
+	<string name="active">已激活</string>
+	<string name="stats_referrers_spam_generic_error">操作过程中出现错误。未更改垃圾评论的状态。</string>
+	<string name="stats_referrers_marking_not_spam">正在标记为非垃圾评论</string>
+	<string name="stats_referrers_unspam">非垃圾评论</string>
+	<string name="stats_referrers_marking_spam">标记为垃圾评论</string>
+	<string name="theme_auth_error_authenticate">未能获取主题：验证用户身份失败</string>
+	<string name="post_published">文章已发布</string>
+	<string name="page_published">页面已发布</string>
+	<string name="post_updated">文章已更新</string>
+	<string name="page_updated">页面已更新</string>
+	<string name="stats_referrers_spam">垃圾评论</string>
+	<string name="theme_no_search_result_found">抱歉，找不到主题。</string>
+	<string name="media_file_name">文件名：%s</string>
+	<string name="media_uploaded_on">上传时间：%s</string>
+	<string name="media_dimensions">尺寸：%s</string>
+	<string name="upload_queued">在排队</string>
+	<string name="media_file_type">文件类型：%s</string>
+	<string name="reader_label_gap_marker">加载更多文章</string>
+	<string name="notifications_no_search_results">没有符合“%s”条件的站点</string>
+	<string name="search_sites">搜索站点</string>
+	<string name="unread">未读</string>
+	<string name="notifications_empty_view_reader">查看阅读器</string>
+	<string name="notifications_empty_action_followers_likes">受到注意：评论您已读过的文章。</string>
+	<string name="notifications_empty_action_comments">加入会话：评论您关注的博客中的文章。</string>
+	<string name="notifications_empty_action_unread">重新发起会话：撰写新文章。</string>
+	<string name="notifications_empty_action_all">活跃起来吧！评论您关注的博客中的文章。</string>
+	<string name="notifications_empty_likes">尚无新的赞可显示…。</string>
+	<string name="notifications_empty_followers">尚无新的关注者可报告…。</string>
+	<string name="notifications_empty_comments">尚无新评论…。</string>
+	<string name="notifications_empty_unread">您已看完所有通知！</string>
+	<string name="stats_widget_error_jetpack_no_blogid">请访问应用程序中的“统计”，并于稍后尝试添加该小组件</string>
+	<string name="stats_widget_error_readd_widget">请删除该小组件，然后重新添加</string>
+	<string name="stats_widget_error_no_visible_blog">若没有可见的博客，则无法访问“统计”</string>
+	<string name="stats_widget_error_no_permissions">您的 WordPress.com 帐户无法访问此博客上的“统计”</string>
+	<string name="stats_widget_error_no_account">请登录 WordPress</string>
+	<string name="stats_widget_error_generic">无法加载统计信息</string>
+	<string name="stats_widget_loading_data">正在加载数据…</string>
+	<string name="stats_widget_name_for_blog">%1$s 的今日统计</string>
+	<string name="stats_widget_name">WordPress 今日统计</string>
+	<string name="add_location_permission_required">添加位置所需的权限。</string>
+	<string name="add_media_permission_required">添加媒体所需的权限</string>
+	<string name="access_media_permission_required">访问媒体所需的权限</string>
+	<string name="stats_enable_rest_api_in_jetpack">如需查看您的状态，请启用Jetpack的JSON API模块。</string>
+	<string name="error_open_list_from_notification">此文章或页面已在其它站点发布</string>
 	<string name="reader_short_comment_count_multi">%s 评论</string>
 	<string name="reader_short_comment_count_one">1评论</string>
 	<string name="reader_label_submit_comment">发送</string>
@@ -32,6 +107,7 @@
 	<string name="notifications_comments_other_blogs">其他站点上的评论</string>
 	<string name="notifications_wpcom_updates">WordPress.com 更新</string>
 	<string name="notifications_other">其他</string>
+	<string name="notifications_account_emails">来自 WordPress.com 的电子邮件</string>
 	<string name="notifications_account_emails_summary">我们会将与您的帐户相关的重要电子邮件都发送给您，但是您还可以获得一些其他的有用信息。</string>
 	<string name="notifications_sights_and_sounds">场景和声音</string>
 	<string name="your_sites">您的站点</string>
@@ -135,12 +211,6 @@
 	<string name="tab_title_device_videos">设备视频</string>
 	<string name="tab_title_site_images">站点图片</string>
 	<string name="tab_title_site_videos">站点视频</string>
-	<string name="media_details_added_on">添加时间：</string>
-	<string name="media_details_uploaded_on">上传时间：</string>
-	<string name="media_details_file_name">文件名：</string>
-	<string name="media_details_file_type">文件类型：</string>
-	<string name="media_details_file_url">文件 URL：</string>
-	<string name="media_details_dimensions">尺寸：</string>
 	<string name="error_publish_no_network">未连接网络时无法发布。保存为草稿。</string>
 	<string name="editor_toast_invalid_path">文件路径无效</string>
 	<string name="verification_code">验证码</string>
@@ -178,6 +248,7 @@
 	<string name="stats_period">时段</string>
 	<string name="logs_copied_to_clipboard">已将应用程序日志复制到剪贴板</string>
 	<string name="post_uploading">正在上传</string>
+	<string name="reader_page_recommended_blogs">您可能会喜欢的站点</string>
 	<string name="stats_comments_total_comments_followers">拥有评论粉丝的文章总数：%1$s</string>
 	<string name="stats_pagination_label">第 %1$s 页，共 %2$s 页</string>
 	<string name="stats_timeframe_years">年</string>
@@ -283,6 +354,7 @@
 	<string name="posting_post">正在发布“%s”</string>
 	<string name="signing_out">正在注销…</string>
 	<string name="sending_content">正在上传“%s”内容</string>
+	<string name="reader_empty_followed_blogs_title">您尚未关注任何站点</string>
 	<string name="reader_toast_err_generic">无法执行此操作</string>
 	<string name="reader_toast_err_block_blog">无法阻止此博客</string>
 	<string name="reader_toast_blog_blocked">此博客中的文章不会再显示</string>
@@ -315,6 +387,8 @@
 	<string name="reader_empty_recommended_blogs">没有推荐的博客</string>
 	<string name="reader_title_blog_preview">读者博客</string>
 	<string name="reader_title_tag_preview">读者标签</string>
+	<string name="reader_page_followed_blogs">关注的站点</string>
+	<string name="reader_hint_add_tag_or_url">输入要关注的 URL 或标签</string>
 	<string name="saving">正在保存...</string>
 	<string name="media_empty_list">没有媒体</string>
 	<string name="ptr_tip_message">注意:下拉以刷新</string>
@@ -332,7 +406,6 @@
 	<string name="theme_fetch_failed">未能获取主题</string>
 	<string name="theme_set_failed">未能设置主题</string>
 	<string name="theme_auth_error_message">确保您有权限设置主题</string>
-	<string name="theme_no_search_result_found">无结果</string>
 	<string name="comments_empty_list">没有评论</string>
 	<string name="mnu_comment_unspam">不是垃圾评论</string>
 	<string name="no_site_error">无法连接到 WordPress 网站</string>
@@ -492,6 +565,7 @@
 	<string name="blog_title_invalid">无效的网站标题</string>
 	<string name="blog_removed_successfully">已成功删除站点</string>
 	<string name="remove_account">删除站点</string>
+	<string name="notifications_empty_all">尚无通知…。</string>
 	<string name="deleting_page">正在删除页面</string>
 	<string name="deleting_post">正在删除日志</string>
 	<string name="share_url_post">分享日志</string>
@@ -521,6 +595,7 @@
 	<string name="reader_toast_err_get_post">无法检索这篇文章</string>
 	<string name="validating_user_data">验证用户数据</string>
 	<string name="validating_site_data">验证站点数据</string>
+	<string name="reader_empty_followed_blogs_description">别担心，只需轻点右上角的图标即可开始浏览！</string>
 	<string name="password_invalid">你需要一个更安全的密码。确定使用7个或更多字符，混合大、小写字母、数字或特殊字符.</string>
 	<string name="nux_tap_continue">继续</string>
 	<string name="nux_welcome_create_account">创建账户</string>
@@ -607,7 +682,6 @@
 	<string name="media_gallery_type_slideshow">幻灯片</string>
 	<string name="media_no_video_title">VideoPress不可用</string>
 	<string name="media_no_video_message">得到videopress升级来上传视频！</string>
-	<string name="view_stats_full_site">查看完整统计</string>
 	<string name="stats_entry_referrers">推荐人</string>
 	<string name="stats_totals_views">浏览次数</string>
 	<string name="stats_totals_clicks">点击数</string>
@@ -626,6 +700,7 @@
 	<string name="more_notifications">以及其他 %d 人。</string>
 	<string name="sign_in">登录</string>
 	<string name="notifications">通知</string>
+	<string name="follows">关注</string>
 	<string name="loading">正在加载…</string>
 	<string name="post_signature">文章签名</string>
 	<string name="add_tagline">为新发表的博文添加签名</string>
@@ -751,5 +826,10 @@
 		<item>标准</item>
 		<item>状态</item>
 		<item>视频</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>免费</item>
+		<item>全部</item>
+		<item>付费</item>
 	</string-array>
 </resources>

@@ -109,6 +109,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mBtnTrashComment;
 
     private String mRestoredReplyText;
+    private String mRestoredNoteId;
 
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
@@ -171,7 +172,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
-                setNoteWithNoteId(savedInstanceState.getString(KEY_NOTE_ID));
+                // The note will be set in onResume() because Simperium will be running there
+                // See WordPress.deferredInit()
+                mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {
                 int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
@@ -299,6 +302,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onResume() {
         super.onResume();
         ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
+
+        // Set the note if we retrieved the noteId from savedInstanceState
+        if (!TextUtils.isEmpty(mRestoredNoteId)) {
+            setNoteWithNoteId(mRestoredNoteId);
+            mRestoredNoteId = null;
+        }
     }
 
     private void setupSuggestionServiceAndAdapter() {
@@ -667,22 +676,27 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
-                    @Override
-                    public void onActionResult(boolean succeeded) {
-                        if (!isAdded())
-                            return;
-                        // update title if it wasn't set above
-                        if (!hasTitle) {
-                            String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
-                            if (!TextUtils.isEmpty(postTitle)) {
-                                setPostTitle(txtPostTitle, postTitle, true);
-                            } else {
-                                txtPostTitle.setText(R.string.untitled);
+                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.OnRequestListener() {
+                            @Override
+                            public void onSuccess() {
+                                if (!isAdded()) return;
+
+                                // update title if it wasn't set above
+                                if (!hasTitle) {
+                                    String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
+                                    if (!TextUtils.isEmpty(postTitle)) {
+                                        setPostTitle(txtPostTitle, postTitle, true);
+                                    } else {
+                                        txtPostTitle.setText(R.string.untitled);
+                                    }
+                                }
                             }
-                        }
-                    }
-                });
+
+                            @Override
+                            public void onFailure(int statusCode) {
+                                // noop
+                            }
+                        });
             }
 
             txtPostTitle.setOnClickListener(new View.OnClickListener() {
@@ -1020,6 +1034,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         toggleLikeButton(!mBtnLikeComment.isActivated());
 
         ReaderAnim.animateLikeButton(mBtnLikeIcon, mBtnLikeComment.isActivated());
+
+        // Bump analytics
+        AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED :  Stat.NOTIFICATION_UNLIKED);
 
         boolean commentWasUnapproved = false;
         if (mNotificationsDetailListFragment != null && mComment != null) {

@@ -33,6 +33,7 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
@@ -49,6 +50,7 @@ import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -184,6 +186,9 @@ public class PostUploadService extends Service {
         private int featuredImageID = -1;
         private XMLRPCClientInterface mClient;
 
+        // True when the post goes from draft or local draft to published status
+        boolean mIsFirstPublishing = false;
+
         // Used when the upload succeed
         private Bitmap mLatestIcon;
 
@@ -195,7 +200,7 @@ public class PostUploadService extends Service {
             if (postUploadedSuccessfully) {
                 WordPress.wpDB.deleteMediaFilesForPost(mPost);
                 mPostUploadNotifier.cancelNotification();
-                mPostUploadNotifier.updateNotificationSuccess(mPost, mLatestIcon);
+                mPostUploadNotifier.updateNotificationSuccess(mPost, mLatestIcon, mIsFirstPublishing);
             } else {
                 mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage(),
                         mErrorUnavailableVideoPress);
@@ -359,18 +364,9 @@ public class PostUploadService extends Service {
 
                     if (mPost.hasLocation()) {
                         PostLocation location = mPost.getLocation();
-                        if (!hLatitude.containsKey("id")) {
-                            hLatitude.put("key", "geo_latitude");
-                        }
-
-                        if (!hLongitude.containsKey("id")) {
-                            hLongitude.put("key", "geo_longitude");
-                        }
-
-                        if (!hPublic.containsKey("id")) {
-                            hPublic.put("key", "geo_public");
-                        }
-
+                        hLatitude.put("key", "geo_latitude");
+                        hLongitude.put("key", "geo_longitude");
+                        hPublic.put("key", "geo_public");
                         hLatitude.put("value", location.getLatitude());
                         hLongitude.put("value", location.getLongitude());
                         hPublic.put("value", 1);
@@ -416,12 +412,18 @@ public class PostUploadService extends Service {
                     mClient.call("metaWeblog.editPost", params);
                 }
 
-                // Track any Analytics before modifying the post
-                trackUploadAnalytics();
+                // Check if it's the first publishing before changing post status.
+                mIsFirstPublishing = mPost.hasChangedFromDraftToPublished()
+                        || (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED);
 
                 mPost.setLocalDraft(false);
                 mPost.setLocalChange(false);
                 WordPress.wpDB.updatePost(mPost);
+
+                // Track analytics only if the post is newly published
+                if (mIsFirstPublishing) {
+                    trackUploadAnalytics();
+                }
 
                 // request the new/updated post from the server to ensure local copy matches server
                 ApiHelper.updateSinglePost(mBlog.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
@@ -439,34 +441,25 @@ public class PostUploadService extends Service {
         }
 
         private void trackUploadAnalytics() {
-            mPost.getStatusEnum();
+            // Calculate the words count
+            Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
-            boolean isFirstTimePublishing = false;
-            if (mPost.hasChangedFromDraftToPublished() ||
-                    (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
-                isFirstTimePublishing = true;
+            if (mHasImage) {
+                properties.put("with_photos", true);
+            }
+            if (mHasVideo) {
+                properties.put("with_videos", true);
+            }
+            if (mHasCategory) {
+                properties.put("with_categories", true);
+            }
+            if (!TextUtils.isEmpty(mPost.getKeywords())) {
+                properties.put("with_tags", true);
             }
 
-            if (isFirstTimePublishing) {
-                // Calculate the words count
-                Map<String, Object> properties = new HashMap<String, Object>();
-                properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
 
-                if (mHasImage) {
-                    properties.put("with_photos", true);
-                }
-                if (mHasVideo) {
-                    properties.put("with_videos", true);
-                }
-                if (mHasCategory) {
-                    properties.put("with_categories", true);
-                }
-                if (!TextUtils.isEmpty(mPost.getKeywords())) {
-                    properties.put("with_tags", true);
-                }
-
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, properties);
-            }
         }
 
         /**
@@ -853,18 +846,21 @@ public class PostUploadService extends Service {
             }
 
             try {
-                return mClient.call(ApiHelper.Methods.UPLOAD_FILE, params, tempFile);
+                return mClient.call(Method.UPLOAD_FILE, params, tempFile);
             } catch (XMLRPCException e) {
+                // well formed XML-RPC response from the server, but it's an error. Ok to print the error message
                 AppLog.e(T.API, e);
                 mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } catch (IOException e) {
+                // I/O-related error. Show a generic connection error message
                 AppLog.e(T.API, e);
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload_connection);
                 return null;
             } catch (XmlPullParserException e) {
+                // XML-RPC response isn't well formed or valid. DO NOT print the real error message
                 AppLog.e(T.API, e);
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
                 return null;
             } finally {
                 // remove the temporary upload file now that we're done with it
@@ -880,7 +876,6 @@ public class PostUploadService extends Service {
     }
 
     private class PostUploadNotifier {
-
         private final NotificationManager mNotificationManager;
         private final NotificationCompat.Builder mNotificationBuilder;
 
@@ -926,29 +921,33 @@ public class PostUploadService extends Service {
             mNotificationManager.cancel(mNotificationId);
         }
 
-        public void updateNotificationSuccess(Post post, Bitmap largeIcon) {
+        public void updateNotificationSuccess(Post post, Bitmap largeIcon, boolean isFirstPublishing) {
             AppLog.d(T.POSTS, "updateNotificationSuccess");
 
             // Get the sharableUrl
             String sharableUrl = WPMeShortlinks.getPostShortlink(post);
             if (sharableUrl == null && !TextUtils.isEmpty(post.getPermaLink())) {
-                    // No short link or perma link - can't share, abort
                     sharableUrl = post.getPermaLink();
             }
 
             // Notification builder
             Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
-                    .page_uploaded) : mContext.getResources().getText(R.string.post_uploaded));
+                    .page_published) : mContext.getResources().getText(R.string.post_published));
+            if (!isFirstPublishing) {
+                notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
+                        .page_updated) : mContext.getResources().getText(R.string.post_updated));
+            }
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
             if (largeIcon == null) {
                 notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.drawable.app_icon));
+                        R.mipmap.app_icon));
             } else {
                 notificationBuilder.setLargeIcon(largeIcon);
             }
             notificationBuilder.setContentTitle(notificationTitle);
             notificationBuilder.setContentText(post.getTitle());
+            notificationBuilder.setAutoCancel(true);
 
             // Tap notification intent (open the post list)
             Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
@@ -961,16 +960,18 @@ public class PostUploadService extends Service {
             notificationBuilder.setContentIntent(pendingIntentPost);
 
             // Share intent - started if the user tap the share link button - only if the link exist
+            int notificationId = getNotificationIdForPost(post);
             if (sharableUrl != null && post.getStatusEnum() == PostStatus.PUBLISHED) {
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
-                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, share,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                Intent shareIntent = new Intent(mContext, ShareAndDismissNotificationReceiver.class);
+                shareIntent.putExtra(ShareAndDismissNotificationReceiver.NOTIFICATION_ID_KEY, notificationId);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, sharableUrl);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
                 notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
                         pendingIntent);
             }
-            mNotificationManager.notify(getNotificationIdForPost(post), notificationBuilder.build());
+            mNotificationManager.notify(notificationId, notificationBuilder.build());
         }
 
         private int getNotificationIdForPost(Post post) {

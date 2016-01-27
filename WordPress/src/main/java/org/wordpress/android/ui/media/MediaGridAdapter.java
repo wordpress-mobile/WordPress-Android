@@ -17,6 +17,7 @@ import android.view.ViewStub;
 import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -195,7 +196,7 @@ public class MediaGridAdapter extends CursorAdapter {
         fileExtension = fileExtension.toUpperCase();
         // file type
         if  (DisplayUtils.isXLarge(context) && !TextUtils.isEmpty(fileExtension)) {
-            holder.fileTypeView.setText("File type: " + fileExtension);
+            holder.fileTypeView.setText(String.format(context.getString(R.string.media_file_type), fileExtension));
         } else {
             holder.fileTypeView.setText(fileExtension);
         }
@@ -244,7 +245,7 @@ public class MediaGridAdapter extends CursorAdapter {
                         @Override
                         public void onClick(View v) {
                             if (!inMultiSelect()) {
-                                ((TextView) v).setText("queued");
+                                ((TextView) v).setText(R.string.upload_queued);
                                 v.setOnClickListener(null);
                                 mCallback.onRetryUpload(mediaId);
                             }
@@ -289,7 +290,6 @@ public class MediaGridAdapter extends CursorAdapter {
             String filepath = uri.getLastPathSegment();
 
             int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setImageResource(0);
             imageView.setErrorImageResId(placeholderResId);
 
             // no default image while downloading
@@ -436,8 +436,7 @@ public class MediaGridAdapter extends CursorAdapter {
         int columnCount = getColumnCount(context);
 
         if (columnCount > 1) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
-            params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
             view.setLayoutParams(params);
         }
     }

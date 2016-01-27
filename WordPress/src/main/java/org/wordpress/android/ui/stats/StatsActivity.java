@@ -12,8 +12,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +43,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -175,7 +174,7 @@ public class StatsActivity extends AppCompatActivity
             if (getIntent().hasExtra(ARG_LAUNCHED_FROM)) {
                 StatsLaunchedFrom from = (StatsLaunchedFrom) getIntent().getSerializableExtra(ARG_LAUNCHED_FROM);
                 if (from == StatsLaunchedFrom.STATS_WIDGET) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED);
+                    AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, WordPress.getBlog(mLocalBlogID));
                 }
             }
         }
@@ -265,28 +264,29 @@ public class StatsActivity extends AppCompatActivity
 
         // Track usage here
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_ACCESSED, currentBlog);
             trackStatsAnalytics();
         }
     }
 
     private void trackStatsAnalytics() {
         // Track usage here
+        Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         switch (mCurrentTimeframe) {
             case INSIGHTS:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED, currentBlog);
                 break;
             case DAY:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED, currentBlog);
                 break;
             case WEEK:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED, currentBlog);
                 break;
             case MONTH:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED, currentBlog);
                 break;
             case YEAR:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED);
+                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED, currentBlog);
                 break;
         }
     }
@@ -524,7 +524,7 @@ public class StatsActivity extends AppCompatActivity
             mResultCode = resultCode;
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
-                if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+                if (currentBlog.getDotComBlogId() == null) {
                     final Handler handler = new Handler();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
@@ -539,9 +539,9 @@ public class StatsActivity extends AppCompatActivity
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
                                 AnalyticsUtils.refreshMetadata();
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
-                                AnalyticsTracker.track(
-                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
+                                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, currentBlog);
+                                AnalyticsUtils.trackWithBlogDetails(
+                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN, currentBlog);
                                 if (isFinishing()) {
                                     return;
                                 }
@@ -574,7 +574,7 @@ public class StatsActivity extends AppCompatActivity
                                 }
                             });
                         }
-                    }, ApiHelper.Methods.GET_OPTIONS, params);
+                    }, Method.GET_OPTIONS, params);
                 } else {
                     mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
                     createFragments(true); // Recreate the fragment and start a refresh of Stats
@@ -644,38 +644,13 @@ public class StatsActivity extends AppCompatActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.stats, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (i == R.id.menu_view_stats_full_site) {
-            final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-            if (blogId == null) {
-                showJetpackMissingAlert();
-                return true;
-            }
-
-            String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
-            if (statsAuthenticatedUser == null) {
-                Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
-                return true;
-            }
-
-            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
-
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
-            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -721,13 +696,14 @@ public class StatsActivity extends AppCompatActivity
             AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
             return false;
         }
-        final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             return false;
         }
+
+        final String blogId = currentBlog.getDotComBlogId();
 
         // blogId is always available for dotcom blogs. It could be null on Jetpack blogs...
         if (blogId != null) {
@@ -789,7 +765,11 @@ public class StatsActivity extends AppCompatActivity
         mSwipeToRefreshHelper.setRefreshing(false);
 
         if (!event.isError) {
-            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+            final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+            if (currentBlog == null) {
+                return;
+            }
+            if (currentBlog.getDotComBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 showJetpackMissingAlert();
             } else {

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
@@ -13,13 +14,17 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
@@ -72,7 +77,6 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -208,9 +212,14 @@ public class WordPress extends Application {
         AnalyticsTracker.init(getContext());
         AnalyticsUtils.refreshMetadata();
 
-        // Track app upgrade
+        // Track app upgrade and install
         int versionCode = PackageUtils.getVersionCode(getContext());
+
         int oldVersionCode = AppPrefs.getLastAppVersionCode();
+        if (oldVersionCode == 0) {
+            // Track application installed if there isn't old version code
+            AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
+        }
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
             Map<String, Long> properties = new HashMap<String, Long>(1);
             properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
@@ -228,10 +237,13 @@ public class WordPress extends Application {
      * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
      * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
      */
-    public void deferredInit() {
+    public void deferredInit(Activity activity) {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
-        registerForCloudMessaging(this);
+        if (checkPlayServices(activity)) {
+            // Register for Cloud messaging
+            startService(new Intent(this, GCMRegistrationIntentService.class));
+        }
         configureSimperium();
 
         // Refresh account informations
@@ -349,52 +361,23 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    /**
-     * Register the device to Google Cloud Messaging service or return registration id if it's already registered.
-     *
-     * @return registration id or empty string if it's not registered.
-     */
-    private static String gcmRegisterIfNot(Context context) {
-        String regId = "";
-        try {
-            GCMRegistrar.checkDevice(context);
-            GCMRegistrar.checkManifest(context);
-            regId = GCMRegistrar.getRegistrationId(context);
-            String gcmId = BuildConfig.GCM_ID;
-            if (gcmId != null && TextUtils.isEmpty(regId)) {
-                GCMRegistrar.register(context, gcmId);
-            }
-        } catch (UnsupportedOperationException e) {
-            // GCMRegistrar.checkDevice throws an UnsupportedOperationException if the device
-            // doesn't support GCM (ie. non-google Android)
-            AppLog.e(T.NOTIFS, "Device doesn't support GCM: " + e.getMessage());
-        } catch (IllegalStateException e) {
-            // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
-            // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
-            AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
-        } catch (Exception e) {
-            // SecurityException can happen on some devices without Google services (these devices probably strip
-            // the AndroidManifest.xml and remove unsupported permissions).
-            AppLog.e(T.NOTIFS, e);
+    public boolean checkPlayServices(Activity activity) {
+        int connectionResult = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+        switch (connectionResult) {
+            // Success: return true
+            case ConnectionResult.SUCCESS:
+                return true;
+            // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                GooglePlayServicesUtil.getErrorDialog(connectionResult, activity, 0);
+            default:
+            case ConnectionResult.SERVICE_MISSING:
+            case ConnectionResult.SERVICE_DISABLED:
+            case ConnectionResult.SERVICE_INVALID:
+                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
+                        + GooglePlayServicesUtil.getErrorString(connectionResult));
         }
-        return regId;
-    }
-
-    public static void registerForCloudMessaging(Context context) {
-        String regId = gcmRegisterIfNot(context);
-
-        // Register to WordPress.com notifications
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            if (!TextUtils.isEmpty(regId)) {
-                // Send the token to WP.com in case it was invalidated
-                NotificationsUtils.registerDeviceForPushNotifications(context, regId);
-                AppLog.v(T.NOTIFS, "Already registered for GCM");
-            }
-        }
-
-        // Register to Helpshift notifications
-        HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        AnalyticsTracker.registerPushNotificationToken(regId);
+        return false;
     }
 
     /**
@@ -467,10 +450,10 @@ public class WordPress extends Application {
     }
 
     /**
-     * returns the blogID of the current blog or -1 if current blog is null
+     * returns the blogID of the current blog or null if current blog is null or remoteID is null.
      */
-    public static int getCurrentRemoteBlogId() {
-        return (getCurrentBlog() != null ? getCurrentBlog().getRemoteBlogId() : -1);
+    public static String getCurrentRemoteBlogId() {
+        return (getCurrentBlog() != null ? getCurrentBlog().getDotComBlogId() : null);
     }
 
     public static int getCurrentLocalTableBlogId() {
@@ -478,7 +461,8 @@ public class WordPress extends Application {
     }
 
     /**
-     * Sign out from wpcom account
+     * Sign out from wpcom account.
+     * Note: This method must not be called on UI Thread.
      */
     public static void WordPressComSignOut(Context context) {
         // Keep the analytics tracking at the beginning, before the account data is actual removed.
@@ -521,6 +505,7 @@ public class WordPress extends Application {
         wpDB.dangerouslyDeleteAllContent();
     }
 
+
     public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
@@ -528,10 +513,12 @@ public class WordPress extends Application {
 
         NotificationsUtils.unregisterDevicePushNotifications(context);
         try {
-            GCMRegistrar.checkDevice(context);
-            GCMRegistrar.unregister(context);
+            String gcmId = BuildConfig.GCM_ID;
+            if (!TextUtils.isEmpty(gcmId)) {
+                InstanceID.getInstance(context).deleteToken(gcmId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+            }
         } catch (Exception e) {
-            AppLog.v(T.NOTIFS, "Could not unregister for GCM: " + e.getMessage());
+            AppLog.e(T.NOTIFS, "Could not delete GCM Token", e);
         }
 
         // delete wpcom blogs
@@ -577,21 +564,36 @@ public class WordPress extends Application {
     }
 
     /**
+     * Device's default User-Agent string.
+     * E.g.:
+     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     *    Safari/537.36"
+     */
+    private static String mDefaultUserAgent;
+    public static String getDefaultUserAgent() {
+        if (mDefaultUserAgent == null) {
+            // TODO: use WebSettings.getDefaultUserAgent() after upgrade to API level 17+
+            mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
+        }
+        return mDefaultUserAgent;
+    }
+
+    /**
      * User-Agent string when making HTTP connections, for both API traffic and WebViews.
-     * Follows the format detailed at http://tools.ietf.org/html/rfc2616#section-14.43,
-     * ie: "AppName/AppVersion (OS Version; Locale; Device)"
-     *    "wp-android/2.6.4 (Android 4.3; en_US; samsung GT-I9505/jfltezh)"
-     *    "wp-android/2.6.3 (Android 4.4.2; en_US; LGE Nexus 5/hammerhead)"
+     * Appends "wp-android/version" to WebView's default User-Agent string for the webservers
+     * to get the full feature list of the browser and serve content accordingly, e.g.:
+     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     *    Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
     private static final String USER_AGENT_APPNAME = "wp-android";
     private static String mUserAgent;
     public static String getUserAgent() {
         if (mUserAgent == null) {
-            mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext())
-                       + " (Android " + Build.VERSION.RELEASE + "; "
-                       + Locale.getDefault().toString() + "; "
-                       + Build.MANUFACTURER + " " + Build.MODEL + "/" + Build.PRODUCT + ")";
+            mUserAgent = getDefaultUserAgent() + " "
+                       + USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
         }
         return mUserAgent;
     }
@@ -717,22 +719,8 @@ public class WordPress extends Application {
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
             if (isPushNotificationPingNeeded() && AccountHelper.isSignedInWordPressDotCom()) {
-                String token = null;
-                try {
-                    // Register for Google Cloud Messaging
-                    GCMRegistrar.checkDevice(mContext);
-                    GCMRegistrar.checkManifest(mContext);
-                    token = GCMRegistrar.getRegistrationId(mContext);
-                    String gcmId = BuildConfig.GCM_ID;
-                    if (gcmId == null || token == null || token.equals("") ) {
-                        AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
-                    } else {
-                        // Send the token to WP.com
-                        NotificationsUtils.registerDeviceForPushNotifications(mContext, token);
-                    }
-                } catch (Exception e) {
-                    AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
-                }
+                // Register for Cloud messaging
+                startService(new Intent(getContext(), GCMRegistrationIntentService.class));
             }
         }
 
@@ -784,7 +772,7 @@ public class WordPress extends Application {
             }
             mIsInBackground = false;
             if (mFirstActivityResumed) {
-                deferredInit();
+                deferredInit(activity);
             }
             mFirstActivityResumed = false;
         }

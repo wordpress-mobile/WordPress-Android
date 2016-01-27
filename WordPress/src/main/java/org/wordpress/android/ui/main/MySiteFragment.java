@@ -48,6 +48,8 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private View mConfigurationHeader;
+    private View mSettingsView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -106,7 +108,7 @@ public class MySiteFragment extends Fragment
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
-        int fabHeight = getResources().getDimensionPixelSize(R.dimen.design_fab_size_normal);
+        int fabHeight = getResources().getDimensionPixelSize(android.support.design.R.dimen.design_fab_size_normal);
         int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
         mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
@@ -116,6 +118,8 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
+        mSettingsView = rootView.findViewById(R.id.row_settings);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
@@ -186,7 +190,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
+        mSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
@@ -304,6 +308,11 @@ public class MySiteFragment extends Fragment
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
+        // show settings for all self-hosted to expose Delete Site
+        int settingsVisibility = mBlog.isAdmin() || !mBlog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        mConfigurationHeader.setVisibility(settingsVisibility);
+        mSettingsView.setVisibility(settingsVisibility);
+
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
@@ -312,7 +321,7 @@ public class MySiteFragment extends Fragment
             homeURL = UrlUtils.removeScheme(mBlog.getHomeURL());
             homeURL = StringUtils.removeTrailingSlash(homeURL);
         } else {
-            homeURL = StringUtils.getHost(mBlog.getUrl());
+            homeURL = UrlUtils.getHost(mBlog.getUrl());
         }
         String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
 
@@ -345,5 +354,15 @@ public class MySiteFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
         mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+        if (!isAdded() || (mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId())) == null) return;
+
+        // Update view if blog has a new name
+        if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
+            mBlogTitleTextView.setText(mBlog.getBlogName());
+        }
     }
 }

@@ -51,17 +51,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APPLICATION_CLOSED:
                 eventName = "application_closed";
                 break;
+            case APPLICATION_INSTALLED:
+                eventName = "application_installed";
+                break;
             case APPLICATION_UPGRADED:
                 eventName = "application_upgraded";
-                break;
-            case THEMES_ACCESSED_THEMES_BROWSER:
-                eventName = "themes_theme_browser_accessed";
-                break;
-            case THEMES_CHANGED_THEME:
-                eventName = "themes_theme_changed";
-                break;
-            case THEMES_PREVIEWED_SITE:
-                eventName = "themes_theme_for_site_previewed";
                 break;
             case READER_ACCESSED:
                 eventName = "reader_accessed";
@@ -74,9 +68,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case READER_ARTICLE_OPENED:
                 eventName = "reader_article_opened";
-                break;
-            case READER_ARTICLE_REBLOGGED:
-                eventName = "reader_article_reblogged";
                 break;
             case READER_ARTICLE_UNLIKED:
                 eventName = "reader_article_unliked";
@@ -95,9 +86,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case READER_DISCOVER_VIEWED:
                 eventName = "reader_discover_viewed";
-                break;
-            case READER_FRESHLY_PRESSED_LOADED:
-                eventName = "reader_freshly_pressed_loaded";
                 break;
             case READER_INFINITE_SCROLL:
                 eventName = "reader_infinite_scroll_performed";
@@ -132,7 +120,28 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_SAVED_DRAFT:
                 eventName = "editor_draft_saved";
                 break;
-            case EDITOR_CLOSED_POST:
+            case EDITOR_DISCARDED_CHANGES:
+                eventName = "editor_discarded_changes";
+                break;
+            case EDITOR_EDITED_IMAGE:
+                eventName = "editor_image_edited";
+                break;
+            case EDITOR_ENABLED_NEW_VERSION:
+                eventName = "editor_enabled_new_version";
+                break;
+            case EDITOR_TOGGLED_OFF:
+                eventName = "editor_toggled_off";
+                break;
+            case EDITOR_TOGGLED_ON:
+                eventName = "editor_toggled_on";
+                break;
+            case EDITOR_UPLOAD_MEDIA_FAILED:
+                eventName = "editor_upload_media_failed";
+                break;
+            case EDITOR_UPLOAD_MEDIA_RETRIED:
+                eventName = "editor_upload_media_retried";
+                break;
+            case EDITOR_CLOSED:
                 eventName = "editor_closed";
                 break;
             case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
@@ -141,7 +150,15 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
                 eventName = "editor_photo_added";
-                predefinedEventProperties.put("via", "wp_media_library");
+                predefinedEventProperties.put("via", "media_library");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+                eventName = "editor_video_added";
+                predefinedEventProperties.put("via", "local_library");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
+                eventName = "editor_video_added";
+                predefinedEventProperties.put("via", "media_library");
                 break;
             case EDITOR_PUBLISHED_POST:
                 eventName = "editor_post_published";
@@ -184,6 +201,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 eventName = "editor_button_tapped";
                 predefinedEventProperties.put("button", "underline");
                 break;
+            case EDITOR_TAPPED_HTML:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "html");
+                break;
+            case EDITOR_TAPPED_ORDERED_LIST:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "ordered_list");
+                break;
+            case EDITOR_TAPPED_UNLINK:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "unlink");
+                break;
+            case EDITOR_TAPPED_UNORDERED_LIST:
+                eventName = "editor_button_tapped";
+                predefinedEventProperties.put("button", "unordered_list");
+                break;
             case NOTIFICATIONS_ACCESSED:
                 eventName = "notifications_accessed";
                 break;
@@ -221,7 +254,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_COMMENTS:
                 eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "media_library");
+                predefinedEventProperties.put("menu_item", "comments");
                 break;
             case OPENED_VIEW_SITE:
                 eventName = "site_menu_opened";
@@ -237,7 +270,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "settings");
+                predefinedEventProperties.put("menu_item", "site_settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                eventName = "me_opened_account_settings";
+                break;
+            case OPENED_MY_PROFILE:
+                eventName = "me_opened_my_profile";
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
@@ -288,9 +327,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_SINGLE_POST_ACCESSED:
                 eventName = "stats_single_post_accessed";
                 break;
-            case STATS_OPENED_WEB_VERSION:
-                eventName = "stats_web_version_accessed";
-                break;
             case STATS_TAPPED_BAR_CHART:
                 eventName = "stats_bar_chart_tapped";
                 break;
@@ -311,6 +347,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
                 eventName = "push_notification_received";
+                break;
+            case PUSH_NOTIFICATION_TAPPED:
+                eventName = "push_notification_alert_tapped";
                 break;
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 eventName = "support_helpshift_screen_opened";
@@ -336,9 +375,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case PUSH_AUTHENTICATION_IGNORED:
                 eventName = "push_authentication_ignored";
                 break;
-            case SETTINGS_LANGUAGE_SELECTION_FORCED:
-                eventName = "settings_language_selection_forced";
-                break;
             case NOTIFICATION_SETTINGS_LIST_OPENED:
                 eventName = "notification_settings_list_opened";
                 break;
@@ -348,14 +384,62 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATION_SETTINGS_DETAILS_OPENED:
                 eventName = "notification_settings_details_opened";
                 break;
-            case NOTIFICATION_SETTINGS_UPDATED:
-                eventName = "notification_settings_updated";
-                break;
             case ME_ACCESSED:
                 eventName = "me_tab_accessed";
                 break;
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
+                break;
+            case THEMES_ACCESSED_THEMES_BROWSER:
+                eventName = "themes_theme_browser_accessed";
+                break;
+            case THEMES_ACCESSED_SEARCH:
+                eventName = "themes_search_accessed";
+                break;
+            case THEMES_CHANGED_THEME:
+                eventName = "themes_theme_changed";
+                break;
+            case THEMES_PREVIEWED_SITE:
+                eventName = "themes_theme_for_site_previewed";
+                break;
+            case THEMES_DEMO_ACCESSED:
+                eventName = "themes_demo_accessed";
+                break;
+            case THEMES_CUSTOMIZE_ACCESSED:
+                eventName = "themes_customize_accessed";
+                break;
+            case THEMES_SUPPORT_ACCESSED:
+                eventName = "themes_support_accessed";
+                break;
+            case THEMES_DETAILS_ACCESSED:
+                eventName = "themes_details_accessed";
+                break;
+            case ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED:
+                eventName = "account_settings_language_selection_forced";
+                break;
+            case SITE_SETTINGS_ACCESSED:
+                eventName = "site_settings_accessed";
+                break;
+            case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
+                eventName = "site_settings_more_settings_accessed";
+                break;
+            case SITE_SETTINGS_ADDED_LIST_ITEM:
+                eventName = "site_settings_added_list_item";
+                break;
+            case SITE_SETTINGS_DELETED_LIST_ITEMS:
+                eventName = "site_settings_deleted_list_items";
+                break;
+            case SITE_SETTINGS_HINT_TOAST_SHOWN:
+                eventName = "site_settings_hint_toast_shown";
+                break;
+            case SITE_SETTINGS_LEARN_MORE_CLICKED:
+                eventName = "site_settings_learn_more_clicked";
+                break;
+            case SITE_SETTINGS_LEARN_MORE_LOADED:
+                eventName = "site_settings_learn_more_loaded";
+                break;
+            case SITE_SETTINGS_SAVED_REMOTELY:
+                eventName = "site_settings_saved_remotely";
                 break;
             default:
                 eventName = null;
@@ -436,11 +520,20 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
+        try {
+            JSONObject properties = new JSONObject();
+            properties.put(JETPACK_USER, isJetpackUser);
+            properties.put(NUMBER_OF_BLOGS, numBlogs);
+            mNosaraClient.registerUserProperties(properties);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+        }
+
         if (isUserConnected && isWordPressComUser) {
             setWordPressComUserName(username);
             // Re-unify the user
             if (getAnonID() != null) {
-                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID());
+                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);
                 clearAnonID();
             }
         } else {
@@ -451,14 +544,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             }
         }
 
-        try {
-            JSONObject properties = new JSONObject();
-            properties.put(JETPACK_USER, isJetpackUser);
-            properties.put(NUMBER_OF_BLOGS, numBlogs);
-            mNosaraClient.registerUserProperties(properties);
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.UTILS, e);
-        }
+
     }
 
 

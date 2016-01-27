@@ -24,7 +24,9 @@
         <TextView
             android:id="@+id/blog_title"
             style="@style/StatsModuleTitle"
-            android:textSize="@dimen/text_sz_medium"
+            android:textSize="@dimen/stats_widget_text_sz"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,9 +44,10 @@
 
     <LinearLayout
         android:id="@+id/stats_widget_values_container"
-        android:minHeight="@dimen/stats_widget_main_container_size"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/stats_widget_main_container_size"
+        android:minHeight="@dimen/stats_widget_main_container_min_size"
         android:layout_width="match_parent"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <!-- Views -->
@@ -53,7 +56,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/margin_medium"
             android:gravity="center"
             android:background="@drawable/stats_visitors_and_views_button_white"
             android:clickable="false">
@@ -72,8 +74,9 @@
                     android:src="@drawable/stats_icon_views" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/text_sz_extra_small"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/stats_widget_text_sz_small"
+                    android:textAllCaps="true"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:text="@string/stats_views"
@@ -84,11 +87,11 @@
             <TextView
                 android:id="@+id/stats_widget_views"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -99,7 +102,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/margin_medium"
             android:gravity="center"
             android:background="@drawable/stats_visitors_and_views_button_white"
             android:clickable="false">
@@ -118,8 +120,9 @@
                     android:src="@drawable/stats_icon_visitors" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/text_sz_extra_small"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/stats_widget_text_sz_small"
+                    android:textAllCaps="true"
                     android:maxLines="1"
                     android:text="@string/stats_visitors"
                     android:ellipsize="end"
@@ -130,11 +133,11 @@
             <TextView
                 android:id="@+id/stats_widget_visitors"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -145,7 +148,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/margin_medium"
             android:gravity="center"
             android:background="@drawable/stats_visitors_and_views_button_white"
             android:clickable="false">
@@ -164,8 +166,9 @@
                     android:src="@drawable/stats_icon_likes" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/text_sz_extra_small"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/stats_widget_text_sz_small"
+                    android:textAllCaps="true"
                     android:maxLines="1"
                     android:text="@string/stats_likes"
                     android:ellipsize="end"
@@ -176,11 +179,11 @@
             <TextView
                 android:id="@+id/stats_widget_likes"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -191,7 +194,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="@dimen/margin_medium"
             android:gravity="center"
             android:background="@drawable/stats_visitors_and_views_button_latest_white"
             android:clickable="false">
@@ -210,8 +212,9 @@
                     android:src="@drawable/stats_icon_comments" />
 
                 <TextView
-                    android:textColor="@color/grey_darken_20"
-                    android:textSize="@dimen/text_sz_extra_small"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/stats_widget_text_sz_small"
+                    android:textAllCaps="true"
                     android:maxLines="1"
                     android:text="@string/stats_comments"
                     android:ellipsize="end"
@@ -222,11 +225,11 @@
             <TextView
                 android:id="@+id/stats_widget_comments"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="0"
+                android:text="@string/stats_default_number_zero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -238,12 +241,13 @@
         android:id="@+id/stats_widget_error_container"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:minHeight="@dimen/stats_widget_main_container_size"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/stats_widget_main_container_size"
+        android:minHeight="@dimen/stats_widget_main_container_min_size"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/stats_widget_error_text"
-            android:textSize="@dimen/text_sz_small"
+            android:textSize="@dimen/stats_widget_text_sz"
             android:textColor="@color/grey_darken_20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

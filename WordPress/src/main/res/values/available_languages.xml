@@ -23,6 +23,10 @@ es
 </item>
 
 <item>
+es-CL
+</item>
+
+<item>
 fr
 </item>
 
@@ -148,6 +152,18 @@ da
 
 <item>
 bg
+</item>
+
+<item>
+sq
+</item>
+
+<item>
+hr
+</item>
+
+<item>
+cs
 </item>
 
 </string-array>

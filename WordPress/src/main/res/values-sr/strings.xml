@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="error_open_list_from_notification">Чланак или страна је објављена на другом веб месту</string>
-	<string name="post_uploaded">Чланак је отпремљен</string>
-	<string name="page_uploaded">Страна је отпремљена</string>
 	<string name="reader_short_comment_count_multi">%s коментара</string>
 	<string name="reader_short_comment_count_one">1 коментар</string>
 	<string name="reader_label_submit_comment">ПОШАЉИ</string>
@@ -138,13 +136,7 @@
 	<string name="invalid_verification_code">Погрешан верификациони код</string>
 	<string name="verification_code">Код за потврђивање</string>
 	<string name="editor_toast_invalid_path">Неисправна путања до датотеке</string>
-	<string name="media_details_file_url">URL датотеке:</string>
-	<string name="media_details_dimensions">Величина:</string>
 	<string name="error_publish_no_network">Није могуће објавити услед недостатка интернет везе. Сачувано као нацрт.</string>
-	<string name="media_details_file_name">Име датотеке:</string>
-	<string name="media_details_file_type">Врста датотеке:</string>
-	<string name="media_details_uploaded_on">Отпремљено:</string>
-	<string name="media_details_added_on">Додато:</string>
 	<string name="tab_title_site_videos">Видео снимци са веб места</string>
 	<string name="tab_title_site_images">Слике са веб места</string>
 	<string name="tab_title_device_videos">Видео снимци на уређају</string>
@@ -375,7 +367,6 @@
 	<string name="error_delete_post">Дошло је до грешке током брисања %s</string>
 	<string name="error_refresh_pages">Стране тренутно не могу бити освежене</string>
 	<string name="comments_empty_list">Нема коментара</string>
-	<string name="theme_no_search_result_found">Нема резултата</string>
 	<string name="theme_auth_error_message">Потврдите да имате дозволу да постављате теме</string>
 	<string name="theme_set_failed">Неуспешно постављање теме</string>
 	<string name="theme_fetch_failed">Неуспешно добављање тема</string>
@@ -564,7 +555,6 @@
 	<string name="media_add_popup_title">Додајте у библиотеку медија</string>
 	<string name="select_from_media_library">Одаберите из библиотеке медија</string>
 	<string name="reader_hint_comment_on_comment">Одговор на коментар…</string>
-	<string name="view_stats_full_site">Погледај целокупно веб место</string>
 	<string name="media_add_popup_capture_photo">Фотографиши</string>
 	<string name="media_gallery_type_slideshow">Приказ слајдова</string>
 	<string name="media_gallery_type">Врста</string>

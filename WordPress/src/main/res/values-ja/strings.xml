@@ -1,9 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">この投稿は存在しません</string>
+	<string name="reader_err_get_post_not_authorized">この投稿を表示する権限がありません</string>
+	<string name="reader_err_get_post_generic">この投稿を取得できません</string>
+	<string name="blog_name_no_spaced_allowed">サイトのアドレスにスペースを含めることはできません</string>
+	<string name="invalid_username_no_spaces">ユーザー名にスペースを含めることはできません</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">フォローしているサイトには、最近の投稿はありません</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">最近の投稿はありません</string>
+	<string name="media_details_copy_url_toast">URL がクリップボードにコピーされました</string>
+	<string name="edit_media">メディアを編集</string>
+	<string name="media_details_copy_url">URL をコピー</string>
+	<string name="media_details_label_date_uploaded">アップロード済み</string>
+	<string name="media_details_label_date_added">追加済み</string>
+	<string name="selected_theme">選択済みテーマ</string>
+	<string name="could_not_load_theme">テーマを読み込めませんでした</string>
+	<string name="theme_activation_error">エラーが発生しました。テーマを有効化できませんでした。</string>
+	<string name="theme_by_author_prompt_append"> by %1$s</string>
+	<string name="theme_prompt">%1$s を選んでいただきありがとうございます。</string>
+	<string name="theme_try_and_customize">お試し &amp; カスタマイズ</string>
+	<string name="theme_view">表示</string>
+	<string name="theme_details">詳細</string>
+	<string name="theme_support">サポート</string>
+	<string name="theme_done">完了</string>
+	<string name="theme_manage_site">サイト管理</string>
+	<string name="title_activity_theme_support">テーマ</string>
+	<string name="theme_activate">有効化</string>
+	<string name="date_range_start_date">開始日</string>
+	<string name="date_range_end_date">終了日</string>
+	<string name="current_theme">現在のテーマ</string>
+	<string name="customize">カスタマイズ</string>
+	<string name="details">詳細</string>
+	<string name="support">サポート</string>
+	<string name="active">有効</string>
+	<string name="stats_referrers_spam_generic_error">操作中に問題が発生しました。スパムの状態は変更されていません。</string>
+	<string name="stats_referrers_marking_not_spam">非スパムとしてマーク中</string>
+	<string name="stats_referrers_unspam">非スパム</string>
+	<string name="stats_referrers_marking_spam">スパムとしてマーク中</string>
+	<string name="theme_auth_error_authenticate">テーマの取得に失敗しました。ユーザーを認証できません。</string>
+	<string name="post_published">投稿を公開しました</string>
+	<string name="page_published">ページを公開しました</string>
+	<string name="post_updated">投稿を更新しました</string>
+	<string name="page_updated">ページを更新しました</string>
+	<string name="stats_referrers_spam">スパム</string>
+	<string name="theme_no_search_result_found">テーマが見つかりませんでした。</string>
+	<string name="media_file_name">ファイル名: %s</string>
+	<string name="media_uploaded_on">アップロード日: %s</string>
+	<string name="media_dimensions">サイズ: %s</string>
+	<string name="upload_queued">待機中</string>
+	<string name="media_file_type">ファイル形式: %s</string>
+	<string name="reader_label_gap_marker">さらに投稿を読み込む</string>
+	<string name="notifications_no_search_results">「%s」に一致するサイトはありません</string>
+	<string name="search_sites">サイトを検索</string>
+	<string name="notifications_empty_view_reader">Reader を表示</string>
+	<string name="unread">未読</string>
+	<string name="notifications_empty_action_followers_likes">存在に気づいてもらうため、読んだ投稿にコメントしてみましょう。</string>
+	<string name="notifications_empty_action_comments">会話に参加しましょう。フォローしているブログの投稿にコメントしてみませんか。</string>
+	<string name="notifications_empty_action_unread">会話をまた活発にするため、新しい記事を書いてみましょう。</string>
+	<string name="notifications_empty_action_all">フォローしているブログの投稿にコメントしてみましょう。</string>
+	<string name="notifications_empty_likes">新しい「いいね」はまだついていません。</string>
+	<string name="notifications_empty_followers">新しいフォロワーはまだいません。</string>
+	<string name="notifications_empty_comments">コメントはまだありません。</string>
+	<string name="notifications_empty_unread">すべて既読になっています !</string>
+	<string name="stats_widget_error_jetpack_no_blogid">アプリ内で統計情報にアクセスし、後でウィジェットを追加してみてください</string>
+	<string name="stats_widget_error_readd_widget">ウィジェットを削除し、もう一度追加してみてください</string>
+	<string name="stats_widget_error_no_visible_blog">表示可能なブログを持っていない場合、統計情報にはアクセスできません</string>
+	<string name="stats_widget_error_no_permissions">あなたの WordPress.com のアカウントではこのブログの統計情報にアクセスできません。</string>
+	<string name="stats_widget_error_no_account">WordPress にログインしてください</string>
+	<string name="stats_widget_error_generic">統計情報を読み込めませんでした</string>
+	<string name="stats_widget_loading_data">データを読み込み中…</string>
+	<string name="stats_widget_name_for_blog">WordPress 統計情報 (%1$s)</string>
+	<string name="stats_widget_name">WordPress 今日の統計情報</string>
+	<string name="add_location_permission_required">位置情報を追加するために必要なアクセス権限</string>
+	<string name="add_media_permission_required">メディアを追加するには権限が必要です</string>
+	<string name="access_media_permission_required">メディアにアクセスするには権限が必要です</string>
 	<string name="stats_enable_rest_api_in_jetpack">統計情報を表示するには、Jetpack の JSON API モジュールを有効化してください。</string>
 	<string name="error_open_list_from_notification">この投稿またはページは他のサイトで公開されています</string>
-	<string name="post_uploaded">投稿を更新しました</string>
-	<string name="page_uploaded">ページを更新しました</string>
 	<string name="reader_short_comment_count_multi">%s件のコメント</string>
 	<string name="reader_short_comment_count_one">1件のコメント</string>
 	<string name="reader_label_submit_comment">送信</string>
@@ -140,15 +211,9 @@
 	<string name="verification_code">認証コード</string>
 	<string name="editor_toast_invalid_path">無効なファイルパス</string>
 	<string name="error_publish_no_network">接続がないため公開できません。下書きとして保存します。</string>
-	<string name="media_details_dimensions">寸法:</string>
 	<string name="device">端末</string>
 	<string name="tab_title_site_images">サイトの画像</string>
 	<string name="tab_title_site_videos">サイトの動画</string>
-	<string name="media_details_added_on">追加日:</string>
-	<string name="media_details_uploaded_on">アップロード日:</string>
-	<string name="media_details_file_name">ファイル名:</string>
-	<string name="media_details_file_type">ファイル形式:</string>
-	<string name="media_details_file_url">ファイル URL:</string>
 	<string name="tab_title_device_images">端末の画像</string>
 	<string name="tab_title_device_videos">端末の動画</string>
 	<string name="take_video">動画を撮る</string>
@@ -156,6 +221,8 @@
 	<string name="media_picker_title">メディアを選択</string>
 	<string name="add_to_post">投稿に追加</string>
 	<string name="language">言語</string>
+	<string name="media_details_label_file_name">ファイル名</string>
+	<string name="media_details_label_file_type">ファイル形式</string>
 	<string name="stats_empty_search_terms_desc">訪問者があなたのサイトを見つけるために検索したキーワードを見て、検索トラフィックについてより詳しく知りましょう。</string>
 	<string name="toast_err_post_uploading">アップロード中は投稿を開けません</string>
 	<string name="stats_view_authors">投稿者</string>
@@ -342,7 +409,6 @@
 	<string name="no_network_message">利用可能なネットワークがありません</string>
 	<string name="out_of_memory">デバイスのメモリが足りません</string>
 	<string name="theme_fetch_failed">テーマの取得に失敗しました</string>
-	<string name="theme_no_search_result_found">一致する結果が見つかりません</string>
 	<string name="theme_set_failed">テーマの設定に失敗しました</string>
 	<string name="adding_cat_failed">カテゴリーの追加に失敗しました</string>
 	<string name="adding_cat_success">カテゴリーを追加しました</string>
@@ -501,6 +567,7 @@
 	<string name="email_cant_be_used_to_signup">こちらから送信するメールがブロックされる問題が発生しているため、そのメールアドレスは登録の際にお使いいただけません。他のメールプロバイダをご利用ください。</string>
 	<string name="blog_removed_successfully">サイトを削除しました</string>
 	<string name="remove_account">サイトを削除</string>
+	<string name="notifications_empty_all">通知はまだありません。</string>
 	<string name="deleting_page">ページを削除中</string>
 	<string name="deleting_post">投稿を削除中</string>
 	<string name="share_link">リンクを共有</string>
@@ -605,7 +672,6 @@
 	<string name="media_edit_success">更新しました</string>
 	<string name="themes_details_label">詳細</string>
 	<string name="themes_features_label">機能</string>
-	<string name="view_stats_full_site">フルサイズ表示</string>
 	<string name="stats_view_referrers">リファラ</string>
 	<string name="stats_view_comments">コメント</string>
 	<string name="media_edit_failure">更新に失敗しました</string>
@@ -634,6 +700,7 @@
 	<string name="sign_in">ログイン</string>
 	<string name="notifications">通知</string>
 	<string name="note_reply_successful">返信を公開しました</string>
+	<string name="follows">フォロー</string>
 	<string name="more_notifications">あと%d件。</string>
 	<string name="new_notifications">%d件の新しい通知</string>
 	<string name="loading">読込中…</string>
@@ -761,5 +828,10 @@
 		<item>標準</item>
 		<item>ステータス</item>
 		<item>動画</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>無料</item>
+		<item>すべて</item>
+		<item>プレミアム</item>
 	</string-array>
 </resources>

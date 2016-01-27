@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
@@ -25,8 +27,6 @@ import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
-
-import javax.annotation.Nonnull;
 
 public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
@@ -38,6 +38,7 @@ public class CommentsActivity extends AppCompatActivity
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private long mSelectedCommentId;
+    private final CommentList mTrashedComments = new CommentList();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,9 +149,8 @@ public class CommentsActivity extends AppCompatActivity
     public void onCommentSelected(long commentId) {
         mSelectedCommentId = commentId;
         FragmentManager fm = getFragmentManager();
-        if (fm == null) {
-            return;
-        }
+        if (fm == null) return;
+
         fm.executePendingTransactions();
         CommentsListFragment listFragment = getListFragment();
 
@@ -196,14 +196,14 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSaveInstanceState(@Nonnull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         // https://code.google.com/p/android/issues/detail?id=19917
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
 
         // retain the id of the highlighted and selected comments
-        if (mSelectedCommentId != 0) {
+        if (mSelectedCommentId != 0 && hasDetailFragment()) {
             outState.putLong(KEY_SELECTED_COMMENT_ID, mSelectedCommentId);
         }
 
@@ -253,6 +253,7 @@ public class CommentsActivity extends AppCompatActivity
                 }
             });
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH) {
+            mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
 
@@ -260,6 +261,7 @@ public class CommentsActivity extends AppCompatActivity
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mTrashedComments.remove(comment);
                     getListFragment().setCommentIsModerating(comment.commentID, false);
                     getListFragment().loadComments();
                 }
@@ -275,12 +277,10 @@ public class CommentsActivity extends AppCompatActivity
                     super.onDismissed(snackbar, event);
 
                     // comment will no longer exist in moderating list if action was undone
-                    if (!isFinishing()
-                            && hasListFragment()
-                            && !getListFragment().isModeratingComment(comment.commentID)) {
-                        AppLog.d(AppLog.T.COMMENTS, "comment moderation undone");
+                    if (!mTrashedComments.contains(comment)) {
                         return;
                     }
+                    mTrashedComments.remove(comment);
 
                     CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override

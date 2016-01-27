@@ -1,14 +1,35 @@
 package org.wordpress.android.ui.notifications;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.test.RenamingDelegatingContext;
+import android.test.ServiceTestCase;
 
-import android.test.AndroidTestCase;
+import org.wordpress.android.FactoryUtils;
+import org.wordpress.android.GCMMessageService;
+import org.wordpress.android.TestUtils;
+import org.wordpress.android.models.AccountHelper;
 
-import org.wordpress.android.GCMIntentService;
+public class GCMIntentServiceTest extends ServiceTestCase<GCMMessageService> {
+    protected Context mTargetContext;
 
-public class GCMIntentServiceTest extends AndroidTestCase {
+    public GCMIntentServiceTest() {
+        super(GCMMessageService.class);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        FactoryUtils.initWithTestFactories();
+
+        mTargetContext = new RenamingDelegatingContext(getContext(), "test_");
+        TestUtils.clearApplicationState(mTargetContext);
+
+        setupService();
+    }
 
     public void testShouldCircularizeNoteIcon() {
-        GCMIntentService intentService = new GCMIntentService();
+        GCMMessageService intentService = new GCMMessageService();
 
         String type = "c";
         assertTrue(intentService.shouldCircularizeNoteIcon(type));
@@ -17,5 +38,23 @@ public class GCMIntentServiceTest extends AndroidTestCase {
 
         type = "invalidType";
         assertFalse(intentService.shouldCircularizeNoteIcon(type));
+    }
+
+    public void testOnMessageReceived() throws InterruptedException {
+        org.wordpress.android.models.Account account = AccountHelper.getDefaultAccount();
+        account.setAccessToken("secret token");
+        account.setUserId(1);
+        final Bundle bundle = new Bundle();
+        bundle.putString("user", "1");
+        for (int i = 0; i < 1000; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getService().onMessageReceived("from", bundle);
+                }
+            }).start();
+        }
+
+        Thread.sleep(10000);
     }
 }

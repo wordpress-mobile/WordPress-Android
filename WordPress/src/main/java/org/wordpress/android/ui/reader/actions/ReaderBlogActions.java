@@ -19,6 +19,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
@@ -50,9 +51,9 @@ public class ReaderBlogActions {
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         if (isAskingToFollow) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId);
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
+            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -313,7 +314,7 @@ public class ReaderBlogActions {
         if (hasBlogId) {
             WordPress.getRestClientUtilsV1_1().get("read/sites/" + blogId, listener, errorListener);
         } else {
-            WordPress.getRestClientUtilsV1_1().get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener, errorListener);
         }
     }
     public static void updateFeedInfo(long feedId, String feedUrl, final UpdateBlogInfoListener infoListener) {
@@ -361,16 +362,14 @@ public class ReaderBlogActions {
      * account for 404 replacement pages used by ISPs such as Charter
      */
     public static void checkUrlReachable(final String blogUrl,
-                                         final ReaderActions.OnCheckUrlReachableListener urlListener) {
+                                         final ReaderActions.OnRequestListener requestListener) {
         // listener is required
-        if (urlListener == null) {
-            return;
-        }
+        if (requestListener == null) return;
 
         Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                urlListener.onSuccess();
+                requestListener.onSuccess();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -388,9 +387,9 @@ public class ReaderBlogActions {
                 // Volley treats a 301 redirect as a failure here, we should treat it as
                 // success since it means the blog url is reachable
                 if (statusCode == 301) {
-                    urlListener.onSuccess();
+                    requestListener.onSuccess();
                 } else {
-                    urlListener.onFailed(statusCode);
+                    requestListener.onFailure(statusCode);
                 }
             }
         };

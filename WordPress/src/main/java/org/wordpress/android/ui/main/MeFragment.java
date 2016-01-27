@@ -22,11 +22,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.prefs.PrefsEvents;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.lang.ref.WeakReference;
+
+import de.greenrobot.event.EventBus;
 
 public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
@@ -36,6 +39,7 @@ public class MeFragment extends Fragment {
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
     private TextView mLoginLogoutTextView;
+    private View mMyProfileView;
     private View mNotificationsView;
     private View mNotificationsDividerView;
     private ProgressDialog mDisconnectProgressDialog;
@@ -54,11 +58,19 @@ public class MeFragment extends Fragment {
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
         mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mMyProfileView = rootView.findViewById(R.id.row_my_profile);
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
         mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
 
         addDropShadowToAvatar();
         refreshAccountDetails();
+
+        mMyProfileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewMyProfile(getActivity());
+            }
+        });
 
         rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +121,24 @@ public class MeFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshAccountDetails();
+    }
+
+    @Override
     public void onDestroy() {
         if (mDisconnectProgressDialog != null) {
             mDisconnectProgressDialog.dismiss();
@@ -141,6 +171,7 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
             mAvatarFrame.setVisibility(View.VISIBLE);
+            mMyProfileView.setVisibility(View.VISIBLE);
             mNotificationsView.setVisibility(View.VISIBLE);
             mNotificationsDividerView.setVisibility(View.VISIBLE);
 
@@ -161,6 +192,7 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
             mAvatarFrame.setVisibility(View.GONE);
+            mMyProfileView.setVisibility(View.GONE);
             mNotificationsView.setVisibility(View.GONE);
             mNotificationsDividerView.setVisibility(View.GONE);
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
@@ -226,5 +258,9 @@ public class MeFragment extends Fragment {
             }
             mDisconnectProgressDialog = null;
         }
+    }
+
+    public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
+        refreshAccountDetails();
     }
 }

@@ -1,9 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">Cet article n’existe plus</string>
+	<string name="reader_err_get_post_not_authorized">Vous n’avez pas les droits nécessaires pour voir cet article</string>
+	<string name="reader_err_get_post_generic">Impossible de retrouver cet article</string>
+	<string name="blog_name_no_spaced_allowed">L\'adresse du site ne peut pas contenir d\'espaces.</string>
+	<string name="invalid_username_no_spaces">Le nom d\'utilisateur ne peut pas contenir d\'espaces.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Les sites que vous suivez n\'ont rien publié récemment.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Pas d\'articles récents.</string>
+	<string name="media_details_copy_url_toast">URL copiée dans le presse-papiers.</string>
+	<string name="edit_media">Modifier le média.</string>
+	<string name="media_details_copy_url">Copier l\'URL.</string>
+	<string name="media_details_label_date_uploaded">Envoyé</string>
+	<string name="media_details_label_date_added">Ajouté</string>
+	<string name="selected_theme">Thème sélectionné</string>
+	<string name="could_not_load_theme">Impossible de charger le thème</string>
+	<string name="theme_activation_error">Quelque chose s\'est mal passé. Impossible d&amp;rsquo;activer le thème.</string>
+	<string name="theme_by_author_prompt_append">par %1$s</string>
+	<string name="theme_prompt">Merci d\'avoir choisi %1$s</string>
+	<string name="theme_details">Détails</string>
+	<string name="theme_support">Support</string>
+	<string name="theme_done">FAIT</string>
+	<string name="theme_manage_site">GÉRER LE SITE</string>
+	<string name="theme_try_and_customize">Essayer et personnaliser</string>
+	<string name="theme_view">Afficher</string>
+	<string name="title_activity_theme_support">Thèmes</string>
+	<string name="theme_activate">Activer</string>
+	<string name="date_range_end_date">Date de fin</string>
+	<string name="current_theme">Thème actuel</string>
+	<string name="customize">Personnaliser</string>
+	<string name="details">Détails</string>
+	<string name="support">Support</string>
+	<string name="active">Actif</string>
+	<string name="date_range_start_date">Date de début</string>
+	<string name="stats_referrers_spam_generic_error">Une erreur a eu lieu durant l\'opération. L\'élément n\'a pas été marqué comme indésirable.</string>
+	<string name="stats_referrers_marking_not_spam">Retirer l\'état d\'indésirable</string>
+	<string name="stats_referrers_marking_spam">Marquer comme indésirable</string>
+	<string name="stats_referrers_unspam">Pas un indésirable</string>
+	<string name="post_published">Article publié</string>
+	<string name="page_published">Page publiée</string>
+	<string name="post_updated">Article mis à jour</string>
+	<string name="page_updated">Page mise à jour</string>
+	<string name="theme_auth_error_authenticate">Impossible de récupérer les thèmes&amp;nbsp;: échec de l&amp;rsquo;authentification de l&amp;rsquo;utilisateur</string>
+	<string name="stats_referrers_spam">Indésirable</string>
+	<string name="theme_no_search_result_found">Désolé, pas de thème trouvé.</string>
+	<string name="media_file_name">Nom du fichier&amp;nbsp;: %s</string>
+	<string name="media_dimensions">Dimensions&amp;nbsp;: %s</string>
+	<string name="media_uploaded_on">Mis en ligne le&amp;nbsp;: %s</string>
+	<string name="upload_queued">En file d&amp;rsquo;attente</string>
+	<string name="media_file_type">Type du fichier&amp;nbsp;: %s</string>
+	<string name="reader_label_gap_marker">Charger plus d\'artilces</string>
+	<string name="notifications_no_search_results">Aucun site ne correspond à \'%s\'</string>
+	<string name="search_sites">Rechercher les sites</string>
+	<string name="notifications_empty_view_reader">Voir le Lecteur</string>
+	<string name="unread">Non lus</string>
+	<string name="notifications_empty_action_followers_likes">Soyez remarqué : commentez les articles que vous avez lus.</string>
+	<string name="notifications_empty_action_comments">Rejoignez une conversation : commentez les articles des sites que vous suivez.</string>
+	<string name="notifications_empty_action_unread">Rallumez la conversation : écrivez un nouvel article.</string>
+	<string name="notifications_empty_action_all">Soyez actif! Commentez les articles des sites que vous suivez.</string>
+	<string name="notifications_empty_likes">Pas (encore) de nouveaux "j\'aime" à afficher.</string>
+	<string name="notifications_empty_followers">Pas (encore) de nouveaux followers.</string>
+	<string name="notifications_empty_comments">Pas (encore) de nouveaux commentaires.</string>
+	<string name="notifications_empty_unread">Vous êtes à jour!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Vous devez d\'abord aller sur l\'écran Stats dans l\'appli, réessayez d\'ajouter le Widget ensuite.</string>
+	<string name="stats_widget_error_readd_widget">Veuillez retirer le widget et le rajouter ensuite.</string>
+	<string name="stats_widget_error_no_visible_blog">Les Stats ne sont pas accessibles sans un Site visible</string>
+	<string name="stats_widget_error_no_permissions">Votre compte WordPress.com n\'a pas accès aux Stats sur ce site.</string>
+	<string name="stats_widget_error_no_account">Veuillez vous connecter à WordPress</string>
+	<string name="stats_widget_error_generic">Les Stats ne peuvent pas être chargées</string>
+	<string name="stats_widget_loading_data">Chargement des données…</string>
+	<string name="stats_widget_name_for_blog">Stats du jour pour %1$s</string>
+	<string name="stats_widget_name">Stats du jour WordPress</string>
+	<string name="add_location_permission_required">Permission nécessaire pour ajouter la Geolocalisation</string>
+	<string name="add_media_permission_required">Droits requis pour ajouter du contenu multimédia</string>
+	<string name="access_media_permission_required">Droits requis pour accéder au contenu multimédia</string>
 	<string name="stats_enable_rest_api_in_jetpack">Pour voir vos stats, vous devez d\'abord activer le module Jetpack nommé JSON API.</string>
 	<string name="error_open_list_from_notification">Cet article ou cette page à été publié sur un autre site</string>
-	<string name="post_uploaded">Article uploadé</string>
-	<string name="page_uploaded">Page uploadée</string>
 	<string name="reader_short_comment_count_multi">%s Commentaires</string>
 	<string name="reader_short_comment_count_one">1 Commentaire</string>
 	<string name="reader_label_submit_comment">ENVOYER</string>
@@ -141,12 +212,7 @@
 	<string name="editor_toast_invalid_path">Chemin de fichier invalide</string>
 	<string name="error_publish_no_network">Impossible de publier quand il n\'y a pas de connexion. Brouillon sauvegardé.</string>
 	<string name="device">Appareil</string>
-	<string name="media_details_dimensions">Dimensions:</string>
-	<string name="media_details_file_url">URL du fichier</string>
-	<string name="media_details_file_type">Type de fichier:</string>
-	<string name="media_details_file_name">Nom de fichier:</string>
-	<string name="media_details_uploaded_on">Uploadé le:</string>
-	<string name="media_details_added_on">Ajouté le:</string>
+	<string name="media_details_label_file_type">Type de fichier:</string>
 	<string name="tab_title_site_videos">Videos du site</string>
 	<string name="tab_title_site_images">Images du site</string>
 	<string name="tab_title_device_videos">Vidéos de l\'appareil</string>
@@ -156,6 +222,7 @@
 	<string name="media_picker_title">Sélectionner un média</string>
 	<string name="add_to_post">Ajouter à l\'article</string>
 	<string name="language">Langue</string>
+	<string name="media_details_label_file_name">Nom de fichier :</string>
 	<string name="posts_fetching">Récupération des articles…</string>
 	<string name="media_fetching">Récupération des médias…</string>
 	<string name="stats_view_search_terms">Termes de Recherche</string>
@@ -336,7 +403,6 @@
 	<string name="out_of_memory">L\'appareil n\'a plus assez de mémoire</string>
 	<string name="gallery_error">Le média ne peut pas être récupéré</string>
 	<string name="blog_not_found">Une erreur s\'est produite en accédant à ce blog</string>
-	<string name="theme_no_search_result_found">Aucun résultat trouvé</string>
 	<string name="stats_empty_comments">Aucun commentaire</string>
 	<string name="no_network_message">Aucun réseau disponible</string>
 	<string name="comments_empty_list">Aucun commentaire</string>
@@ -501,6 +567,7 @@
 	<string name="dlg_unapproving_comments">Désapprobation</string>
 	<string name="remove_account">Supprimer le site</string>
 	<string name="blog_removed_successfully">Site supprimé avec succès</string>
+	<string name="notifications_empty_all">Pas (encore) de notifications.</string>
 	<string name="deleting_page">Suppression de la page</string>
 	<string name="deleting_post">Suppression de l\'article</string>
 	<string name="share_url_page">Partager la page</string>
@@ -591,7 +658,6 @@
 	<string name="stats_timeframe_days">Jours</string>
 	<string name="stats_timeframe_weeks">Semaines</string>
 	<string name="stats_timeframe_months">Mois</string>
-	<string name="view_stats_full_site">Voir le site complet</string>
 	<string name="stats_view_clicks">Clicks</string>
 	<string name="media_no_video_title">VideoPress indisponible</string>
 	<string name="media_gallery_type_slideshow">Diaporama</string>
@@ -636,6 +702,7 @@
 	<string name="note_reply_successful">Réponse envoyée</string>
 	<string name="new_notifications">%d nouvelles notifications</string>
 	<string name="more_notifications">et %d autres.</string>
+	<string name="follows">Suit</string>
 	<string name="loading">Chargement…</string>
 	<string name="post_signature">Signature des articles</string>
 	<string name="add_tagline">Ajouter une signature aux articles</string>
@@ -715,7 +782,7 @@
 	<string name="reply">Répondre</string>
 	<string name="yes">Oui</string>
 	<string name="no">Non</string>
-	<string name="notification_settings">Paramètres de notification</string>
+	<string name="notification_settings">Paramètres de Notification</string>
 	<string-array name="alignment_array">
 		<item>Aucun</item>
 		<item>Gauche</item>
@@ -761,5 +828,10 @@
 		<item>Standard</item>
 		<item>État</item>
 		<item>Vidéo</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratuit</item>
+		<item>Tous</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

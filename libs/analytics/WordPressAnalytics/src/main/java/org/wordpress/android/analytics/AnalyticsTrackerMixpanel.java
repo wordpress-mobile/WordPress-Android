@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 
 import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class AnalyticsTrackerMixpanel extends Tracker {
@@ -35,7 +34,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
     public AnalyticsTrackerMixpanel(Context context, String token) throws IllegalArgumentException {
         super(context);
-        mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
+        mAggregatedProperties = new EnumMap<>(AnalyticsTracker.Stat.class);
         mMixpanel = MixpanelAPI.getInstance(context, token);
     }
 
@@ -142,9 +141,8 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
             // Retrieve properties user has already passed in and combine them with the saved properties
             if (properties != null) {
-                Iterator iter = properties.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry pairs = (Map.Entry) iter.next();
+                for (Object o : properties.entrySet()) {
+                    Map.Entry pairs = (Map.Entry) o;
                     String key = (String) pairs.getKey();
                     try {
                         Object value = pairs.getValue();
@@ -254,7 +252,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
     private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(
             AnalyticsTracker.Stat stat) {
-        AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
+        AnalyticsTrackerMixpanelInstructionsForStat instructions;
         switch (stat) {
             case APPLICATION_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -266,27 +264,13 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Closed");
                 break;
+            case APPLICATION_INSTALLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Application Installed");
+                break;
             case APPLICATION_UPGRADED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Upgraded");
-                break;
-            case THEMES_ACCESSED_THEMES_BROWSER:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Accessed Theme Browser");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
-                instructions.setCurrentDateForPeopleProperty("last_time_accessed_theme_browser");
-                break;
-            case THEMES_CHANGED_THEME:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Changed Theme");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
-                instructions.setCurrentDateForPeopleProperty("last_time_changed_theme");
-                break;
-            case THEMES_PREVIEWED_SITE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Themes - Previewed Theme for Site");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_previewed_a_theme");
-                instructions.setCurrentDateForPeopleProperty("last_time_previewed_a_theme");
                 break;
             case READER_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -312,12 +296,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Reader - Opened Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_opened_reader_article");
-                break;
-            case READER_ARTICLE_REBLOGGED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Reblogged Article");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reblogged_article");
-                instructions.setCurrentDateForPeopleProperty("last_time_reblogged_article");
                 break;
             case READER_ARTICLE_UNLIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -355,12 +333,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement(
                         "number_of_times_discover_content_viewed");
                 instructions.setCurrentDateForPeopleProperty("last_time_discover_content_viewed");
-                break;
-            case READER_FRESHLY_PRESSED_LOADED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - Loaded Freshly Pressed");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_loaded_freshly_pressed");
-                instructions.setCurrentDateForPeopleProperty("last_time_loaded_freshly_pressed");
                 break;
             case READER_INFINITE_SCROLL:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -429,7 +401,46 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_saved_draft");
                 instructions.setCurrentDateForPeopleProperty("last_time_saved_draft");
                 break;
-            case EDITOR_CLOSED_POST:
+            case EDITOR_DISCARDED_CHANGES:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Discarded Changes");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_discarded_changes");
+                instructions.setCurrentDateForPeopleProperty("last_time_discarded_changes");
+                break;
+            case EDITOR_EDITED_IMAGE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Edited Image");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_edited_image");
+                instructions.setCurrentDateForPeopleProperty("last_time_edited_image");
+                break;
+            case EDITOR_ENABLED_NEW_VERSION:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Enabled New Version");
+                instructions.addSuperPropertyToFlag("enabled_new_editor");
+                break;
+            case EDITOR_TOGGLED_ON:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Toggled New Editor On");
+                instructions.setPeoplePropertyToValue("enabled_new_editor", true);
+                break;
+            case EDITOR_TOGGLED_OFF:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Toggled New Editor Off");
+                instructions.setPeoplePropertyToValue("enabled_new_editor", true);
+                break;
+            case EDITOR_UPLOAD_MEDIA_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Upload Media Failed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_upload_media_failed");
+                instructions.setCurrentDateForPeopleProperty("last_time_editor_upload_media_failed");
+                break;
+            case EDITOR_UPLOAD_MEDIA_RETRIED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Retried Uploading Media");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_retried_uploading_media");
+                instructions.setCurrentDateForPeopleProperty("last_time_editor_retried_uploading_media");
+                break;
+            case EDITOR_CLOSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Closed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_closed");
@@ -447,6 +458,20 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement(
                         "number_of_times_added_photo_via_wp_media_library");
                 instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_wp_media_library_to_post");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Video via Local Library");
+                instructions.
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_video_via_local_library");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_local_library_to_post");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Video via WP Media Library");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_added_video_via_wp_media_library");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_wp_media_library_to_post");
                 break;
             case EDITOR_PUBLISHED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -513,6 +538,30 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Editor - Tapped Underline Button");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_underline");
                 instructions.setCurrentDateForPeopleProperty("last_time_tapped_underline_in_editor");
+                break;
+            case EDITOR_TAPPED_HTML:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped HTML Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_html");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_html_in_editor");
+                break;
+            case EDITOR_TAPPED_ORDERED_LIST:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Ordered List Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_ordered_list");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_ordered_list_in_editor");
+                break;
+            case EDITOR_TAPPED_UNLINK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Unlink Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_unlink");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_unlink_in_editor");
+                break;
+            case EDITOR_TAPPED_UNORDERED_LIST:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Tapped Unordered List Button");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_tapped_unordered_list");
+                instructions.setCurrentDateForPeopleProperty("last_time_tapped_unordered_list_in_editor");
                 break;
             case NOTIFICATIONS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -588,7 +637,15 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Site Menu - Opened Settings");
+                        mixpanelInstructionsForEventName("Site Menu - Opened Site Settings");
+                break;
+            case OPENED_ACCOUNT_SETTINGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened Account Settings");
+                break;
+            case OPENED_MY_PROFILE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened My Profile");
                 break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -614,6 +671,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Signed into Jetpack");
                 instructions.addSuperPropertyToFlag("jetpack_user");
                 instructions.addSuperPropertyToFlag("dotcom_user");
+                break;
+            case ACCOUNT_LOGOUT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Logged Out");
                 break;
             case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -667,12 +728,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_single_post_screen_stats");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_single_post_screen_stats");
                 break;
-            case STATS_OPENED_WEB_VERSION:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats - Opened Web Version");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_web_version_of_stats");
-                instructions.setCurrentDateForPeopleProperty("last_time_accessed_web_version_of_stats");
-                break;
             case STATS_TAPPED_BAR_CHART:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Tapped Bar Chart");
@@ -687,23 +742,27 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case STATS_SELECTED_INSTALL_JETPACK:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Selected Install Jetpack");
+                        mixpanelInstructionsForEventName("Stats - Selected Install Jetpack");
                 break;
             case STATS_WIDGET_ADDED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats Widget Added");
+                        mixpanelInstructionsForEventName("Stats - Widget Added");
                 break;
             case STATS_WIDGET_REMOVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats Widget Removed");
+                        mixpanelInstructionsForEventName("Stats - Widget Removed");
                 break;
             case STATS_WIDGET_TAPPED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Stats Widget Tapped");
+                        mixpanelInstructionsForEventName("Stats - Widget Tapped");
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Push Notification Received");
+                        mixpanelInstructionsForEventName("Push Notification - Received");
+                break;
+            case PUSH_NOTIFICATION_TAPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Notification - Alert Tapped");
                 break;
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -739,10 +798,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Push Authentication - Ignored");
                 break;
-            case SETTINGS_LANGUAGE_SELECTION_FORCED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Settings - Forced Language Selection");
-                break;
             case NOTIFICATION_SETTINGS_LIST_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notification Settings - Accessed List");
@@ -755,10 +810,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notification Settings - Accessed Details");
                 break;
-            case NOTIFICATION_SETTINGS_UPDATED:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Notification Settings - Updated");
-                break;
             case ME_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me Tab - Accessed");
@@ -768,6 +819,88 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("My Site - Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_my_site");
+                break;
+            case THEMES_ACCESSED_THEMES_BROWSER:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Accessed Theme Browser");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
+                instructions.setCurrentDateForPeopleProperty("last_time_accessed_theme_browser");
+                break;
+            case THEMES_ACCESSED_SEARCH:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Accessed Theme");
+                break;
+            case THEMES_CHANGED_THEME:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Changed Theme");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
+                instructions.setCurrentDateForPeopleProperty("last_time_changed_theme");
+                break;
+            case THEMES_PREVIEWED_SITE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Previewed Theme for Site");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_previewed_a_theme");
+                instructions.setCurrentDateForPeopleProperty("last_time_previewed_a_theme");
+                break;
+            case THEMES_DEMO_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Demo Accessed");
+                break;
+            case THEMES_CUSTOMIZE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Customize Accessed");
+                break;
+            case THEMES_SUPPORT_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Support Accessed");
+                break;
+            case THEMES_DETAILS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Details Accessed");
+                break;
+            case ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Forced Language Selection");
+                break;
+            case SITE_SETTINGS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Site Settings Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_settings_accessed");
+                break;
+            case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - More Settings Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_more_settings_accessed");
+                break;
+            case SITE_SETTINGS_ADDED_LIST_ITEM:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Added List Item");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_list_items_added");
+                break;
+            case SITE_SETTINGS_DELETED_LIST_ITEMS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Site Deleted List Items");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_list_items_were_deleted");
+                break;
+            case SITE_SETTINGS_HINT_TOAST_SHOWN:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Preference Hint Shown");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_preference_hints_viewed");
+                break;
+            case SITE_SETTINGS_LEARN_MORE_CLICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Learn More Clicked");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_learn_more_clicked");
+                break;
+            case SITE_SETTINGS_LEARN_MORE_LOADED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Learn More Loaded");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_learn_more_seen");
+                break;
+            case SITE_SETTINGS_SAVED_REMOTELY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Settings - Saved Remotely");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_settings_updated_remotely");
                 break;
             default:
                 instructions = null;
@@ -784,6 +917,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     private void incrementSuperProperty(String property) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         int propertyCount = preferences.getInt(property, 0);
@@ -840,8 +974,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
 
         try {
-            Object valueForProperty = properties.get(property);
-            return valueForProperty;
+            return properties.get(property);
         } catch (JSONException e) {
             // We are okay with swallowing this exception as the next line will just return a null value
         }
@@ -871,4 +1004,3 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         editor.apply();
     }
 }
-

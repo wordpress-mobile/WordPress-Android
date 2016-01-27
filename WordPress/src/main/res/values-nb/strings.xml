@@ -66,7 +66,6 @@
 	<string name="tab_title_site_images">Bilder på nettsted</string>
 	<string name="tab_title_device_videos">Filmer på enhet</string>
 	<string name="tab_title_device_images">Bilder på enhet</string>
-	<string name="media_details_file_url">Fil-URL:</string>
 	<string name="two_step_footer_label">Skriv inn koden fra din autentiseringsapp.</string>
 	<string name="two_step_footer_button">Send kode via tekstmelding.</string>
 	<string name="two_step_sms_sent">Sjekk dine tekstmeldinger for verifikasjonskoden.</string>
@@ -77,9 +76,6 @@
 	<string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
 	<string name="verify">Verifiser</string>
 	<string name="error_publish_no_network">Kan ikke publisere uten tilkobling. Laget som utkast.</string>
-	<string name="media_details_dimensions">Dimensjoner:</string>
-	<string name="media_details_file_name">Filnavn:</string>
-	<string name="media_details_file_type">Filtype:</string>
 	<string name="language">Språk</string>
 	<string name="media_picker_title">Velg media</string>
 	<string name="take_photo">Ta et bilde</string>
@@ -320,7 +316,6 @@
 	<string name="media_no_video_message">Oppgrader til VideoPress for å laste opp video!</string>
 	<string name="media_edit_description_hint">Skriv en beskrivelse her</string>
 	<string name="themes_features_label">Funksjoner</string>
-	<string name="view_stats_full_site">Se alle</string>
 	<string name="stats_view_visitors_and_views">Besøk og visninger</string>
 	<string name="stats_view_clicks">Klikk</string>
 	<string name="stats_view_tags_and_categories">Stikkord og kategorier</string>
@@ -341,6 +336,7 @@
 	<string name="sign_in">Logg inn</string>
 	<string name="notifications">Varsler</string>
 	<string name="note_reply_successful">Kommentar publisert</string>
+	<string name="follows">Følg</string>
 	<string name="new_notifications">%d nye varsler</string>
 	<string name="more_notifications">og %d flere.</string>
 	<string name="loading">Laster...</string>

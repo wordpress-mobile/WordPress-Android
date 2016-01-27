@@ -1,9 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_err_get_post_not_found">This post no longer exists</string>
+	<string name="reader_err_get_post_not_authorized">You\'re not authorised to view this post</string>
+	<string name="reader_err_get_post_generic">Unable to retrieve this post</string>
+	<string name="blog_name_no_spaced_allowed">Site address can\'t contain spaces</string>
+	<string name="invalid_username_no_spaces">Username can\'t contain spaces</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
+	<string name="edit_media">Edit media</string>
+	<string name="media_details_copy_url_toast">URL copied to clipboard</string>
+	<string name="media_details_copy_url">Copy URL</string>
+	<string name="media_details_label_date_uploaded">Uploaded</string>
+	<string name="media_details_label_date_added">Added</string>
+	<string name="selected_theme">Selected Theme</string>
+	<string name="could_not_load_theme">Could not load theme</string>
+	<string name="theme_activation_error">Something went wrong. Could not activate theme</string>
+	<string name="theme_by_author_prompt_append"> by %1$s</string>
+	<string name="theme_prompt">Thanks for choosing %1$s</string>
+	<string name="theme_details">Details</string>
+	<string name="theme_done">DONE</string>
+	<string name="theme_manage_site">MANAGE SITE</string>
+	<string name="theme_support">Support</string>
+	<string name="theme_try_and_customize">Try &amp; Customise</string>
+	<string name="theme_view">View</string>
+	<string name="theme_activate">Activate</string>
+	<string name="title_activity_theme_support">Themes</string>
+	<string name="active">Active</string>
+	<string name="current_theme">Current Theme</string>
+	<string name="customize">Customise</string>
+	<string name="details">Details</string>
+	<string name="date_range_end_date">End Date</string>
+	<string name="date_range_start_date">Start Date</string>
+	<string name="support">Support</string>
+	<string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
+	<string name="stats_referrers_marking_not_spam">Marking as not spam</string>
+	<string name="stats_referrers_marking_spam">Marking as spam</string>
+	<string name="stats_referrers_unspam">Not spam</string>
+	<string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticating user</string>
+	<string name="page_published">Page published</string>
+	<string name="page_updated">Page updated</string>
+	<string name="post_published">Post published</string>
+	<string name="post_updated">Post updated</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Sorry, no themes found.</string>
+	<string name="media_dimensions">Dimensions: %s</string>
+	<string name="media_file_name">File name: %s</string>
+	<string name="media_uploaded_on">Uploaded on: %s</string>
+	<string name="media_file_type">File type: %s</string>
+	<string name="upload_queued">Queued</string>
+	<string name="reader_label_gap_marker">Load more posts</string>
+	<string name="notifications_no_search_results">No sites matched \'%s\'</string>
+	<string name="search_sites">Search sites</string>
+	<string name="unread">Unread</string>
+	<string name="notifications_empty_view_reader">View Reader</string>
+	<string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
+	<string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
+	<string name="notifications_empty_action_unread">Reignite the conversation: write a new post.</string>
+	<string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
+	<string name="notifications_empty_likes">No new likes to show…yet.</string>
+	<string name="notifications_empty_followers">No new followers to report…yet.</string>
+	<string name="notifications_empty_comments">No new comments…yet.</string>
+	<string name="notifications_empty_unread">You\'re all caught up!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Please access the Stats in the app, and try adding the widget later</string>
+	<string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
+	<string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
+	<string name="stats_widget_error_no_permissions">Your WordPress.com account can\'t access Stats on this blog</string>
+	<string name="stats_widget_error_no_account">Please login into WordPress</string>
+	<string name="stats_widget_error_generic">Stats couldn\'t be loaded</string>
+	<string name="stats_widget_loading_data">Loading data…</string>
+	<string name="stats_widget_name_for_blog">Today\'s Stats for %1$s</string>
+	<string name="stats_widget_name">WordPress Today\'s Stats</string>
+	<string name="add_location_permission_required">Permission required in order to add location</string>
+	<string name="add_media_permission_required">Permissions required in order to add media</string>
+	<string name="access_media_permission_required">Permissions required in order to access media</string>
 	<string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
 	<string name="error_open_list_from_notification">This post or page was published on another site</string>
-	<string name="post_uploaded">Post uploaded</string>
-	<string name="page_uploaded">Page uploaded</string>
 	<string name="reader_short_comment_count_multi">%s Comments</string>
 	<string name="reader_short_comment_count_one">1 Comment</string>
 	<string name="reader_label_submit_comment">SEND</string>
@@ -50,7 +121,6 @@
 	<string name="post_deleted">Post deleted</string>
 	<string name="post_trashed">Post sent to bin</string>
 	<string name="stats_no_activity_this_period">No activity this period</string>
-	<string name="trashed">Trashed</string>
 	<string name="button_back">Back</string>
 	<string name="page_deleted">Page deleted</string>
 	<string name="button_more">More</string>
@@ -61,10 +131,11 @@
 	<string name="button_edit">Edit</string>
 	<string name="button_publish">Publish</string>
 	<string name="button_delete">Delete</string>
+	<string name="trashed">Binned</string>
 	<string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
 	<string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
 	<string name="my_site_no_sites_view_drake">Illustration</string>
-	<string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this blog</string>
+	<string name="reader_toast_err_follow_blog_not_authorized">You are not authorised to access this blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">This blog could not be found</string>
 	<string name="undo">Undo</string>
 	<string name="tabbar_accessibility_label_my_site">My Site</string>
@@ -140,12 +211,6 @@
 	<string name="tab_title_device_videos">Device Videos</string>
 	<string name="tab_title_site_images">Site Images</string>
 	<string name="tab_title_site_videos">Site Videos</string>
-	<string name="media_details_added_on">Added on:</string>
-	<string name="media_details_uploaded_on">Uploaded on:</string>
-	<string name="media_details_file_name">File name:</string>
-	<string name="media_details_file_type">File type:</string>
-	<string name="media_details_file_url">File URL:</string>
-	<string name="media_details_dimensions">Dimensions:</string>
 	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
 	<string name="editor_toast_invalid_path">Invalid file path</string>
 	<string name="verification_code">Verification code</string>
@@ -156,6 +221,8 @@
 	<string name="two_step_sms_sent">Check your text messages for the verification code.</string>
 	<string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
 	<string name="auth_required">Sign in again to continue.</string>
+	<string name="media_details_label_file_type">File type</string>
+	<string name="media_details_label_file_name">File name</string>
 	<string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
 	<string name="publisher">Publisher:</string>
 	<string name="error_notification_open">Could not open notification</string>
@@ -209,8 +276,6 @@
 	<string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
 	<string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
 	<string name="stats_empty_followers">No followers</string>
-	<string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
-	<string name="stats_empty_publicize">No publicize followers recorded</string>
 	<string name="stats_empty_video">No videos played</string>
 	<string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
 	<string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
@@ -234,7 +299,6 @@
 	<string name="stats_entry_clicks_link">Link</string>
 	<string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
 	<string name="stats_view_videos">Videos</string>
-	<string name="stats_view_publicize">Publicize</string>
 	<string name="stats_view_followers">Followers</string>
 	<string name="stats_view_countries">Countries</string>
 	<string name="stats_likes">Likes</string>
@@ -243,6 +307,9 @@
 	<string name="stats_timeframe_years">Years</string>
 	<string name="stats_views">Views</string>
 	<string name="stats_visitors">Visitors</string>
+	<string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicise.</string>
+	<string name="stats_empty_publicize">No publicise followers recorded</string>
+	<string name="stats_view_publicize">Publicise</string>
 	<string name="ssl_certificate_details">Details</string>
 	<string name="sure_to_remove_account">Remove this site?</string>
 	<string name="delete_sure_post">Delete this post</string>
@@ -282,7 +349,6 @@
 	<string name="uploading_total">Uploading %1$d of %2$d</string>
 	<string name="mnu_comment_liked">Liked</string>
 	<string name="comment">Comment</string>
-	<string name="comment_trashed">Comment trashed</string>
 	<string name="posts_empty_list">No posts yet. Why not create one?</string>
 	<string name="comment_reply_to_user">Reply to %s</string>
 	<string name="pages_empty_list">No pages yet. Why not create one?</string>
@@ -290,6 +356,7 @@
 	<string name="posting_post">Posting "%s"</string>
 	<string name="signing_out">Signing out…</string>
 	<string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+	<string name="comment_trashed">Comment binned</string>
 	<string name="reader_menu_block_blog">Block this blog</string>
 	<string name="reader_toast_err_generic">Unable to perform this action</string>
 	<string name="reader_toast_err_block_blog">Unable to block this blog</string>
@@ -340,7 +407,6 @@
 	<string name="theme_fetch_failed">Failed to fetch themes</string>
 	<string name="theme_set_failed">Failed to set theme</string>
 	<string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
-	<string name="theme_no_search_result_found">No results found</string>
 	<string name="comments_empty_list">No comments</string>
 	<string name="mnu_comment_unspam">Not spam</string>
 	<string name="no_site_error">Couldn\'t connect to the WordPress site</string>
@@ -419,12 +485,10 @@
 	<string name="comment_status_approved">Approved</string>
 	<string name="comment_status_unapproved">Pending</string>
 	<string name="comment_status_spam">Spam</string>
-	<string name="comment_status_trash">Trashed</string>
 	<string name="edit_comment">Edit comment</string>
 	<string name="mnu_comment_approve">Approve</string>
 	<string name="mnu_comment_unapprove">Unapprove</string>
 	<string name="mnu_comment_spam">Spam</string>
-	<string name="mnu_comment_trash">Trash</string>
 	<string name="dlg_approving_comments">Approving</string>
 	<string name="dlg_unapproving_comments">Unapproving</string>
 	<string name="dlg_spamming_comments">Marking as spam</string>
@@ -473,7 +537,6 @@
 	<string name="open_source_licenses">Open source licenses</string>
 	<string name="pending_review">Pending review</string>
 	<string name="http_credentials">HTTP credentials (optional)</string>
-	<string name="http_authorization_required">Authorization required</string>
 	<string name="post_format">Post format</string>
 	<string name="new_post">New post</string>
 	<string name="new_media">New media</string>
@@ -501,6 +564,10 @@
 	<string name="blog_title_invalid">Invalid site title</string>
 	<string name="blog_removed_successfully">Site removed successfully</string>
 	<string name="remove_account">Remove site</string>
+	<string name="notifications_empty_all">No notifications…yet.</string>
+	<string name="http_authorization_required">Authorisation required</string>
+	<string name="mnu_comment_trash">Bin</string>
+	<string name="comment_status_trash">Binned</string>
 	<string name="deleting_page">Deleting page</string>
 	<string name="deleting_post">Deleting post</string>
 	<string name="share_url_post">Share post</string>
@@ -617,7 +684,6 @@
 	<string name="share_action_title">Add to …</string>
 	<string name="share_action">Share</string>
 	<string name="stats">Stats</string>
-	<string name="view_stats_full_site">View full site</string>
 	<string name="stats_view_visitors_and_views">Visitors and Views</string>
 	<string name="menu_search">Search</string>
 	<string name="passcode_manage">Manage PIN lock</string>
@@ -636,6 +702,7 @@
 	<string name="note_reply_successful">Reply published</string>
 	<string name="new_notifications">%d new notifications</string>
 	<string name="more_notifications">and %d more.</string>
+	<string name="follows">Follows</string>
 	<string name="loading">Loading…</string>
 	<string name="post_signature">Post signature</string>
 	<string name="add_tagline">Add a signature to new posts</string>
@@ -748,7 +815,7 @@
 		<item>Published</item>
 		<item>Drafts</item>
 		<item>Scheduled</item>
-		<item>Trashed</item>
+		<item>Binned</item>
 	</string-array>
 	<string-array name="post_formats_array">
 		<item>Aside</item>
@@ -761,5 +828,10 @@
 		<item>Standard</item>
 		<item>Status</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Free</item>
+		<item>All</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

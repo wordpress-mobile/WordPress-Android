@@ -479,18 +479,19 @@ public class PostsListFragment extends Fragment
                 // if the post no longer exists in the list of trashed posts it's because the
                 // user undid the trash, so don't perform the deletion
                 if (!mTrashedPosts.contains(post)) {
-                    AppLog.d(AppLog.T.POSTS, "user undid trashing");
                     return;
                 }
+
+                // remove from the list of trashed posts in case onDismissed is called multiple
+                // times - this way the above check prevents us making the call to delete it twice
+                // https://code.google.com/p/android/issues/detail?id=190529
+                mTrashedPosts.remove(post);
 
                 WordPress.wpDB.deletePost(fullPost);
 
                 if (!post.isLocalDraft()) {
-                    List<Object> apiArgs = new Vector<>();
-                    apiArgs.add(WordPress.getCurrentBlog());
-                    apiArgs.add(fullPost.getRemotePostId());
-                    apiArgs.add(mIsPage);
-                    new ApiHelper.DeleteSinglePostTask().execute(apiArgs);
+                    new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
+                            fullPost.getRemotePostId(), mIsPage);
                 }
             }
         });

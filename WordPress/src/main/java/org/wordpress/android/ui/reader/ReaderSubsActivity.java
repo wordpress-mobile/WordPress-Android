@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -49,8 +50,6 @@ import org.wordpress.android.widgets.WPViewPager;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 import de.greenrobot.event.EventBus;
 
@@ -227,7 +226,7 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSaveInstanceState(@Nonnull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
@@ -362,7 +361,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         showAddUrlProgress();
 
-        ReaderActions.OnCheckUrlReachableListener urlListener = new ReaderActions.OnCheckUrlReachableListener() {
+        ReaderActions.OnRequestListener requestListener = new ReaderActions.OnRequestListener() {
             @Override
             public void onSuccess() {
                 if (!isFinishing()) {
@@ -370,7 +369,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 }
             }
             @Override
-            public void onFailed(int statusCode) {
+            public void onFailure(int statusCode) {
                 if (!isFinishing()) {
                     hideAddUrlProgress();
                     String errMsg;
@@ -390,7 +389,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 }
             }
         };
-        ReaderBlogActions.checkUrlReachable(blogUrl, urlListener);
+        ReaderBlogActions.checkUrlReachable(blogUrl, requestListener);
     }
 
     private void followBlogUrl(String normUrl) {
