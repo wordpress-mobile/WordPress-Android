@@ -62,8 +62,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mWebAddressPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_web_address));
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
 
-        mWebAddressPreference.setSummary(mWebAddressPreference.getText());
-
         mEmailPreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
         mLanguagePreference.setOnPreferenceChangeListener(this);
@@ -164,6 +162,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         Account account = AccountHelper.getDefaultAccount();
         mUsernamePreference.setSummary(account.getUserName());
         mEmailPreference.setSummary(account.getEmail());
+        mWebAddressPreference.setSummary(account.getWebAddress());
 
         checkIfEmailChangeIsPending();
     }
