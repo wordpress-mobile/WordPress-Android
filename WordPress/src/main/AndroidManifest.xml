@@ -108,7 +108,7 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.prefs.SettingsActivity"
-            android:configChanges="locale|orientation"
+            android:configChanges="locale|orientation|screenSize"
             android:theme="@style/CalypsoTheme"/>
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
