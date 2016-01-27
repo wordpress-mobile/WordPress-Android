@@ -290,11 +290,43 @@
             android:title="@string/start_over"
             app:longClickHint="@string/site_settings_start_over_hint" />
 
-        <Preference
-            android:id="@+id/pref_delete_site"
-            android:key="@string/pref_key_site_delete_site"
+        <PreferenceScreen
+            android:id="@+id/pref_delete_site_screen"
+            android:key="@string/pref_key_site_delete_site_screen"
             android:title="@string/site_settings_delete_site_title"
-            app:longClickHint="@string/site_settings_delete_site_hint" />
+            app:longClickHint="@string/site_settings_delete_site_hint">
+
+            <org.wordpress.android.ui.prefs.WPPreference
+                android:title="@string/domain_removal"
+                android:summary="@string/domain_removal_summary"
+                app:longClickHint="@string/domain_removal_hint" />
+
+            <org.wordpress.android.ui.prefs.WPButtonPreference
+                android:id="@+id/pref_export_site"
+                android:key="@string/pref_key_site_export_site"
+                android:icon="@drawable/gridicons_history"
+                android:title="@string/keep_your_content"
+                android:summary="@string/export_site_summary"
+                android:layout="@layout/delete_site_preference"
+                android:widgetLayout="@layout/delete_site_preference_button"
+                app:longClickHint="@string/export_site_hint"
+                app:buttonText="@string/export_content"
+                app:buttonTextAllCaps="true" />
+
+            <org.wordpress.android.ui.prefs.WPButtonPreference
+                android:id="@+id/pref_delete_site"
+                android:key="@string/pref_key_site_delete_site"
+                android:icon="@drawable/gridicons_trash"
+                android:title="@string/are_you_sure"
+                android:summary="@string/delete_site_summary"
+                android:layout="@layout/delete_site_preference"
+                android:widgetLayout="@layout/delete_site_preference_button"
+                app:longClickHint="@string/delete_site_hint"
+                app:buttonText="delete site"
+                app:buttonTextAllCaps="true"
+                app:buttonTextColor="@color/alert_red" />
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
 

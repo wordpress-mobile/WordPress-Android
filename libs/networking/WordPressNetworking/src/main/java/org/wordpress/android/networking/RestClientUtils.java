@@ -250,6 +250,14 @@ public class RestClientUtils {
     }
 
     /**
+     * Delete a site
+     */
+    public void deleteSite(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/delete", siteId);
+        post(path, listener, errorListener);
+    }
+
+    /**
      * Make GET request
      */
     public Request<JSONObject> get(String path, Listener listener, ErrorListener errorListener) {
