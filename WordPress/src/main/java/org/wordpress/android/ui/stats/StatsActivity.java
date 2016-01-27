@@ -771,7 +771,7 @@ public class StatsActivity extends AppCompatActivity
             // request a window without the title
             dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false); // No back key
+            dialog.setCancelable(false);
             return dialog;
         }
 

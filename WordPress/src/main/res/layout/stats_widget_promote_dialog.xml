@@ -7,7 +7,6 @@
     android:layout_gravity="center"
     android:orientation="vertical">
 
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,11 +19,12 @@
         android:orientation="vertical">
         <org.wordpress.android.widgets.WPTextView
             style="@style/StatsModuleTitle"
+            android:textSize="@dimen/text_sz_large"
             android:layout_width="wrap_content"
             android:text="@string/stats_widget_promo_title" />
         <org.wordpress.android.widgets.WPTextView
             android:textColor="@color/grey_darken_30"
-            android:textSize="@dimen/text_sz_small"
+            android:textSize="@dimen/text_sz_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
@@ -40,6 +40,8 @@
             style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:textColor="@color/stats_link_text_color"
             android:layout_width="wrap_content"
+            android:padding="8dp"
+            android:minWidth="64dp"
             android:text="@string/stats_widget_promo_ok_btn_label"
             android:layout_height="36dp"
             android:id="@+id/got_it_btn" />
