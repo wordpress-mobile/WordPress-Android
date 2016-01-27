@@ -98,7 +98,7 @@ public class StatsActivity extends AppCompatActivity
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
 
     // Shortcut to the App Preference that holds if the Stats Widget was previously displayed to the user.
-    private boolean mIsStatsWidgetDisplayed = false;
+    private boolean mShouldDisplayStatsWidgetPromo = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -272,8 +272,8 @@ public class StatsActivity extends AppCompatActivity
             trackStatsAnalytics();
         }
 
-        // Read from preferece the value when the activity is started and use it later.
-        mIsStatsWidgetDisplayed = AppPrefs.isStatsWidgetPromoDisplayed();
+        // Check if we should show the widget promo later
+        mShouldDisplayStatsWidgetPromo = !AppPrefs.isStatsWidgetPromoDisplayed();
     }
 
     private void trackStatsAnalytics() {
@@ -755,13 +755,13 @@ public class StatsActivity extends AppCompatActivity
         return true;
     }
 
-    public static class MyAlertDialogFragment extends DialogFragment {
+    public static class StatsWidgetPromoDialogFragment extends DialogFragment {
 
-        public static MyAlertDialogFragment newInstance(int title) {
-            MyAlertDialogFragment frag = new MyAlertDialogFragment();
-            Bundle args = new Bundle();
+        public static StatsWidgetPromoDialogFragment newInstance(int title) {
+            StatsWidgetPromoDialogFragment frag = new StatsWidgetPromoDialogFragment();
+           /* Bundle args = new Bundle();
             args.putInt("title", title);
-            frag.setArguments(args);
+            frag.setArguments(args);*/
             return frag;
         }
 
@@ -775,8 +775,8 @@ public class StatsActivity extends AppCompatActivity
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             // Fetch arguments from bundle and set title
-            String title = getArguments().getString("title", "Enter Name");
-            getDialog().setTitle(title);
+            /*String title = getArguments().getString("title", "Enter Name");
+            getDialog().setTitle(title);*/
         }
 
         /*
@@ -807,10 +807,10 @@ public class StatsActivity extends AppCompatActivity
         mIsUpdatingStats = event.mUpdating;
 
         // Should we display the widget promo?
-        if (!mIsUpdatingStats && !mIsStatsWidgetDisplayed) {
+        if (!mIsUpdatingStats && mShouldDisplayStatsWidgetPromo) {
             AppPrefs.setStatsWidgetPromoDisplayed(true);
-            mIsStatsWidgetDisplayed = true;
-            DialogFragment newFragment = MyAlertDialogFragment
+            mShouldDisplayStatsWidgetPromo = false;
+            DialogFragment newFragment = StatsWidgetPromoDialogFragment
                     .newInstance(R.string.invalid_password_title);
             newFragment.show(getFragmentManager(), "dialog");
         }
@@ -840,6 +840,27 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        // There was an error loading Stats. Don't show the promo widget dialog.
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+
+        if (!mShouldDisplayStatsWidgetPromo) {
+            // no need to go further here. The stats widget promo dialog must not be shown.
+            return;
+        }
+
+        // Check if the user hasn't changed blog.
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        if (currentBlog == null || event.mRequestBlogId.equals(currentBlog.getDotComBlogId())) {
+            mShouldDisplayStatsWidgetPromo = false;
+        } else {
+            mShouldDisplayStatsWidgetPromo = true;
+        }
+    }
+
+    @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.JetpackAuthError event) {
         if (isFinishing() || !mIsInFront) {
             return;
@@ -849,6 +870,10 @@ public class StatsActivity extends AppCompatActivity
             // The user has changed blog
             return;
         }
+
+        // There was an error loading Stats. Don't show the promo widget dialog.
+        mShouldDisplayStatsWidgetPromo = false;
+
         mSwipeToRefreshHelper.setRefreshing(false);
         startWPComLoginActivity();
     }
