@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -28,6 +29,20 @@ public class MyProfileActivity extends AppCompatActivity {
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
 
+    private boolean mIsMultiline;
+    private boolean mIsDialogOpen;
+    private String mDialogTitle;
+    private String mHint;
+    private String mDialogText;
+    private WPTextView mTextView;
+
+    private final String TITLE_TAG = "TITLE";
+    private final String HINT_TAG = "HINT";
+    private final String TEXT_VIEW_TAG = "TEXT-VIEW";
+    private final String DIALOG_TEXT_TAG = "DIALOG-TEXT";
+    private final String IS_MULTILINE_TAG = "IS-MULTILINE";
+    private final String IS_DIALOG_OPEN_TAG = "IS-DIALOG-OPEN";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +54,7 @@ public class MyProfileActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         setContentView(R.layout.my_profile_activity);
 
         mFirstName = (WPTextView) findViewById(R.id.first_name);
@@ -72,6 +88,42 @@ public class MyProfileActivity extends AppCompatActivity {
                         getString(R.string.about_me_hint),
                         mAboutMe,
                         true));
+
+        if (savedInstanceState != null) {
+            mIsDialogOpen = savedInstanceState.getBoolean(IS_DIALOG_OPEN_TAG);
+            if (mIsDialogOpen) {
+                final WPTextView textView = (WPTextView) findViewById(savedInstanceState.getInt(TEXT_VIEW_TAG));
+                String title = savedInstanceState.getString(TITLE_TAG);
+                String hint = savedInstanceState.getString(HINT_TAG);
+                mDialogText = savedInstanceState.getString(DIALOG_TEXT_TAG);
+                boolean isMultiline = savedInstanceState.getBoolean(IS_MULTILINE_TAG);
+
+                DialogUtils.showMyProfileDialog(MyProfileActivity.this, title,
+                        mDialogText, hint, isMultiline, new DialogUtils.Callback() {
+                            @Override
+                            public void onSuccessfulInput(String input) {
+                                updateLabel(textView, input);
+                                updateMyProfileForLabel(textView);
+                                mIsDialogOpen = false;
+                            }
+
+                            @Override
+                            public void onUnSuccessfulInput() {
+                                mIsDialogOpen = false;
+                            }
+
+                            @Override
+                            public void onInputChanged(String input) {
+                                mDialogText = input;
+                            }
+
+                            @Override
+                            public void setDialogState() {
+                                mIsDialogOpen = false;
+                            }
+                        });
+            }
+        }
     }
 
     @Override
@@ -135,12 +187,18 @@ public class MyProfileActivity extends AppCompatActivity {
                                                        final String hint,
                                                        final WPTextView textView,
                                                        final boolean isMultiline) {
+        mDialogTitle = dialogTitle;
+        mHint = hint;
+        mTextView = textView;
+        mIsMultiline = isMultiline;
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mIsDialogOpen = true;
+                mDialogText = textView.getText().toString();
                 DialogUtils.showMyProfileDialog(MyProfileActivity.this,
                         dialogTitle,
-                        textView.getText().toString(),
+                        mDialogText,
                         hint,
                         isMultiline,
                         new DialogUtils.Callback() {
@@ -148,6 +206,22 @@ public class MyProfileActivity extends AppCompatActivity {
                             public void onSuccessfulInput(String input) {
                                 updateLabel(textView, input);
                                 updateMyProfileForLabel(textView);
+                                mIsDialogOpen = false;
+                            }
+
+                            @Override
+                            public void onUnSuccessfulInput() {
+                                mIsDialogOpen = false;
+                            }
+
+                            @Override
+                            public void onInputChanged(String input) {
+                                mDialogText = input;
+                            }
+
+                            @Override
+                            public void setDialogState() {
+                                mIsDialogOpen = false;
                             }
                         });
             }
@@ -174,4 +248,17 @@ public class MyProfileActivity extends AppCompatActivity {
             refreshDetails();
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(TITLE_TAG, mDialogTitle);
+        outState.putString(HINT_TAG, mHint);
+        outState.putInt(TEXT_VIEW_TAG, mTextView.getId());
+        outState.putBoolean(IS_MULTILINE_TAG, mIsMultiline);
+        outState.putString(DIALOG_TEXT_TAG, mDialogText);
+        outState.putBoolean(IS_DIALOG_OPEN_TAG, mIsDialogOpen);
+    }
+
 }
