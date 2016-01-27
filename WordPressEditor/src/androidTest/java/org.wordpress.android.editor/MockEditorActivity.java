@@ -62,6 +62,16 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     }
 
     @Override
+    public void onVideoPressInfoRequested(String videoId) {
+
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        return "";
+    }
+
+    @Override
     public void saveMediaFile(MediaFile mediaFile) {
 
     }

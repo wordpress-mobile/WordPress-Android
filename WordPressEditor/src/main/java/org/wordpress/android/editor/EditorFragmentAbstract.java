@@ -11,6 +11,9 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
@@ -18,6 +21,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
+    public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
     public abstract boolean hasFailedMediaUploads();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
@@ -34,6 +38,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
+
+    protected HashMap<String, String> mCustomHttpHeaders;
 
     @Override
     public void onAttach(Activity activity) {
@@ -83,6 +89,14 @@ public abstract class EditorFragmentAbstract extends Fragment {
         mFeaturedImageId = featuredImageId;
     }
 
+    public void setCustomHttpHeader(String name, String value) {
+        if (mCustomHttpHeaders == null) {
+            mCustomHttpHeaders = new HashMap<>();
+        }
+
+        mCustomHttpHeaders.put(name, value);
+    }
+
     public void setDebugModeEnabled(boolean debugModeEnabled) {
         mDebugModeEnabled = debugModeEnabled;
     }
@@ -113,6 +127,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
         void onFeaturedImageChanged(int mediaId);
+        void onVideoPressInfoRequested(String videoId);
+        String onAuthHeaderRequested(String url);
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
     }

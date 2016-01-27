@@ -12,6 +12,10 @@
     }
 }
 
+video::-webkit-media-controls-fullscreen-button {
+    display: none;
+}
+
 /* Used only on older APIs (API<19), which don't support CSS filter effects (specifically, blur). */
 .edit-container .edit-overlay-bg {
     position: absolute;

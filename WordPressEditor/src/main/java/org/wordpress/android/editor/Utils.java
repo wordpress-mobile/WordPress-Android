@@ -6,19 +6,19 @@ import android.content.res.AssetManager;
 import android.net.Uri;
 
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.HTTPUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Utils {
-
     public static String getHtmlFromFile(Activity activity, String filename) {
         try {
             AssetManager assetManager = activity.getAssets();
@@ -156,24 +155,40 @@ public class Utils {
         return changeMap;
     }
 
-    public static Uri downloadExternalMedia(Context context, Uri imageUri) {
+    public static Uri downloadExternalMedia(Context context, Uri imageUri, Map<String, String> headers) {
         if(context != null && imageUri != null) {
             File cacheDir = null;
 
-            if(context.getApplicationContext() != null) {
+            if (context.getApplicationContext() != null) {
                 cacheDir = context.getCacheDir();
             }
 
             try {
                 InputStream inputStream;
-                if(imageUri.toString().startsWith("content://")) {
+                if (imageUri.toString().startsWith("content://")) {
                     inputStream = context.getContentResolver().openInputStream(imageUri);
-                    if(inputStream == null) {
+                    if (inputStream == null) {
                         AppLog.e(AppLog.T.UTILS, "openInputStream returned null");
                         return null;
                     }
                 } else {
-                    inputStream = (new URL(imageUri.toString())).openStream();
+                    if (headers == null) {
+                        headers = Collections.emptyMap();
+                    }
+
+                    HttpURLConnection conn = HTTPUtils.setupUrlConnection(imageUri.toString(), headers);
+
+                    // If the HTTP response is a redirect, follow it
+                    int responseCode = conn.getResponseCode();
+                    if (responseCode != HttpURLConnection.HTTP_OK) {
+                        if (responseCode == HttpURLConnection.HTTP_MOVED_PERM
+                                || responseCode == HttpURLConnection.HTTP_MOVED_TEMP
+                                || responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
+                            conn = HTTPUtils.setupUrlConnection(conn.getHeaderField("Location"), headers);
+                        }
+                    }
+
+                    inputStream = conn.getInputStream();
                 }
 
                 String fileName = "thumb-" + System.currentTimeMillis();
@@ -183,7 +198,7 @@ public class Utils {
                 byte[] data = new byte[1024];
 
                 int count;
-                while((count = inputStream.read(data)) != -1) {
+                while ((count = inputStream.read(data)) != -1) {
                     output.write(data, 0, count);
                 }
 

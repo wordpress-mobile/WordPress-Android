@@ -163,6 +163,16 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
+    public void onVideoPressInfoRequested(String videoId) {
+
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        return "";
+    }
+
+    @Override
     public void onEditorFragmentInitialized() {
         // arbitrary setup
         mEditorFragment.setFeaturedImageSupported(true);
