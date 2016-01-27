@@ -37,6 +37,8 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="search">Search</string>
     <string name="show">Show</string>
     <string name="hide">Hide</string>
     <string name="select_all">Select all</string>
@@ -393,7 +395,6 @@
     <!-- location -->
     <string name="location">Location</string>
     <string name="location_not_found">Unknown location</string>
-    <string name="remove_location">Remove</string>
     <string name="add_location">Add location</string>
     <string name="current_location">Current location</string>
     <string name="search_current_location">Locate</string>
@@ -878,7 +879,6 @@
     <string name="new_post">New post</string>
     <string name="new_media">New media</string>
     <string name="edit_media">Edit media</string>
-    <string name="menu_search">Search</string>
     <string name="view_site">View site</string>
 
     <!-- Image Alignment -->
