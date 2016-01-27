@@ -400,6 +400,7 @@
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
             android:src="@drawable/gridicon_create_light"
+            android:contentDescription="@string/new_post"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed" />
     </android.support.design.widget.CoordinatorLayout>
