@@ -2,6 +2,8 @@ package org.wordpress.android.ui;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -406,6 +409,14 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+            builder.setSmallIcon(R.drawable.hs__action_download);
+            builder.setContentTitle("WordPress");
+            builder.setContentTitle("Exporting your WordPress site");
+
+            Notification notification = builder.build();
+            Intent resultIntent = new Intent(getApplicationContext(), DownloadManager.class);
+
         }
 
         @Override
