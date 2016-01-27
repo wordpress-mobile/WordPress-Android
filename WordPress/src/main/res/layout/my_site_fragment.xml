@@ -91,11 +91,12 @@
 
             <!--View Site-->
             <FrameLayout
-                android:id="@+id/row_view_site"
                 style="@style/MySiteListRowLayout"
                 android:layout_marginTop="@dimen/my_site_margin_general">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_view_site"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_view_site_icon"
@@ -112,11 +113,11 @@
             </FrameLayout>
 
             <!--Stats-->
-            <FrameLayout
-                android:id="@+id/row_stats"
-                style="@style/MySiteListRowLayout">
+            <FrameLayout style="@style/MySiteListRowLayout">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_stats"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_stats_icon"
@@ -144,11 +145,11 @@
             </LinearLayout>
 
             <!--Blog Posts-->
-            <FrameLayout
-                android:id="@+id/row_blog_posts"
-                style="@style/MySiteListRowLayout">
+            <FrameLayout style="@style/MySiteListRowLayout">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_blog_posts"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_blog_posts_icon"
@@ -175,11 +176,11 @@
             </FrameLayout>
 
             <!--Media-->
-            <FrameLayout
-                android:id="@+id/row_media"
-                style="@style/MySiteListRowLayout">
+            <FrameLayout style="@style/MySiteListRowLayout">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_media"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_media_icon"
@@ -197,10 +198,11 @@
 
             <!--Pages-->
             <FrameLayout
-                android:id="@+id/row_pages"
                 style="@style/MySiteListRowLayout">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_pages"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_pages_icon"
@@ -217,11 +219,11 @@
             </FrameLayout>
 
             <!--Comments-->
-            <FrameLayout
-                android:id="@+id/row_comments"
-                style="@style/MySiteListRowLayout">
+            <FrameLayout style="@style/MySiteListRowLayout">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_comments"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_comments_icon"
@@ -251,11 +253,11 @@
             </LinearLayout>
 
             <!--Themes-->
-            <FrameLayout
-                android:id="@+id/row_themes"
-                style="@style/MySiteListRowLayout">
+            <FrameLayout style="@style/MySiteListRowLayout">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_themes"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_themes_icon"
@@ -285,11 +287,11 @@
             </LinearLayout>
 
             <!--Settings-->
-            <FrameLayout
-                android:id="@+id/row_settings"
-                style="@style/MySiteListRowLayout">
+            <FrameLayout style="@style/MySiteListRowLayout">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_settings"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_settings_icon"
@@ -318,11 +320,12 @@
 
             <!--View Admin-->
             <FrameLayout
-                android:id="@+id/row_admin"
                 style="@style/MySiteListRowLayout"
                 android:layout_marginBottom="@dimen/margin_extra_large">
 
-                <LinearLayout style="@style/MySiteListRowSelectableLayer">
+                <LinearLayout
+                    android:id="@+id/row_admin"
+                    style="@style/MySiteListRowSelectableLayer">
 
                     <ImageView
                         android:id="@+id/my_site_view_admin_icon"

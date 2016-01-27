@@ -250,7 +250,7 @@ public abstract class DualPaneHostFragment extends Fragment implements DualPaneH
 
     private void showContent(Class contentFragmentClass, @Nullable String tag, @Nullable Bundle args, @Nullable Intent
             intent) {
-        if (!DualPaneHelper.isInDualPaneConfiguration(getActivity()) || !isAdded()) return;
+        if (!isAdded() || !DualPaneHelper.isInDualPaneConfiguration(getActivity())) return;
 
         if (contentFragmentClass == null || !Fragment.class.isAssignableFrom(contentFragmentClass)) {
             throw new IllegalArgumentException("You need to pass a Fragment class to showContent() method!");

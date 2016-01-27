@@ -231,13 +231,13 @@
 
     <!--My Site Styles-->
     <style name="MySiteListRowLayout">
+        <item name="android:addStatesFromChildren">true</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="MySiteListRowSelectableLayer">
-        <item name="android:tag">@string/my_site_list_row_selectable_layer_tag</item>
         <item name="android:background">@drawable/my_site_list_row_selector</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">match_parent</item>

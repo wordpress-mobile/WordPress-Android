@@ -120,33 +120,23 @@ public class MySiteFragment extends Fragment implements WPMainActivity.OnScrollT
     }
 
     private void resetRowSelection() {
-        if (getView() == null || !isAdded()) return;
+        if (!isAdded() || getView() == null) return;
 
         View selectedView = getView().findViewById(mSelectedRowViewId);
         if (selectedView != null) {
-            View selectableChildView = selectedView.findViewWithTag(getString(R.string
-                    .my_site_list_row_selectable_layer_tag));
-
-            if (selectableChildView != null) {
-                selectableChildView.setSelected(false);
-            }
+            selectedView.setSelected(false);
         }
         mSelectedRowViewId = 0;
     }
 
     private void selectRow(int rowId) {
-        if (getView() == null || !isAdded()) return;
+        if (!isAdded() || getView() == null) return;
 
         View rowView = getView().findViewById(rowId);
 
         if (rowView != null) {
-            View selectableChildView = rowView.findViewWithTag(getString(R.string
-                    .my_site_list_row_selectable_layer_tag)); //looking for view that we can select
-
-            if (selectableChildView != null) {
-                mSelectedRowViewId = rowView.getId();
-                selectableChildView.setSelected(true);
-            }
+            rowView.setSelected(true);
+            mSelectedRowViewId = rowId;
         }
     }
 
