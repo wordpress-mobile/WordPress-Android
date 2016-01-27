@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:text="@string/stats_widget_promo_title" />
         <org.wordpress.android.widgets.WPTextView
-            android:textColor="@color/grey_darken_30"
+            android:textColor="@color/grey_darken_20"
             android:textSize="@dimen/text_sz_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         android:gravity="right|end">
         <Button
             style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
-            android:textColor="@color/stats_link_text_color"
+            android:textColor="@color/blue_medium"
             android:layout_width="wrap_content"
             android:padding="8dp"
             android:minWidth="64dp"
