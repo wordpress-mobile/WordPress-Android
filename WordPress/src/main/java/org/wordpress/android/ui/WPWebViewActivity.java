@@ -94,7 +94,7 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
-    private String exportUrl;
+    private DownloadContentHeader mDownloadContentHeader;
 
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
         openWPCOMURL(context, url, user);
@@ -357,7 +357,8 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
     public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
         exportUrl = url;
         if (PermissionUtils.checkAndRequestStoragePermission(this, EXTERNAL_WRITE_STORAGE_REQUEST_CODE)) {
-            downloadURL();
+            mDownloadContentHeader = new DownloadContentHeader(url, contentDisposition, mimetype);
+            new DownloadExportFileTask().execute();
         }
     }
 
@@ -372,47 +373,50 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
                         return;
                     }
                 }
-                downloadURL();
+
+                new DownloadExportFileTask().execute();
                 break;
             default:
                 break;
         }
     }
 
-    private void downloadURL() {
-        new DownloadExportFileTask().execute(exportUrl);
+    private class DownloadContentHeader {
+        String url;
+        String contentDisposition;
+        String mimeType;
 
+        DownloadContentHeader(String url, String contentDisposition, String mimetype) {
+            this.url = url;
+            this.contentDisposition = contentDisposition;
+            this.mimeType = mimetype;
+        }
 
-//        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(exportUrl));
-//        request.allowScanningByMediaScanner();
-//        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-//        request.setMimeType("text/xml");
-//        request.setTitle("yup");
-//        request.setDescription("WordPress backup");
-//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "dd");
-//        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-//        dm.enqueue(request);
-//        Toast.makeText(this, "Downloading File", //To notify the Client that the file is being downloaded
-//                Toast.LENGTH_LONG).show();
+        public String fileNameFromDisposition() {
+            String[] split = contentDisposition.split("filename=");
+            if (split.length > 1) {
+                return split[1];
+            } else {
+                return "WordPress.xml";
+            }
+        }
     }
 
-    class DownloadExportFileTask extends AsyncTask<String, Void, Void> {
-        private DownloadManager downloadManager;
+    private class DownloadExportFileTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         }
 
         @Override
-        protected Void doInBackground(String... exportUrls) {
+        protected Void doInBackground(Void... params) {
             try {
-                URL url = new URL(exportUrl);
+                URL url = new URL(mDownloadContentHeader.url);
+
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.connect();
-                File SDCardRoot = Environment.getExternalStorageDirectory();
-                File file = new File(SDCardRoot, "Downloadsxx.xml");
+
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), mDownloadContentHeader.fileNameFromDisposition());
 
                 FileOutputStream fileOutput = new FileOutputStream(file);
                 InputStream inputStream = urlConnection.getInputStream();
@@ -424,13 +428,12 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
                 while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
                     //add the data in the buffer to the file in the file output stream (the file on the sd card
                     fileOutput.write(buffer, 0, bufferLength);
-
                 }
                 //close the output stream when done
                 fileOutput.close();
 
-                downloadManager.addCompletedDownload("Downloa", "Yuppers", true, "string/xml", file.getPath(), file.length(), true);
-
+                DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                downloadManager.addCompletedDownload(mDownloadContentHeader.fileNameFromDisposition(), "WordPress.com export file", true, mDownloadContentHeader.mimeType, file.getPath(), file.length(), true);
             } catch (java.io.IOException e) {
                 e.printStackTrace();
             }
