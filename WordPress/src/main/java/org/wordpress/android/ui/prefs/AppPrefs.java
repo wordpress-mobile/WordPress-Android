@@ -47,8 +47,8 @@ public class AppPrefs {
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
 
-        // Store if the Stats Widget promo was previously displayed to the user
-        STATS_WIDGET_PROMO_SHOWN,
+        // Store the number of times Stats are loaded fine before the Widget promo is displayed to the user
+        STATS_WIDGET_PROMO_ANALYTICS,
     }
 
     /**
@@ -258,12 +258,16 @@ public class AppPrefs {
         }
     }
 
-    // Store whether the Stats Widget promo was previously shown to the user
-    public static boolean isStatsWidgetPromoDisplayed() {
-        return getBoolean(DeletablePrefKey.STATS_WIDGET_PROMO_SHOWN, false);
+    // Store the number of times Stats are loading successfully before showing the Promo Dialog
+    public static void bumpAnalyticsForStatsWidgetPromo() {
+        int current = getAnalyticsForStatsWidgetPromo();
+        setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, current + 1);
     }
-    public static void setStatsWidgetPromoDisplayed(boolean displayed) {
-        //setBoolean(DeletablePrefKey.STATS_WIDGET_PROMO_SHOWN, displayed); // TODO: enable this
-        setBoolean(DeletablePrefKey.STATS_WIDGET_PROMO_SHOWN, false);
+    //TODO remove
+    public static void setAnalyticsForStatsWidgetPromo(int number) {
+        setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, number);
+    }
+    public static int getAnalyticsForStatsWidgetPromo() {
+        return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 }

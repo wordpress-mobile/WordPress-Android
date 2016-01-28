@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -73,6 +74,7 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
     private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
+    private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
 
     private Spinner mSpinner;
     private ScrollViewExt mOuterScrollView;
@@ -100,8 +102,7 @@ public class StatsActivity extends AppCompatActivity
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
 
-    // Shortcut to the App Preference that holds if the Stats Widget was previously displayed to the user.
-    private boolean mShouldDisplayStatsWidgetPromo = true;
+    private boolean mThereWasAnErrorLoadingStats = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,7 @@ public class StatsActivity extends AppCompatActivity
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
+            mThereWasAnErrorLoadingStats = savedInstanceState.getBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS);
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
             if(yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
@@ -274,9 +276,6 @@ public class StatsActivity extends AppCompatActivity
             AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_ACCESSED, currentBlog);
             trackStatsAnalytics();
         }
-
-        // Check if we should show the widget promo later
-        mShouldDisplayStatsWidgetPromo = !AppPrefs.isStatsWidgetPromoDisplayed();
     }
 
     private void trackStatsAnalytics() {
@@ -345,6 +344,7 @@ public class StatsActivity extends AppCompatActivity
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
+        outState.putBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS, mThereWasAnErrorLoadingStats);
         if (mOuterScrollView.getScrollY() != 0) {
             outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
         }
@@ -795,6 +795,27 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
+    private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
+        if (mIsUpdatingStats || mThereWasAnErrorLoadingStats) {
+            // Do nothing in case of errors or when it's still loading
+            return;
+        }
+
+        // Bump analytics that drives the Promo widget when the loading is completed without errors.
+        AppPrefs.bumpAnalyticsForStatsWidgetPromo();
+
+        // Should we display the widget promo?
+        String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
+        if (StringUtils.isEmpty(prevWidgetKeysString)) {
+            // No widget on the screen.
+            int counter =  AppPrefs.getAnalyticsForStatsWidgetPromo();
+            if (counter == 3 || counter == 1000 || counter == 10000) {
+                DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
+                newFragment.show(getFragmentManager(), "promote_widget_dialog");
+            }
+        }
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
         if (isFinishing() || !mIsInFront) {
@@ -803,12 +824,8 @@ public class StatsActivity extends AppCompatActivity
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
         mIsUpdatingStats = event.mUpdating;
 
-        // Should we display the widget promo?
-        if (!mIsUpdatingStats && mShouldDisplayStatsWidgetPromo) {
-            AppPrefs.setStatsWidgetPromoDisplayed(true);
-            mShouldDisplayStatsWidgetPromo = false;
-            DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
-            newFragment.show(getFragmentManager(), "promote_widget_dialog");
+        if (!mIsUpdatingStats && !mThereWasAnErrorLoadingStats) {
+            bumpPromoAnaylticsAndShowPromoDialogIfNecessary();
         }
     }
 
@@ -837,23 +854,13 @@ public class StatsActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdateError event) {
-        // There was an error loading Stats. Don't show the promo widget dialog.
+        // There was an error loading Stats. Don't bump stats for promo widget.
         if (isFinishing() || !mIsInFront) {
             return;
         }
 
-        if (!mShouldDisplayStatsWidgetPromo) {
-            // no need to go further here. The stats widget promo dialog must not be shown.
-            return;
-        }
-
-        // Check if the user hasn't changed blog.
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-        if (currentBlog == null || event.mRequestBlogId.equals(currentBlog.getDotComBlogId())) {
-            mShouldDisplayStatsWidgetPromo = false;
-        } else {
-            mShouldDisplayStatsWidgetPromo = true;
-        }
+        // There was an error loading Stats. Don't bump stats for promo widget.
+        mThereWasAnErrorLoadingStats = true;
     }
 
     @SuppressWarnings("unused")
@@ -862,13 +869,13 @@ public class StatsActivity extends AppCompatActivity
             return;
         }
 
+        // There was an error loading Stats. Don't bump stats for promo widget.
+        mThereWasAnErrorLoadingStats = true;
+
         if (event.mLocalBlogId != mLocalBlogID) {
             // The user has changed blog
             return;
         }
-
-        // There was an error loading Stats. Don't show the promo widget dialog.
-        mShouldDisplayStatsWidgetPromo = false;
 
         mSwipeToRefreshHelper.setRefreshing(false);
         startWPComLoginActivity();
