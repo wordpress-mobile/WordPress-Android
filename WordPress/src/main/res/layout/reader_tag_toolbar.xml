@@ -39,6 +39,7 @@
         android:layout_centerVertical="true"
         android:background="?android:selectableItemBackground"
         android:padding="@dimen/margin_large"
+        android:contentDescription="@string/reader_menu_tags"
         android:src="@drawable/my_site_icon_settings" />
 
 </RelativeLayout>
