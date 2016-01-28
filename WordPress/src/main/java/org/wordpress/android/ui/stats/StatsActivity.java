@@ -785,7 +785,7 @@ public class StatsActivity extends AppCompatActivity
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            Button btn = (Button)view.findViewById(R.id.got_it_btn);
+            Button btn = (Button)view.findViewById(R.id.stats_widget_promo_got_it_btn);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Calypso.AlertDialog"
-    android:id="@+id/dialog_outer_container"
     android:layout_width="280dp"
+    android:padding="0dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/gravatar_placeholder" />
+        android:src="@drawable/stats_widget_promo_header" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,12 +19,11 @@
         <org.wordpress.android.widgets.WPTextView
             style="@style/StatsModuleTitle"
             android:textSize="@dimen/text_sz_large"
-            android:layout_width="wrap_content"
             android:text="@string/stats_widget_promo_title" />
         <org.wordpress.android.widgets.WPTextView
             android:textColor="@color/grey_darken_20"
             android:textSize="@dimen/text_sz_medium"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:text="@string/stats_widget_promo_desc" />
@@ -44,7 +42,7 @@
             android:minWidth="64dp"
             android:text="@string/stats_widget_promo_ok_btn_label"
             android:layout_height="36dp"
-            android:id="@+id/got_it_btn" />
+            android:id="@+id/stats_widget_promo_got_it_btn" />
     </LinearLayout>
 
 </LinearLayout>
