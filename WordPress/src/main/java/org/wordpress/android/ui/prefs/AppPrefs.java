@@ -47,7 +47,7 @@ public class AppPrefs {
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
 
-        // Store the number of times Stats are loaded fine before the Widget promo is displayed to the user
+        // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
         STATS_WIDGET_PROMO_ANALYTICS,
     }
 
@@ -262,10 +262,6 @@ public class AppPrefs {
     public static void bumpAnalyticsForStatsWidgetPromo() {
         int current = getAnalyticsForStatsWidgetPromo();
         setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, current + 1);
-    }
-    //TODO remove
-    public static void setAnalyticsForStatsWidgetPromo(int number) {
-        setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, number);
     }
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);

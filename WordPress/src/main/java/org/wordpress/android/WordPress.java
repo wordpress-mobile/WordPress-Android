@@ -229,8 +229,6 @@ public class WordPress extends Application {
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
         }
         AppPrefs.setLastAppVersionCode(versionCode);
-
-        AppPrefs.setAnalyticsForStatsWidgetPromo(0);
     }
 
     /**
