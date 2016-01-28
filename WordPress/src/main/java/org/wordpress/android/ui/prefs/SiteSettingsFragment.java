@@ -50,6 +50,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -85,6 +86,8 @@ public class SiteSettingsFragment extends PreferenceFragment
      * is set to this value and {@link Activity#finish()} is invoked.
      */
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
+
+    public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     /**
      * Used to move the Uncategorized category to the beginning of the category list.
@@ -644,7 +647,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showDeleteSiteDialog() {
         Bundle args = new Bundle();
-        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, mBlog.getURLHost());
+        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, UrlUtils.getDomainFromUrl(mBlog.getHomeURL()));
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
         deleteSiteDialogFragment.setArguments(args);
         deleteSiteDialogFragment.setTargetFragment(this, DELETE_SITE_REQUEST_CODE);
@@ -797,7 +800,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
 
         if (!newValue.equals(pref.getSummary())) {
-            String formattedValue = StringUtils.unescapeHTML(newValue.replaceFirst(Blog.ADDRESS_FORMAT_REGEX, ""));
+            String formattedValue = StringUtils.unescapeHTML(newValue.replaceFirst(ADDRESS_FORMAT_REGEX, ""));
 
             pref.setText(formattedValue);
             pref.setSummary(formattedValue);

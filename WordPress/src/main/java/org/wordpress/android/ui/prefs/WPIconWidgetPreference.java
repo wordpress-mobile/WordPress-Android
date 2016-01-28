@@ -66,7 +66,7 @@ public class WPIconWidgetPreference extends WPPreference {
         if (view.findViewById(R.id.domain) != null) {
             TextView textView = (TextView) view.findViewById(R.id.domain);
             Blog blog = WordPress.getCurrentBlog();
-            textView.setText(blog.getURLHost());
+            textView.setText(blog.getWordPressComHost());
         }
     }
 }

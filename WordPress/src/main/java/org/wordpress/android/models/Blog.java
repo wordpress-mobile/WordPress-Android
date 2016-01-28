@@ -22,7 +22,6 @@ public class Blog {
      *
      * Used to format user-facing {@link String}s.
      */
-    public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     private int localTableBlogId;
     private String url;
@@ -124,12 +123,6 @@ public class Blog {
         }
     }
 
-    public String getURLHost() {
-        try {
-            URI uri = new URI(getUrl());
-            return  uri.getHost();
-        } catch (URISyntaxException e) {
-            return StringUtils.unescapeHTML(getHomeURL().replaceFirst(ADDRESS_FORMAT_REGEX, ""));
     public String getWordPressComHost() {
         if (WPUrlUtils.isWordPressCom(getHomeURL())) {
             return UrlUtils.getDomainFromUrl(getHomeURL());
