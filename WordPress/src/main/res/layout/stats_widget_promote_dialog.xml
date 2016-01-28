@@ -1,49 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="280dp"
-    android:padding="0dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:orientation="vertical">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/stats_widget_promo_header" />
-
+    android:layout_width="wrap_content">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
+        android:padding="0dp"
         android:layout_height="wrap_content"
-        android:padding="24dp"
+        android:layout_gravity="center"
         android:orientation="vertical">
-        <org.wordpress.android.widgets.WPTextView
-            style="@style/StatsModuleTitle"
-            android:textSize="@dimen/text_sz_large"
-            android:text="@string/stats_widget_promo_title" />
-        <org.wordpress.android.widgets.WPTextView
-            android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/text_sz_medium"
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/stats_widget_promo_header" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:text="@string/stats_widget_promo_desc" />
-    </LinearLayout>
+            android:padding="24dp"
+            android:orientation="vertical">
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/StatsModuleTitle"
+                android:textSize="@dimen/text_sz_large"
+                android:text="@string/stats_widget_promo_title" />
+            <org.wordpress.android.widgets.WPTextView
+                android:textColor="@color/grey_darken_20"
+                android:textSize="@dimen/text_sz_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="@string/stats_widget_promo_desc" />
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:padding="8dp"
-        android:gravity="right|end">
-        <Button
-            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
-            android:textColor="@color/blue_medium"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
             android:padding="8dp"
-            android:minWidth="64dp"
-            android:text="@string/stats_widget_promo_ok_btn_label"
-            android:layout_height="36dp"
-            android:id="@+id/stats_widget_promo_got_it_btn" />
+            android:gravity="right|end">
+            <Button
+                style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                android:textColor="@color/blue_medium"
+                android:layout_width="wrap_content"
+                android:padding="8dp"
+                android:minWidth="64dp"
+                android:text="@string/stats_widget_promo_ok_btn_label"
+                android:layout_height="36dp"
+                android:id="@+id/stats_widget_promo_got_it_btn" />
+        </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
 

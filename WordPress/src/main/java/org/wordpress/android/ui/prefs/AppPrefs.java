@@ -258,7 +258,7 @@ public class AppPrefs {
         }
     }
 
-    // Store the number of times Stats are loading successfully before showing the Promo Dialog
+    // Store the number of times Stats are loaded successfully before showing the Promo Dialog
     public static void bumpAnalyticsForStatsWidgetPromo() {
         int current = getAnalyticsForStatsWidgetPromo();
         setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, current + 1);

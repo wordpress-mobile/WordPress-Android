@@ -801,18 +801,19 @@ public class StatsActivity extends AppCompatActivity
             return;
         }
 
+        if (!StringUtils.isEmpty(AppPrefs.getStatsWidgetsKeys())) {
+            // Stats widgets already used!!
+            return;
+        }
+
         // Bump analytics that drives the Promo widget when the loading is completed without errors.
         AppPrefs.bumpAnalyticsForStatsWidgetPromo();
 
         // Should we display the widget promo?
-        String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
-        if (StringUtils.isEmpty(prevWidgetKeysString)) {
-            // No widget on the screen.
-            int counter =  AppPrefs.getAnalyticsForStatsWidgetPromo();
-            if (counter == 3 || counter == 1000 || counter == 10000) {
-                DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
-                newFragment.show(getFragmentManager(), "promote_widget_dialog");
-            }
+        int counter =  AppPrefs.getAnalyticsForStatsWidgetPromo();
+        if (counter == 3 || counter == 1000 || counter == 10000) {
+            DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
+            newFragment.show(getFragmentManager(), "promote_widget_dialog");
         }
     }
 
@@ -825,6 +826,7 @@ public class StatsActivity extends AppCompatActivity
         mIsUpdatingStats = event.mUpdating;
 
         if (!mIsUpdatingStats && !mThereWasAnErrorLoadingStats) {
+            // Do not bump promo analytics or show the dialog in case of errors or when it's still loading
             bumpPromoAnaylticsAndShowPromoDialogIfNecessary();
         }
     }
