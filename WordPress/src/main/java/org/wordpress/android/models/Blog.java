@@ -10,6 +10,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -128,6 +130,11 @@ public class Blog {
             return  uri.getHost();
         } catch (URISyntaxException e) {
             return StringUtils.unescapeHTML(getHomeURL().replaceFirst(ADDRESS_FORMAT_REGEX, ""));
+    public String getWordPressComHost() {
+        if (WPUrlUtils.isWordPressCom(getHomeURL())) {
+            return UrlUtils.getDomainFromUrl(getHomeURL());
+        } else {
+            return UrlUtils.getDomainFromUrl(getUrl());
         }
     }
 
