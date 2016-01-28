@@ -33,6 +33,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
+    private static final String ARG_REST_RESPONSE_FOLLOWERS_EMAIL = "ARG_REST_RESPONSE_FOLLOWERS_EMAIL";
     private final Map<String, Integer> userBlogs = new HashMap<>();
 
     @Override
@@ -59,14 +60,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX)) {
-                mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
-            }
-        } else {
-            // first time it's created
-            mTopPagerSelectedButtonIndex = getArguments().getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
-        }
 
         // Single background thread used to create the blogs list in BG
         ThreadPoolExecutor blogsListCreatorExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
@@ -88,11 +81,61 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         });
     }
 
+    private FollowersModel mFollowersWPCOM;
+    private FollowersModel mFollowersEmail;
+
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
-        outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
-        super.onSaveInstanceState(outState);
+    protected boolean hasDataAvailable() {
+        return mFollowersWPCOM != null || mFollowersEmail != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (mFollowersWPCOM != null) {
+            outState.putSerializable(ARG_REST_RESPONSE, mFollowersWPCOM);
+        }
+        if (mFollowersEmail != null) {
+            outState.putSerializable(ARG_REST_RESPONSE_FOLLOWERS_EMAIL, mFollowersEmail);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mFollowersWPCOM = (FollowersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE_FOLLOWERS_EMAIL)) {
+            mFollowersEmail = (FollowersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_FOLLOWERS_EMAIL);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.FollowersWPCOMUdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        mFollowersWPCOM = event.mFollowers;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.FollowersEmailUdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        mFollowersEmail = event.mFollowers;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mFollowersWPCOM = null;
+        mFollowersEmail = null;
+        showErrorUI(event.mError);
     }
 
     @Override
@@ -101,21 +144,16 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             return;
         }
 
-        mTopPagerContainer.setVisibility(View.VISIBLE);
-        mTotalsLabel.setVisibility(View.VISIBLE);
-
-        if (mDatamodels == null) {
+        if (!hasDataAvailable()) {
             showHideNoResultsUI(true);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
             return;
         }
 
-        if (isErrorResponse()) {
-            showErrorUI();
-            return;
-        }
+        mTotalsLabel.setVisibility(View.VISIBLE);
 
-        final FollowersModel followersModel = (FollowersModel) mDatamodels[mTopPagerSelectedButtonIndex];
+        final FollowersModel followersModel = getCurrentDataModel();
+
         if (followersModel != null && followersModel.getFollowers() != null &&
                 followersModel.getFollowers().size() > 0) {
             ArrayAdapter adapter = new DotComFollowerAdapter(getActivity(), followersModel.getFollowers());
@@ -153,7 +191,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 setNavigationButtonsEnabled(false);
                                 refreshStats(
                                         followersModel.getPage() - 1,
-                                        new StatsService.StatsEndpointsEnum[]{getSectionsToUpdate()[mTopPagerSelectedButtonIndex]}
+                                        new StatsService.StatsEndpointsEnum[]{sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
                                 );
                             }
                         };
@@ -173,7 +211,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 setNavigationButtonsEnabled(false);
                                 refreshStats(
                                         followersModel.getPage() + 1,
-                                        new StatsService.StatsEndpointsEnum[]{getSectionsToUpdate()[mTopPagerSelectedButtonIndex]}
+                                        new StatsService.StatsEndpointsEnum[]{sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
                                 );
                             }
                         };
@@ -202,6 +240,13 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             mBottomPaginationContainer.setVisibility(View.GONE);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
         }
+
+        // Always visible. Even if the current tab is empty, otherwise the user can't switch tab
+        mTopPagerContainer.setVisibility(View.VISIBLE);
+    }
+
+    private FollowersModel getCurrentDataModel() {
+        return mTopPagerSelectedButtonIndex == 0 ? mFollowersWPCOM : mFollowersEmail;
     }
 
     private void setNavigationBackButtonsVisibility(boolean visible) {
@@ -223,10 +268,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (isDataEmpty()) {
+        if (!hasDataAvailable()) {
             return false;
         }
-        FollowersModel followersModel = (FollowersModel) mDatamodels[mTopPagerSelectedButtonIndex];
+        FollowersModel followersModel = getCurrentDataModel();
         return !(followersModel == null || followersModel.getFollowers() == null
                 || followersModel.getFollowers().size() < MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
 
@@ -391,7 +436,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.FOLLOWERS_WPCOM, StatsService.StatsEndpointsEnum.FOLLOWERS_EMAIL
         };
