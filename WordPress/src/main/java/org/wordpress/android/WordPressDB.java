@@ -241,7 +241,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
         SiteSettingsTable.createTable(db);
-        MenusTable.createTable(db);
+        MenusTable.createMenusTables(db);
         CommentTable.createTables(db);
         SuggestionTable.createTables(db);
 

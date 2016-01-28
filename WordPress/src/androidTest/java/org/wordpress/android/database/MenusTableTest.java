@@ -1,19 +1,23 @@
 package org.wordpress.android.database;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 
 import org.wordpress.android.TestUtils;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenusTable;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.util.DatabaseUtils;
 
 public class MenusTableTest extends InstrumentationTestCase {
     private static final String CONTEXT_RENAME_PREFIX = "test_";
     private static final String DB_FILE_NAME = "taliwutt-blogs-sample.sql";
 
+    private static final long INVALID_ID = -1;
     private static final long TEST_ID = 1;
     private static final String TEST_NAME = "MenusTableTestName";
     private static final String TEST_DETAILS = "MenusTableTestDetails";
@@ -31,6 +35,18 @@ public class MenusTableTest extends InstrumentationTestCase {
         TestUtils.loadDBFromDump(mTargetContext, mTestContext, DB_FILE_NAME);
     }
 
+    public void testDeleteTables() {
+        SQLiteDatabase db = WordPress.wpDB.getDatabase();
+        assertTrue(DatabaseUtils.doesTableExist(db, MenuModel.MENUS_TABLE_NAME));
+        assertTrue(DatabaseUtils.doesTableExist(db, MenuItemModel.MENU_ITEMS_TABLE_NAME));
+        assertTrue(DatabaseUtils.doesTableExist(db, MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
+        MenusTable.deleteMenusTables();
+        assertFalse(DatabaseUtils.doesTableExist(db, MenuModel.MENUS_TABLE_NAME));
+        assertFalse(DatabaseUtils.doesTableExist(db, MenuItemModel.MENU_ITEMS_TABLE_NAME));
+        assertFalse(DatabaseUtils.doesTableExist(db, MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
+        MenusTable.createMenusTables(db);
+    }
+
     public void testUniqueTableNames() {
         assertFalse(MenuModel.MENUS_TABLE_NAME.equals(MenuItemModel.MENU_ITEMS_TABLE_NAME));
         assertFalse(MenuModel.MENUS_TABLE_NAME.equals(MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
@@ -38,15 +54,15 @@ public class MenusTableTest extends InstrumentationTestCase {
     }
 
     public void testInvalidMenuLocation() {
-        assertNull(MenusTable.getMenuLocationFromId(-1));
+        assertNull(MenusTable.getMenuLocationFromId(INVALID_ID));
     }
 
     public void testInvalidMenu() {
-        assertNull(MenusTable.getMenuForMenuId(-1));
+        assertNull(MenusTable.getMenuFromId(INVALID_ID));
     }
 
     public void testInvalidMenuItem() {
-        assertNull(MenusTable.getMenuItemForId(-1));
+        assertNull(MenusTable.getMenuItemFromId(INVALID_ID));
     }
 
     public void testSaveLoadMenuLocation() {
@@ -63,7 +79,7 @@ public class MenusTableTest extends InstrumentationTestCase {
     public void testSaveLoadMenu() {
         MenuModel testMenu = getTestMenu();
         assertTrue(MenusTable.saveMenu(testMenu));
-        MenuModel savedMenu = MenusTable.getMenuForMenuId(testMenu.menuId);
+        MenuModel savedMenu = MenusTable.getMenuFromId(testMenu.menuId);
         assertEquals(testMenu.menuId, savedMenu.menuId);
         assertEquals(testMenu.name, savedMenu.name);
         assertEquals(testMenu.details, savedMenu.details);
@@ -74,7 +90,7 @@ public class MenusTableTest extends InstrumentationTestCase {
     public void testSaveLoadMenuItem() {
         MenuItemModel testItem = getTestMenuItem();
         assertTrue(MenusTable.saveMenuItem(testItem));
-        MenuItemModel savedItem = MenusTable.getMenuItemForId(testItem.itemId);
+        MenuItemModel savedItem = MenusTable.getMenuItemFromId(testItem.itemId);
         assertNotNull(savedItem);
         assertEquals(testItem.itemId, savedItem.itemId);
         assertEquals(testItem.contentId, savedItem.contentId);

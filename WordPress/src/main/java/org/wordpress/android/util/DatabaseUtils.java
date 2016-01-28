@@ -1,7 +1,9 @@
 package org.wordpress.android.util;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.List;
 
@@ -14,6 +16,20 @@ public class DatabaseUtils {
      */
     public static String where(String column) {
         return "WHERE " + column + "=?";
+    }
+
+    public static String where(String column, String value) {
+        return "WHERE " + column + "='" + value + "'";
+    }
+
+    public static boolean doesTableExist(SQLiteDatabase db, String tableName) {
+        if (db == null || TextUtils.isEmpty(tableName)) return false;
+
+        Cursor cursor = db.rawQuery("SELECT * FROM SQLITE_MASTER " + where("TBL_NAME", tableName), null);
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+
+        return exists;
     }
 
     /**
