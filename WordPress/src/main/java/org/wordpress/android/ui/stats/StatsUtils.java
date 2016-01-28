@@ -11,18 +11,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
+import org.wordpress.android.ui.stats.models.BaseStatsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
@@ -49,12 +50,13 @@ import java.util.concurrent.TimeUnit;
 public class StatsUtils {
     @SuppressLint("SimpleDateFormat")
     private static long toMs(String date, String pattern) {
-        if (date == null) {
+        if (date == null || date.equals("null")) {
+            AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
             return -1;
         }
 
         if (pattern == null) {
-            AppLog.w(T.UTILS, "Trying to parse with a null pattern");
+            AppLog.w(T.UTILS, "Trying to parse a Stats date with a null pattern");
             return -1;
         }
 
@@ -336,9 +338,9 @@ public class StatsUtils {
         }
     }
 
-    public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
+    public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
             throws JSONException {
-        Serializable model = null;
+        BaseStatsModel model = null;
         switch (endpointName) {
             case VISITS:
                 model = new VisitsModel(blogID, response);
@@ -395,7 +397,7 @@ public class StatsUtils {
                 model = new InsightsLatestPostModel(blogID, response);
                 break;
             case INSIGHTS_LATEST_POST_VIEWS:
-                model = response.getInt("views");
+                model = new InsightsLatestPostDetailsModel(blogID, response);
                 break;
         }
         return model;

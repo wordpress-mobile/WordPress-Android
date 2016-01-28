@@ -65,6 +65,7 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_small"
+            android:contentDescription="@string/add"
             android:src="@drawable/reader_follow" />
 
     </LinearLayout>
