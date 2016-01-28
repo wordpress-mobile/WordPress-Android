@@ -761,8 +761,7 @@ public class StatsActivity extends AppCompatActivity
     public static class StatsWidgetPromoDialogFragment extends DialogFragment {
 
         public static StatsWidgetPromoDialogFragment newInstance() {
-            StatsWidgetPromoDialogFragment frag = new StatsWidgetPromoDialogFragment();
-            return frag;
+            return new StatsWidgetPromoDialogFragment();
         }
 
         @Override
