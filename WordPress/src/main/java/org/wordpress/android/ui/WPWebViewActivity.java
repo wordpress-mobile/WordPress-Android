@@ -358,10 +358,22 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
 
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-        exportUrl = url;
         if (PermissionUtils.checkAndRequestStoragePermission(this, EXTERNAL_WRITE_STORAGE_REQUEST_CODE)) {
-            mDownloadContentHeader = new DownloadContentHeader(url, contentDisposition, mimetype);
-            new DownloadExportFileTask().execute();
+//            mDownloadContentHeader = new DownloadContentHeader(url, contentDisposition, mimetype);
+//            new DownloadExportFileTask().execute();
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+            request.allowScanningByMediaScanner();
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+            request.setMimeType(mimetype);
+            request.setTitle("yup.xml");
+            request.setDescription("WordPress backup");
+            request.addRequestHeader("Authentication", "Bearer " + AccountHelper.getDefaultAccount().getAccessToken());
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "");
+            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            dm.enqueue(request);
+            Toast.makeText(this, "Downloading File", //To notify the Client that the file is being downloaded
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -417,6 +429,11 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
             Notification notification = builder.build();
             Intent resultIntent = new Intent(getApplicationContext(), DownloadManager.class);
 
+
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+            mNotificationManager.notify(0, builder.build());
         }
 
         @Override
