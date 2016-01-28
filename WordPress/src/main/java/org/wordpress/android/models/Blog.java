@@ -122,9 +122,9 @@ public class Blog {
         }
     }
 
-    public String getHomeURLHost() {
+    public String getURLHost() {
         try {
-            URI uri = new URI(getHomeURL());
+            URI uri = new URI(getUrl());
             return  uri.getHost();
         } catch (URISyntaxException e) {
             return StringUtils.unescapeHTML(getHomeURL().replaceFirst(ADDRESS_FORMAT_REGEX, ""));

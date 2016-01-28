@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -43,8 +42,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -56,8 +53,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -649,7 +644,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showDeleteSiteDialog() {
         Bundle args = new Bundle();
-        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, mBlog.getHomeURLHost());
+        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, mBlog.getURLHost());
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
         deleteSiteDialogFragment.setArguments(args);
         deleteSiteDialogFragment.setTargetFragment(this, DELETE_SITE_REQUEST_CODE);
