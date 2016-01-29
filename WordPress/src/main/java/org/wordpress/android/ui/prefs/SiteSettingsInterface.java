@@ -282,11 +282,6 @@ public abstract class SiteSettingsInterface {
         return mSettings.postFormats;
     }
 
-    public @NonNull String[] getFormatKeys() {
-        if (mSettings.postFormatKeys == null) mSettings.postFormatKeys = new String[0];
-        return mSettings.postFormatKeys;
-    }
-
     public @NonNull CategoryModel[] getCategories() {
         if (mSettings.categories == null) mSettings.categories = new CategoryModel[0];
         return mSettings.categories;
@@ -369,6 +364,10 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getCloseAfterDescription(int period) {
         if (mActivity == null) return "";
 
+        if (!getShouldCloseAfter()) {
+            return mActivity.getString(R.string.never);
+        }
+
         if (period == 0) return mActivity.getString(R.string.never);
         return mActivity.getResources().getQuantityString(R.plurals.days_quantity, period, period);
     }
@@ -418,8 +417,12 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getPagingDescription() {
         if (mActivity == null) return "";
 
+        if (!getShouldPageComments()) {
+            return mActivity.getString(R.string.disabled);
+        }
+
         int count = getPagingCount();
-        if (count == 0) return mActivity.getString(R.string.none);
+        if (count == 0) return mActivity.getString(R.string.disabled);
         return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }
 
@@ -768,8 +771,7 @@ public abstract class SiteSettingsInterface {
                     }
                     mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
                     String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
-                    mRemoteSettings.postFormatKeys = mRemoteSettings.postFormats.keySet().toArray(formatKeys);
-                    mSettings.postFormatKeys = mRemoteSettings.postFormatKeys.clone();
+                    SiteSettingsTable.saveSettings(mSettings);
 
                     notifyUpdatedOnUiThread(null);
                 }

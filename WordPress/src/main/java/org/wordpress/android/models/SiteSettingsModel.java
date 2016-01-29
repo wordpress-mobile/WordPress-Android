@@ -106,7 +106,6 @@ public class SiteSettingsModel {
     public CategoryModel[] categories;
     public String defaultPostFormat;
     public Map<String, String> postFormats;
-    public String[] postFormatKeys;
     public boolean showRelatedPosts;
     public boolean showRelatedPostHeader;
     public boolean showRelatedPostImages;
@@ -203,8 +202,12 @@ public class SiteSettingsModel {
         commentsRequireUserAccount = other.commentsRequireUserAccount;
         commentAutoApprovalKnownUsers = other.commentAutoApprovalKnownUsers;
         maxLinks = other.maxLinks;
-        holdForModeration = new ArrayList<>(other.holdForModeration);
-        blacklist = new ArrayList<>(other.blacklist);
+        if (other.holdForModeration != null) {
+            holdForModeration = new ArrayList<>(other.holdForModeration);
+        }
+        if (other.blacklist != null) {
+            blacklist = new ArrayList<>(other.blacklist);
+        }
     }
 
     /**
@@ -244,8 +247,12 @@ public class SiteSettingsModel {
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
         holdForModeration = new ArrayList<>();
         blacklist = new ArrayList<>();
-        Collections.addAll(holdForModeration, moderationKeys.split("\n"));
-        Collections.addAll(blacklist, blacklistKeys.split("\n"));
+        if (!TextUtils.isEmpty(moderationKeys)) {
+            Collections.addAll(holdForModeration, moderationKeys.split("\n"));
+        }
+        if (!TextUtils.isEmpty(blacklistKeys)) {
+            Collections.addAll(blacklist, blacklistKeys.split("\n"));
+        }
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
