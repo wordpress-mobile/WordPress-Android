@@ -179,6 +179,7 @@
         <item>de</item>
         <item>el</item>
         <item>es</item>
+        <item>es_CL</item>
         <item>fr</item>
         <item>gd</item>
         <item>hi</item>
@@ -187,7 +188,6 @@
         <item>it</item>
         <item>ja</item>
         <item>ko</item>
-        <item>nb</item>
         <item>nl</item>
         <item>pl</item>
         <item>ru</item>
@@ -196,7 +196,6 @@
         <item>uz</item>
         <item>zh_CN</item>
         <item>zh_TW</item>
-        <item>zh_HK</item>
         <item>en_GB</item>
         <item>tr</item>
         <item>eu</item>
@@ -205,20 +204,25 @@
         <item>ar</item>
         <item>ro</item>
         <item>mk</item>
-        <item>en_AU</item>
         <item>sr</item>
         <item>sk</item>
         <item>cy</item>
         <item>da</item>
+        <item>bg</item>
+        <item>sq</item>
+        <item>hr</item>
+        <item>cs</item>
     </string-array>
 
     <!-- Language IDs for WordPress REST call -->
+    <!-- ref https://wpcom.trac.automattic.com/browser/trunk/.config/locales.php -->
     <string-array name="lang_ids" translatable="false">
         <item>1</item>
         <item>79</item>
         <item>15</item>
         <item>17</item>
         <item>19</item>
+        <item>484</item>
         <item>24</item>
         <item>476</item>
         <item>30</item>
@@ -247,5 +251,9 @@
         <item>64</item>
         <item>13</item>
         <item>14</item>
+        <item>6</item>
+        <item>66</item>
+        <item>431</item>
+        <item>11</item>
     </string-array>
 </resources>

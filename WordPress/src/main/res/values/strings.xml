@@ -584,6 +584,7 @@
 
     <!-- Errors -->
     <string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
+    <string name="site_settings_unknown_language_code_error">Language code not recognized</string>
     <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
 
     <!--               -->

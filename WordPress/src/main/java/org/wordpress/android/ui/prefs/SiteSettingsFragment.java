@@ -369,7 +369,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setAddress(newValue.toString());
             changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
         } else if (preference == mLanguagePref) {
-            mSiteSettings.setLanguageCode(newValue.toString());
+            if (!mSiteSettings.setLanguageCode(newValue.toString())) {
+                ToastUtils.showToast(getActivity(), R.string.site_settings_unknown_language_code_error);
+            }
             changeLanguageValue(mSiteSettings.getLanguageCode());
         } else if (preference == mPrivacyPref) {
             mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
