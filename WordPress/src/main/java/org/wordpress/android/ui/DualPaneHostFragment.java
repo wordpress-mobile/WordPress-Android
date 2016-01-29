@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.DualPaneContentState;
 import org.wordpress.android.util.DualPaneHelper;
 
 import de.greenrobot.event.EventBus;

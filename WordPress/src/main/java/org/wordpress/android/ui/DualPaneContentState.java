@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
