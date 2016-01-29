@@ -60,7 +60,6 @@
             <ImageView
                 android:id="@+id/me_my_profile_icon"
                 style="@style/MeListRowIcon"
-                android:contentDescription="@string/my_profile"
                 android:src="@drawable/me_icon_my_profile" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -79,7 +78,6 @@
             <ImageView
                 android:id="@+id/me_settings_icon"
                 style="@style/MeListRowIcon"
-                android:contentDescription="@string/me_btn_settings"
                 android:src="@drawable/me_icon_account_settings" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -98,7 +96,6 @@
             <ImageView
                 android:id="@+id/me_notifications_icon"
                 style="@style/MeListRowIcon"
-                android:contentDescription="@string/me_btn_settings"
                 android:src="@drawable/me_icon_notifications" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -118,7 +115,6 @@
             <ImageView
                 android:id="@+id/me_support_icon"
                 style="@style/MeListRowIcon"
-                android:contentDescription="@string/me_btn_support"
                 android:src="@drawable/me_icon_support" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
@@ -137,7 +133,6 @@
             <ImageView
                 android:id="@+id/me_login_logout_icon"
                 style="@style/MeListRowIcon"
-                android:contentDescription="@string/me_btn_login_logout"
                 android:src="@drawable/me_icon_login_logout" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
