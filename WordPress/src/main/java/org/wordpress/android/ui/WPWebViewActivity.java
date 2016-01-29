@@ -161,8 +161,22 @@ public class WPWebViewActivity extends WebViewActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+
+        if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
+            Blog blog = WordPress.getBlog(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
+            if (blog == null) {
+                AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
+                finish();
+            }
+            mWebView.setWebViewClient(new WPWebViewClient(blog));
+        } else {
+            mWebView.setWebViewClient(new WebViewClient());
+        }
+
+        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
     }
 
     @Override
@@ -174,19 +188,6 @@ public class WPWebViewActivity extends WebViewActivity {
             finish();
             return;
         }
-
-        if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {
-            Blog blog = WordPress.getBlog(extras.getInt(LOCAL_BLOG_ID, -1));
-            if (blog == null) {
-                AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
-                finish();
-            }
-            mWebView.setWebViewClient(new WPWebViewClient(blog));
-        } else {
-            mWebView.setWebViewClient(new WebViewClient());
-        }
-
-        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
 
         String addressToLoad = extras.getString(URL_TO_LOAD);
         String username = extras.getString(AUTHENTICATION_USER, "");
