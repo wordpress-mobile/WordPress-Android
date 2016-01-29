@@ -39,6 +39,7 @@ public abstract class WebViewActivity extends AppCompatActivity {
         // format the page for mobile display
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        configureWebView();
 
         if (savedInstanceState == null) {
             readExtras();
@@ -96,6 +97,14 @@ public abstract class WebViewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    /*
+     * descendants should override this to set a WebViewClient, WebChromeClient, and anything
+     * else necessary to configure the webView prior to navigation
+     */
+    protected void configureWebView() {
+        // noop
     }
 
     private void pauseWebView() {

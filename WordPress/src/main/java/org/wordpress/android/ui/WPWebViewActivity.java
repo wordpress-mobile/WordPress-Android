@@ -159,9 +159,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    protected void configureWebView() {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
