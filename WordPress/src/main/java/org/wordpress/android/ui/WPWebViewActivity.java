@@ -160,58 +160,62 @@ public class WPWebViewActivity extends WebViewActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
 
-        if (extras == null) {
-            AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
-            finish();
-            return;
-        }
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
 
-        if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {
-            Blog blog = WordPress.getBlog(extras.getInt(LOCAL_BLOG_ID, -1));
-            if (blog == null) {
+            if (extras == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
                 finish();
+                return;
             }
-            mWebView.setWebViewClient(new WPWebViewClient(blog));
-        } else {
-            mWebView.setWebViewClient(new WebViewClient());
-        }
-        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setDomStorageEnabled(true);
 
-        String addressToLoad = extras.getString(URL_TO_LOAD);
-        String username = extras.getString(AUTHENTICATION_USER, "");
-        String password = extras.getString(AUTHENTICATION_PASSWD, "");
-        String authURL = extras.getString(AUTHENTICATION_URL);
+            if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {
+                Blog blog = WordPress.getBlog(extras.getInt(LOCAL_BLOG_ID, -1));
+                if (blog == null) {
+                    AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
+                    finish();
+                }
+                mWebView.setWebViewClient(new WPWebViewClient(blog));
+            } else {
+                mWebView.setWebViewClient(new WebViewClient());
+            }
+            mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
 
-        if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
-            AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
-            Toast.makeText(this, getText(R.string.invalid_url_message),
-                    Toast.LENGTH_SHORT).show();
-            finish();
-        }
+            mWebView.getSettings().setJavaScriptEnabled(true);
+            mWebView.getSettings().setDomStorageEnabled(true);
 
-        if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
-            // Only the URL to load is passed to this activity. Use a the normal loader not authenticated.
-            loadUrl(addressToLoad);
-        } else {
-            if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
-                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
+            String addressToLoad = extras.getString(URL_TO_LOAD);
+            String username = extras.getString(AUTHENTICATION_USER, "");
+            String password = extras.getString(AUTHENTICATION_PASSWD, "");
+            String authURL = extras.getString(AUTHENTICATION_URL);
+
+            if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
+                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
                 Toast.makeText(this, getText(R.string.invalid_url_message),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
 
-            if (TextUtils.isEmpty(username)) {
-                AppLog.e(AppLog.T.UTILS, "Username empty/null");
-                Toast.makeText(this, getText(R.string.incorrect_credentials), Toast.LENGTH_SHORT).show();
-                finish();
-            }
+            if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
+                // Only the URL to load is passed to this activity. Use a the normal loader not authenticated.
+                loadUrl(addressToLoad);
+            } else {
+                if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
+                    AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
+                    Toast.makeText(this, getText(R.string.invalid_url_message),
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                }
 
-            this.loadAuthenticatedUrl(authURL, addressToLoad, username, password);
+                if (TextUtils.isEmpty(username)) {
+                    AppLog.e(AppLog.T.UTILS, "Username empty/null");
+                    Toast.makeText(this, getText(R.string.incorrect_credentials), Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                this.loadAuthenticatedUrl(authURL, addressToLoad, username, password);
+            }
         }
     }
 
