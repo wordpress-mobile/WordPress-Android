@@ -125,9 +125,9 @@ public class Blog {
 
     public String getWordPressComHost() {
         if (WPUrlUtils.isWordPressCom(getHomeURL())) {
-            return UrlUtils.getDomainFromUrl(getHomeURL());
+            return UrlUtils.getHost(getHomeURL());
         } else {
-            return UrlUtils.getDomainFromUrl(getUrl());
+            return UrlUtils.getHost(getUrl());
         }
     }
 

@@ -647,7 +647,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showDeleteSiteDialog() {
         Bundle args = new Bundle();
-        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, UrlUtils.getDomainFromUrl(mBlog.getHomeURL()));
+        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, UrlUtils.getHost(mBlog.getHomeURL()));
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
         deleteSiteDialogFragment.setArguments(args);
         deleteSiteDialogFragment.setTargetFragment(this, DELETE_SITE_REQUEST_CODE);
