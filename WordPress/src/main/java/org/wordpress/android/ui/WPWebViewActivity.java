@@ -160,6 +160,8 @@ public class WPWebViewActivity extends WebViewActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -176,7 +178,7 @@ public class WPWebViewActivity extends WebViewActivity {
         if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {
             Blog blog = WordPress.getBlog(extras.getInt(LOCAL_BLOG_ID, -1));
             if (blog == null) {
-                AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
+                AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
             mWebView.setWebViewClient(new WPWebViewClient(blog));
@@ -185,9 +187,6 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
-
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setDomStorageEnabled(true);
 
         String addressToLoad = extras.getString(URL_TO_LOAD);
         String username = extras.getString(AUTHENTICATION_USER, "");
