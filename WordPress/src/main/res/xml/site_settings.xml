@@ -296,7 +296,7 @@
             android:title="@string/site_settings_delete_site_title"
             app:longClickHint="@string/site_settings_delete_site_hint">
 
-            <org.wordpress.android.ui.prefs.WPIconWidgetPreference
+            <org.wordpress.android.ui.prefs.WPDeleteSitePreference
                 android:icon="@drawable/ic_business"
                 android:title="@string/domain_removal"
                 android:summary="@string/domain_removal_summary"
@@ -304,7 +304,7 @@
                 android:widgetLayout="@layout/domain_removal_preference"
                 android:layout="@layout/delete_site_preference" />
 
-            <org.wordpress.android.ui.prefs.WPIconWidgetPreference
+            <org.wordpress.android.ui.prefs.WPDeleteSitePreference
                 android:id="@+id/pref_export_site"
                 android:key="@string/pref_key_site_export_site"
                 android:icon="@drawable/gridicons_history"
@@ -316,7 +316,7 @@
                 app:buttonText="@string/export_content"
                 app:buttonTextAllCaps="true" />
 
-            <org.wordpress.android.ui.prefs.WPIconWidgetPreference
+            <org.wordpress.android.ui.prefs.WPDeleteSitePreference
                 android:id="@+id/pref_delete_site"
                 android:key="@string/pref_key_site_delete_site"
                 android:icon="@drawable/gridicons_trash"

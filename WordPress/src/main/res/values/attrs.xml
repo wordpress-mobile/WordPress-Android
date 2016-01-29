@@ -18,7 +18,7 @@
         <attr name="longClickHint" />
     </declare-styleable>
 
-    <declare-styleable name="WPIconWidgetPreference">
+    <declare-styleable name="WPDeleteSitePreference">
         <attr name="buttonText" format="string" />
         <attr name="buttonTextColor" format="reference|color" />
         <attr name="buttonTextAllCaps" format="boolean" />

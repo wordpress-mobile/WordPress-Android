@@ -18,12 +18,12 @@ import org.wordpress.android.models.Blog;
  * with id R.id.button, an onPreferenceClick listener is added.
  */
 
-public class WPIconWidgetPreference extends WPPreference {
+public class WPDeleteSitePreference extends WPPreference {
     private String mButtonText;
     private int mButtonTextColor;
     private boolean mButtonTextAllCaps;
 
-    public WPIconWidgetPreference(Context context, AttributeSet attrs) {
+    public WPDeleteSitePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mButtonTextColor = ContextCompat.getColor(context, R.color.black);
@@ -49,7 +49,7 @@ public class WPIconWidgetPreference extends WPPreference {
         super.onBindView(view);
 
         if (view.findViewById(R.id.button) != null) {
-            final WPIconWidgetPreference iconWidgetPreference = this;
+            final WPDeleteSitePreference iconWidgetPreference = this;
 
             Button button = (Button) view.findViewById(R.id.button);
             button.setText(mButtonText);
