@@ -32,11 +32,11 @@ public class WPDeleteSitePreference extends WPPreference {
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
             int index = array.getIndex(i);
-            if (index == R.styleable.WPIconWidgetPreference_buttonText) {
+            if (index == R.styleable.WPDeleteSitePreference_buttonText) {
                 mButtonText = array.getString(index);
-            } else if (index == R.styleable.WPIconWidgetPreference_buttonTextColor) {
+            } else if (index == R.styleable.WPDeleteSitePreference_buttonTextColor) {
                 mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.black));
-            } else if (index == R.styleable.WPIconWidgetPreference_buttonTextAllCaps) {
+            } else if (index == R.styleable.WPDeleteSitePreference_buttonTextAllCaps) {
                 mButtonTextAllCaps = array.getBoolean(index, false);
             }
         }
@@ -49,7 +49,7 @@ public class WPDeleteSitePreference extends WPPreference {
         super.onBindView(view);
 
         if (view.findViewById(R.id.button) != null) {
-            final WPDeleteSitePreference iconWidgetPreference = this;
+            final WPDeleteSitePreference deleteSitePreference = this;
 
             Button button = (Button) view.findViewById(R.id.button);
             button.setText(mButtonText);
@@ -58,7 +58,7 @@ public class WPDeleteSitePreference extends WPPreference {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getOnPreferenceClickListener().onPreferenceClick(iconWidgetPreference);
+                    getOnPreferenceClickListener().onPreferenceClick(deleteSitePreference);
                 }
             });
         }
