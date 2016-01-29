@@ -40,6 +40,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -370,6 +371,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
         } else if (preference == mLanguagePref) {
             if (!mSiteSettings.setLanguageCode(newValue.toString())) {
+                AppLog.w(AppLog.T.SETTINGS, "Unknown language code " + newValue.toString() + " selected in Site Settings.");
                 ToastUtils.showToast(getActivity(), R.string.site_settings_unknown_language_code_error);
             }
             changeLanguageValue(mSiteSettings.getLanguageCode());
