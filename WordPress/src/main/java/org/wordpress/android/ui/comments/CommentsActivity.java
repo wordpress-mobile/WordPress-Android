@@ -34,7 +34,6 @@ public class CommentsActivity extends AppCompatActivity
                    CommentActions.OnCommentActionListener,
                    CommentActions.OnCommentChangeListener {
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
-    private static final String KEY_SELECTED_POST_ID = "selected_post_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private long mSelectedCommentId;
@@ -42,7 +41,7 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(null);
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.comment_activity);
 
@@ -52,24 +51,17 @@ public class CommentsActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.tab_comments));
 
-        restoreSavedInstance(savedInstanceState);
-    }
-
-    private void restoreSavedInstance(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
+            Fragment commentsListFragment = new CommentsListFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.layout_fragment_container, commentsListFragment, getString(R.string
+                            .fragment_tag_comment_list))
+                    .commitAllowingStateLoss();
+        } else {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
             getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
 
-            // restore the selected comment
-            long commentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
-            if (commentId != 0) {
-                onCommentSelected(commentId);
-            }
-            // restore the post detail fragment if one was selected
-            BlogPairId selectedPostId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
-            if (selectedPostId != null) {
-                showReaderFragment(selectedPostId.getRemoteBlogId(), selectedPostId.getId());
-            }
+            mSelectedCommentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
         }
     }
 

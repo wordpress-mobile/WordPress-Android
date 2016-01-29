@@ -12,7 +12,7 @@ import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MapUtils;
-import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -125,7 +125,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
 
         XMLRPCClientInterface xmlrpcInterface = instantiateInterface();
         if (xmlrpcInterface == null) return;
-        xmlrpcInterface.callAsync(callback, ApiHelper.Methods.SET_OPTIONS, callParams);
+        xmlrpcInterface.callAsync(callback, Method.SET_OPTIONS, callParams);
     }
 
     /**
@@ -140,8 +140,8 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
 
                 // Need two interfaces or the first call gets aborted
-                instantiateInterface().callAsync(mOptionsCallback, ApiHelper.Methods.GET_OPTIONS, params);
-                instantiateInterface().callAsync(mCategoriesCallback, ApiHelper.Methods.GET_CATEGORIES, params);
+                instantiateInterface().callAsync(mOptionsCallback, Method.GET_OPTIONS, params);
+                instantiateInterface().callAsync(mCategoriesCallback, Method.GET_CATEGORIES, params);
             }
         });
         thread.run();
@@ -193,7 +193,14 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 credentialsVerified(true);
 
                 deserializeOptionsResponse(mRemoteSettings, (Map) result);
+
+                // postFormats setting is not returned by this api call so copy it over
+                final Map<String, String> currentPostFormats = mSettings.postFormats;
+
                 mSettings.copyFrom(mRemoteSettings);
+
+                mSettings.postFormats = currentPostFormats;
+
                 SiteSettingsTable.saveSettings(mSettings);
                 notifyUpdatedOnUiThread(null);
             } else {

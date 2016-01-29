@@ -72,6 +72,7 @@
             android:background="?android:selectableItemBackground"
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
+            android:contentDescription="@string/more"
             android:src="@drawable/ic_action_more" />
 
         <LinearLayout
