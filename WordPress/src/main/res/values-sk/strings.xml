@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="blog_name_no_spaced_allowed">Adresa webovej stránky nemôže obsahovať medzery</string>
+	<string name="invalid_username_no_spaces">Používateľské meno nemôže obsahovať medzery</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Webové stránky, ktoré sledujete v poslednej dobe nezverejnili nič.</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Žiadne nové články</string>
+	<string name="media_details_copy_url_toast">URL adresa skopírovaná do schránky</string>
+	<string name="edit_media">Upraviť súbory</string>
+	<string name="media_details_copy_url">Kopírovať URL adresu</string>
+	<string name="media_details_label_date_uploaded">Nahraté</string>
+	<string name="media_details_label_date_added">Pridané</string>
 	<string name="selected_theme">Zvolená téma</string>
 	<string name="could_not_load_theme">Nie je možné načítať tému</string>
 	<string name="theme_activation_error">Niečo nezafungovalo. Nie je možné aktivovať tému.</string>
@@ -190,24 +199,19 @@
 	<string name="loading_images">Nahrávajú sa obrázky</string>
 	<string name="loading_videos">Nahrávajú sa videá</string>
 	<string name="media_picker_title">Vybrať súbory</string>
-	<string name="media_details_dimensions">Rozmery:</string>
 	<string name="sign_in_jetpack">Prihláste sa do účtu WordPress.com a pripojte sa na Jetpack.</string>
 	<string name="two_step_sms_sent">Vložte overovací kód z SMS správy.</string>
 	<string name="take_photo">Spraviť fotku</string>
 	<string name="error_publish_no_network">Nedá sa publikovať, nefunguje pripojenie. Uložené ako koncept.</string>
 	<string name="two_step_footer_label">Vložte kód z aplikácie Authenticator.</string>
-	<string name="media_details_file_name">Názov súboru:</string>
 	<string name="tab_title_site_images">Obrázky na stránke</string>
-	<string name="media_details_uploaded_on">Aktualizované dňa:</string>
-	<string name="media_details_added_on">Pridané dňa:</string>
 	<string name="take_video">Nahrať video</string>
 	<string name="verify">Overiť</string>
-	<string name="media_details_file_type">Typ súboru</string>
+	<string name="media_details_label_file_type">Typ súboru</string>
 	<string name="auth_required">Pre pokračovanie sa opäť prihlláste.</string>
 	<string name="two_step_footer_button">Odoslanie kódu textovou správou.</string>
 	<string name="verification_code">Overovací kód</string>
 	<string name="invalid_verification_code">Nesprávny overovací kód</string>
-	<string name="media_details_file_url">URL adresa súboru</string>
 	<string name="editor_toast_invalid_path">Nesprávna cesta súboru</string>
 	<string name="tab_title_site_videos">Videá na stánke</string>
 	<string name="add_to_post">Pridať k príspevku</string>
@@ -215,6 +219,7 @@
 	<string name="tab_title_device_videos">Videá v zariadení</string>
 	<string name="language">Jazyk</string>
 	<string name="device">Zariadenie</string>
+	<string name="media_details_label_file_name">Názov súboru</string>
 	<string name="stats_followers_total_wpcom_paged">WordPress.com odberatelia %1$d - %2$d z %3$s</string>
 	<string name="stats_followers_total_email_paged">Zobrazuje sa %1$d - %2$d z %3$s odberateľov</string>
 	<string name="media_fetching">Načítavajú sa súbory...</string>
@@ -636,7 +641,6 @@
 	<string name="stats_view_clicks">Kliknutia</string>
 	<string name="media_gallery_type_circles">Kruhy</string>
 	<string name="media_no_video_title">VideoPress nedostupný</string>
-	<string name="view_stats_full_site">Zobraziť celú stránku</string>
 	<string name="post_excerpt">Zhrnutie</string>
 	<string name="media_add_popup_capture_video">Natočiť video</string>
 	<string name="media_gallery_type">Typ</string>

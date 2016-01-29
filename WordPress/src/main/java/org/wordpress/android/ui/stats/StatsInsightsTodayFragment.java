@@ -49,22 +49,59 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         return view;
     }
 
-    void customizeUIWithResults() {
-        mResultContainer.removeAllViews();
 
-        // Another check that the data is available
-        if (isDataEmpty(0) || !(mDatamodels[0] instanceof VisitsModel)) {
-            showErrorUI(null);
+    private VisitsModel mVisitsModel;
+
+    @Override
+    protected boolean hasDataAvailable() {
+        return mVisitsModel != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mVisitsModel);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mVisitsModel = (VisitsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.VisitorsAndViewsUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 
-        VisitsModel visitsModel = (VisitsModel) mDatamodels[0];
-        if (visitsModel.getVisits() == null || visitsModel.getVisits().size() == 0) {
-            showErrorUI(null);
+        mVisitsModel = event.mVisitsAndViews;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
             return;
         }
 
-        List<VisitModel> visits = visitsModel.getVisits();
+        mVisitsModel = null;
+        showErrorUI(event.mError);
+    }
+
+    protected void updateUI() {
+        super.updateUI();
+
+        if (!isAdded() || !hasDataAvailable()) {
+            return;
+        }
+
+        if (mVisitsModel.getVisits() == null || mVisitsModel.getVisits().size() == 0) {
+            showErrorUI();
+            return;
+        }
+
+        List<VisitModel> visits = mVisitsModel.getVisits();
         VisitModel data = visits.get(visits.size() - 1);
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
@@ -149,7 +186,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.VISITS
         };

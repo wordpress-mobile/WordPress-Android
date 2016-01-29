@@ -110,7 +110,6 @@ public class SiteSettingsModel {
     public CategoryModel[] categories;
     public String defaultPostFormat;
     public Map<String, String> postFormats;
-    public String[] postFormatKeys;
     public boolean showRelatedPosts;
     public boolean showRelatedPostHeader;
     public boolean showRelatedPostImages;
