@@ -23,6 +23,8 @@ import de.greenrobot.event.EventBus;
 
 public class MyProfileActivity extends AppCompatActivity {
 
+    private final String DIALOG_TAG = "DIALOG";
+
     private WPTextView mFirstName;
     private WPTextView mLastName;
     private WPTextView mDisplayName;
@@ -138,7 +140,8 @@ public class MyProfileActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.showMyProfileDialog(MyProfileActivity.this,
+
+                DialogUtils dialogUtils = DialogUtils.newInstance(MyProfileActivity.this,
                         dialogTitle,
                         textView.getText().toString(),
                         hint,
@@ -150,6 +153,7 @@ public class MyProfileActivity extends AppCompatActivity {
                                 updateMyProfileForLabel(textView);
                             }
                         });
+                dialogUtils.show(getFragmentManager(), DIALOG_TAG);
             }
         };
     }
