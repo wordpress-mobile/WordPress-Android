@@ -40,12 +40,15 @@ public abstract class WebViewActivity extends AppCompatActivity {
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
-        // load URL if one was provided in the intent
         if (savedInstanceState == null) {
-            String url = getIntent().getStringExtra(URL);
-            if (url != null) {
-                loadUrl(url);
-            }
+            readExtras();
+        }
+    }
+
+    protected void readExtras() {
+        String url = getIntent().getStringExtra(URL);
+        if (url != null) {
+            loadUrl(url);
         }
     }
 
