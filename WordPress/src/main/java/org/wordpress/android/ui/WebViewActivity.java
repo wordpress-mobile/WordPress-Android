@@ -45,6 +45,12 @@ public abstract class WebViewActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * load the desired URL from the activity's extras - only done on initial activity creation
+     * (ie: when savedInstanceState = null) since onSaveInstanceState /onRestoreInstanceState
+     * will take care of saving and restoring the correct URL when the activity is recreated.
+     * note that descendants should override this w/o calling super() to load a different URL.
+     */
     protected void readExtras() {
         String url = getIntent().getStringExtra(URL);
         if (url != null) {
@@ -52,12 +58,18 @@ public abstract class WebViewActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * save the webView state with the bundle so it can be restored
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         mWebView.saveState(outState);
         super.onSaveInstanceState(outState);
     }
 
+    /*
+     * restore the webView state saved above
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
