@@ -423,11 +423,11 @@ public abstract class SiteSettingsInterface {
         if (mActivity == null) return "";
 
         if (!getShouldPageComments()) {
-            return mActivity.getString(R.string.none);
+            return mActivity.getString(R.string.disabled);
         }
 
         int count = getPagingCount();
-        if (count == 0) return mActivity.getString(R.string.none);
+        if (count == 0) return mActivity.getString(R.string.disabled);
         return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }
 

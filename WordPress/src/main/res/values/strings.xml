@@ -411,6 +411,7 @@
     <string name="related_posts">Related Posts</string>
     <string name="more">More</string>
     <string name="none">None</string>
+    <string name="disabled">Disabled</string>
     <string name="comments">Comments</string>
     <string name="close_after">Close after</string>
     <string name="oldest_first">Oldest first</string>
