@@ -2,6 +2,7 @@
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -42,17 +43,17 @@ public abstract class WebViewActivity extends AppCompatActivity {
         configureWebView();
 
         if (savedInstanceState == null) {
-            readExtras();
+            loadContent();
         }
     }
 
     /*
-     * load the desired URL from the activity's extras - only done on initial activity creation
-     * (ie: when savedInstanceState = null) since onSaveInstanceState /onRestoreInstanceState
-     * will take care of saving and restoring the correct URL when the activity is recreated.
-     * note that descendants should override this w/o calling super() to load a different URL.
+     * load the desired content - only done on initial activity creation (ie: when savedInstanceState
+     * is null) since onSaveInstanceState() and onRestoreInstanceState() will take care of saving
+     * and restoring the correct URL when the activity is recreated - note that descendants should
+     * override this w/o calling super() to load a different URL.
      */
-    protected void readExtras() {
+    protected void loadContent() {
         String url = getIntent().getStringExtra(URL);
         if (url != null) {
             loadUrl(url);
@@ -94,9 +95,15 @@ public abstract class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.webview);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /*

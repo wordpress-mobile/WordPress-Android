@@ -16,7 +16,7 @@ public class LicensesActivity extends WebViewActivity {
     }
 
     @Override
-    protected void readExtras() {
+    protected void loadContent() {
         loadUrl("file:///android_asset/licenses.html");
     }
 }

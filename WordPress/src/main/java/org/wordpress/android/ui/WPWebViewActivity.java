@@ -178,7 +178,7 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     @Override
-    protected void readExtras() {
+    protected void loadContent() {
         Bundle extras = getIntent().getExtras();
 
         if (extras == null) {

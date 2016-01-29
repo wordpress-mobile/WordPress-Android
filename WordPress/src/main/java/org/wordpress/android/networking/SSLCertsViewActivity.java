@@ -24,7 +24,7 @@ public class SSLCertsViewActivity extends WebViewActivity {
     }
 
     @Override
-    protected void readExtras() {
+    protected void loadContent() {
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.containsKey(CERT_DETAILS_KEYS)) {
             String certDetails = extras.getString(CERT_DETAILS_KEYS);
