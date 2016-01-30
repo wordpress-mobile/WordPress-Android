@@ -1480,7 +1480,7 @@ ZSSEditor.applyVideoFormattingCallback = function( match ) {
         out += ' preload="metadata"';
     }
 
-    out += ' onclick="" controls="controls"></video>';
+    out += ' onclick="" controls="controls"></video><br>';
 
     return out;
 }
