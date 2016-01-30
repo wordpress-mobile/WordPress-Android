@@ -225,6 +225,7 @@ public class CommentsListFragment extends Fragment {
                         updateComments(false);
                     }
                 });
+
         return view;
     }
 
@@ -661,4 +662,5 @@ public class CommentsListFragment extends Fragment {
             mActionMode = null;
         }
     }
+
 }

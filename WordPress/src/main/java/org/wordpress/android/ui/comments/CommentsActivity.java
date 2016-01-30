@@ -4,14 +4,21 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -38,6 +45,12 @@ public class CommentsActivity extends AppCompatActivity
     private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
 
+    private final CommentStatus[] commentStatuses = {CommentStatus.UNKNOWN, CommentStatus.UNAPPROVED, CommentStatus.APPROVED, CommentStatus.TRASH,
+            CommentStatus.SPAM};
+    private Spinner mSpinner;
+    private CommentsStatusSpinnerAdapter mCommentsStatusSpinnerAdapter;
+    private CommentStatus mCurrentCommentStatusType = CommentStatus.UNKNOWN;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +75,43 @@ public class CommentsActivity extends AppCompatActivity
 
             mSelectedCommentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
         }
+
+        if (mSpinner == null && toolbar != null) {
+            View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
+            mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
+
+            mCommentsStatusSpinnerAdapter = new CommentsStatusSpinnerAdapter(this, commentStatuses);
+
+            mSpinner.setAdapter(mCommentsStatusSpinnerAdapter);
+            mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (isFinishing()) {
+                        return;
+                    }
+                    final CommentStatus selectedCommentStatus =  (CommentStatus) mCommentsStatusSpinnerAdapter.getItem(position);
+
+                    if (mCurrentCommentStatusType == selectedCommentStatus) {
+                        AppLog.d(AppLog.T.COMMENTS, "The selected STATUS is already active: " + selectedCommentStatus.getLabel());
+                        return;
+                    }
+
+                    AppLog.d(AppLog.T.STATS, "NEW STATUS : " + selectedCommentStatus.getLabel());
+                    mCurrentCommentStatusType = selectedCommentStatus;
+                    //AppPrefs.setCommentStatus(mCurrentCommentStatusType);
+                    //updateCommentList();
+
+                    //trackCommentsAnalytics();
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // nop
+                }
+            });
+        }
+
+        selectCurrentCommentStatusTypeInActionBar();
+
     }
 
     @Override
@@ -318,5 +368,105 @@ public class CommentsActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+    * make sure the passed comment status type is the one selected in the actionbar
+    */
+    private void selectCurrentCommentStatusTypeInActionBar() {
+        if (isFinishing()) {
+            return;
+        }
+
+        if (mCommentsStatusSpinnerAdapter == null || mSpinner == null) {
+            return;
+        }
+
+        int position = mCommentsStatusSpinnerAdapter.getIndexOfCommentStatus(mCurrentCommentStatusType);
+
+        if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
+            mSpinner.setSelection(position);
+        }
+    }
+
+    /*
+     * adapter used by the comments status spinner
+     */
+    private class CommentsStatusSpinnerAdapter extends BaseAdapter {
+        private final CommentStatus[] mStatuses;
+        private final LayoutInflater mInflater;
+
+        CommentsStatusSpinnerAdapter(Context context, CommentStatus[] statusesNames) {
+            super();
+            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mStatuses = statusesNames;
+        }
+
+        @Override
+        public int getCount() {
+            return (mStatuses != null ? mStatuses.length : 0);
+        }
+
+        @Override
+        public Object getItem(int position) {
+            if (position < 0 || position >= getCount())
+                return "";
+            return mStatuses[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final View view;
+            if (convertView == null) {
+                view = mInflater.inflate(R.layout.toolbar_spinner_item, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            final TextView text = (TextView) view.findViewById(R.id.text);
+            CommentStatus selectedTimeframe = (CommentStatus)getItem(position);
+            text.setText(selectedTimeframe.getLabel());
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            CommentStatus selectedTimeframe = (CommentStatus)getItem(position);
+            final TagViewHolder holder;
+
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.toolbar_spinner_dropdown_item, parent, false);
+                holder = new TagViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (TagViewHolder) convertView.getTag();
+            }
+
+            holder.textView.setText(selectedTimeframe.getLabel());
+            return convertView;
+        }
+
+        private class TagViewHolder {
+            private final TextView textView;
+            TagViewHolder(View view) {
+                textView = (TextView) view.findViewById(R.id.text);
+            }
+        }
+
+        public int getIndexOfCommentStatus(CommentStatus tm) {
+            int pos = 0;
+            for (int i = 0; i < mStatuses.length; i++) {
+                if (mStatuses[i] == tm) {
+                    pos = i;
+                    return pos;
+                }
+            }
+            return pos;
+        }
     }
 }

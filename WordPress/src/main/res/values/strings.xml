@@ -273,6 +273,7 @@
     <string name="comment_status_unapproved">Pending</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Trashed</string>
+    <string name="comment_status_all">All</string>
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>

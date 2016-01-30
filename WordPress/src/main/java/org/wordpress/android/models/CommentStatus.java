@@ -4,7 +4,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
 public enum CommentStatus {
-    UNKNOWN(R.string.unknown),
+    UNKNOWN(R.string.comment_status_all),
     UNAPPROVED(R.string.comment_status_unapproved),
     APPROVED(R.string.comment_status_approved),
     TRASH(R.string.comment_status_trash),  // <-- REST only
