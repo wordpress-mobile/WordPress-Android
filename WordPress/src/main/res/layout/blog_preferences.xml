@@ -32,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
+                android:maxLength="@integer/max_length_username"
                 android:singleLine="true" />
 
             <org.wordpress.android.widgets.OpenSansEditText
@@ -40,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
                 android:inputType="textPassword"
+                android:maxLength="@integer/max_length_password"
                 android:singleLine="true" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -54,6 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:maxLength="@integer/max_length_username"
                 android:hint="@string/httpuser" />
 
             <org.wordpress.android.widgets.OpenSansEditText
@@ -62,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:singleLine="true"
+                android:maxLength="@integer/max_length_password"
                 android:hint="@string/httppassword" />
         </LinearLayout>
 
