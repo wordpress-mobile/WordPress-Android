@@ -1225,8 +1225,6 @@ ZSSEditor.replaceLocalVideoWithRemoteVideo = function(videoNodeIdentifier, remot
     }
     videoNode.attr('poster', remotePosterUrl);
     var thisObj = this;
-    videoNode.on('webkitbeginfullscreen', function (event){ thisObj.sendVideoFullScreenStarted(); } );
-    videoNode.on('webkitendfullscreen', function (event){ thisObj.sendVideoFullScreenEnded(); } );
     videoNode.on('error', function(event) { videoNode.load()} );
     this.markVideoUploadDone(videoNodeIdentifier);
 };
@@ -1295,22 +1293,6 @@ ZSSEditor.sendVideoReplacedCallback = function( videoNodeIdentifier ) {
     var joinedArguments = arguments.join( defaultCallbackSeparator );
 
     this.callback("callback-video-replaced", joinedArguments);
-};
-
-/**
- *  @brief      Callbacks to native that the video entered full screen mode
- *
- */
-ZSSEditor.sendVideoFullScreenStarted = function() {
-    this.callback("callback-video-fullscreen-started", "empty");
-};
-
-/**
- *  @brief      Callbacks to native that the video entered full screen mode
- *
- */
-ZSSEditor.sendVideoFullScreenEnded = function() {
-    this.callback("callback-video-fullscreen-ended", "empty");
 };
 
 /**
@@ -1531,8 +1513,6 @@ ZSSEditor.setVideoPressLinks = function(videopressID, videoURL, posterURL ) {
     videoNode.attr('controls', '');
     videoNode.attr('poster', posterURL);
     var thisObj = this;
-    videoNode.on('webkitbeginfullscreen', function (event){ thisObj.sendVideoFullScreenStarted(); } );
-    videoNode.on('webkitendfullscreen', function (event){ thisObj.sendVideoFullScreenEnded(); } );
     videoNode.load();
 };
 
@@ -2889,22 +2869,6 @@ ZSSField.prototype.sendVideoTappedCallback = function( videoNode ) {
 
     ZSSEditor.callback('callback-video-tap', joinedArguments);
 }
-
-/**
- *  @brief      Callbacks to native that the video entered full screen mode
- *
- */
-ZSSField.prototype.sendVideoFullScreenStarted = function() {
-    this.callback("callback-video-fullscreen-started", "empty");
-};
-
-/**
- *  @brief      Callbacks to native that the video entered full screen mode
- *
- */
-ZSSField.prototype.sendVideoFullScreenEnded = function() {
-    this.callback("callback-video-fullscreen-ended", "empty");
-};
 
 // MARK: - Callback Execution
 
