@@ -31,6 +31,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
@@ -43,6 +44,7 @@ public class CommentsActivity extends AppCompatActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
+    static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
     private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
 
@@ -64,6 +66,13 @@ public class CommentsActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (getIntent() != null && getIntent().hasExtra(SAVED_COMMENTS_STATUS_TYPE)) {
+            mCurrentCommentStatusType = (CommentStatus) getIntent().getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE);
+        } else {
+            // Read the value from app preferences here. Default to 0 - All
+            mCurrentCommentStatusType = AppPrefs.getCommentsStatusFilter();
         }
 
         if (savedInstanceState == null) {
@@ -101,7 +110,7 @@ public class CommentsActivity extends AppCompatActivity
 
                     AppLog.d(AppLog.T.STATS, "NEW STATUS : " + selectedCommentStatus.getLabel());
                     mCurrentCommentStatusType = selectedCommentStatus;
-                    //AppPrefs.setCommentStatus(mCurrentCommentStatusType);
+                    AppPrefs.setCommentsStatusFilter(mCurrentCommentStatusType);
                     //updateCommentList();
 
                     //trackCommentsAnalytics();
