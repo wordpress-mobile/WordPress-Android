@@ -76,7 +76,9 @@ public class CommentsActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
-            Fragment commentsListFragment = new CommentsListFragment();
+            CommentsListFragment commentsListFragment = new CommentsListFragment();
+            // initialize comment status filter first time
+            commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             getFragmentManager().beginTransaction()
                     .add(R.id.layout_fragment_container, commentsListFragment, getString(R.string
                             .fragment_tag_comment_list))
@@ -111,7 +113,7 @@ public class CommentsActivity extends AppCompatActivity
                     AppLog.d(AppLog.T.STATS, "NEW STATUS : " + selectedCommentStatus.getLabel());
                     mCurrentCommentStatusType = selectedCommentStatus;
                     AppPrefs.setCommentsStatusFilter(mCurrentCommentStatusType);
-                    //updateCommentList();
+                    updateCommentList();
 
                     //trackCommentsAnalytics();
                 }
@@ -244,6 +246,7 @@ public class CommentsActivity extends AppCompatActivity
         CommentsListFragment listFragment = getListFragment();
         if (listFragment != null) {
             listFragment.setRefreshing(true);
+            listFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             listFragment.updateComments(false);
         }
     }

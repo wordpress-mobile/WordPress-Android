@@ -359,6 +359,16 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     /*
+     * clear all comments
+     */
+    void clearComments() {
+        if (mComments != null){
+            mComments.clear();
+            notifyDataSetChanged();
+        }
+    }
+
+    /*
      * load comments using an AsyncTask
      */
     void loadComments() {

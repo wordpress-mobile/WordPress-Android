@@ -190,11 +190,11 @@ public class AppPrefs {
 
     public static CommentStatus getCommentsStatusFilter() {
         int idx = getInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX);
-        CommentStatus[] timeframeValues = CommentStatus.values();
-        if (timeframeValues.length < idx) {
-            return timeframeValues[0];
+        CommentStatus[] commentStatusValues = CommentStatus.values();
+        if (commentStatusValues.length < idx) {
+            return commentStatusValues[0];
         } else {
-            return timeframeValues[idx];
+            return commentStatusValues[idx];
         }
     }
     public static void setCommentsStatusFilter(CommentStatus commentstatus) {

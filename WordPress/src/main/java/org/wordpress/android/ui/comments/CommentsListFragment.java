@@ -59,6 +59,7 @@ public class CommentsListFragment extends Fragment {
     private ActionMode mActionMode;
     private TextView mEmptyView;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
+    private CommentStatus mCommentStatusFilter;
 
     private UpdateCommentsTask mUpdateCommentsTask;
 
@@ -242,6 +243,10 @@ public class CommentsListFragment extends Fragment {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
+    public void setCommentStatusFilter(CommentStatus statusfilter) {
+        mCommentStatusFilter = statusfilter;
+    }
+
     private void dismissDialog(int id) {
         if (!isAdded())
             return;
@@ -376,7 +381,7 @@ public class CommentsListFragment extends Fragment {
 
         updateEmptyView(EmptyViewMessageType.LOADING);
 
-        mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
+        mUpdateCommentsTask = new UpdateCommentsTask(loadMore, mCommentStatusFilter);
         mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -396,9 +401,11 @@ public class CommentsListFragment extends Fragment {
     private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
         ErrorType mErrorType = ErrorType.NO_ERROR;
         final boolean mIsLoadingMore;
+        final CommentStatus mStatusFilter;
 
-        private UpdateCommentsTask(boolean loadMore) {
+        private UpdateCommentsTask(boolean loadMore, CommentStatus statusfilter) {
             mIsLoadingMore = loadMore;
+            mStatusFilter = statusfilter;
         }
 
         @Override
@@ -446,6 +453,13 @@ public class CommentsListFragment extends Fragment {
                 hPost.put("number", COMMENTS_PER_PAGE);
             }
 
+            if (mStatusFilter != null){
+                //if this is UNKNOWN that means show ALL, i.e., do not apply filter
+                if (!mStatusFilter.equals(CommentStatus.UNKNOWN)){
+                    hPost.put("status", CommentStatus.toRESTString(mStatusFilter));
+                }
+            }
+
             Object[] params = { blog.getRemoteBlogId(),
                                 blog.getUsername(),
                                 blog.getPassword(),
@@ -464,6 +478,8 @@ public class CommentsListFragment extends Fragment {
         }
 
         protected void onPostExecute(CommentList comments) {
+
+            boolean isRefreshing = mSwipeToRefreshHelper.isRefreshing();
             mIsUpdatingComments = false;
             mUpdateCommentsTask = null;
 
@@ -498,10 +514,13 @@ public class CommentsListFragment extends Fragment {
                 if (comments != null && comments.size() > 0) {
                     getAdapter().loadComments();
                 } else {
+                    if (isRefreshing){
+                        //if refreshing and no errors, we only want freshest stuff, so clear old data
+                        getAdapter().clearComments();
+                    }
                     updateEmptyView(EmptyViewMessageType.NO_CONTENT);
                 }
             }
-
         }
     }
 
@@ -626,7 +645,7 @@ public class CommentsListFragment extends Fragment {
             setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam);
             setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
             setItemEnabled(menu, R.id.menu_spam,      hasAnyNonSpam);
-            setItemEnabled(menu, R.id.menu_trash,     hasSelection);
+            setItemEnabled(menu, R.id.menu_trash, hasSelection);
 
             return true;
         }
