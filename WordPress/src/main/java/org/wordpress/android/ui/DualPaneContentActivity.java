@@ -46,6 +46,8 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
             }
 
             finish();
+            //no transitions are allowed when the activity is switching to single pane mode
+            overridePendingTransition(0, 0);
         }
     }
 

@@ -312,6 +312,10 @@ public class ActivityLauncher {
         // letting activity know that it was started from dual pane host
         if (intent != null) {
             intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_HOST, true);
+
+            // Slide in from right is a default transition pattern, so if the activity is going to be started from
+            // DualPaneHostFragment, we need to let it know that it should slide out to right on finish
+            intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
         }
 
         if (DualPaneHelper.isInDualPaneConfiguration(context)) {
