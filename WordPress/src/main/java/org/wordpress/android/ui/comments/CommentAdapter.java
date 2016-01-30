@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -371,11 +372,11 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /*
      * load comments using an AsyncTask
      */
-    void loadComments() {
+    void loadComments(CommentStatus statusFilter) {
         if (mIsLoadTaskRunning) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
         } else {
-            new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadCommentsTask(statusFilter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -385,6 +386,12 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private boolean mIsLoadTaskRunning = false;
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         CommentList tmpComments;
+        CommentStatus mStatusFilter;
+
+        public LoadCommentsTask (CommentStatus statusFilter){
+            mStatusFilter = statusFilter;
+        }
+
         @Override
         protected void onPreExecute() {
             mIsLoadTaskRunning = true;
@@ -395,7 +402,12 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            tmpComments = CommentTable.getCommentsForBlog(mLocalBlogId);
+            if (mStatusFilter != null && mStatusFilter.equals(CommentStatus.UNKNOWN) || mStatusFilter == null){
+                tmpComments = CommentTable.getCommentsForBlog(mLocalBlogId);
+            } else {
+                tmpComments = CommentTable.getCommentsForBlogWithFilter(mLocalBlogId, mStatusFilter);
+            }
+
             if (mComments.isSameList(tmpComments)) {
                 return false;
             }

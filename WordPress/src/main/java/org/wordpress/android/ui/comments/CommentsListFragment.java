@@ -235,7 +235,7 @@ public class CommentsListFragment extends Fragment {
         super.onResume();
         if (mRecycler.getAdapter() == null) {
             mRecycler.setAdapter(getAdapter());
-            getAdapter().loadComments();
+            getAdapter().loadComments(mCommentStatusFilter);
         }
     }
 
@@ -362,7 +362,7 @@ public class CommentsListFragment extends Fragment {
         // this is called from CommentsActivity when a comment was changed in the detail view,
         // and the change will already be in SQLite so simply reload the comment adapter
         // to show the change
-        getAdapter().loadComments();
+        getAdapter().loadComments(mCommentStatusFilter);
     }
 
     /*
@@ -456,7 +456,7 @@ public class CommentsListFragment extends Fragment {
             if (mStatusFilter != null){
                 //if this is UNKNOWN that means show ALL, i.e., do not apply filter
                 if (!mStatusFilter.equals(CommentStatus.UNKNOWN)){
-                    hPost.put("status", CommentStatus.toRESTString(mStatusFilter));
+                    hPost.put("status", CommentStatus.toString(mStatusFilter));
                 }
             }
 
@@ -512,7 +512,7 @@ public class CommentsListFragment extends Fragment {
 
             if (!getActivity().isFinishing()) {
                 if (comments != null && comments.size() > 0) {
-                    getAdapter().loadComments();
+                    getAdapter().loadComments(mStatusFilter);
                 } else {
                     if (isRefreshing){
                         //if refreshing and no errors, we only want freshest stuff, so clear old data
@@ -549,7 +549,11 @@ public class CommentsListFragment extends Fragment {
                     stringId = R.string.comments_fetching;
                     break;
                 case NO_CONTENT:
-                    stringId = R.string.comments_empty_list;
+                    if (mCommentStatusFilter != null && mCommentStatusFilter.equals(CommentStatus.UNKNOWN) || mCommentStatusFilter == null){
+                        stringId = R.string.comments_empty_list;
+                    } else {
+                        stringId = R.string.comments_empty_list_filtered;
+                    }
                     break;
                 case NETWORK_ERROR:
                     stringId = R.string.no_network_message;

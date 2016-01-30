@@ -24,6 +24,10 @@ public enum CommentStatus {
      * returns the string representation of the passed status, as used by the XMLRPC API
      */
     public static String toString(CommentStatus status) {
+        if (status == null){
+            return "";
+        }
+
         switch (status) {
             case UNAPPROVED:
                 return "hold";

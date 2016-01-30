@@ -10,6 +10,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
@@ -134,6 +135,33 @@ public class CommentTable {
         String[] args = {Integer.toString(localBlogId)};
         Cursor c = getReadableDb().rawQuery(
                 "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? ORDER BY published DESC", args);
+
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    Comment comment = getCommentFromCursor(c);
+                    comments.add(comment);
+                } while (c.moveToNext());
+            }
+
+            return comments;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
+    /**
+     * get comments for a blog that have a specific status
+     * @param localBlogId - unique id in account table for this blog
+     * @param filter - status to filter comments by
+     * @return list of comments for this blog
+     */
+    public static CommentList getCommentsForBlogWithFilter(int localBlogId, CommentStatus filter) {
+        CommentList comments = new CommentList();
+
+        String[] args = {Integer.toString(localBlogId), CommentStatus.toString(filter)};
+        Cursor c = getReadableDb().rawQuery(
+                "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND status=? ORDER BY published DESC", args);
 
         try {
             if (c.moveToFirst()) {
