@@ -28,7 +28,7 @@ public class WPDeleteSitePreference extends WPPreference {
 
         mButtonTextColor = ContextCompat.getColor(context, R.color.black);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPIconWidgetPreference);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPDeleteSitePreference);
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
             int index = array.getIndex(i);
