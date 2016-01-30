@@ -376,6 +376,8 @@ public class CommentsListFragment extends Fragment {
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             setRefreshing(false);
+            //we're offline, load/refresh whatever we have in our local db
+            getAdapter().loadComments(mCommentStatusFilter);
             return;
         }
 
