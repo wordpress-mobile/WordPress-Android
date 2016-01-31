@@ -48,7 +48,7 @@ public class CommentsActivity extends AppCompatActivity
     private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
 
-    private final CommentStatus[] commentStatuses = {CommentStatus.UNKNOWN, CommentStatus.UNAPPROVED, CommentStatus.APPROVED, //CommentStatus.TRASH,
+    private final CommentStatus[] commentStatuses = {CommentStatus.UNKNOWN, CommentStatus.UNAPPROVED, CommentStatus.APPROVED, CommentStatus.TRASH,
             CommentStatus.SPAM};
     private Spinner mSpinner;
     private CommentsStatusSpinnerAdapter mCommentsStatusSpinnerAdapter;
