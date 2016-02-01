@@ -1265,6 +1265,7 @@
 
     <!--Account Settings-->
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
+    <string name="primary_site">Primary site</string>
     <string name="web_address">Web Address</string>
 
 </resources>

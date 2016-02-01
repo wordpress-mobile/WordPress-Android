@@ -22,15 +22,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,6 +49,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private PreferenceScreen mPreferenceScreen;
     private Preference mUsernamePreference;
     private EditTextPreference mEmailPreference;
+    private DetailListPreference mPrimarySitePreference;
     private EditTextPreference mWebAddressPreference;
     private DetailListPreference mLanguagePreference;
     private Snackbar mEmailSnackbar;
@@ -60,10 +66,12 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
         mEmailPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_email));
+        mPrimarySitePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_primary_site));
         mWebAddressPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_web_address));
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
 
         mEmailPreference.setOnPreferenceChangeListener(this);
+        mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
         mLanguagePreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
@@ -140,6 +148,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 showPendingEmailChangeSnackbar(newValue.toString());
             }
             return false;
+        } else if (preference == mPrimarySitePreference) {
         } else if (preference == mWebAddressPreference) {
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
@@ -164,6 +173,16 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mUsernamePreference.setSummary(account.getUserName());
         mEmailPreference.setSummary(account.getEmail());
         mWebAddressPreference.setSummary(account.getWebAddress());
+
+        List<Map<String, Object>> blogList = WordPress.wpDB.getBlogsBy("dotcomFlag=1", null);
+        mPrimarySitePreference.setEntries(BlogUtils.getBlogNamesFromAccountMapList(blogList));
+        mPrimarySitePreference.setEntryValues(BlogUtils.getBlogIdsFromAccountMapList(blogList));
+        mPrimarySitePreference.setDetails(BlogUtils.getHomeURLOrHostNamesFromAccountMapList(blogList));
+        mPrimarySitePreference.setValue("" + account.getPrimaryBlogId());
+        Blog primaryBlog = WordPress.wpDB.getBlogForDotComBlogId("" + account.getPrimaryBlogId());
+        if (primaryBlog != null) {
+            mPrimarySitePreference.setSummary(UrlUtils.getHost(primaryBlog.getHomeURL()));
+        }
 
         checkIfEmailChangeIsPending();
     }

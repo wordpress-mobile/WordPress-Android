@@ -13,6 +13,10 @@
         android:key="@string/pref_key_email"
         android:title="@string/email" />
 
+    <org.wordpress.android.ui.prefs.DetailListPreference
+        android:key="@string/pref_key_primary_site"
+        android:title="@string/primary_site" />
+
     <EditTextPreference
         android:key="@string/pref_key_web_address"
         android:title="@string/web_address" />
