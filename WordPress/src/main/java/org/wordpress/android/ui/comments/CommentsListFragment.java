@@ -42,6 +42,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
+import org.xmlrpc.android.ApiHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -397,8 +398,7 @@ public class CommentsListFragment extends Fragment {
 
         final Blog blog = WordPress.getCurrentBlog();
         if (blog == null) {
-//            mErrorType = ErrorType.INVALID_CURRENT_BLOG;
-//            return null;
+            AppLog.e(AppLog.T.COMMENTS, ApiHelper.ErrorType.INVALID_CURRENT_BLOG.name() + " - " + "Current blog is null");
             return;
         }
 
@@ -412,37 +412,20 @@ public class CommentsListFragment extends Fragment {
         }
 
         if (mCommentStatusFilter != null){
-            //if this is UNKNOWN that means show ALL, i.e., do not apply filter
-            if (!mCommentStatusFilter.equals(CommentStatus.UNKNOWN)){
-                params.put("status", CommentStatus.toRESTString(mCommentStatusFilter));
-            }
+            params.put("status", CommentStatus.toRESTString(mCommentStatusFilter));
         }
 
         WordPress.getRestClientUtilsV1_1().getComments(String.valueOf(blog.getRemoteBlogId()), params,
                 new RestClientUtils.FluxProxyListener<CommentList>() {
                     @Override
                     public CommentList onSave(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Received onSave signal to Categories REST request.");
-                        CommentList comments = null;
-                        try {
-                            comments = CommentList.fromJSONV1_1(response);
-                            if (comments != null){
-                                int localBlogId = blog.getLocalTableBlogId();
-                                CommentTable.saveComments(localBlogId, comments);
-                            }
-                        } catch (JSONException ex){
-                            AppLog.d(AppLog.T.API, "Error parsing WP.com comments:" + ex.getMessage());
-                            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
-                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            return null;
-                        }
-
-                        return comments;
+                        AppLog.d(AppLog.T.COMMENTS, "Received onSave signal to Comments REST request.");
+                        return saveCommentList(response, blog.getLocalTableBlogId());
                     }
 
                     @Override
                     public void onDataReady(CommentList comments) {
-                        AppLog.d(AppLog.T.API, "Received onDataReady signal to Categories REST request.");
+                        AppLog.d(AppLog.T.COMMENTS, "Received onDataReady signal to Comments REST request.");
 
                         boolean isRefreshing = mSwipeToRefreshHelper.isRefreshing();
                         mIsUpdatingComments = false;
@@ -460,7 +443,7 @@ public class CommentsListFragment extends Fragment {
                             if (comments != null && comments.size() > 0) {
                                 getAdapter().loadComments(mCommentStatusFilter);
                             } else {
-                                if (isRefreshing){
+                                if (isRefreshing) {
                                     //if refreshing and no errors, we only want freshest stuff, so clear old data
                                     getAdapter().clearComments();
                                 }
@@ -468,13 +451,13 @@ public class CommentsListFragment extends Fragment {
                             }
                         }
                     }
-                }, new RestClientUtils.FluxProxyErrorListener(){
+                }, new RestClientUtils.FluxProxyErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         mSwipeToRefreshHelper.setRefreshing(false);
                         AppLog.e(AppLog.T.COMMENTS, VolleyUtils.errStringFromVolleyError(error), error);
                         int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
-                        switch (statusCode){
+                        switch (statusCode) {
                             case 401:
                                 if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
                                     ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
@@ -489,6 +472,22 @@ public class CommentsListFragment extends Fragment {
                     }
                 });
 
+    }
+
+    private CommentList saveCommentList(JSONObject commentsObj, int localTableBlogId){
+        CommentList comments = null;
+        try {
+            comments = CommentList.fromJSONV1_1(commentsObj);
+            if (comments != null){
+                CommentTable.saveComments(localTableBlogId, comments);
+            }
+        } catch (JSONException ex){
+            AppLog.d(AppLog.T.API, "Error parsing WP.com comments:" + ex.getMessage());
+            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+            return null;
+        }
+        return comments;
     }
 
     public void setCommentIsModerating(long commentId, boolean isModerating) {
