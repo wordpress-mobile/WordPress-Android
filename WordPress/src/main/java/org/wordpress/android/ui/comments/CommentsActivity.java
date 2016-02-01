@@ -48,8 +48,8 @@ public class CommentsActivity extends AppCompatActivity
     private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
 
-    private final CommentStatus[] commentStatuses = {CommentStatus.UNKNOWN, CommentStatus.UNAPPROVED, CommentStatus.APPROVED, CommentStatus.TRASH,
-            CommentStatus.SPAM};
+    private final CommentStatus[] commentStatuses = {CommentStatus.UNKNOWN, CommentStatus.UNAPPROVED,
+            CommentStatus.APPROVED, CommentStatus.TRASH, CommentStatus.SPAM};
     private Spinner mSpinner;
     private CommentsStatusSpinnerAdapter mCommentsStatusSpinnerAdapter;
     private CommentStatus mCurrentCommentStatusType = CommentStatus.UNKNOWN;
@@ -111,10 +111,12 @@ public class CommentsActivity extends AppCompatActivity
                         return;
                     }
 
-                    final CommentStatus selectedCommentStatus =  (CommentStatus) mCommentsStatusSpinnerAdapter.getItem(position);
+                    final CommentStatus selectedCommentStatus =
+                            (CommentStatus) mCommentsStatusSpinnerAdapter.getItem(position);
 
                     if (mCurrentCommentStatusType == selectedCommentStatus) {
-                        AppLog.d(AppLog.T.COMMENTS, "The selected STATUS is already active: " + selectedCommentStatus.getLabel());
+                        AppLog.d(AppLog.T.COMMENTS, "The selected STATUS is already active: " +
+                                selectedCommentStatus.getLabel());
                         return;
                     }
 
