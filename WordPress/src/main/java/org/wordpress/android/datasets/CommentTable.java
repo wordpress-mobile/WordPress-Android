@@ -158,10 +158,18 @@ public class CommentTable {
      */
     public static CommentList getCommentsForBlogWithFilter(int localBlogId, CommentStatus filter) {
         CommentList comments = new CommentList();
+        Cursor c;
 
-        String[] args = {Integer.toString(localBlogId), CommentStatus.toString(filter)};
-        Cursor c = getReadableDb().rawQuery(
-                "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND status=? ORDER BY published DESC", args);
+        if (CommentStatus.UNKNOWN.equals(filter)){
+            String[] args = {Integer.toString(localBlogId), CommentStatus.toString(CommentStatus.APPROVED), CommentStatus.toString(CommentStatus.UNAPPROVED)};
+            c = getReadableDb().rawQuery(
+                    "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND (status=? OR status=?) ORDER BY published DESC", args);
+
+        } else {
+            String[] args = {Integer.toString(localBlogId), CommentStatus.toString(filter)};
+            c = getReadableDb().rawQuery(
+                    "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND status=? ORDER BY published DESC", args);
+        }
 
         try {
             if (c.moveToFirst()) {

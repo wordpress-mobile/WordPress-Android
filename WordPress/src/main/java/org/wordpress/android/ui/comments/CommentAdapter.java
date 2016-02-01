@@ -403,8 +403,8 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            if (mStatusFilter != null && mStatusFilter.equals(CommentStatus.UNKNOWN) || mStatusFilter == null){
-                tmpComments = CommentTable.getCommentsForBlog(mLocalBlogId);
+            if (mStatusFilter == null){
+                tmpComments = CommentTable.getCommentsForBlogWithFilter(mLocalBlogId, CommentStatus.UNKNOWN);
             } else {
                 tmpComments = CommentTable.getCommentsForBlogWithFilter(mLocalBlogId, mStatusFilter);
             }

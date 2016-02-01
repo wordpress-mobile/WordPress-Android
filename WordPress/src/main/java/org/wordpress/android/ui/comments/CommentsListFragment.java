@@ -50,7 +50,6 @@ public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
     boolean mHasAutoRefreshedComments = false;
-    private boolean mHasCheckedDeletedComments = false;
 
     private ProgressBar mProgressLoadMore;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -437,13 +436,6 @@ public class CommentsListFragment extends Fragment {
             if (blog == null) {
                 mErrorType = ErrorType.INVALID_CURRENT_BLOG;
                 return null;
-            }
-
-            // the first time this is called, make sure comments deleted on server are removed
-            // from the local database
-            if (!mHasCheckedDeletedComments && !mIsLoadingMore) {
-                mHasCheckedDeletedComments = true;
-                ApiHelper.removeDeletedComments(blog);
             }
 
             Map<String, Object> hPost = new HashMap<>();
