@@ -63,7 +63,7 @@ public class CommentsListFragment extends Fragment {
 
     private UpdateCommentsTask mUpdateCommentsTask;
 
-    private static final int COMMENTS_PER_PAGE = 30;
+    public static final int COMMENTS_PER_PAGE = 30;
 
     private CommentAdapter getAdapter() {
         if (mAdapter == null) {
