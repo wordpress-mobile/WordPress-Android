@@ -82,7 +82,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 40;
+    private static final int DATABASE_VERSION = 41;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -216,6 +216,9 @@ public class WordPressDB {
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
+    // Add plan_id to blog
+    private static final String ADD_BLOGS_PLAN_ID = "alter table accounts add plan_id text;";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -388,6 +391,9 @@ public class WordPressDB {
                 currentVersion++;
             case 39:
                 AccountTable.migrationAddFirstNameLastNameAboutMeFields(db);
+                currentVersion++;
+            case 40:
+                db.execSQL(ADD_BLOGS_PLAN_ID);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -683,6 +689,7 @@ public class WordPressDB {
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
+        values.put("plan_id", blog.getPlanID());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {

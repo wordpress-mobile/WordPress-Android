@@ -69,8 +69,10 @@ public class BlogUtils {
                 isVisible = MapUtils.getMapBool(blogMap, "isVisible");
             }
             boolean isAdmin = MapUtils.getMapBool(blogMap, "isAdmin");
+            String planID = blogMap.get("planID").toString();
+
             retValue |= addOrUpdateBlog(blogName, xmlrpc, homeUrl, blogId, username, password, httpUsername,
-                    httpPassword, isAdmin, isVisible);
+                    httpPassword, isAdmin, isVisible, planID);
         }
         return retValue;
     }
@@ -99,7 +101,8 @@ public class BlogUtils {
      */
     public static boolean addOrUpdateBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
                                            String username, String password, String httpUsername, String httpPassword,
-                                           boolean isAdmin, boolean isVisible) {
+                                           boolean isAdmin, boolean isVisible,
+                                           String planID) {
         Blog blog;
         if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
@@ -120,16 +123,25 @@ public class BlogUtils {
             blog.setWpVersion("");
             blog.setAdmin(isAdmin);
             blog.setHidden(!isVisible);
+            blog.setPlanID(planID);
             WordPress.wpDB.saveBlog(blog);
             return true;
         } else {
-            // Update blog name
+            // Update blog name and/or PlanID
             int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(
                     Integer.parseInt(blogId), xmlRpcUrl);
             try {
+                boolean blogUpdated = false;
                 blog = WordPress.wpDB.instantiateBlogByLocalId(localTableBlogId);
                 if (!blogName.equals(blog.getBlogName())) {
                     blog.setBlogName(blogName);
+                    blogUpdated = true;
+                }
+                if (!planID.equals(blog.getPlanID())) {
+                    blog.setPlanID(planID);
+                    blogUpdated = true;
+                }
+                if (blogUpdated) {
                     WordPress.wpDB.saveBlog(blog);
                     return true;
                 }
