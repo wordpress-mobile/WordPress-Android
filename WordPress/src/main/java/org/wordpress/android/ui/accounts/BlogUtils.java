@@ -69,7 +69,10 @@ public class BlogUtils {
                 isVisible = MapUtils.getMapBool(blogMap, "isVisible");
             }
             boolean isAdmin = MapUtils.getMapBool(blogMap, "isAdmin");
-            String planID = blogMap.get("planID").toString();
+            String planID = null;
+            if (blogMap.containsKey("planID")) {
+                planID = blogMap.get("planID").toString();
+            }
 
             retValue |= addOrUpdateBlog(blogName, xmlrpc, homeUrl, blogId, username, password, httpUsername,
                     httpPassword, isAdmin, isVisible, planID);

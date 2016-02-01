@@ -781,7 +781,7 @@ public class WordPressDB {
                              "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
-                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
+                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden", "plan_id"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -837,6 +837,7 @@ public class WordPressDB {
                 }
                 blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
+                blog.setPlanID(c.getString(c.getColumnIndex("plan_id")));
             }
         }
         c.close();
