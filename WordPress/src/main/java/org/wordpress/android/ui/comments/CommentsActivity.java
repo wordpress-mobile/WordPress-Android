@@ -120,7 +120,7 @@ public class CommentsActivity extends AppCompatActivity
                         return;
                     }
 
-                    AppLog.d(AppLog.T.STATS, "NEW STATUS : " + selectedCommentStatus.getLabel());
+                    AppLog.d(AppLog.T.COMMENTS, "NEW STATUS : " + selectedCommentStatus.getLabel());
                     mCurrentCommentStatusType = selectedCommentStatus;
                     AppPrefs.setCommentsStatusFilter(mCurrentCommentStatusType);
                     updateCommentList();
