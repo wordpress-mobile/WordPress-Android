@@ -92,28 +92,6 @@ public class RestClientUtils {
         get(path, params, null, listenerBridge, errorListener);
     }
 
-
-//    /**
-//     * get a list of recent comments
-//     * <p/>
-//     * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
-//     */
-//    public void OLDgetComments(String siteId, Map<String, String> params, Listener listener, ErrorListener errorListener) {
-//        String path = String.format("sites/%s/comments", siteId);
-//        get(path, params, null, listener, errorListener);
-//    }
-//
-//    /**
-//     * Get recent comments with default params.
-//     * <p/>
-//     * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
-//     */
-//    public void getComments(String siteId, Listener listener, ErrorListener errorListener) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("number", "40");
-//        getComments(siteId, params, listener, errorListener);
-//    }
-//
     /**
      * Reply to a comment
      * <p/>
