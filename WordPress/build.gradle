@@ -36,12 +36,18 @@ android {
         targetSdkVersion 23
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
+        buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
     }
 
     productFlavors {
-        vanilla {}
+        vanilla {} // used for release and beta
 
-        zbetagroup {
+        zalpha { // alpha version - enable experimental features
+            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
+            applicationId "org.wordpress.android"
+        }
+
+        wasabi { // "hot" version, can be installed along release, alpha or beta versions
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             applicationId "org.wordpress.android.beta"
         }

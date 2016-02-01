@@ -42,6 +42,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -70,6 +71,7 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
@@ -199,8 +201,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mShowNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
+        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();

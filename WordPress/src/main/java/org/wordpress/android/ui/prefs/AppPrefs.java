@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -46,6 +47,9 @@ public class AppPrefs {
 
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
+
+        // visual editor enabled
+        VISUAL_EDITOR_ENABLED,
     }
 
     /**
@@ -67,9 +71,11 @@ public class AppPrefs {
     private static String getString(PrefKey key) {
         return getString(key, "");
     }
+
     private static String getString(PrefKey key, String defaultValue) {
         return prefs().getString(key.name(), defaultValue);
     }
+
     private static void setString(PrefKey key, String value) {
         SharedPreferences.Editor editor = prefs().edit();
         if (TextUtils.isEmpty(value)) {
@@ -88,6 +94,7 @@ public class AppPrefs {
             return 0;
         }
     }
+
     private static void setLong(PrefKey key, long value) {
         setString(key, Long.toString(value));
     }
@@ -100,13 +107,15 @@ public class AppPrefs {
             return 0;
         }
     }
+
     private static void setInt(PrefKey key, int value) {
         setString(key, Integer.toString(value));
     }
 
     private static boolean getBoolean(PrefKey key, boolean def) {
-         String value = getString(key, Boolean.toString(def));
-         return Boolean.parseBoolean(value);
+
+        String value = getString(key, Boolean.toString(def));
+        return Boolean.parseBoolean(value);
     }
 
     private static void setBoolean(PrefKey key, boolean value) {
@@ -138,6 +147,7 @@ public class AppPrefs {
         int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
         return new ReaderTag(tagName, ReaderTagType.fromInt(tagType));
     }
+
     public static void setReaderTag(ReaderTag tag) {
         if (tag != null && !TextUtils.isEmpty(tag.getTagName())) {
             setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagName());
@@ -157,6 +167,7 @@ public class AppPrefs {
     public static String getReaderSubsPageTitle() {
         return getString(DeletablePrefKey.READER_SUBS_PAGE_TITLE);
     }
+
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
     }
@@ -170,6 +181,7 @@ public class AppPrefs {
             return timeframeValues[idx];
         }
     }
+
     public static void setStatsTimeframe(StatsTimeframe timeframe) {
         if (timeframe != null) {
             setInt(DeletablePrefKey.STATS_ITEM_INDEX, timeframe.ordinal());
@@ -184,6 +196,7 @@ public class AppPrefs {
     public static int getLastAppVersionCode() {
         return getInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX);
     }
+
     public static void setLastAppVersionCode(int versionCode) {
         setInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX, versionCode);
     }
@@ -195,13 +208,14 @@ public class AppPrefs {
     public static String getLastActivityStr() {
         return getString(DeletablePrefKey.LAST_ACTIVITY_STR, ActivityId.UNKNOWN.name());
     }
+
     public static void setLastActivityStr(String value) {
         setString(DeletablePrefKey.LAST_ACTIVITY_STR, value);
     }
+
     public static void resetLastActivityStr() {
         remove(DeletablePrefKey.LAST_ACTIVITY_STR);
     }
-
 
     // Mixpanel email retrieval check
 
@@ -216,27 +230,32 @@ public class AppPrefs {
     public static int getMainTabIndex() {
         return getInt(DeletablePrefKey.MAIN_TAB_INDEX);
     }
+
     public static void setMainTabIndex(int index) {
         setInt(DeletablePrefKey.MAIN_TAB_INDEX, index);
     }
-
 
     // Stats Widgets
     public static void resetStatsWidgetsKeys() {
         remove(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS);
     }
+
     public static String getStatsWidgetsKeys() {
         return getString(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS);
     }
+
     public static void setStatsWidgetsKeys(String widgetData) {
         setString(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS, widgetData);
     }
+
     public static String getStatsWidgetsData() {
         return getString(DeletablePrefKey.STATS_WIDGET_DATA);
     }
+
     public static void setStatsWidgetsData(String widgetData) {
         setString(DeletablePrefKey.STATS_WIDGET_DATA, widgetData);
     }
+
     public static void resetStatsWidgetsData() {
         remove(DeletablePrefKey.STATS_WIDGET_DATA);
     }
@@ -253,5 +272,18 @@ public class AppPrefs {
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
         }
+    }
+
+    // Visual Editor
+    public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
+        setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
+    }
+
+    public static boolean isVisualEditorAvailable() {
+        return BuildConfig.VISUAL_EDITOR_AVAILABLE;
+    }
+
+    public static boolean isVisualEditorEnabled() {
+        return BuildConfig.VISUAL_EDITOR_AVAILABLE && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
     }
 }

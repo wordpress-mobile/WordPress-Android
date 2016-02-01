@@ -55,6 +55,7 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -108,8 +109,6 @@ public class EditPostSettingsFragment extends Fragment
     private String[] mPostFormats;
     private String[] mPostFormatTitles;
 
-    private boolean mSupportNewEditor;
-
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Override
@@ -117,8 +116,6 @@ public class EditPostSettingsFragment extends Fragment
         super.onCreate(savedInstanceState);
         if (getActivity() != null) {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, false);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            mSupportNewEditor = prefs.getBoolean(getString(R.string.pref_key_visual_editor_enabled), false);
         }
     }
 
@@ -163,7 +160,7 @@ public class EditPostSettingsFragment extends Fragment
         mFeaturedImageView = (NetworkImageView) mRootView.findViewById(R.id.featuredImage);
         mFeaturedImageButton = (Button) mRootView.findViewById(R.id.addFeaturedImage);
 
-        if (mSupportNewEditor) {
+        if (AppPrefs.isVisualEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
             mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -338,7 +335,7 @@ public class EditPostSettingsFragment extends Fragment
             mTagsEditText.setText(tags);
         }
 
-        if (mSupportNewEditor) {
+        if (AppPrefs.isVisualEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
         }
     }
@@ -610,7 +607,7 @@ public class EditPostSettingsFragment extends Fragment
             mPost.setJSONCategories(new JSONArray(mCategories));
         }
 
-        if (mSupportNewEditor) {
+        if (AppPrefs.isVisualEditorEnabled()) {
             mPost.setFeaturedImageId(mFeaturedImageId);
         }
 

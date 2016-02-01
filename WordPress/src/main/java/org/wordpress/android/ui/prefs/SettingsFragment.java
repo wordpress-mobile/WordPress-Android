@@ -8,6 +8,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -79,6 +80,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         updatePostSignature();
+        updateVisualEditorSettings();
     }
 
     @Override
@@ -114,16 +116,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         return false;
     }
 
-    private void hideManageNotificationCategory() {
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-        PreferenceCategory notifs =
-                (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
-        if (preferenceScreen != null && notifs != null) {
-            preferenceScreen.removePreference(notifs);
-        }
-    }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -138,6 +130,29 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             mTaglineTextPreference.setText(getString(R.string.posted_from));
         } else {
             mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
+        }
+    }
+
+    private void updateVisualEditorSettings() {
+        if (!AppPrefs.isVisualEditorAvailable()) {
+            PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string
+                    .pref_key_settings_root));
+            PreferenceCategory editor = (PreferenceCategory) findPreference(getActivity().getString(R.string
+                    .pref_key_editor));
+            if (preferenceScreen != null && editor != null) {
+                preferenceScreen.removePreference(editor);
+            }
+        } else {
+            final CheckBoxPreference visualEditorCheckBox = (CheckBoxPreference) findPreference(getActivity()
+                    .getString(R.string.pref_key_visual_editor_enabled));
+            visualEditorCheckBox.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                    visualEditorCheckBox.setChecked(!visualEditorCheckBox.isChecked());
+                    AppPrefs.setVisualEditorEnabled(visualEditorCheckBox.isChecked());
+                    return false;
+                }
+            });
         }
     }
 
