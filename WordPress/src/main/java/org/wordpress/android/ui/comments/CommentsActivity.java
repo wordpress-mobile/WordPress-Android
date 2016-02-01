@@ -53,6 +53,7 @@ public class CommentsActivity extends AppCompatActivity
     private Spinner mSpinner;
     private CommentsStatusSpinnerAdapter mCommentsStatusSpinnerAdapter;
     private CommentStatus mCurrentCommentStatusType = CommentStatus.UNKNOWN;
+    private boolean mSelectingRememeberedStatusTypeOnCreate = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,7 @@ public class CommentsActivity extends AppCompatActivity
 
             mCommentsStatusSpinnerAdapter = new CommentsStatusSpinnerAdapter(this, commentStatuses);
 
+            mSelectingRememeberedStatusTypeOnCreate = true;
             mSpinner.setAdapter(mCommentsStatusSpinnerAdapter);
             mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -103,6 +105,12 @@ public class CommentsActivity extends AppCompatActivity
                     if (isFinishing()) {
                         return;
                     }
+
+                    if (mSelectingRememeberedStatusTypeOnCreate){
+                        mSelectingRememeberedStatusTypeOnCreate = false;
+                        return;
+                    }
+
                     final CommentStatus selectedCommentStatus =  (CommentStatus) mCommentsStatusSpinnerAdapter.getItem(position);
 
                     if (mCurrentCommentStatusType == selectedCommentStatus) {

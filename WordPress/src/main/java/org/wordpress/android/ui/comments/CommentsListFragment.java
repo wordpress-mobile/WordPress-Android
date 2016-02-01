@@ -66,7 +66,7 @@ public class CommentsListFragment extends Fragment {
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
     private CommentStatus mCommentStatusFilter;
 
-    private static final String COMMENTS_PER_PAGE = "30";
+    public static final int COMMENTS_PER_PAGE = 30;
 
     private CommentAdapter getAdapter() {
         if (mAdapter == null) {
@@ -406,9 +406,9 @@ public class CommentsListFragment extends Fragment {
         if (loadMore) {
             int numExisting = getAdapter().getItemCount();
             params.put("offset", Integer.toString(numExisting));
-            params.put("number", COMMENTS_PER_PAGE);
+            params.put("number", Integer.toString(COMMENTS_PER_PAGE));
         } else {
-            params.put("number", COMMENTS_PER_PAGE);
+            params.put("number", Integer.toString(COMMENTS_PER_PAGE));
         }
 
         if (mCommentStatusFilter != null){
