@@ -159,9 +159,11 @@ public class CommentTable {
     public static CommentList getCommentsForBlogWithFilter(int localBlogId, CommentStatus filter) {
         CommentList comments = new CommentList();
 
-        String[] args = {Integer.toString(localBlogId), CommentStatus.toString(filter)};
+        //we need to get the filter values for both XMLrpc and REST api as in the case of a migration where existing data is present on a device,
+        // we still need to be able to filter both values
+        String[] args = {Integer.toString(localBlogId), CommentStatus.toString(filter), CommentStatus.toRESTString(filter)};
         Cursor c = getReadableDb().rawQuery(
-                "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND status=? ORDER BY published DESC", args);
+                "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND (status=? OR status=?)  ORDER BY published DESC", args);
 
         try {
             if (c.moveToFirst()) {
