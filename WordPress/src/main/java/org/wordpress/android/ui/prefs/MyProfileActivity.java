@@ -14,6 +14,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.DialogUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -172,6 +173,19 @@ public class MyProfileActivity extends AppCompatActivity {
     public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
         if (!isFinishing()) {
             refreshDetails();
+        }
+    }
+
+    public void onEventMainThread(PrefsEvents.MyProfileDataLoadSaveError event) {
+        if (!isFinishing()) {
+            if (event != null
+                    && event.mVolleyError != null
+                    && event.mVolleyError.networkResponse != null
+                    && event.mVolleyError.networkResponse.statusCode == 401) {
+                    ToastUtils.showToast(this, R.string.error_refresh_unauthorized_profile, ToastUtils.Duration.LONG);
+            } else {
+                ToastUtils.showToast(this, R.string.error_refresh_profile_not_loaded, ToastUtils.Duration.LONG);
+            }
         }
     }
 }
