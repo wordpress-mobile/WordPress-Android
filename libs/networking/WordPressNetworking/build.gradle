@@ -29,8 +29,8 @@ android {
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.3.0'
-    compile 'com.automattic:rest:1.0.2'
+    compile 'org.wordpress:utils:+'
+    compile 'com.automattic:rest:+'
 }
 
 uploadArchives {
