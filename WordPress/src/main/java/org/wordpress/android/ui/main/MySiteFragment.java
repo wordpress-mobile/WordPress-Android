@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,16 +20,23 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
+import org.wordpress.android.ui.plans.PlansUtils;
+import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -50,6 +59,7 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private RelativeLayout mPlansContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
     private View mFabView;
@@ -128,6 +138,7 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mPlansContainer = (RelativeLayout) rootView.findViewById(R.id.row_plans);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
@@ -160,6 +171,22 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
+            }
+        });
+
+        mPlansContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Blog current = WordPress.getBlog(mBlogLocalId);
+                Plan currentBlogPlan = PlansUtils.getGlobalPlan(current.getPlanID());
+                String desc = currentBlogPlan != null ? currentBlogPlan.getDescription() : "Unknown";
+                String title = currentBlogPlan != null ? currentBlogPlan.getProductName() : "Unknown";
+                Dialog dlg = new AlertDialog.Builder(getActivity())
+                        .setTitle(title)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setMessage(desc)
+                        .create();
+                dlg.show();
             }
         });
 
@@ -331,6 +358,29 @@ public class MySiteFragment extends Fragment
 
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
+
+
+        //Reload plans details for the current blog.
+        if (blog.getPlanID() != 0) {
+            WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (response != null) {
+                        AppLog.d(AppLog.T.UTILS, response.toString());
+                    } else {
+
+                    }
+                }
+            }, new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                   // JSONObject errorObject = VolleyUtils.volleyErrorToJSON(volleyError);
+                    AppLog.e(AppLog.T.UTILS, "Error", volleyError);
+                }
+            });
+        }
+        // Hide the Plan item if planID is not available.
+        mPlansContainer.setVisibility(blog.getPlanID() != 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override

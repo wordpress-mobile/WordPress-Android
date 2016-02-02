@@ -126,6 +126,24 @@
 
             </RelativeLayout>
 
+            <!--Plans-->
+            <RelativeLayout
+                android:id="@+id/row_plans"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_plans_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:src="@drawable/my_site_icon_stats" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_plans_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_plans_icon"
+                    android:text="@string/plans" />
+
+            </RelativeLayout>
+
             <!--PUBLISH-->
             <LinearLayout style="@style/MySiteListHeaderLayout">
 

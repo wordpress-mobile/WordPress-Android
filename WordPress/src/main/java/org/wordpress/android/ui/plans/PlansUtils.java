@@ -22,6 +22,21 @@ public class PlansUtils {
 
     private static final int SECONDS_BETWEEN_PLANS_UPDATE = 20 * 60; // 20 minutes
 
+    public static Plan getGlobalPlan(long planId) {
+        List<Plan> plans = getGlobalPlans();
+        if (plans == null || plans.size() == 0) {
+            return null;
+        }
+
+        for (Plan current: plans) {
+            if (current.getProductID() == planId) {
+                return  current;
+            }
+        }
+
+        return null;
+    }
+
     public static List<Plan> getGlobalPlans() {
         String plansString = AppPrefs.getGlobalPlans();
         if (TextUtils.isEmpty(plansString)) {
