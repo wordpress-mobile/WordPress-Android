@@ -69,9 +69,9 @@ public class BlogUtils {
                 isVisible = MapUtils.getMapBool(blogMap, "isVisible");
             }
             boolean isAdmin = MapUtils.getMapBool(blogMap, "isAdmin");
-            String planID = null;
+            long planID = 0;
             if (blogMap.containsKey("planID")) {
-                planID = blogMap.get("planID").toString();
+                planID = MapUtils.getMapLong(blogMap, "planID");
             }
 
             retValue |= addOrUpdateBlog(blogName, xmlrpc, homeUrl, blogId, username, password, httpUsername,
@@ -105,7 +105,7 @@ public class BlogUtils {
     public static boolean addOrUpdateBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
                                            String username, String password, String httpUsername, String httpPassword,
                                            boolean isAdmin, boolean isVisible,
-                                           String planID) {
+                                           long planID) {
         Blog blog;
         if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
@@ -140,7 +140,7 @@ public class BlogUtils {
                     blog.setBlogName(blogName);
                     blogUpdated = true;
                 }
-                if (!planID.equals(blog.getPlanID())) {
+                if (planID != blog.getPlanID()) {
                     blog.setPlanID(planID);
                     blogUpdated = true;
                 }

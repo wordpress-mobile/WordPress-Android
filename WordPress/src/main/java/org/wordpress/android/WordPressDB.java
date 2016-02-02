@@ -217,8 +217,8 @@ public class WordPressDB {
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
 
-    // Add plan_id to blog
-    private static final String ADD_BLOGS_PLAN_ID = "alter table accounts add plan_id text;";
+    // Add plan_product_id to blog
+    private static final String ADD_BLOGS_PLAN_ID = "alter table accounts add plan_product_id integer default 0;";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -496,6 +496,7 @@ public class WordPressDB {
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
         values.put("blogId", blog.getRemoteBlogId());
         values.put("dotcomFlag", blog.isDotcomFlag());
+        values.put("plan_product_id", blog.getPlanID());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -689,7 +690,7 @@ public class WordPressDB {
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
-        values.put("plan_id", blog.getPlanID());
+        values.put("plan_product_id", blog.getPlanID());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -781,7 +782,7 @@ public class WordPressDB {
                              "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
-                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden", "plan_id"};
+                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden", "plan_product_id"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -837,7 +838,7 @@ public class WordPressDB {
                 }
                 blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
-                blog.setPlanID(c.getString(c.getColumnIndex("plan_id")));
+                blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
             }
         }
         c.close();
