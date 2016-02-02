@@ -76,7 +76,7 @@ public class AccountTable {
         values.put("about_me", account.getAboutMe());
         values.put("new_email", account.getNewEmail());
         values.put("pending_email_change", account.getPendingEmailChange());
-        values.put("web_address", account.getPendingEmailChange());
+        values.put("web_address", account.getWebAddress());
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
