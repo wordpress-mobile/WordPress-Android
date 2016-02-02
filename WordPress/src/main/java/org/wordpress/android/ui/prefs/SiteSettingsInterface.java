@@ -464,9 +464,12 @@ public abstract class SiteSettingsInterface {
         mSettings.privacy = privacy;
     }
 
-    public void setLanguageCode(String languageCode) {
+    public boolean setLanguageCode(String languageCode) {
+        if (!mLanguageCodes.containsKey(languageCode) ||
+            TextUtils.isEmpty(mLanguageCodes.get(languageCode))) return false;
         mSettings.language = languageCode;
         mSettings.languageId = Integer.valueOf(mLanguageCodes.get(languageCode));
+        return true;
     }
 
     public void setLanguageId(int languageId) {
