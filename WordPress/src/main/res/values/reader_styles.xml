@@ -85,7 +85,7 @@
         <item name="android:inputType">text</item>
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
-        <item name="android:maxLength">@integer/reader_max_length_topic_name</item>
+        <item name="android:maxLength">@integer/max_length_reader_topic_name</item>
     </style>
 
     <!-- images -->
