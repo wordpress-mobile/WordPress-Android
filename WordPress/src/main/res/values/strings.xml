@@ -869,6 +869,7 @@
     <string name="editor_post_title_placeholder">Post Title</string>
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
+    <string name="visual_editor_enabled">Visual Editor enabled</string>
 
     <!-- editor post settings -->
     <string name="editor_post_settings_featured_image">Featured Image</string>
