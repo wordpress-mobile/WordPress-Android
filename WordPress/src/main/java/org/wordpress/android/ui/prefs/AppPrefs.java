@@ -61,7 +61,13 @@ public class AppPrefs {
 
         // index of the last app-version
         LAST_APP_VERSION_INDEX,
-    }
+
+        // Global plans
+        GLOBAL_PLANS,
+
+        // Global plans features
+        GLOBAL_PLANS_PLANS_FEATURES,
+        }
 
     private static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
@@ -265,5 +271,19 @@ public class AppPrefs {
     }
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
+    }
+
+    // Plans
+    public static void setGlobalPlans(String jsonOfPlans) {
+        setString(UndeletablePrefKey.GLOBAL_PLANS, jsonOfPlans);
+    }
+    public static String getGlobalPlans() {
+        return getString(UndeletablePrefKey.GLOBAL_PLANS, "");
+    }
+    public static void setGlobalPlansFeatures(String jsonOfFeatures) {
+        setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
+    }
+    public static String getGlobalPlansFeatures() {
+        return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
     }
 }
