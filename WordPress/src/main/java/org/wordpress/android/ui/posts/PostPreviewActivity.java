@@ -209,8 +209,9 @@ public class PostPreviewActivity extends AppCompatActivity {
         // if both buttons are visible, show them below the message instead of to the right of it
         if (mPost.isLocalChange()) {
             RelativeLayout.LayoutParams paramsMessage = (RelativeLayout.LayoutParams) messageText.getLayoutParams();
-            paramsMessage.removeRule(RelativeLayout.LEFT_OF);
-            paramsMessage.removeRule(RelativeLayout.CENTER_VERTICAL);
+            // passing "0" removes the param (necessary since removeRule() is API 17+)
+            paramsMessage.addRule(RelativeLayout.LEFT_OF, 0);
+            paramsMessage.addRule(RelativeLayout.CENTER_VERTICAL, 0);
             ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
             marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_small);
 
