@@ -5,34 +5,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 public class Plan {
-/*
-        "product_id": 2002,
-        "product_name": "Free",
-        "product_name_en": "Free",
-        "prices": {
-            "USD": 0,
-            "GBP": 0
-        },
-        "product_name_short": "Free",
-        "product_slug": "jetpack_free",
-        "tagline": "Get started",
-        "shortdesc": "Jetpack (free) speeds up your site's images, secures it, and enables traffic and customization tools.",
-        "description": "Spam Protection",
-        "cost": 0,
-        "bill_period": -1,
-        "product_type": "jetpack",
-        "available": "yes",
-        "width": 500,
-        "height": 435,
-        "bill_period_label": "for life",
-        "price": "\u00a30",
-        "formatted_price": "\u00a30",
-        "raw_price": 0
- */
-
     private long mProductID;
     private String mProductName;
     private String mProductNameEnglish;
@@ -46,12 +23,23 @@ public class Plan {
     private int mBillPeriod;
     private String mProductType;
     private boolean isAvailable;
-    private int mWidth;
-    private int mHeight;
     private String mBillPeriodLabel;
     private String mPrice;
     private String mFormattedPrice;
     private int mRawPrice;
+
+    // Optionals
+    private int mWidth;
+    private int mHeight;
+    private long mSaving; // diff from cost and original
+    private long mOriginal; // Original price
+    private String mFormattedOriginalPrice;
+    private int mStore;
+    private int mMulti;
+    private String mSupportDocument;
+    private String mCapability;
+    private List<Integer> mBundleProductIds;
+    private List<String> mFeatures;
 
     public Plan(JSONObject planJSONObject) throws JSONException {
         mProductID = planJSONObject.getLong("product_id");
@@ -79,12 +67,40 @@ public class Plan {
         mProductType = planJSONObject.getString("product_type");
         String rawAvailable = planJSONObject.optString("available");
         isAvailable = "yes".equals(rawAvailable) || "1".equals(rawAvailable) || "true".equals(rawAvailable);
-        mWidth = planJSONObject.getInt("width");
-        mHeight = planJSONObject.getInt("height");
         mBillPeriodLabel = planJSONObject.getString("bill_period_label");
         mPrice = planJSONObject.getString("price");
         mFormattedPrice = planJSONObject.getString("formatted_price");
         mRawPrice = planJSONObject.getInt("raw_price");
+
+        // Optionals
+        mWidth = planJSONObject.optInt("width");
+        mHeight = planJSONObject.optInt("height");
+        mSaving = planJSONObject.optLong("saving", 0L);
+        mOriginal = planJSONObject.optLong("original", mCost);
+        mFormattedOriginalPrice = planJSONObject.optString("formatted_original_price");
+        mSupportDocument = planJSONObject.optString("support_document");
+        mCapability = planJSONObject.optString("capability");
+        mStore = planJSONObject.optInt("store");
+        mMulti = planJSONObject.optInt("multi");
+
+        if (planJSONObject.has("bundle_product_ids")) {
+            JSONArray bundleIDS = planJSONObject.getJSONArray("bundle_product_ids");
+            mBundleProductIds = new ArrayList<>(bundleIDS.length());
+            for (int i=0; i < bundleIDS.length(); i ++) {
+                int currentBundleID = bundleIDS.getInt(i);
+                mBundleProductIds.add(currentBundleID);
+            }
+        }
+
+        if (planJSONObject.has("feature_1")) {
+            // At least one feature is available
+            mFeatures = new ArrayList<>();
+            for (int i=1; i < 50; i ++) {
+                if (planJSONObject.has("feature_" + i)) {
+                    mFeatures.add(planJSONObject.getString("feature_" + i));
+                }
+            }
+        }
     }
 
 
@@ -163,5 +179,40 @@ public class Plan {
     public int getRawPrice() {
         return mRawPrice;
     }
-    
+
+    public List<String> getFeatures() {
+        return mFeatures;
+    }
+
+    public List<Integer> getBundleProductIds() {
+        return mBundleProductIds;
+    }
+
+    public String getCapability() {
+        return mCapability;
+    }
+
+    public String getSupportDocument() {
+        return mSupportDocument;
+    }
+
+    public int getMulti() {
+        return mMulti;
+    }
+
+    public int getStore() {
+        return mStore;
+    }
+
+    public String getFormattedOriginalPrice() {
+        return mFormattedOriginalPrice;
+    }
+
+    public long getSaving() {
+        return mSaving;
+    }
+
+    public long getOriginal() {
+        return mOriginal;
+    }
 }

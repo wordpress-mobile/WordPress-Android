@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -38,13 +39,54 @@ public class PlansUtils {
             }
         } catch (JSONException e) {
             AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
+            return null;
         }
 
         return plans;
     }
 
-    public static String getGlobalPlansFeatures() {
-        return AppPrefs.getGlobalPlansFeatures();
+    public static List<Long> getGlobalPlansIDS() {
+        List<Plan> plans = getGlobalPlans();
+        if (plans == null) {
+            return null;
+        }
+
+        List<Long> plansIDS = new ArrayList<>(plans.size());
+        for (Plan currentPlan: plans) {
+            plansIDS.add(currentPlan.getProductID());
+        }
+
+        return plansIDS;
+    }
+
+    public static List<Feature> getGlobalPlansFeatures() {
+        String featuresString = AppPrefs.getGlobalPlansFeatures();
+        if (TextUtils.isEmpty(featuresString)) {
+            return null;
+        }
+
+        List<Long> plansIDS = getGlobalPlansIDS();
+        if (plansIDS == null || plansIDS.size() == 0) {
+            //no plans stored in the app. Features are attached to plans. We can probably returns null here.
+            //TODO: Check if we need to return null or features with empty links to plans
+            return null;
+        }
+
+        List<Feature> features = new ArrayList<>();
+        try {
+            JSONObject featuresJSONObject = new JSONObject(featuresString);
+            JSONArray featuresArray = featuresJSONObject.getJSONArray("originalResponse");
+            for (int i=0; i < featuresArray.length(); i ++) {
+                JSONObject currentFeatureJSON = featuresArray.getJSONObject(i);
+                Feature currentFeature = new Feature(currentFeatureJSON, plansIDS);
+                features.add(currentFeature);
+            }
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.PLANS, "Can't parse the features list returned from the server", e);
+            return null;
+        }
+
+        return features;
     }
 
     public static void updateGlobalPlans(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
@@ -55,6 +97,7 @@ public class PlansUtils {
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlans(response.toString());
+                    updateGlobalPlansFeatures(null, null); // Load details of features from the server.
                 }
 
                 if (listener != null) {
@@ -64,13 +107,38 @@ public class PlansUtils {
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.PLANS, "Error", volleyError);
+                AppLog.e(AppLog.T.PLANS, "Error loading plans/", volleyError);
                 if (errorListener!= null) {
                     errorListener.onErrorResponse(volleyError);
                 }
             }
         });
     }
+
+    public static void updateGlobalPlansFeatures(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
+        WordPress.getRestClientUtils().get("plans/features/", new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (response != null) {
+                    AppLog.d(AppLog.T.PLANS, response.toString());
+                    // Store the response into App Prefs
+                    AppPrefs.setGlobalPlansFeatures(response.toString());
+                }
+                if (listener != null) {
+                    listener.onResponse(response);
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
+                if (errorListener!= null) {
+                    errorListener.onErrorResponse(volleyError);
+                }
+            }
+        });
+    }
+
 
     /**
      *  Download all available plans from wpcom
