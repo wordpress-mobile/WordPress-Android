@@ -66,6 +66,7 @@ public class AccountModel {
         mAboutMe = json.optString(Account.RestParam.toString(Account.RestParam.ABOUT_ME));
         mNewEmail = json.optString(Account.RestParam.toString(Account.RestParam.NEW_EMAIL));
         mPendingEmailChange = json.optBoolean(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING));
+        mPrimaryBlogId = json.optLong(Account.RestParam.toString(Account.RestParam.PRIMARY_BLOG));
         mWebAddress = json.optString(Account.RestParam.toString(Account.RestParam.WEB_ADDRESS));
     }
 

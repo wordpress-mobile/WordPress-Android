@@ -155,6 +155,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             return false;
         } else if (preference == mPrimarySitePreference) {
             changePrimaryBlogPreference(newValue.toString());
+            updatePrimaryBlog(newValue.toString());
         } else if (preference == mWebAddressPreference) {
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
@@ -312,6 +313,13 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         Account account = AccountHelper.getDefaultAccount();
         Map<String, String> params = new HashMap<>();
         params.put(Account.RestParam.toString(Account.RestParam.EMAIL), newEmail);
+        account.postAccountSettings(params);
+    }
+
+    private void updatePrimaryBlog(String blogId) {
+        Account account = AccountHelper.getDefaultAccount();
+        Map<String, String> params = new HashMap<>();
+        params.put(Account.RestParam.toString(Account.RestParam.PRIMARY_BLOG), blogId);
         account.postAccountSettings(params);
     }
 
