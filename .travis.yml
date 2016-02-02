@@ -31,4 +31,4 @@ install:
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
 
 script:
-  - ./gradlew -PdisablePreDex assembleVanillaRelease
+  - ./gradlew -PdisablePreDex assembleVanillaRelease lint
