@@ -83,6 +83,11 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         checkWordPressComOnlyFields();
+
+        List<Map<String, Object>> blogList = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"homeURL"});
+        mPrimarySitePreference.setEntries(BlogUtils.getBlogNamesFromAccountMapList(blogList));
+        mPrimarySitePreference.setEntryValues(BlogUtils.getBlogIdsFromAccountMapList(blogList));
+        mPrimarySitePreference.setDetails(BlogUtils.getHomeURLOrHostNamesFromAccountMapList(blogList));
     }
 
     @Override
@@ -149,6 +154,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             }
             return false;
         } else if (preference == mPrimarySitePreference) {
+            changePrimaryBlogPreference(newValue.toString());
         } else if (preference == mWebAddressPreference) {
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
@@ -174,15 +180,8 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mEmailPreference.setSummary(account.getEmail());
         mWebAddressPreference.setSummary(account.getWebAddress());
 
-        List<Map<String, Object>> blogList = WordPress.wpDB.getBlogsBy("dotcomFlag=1", null);
-        mPrimarySitePreference.setEntries(BlogUtils.getBlogNamesFromAccountMapList(blogList));
-        mPrimarySitePreference.setEntryValues(BlogUtils.getBlogIdsFromAccountMapList(blogList));
-        mPrimarySitePreference.setDetails(BlogUtils.getHomeURLOrHostNamesFromAccountMapList(blogList));
-        mPrimarySitePreference.setValue("" + account.getPrimaryBlogId());
-        Blog primaryBlog = WordPress.wpDB.getBlogForDotComBlogId("" + account.getPrimaryBlogId());
-        if (primaryBlog != null) {
-            mPrimarySitePreference.setSummary(UrlUtils.getHost(primaryBlog.getHomeURL()));
-        }
+        String blogId = String.valueOf(account.getPrimaryBlogId());
+        changePrimaryBlogPreference(blogId);
 
         checkIfEmailChangeIsPending();
     }
@@ -288,6 +287,15 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mLanguagePreference.setEntries(WPPrefUtils.createLanguageDisplayStrings(availableLocales));
         mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(availableLocales, languageCode));
         mLanguagePreference.refreshAdapter();
+    }
+
+    private void changePrimaryBlogPreference(String blogId) {
+        mPrimarySitePreference.setValue(blogId);
+        Blog primaryBlog = WordPress.wpDB.getBlogForDotComBlogId(blogId);
+        if (primaryBlog != null) {
+            mPrimarySitePreference.setSummary(UrlUtils.getHost(primaryBlog.getHomeURL()));
+            mPrimarySitePreference.refreshAdapter();
+        }
     }
 
     private boolean handleAboutPreferenceClick() {
