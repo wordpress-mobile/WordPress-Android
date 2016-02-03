@@ -24,7 +24,7 @@ public class Plan {
     private long mCost;
     private int mBillPeriod;
     private String mProductType;
-    private boolean isAvailable;
+    private boolean mIsAvailable;
     private String mBillPeriodLabel;
     private String mPrice;
     private String mFormattedPrice;
@@ -41,7 +41,7 @@ public class Plan {
     private String mSupportDocument;
     private String mCapability;
     private List<Integer> mBundleProductIds;
-    private List<String> mFeatures;
+    private List<String> mFeatures = new ArrayList<>();
 
     public Plan(JSONObject planJSONObject) throws JSONException {
         mProductID = planJSONObject.getLong("product_id");
@@ -67,7 +67,7 @@ public class Plan {
         mCost = planJSONObject.getLong("cost");
         mBillPeriod = planJSONObject.getInt("bill_period");
         mProductType = planJSONObject.getString("product_type");
-        isAvailable = JSONUtils.isStringTrue(planJSONObject, "available");
+        mIsAvailable = JSONUtils.getBool(planJSONObject, "available");
         mBillPeriodLabel = planJSONObject.getString("bill_period_label");
         mPrice = planJSONObject.getString("price");
         mFormattedPrice = planJSONObject.getString("formatted_price");
@@ -93,14 +93,10 @@ public class Plan {
             }
         }
 
-        if (planJSONObject.has("feature_1")) {
-            // At least one feature is available
-            mFeatures = new ArrayList<>();
-            for (int i=1; i < 50; i ++) {
-                if (planJSONObject.has("feature_" + i)) {
-                    mFeatures.add(planJSONObject.getString("feature_" + i));
-                }
-            }
+        int featureNumber = 1;
+        while (planJSONObject.has("feature_" + featureNumber)) {
+            mFeatures.add(planJSONObject.getString("feature_" + featureNumber));
+            featureNumber++;
         }
     }
 
@@ -154,7 +150,7 @@ public class Plan {
     }
 
     public boolean isAvailable() {
-        return isAvailable;
+        return mIsAvailable;
     }
 
     public int getWidth() {
