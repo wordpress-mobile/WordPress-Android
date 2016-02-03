@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -16,7 +17,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.RateLimitedTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class PlansUtils {
 
@@ -105,14 +109,17 @@ public class PlansUtils {
     }
 
     public static void updateGlobalPlans(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
-        WordPress.getRestClientUtils().get("plans/", new RestRequest.Listener() {
+        Map<String, String> params = getDefaultRestCallParameters();
+        WordPress.getRestClientUtils().get("plans/", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlans(response.toString());
-                    updateGlobalPlansFeatures(null, null); // Load details of features from the server.
+
+                    // Load details of features from the server.
+                    updateGlobalPlansFeatures(null, null);
                 }
 
                 if (listener != null) {
@@ -131,7 +138,8 @@ public class PlansUtils {
     }
 
     public static void updateGlobalPlansFeatures(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
-        WordPress.getRestClientUtils().get("plans/features/", new RestRequest.Listener() {
+        Map<String, String> params = getDefaultRestCallParameters();
+        WordPress.getRestClientUtils().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
@@ -156,7 +164,7 @@ public class PlansUtils {
 
 
     /**
-     *  Download all available plans from wpcom
+     *  Download all available plans from wpcom. If the call ends with success it start to download features.
      */
     public static RateLimitedTask sAvailablePlans = new RateLimitedTask(SECONDS_BETWEEN_PLANS_UPDATE) {
         protected boolean run() {
@@ -164,4 +172,43 @@ public class PlansUtils {
             return true;
         }
     };
+
+    /**
+     * This function returns default parameters used in all REST Calls in Plans.
+     *
+     * The "locale" parameter fox ex is one of those we need to add to the request. It must be set to retrieve
+     * the localized version of plans descriptions and avoid hardcode them in code.
+     *
+     * @return The map with default parameters.
+     */
+    private static Map<String, String> getDefaultRestCallParameters() {
+        String deviceLanguageCode = Locale.getDefault().getLanguage();
+        Map<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
+    }
+
+    /**
+     * This function return true if Plans are available for a blog.
+     * Basically this means that Plans data were downloaded from the server,
+     * and the blog has the product_id stored in the DB.
+     *
+     * @param blog to test
+     * @return True if Plans are enabled on the blog
+     */
+    public static boolean isPlanFeatureAvailableForBlog(Blog blog) {
+        /*List<Long> plansIDS = getGlobalPlansIDS();
+        if (plansIDS == null || plansIDS.size() == 0) {
+            return false;
+        }*/
+
+        // fast implementation of the function above. Less safe though.
+        String plansString = AppPrefs.getGlobalPlans();
+        if (TextUtils.isEmpty(plansString)) {
+            return false;
+        }
+        return (blog.getPlanID() != 0);
+    }
 }

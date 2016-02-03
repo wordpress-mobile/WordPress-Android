@@ -361,7 +361,7 @@ public class MySiteFragment extends Fragment
 
 
         //Reload plans details for the current blog.
-        if (blog.getPlanID() != 0) {
+        if (PlansUtils.isPlanFeatureAvailableForBlog(blog)) {
             WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", new RestRequest.Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -379,8 +379,9 @@ public class MySiteFragment extends Fragment
                 }
             });
         }
-        // Hide the Plan item if planID is not available.
-        mPlansContainer.setVisibility(blog.getPlanID() != 0 ? View.VISIBLE : View.GONE);
+
+        // Hide the Plan item if the Plans feature is not available.
+        mPlansContainer.setVisibility(PlansUtils.isPlanFeatureAvailableForBlog(blog) ? View.VISIBLE : View.GONE);
     }
 
     @Override
