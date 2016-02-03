@@ -1280,6 +1280,6 @@
     <string name="about_me_hint">A few words about you…</string>
 
     <!-- Plans -->
-    <string name="plans">Plans</string>
+    <string name="plan">Plan</string>
 
 </resources>

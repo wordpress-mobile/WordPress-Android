@@ -20,10 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -36,7 +32,6 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -59,7 +54,7 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
-    private RelativeLayout mPlansContainer;
+    private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
     private View mFabView;
@@ -138,7 +133,7 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
-        mPlansContainer = (RelativeLayout) rootView.findViewById(R.id.row_plans);
+        mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
@@ -174,7 +169,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        mPlansContainer.setOnClickListener(new View.OnClickListener() {
+        mPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Blog current = WordPress.getBlog(mBlogLocalId);
@@ -360,7 +355,7 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView.setText(homeURL);
 
         // Hide the Plan item if the Plans feature is not available.
-        mPlansContainer.setVisibility(PlansUtils.isPlanFeatureAvailableForBlog(blog) ? View.VISIBLE : View.GONE);
+        mPlanContainer.setVisibility(PlansUtils.isPlanFeatureAvailableForBlog(blog) ? View.VISIBLE : View.GONE);
     }
 
     @Override
