@@ -134,7 +134,7 @@
                 <ImageView
                     android:id="@+id/my_site_plans_icon"
                     style="@style/MySiteListRowIcon"
-                    android:src="@drawable/my_site_icon_stats" />
+                    android:src="@drawable/gridicons_clipboard" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plans_text_view"
