@@ -58,6 +58,7 @@ public class Account extends AccountModel {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.API, volleyError);
+                EventBus.getDefault().post(new PrefsEvents.MyProfileDataLoadSaveError(volleyError));
             }
         };
 
@@ -79,6 +80,7 @@ public class Account extends AccountModel {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.API, volleyError);
+                EventBus.getDefault().post(new PrefsEvents.MyProfileDataLoadSaveError(volleyError));
             }
         };
 
