@@ -1,32 +1,57 @@
 package org.wordpress.android.ui.main;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.wordpress.rest.RestRequest;
+
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Outline;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.PrefsEvents;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 
 import de.greenrobot.event.EventBus;
@@ -65,6 +90,12 @@ public class MeFragment extends Fragment {
         addDropShadowToAvatar();
         refreshAccountDetails();
 
+        mAvatarFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WordPressMediaUtils.launchPictureLibrary(MeFragment.this);
+            }
+        });
         mMyProfileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,6 +254,180 @@ public class MeFragment extends Fragment {
 
     private void showDisconnectDialog(Context context) {
         mDisconnectProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out), false);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data != null || requestCode == RequestCodes.TAKE_PHOTO) {
+            String path;
+
+            switch (requestCode) {
+                case RequestCodes.PICTURE_LIBRARY:
+                    Uri imageUri = data.getData();
+                    fetchMedia(imageUri);
+                    break;
+            }
+        }
+    }
+
+    private void fetchMedia(Uri mediaUri) {
+        if (!MediaUtils.isInMediaStore(mediaUri)) {
+            // Create an AsyncTask to download the file
+            new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+        } else {
+            // It is a regular local media file
+            String path = getRealPathFromURI(mediaUri);
+            uploadGravatar(path);
+        }
+    }
+
+    private String getRealPathFromURI(Uri uri) {
+        String path;
+        if ("content".equals(uri.getScheme())) {
+            path = getRealPathFromContentURI(uri);
+        } else if ("file".equals(uri.getScheme())) {
+            path = uri.getPath();
+        } else {
+            path = uri.toString();
+        }
+        return path;
+    }
+
+    private String getRealPathFromContentURI(Uri contentUri) {
+        if (contentUri == null)
+            return null;
+
+        String[] proj = { MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+
+        if (cursor == null)
+            return null;
+
+        int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+        if (column_index == -1) {
+            cursor.close();
+            return null;
+        }
+
+        String path;
+        if (cursor.moveToFirst()) {
+            path = cursor.getString(column_index);
+        } else {
+            path = null;
+        }
+
+        cursor.close();
+        return path;
+    }
+
+    private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
+        @Override
+        protected Uri doInBackground(Uri... uris) {
+            Uri imageUri = uris[0];
+            return MediaUtils.downloadExternalMedia(getActivity(), imageUri);
+        }
+
+        protected void onPostExecute(Uri newUri) {
+            if (getActivity() == null)
+                return;
+
+            if (newUri != null) {
+                String path = getRealPathFromURI(newUri);
+                uploadGravatar(path);
+            }
+            else
+                Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void uploadGravatar(String filePath) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null) {
+                    try {
+                        AppLog.d(AppLog.T.API, jsonObject.toString(2));
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.API, e);
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.API, volleyError);
+                AppLog.d(AppLog.T.API, "reponse: " + new String(volleyError.networkResponse.data));
+            }
+        };
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            return;
+        }
+
+        final RestRequest request = WordPress.getGravatarRestClientUtilsV1().newPostRequest("upload-image", null,
+                listener, errorListener);
+
+        MultipartRequest multipartRequest = new MultipartRequest(request, listener, errorListener);
+        multipartRequest.addPart("filedata", file);
+        multipartRequest.addPart("account", "stefanostogoulidis+stefanosuser@gmail.com");
+
+        WordPress.getGravatarRestClientUtilsV1().post(multipartRequest, null, errorListener);
+    }
+
+    public class MultipartRequest extends RestRequest {
+        private MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+
+        public MultipartRequest(RestRequest restRequest, Listener listener, ErrorListener errorListener)
+        {
+            super(restRequest.getMethod(), restRequest.getUrl(), null, listener, errorListener);
+
+            entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            entityBuilder.setBoundary("-------------" + System.currentTimeMillis());
+
+            setUserAgent(WordPress.getUserAgent());
+        }
+
+        public void addPart(String partName, File file) {
+            entityBuilder.addPart(partName, new FileBody(file));
+        }
+
+        public void addPart(String partName, String text) {
+            try
+            {
+                entityBuilder.addPart(partName, new StringBody(text));
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                VolleyLog.e("UnsupportedEncodingException");
+            }
+        }
+
+        @Override
+        public String getBodyContentType()
+        {
+            return entityBuilder.build().getContentType().getValue();
+        }
+
+        @Override
+        public byte[] getBody() throws AuthFailureError
+        {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try
+            {
+                entityBuilder.build().writeTo(bos);
+            }
+            catch (IOException e)
+            {
+                VolleyLog.e("IOException writing to ByteArrayOutputStream");
+            }
+            return bos.toByteArray();
+        }
     }
 
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {

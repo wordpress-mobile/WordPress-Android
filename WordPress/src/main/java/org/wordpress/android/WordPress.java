@@ -96,6 +96,8 @@ public class WordPress extends Application {
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
 
+    private static RestClientUtils mGravatarRestClientUtilsVersion1;
+
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
@@ -331,6 +333,16 @@ public class WordPress extends Application {
             mRestClientUtilsVersion1_2 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
         return mRestClientUtilsVersion1_2;
+    }
+
+    public static RestClientUtils getGravatarRestClientUtilsV1() {
+        if (mGravatarRestClientUtilsVersion1 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+
+            RestClient restClient = new RestClient(requestQueue, null, "https://api.gravatar.com/v1/");
+            mGravatarRestClientUtilsVersion1 = new RestClientUtils(restClient, authenticator, mOnAuthFailedListener);
+        }
+        return mGravatarRestClientUtilsVersion1;
     }
 
     /**
