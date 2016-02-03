@@ -99,6 +99,7 @@
                     android:inputType="textEmailAddress"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/nux_password"
+                    android:maxLength="@integer/max_length_username"
                     app:persistenceEnabled="true" />
 
                 <ImageView
@@ -128,6 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="38dp"
                     android:hint="@string/password"
+                    android:maxLength="@integer/max_length_password"
                     android:inputType="textPassword" />
 
                 <ImageView
