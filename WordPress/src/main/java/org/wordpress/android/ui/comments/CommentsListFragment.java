@@ -19,24 +19,30 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.ErrorType;
-import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +56,6 @@ public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
     boolean mHasAutoRefreshedComments = false;
-    private boolean mHasCheckedDeletedComments = false;
 
     private ProgressBar mProgressLoadMore;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -59,10 +64,9 @@ public class CommentsListFragment extends Fragment {
     private ActionMode mActionMode;
     private TextView mEmptyView;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
+    private CommentStatus mCommentStatusFilter;
 
-    private UpdateCommentsTask mUpdateCommentsTask;
-
-    private static final int COMMENTS_PER_PAGE = 30;
+    public static final int COMMENTS_PER_PAGE = 30;
 
     private CommentAdapter getAdapter() {
         if (mAdapter == null) {
@@ -179,7 +183,7 @@ public class CommentsListFragment extends Fragment {
             mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.checkConnection(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
@@ -225,6 +229,7 @@ public class CommentsListFragment extends Fragment {
                         updateComments(false);
                     }
                 });
+
         return view;
     }
 
@@ -233,12 +238,16 @@ public class CommentsListFragment extends Fragment {
         super.onResume();
         if (mRecycler.getAdapter() == null) {
             mRecycler.setAdapter(getAdapter());
-            getAdapter().loadComments();
+            getAdapter().loadComments(mCommentStatusFilter);
         }
     }
 
     public void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
+    }
+
+    public void setCommentStatusFilter(CommentStatus statusfilter) {
+        mCommentStatusFilter = statusfilter;
     }
 
     private void dismissDialog(int id) {
@@ -356,27 +365,129 @@ public class CommentsListFragment extends Fragment {
         // this is called from CommentsActivity when a comment was changed in the detail view,
         // and the change will already be in SQLite so simply reload the comment adapter
         // to show the change
-        getAdapter().loadComments();
+        getAdapter().loadComments(mCommentStatusFilter);
     }
 
     /*
      * get latest comments from server, or pass loadMore=true to get comments beyond the
      * existing ones
      */
-    void updateComments(boolean loadMore) {
+    void updateComments(final boolean loadMore) {
         if (mIsUpdatingComments) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             setRefreshing(false);
+            //we're offline, load/refresh whatever we have in our local db
+            getAdapter().loadComments(mCommentStatusFilter);
             return;
         }
 
         updateEmptyView(EmptyViewMessageType.LOADING);
 
-        mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
-        mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mIsUpdatingComments = true;
+        if (loadMore) {
+            showLoadingProgress();
+        }
+
+        if (!isAdded()) {
+            //return null;
+            return;
+        }
+
+        final Blog blog = WordPress.getCurrentBlog();
+        if (blog == null) {
+            AppLog.e(AppLog.T.COMMENTS, ApiHelper.ErrorType.INVALID_CURRENT_BLOG.name() + " - " + "Current blog is null");
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        if (loadMore) {
+            int numExisting = getAdapter().getItemCount();
+            params.put("offset", Integer.toString(numExisting));
+            params.put("number", Integer.toString(COMMENTS_PER_PAGE));
+        } else {
+            params.put("number", Integer.toString(COMMENTS_PER_PAGE));
+        }
+
+        if (mCommentStatusFilter != null){
+            params.put("status", CommentStatus.toRESTString(mCommentStatusFilter));
+        }
+
+        WordPress.getRestClientUtilsV1_1().getComments(String.valueOf(blog.getRemoteBlogId()), params,
+                new RestClientUtils.FluxProxyListener<CommentList>() {
+                    @Override
+                    public CommentList onSave(JSONObject response) {
+                        AppLog.d(AppLog.T.COMMENTS, "Received onSave signal to Comments REST request.");
+                        return saveCommentList(response, blog.getLocalTableBlogId());
+                    }
+
+                    @Override
+                    public void onDataReady(CommentList comments) {
+                        AppLog.d(AppLog.T.COMMENTS, "Received onDataReady signal to Comments REST request.");
+
+                        boolean isRefreshing = mSwipeToRefreshHelper.isRefreshing();
+                        mIsUpdatingComments = false;
+
+                        if (!isAdded()) return;
+
+                        if (loadMore) {
+                            hideLoadingProgress();
+                        }
+                        mSwipeToRefreshHelper.setRefreshing(false);
+
+                        mCanLoadMoreComments = (comments != null && comments.size() > 0);
+
+                        if (!getActivity().isFinishing()) {
+                            if (comments != null && comments.size() > 0) {
+                                getAdapter().loadComments(mCommentStatusFilter);
+                            } else {
+                                if (isRefreshing) {
+                                    //if refreshing and no errors, we only want freshest stuff, so clear old data
+                                    getAdapter().clearComments();
+                                }
+                                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                            }
+                        }
+                    }
+                }, new RestClientUtils.FluxProxyErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mSwipeToRefreshHelper.setRefreshing(false);
+                        AppLog.e(AppLog.T.COMMENTS, VolleyUtils.errStringFromVolleyError(error), error);
+                        int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
+                        switch (statusCode) {
+                            case 401:
+                                if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                                    ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
+                                }
+                                updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                                break;
+                            default:
+                                ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+                                updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                                break;
+                        }
+                    }
+                });
+
+    }
+
+    private CommentList saveCommentList(JSONObject commentsObj, int localTableBlogId){
+        CommentList comments = null;
+        try {
+            comments = CommentList.fromJSONV1_1(commentsObj);
+            if (comments != null){
+                CommentTable.saveComments(localTableBlogId, comments);
+            }
+        } catch (JSONException ex){
+            AppLog.d(AppLog.T.API, "Error parsing WP.com comments:" + ex.getMessage());
+            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+            return null;
+        }
+        return comments;
     }
 
     public void setCommentIsModerating(long commentId, boolean isModerating) {
@@ -389,120 +500,6 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    /*
-     * task to retrieve latest comments from server
-     */
-    private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
-        ErrorType mErrorType = ErrorType.NO_ERROR;
-        final boolean mIsLoadingMore;
-
-        private UpdateCommentsTask(boolean loadMore) {
-            mIsLoadingMore = loadMore;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mIsUpdatingComments = true;
-            if (mIsLoadingMore) {
-                showLoadingProgress();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            mIsUpdatingComments = false;
-            mUpdateCommentsTask = null;
-            mSwipeToRefreshHelper.setRefreshing(false);
-        }
-
-        @Override
-        protected CommentList doInBackground(Void... args) {
-            if (!isAdded()) {
-                return null;
-            }
-
-            Blog blog = WordPress.getCurrentBlog();
-            if (blog == null) {
-                mErrorType = ErrorType.INVALID_CURRENT_BLOG;
-                return null;
-            }
-
-            // the first time this is called, make sure comments deleted on server are removed
-            // from the local database
-            if (!mHasCheckedDeletedComments && !mIsLoadingMore) {
-                mHasCheckedDeletedComments = true;
-                ApiHelper.removeDeletedComments(blog);
-            }
-
-            Map<String, Object> hPost = new HashMap<>();
-            if (mIsLoadingMore) {
-                int numExisting = getAdapter().getItemCount();
-                hPost.put("offset", numExisting);
-                hPost.put("number", COMMENTS_PER_PAGE);
-            } else {
-                hPost.put("number", COMMENTS_PER_PAGE);
-            }
-
-            Object[] params = { blog.getRemoteBlogId(),
-                                blog.getUsername(),
-                                blog.getPassword(),
-                                hPost };
-            try {
-                return ApiHelper.refreshComments(blog, params);
-            } catch (XMLRPCFault xmlrpcFault) {
-                mErrorType = ErrorType.UNKNOWN_ERROR;
-                if (xmlrpcFault.getFaultCode() == 401) {
-                    mErrorType = ErrorType.UNAUTHORIZED;
-                }
-            } catch (Exception e) {
-                mErrorType = ErrorType.UNKNOWN_ERROR;
-            }
-            return null;
-        }
-
-        protected void onPostExecute(CommentList comments) {
-            mIsUpdatingComments = false;
-            mUpdateCommentsTask = null;
-
-            if (!isAdded()) return;
-
-            if (mIsLoadingMore) {
-                hideLoadingProgress();
-            }
-            mSwipeToRefreshHelper.setRefreshing(false);
-
-            if (isCancelled()) return;
-
-            mCanLoadMoreComments = (comments != null && comments.size() > 0);
-
-            // result will be null on error OR if no more comments exists
-            if (comments == null && !getActivity().isFinishing() && mErrorType != ErrorType.NO_ERROR) {
-                switch (mErrorType) {
-                    case UNAUTHORIZED:
-                        if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
-                            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
-                        }
-                        updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                        return;
-                    default:
-                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
-                        updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                        return;
-                }
-            }
-
-            if (!getActivity().isFinishing()) {
-                if (comments != null && comments.size() > 0) {
-                    getAdapter().loadComments();
-                } else {
-                    updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                }
-            }
-
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -529,7 +526,11 @@ public class CommentsListFragment extends Fragment {
                     stringId = R.string.comments_fetching;
                     break;
                 case NO_CONTENT:
-                    stringId = R.string.comments_empty_list;
+                    if (mCommentStatusFilter != null && mCommentStatusFilter.equals(CommentStatus.UNKNOWN) || mCommentStatusFilter == null){
+                        stringId = R.string.comments_empty_list;
+                    } else {
+                        stringId = R.string.comments_empty_list_filtered;
+                    }
                     break;
                 case NETWORK_ERROR:
                     stringId = R.string.no_network_message;
@@ -625,7 +626,7 @@ public class CommentsListFragment extends Fragment {
             setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam);
             setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
             setItemEnabled(menu, R.id.menu_spam,      hasAnyNonSpam);
-            setItemEnabled(menu, R.id.menu_trash,     hasSelection);
+            setItemEnabled(menu, R.id.menu_trash, hasSelection);
 
             return true;
         }
@@ -661,4 +662,5 @@ public class CommentsListFragment extends Fragment {
             mActionMode = null;
         }
     }
+
 }

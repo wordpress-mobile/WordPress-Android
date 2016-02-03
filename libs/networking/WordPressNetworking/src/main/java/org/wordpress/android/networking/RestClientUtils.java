@@ -82,6 +82,17 @@ public class RestClientUtils {
     }
 
     /**
+     * get a list of recent comments
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
+     */
+    public void getComments(String siteId, Map<String, String> params, final FluxProxyListener listener, FluxProxyErrorListener errorListener) {
+        String path = String.format("sites/%s/comments", siteId);
+        FluxProxyListenerBridge listenerBridge = new FluxProxyListenerBridge(listener);
+        get(path, params, null, listenerBridge, errorListener);
+    }
+
+    /**
      * Reply to a comment
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
@@ -346,5 +357,30 @@ public class RestClientUtils {
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
         authCheck.send();
+    }
+
+    public interface FluxProxyErrorListener extends ErrorListener {
+    }
+
+    public interface FluxProxyListener<T> {
+        /** Called when a response is received and needs be saved. */
+        public T onSave(JSONObject response);
+        /** Called after onSave() is called and data is ready to be processed */
+        public void onDataReady(T response);
+    }
+
+    private class FluxProxyListenerBridge implements Listener {
+
+        FluxProxyListener mFluxListener = null;
+
+        public FluxProxyListenerBridge(FluxProxyListener fluxListener){
+            mFluxListener = fluxListener;
+        }
+
+        @Override
+        public void onResponse(JSONObject response) {
+            Object result = mFluxListener.onSave(response);
+            mFluxListener.onDataReady(result);
+        }
     }
 }

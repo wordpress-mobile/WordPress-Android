@@ -1,16 +1,33 @@
 package org.wordpress.android.models;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+
 public enum CommentStatus {
-    UNKNOWN,
-    UNAPPROVED,
-    APPROVED,
-    TRASH,  // <-- REST only
-    SPAM;
+    UNKNOWN(R.string.comment_status_all),
+    UNAPPROVED(R.string.comment_status_unapproved),
+    APPROVED(R.string.comment_status_approved),
+    TRASH(R.string.comment_status_trash),
+    SPAM(R.string.comment_status_spam);
+
+    private final int mLabelResId;
+
+    CommentStatus(int labelResId) {
+        mLabelResId = labelResId;
+    }
+
+    public String getLabel() {
+        return WordPress.getContext().getString(mLabelResId);
+    }
 
     /*
      * returns the string representation of the passed status, as used by the XMLRPC API
      */
     public static String toString(CommentStatus status) {
+        if (status == null){
+            return "";
+        }
+
         switch (status) {
             case UNAPPROVED:
                 return "hold";
@@ -18,6 +35,8 @@ public enum CommentStatus {
                 return "approve";
             case SPAM:
                 return "spam";
+            case TRASH:
+                return "trash";
             default:
                 return "";
         }
@@ -37,7 +56,7 @@ public enum CommentStatus {
             case TRASH:
                 return "trash";
             default:
-                return "";
+                return "all";
         }
     }
 

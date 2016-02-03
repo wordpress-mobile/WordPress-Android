@@ -4,18 +4,25 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
@@ -24,6 +31,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
@@ -36,8 +44,16 @@ public class CommentsActivity extends AppCompatActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
+    static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
     private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
+
+    private final CommentStatus[] commentStatuses = {CommentStatus.UNKNOWN, CommentStatus.UNAPPROVED,
+            CommentStatus.APPROVED, CommentStatus.TRASH, CommentStatus.SPAM};
+    private Spinner mSpinner;
+    private CommentsStatusSpinnerAdapter mCommentsStatusSpinnerAdapter;
+    private CommentStatus mCurrentCommentStatusType = CommentStatus.UNKNOWN;
+    private boolean mSelectingRememeberedStatusTypeOnCreate = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,12 +63,23 @@ public class CommentsActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.tab_comments));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (getIntent() != null && getIntent().hasExtra(SAVED_COMMENTS_STATUS_TYPE)) {
+            mCurrentCommentStatusType = (CommentStatus) getIntent().getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE);
+        } else {
+            // Read the value from app preferences here. Default to 0 - All
+            mCurrentCommentStatusType = AppPrefs.getCommentsStatusFilter();
+        }
 
         if (savedInstanceState == null) {
-            Fragment commentsListFragment = new CommentsListFragment();
+            CommentsListFragment commentsListFragment = new CommentsListFragment();
+            // initialize comment status filter first time
+            commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             getFragmentManager().beginTransaction()
                     .add(R.id.layout_fragment_container, commentsListFragment, getString(R.string
                             .fragment_tag_comment_list))
@@ -63,6 +90,52 @@ public class CommentsActivity extends AppCompatActivity
 
             mSelectedCommentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
         }
+
+        if (mSpinner == null && toolbar != null) {
+            View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
+            mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
+
+            mCommentsStatusSpinnerAdapter = new CommentsStatusSpinnerAdapter(this, commentStatuses);
+
+            mSelectingRememeberedStatusTypeOnCreate = true;
+            mSpinner.setAdapter(mCommentsStatusSpinnerAdapter);
+            mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (isFinishing()) {
+                        return;
+                    }
+
+                    if (mSelectingRememeberedStatusTypeOnCreate){
+                        mSelectingRememeberedStatusTypeOnCreate = false;
+                        return;
+                    }
+
+                    final CommentStatus selectedCommentStatus =
+                            (CommentStatus) mCommentsStatusSpinnerAdapter.getItem(position);
+
+                    if (mCurrentCommentStatusType == selectedCommentStatus) {
+                        AppLog.d(AppLog.T.COMMENTS, "The selected STATUS is already active: " +
+                                selectedCommentStatus.getLabel());
+                        return;
+                    }
+
+                    AppLog.d(AppLog.T.COMMENTS, "NEW STATUS : " + selectedCommentStatus.getLabel());
+                    mCurrentCommentStatusType = selectedCommentStatus;
+                    AppPrefs.setCommentsStatusFilter(mCurrentCommentStatusType);
+                    updateCommentList();
+
+                    //trackCommentsAnalytics();
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // nop
+                }
+            });
+        }
+
+        selectCurrentCommentStatusTypeInActionBar();
+
     }
 
     @Override
@@ -183,6 +256,7 @@ public class CommentsActivity extends AppCompatActivity
         CommentsListFragment listFragment = getListFragment();
         if (listFragment != null) {
             listFragment.setRefreshing(true);
+            listFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             listFragment.updateComments(false);
         }
     }
@@ -319,5 +393,105 @@ public class CommentsActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+    * make sure the passed comment status type is the one selected in the actionbar
+    */
+    private void selectCurrentCommentStatusTypeInActionBar() {
+        if (isFinishing()) {
+            return;
+        }
+
+        if (mCommentsStatusSpinnerAdapter == null || mSpinner == null) {
+            return;
+        }
+
+        int position = mCommentsStatusSpinnerAdapter.getIndexOfCommentStatus(mCurrentCommentStatusType);
+
+        if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
+            mSpinner.setSelection(position);
+        }
+    }
+
+    /*
+     * adapter used by the comments status spinner
+     */
+    private class CommentsStatusSpinnerAdapter extends BaseAdapter {
+        private final CommentStatus[] mStatuses;
+        private final LayoutInflater mInflater;
+
+        CommentsStatusSpinnerAdapter(Context context, CommentStatus[] statusesNames) {
+            super();
+            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mStatuses = statusesNames;
+        }
+
+        @Override
+        public int getCount() {
+            return (mStatuses != null ? mStatuses.length : 0);
+        }
+
+        @Override
+        public Object getItem(int position) {
+            if (position < 0 || position >= getCount())
+                return "";
+            return mStatuses[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final View view;
+            if (convertView == null) {
+                view = mInflater.inflate(R.layout.toolbar_spinner_item, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            final TextView text = (TextView) view.findViewById(R.id.text);
+            CommentStatus selectedTimeframe = (CommentStatus)getItem(position);
+            text.setText(selectedTimeframe.getLabel());
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            CommentStatus selectedTimeframe = (CommentStatus)getItem(position);
+            final TagViewHolder holder;
+
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.toolbar_spinner_dropdown_item, parent, false);
+                holder = new TagViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (TagViewHolder) convertView.getTag();
+            }
+
+            holder.textView.setText(selectedTimeframe.getLabel());
+            return convertView;
+        }
+
+        private class TagViewHolder {
+            private final TextView textView;
+            TagViewHolder(View view) {
+                textView = (TextView) view.findViewById(R.id.text);
+            }
+        }
+
+        public int getIndexOfCommentStatus(CommentStatus tm) {
+            int pos = 0;
+            for (int i = 0; i < mStatuses.length; i++) {
+                if (mStatuses[i] == tm) {
+                    pos = i;
+                    return pos;
+                }
+            }
+            return pos;
+        }
     }
 }
