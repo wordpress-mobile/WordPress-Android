@@ -323,6 +323,10 @@
             android:label="@string/my_profile"
             android:theme="@style/CalypsoTheme" />
 
+        <!-- Lib activities-->
+        <activity
+            android:name="com.soundcloud.android.crop.CropImageActivity" />
+
 		<!-- Services -->
         <service
             android:name=".ui.posts.services.PostUploadService"

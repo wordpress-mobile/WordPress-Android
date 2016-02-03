@@ -3,9 +3,11 @@ package org.wordpress.android.ui.main;
 import com.android.volley.AuthFailureError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.soundcloud.android.crop.Crop;
 import com.wordpress.rest.RestRequest;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -260,16 +262,30 @@ public class MeFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || requestCode == RequestCodes.TAKE_PHOTO) {
-            String path;
-
-            switch (requestCode) {
-                case RequestCodes.PICTURE_LIBRARY:
-                    Uri imageUri = data.getData();
-                    fetchMedia(imageUri);
-                    break;
-            }
+        if (data == null) {
+            return;
         }
+
+        String path;
+
+        switch (requestCode) {
+            case RequestCodes.PICTURE_LIBRARY:
+                Uri imageUri = data.getData();
+                startCropActivity(imageUri);
+                break;
+            case RequestCodes.CROP_PHOTO:
+                if (resultCode == Activity.RESULT_OK) {
+                    fetchMedia(Crop.getOutput(data));
+                } else if (resultCode == Crop.RESULT_ERROR) {
+                    AppLog.e(AppLog.T.API, Crop.getError(data).getMessage());
+                }
+                break;
+        }
+    }
+
+    private void startCropActivity(Uri uri) {
+        Crop.of(uri, Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"))).asSquare().start(getActivity(),
+                this, RequestCodes.CROP_PHOTO);
     }
 
     private void fetchMedia(Uri mediaUri) {

@@ -95,6 +95,8 @@ dependencies {
     }
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
 
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
+
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
     androidTestCompile 'org.mockito:mockito-core:+'
