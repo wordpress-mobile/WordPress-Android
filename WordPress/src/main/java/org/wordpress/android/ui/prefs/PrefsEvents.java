@@ -4,6 +4,7 @@ import com.android.volley.VolleyError;
 
 public class PrefsEvents {
     public static class AccountSettingsFetchSuccess {}
+    public static class AccountSettingsPostSuccess {}
     public static class AccountSettingsFetchError {
         public final VolleyError mVolleyError;
         public AccountSettingsFetchError(VolleyError error) {

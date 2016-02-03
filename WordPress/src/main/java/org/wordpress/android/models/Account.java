@@ -72,6 +72,7 @@ public class Account extends AccountModel {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
+                    EventBus.getDefault().post(new PrefsEvents.AccountSettingsPostSuccess());
                 }
             }
         };
