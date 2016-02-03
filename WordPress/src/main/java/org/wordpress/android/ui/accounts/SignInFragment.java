@@ -350,7 +350,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private final View.OnClickListener mForgotPasswordListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getForgotPasswordURL()));
+            String forgotPasswordUrl = getForgotPasswordURL();
+            AppLog.i(T.NUX, "User tapped forgot password link: " + forgotPasswordUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(forgotPasswordUrl));
             startActivity(intent);
         }
     };
@@ -598,9 +600,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPassword = EditTextUtils.getText(mPasswordEditText).trim();
         mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
         if (isWPComLogin()) {
+            AppLog.i(T.NUX, "User tries to sign in on WordPress.com with username: " + mUsername);
             startProgress(getString(R.string.connecting_wpcom));
             signInAndFetchBlogListWPCom();
         } else {
+            String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
+            AppLog.i(T.NUX, "User tries to sign in on Self Hosted: " + selfHostedUrl + " with username: " + mUsername);
             startProgress(getString(R.string.signing_in));
             signInAndFetchBlogListWPOrg();
         }

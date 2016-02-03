@@ -216,6 +216,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
                 showError(getString(messageId));
             }
         });
+        AppLog.i(T.NUX, "User tries to create a new site, name: " + siteName + ", URL: " + siteUrl);
         createUserAndBlog.startCreateBlogProcess();
     }
 
