@@ -3,6 +3,7 @@ package org.wordpress.android.ui.plans.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.Hashtable;
 import java.util.List;
@@ -53,15 +54,15 @@ public class Feature {
     }
 
     public String getProductSlug() {
-        return mProductSlug;
+        return StringUtils.notNullStr(mProductSlug);
     }
 
     public String getTitle() {
-        return mTitle;
+        return StringUtils.notNullStr(mTitle);
     }
 
     public String getDescription() {
-        return mDescription;
+        return StringUtils.notNullStr(mDescription);
     }
 
     public Hashtable<String, String> getPlanIDToDescription() {

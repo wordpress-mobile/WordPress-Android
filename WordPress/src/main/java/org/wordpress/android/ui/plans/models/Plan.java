@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -109,11 +110,11 @@ public class Plan {
     }
 
     public String getProductName() {
-        return mProductName;
+        return StringUtils.notNullStr(mProductName);
     }
 
     public String getProductNameEnglish() {
-        return mProductNameEnglish;
+        return StringUtils.notNullStr(mProductNameEnglish);
     }
 
     public Hashtable<String, Integer> getPrices() {
@@ -121,23 +122,23 @@ public class Plan {
     }
 
     public String getProductNameShort() {
-        return mProductNameShort;
+        return StringUtils.notNullStr(mProductNameShort);
     }
 
     public String getProductSlug() {
-        return mProductSlug;
+        return StringUtils.notNullStr(mProductSlug);
     }
 
     public String getTagline() {
-        return mTagline;
+        return StringUtils.notNullStr(mTagline);
     }
 
     public String getShortdesc() {
-        return mShortdesc;
+        return StringUtils.notNullStr(mShortdesc);
     }
 
     public String getDescription() {
-        return mDescription;
+        return StringUtils.notNullStr(mDescription);
     }
 
     public long getCost() {
@@ -149,7 +150,7 @@ public class Plan {
     }
 
     public String getProductType() {
-        return mProductType;
+        return StringUtils.notNullStr(mProductType);
     }
 
     public boolean isAvailable() {
@@ -165,15 +166,15 @@ public class Plan {
     }
 
     public String getBillPeriodLabel() {
-        return mBillPeriodLabel;
+        return StringUtils.notNullStr(mBillPeriodLabel);
     }
 
     public String getPrice() {
-        return mPrice;
+        return StringUtils.notNullStr(mPrice);
     }
 
     public String getFormattedPrice() {
-        return mFormattedPrice;
+        return StringUtils.notNullStr(mFormattedPrice);
     }
 
     public int getRawPrice() {
@@ -189,11 +190,11 @@ public class Plan {
     }
 
     public String getCapability() {
-        return mCapability;
+        return StringUtils.notNullStr(mCapability);
     }
 
     public String getSupportDocument() {
-        return mSupportDocument;
+        return StringUtils.notNullStr(mSupportDocument);
     }
 
     public int getMulti() {
@@ -205,7 +206,7 @@ public class Plan {
     }
 
     public String getFormattedOriginalPrice() {
-        return mFormattedOriginalPrice;
+        return StringUtils.notNullStr(mFormattedOriginalPrice);
     }
 
     public long getSaving() {

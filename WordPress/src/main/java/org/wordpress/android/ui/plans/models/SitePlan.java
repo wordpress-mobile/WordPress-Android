@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.plans.models;
 
-import android.support.annotation.Nullable;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.StringUtils;
 
 /**
  * This class represent an available Plan for a site.
@@ -68,7 +67,7 @@ public class SitePlan {
     }
 
     public String getFormattedPrice() {
-        return mFormattedPrice;
+        return StringUtils.notNullStr(mFormattedPrice);
     }
 
     public int getRawDiscount() {
@@ -76,15 +75,15 @@ public class SitePlan {
     }
 
     public String getFormattedDiscount() {
-        return mFormattedDiscount;
+        return StringUtils.notNullStr(mFormattedDiscount);
     }
 
     public String getProductName() {
-        return mProductName;
+        return StringUtils.notNullStr(mProductName);
     }
 
     public String getProductSlug() {
-        return mProductSlug;
+        return StringUtils.notNullStr(mProductSlug);
     }
 
     public boolean isCurrentPlan() {
@@ -99,22 +98,19 @@ public class SitePlan {
         return mBlogLocalTableID;
     }
 
-    @Nullable
     public String getSubscribedDate() {
-        return mSubscribedDate;
+        return StringUtils.notNullStr(mSubscribedDate);
     }
 
-    @Nullable
     public String getUserFacingExpiry() {
-        return mUserFacingExpiry;
+        return StringUtils.notNullStr(mUserFacingExpiry);
     }
 
     public boolean isFreeTrial() {
         return mFreeTrial;
     }
 
-    @Nullable
     public String getExpiry() {
-        return mExpiry;
+        return StringUtils.notNullStr(mExpiry);
     }
 }
