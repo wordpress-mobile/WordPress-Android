@@ -56,7 +56,7 @@ public enum CommentStatus {
             case TRASH:
                 return "trash";
             default:
-                return "";
+                return "all";
         }
     }
 

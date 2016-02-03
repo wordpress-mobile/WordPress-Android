@@ -160,15 +160,24 @@ public class CommentTable {
         CommentList comments = new CommentList();
         Cursor c;
 
+        //aggregating 'all' to include approved and unapproved comments
         if (CommentStatus.UNKNOWN.equals(filter)){
-            String[] args = {Integer.toString(localBlogId), CommentStatus.toString(CommentStatus.APPROVED), CommentStatus.toString(CommentStatus.UNAPPROVED)};
+            //we need to get the filter values for both XMLrpc and REST api as in the case of a migration where existing
+            // data is present on a device, we still need to be able to filter both values
+            String[] args = {Integer.toString(localBlogId),
+                    CommentStatus.toString(CommentStatus.APPROVED),
+                    CommentStatus.toString(CommentStatus.UNAPPROVED),
+                    CommentStatus.toRESTString(CommentStatus.APPROVED),
+                    CommentStatus.toRESTString(CommentStatus.UNAPPROVED)};
             c = getReadableDb().rawQuery(
-                    "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND (status=? OR status=?) ORDER BY published DESC", args);
+                    "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND (status=? OR status=? OR status=? OR status=?)  ORDER BY published DESC", args);
 
         } else {
-            String[] args = {Integer.toString(localBlogId), CommentStatus.toString(filter)};
+            //we need to get the filter values for both XMLrpc and REST api as in the case of a migration where existing
+            // data is present on a device, we still need to be able to filter both values
+            String[] args = {Integer.toString(localBlogId), CommentStatus.toString(filter), CommentStatus.toRESTString(filter)};
             c = getReadableDb().rawQuery(
-                    "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND status=? ORDER BY published DESC", args);
+                    "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND (status=? OR status=?)  ORDER BY published DESC", args);
         }
 
         try {
