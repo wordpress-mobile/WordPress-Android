@@ -80,9 +80,6 @@ public class MySiteFragment extends Fragment
         mBlogLocalId = BlogUtils.getBlogLocalId(blog);
 
         refreshBlogDetails(blog);
-
-        // Prefetch available plans for the site
-        PlansUtils.downloadAvailablePlansForSite(false, blog, null);
     }
 
     @Override
