@@ -935,8 +935,7 @@
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
-    <string name="error_refresh_unauthorized_profile">You don\'t have permission to view or edit your profile - check your configured site is whitelisted</string>
-    <string name="error_refresh_profile_not_loaded">There was an error trying to access your profile information</string>
+    <string name="error_refresh_profile_not_accessible">There was an error trying to access your profile information</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
