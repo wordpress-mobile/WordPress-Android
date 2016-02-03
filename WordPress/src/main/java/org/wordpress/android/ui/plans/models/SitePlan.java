@@ -27,8 +27,8 @@ public class SitePlan {
   },
      */
 
-    protected long mBlogLocalTableID;
-    protected long mProductID;
+    protected final long mBlogLocalTableID;
+    protected final long mProductID;
     protected int mRawPrice;
     protected String mFormattedPrice;
     protected int mRawDiscount;

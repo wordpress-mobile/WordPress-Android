@@ -19,7 +19,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
@@ -101,6 +100,7 @@ public class WordPress extends Application {
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
+    private static final int SECONDS_BETWEEN_PLANS_UPDATE = 20 * 60; // 20 minutes
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
@@ -117,6 +117,15 @@ public class WordPress extends Application {
                 return true;
             }
             return false;
+        }
+    };
+
+    /**
+     *  Download all available plans from wpcom. If the call ends with success it start to download features.
+     */
+    public static RateLimitedTask sAvailablePlans = new RateLimitedTask(SECONDS_BETWEEN_PLANS_UPDATE) {
+        protected boolean run() {
+            return PlansUtils.downloadGlobalPlans(WordPress.getContext(), null, null);
         }
     };
 
@@ -770,7 +779,7 @@ public class WordPress extends Application {
                 sUpdateCurrentBlogOption.runIfNotLimited();
 
                 // Update global plans
-                PlansUtils.sAvailablePlans.runIfNotLimited();
+                sAvailablePlans.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
         }

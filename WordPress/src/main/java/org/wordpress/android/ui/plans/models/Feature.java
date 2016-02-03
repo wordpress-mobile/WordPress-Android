@@ -28,7 +28,7 @@ public class Feature {
     private String mTitle;
     private String mDescription;
     private boolean mIsNotPartOfFreeTrial;
-    private Hashtable<String, String> planIDToDescription = new Hashtable<>(); // plan ID/Description that have this feature in it.
+    private final Hashtable<String, String> planIDToDescription = new Hashtable<>(); // plan ID/Description that have this feature in it.
 
     public Feature(JSONObject featureJSONObject, List<Long> plansIDS) throws JSONException {
         mProductSlug = featureJSONObject.getString("product_slug");

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plans;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -16,7 +17,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import java.util.Map;
 
 public class PlansUtils {
 
-    private static final int SECONDS_BETWEEN_PLANS_UPDATE = 20 * 60; // 20 minutes
     private static HashMap<Integer, List<SitePlan>> availablePlansForSites = new HashMap<>();
 
     public interface AvailablePlansListener {
@@ -39,7 +39,7 @@ public class PlansUtils {
             return false;
         }
 
-        if (!force && PlansUtils.getAvailablelPlansForSite(blog) != null) {
+        if (!force && PlansUtils.getAvailablePlansForSite(blog) != null) {
             // Plans for the site already available.
             return false;
         }
@@ -87,7 +87,7 @@ public class PlansUtils {
     }
 
     @Nullable
-    public static List<SitePlan> getAvailablelPlansForSite(Blog blog) {
+    public static List<SitePlan> getAvailablePlansForSite(Blog blog) {
         return availablePlansForSites.get(blog.getLocalTableBlogId());
     }
 
@@ -177,7 +177,10 @@ public class PlansUtils {
         return features;
     }
 
-    public static void downloadGlobalPlans(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
+    public static boolean downloadGlobalPlans(final Context ctx, final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
+        if (!NetworkUtils.isNetworkAvailable(ctx)) {
+            return false;
+        }
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtils().get("plans/", params, null, new RestRequest.Listener() {
             @Override
@@ -188,7 +191,7 @@ public class PlansUtils {
                     AppPrefs.setGlobalPlans(response.toString());
 
                     // Load details of features from the server.
-                    downloadFeatures(null, null);
+                    downloadFeatures(ctx, null, null);
                 }
 
                 if (listener != null) {
@@ -204,9 +207,18 @@ public class PlansUtils {
                 }
             }
         });
+        return true;
     }
 
-    public static void downloadFeatures(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
+    /*
+     * Download Features from the WordPress.com backend.
+     *
+     * Return true if the request is enqueued. False otherwise.
+     */
+    public static boolean downloadFeatures(final Context ctx, final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
+        if (!NetworkUtils.isNetworkAvailable(ctx)) {
+            return false;
+        }
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtils().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
@@ -229,23 +241,14 @@ public class PlansUtils {
                 }
             }
         });
+
+        return true;
     }
-
-
-    /**
-     *  Download all available plans from wpcom. If the call ends with success it start to download features.
-     */
-    public static RateLimitedTask sAvailablePlans = new RateLimitedTask(SECONDS_BETWEEN_PLANS_UPDATE) {
-        protected boolean run() {
-            downloadGlobalPlans(null, null);
-            return true;
-        }
-    };
 
     /**
      * This function returns default parameters used in all REST Calls in Plans.
      *
-     * The "locale" parameter fox ex is one of those we need to add to the request. It must be set to retrieve
+     * The "locale" parameter fox example is one of those we need to add to the request. It must be set to retrieve
      * the localized version of plans descriptions and avoid hardcode them in code.
      *
      * @return The map with default parameters.
@@ -273,11 +276,8 @@ public class PlansUtils {
             return false;
         }*/
 
-        // fast implementation of the function above. Less safe though.
-        String plansString = AppPrefs.getGlobalPlans();
-        if (TextUtils.isEmpty(plansString)) {
-            return false;
-        }
-        return (blog.getPlanID() != 0);
+       // fastes than above but not completely safe.
+      return !TextUtils.isEmpty(AppPrefs.getGlobalPlans()) &&
+              blog.getPlanID() != 0;
     }
 }

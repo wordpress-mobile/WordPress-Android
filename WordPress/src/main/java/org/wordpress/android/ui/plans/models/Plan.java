@@ -14,7 +14,7 @@ public class Plan {
     private long mProductID;
     private String mProductName;
     private String mProductNameEnglish;
-    private Hashtable<String, Integer> mPrices = new Hashtable();
+    private final Hashtable<String, Integer> mPrices = new Hashtable<>();
     private String mProductNameShort;
     private String mProductSlug;
     private String mTagline;
