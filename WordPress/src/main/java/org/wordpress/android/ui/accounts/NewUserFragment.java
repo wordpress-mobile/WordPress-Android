@@ -26,6 +26,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -307,6 +309,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         }
                     }
                 });
+        AppLog.i(T.NUX, "User tries to create a new account, username: " + username + ", email: " + email
+                        + ", site name: " + siteName + ", site URL: " + siteUrl);
         createUserAndBlog.startCreateUserAndBlogProcess();
     }
 
