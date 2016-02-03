@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -203,6 +204,22 @@ public class PostPreviewActivity extends AppCompatActivity {
                     revertPost();
                 }
             });
+        }
+
+        // if both buttons are visible, show them below the message instead of to the right of it
+        if (mPost.isLocalChange()) {
+            RelativeLayout.LayoutParams paramsMessage = (RelativeLayout.LayoutParams) messageText.getLayoutParams();
+            // passing "0" removes the param (necessary since removeRule() is API 17+)
+            paramsMessage.addRule(RelativeLayout.LEFT_OF, 0);
+            paramsMessage.addRule(RelativeLayout.CENTER_VERTICAL, 0);
+            ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
+            marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_small);
+
+            ViewGroup buttonsView = (ViewGroup) messageView.findViewById(R.id.layout_buttons);
+            RelativeLayout.LayoutParams paramsButtons = (RelativeLayout.LayoutParams) buttonsView.getLayoutParams();
+            paramsButtons.addRule(RelativeLayout.BELOW, R.id.message_text);
+            ViewGroup.MarginLayoutParams marginsButtons = (ViewGroup.MarginLayoutParams) buttonsView.getLayoutParams();
+            marginsButtons.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_large);
         }
 
         // first set message bar to invisible so it takes up space, then animate it in
