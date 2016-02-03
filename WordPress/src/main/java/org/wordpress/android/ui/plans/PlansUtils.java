@@ -35,7 +35,7 @@ public class PlansUtils {
     }
 
     public static boolean downloadAvailablePlansForSite(boolean force, final Blog blog, final AvailablePlansListener listener) {
-        if (!PlansUtils.isPlanFeatureAvailableForBlog(blog)) {
+        if (blog == null || !PlansUtils.isPlanFeatureAvailableForBlog(blog)) {
             return false;
         }
 
@@ -271,13 +271,7 @@ public class PlansUtils {
      * @return True if Plans are enabled on the blog
      */
     public static boolean isPlanFeatureAvailableForBlog(Blog blog) {
-        /*List<Long> plansIDS = getGlobalPlansIDS();
-        if (plansIDS == null || plansIDS.size() == 0) {
-            return false;
-        }*/
-
-       // fastes than above but not completely safe.
-      return !TextUtils.isEmpty(AppPrefs.getGlobalPlans()) &&
-              blog.getPlanID() != 0;
+        return !TextUtils.isEmpty(AppPrefs.getGlobalPlans()) &&
+                blog != null && blog.getPlanID() != 0;
     }
 }
