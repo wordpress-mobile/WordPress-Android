@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plans;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -12,6 +13,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
+import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.RateLimitedTask;
@@ -25,7 +27,71 @@ import java.util.Map;
 public class PlansUtils {
 
     private static final int SECONDS_BETWEEN_PLANS_UPDATE = 20 * 60; // 20 minutes
+    private static HashMap<Integer, List<SitePlan>> availablePlansForSites = new HashMap<>();
 
+    public interface AvailablePlansListener {
+        void onResponse(List<SitePlan> plans);
+        void onError(Exception volleyError);
+    }
+
+    public static boolean downloadAvailablePlansForSite(boolean force, final Blog blog, final AvailablePlansListener listener) {
+        if (!PlansUtils.isPlanFeatureAvailableForBlog(blog)) {
+            return false;
+        }
+
+        if (!force && PlansUtils.getAvailablelPlansForSite(blog) != null) {
+            // Plans for the site already available.
+            return false;
+        }
+
+        Map<String, String> params = getDefaultRestCallParameters();
+        WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", params, null, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (response != null) {
+                    AppLog.d(AppLog.T.PLANS, response.toString());
+                    List<SitePlan> plans = new ArrayList<>();
+                    try {
+                        JSONArray planIDs = response.names();
+                        if (planIDs != null) {
+                            for (int i=0; i < planIDs.length(); i ++) {
+                                String currentKey = planIDs.getString(i);
+                                JSONObject currentPlanJSON = response.getJSONObject(currentKey);
+                                SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, blog);
+                                plans.add(currentPlan);
+                            }
+                        }
+                        availablePlansForSites.put(blog.getLocalTableBlogId(), plans);
+                        if (listener!= null) {
+                            listener.onResponse(plans);
+                        }
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
+                        if (listener!= null) {
+                            listener.onError(e);
+                        }
+                    }
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.UTILS, "Error", volleyError);
+                if (listener!= null) {
+                    listener.onError(volleyError);
+                }
+            }
+        });
+
+        return true;
+    }
+
+    @Nullable
+    public static List<SitePlan> getAvailablelPlansForSite(Blog blog) {
+        return availablePlansForSites.get(blog.getLocalTableBlogId());
+    }
+
+    @Nullable
     public static Plan getGlobalPlan(long planId) {
         List<Plan> plans = getGlobalPlans();
         if (plans == null || plans.size() == 0) {
@@ -41,6 +107,7 @@ public class PlansUtils {
         return null;
     }
 
+    @Nullable
     public static List<Plan> getGlobalPlans() {
         String plansString = AppPrefs.getGlobalPlans();
         if (TextUtils.isEmpty(plansString)) {
@@ -64,6 +131,7 @@ public class PlansUtils {
         return plans;
     }
 
+    @Nullable
     public static List<Long> getGlobalPlansIDS() {
         List<Plan> plans = getGlobalPlans();
         if (plans == null) {
@@ -78,7 +146,8 @@ public class PlansUtils {
         return plansIDS;
     }
 
-    public static List<Feature> getGlobalPlansFeatures() {
+    @Nullable
+    public static List<Feature> getFeatures() {
         String featuresString = AppPrefs.getGlobalPlansFeatures();
         if (TextUtils.isEmpty(featuresString)) {
             return null;
@@ -108,7 +177,7 @@ public class PlansUtils {
         return features;
     }
 
-    public static void updateGlobalPlans(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
+    public static void downloadGlobalPlans(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtils().get("plans/", params, null, new RestRequest.Listener() {
             @Override
@@ -119,7 +188,7 @@ public class PlansUtils {
                     AppPrefs.setGlobalPlans(response.toString());
 
                     // Load details of features from the server.
-                    updateGlobalPlansFeatures(null, null);
+                    downloadFeatures(null, null);
                 }
 
                 if (listener != null) {
@@ -137,7 +206,7 @@ public class PlansUtils {
         });
     }
 
-    public static void updateGlobalPlansFeatures(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
+    public static void downloadFeatures(final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtils().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
@@ -168,7 +237,7 @@ public class PlansUtils {
      */
     public static RateLimitedTask sAvailablePlans = new RateLimitedTask(SECONDS_BETWEEN_PLANS_UPDATE) {
         protected boolean run() {
-            updateGlobalPlans(null, null);
+            downloadGlobalPlans(null, null);
             return true;
         }
     };

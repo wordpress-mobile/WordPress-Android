@@ -8,6 +8,22 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class Feature {
+    /*
+
+        We "need" the IDs of plans to parse Feature correctly, since the Feature contains the IDs of plans
+        where it's available as first level key. The value is the label of the feature in that plan.
+        See the example below:
+
+        {
+        "product_slug": "space",
+        "title": "Space",
+        "description": "Increase your available storage space and add the ability to upload audio files.",
+        "1": "3GB",
+        "1003": "13GB",
+        "1008": "Unlimited"
+    },
+     */
+
     private String mProductSlug;
     private String mTitle;
     private String mDescription;

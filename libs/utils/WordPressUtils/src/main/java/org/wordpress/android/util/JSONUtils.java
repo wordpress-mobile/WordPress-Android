@@ -213,6 +213,11 @@ public class JSONUtils {
         return true;
     }
 
+    public static boolean isStringTrue(JSONObject json, String name) {
+        String rawAvailable = json.optString(name).toLowerCase();
+        return "yes".equals(rawAvailable) || "1".equals(rawAvailable) || "true".equals(rawAvailable);
+    }
+
     /*
      * returns the JSONObject child of the passed parent that matches the passed query
      * this is basically an "optJSONObject" that supports nested queries, for example:

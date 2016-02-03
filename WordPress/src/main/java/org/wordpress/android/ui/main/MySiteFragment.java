@@ -80,6 +80,9 @@ public class MySiteFragment extends Fragment
         mBlogLocalId = BlogUtils.getBlogLocalId(blog);
 
         refreshBlogDetails(blog);
+
+        // Prefetch available plans for the site
+        PlansUtils.downloadAvailablePlansForSite(false, blog, null);
     }
 
     @Override
@@ -358,27 +361,6 @@ public class MySiteFragment extends Fragment
 
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
-
-
-        //Reload plans details for the current blog.
-        if (PlansUtils.isPlanFeatureAvailableForBlog(blog)) {
-            WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", new RestRequest.Listener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    if (response != null) {
-                        AppLog.d(AppLog.T.UTILS, response.toString());
-                    } else {
-
-                    }
-                }
-            }, new RestRequest.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                   // JSONObject errorObject = VolleyUtils.volleyErrorToJSON(volleyError);
-                    AppLog.e(AppLog.T.UTILS, "Error", volleyError);
-                }
-            });
-        }
 
         // Hide the Plan item if the Plans feature is not available.
         mPlansContainer.setVisibility(PlansUtils.isPlanFeatureAvailableForBlog(blog) ? View.VISIBLE : View.GONE);

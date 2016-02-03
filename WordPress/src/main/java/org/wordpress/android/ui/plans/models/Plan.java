@@ -4,6 +4,7 @@ package org.wordpress.android.ui.plans.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.JSONUtils;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -65,8 +66,7 @@ public class Plan {
         mCost = planJSONObject.getLong("cost");
         mBillPeriod = planJSONObject.getInt("bill_period");
         mProductType = planJSONObject.getString("product_type");
-        String rawAvailable = planJSONObject.optString("available");
-        isAvailable = "yes".equals(rawAvailable) || "1".equals(rawAvailable) || "true".equals(rawAvailable);
+        isAvailable = JSONUtils.isStringTrue(planJSONObject, "available");
         mBillPeriodLabel = planJSONObject.getString("bill_period_label");
         mPrice = planJSONObject.getString("price");
         mFormattedPrice = planJSONObject.getString("formatted_price");
