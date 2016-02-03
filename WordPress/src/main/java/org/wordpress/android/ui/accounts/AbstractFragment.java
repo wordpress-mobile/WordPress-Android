@@ -39,7 +39,6 @@ public abstract class AbstractFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppLog.v(T.NUX, "NewAccountAbstractOage.onCreate()");
         mSystemService = (ConnectivityManager) getActivity().getApplicationContext().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         if (requestQueue == null) {

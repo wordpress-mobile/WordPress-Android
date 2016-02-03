@@ -50,7 +50,7 @@
             android:id="@+id/pref_site_language"
             android:key="@string/pref_key_site_language"
             android:title="@string/site_settings_language_title"
-            android:entries="@array/available_languages"
+            android:entries="@array/language_codes"
             android:entryValues="@array/language_codes"
             app:longClickHint="@string/site_settings_language_hint" />
 
@@ -67,6 +67,7 @@
             android:key="@string/pref_key_site_username"
             android:title="@string/site_settings_username_title"
             android:enabled="false"
+            android:maxLength="@integer/max_length_username"
             app:summaryLines="1"
             app:maxSummaryLines="2"
             app:longClickHint="@string/site_settings_username_hint" />
@@ -77,6 +78,7 @@
             android:title="@string/site_settings_password_title"
             android:enabled="false"
             android:inputType="textPassword"
+            android:maxLength="@integer/max_length_password"
             app:summaryLines="1"
             app:maxSummaryLines="2"
             app:longClickHint="@string/site_settings_password_hint" />

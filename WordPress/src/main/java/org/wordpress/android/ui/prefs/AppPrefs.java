@@ -46,6 +46,9 @@ public class AppPrefs {
 
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
+
+        // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
+        STATS_WIDGET_PROMO_ANALYTICS,
     }
 
     /**
@@ -253,5 +256,14 @@ public class AppPrefs {
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
         }
+    }
+
+    // Store the number of times Stats are loaded successfully before showing the Promo Dialog
+    public static void bumpAnalyticsForStatsWidgetPromo() {
+        int current = getAnalyticsForStatsWidgetPromo();
+        setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, current + 1);
+    }
+    public static int getAnalyticsForStatsWidgetPromo() {
+        return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 }
