@@ -210,12 +210,9 @@ public class JSONUtils {
             return false;
         if (value.equalsIgnoreCase("false"))
             return false;
+        if (value.equalsIgnoreCase("no"))
+            return false;
         return true;
-    }
-
-    public static boolean isStringTrue(JSONObject json, String name) {
-        String rawAvailable = json.optString(name).toLowerCase();
-        return "yes".equals(rawAvailable) || "1".equals(rawAvailable) || "true".equals(rawAvailable);
     }
 
     /*
