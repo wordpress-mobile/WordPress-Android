@@ -30,7 +30,6 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -104,7 +103,6 @@ public class NotificationsUtils {
         Map<String, String> contentStruct = new HashMap<>();
         contentStruct.put("device_token", token);
         contentStruct.put("device_family", "android");
-        contentStruct.put("app_secret_key", BuildConfig.APP_PN_KEY);
         contentStruct.put("device_name", deviceName);
         contentStruct.put("device_model", Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);

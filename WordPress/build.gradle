@@ -35,7 +35,6 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
 
-        buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.release.build\""
         buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
     }
 
@@ -44,13 +43,11 @@ android {
 
         zalpha { // alpha version - enable experimental features
             buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.alpha.build\""
             applicationId "org.wordpress.android"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             applicationId "org.wordpress.android.beta"
         }
     }
