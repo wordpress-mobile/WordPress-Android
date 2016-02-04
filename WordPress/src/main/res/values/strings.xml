@@ -587,6 +587,7 @@
 
     <!-- Errors -->
     <string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
+    <string name="site_settings_unknown_language_code_error">Language code not recognized</string>
     <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
 
     <!--               -->
@@ -628,6 +629,11 @@
     <string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
     <string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
     <string name="stats_widget_error_jetpack_no_blogid">Please access the Stats in the app, and try adding the widget later</string>
+
+    <!-- stats: Widget Promote Dialog -->
+    <string name="stats_widget_promo_title">Home Screen Stats Widget</string>
+    <string name="stats_widget_promo_desc">Add the widget to your home screen to access your Stats in one click.</string>
+    <string name="stats_widget_promo_ok_btn_label">Ok, got it</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -941,6 +947,10 @@
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
+    <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+    <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
+    <string name="error_post_my_profile">Couldn\'t save your profile</string>
+    <string name="error_post_my_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
