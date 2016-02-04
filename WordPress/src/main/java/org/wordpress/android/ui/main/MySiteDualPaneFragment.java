@@ -15,7 +15,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
  * Concrete implementation of MySite dual pane fragment.
  */
 
-public class MySiteDualPaneFragment extends DualPaneHostFragment {
+public class MySiteDualPaneFragment extends DualPaneHostFragment implements WPMainActivity.OnScrollToTopListener {
 
     private static final String PREVIOUS_BLOG_LOCAL_ID = "previous_blog_local_id";
 
@@ -77,5 +77,17 @@ public class MySiteDualPaneFragment extends DualPaneHostFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(PREVIOUS_BLOG_LOCAL_ID, mCurrentBlogId);
+    }
+
+    @Override
+    public void onScrollToTop() {
+        passScrollToTopEvent(getSidebarFragment());
+        passScrollToTopEvent(getContentPaneFragment());
+    }
+
+    private void passScrollToTopEvent(Fragment fragment) {
+        if (fragment != null && fragment instanceof WPMainActivity.OnScrollToTopListener) {
+            ((WPMainActivity.OnScrollToTopListener) fragment).onScrollToTop();
+        }
     }
 }
