@@ -1279,4 +1279,7 @@
     <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
 
+    <!-- Plans -->
+    <string name="plan">Plan</string>
+
 </resources>

@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +26,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
+import org.wordpress.android.ui.plans.PlansUtils;
+import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -50,6 +54,7 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
     private View mFabView;
@@ -128,6 +133,7 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
@@ -160,6 +166,22 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
+            }
+        });
+
+        mPlanContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Blog current = WordPress.getBlog(mBlogLocalId);
+                Plan currentBlogPlan = PlansUtils.getGlobalPlan(current.getPlanID());
+                String desc = currentBlogPlan != null ? currentBlogPlan.getDescription() : "Unknown";
+                String title = currentBlogPlan != null ? currentBlogPlan.getProductName() : "Unknown";
+                Dialog dlg = new AlertDialog.Builder(getActivity())
+                        .setTitle(title)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setMessage(desc)
+                        .create();
+                dlg.show();
             }
         });
 
@@ -331,6 +353,9 @@ public class MySiteFragment extends Fragment
 
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
+
+        // Hide the Plan item if the Plans feature is not available.
+        mPlanContainer.setVisibility(PlansUtils.isPlanFeatureAvailableForBlog(blog) ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -41,6 +41,7 @@ public class Blog {
     private String blogOptions = "{}";
     private boolean isAdmin;
     private boolean isHidden;
+    private long planID;
 
     public Blog() {
     }
@@ -482,5 +483,13 @@ public class Blog {
             }
             return remoteID;
         }
+    }
+
+    public long getPlanID() {
+        return planID;
+    }
+
+    public void setPlanID(long planID) {
+        this.planID = planID;
     }
 }

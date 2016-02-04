@@ -43,6 +43,8 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
                     site.put("blogid", jsonSite.get("ID"));
                     site.put("isAdmin", jsonSite.get("user_can_manage"));
                     site.put("isVisible", jsonSite.get("visible"));
+                    JSONObject plan = jsonSite.getJSONObject("plan");
+                    site.put("planID", plan.get("product_id"));
                     JSONObject jsonLinks = JSONUtils.getJSONChild(jsonSite, "meta/links");
                     if (jsonLinks != null) {
                         site.put("xmlrpc", jsonLinks.getString("xmlrpc"));

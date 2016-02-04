@@ -20,6 +20,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -198,7 +199,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
                     String blogId = details.getString("blogid");
                     String username = AccountHelper.getDefaultAccount().getUserName();
                     BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, null, null, null,
-                            true, true);
+                            true, true, PlansConstants.DEFAULT_PLAN_ID_FOR_NEW_BLOG);
                     ToastUtils.showToast(getActivity(), R.string.new_blog_wpcom_created);
                 } catch (JSONException e) {
                     AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
