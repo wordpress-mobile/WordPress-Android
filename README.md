@@ -48,7 +48,7 @@ You can use [Android Studio][3] by importing the project as a Gradle project.
             |   |-- java        # main project java code
             |   `-- res         # main project resources
             |-- vanilla         # vanilla variant specific manifest
-            `-- zbetagroup      # beta variant specific resources and manifest
+            `-- wasabi          # wasabi variant specific resources and manifest
 
 ## OAuth2 Authentication ##
 
