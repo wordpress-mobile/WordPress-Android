@@ -16,6 +16,7 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
 
     public final static String ARG_LAUNCHED_FROM_DUAL_PANE_HOST = "launched_from_dual_pane_dashboard";
     public final static String FRAGMENT_STATE_KEY = "fragment_state";
+    public final static String RETAINED_FRAGMENT_STATE_KEY = "retained_fragment_state";
 
     private Fragment.SavedState mFragmentSavedState;
 
@@ -33,15 +34,13 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
         boolean isLaunchedFromDualPaneDashboard = getIntent().getBooleanExtra(ARG_LAUNCHED_FROM_DUAL_PANE_HOST, false);
 
         // When activity launched from dual pane host gets recreated in dual pane mode it calls finish(), but before that,
-        // it grabs nested fragment's state and broadcasts it using EventBus. Dual pane host get's it and use's it to show
-        // fragment in dual pane mode.
+        // it broadcasts retained fragment state using EventBus. Dual pane host get's it and use's it to show fragment in
+        // dual pane mode.
         if (DualPaneHelper.isInDualPaneConfiguration(this) && isLaunchedFromDualPaneDashboard) {
 
-            Fragment hostedFragment = getHostedFragment();
-
-            if (hostedFragment != null) {
-                Fragment.SavedState savedState = getSupportFragmentManager().saveFragmentInstanceState(hostedFragment);
-                EventBus.getDefault().postSticky(new DualPaneContentState(getIntent(), hostedFragment.getClass(),
+            if (savedInstanceState != null && getHostedFragment() != null) {
+                Fragment.SavedState savedState = savedInstanceState.getParcelable(RETAINED_FRAGMENT_STATE_KEY);
+                EventBus.getDefault().postSticky(new DualPaneContentState(getIntent(), getHostedFragment().getClass(),
                         savedState));
             }
 
@@ -57,5 +56,17 @@ public abstract class DualPaneContentActivity extends AppCompatActivity {
 
     protected Fragment.SavedState getFragmentSavedState() {
         return mFragmentSavedState;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Fragment hostedFragment = getHostedFragment();
+
+        if (hostedFragment != null) {
+            Fragment.SavedState savedState = getSupportFragmentManager().saveFragmentInstanceState(hostedFragment);
+            outState.putParcelable(RETAINED_FRAGMENT_STATE_KEY, savedState);
+        }
     }
 }
