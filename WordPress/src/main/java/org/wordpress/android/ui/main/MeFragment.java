@@ -94,7 +94,7 @@ public class MeFragment extends Fragment {
         addDropShadowToAvatar();
         refreshAccountDetails();
 
-        mAvatarFrame.setOnClickListener(new View.OnClickListener() {
+        mAvatarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WordPressMediaUtils.launchPictureLibrary(MeFragment.this);
