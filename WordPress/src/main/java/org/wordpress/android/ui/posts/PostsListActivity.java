@@ -5,21 +5,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.DualPaneContentActivity;
 import org.wordpress.android.util.ToastUtils;
 
-/*
- * Serves as the host for PostsListFragment when showing uploaded posts.
+/**
+ * Serves as the host for {@link PostsListFragment} when showing uploaded posts/pages.
  */
-
-public class PostsListActivity extends AppCompatActivity {
+public class PostsListActivity extends DualPaneContentActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
@@ -30,14 +32,36 @@ public class PostsListActivity extends AppCompatActivity {
     private PostsListFragment mPostList;
 
     @Override
+    protected String getContentFragmentTag() {
+        return PostsListFragment.class.getSimpleName();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.post_list_activity);
 
         mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
 
-        FragmentManager fm = getSupportFragmentManager();
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mPostList = (PostsListFragment) fragmentManager.findFragmentByTag(getContentFragmentTag());
+
+        if (mPostList == null) {
+            mPostList = (PostsListFragment) Fragment.instantiate(this, PostsListFragment.class.getName(),
+                    getIntent().getExtras());
+            mPostList.setInitialSavedState(getFragmentSavedState());
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, mPostList, getContentFragmentTag()).commit();
+        }
 
         showErrorDialogIfNeeded(getIntent().getExtras());
         showWarningToastIfNeeded(getIntent().getExtras());

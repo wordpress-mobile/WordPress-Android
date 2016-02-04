@@ -200,6 +200,7 @@
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
+    <dimen name="my_site_sidebar_width">300dp</dimen>
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>

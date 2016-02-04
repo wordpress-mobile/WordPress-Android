@@ -50,7 +50,7 @@
         <item name="android:divider">@drawable/tab_divider_wordpress</item>
     </style>
 
-   <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
+    <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
@@ -231,11 +231,20 @@
 
     <!--My Site Styles-->
     <style name="MySiteListRowLayout">
+        <item name="android:addStatesFromChildren">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="MySiteListRowSelectableLayer">
+        <item name="android:background">@drawable/my_site_list_row_selector</item>
+        <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
+
 
     <style name="MySiteListRowIcon">
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
@@ -333,6 +342,7 @@
         <item name="android:windowEnterAnimation">@anim/activity_slide_in_from_right</item>
         <item name="android:windowExitAnimation">@anim/activity_slide_out_to_right</item>
     </style>
+
     <style name="MyProfileRow">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>

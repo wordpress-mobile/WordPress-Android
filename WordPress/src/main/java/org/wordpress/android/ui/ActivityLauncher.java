@@ -3,6 +3,7 @@ package org.wordpress.android.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -20,13 +21,14 @@ import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
@@ -37,6 +39,7 @@ import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DualPaneHelper;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
@@ -72,10 +75,20 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewCurrentBlogPosts(Context context) {
+    public static void viewCurrentBlogPosts(Context context, @Nullable DualPaneHost dualPaneHost) {
         Intent intent = new Intent(context, PostsListActivity.class);
-        slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
+
+        if (dualPaneHost != null) {
+            showDualPaneContent(context,
+                    PostsListFragment.class,
+                    context.getString(R.string.fragment_tag_blog_post_list),
+                    intent,
+                    dualPaneHost,
+                    AnalyticsTracker.Stat.OPENED_POSTS);
+        } else {
+            slideInFromRight(context, intent);
+            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
+        }
     }
 
     public static void viewCurrentBlogMedia(Context context) {
@@ -84,11 +97,21 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
 
-    public static void viewCurrentBlogPages(Context context) {
+    public static void viewCurrentBlogPages(Context context, @Nullable DualPaneHost dualPaneHost) {
         Intent intent = new Intent(context, PostsListActivity.class);
+
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
-        slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
+        if (dualPaneHost != null) {
+            showDualPaneContent(context,
+                    PostsListFragment.class,
+                    context.getString(R.string.fragment_tag_blog_pages_list),
+                    intent,
+                    dualPaneHost,
+                    AnalyticsTracker.Stat.OPENED_PAGES);
+        } else {
+            slideInFromRight(context, intent);
+            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
+        }
     }
 
     public static void viewCurrentBlogComments(Context context) {
@@ -142,7 +165,7 @@ public class ActivityLauncher {
 
         // Create a new post object and assign default settings
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
-        newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) +"]");
+        newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) + "]");
         newPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(context));
         WordPress.wpDB.savePost(newPost);
 
@@ -282,6 +305,34 @@ public class ActivityLauncher {
                 R.anim.activity_slide_in_from_right,
                 R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, intent, requestCode, options.toBundle());
+    }
+
+    private static void showDualPaneContent(Context context, Class fragmentClass, String tag, Intent intent,
+                                            DualPaneHost dualPaneHost, AnalyticsTracker.Stat stat) {
+        // letting activity know that it was started from dual pane host
+        if (intent != null) {
+            intent.putExtra(DualPaneContentActivity.ARG_LAUNCHED_FROM_DUAL_PANE_HOST, true);
+
+            // Slide in from right is a default transition pattern, so if the activity is going to be started from
+            // DualPaneHostFragment, we need to let it know that it should slide out to right on finish
+            intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
+        }
+
+        if (DualPaneHelper.isInDualPaneConfiguration(context)) {
+            //do nothing if fragment already added
+            if (!dualPaneHost.isFragmentAdded(tag)) {
+                dualPaneHost.showContent(fragmentClass, tag, intent);
+                if (stat != null) {
+                    AnalyticsUtils.trackWithCurrentBlogDetails(stat);
+                }
+            }
+        } else {
+            dualPaneHost.onContentActivityStarted();
+            slideInFromRight(context, intent);
+            if (stat != null) {
+                AnalyticsUtils.trackWithCurrentBlogDetails(stat);
+            }
+        }
     }
 
     /*

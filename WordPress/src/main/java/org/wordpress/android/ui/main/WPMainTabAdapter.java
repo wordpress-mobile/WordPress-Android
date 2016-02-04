@@ -53,7 +53,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case TAB_MY_SITE:
-                return MySiteFragment.newInstance();
+                return MySiteDualPaneFragment.newInstance();
             case TAB_READER:
                 return ReaderPostListFragment.newInstance();
             case TAB_ME:

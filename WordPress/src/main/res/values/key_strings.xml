@@ -6,6 +6,8 @@
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
+    <string name="fragment_tag_blog_post_list" translatable="false">fragment_blog_post_list</string>
+    <string name="fragment_tag_blog_pages_list" translatable="false">fragment_blog_pages_list</string>
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
@@ -248,4 +250,5 @@
         <item>13</item>
         <item>14</item>
     </string-array>
+
 </resources>

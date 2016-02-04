@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.main;
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -410,8 +410,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
      */
     private MySiteFragment getMySiteFragment() {
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
-        if (fragment instanceof MySiteFragment) {
-            return (MySiteFragment) fragment;
+        if (fragment instanceof MySiteDualPaneFragment) {
+            return ((MySiteDualPaneFragment) fragment).getMySiteFragment();
         }
         return null;
     }

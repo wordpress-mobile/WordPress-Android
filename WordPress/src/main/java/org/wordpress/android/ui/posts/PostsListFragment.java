@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,13 +24,14 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.DualPaneFragment;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.DualPaneHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -45,11 +44,11 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import de.greenrobot.event.EventBus;
 
-public class PostsListFragment extends DualPaneFragment
+public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
-        PostsListAdapter.OnPostButtonClickListener {
+        PostsListAdapter.OnPostButtonClickListener, MySiteFragment.MySiteContentFragment {
 
     public static final int POSTS_REQUEST_COUNT = 20;
 
@@ -74,11 +73,9 @@ public class PostsListFragment extends DualPaneFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (isAdded()) {
-            Bundle extras = getActivity().getIntent().getExtras();
-            if (extras != null) {
-                mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
-            }
+        Bundle extras = getArguments();
+        if (extras != null) {
+            mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
         }
     }
 
@@ -100,24 +97,12 @@ public class PostsListFragment extends DualPaneFragment
         int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         int spacingHorizontal;
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
-        if (isInDualPaneMode()) {
-            //hide toolbar in dual pane mode
-            toolbar.setVisibility(View.GONE);
-
+        if (DualPaneHelper.isInDualPaneMode(this)) {
             //Use normal margin (instead of wide, tablet one) while in dual pane mode.
-            //Setting margin through different resource qualifiers in this case
-            //is too complicated and harder to follow.
+            //Setting margin through different resource qualifiers in this case is more complicated and harder to follow.
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin_normal);
-        } else {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-
+        }
+        else {
             spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         }
 
@@ -528,5 +513,14 @@ public class PostsListFragment extends DualPaneFragment
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public int getMatchingRowViewId() {
+        if (mIsPage) {
+            return R.id.row_pages;
+        } else {
+            return R.id.row_blog_posts;
+        }
     }
 }

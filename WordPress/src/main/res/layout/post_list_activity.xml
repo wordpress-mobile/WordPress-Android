@@ -4,10 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/postList"
-        android:name="org.wordpress.android.ui.posts.PostsListFragment"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
 
 </LinearLayout>
