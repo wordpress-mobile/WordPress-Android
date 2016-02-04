@@ -62,6 +62,9 @@ public class AppPrefs {
 
         // index of the last app-version
         LAST_APP_VERSION_INDEX,
+
+        // visual editor available
+        VISUAL_EDITOR_AVAILABLE,
     }
 
     private static SharedPreferences prefs() {
@@ -279,11 +282,18 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
     }
 
+    public static void setVisualEditorAvailable(boolean visualEditorAvailable) {
+        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, visualEditorAvailable);
+    }
+
     public static boolean isVisualEditorAvailable() {
+        // TODO: When we allow users to test the visual editor, we should change this function by:
+        // return BuildConfig.VISUAL_EDITOR_AVAILABLE
+        //        || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
         return BuildConfig.VISUAL_EDITOR_AVAILABLE;
     }
 
     public static boolean isVisualEditorEnabled() {
-        return BuildConfig.VISUAL_EDITOR_AVAILABLE && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
+        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
     }
 }

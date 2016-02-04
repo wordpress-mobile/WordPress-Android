@@ -323,7 +323,18 @@
             android:label="@string/my_profile"
             android:theme="@style/CalypsoTheme" />
 
-		<!-- Services -->
+        <activity android:name=".ui.VisualEditorOptionsReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="editor"
+                    android:scheme="wordpress" />
+            </intent-filter>
+        </activity>
+
+        <!-- Services -->
         <service
             android:name=".ui.posts.services.PostUploadService"
             android:label="Post Upload Service" />

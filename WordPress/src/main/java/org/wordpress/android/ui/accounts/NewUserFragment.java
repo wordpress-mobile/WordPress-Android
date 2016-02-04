@@ -24,6 +24,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -294,6 +295,9 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         AnalyticsUtils.refreshMetadata(username, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         endProgress();
+                        // Set visual editor available when user signup
+                        AppPrefs.setVisualEditorAvailable(true);
+                        AppPrefs.setVisualEditorEnabled(true);
                         if (isAdded()) {
                             finishThisStuff(username, password);
                         }
