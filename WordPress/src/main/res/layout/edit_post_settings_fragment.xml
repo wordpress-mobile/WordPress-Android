@@ -117,6 +117,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
             android:hint="@string/post_password"
+            android:maxLength="@integer/max_length_password"
             android:inputType="textPassword" />
 
         <org.wordpress.android.widgets.WPTextView

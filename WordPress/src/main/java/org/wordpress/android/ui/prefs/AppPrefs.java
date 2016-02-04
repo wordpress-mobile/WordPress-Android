@@ -50,6 +50,9 @@ public class AppPrefs {
 
         // visual editor enabled
         VISUAL_EDITOR_ENABLED,
+
+        // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
+        STATS_WIDGET_PROMO_ANALYTICS,
     }
 
     /**
@@ -295,5 +298,15 @@ public class AppPrefs {
 
     public static boolean isVisualEditorEnabled() {
         return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
+    }
+
+    // Store the number of times Stats are loaded successfully before showing the Promo Dialog
+    public static void bumpAnalyticsForStatsWidgetPromo() {
+        int current = getAnalyticsForStatsWidgetPromo();
+        setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, current + 1);
+    }
+
+    public static int getAnalyticsForStatsWidgetPromo() {
+        return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 }
