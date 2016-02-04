@@ -81,8 +81,8 @@ dependencies {
     compile 'com.helpshift:android-aar:4.2.0-support'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.2'
-    compile 'org.wordpress:graphview:+'
-    compile 'org.wordpress:persistentedittext:+'
+    compile 'org.wordpress:graphview:3.4.0'
+    compile 'org.wordpress:persistentedittext:1.0.1'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
@@ -91,11 +91,11 @@ dependencies {
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:passcodelock:+'
-    compile 'org.wordpress:emailchecker:+'
+    compile 'org.wordpress:passcodelock:1.1.0'
+    compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile 'com.simperium.android:simperium:+'
+    compile 'com.simperium.android:simperium:0.6.8'
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
