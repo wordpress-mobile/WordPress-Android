@@ -44,6 +44,11 @@ public class WPNetworkImageView extends ImageView {
         GONE_UNTIL_AVAILABLE,
     }
 
+    public interface ImageLoadListener {
+        void onLoaded();
+        void onError();
+    }
+
     private ImageType mImageType = ImageType.NONE;
     private String mUrl;
     private ImageLoader.ImageContainer mImageContainer;
@@ -64,11 +69,16 @@ public class WPNetworkImageView extends ImageView {
     }
 
     public void setImageUrl(String url, ImageType imageType) {
-        mUrl = url;
+        setImageUrl(url, imageType, false, null);
+    }
+
+    public void setImageUrl(String url, ImageType imageType, boolean force, ImageLoadListener imageLoadListener) {
+        // Hack to bypass the Volley cache: append something to the URL to make it unique
+        mUrl = url + (force ? "&" + System.currentTimeMillis() : "");
         mImageType = imageType;
 
         // The URL has potentially changed. See if we need to load it.
-        loadImageIfNecessary(false);
+        loadImageIfNecessary(false, imageLoadListener);
     }
 
     /*
@@ -129,7 +139,7 @@ public class WPNetworkImageView extends ImageView {
      * Loads the image for the view if it isn't already loaded.
      * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
      */
-    private void loadImageIfNecessary(final boolean isInLayoutPass) {
+    private void loadImageIfNecessary(final boolean isInLayoutPass, final ImageLoadListener imageLoadListener) {
         // do nothing if image type hasn't been set yet
         if (mImageType == ImageType.NONE) {
             return;
@@ -202,6 +212,10 @@ public class WPNetworkImageView extends ImageView {
                         if (statusCode == 404) {
                             mUrlSkipList.add(mUrl);
                         }
+
+                        if (imageLoadListener != null) {
+                            imageLoadListener.onError();
+                        }
                     }
 
                     @Override
@@ -214,11 +228,11 @@ public class WPNetworkImageView extends ImageView {
                             post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    handleResponse(response, true);
+                                    handleResponse(response, true, imageLoadListener);
                                 }
                             });
                         } else {
-                            handleResponse(response, isImmediate);
+                            handleResponse(response, isImmediate, imageLoadListener);
                         }
                     }
                 }, maxWidth, maxHeight, scaleType);
@@ -232,7 +246,8 @@ public class WPNetworkImageView extends ImageView {
             || imageType == ImageType.VIDEO;
     }
 
-    private void handleResponse(ImageLoader.ImageContainer response, boolean isCached) {
+    private void handleResponse(ImageLoader.ImageContainer response, boolean isCached, ImageLoadListener
+            imageLoadListener) {
         if (response.getBitmap() != null) {
             Bitmap bitmap = response.getBitmap();
 
@@ -242,7 +257,7 @@ public class WPNetworkImageView extends ImageView {
 
             // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
-                new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                new CircularizeBitmapTask(imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
                 return;
             }
 
@@ -261,7 +276,7 @@ public class WPNetworkImageView extends ImageView {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (!isInEditMode()) {
-            loadImageIfNecessary(true);
+            loadImageIfNecessary(true, null);
         }
     }
 
@@ -351,7 +366,7 @@ public class WPNetworkImageView extends ImageView {
 
     public void showDefaultGravatarImage() {
         if (getContext() == null) return;
-        new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+        new CircularizeBitmapTask(null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
                 getContext().getResources(),
                 R.drawable.gravatar_placeholder
         ));
@@ -374,6 +389,12 @@ public class WPNetworkImageView extends ImageView {
 
     // Circularizes a bitmap in a background thread
     private class CircularizeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
+        private ImageLoadListener mImageLoadListener;
+
+        public CircularizeBitmapTask(ImageLoadListener imageLoadListener) {
+            mImageLoadListener = imageLoadListener;
+        }
+
         @Override
         protected Bitmap doInBackground(Bitmap... params) {
             if (params == null || params.length == 0) return null;
@@ -386,6 +407,14 @@ public class WPNetworkImageView extends ImageView {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
                 setImageBitmap(bitmap);
+                if (mImageLoadListener != null) {
+                    mImageLoadListener.onLoaded();
+                    fadeIn();
+                }
+            } else {
+                if (mImageLoadListener != null) {
+                    mImageLoadListener.onError();
+                }
             }
         }
     }

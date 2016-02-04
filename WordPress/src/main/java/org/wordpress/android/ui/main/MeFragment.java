@@ -62,6 +62,7 @@ public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
 
     private ViewGroup mAvatarFrame;
+    private View mProgressBar;
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
@@ -82,6 +83,7 @@ public class MeFragment extends Fragment {
 
         mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
+        mProgressBar = rootView.findViewById(R.id.avatar_progress);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
         mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
@@ -208,9 +210,7 @@ public class MeFragment extends Fragment {
             mNotificationsView.setVisibility(View.VISIBLE);
             mNotificationsDividerView.setVisibility(View.VISIBLE);
 
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-            String avatarUrl = GravatarUtils.fixGravatarUrl(defaultAccount.getAvatarUrl(), avatarSz);
-            mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            loadAvatar(defaultAccount, false, null);
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
             mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
@@ -225,11 +225,19 @@ public class MeFragment extends Fragment {
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
             mAvatarFrame.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
             mMyProfileView.setVisibility(View.GONE);
             mNotificationsView.setVisibility(View.GONE);
             mNotificationsDividerView.setVisibility(View.GONE);
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
         }
+    }
+
+    private void loadAvatar(Account account, boolean force, WPNetworkImageView.ImageLoadListener imageLoadListener) {
+        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+        String avatarUrl = GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
+        AppLog.i(AppLog.T.API, avatarUrl);
+        mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, force, imageLoadListener);
     }
 
     private void signOutWordPressComWithConfirmation() {
@@ -364,6 +372,18 @@ public class MeFragment extends Fragment {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null) {
+                    loadAvatar(AccountHelper.getDefaultAccount(), true, new WPNetworkImageView.ImageLoadListener() {
+                        @Override
+                        public void onLoaded() {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    });
+
                     try {
                         AppLog.d(AppLog.T.API, jsonObject.toString(2));
                     } catch (JSONException e) {
@@ -385,6 +405,8 @@ public class MeFragment extends Fragment {
         if (!file.exists()) {
             return;
         }
+
+        mProgressBar.setVisibility(View.VISIBLE);
 
         final RestRequest request = WordPress.getGravatarRestClientUtilsV1().newPostRequest("upload-image", null,
                 listener, errorListener);
