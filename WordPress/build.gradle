@@ -48,6 +48,7 @@ android {
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
+            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             applicationId "org.wordpress.android.beta"
         }
