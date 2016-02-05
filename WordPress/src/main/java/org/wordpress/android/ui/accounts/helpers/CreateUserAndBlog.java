@@ -260,7 +260,6 @@ public class CreateUserAndBlog {
         @Override
         public void onResponse(JSONObject response) {
             AppLog.d(T.NUX, String.format("Create Account step %s", mStep.name()));
-            AppLog.d(T.NUX, String.format("OK %s", response.toString()));
             nextStep(response);
         }
     }

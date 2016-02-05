@@ -50,7 +50,7 @@
             android:id="@+id/pref_site_language"
             android:key="@string/pref_key_site_language"
             android:title="@string/site_settings_language_title"
-            android:entries="@array/available_languages"
+            android:entries="@array/language_codes"
             android:entryValues="@array/language_codes"
             app:longClickHint="@string/site_settings_language_hint" />
 
