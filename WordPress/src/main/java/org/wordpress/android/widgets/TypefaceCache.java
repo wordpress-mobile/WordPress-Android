@@ -12,7 +12,7 @@ import java.util.Hashtable;
 
 public class TypefaceCache {
     /**
-     * Cache used for all views that support custom fonts. The default is Open Sans, but
+     * Cache used for all views that support custom fonts. The default is the system font, but
      * Merriweather is also available via the "fontFamily" attribute
      */
 
@@ -20,9 +20,8 @@ public class TypefaceCache {
     public static final int VARIATION_LIGHT = 1;
     public static final int VARIATION_DEFAULT = VARIATION_NORMAL;
 
-    public static final int FAMILY_OPEN_SANS = 0;
+    public static final int FAMILY_DEFAULT = 0;
     public static final int FAMILY_MERRIWEATHER = 1;
-    public static final int FAMILY_DEFAULT = FAMILY_OPEN_SANS;
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
@@ -30,9 +29,9 @@ public class TypefaceCache {
         return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_DEFAULT);
     }
     public static Typeface getTypeface(Context context,
-                                        int family,
-                                        int fontStyle,
-                                        int variation) {
+                                       int family,
+                                       int fontStyle,
+                                       int variation) {
         if (context == null) {
             return null;
         }

@@ -84,7 +84,7 @@ public class WPPrefUtils {
      */
     public static Typeface getNormalTypeface(Context context) {
         return TypefaceCache.getTypeface(context,
-                TypefaceCache.FAMILY_OPEN_SANS, Typeface.NORMAL, TypefaceCache.VARIATION_NORMAL);
+                TypefaceCache.FAMILY_DEFAULT, Typeface.NORMAL, TypefaceCache.VARIATION_NORMAL);
     }
 
     /**
@@ -94,7 +94,7 @@ public class WPPrefUtils {
      */
     public static Typeface getSemiboldTypeface(Context context) {
         return TypefaceCache.getTypeface(context,
-                TypefaceCache.FAMILY_OPEN_SANS, Typeface.BOLD, TypefaceCache.VARIATION_LIGHT);
+                TypefaceCache.FAMILY_DEFAULT, Typeface.BOLD, TypefaceCache.VARIATION_LIGHT);
     }
 
     /**

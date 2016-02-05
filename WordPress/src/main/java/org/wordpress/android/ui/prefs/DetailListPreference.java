@@ -124,7 +124,7 @@ public class DetailListPreference extends ListPreference
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_OPEN_SANS,
+                TypefaceCache.FAMILY_DEFAULT,
                 Typeface.BOLD,
                 TypefaceCache.VARIATION_LIGHT);
 
@@ -203,7 +203,7 @@ public class DetailListPreference extends ListPreference
         if (view != null) {
             Resources res = getContext().getResources();
             Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_OPEN_SANS,
+                    TypefaceCache.FAMILY_DEFAULT,
                     Typeface.NORMAL,
                     TypefaceCache.VARIATION_NORMAL);
 
@@ -232,7 +232,7 @@ public class DetailListPreference extends ListPreference
             if (mainText != null && getEntries() != null && position < getEntries().length) {
                 mainText.setText(getEntries()[position]);
                 mainText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                        TypefaceCache.FAMILY_OPEN_SANS,
+                        TypefaceCache.FAMILY_DEFAULT,
                         Typeface.NORMAL,
                         TypefaceCache.VARIATION_NORMAL));
             }
@@ -242,7 +242,7 @@ public class DetailListPreference extends ListPreference
                     detailText.setVisibility(View.VISIBLE);
                     detailText.setText(mDetails[position]);
                     detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                            TypefaceCache.FAMILY_OPEN_SANS,
+                            TypefaceCache.FAMILY_DEFAULT,
                             Typeface.NORMAL,
                             TypefaceCache.VARIATION_NORMAL));
                 } else {
