@@ -1,0 +1,120 @@
+{
+  "originalResponse": [
+    {
+      "product_slug": "free-blog",
+      "title": "Free Blog",
+      "description": "Get a free blog on WordPress.com.",
+      "1": true,
+      "1003": true,
+      "1008": true
+    },
+    {
+      "product_slug": "ecommerce",
+      "title": "eCommerce",
+      "description": "Sell stuff right on your blog with Ecwid and Shopify.",
+      "1008": true
+    },
+    {
+      "product_slug": "custom-domain",
+      "title": "A Custom Site Address",
+      "description": "Register a new domain name (with private whois records) or map a domain you already own.",
+      "1003": true,
+      "1008": true,
+      "not_part_of_free_trial": true
+    },
+    {
+      "product_slug": "space",
+      "title": "Space",
+      "description": "Increase your available storage space and add the ability to upload audio files.",
+      "1": "3GB",
+      "1003": "13GB",
+      "1008": "Unlimited"
+    },
+    {
+      "product_slug": "no-adverts\/no-adverts.php",
+      "title": "No Ads",
+      "description": "Remove all ads from your blog.",
+      "1003": true,
+      "1008": true
+    },
+    {
+      "product_slug": "custom-design",
+      "title": "Custom Design",
+      "description": "Customize the fonts in your theme, change your color scheme, and dive into custom CSS to make all the presentational changes you desire.",
+      "1003": true,
+      "1008": true
+    },
+    {
+      "product_slug": "videopress",
+      "title": "VideoPress",
+      "description": "Upload and play beautiful HD video right from your WordPress blog or website.",
+      "1003": true,
+      "1008": true
+    },
+    {
+      "product_slug": "premium-themes",
+      "title": "Premium Themes",
+      "description": "Exclusive, hand-crafted designs you will love with dedicated support directly from the themes authors",
+      "1008": "Unlimited",
+      "1003": null
+    },
+    {
+      "product_slug": "google-analytics",
+      "title": "Google Analytics",
+      "description": "Google Analytics is a free service that offers a complementary view of your traffic to our built-in Stats feature.",
+      "1008": true
+    },
+    {
+      "product_slug": "akismet",
+      "title": "Spam protection",
+      "description": "Spam protection",
+      "2002": "Akismet Basic",
+      "2000": "Akismet Plus",
+      "2001": "Akismet Unlimited"
+    },
+    {
+      "product_slug": "vaultpress-backups",
+      "title": "Database backups",
+      "description": "Database backups",
+      "2000": "VaultPress Daily",
+      "2001": "VaultPress Real-time"
+    },
+    {
+      "product_slug": "vaultpress-backup-archive",
+      "title": "Backup archive",
+      "description": "Backup archive",
+      "2000": "30 days",
+      "2001": "Full archive"
+    },
+    {
+      "product_slug": "vaultpress-automated-restores",
+      "title": "Automated Restores",
+      "description": "Automated Restores",
+      "2000": true,
+      "2001": true
+    },
+    {
+      "product_slug": "vaultpress-security-scanning",
+      "title": "Security scanning",
+      "description": "Security scanning",
+      "2001": true
+    },
+    {
+      "product_slug": "polldaddy",
+      "title": "Polls and Ratings",
+      "description": "Polls and Ratings",
+      "2001": "PollDaddy Pro"
+    },
+    {
+      "product_slug": "support",
+      "title": "Support",
+      "description": "For those times when you can't find an answer on our Support site",
+      "1": "Community",
+      "1003": "Direct email",
+      "1008": "Live chat",
+      "2002": "Direct email",
+      "2000": "Expert security support",
+      "2001": "Priority security support"
+    }
+  ]
+}
