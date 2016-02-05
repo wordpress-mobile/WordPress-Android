@@ -610,7 +610,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         args.putString(NumberPickerDialog.SWITCH_DESC_KEY, getString(R.string.site_settings_threading_dialog_description));
         args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_threading_title));
         args.putString(NumberPickerDialog.HEADER_TEXT_KEY, getString(R.string.site_settings_threading_dialog_header));
-        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 1);
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 2);
         args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.threading_limit));
         args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getThreadingLevels());
         showNumberPickerDialog(args, THREADING_REQUEST_CODE, "threading-dialog", new Formatter() {
