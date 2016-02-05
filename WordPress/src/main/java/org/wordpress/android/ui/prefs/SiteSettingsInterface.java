@@ -357,11 +357,19 @@ public abstract class SiteSettingsInterface {
         return mSettings.closeCommentAfter;
     }
 
-    public @NonNull String getCloseAfterDescription() {
-        return getCloseAfterDescription(getCloseAfter());
+    public @NonNull String getCloseAfterDescriptionForPeriod() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfter());
     }
 
-    public @NonNull String getCloseAfterDescription(int period) {
+    public int getCloseAfterPeriodForDescription() {
+        return !getShouldCloseAfter() ? 0 : getCloseAfter();
+    }
+
+    public @NonNull String getCloseAfterDescription() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfterPeriodForDescription());
+    }
+
+    public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
         if (mActivity == null) return "";
 
         if (period == 0) return mActivity.getString(R.string.never);
@@ -394,12 +402,12 @@ public abstract class SiteSettingsInterface {
         return mSettings.threadingLevels;
     }
 
-    public int getThreadingLevelsForDescrpition() {
+    public int getThreadingLevelsForDescription() {
         return !getShouldThreadComments() ? 1 : getThreadingLevels();
     }
 
     public @NonNull String getThreadingDescription() {
-        return getThreadingDescriptionForLevel(getThreadingLevelsForDescrpition());
+        return getThreadingDescriptionForLevel(getThreadingLevelsForDescription());
     }
 
     public @NonNull String getThreadingDescriptionForLevel(int level) {

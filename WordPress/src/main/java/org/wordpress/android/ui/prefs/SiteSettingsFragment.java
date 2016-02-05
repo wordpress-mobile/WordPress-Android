@@ -379,11 +379,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             setReceivePingbacks((Boolean) newValue);
         } else if (preference == mCloseAfterPref) {
             mSiteSettings.setCloseAfter(Integer.parseInt(newValue.toString()));
-            if (mSiteSettings.getShouldCloseAfter()) {
-                mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription());
-            } else {
-                mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription(0));
-            }
+            mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription());
         } else if (preference == mSortByPref) {
             mSiteSettings.setCommentSorting(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mSortByPref,
@@ -679,7 +675,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setSummary(mSiteSettings.getThreadingDescription());
-        mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription());
+        mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescriptionForPeriod());
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
     }
 
