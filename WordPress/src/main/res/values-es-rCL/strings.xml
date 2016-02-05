@@ -53,14 +53,12 @@
 	<string name="trashed">En la papelera</string>
 	<string name="button_back">Atrás</string>
 	<string name="page_deleted">Página borrada</string>
-	<string name="button_more">Más</string>
 	<string name="button_stats">Estadísticas</string>
 	<string name="button_trash">Papelera</string>
 	<string name="button_preview">Vista previa</string>
 	<string name="button_view">Ver</string>
 	<string name="button_edit">Editar</string>
 	<string name="button_publish">Publicar</string>
-	<string name="button_delete">Borrar</string>
 	<string name="my_site_no_sites_view_subtitle">¿Quieres añadir uno?</string>
 	<string name="my_site_no_sites_view_title">Aún no tienes ningún sitio WordPress.</string>
 	<string name="my_site_no_sites_view_drake">Ilustración</string>
@@ -99,7 +97,6 @@
 	<string name="my_site_btn_view_admin">Ver Administrador</string>
 	<string name="my_site_btn_blog_posts">Entradas del blog</string>
 	<string name="my_site_btn_site_settings">Preferencias</string>
-	<string name="my_site_btn_comments">Comentarios</string>
 	<string name="my_site_header_look_and_feel">Aspecto</string>
 	<string name="my_site_header_publish">Publicar</string>
 	<string name="my_site_header_configuration">Configuración</string>
@@ -135,6 +132,8 @@
 	<string name="media_picker_title">Selecciona medio</string>
 	<string name="take_photo">Sacar una foto</string>
 	<string name="take_video">Grabar un vídeo</string>
+	<string name="media_details_label_file_name">Nombre del archivo:</string>
+	<string name="media_details_label_file_type">Tipo de archivo:</string>
 	<string name="error_publish_no_network">No se puede publicar mientras no haya conexión. Guardado como borrador.</string>
 	<string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
 	<string name="verification_code">Código de verificación</string>
@@ -226,7 +225,6 @@
 	<string name="stats_view_followers">Seguidores</string>
 	<string name="stats_view_countries">Países</string>
 	<string name="stats_likes">Me gusta</string>
-	<string name="stats_comments">Comentarios</string>
 	<string name="stats_pagination_label">Página %1$s de %2$s</string>
 	<string name="stats_timeframe_years">Años</string>
 	<string name="stats_views">Vistas</string>
@@ -261,7 +259,6 @@
 	<string name="reader_label_comment_count_single">Un comentario</string>
 	<string name="reader_label_comments_closed">Los comentarios están cerrados</string>
 	<string name="reader_label_comments_on">Comentarios en</string>
-	<string name="reader_title_comments">Comentarios</string>
 	<string name="reader_title_photo_viewer">%1$d de %2$d</string>
 	<string name="error_publish_empty_post">No se puede publicar una entrada vacía.</string>
 	<string name="error_refresh_unauthorized_posts">No tienes permiso para ver o editar entradas.</string>
@@ -592,7 +589,6 @@
 	<string name="stats_view_clicks">Clics</string>
 	<string name="stats_view_tags_and_categories">Etiquetas y categorías</string>
 	<string name="stats_view_referrers">Referentes</string>
-	<string name="stats_view_comments">Comentarios</string>
 	<string name="stats_timeframe_today">Hoy</string>
 	<string name="stats_timeframe_yesterday">Ayer</string>
 	<string name="stats_timeframe_days">Días</string>
@@ -606,7 +602,6 @@
 	<string name="stats_totals_views">Vistas</string>
 	<string name="stats_totals_clicks">Clics</string>
 	<string name="stats_totals_plays">Juegos</string>
-	<string name="stats_totals_comments">Comentarios</string>
 	<string name="menu_search">Buscar</string>
 	<string name="passcode_manage">Administrar el PIN de bloqueo</string>
 	<string name="passcode_enter_passcode">Introduce tu PIN</string>
@@ -663,7 +658,6 @@
 	<string name="app_title">WordPress para Android</string>
 	<string name="tos">Términos de Servicio</string>
 	<string name="about">Acerca de</string>
-	<string name="max_thumbnail_px_width">Ancho de imagen por defecto</string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
@@ -701,7 +695,6 @@
 	<string name="save">Guardar</string>
 	<string name="add">Añadir</string>
 	<string name="category_refresh_error">Error de actualización de categorías</string>
-	<string name="tab_comments">Comentarios</string>
 	<string name="preview">Vista previa</string>
 	<string name="on">en</string>
 	<string name="reply">Responder</string>
