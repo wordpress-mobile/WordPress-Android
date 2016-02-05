@@ -40,7 +40,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     private FilterCriteria[] mFilterCriteriaOptions;
     private FilterCriteria mCurrentFilter;
-    private LoaderListener mListener;
+    private Listener mListener;
     private SpinnerAdapter mSpinnerAdapter;
     private RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
     private AppLog.T mTAG;
@@ -80,7 +80,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         return mCurrentFilter;
     }
 
-    public void setLoaderListener(LoaderListener listener){
+    public void setLifecycleListener(Listener listener){
         mListener = listener;
         mFilterCriteriaOptions = mListener.onLoadFilterCriteriaOptions();
         initAdapter();
@@ -329,7 +329,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    public interface LoaderListener {
+    public interface Listener {
         FilterCriteria[] onLoadFilterCriteriaOptions();
         void onLoadData();
         void onFilterSelected(int position, FilterCriteria criteria);

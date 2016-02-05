@@ -194,7 +194,7 @@ public class CommentsListFragment extends Fragment {
 
         mFilteredCommentsView = (FilteredRecyclerView) view.findViewById(R.id.filtered_recycler_view);
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
-        mFilteredCommentsView.setLoaderListener(new FilteredRecyclerView.LoaderListener() {
+        mFilteredCommentsView.setLifecycleListener(new FilteredRecyclerView.Listener() {
             @Override
             public FilterCriteria[] onLoadFilterCriteriaOptions() {
                 return commentStatuses;
