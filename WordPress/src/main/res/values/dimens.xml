@@ -67,6 +67,7 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
+    <dimen name="margin_filter_spinner">68dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
