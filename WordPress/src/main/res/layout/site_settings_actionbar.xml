@@ -17,7 +17,6 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="@dimen/text_sz_extra_large"
-        app:fontFamily="openSans"
         app:fontVariation="light" />
 
 </RelativeLayout>
