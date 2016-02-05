@@ -203,12 +203,10 @@
                     android:defaultValue="0"
                     app:longClickHint="@string/site_settings_sort_by_hint"  />
 
-                <org.wordpress.android.ui.prefs.DetailListPreference
+                <org.wordpress.android.ui.prefs.WPPreference
                     android:id="@+id/pref_threading"
                     android:key="@string/pref_key_site_threading"
                     android:title="@string/site_settings_threading_title"
-                    android:entries="@array/site_settings_threading_entries"
-                    android:entryValues="@array/site_settings_threading_values"
                     android:defaultValue="0"
                     app:longClickHint="@string/site_settings_threading_hint" />
 

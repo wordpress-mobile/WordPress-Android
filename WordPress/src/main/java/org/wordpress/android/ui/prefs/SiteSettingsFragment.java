@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -148,7 +149,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mUserAccountRequiredPref;
     private Preference mCloseAfterPref;
     private DetailListPreference mSortByPref;
-    private DetailListPreference mThreadingPref;
+    private Preference mThreadingPref;
     private Preference mPagingPref;
     private DetailListPreference mWhitelistPref;
     private Preference mMultipleLinksPref;
@@ -220,45 +221,42 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case RELATED_POSTS_REQUEST_CODE:
-                // data is null if user cancelled editing Related Posts settings
-                if (data == null) break;
-                mSiteSettings.setShowRelatedPosts(data.getBooleanExtra(
-                        RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, false));
-                mSiteSettings.setShowRelatedPostHeader(data.getBooleanExtra(
-                        RelatedPostsDialog.SHOW_HEADER_KEY, false));
-                mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(
-                        RelatedPostsDialog.SHOW_IMAGES_KEY, false));
-                mSiteSettings.saveSettings();
-                break;
-            case THREADING_REQUEST_CODE:
-                if (data == null) break;
-                mSiteSettings.setShouldThreadComments(data.getBooleanExtra
-                        (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
-                onPreferenceChange(mThreadingPref, data.getIntExtra(
-                        NumberPickerDialog.CUR_VALUE_KEY, -1));
-                break;
-            case PAGING_REQUEST_CODE:
-                if (data == null) break;
-                mSiteSettings.setShouldPageComments(data.getBooleanExtra
-                        (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
-                onPreferenceChange(mPagingPref, data.getIntExtra(
-                        NumberPickerDialog.CUR_VALUE_KEY, -1));
-                break;
-            case CLOSE_AFTER_REQUEST_CODE:
-                if (data == null) break;
-                mSiteSettings.setShouldCloseAfter(data.getBooleanExtra
-                        (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
-                onPreferenceChange(mCloseAfterPref, data.getIntExtra(
-                        NumberPickerDialog.CUR_VALUE_KEY, -1));
-                break;
-            case MULTIPLE_LINKS_REQUEST_CODE:
-                if (data == null) break;
-                int numLinks = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
-                if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
-                onPreferenceChange(mMultipleLinksPref, numLinks);
-                break;
+        if (data != null) {
+            switch (requestCode) {
+                case RELATED_POSTS_REQUEST_CODE:
+                    // data is null if user cancelled editing Related Posts settings
+                    mSiteSettings.setShowRelatedPosts(data.getBooleanExtra(
+                            RelatedPostsDialog.SHOW_RELATED_POSTS_KEY, false));
+                    mSiteSettings.setShowRelatedPostHeader(data.getBooleanExtra(
+                            RelatedPostsDialog.SHOW_HEADER_KEY, false));
+                    mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(
+                            RelatedPostsDialog.SHOW_IMAGES_KEY, false));
+                    mSiteSettings.saveSettings();
+                    break;
+                case THREADING_REQUEST_CODE:
+                    int levels = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
+                    mSiteSettings.setShouldThreadComments(levels > 1 && data.getBooleanExtra
+                            (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    onPreferenceChange(mThreadingPref, levels);
+                    break;
+                case PAGING_REQUEST_CODE:
+                    mSiteSettings.setShouldPageComments(data.getBooleanExtra
+                            (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    onPreferenceChange(mPagingPref, data.getIntExtra(
+                            NumberPickerDialog.CUR_VALUE_KEY, -1));
+                    break;
+                case CLOSE_AFTER_REQUEST_CODE:
+                    mSiteSettings.setShouldCloseAfter(data.getBooleanExtra
+                            (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    onPreferenceChange(mCloseAfterPref, data.getIntExtra(
+                            NumberPickerDialog.CUR_VALUE_KEY, -1));
+                    break;
+                case MULTIPLE_LINKS_REQUEST_CODE:
+                    int numLinks = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
+                    if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
+                    onPreferenceChange(mMultipleLinksPref, numLinks);
+                    break;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -325,34 +323,31 @@ public class SiteSettingsFragment extends PreferenceFragment
     public boolean onPreferenceClick(Preference preference) {
         if (preference == mRelatedPostsPref) {
             showRelatedPostsDialog();
-            return true;
         } else if (preference == mMultipleLinksPref) {
             showMultipleLinksDialog();
-            return true;
         } else if (preference == mModerationHoldPref) {
             mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
                     R.string.site_settings_hold_for_moderation_description);
-            return true;
         } else if (preference == mBlacklistPref) {
             mEditingList = mSiteSettings.getBlacklistKeys();
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
-            return true;
         } else if (preference == mDeleteSitePref) {
             removeBlogWithConfirmation();
-            return true;
         } else if (preference == mCloseAfterPref) {
             showCloseAfterDialog();
-            return true;
         } else if (preference == mPagingPref) {
             showPagingDialog();
-            return true;
+        } else if (preference == mThreadingPref) {
+            showThreadingDialog();
         } else if (preference == mCategoryPref || preference == mFormatPref) {
             return !shouldShowListPreference((DetailListPreference) preference);
+        } else {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -396,9 +391,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mSiteSettings.getSortingDescription());
         } else if (preference == mThreadingPref) {
             mSiteSettings.setThreadingLevels(Integer.parseInt(newValue.toString()));
-            setDetailListPreferenceValue(mThreadingPref,
-                    newValue.toString(),
-                    mSiteSettings.getThreadingDescription());
+            mThreadingPref.setSummary(mSiteSettings.getThreadingDescription());
         } else if (preference == mPagingPref) {
             mSiteSettings.setPagingCount(Integer.parseInt(newValue.toString()));
             mPagingPref.setSummary(mSiteSettings.getPagingDescription());
@@ -549,11 +542,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         mIdentityRequiredPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_site_identity_required);
         mUserAccountRequiredPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_user_account_required);
         mSortByPref = (DetailListPreference) getChangePref(R.string.pref_key_site_sort_by);
-        mThreadingPref = (DetailListPreference) getChangePref(R.string.pref_key_site_threading);
         mWhitelistPref = (DetailListPreference) getChangePref(R.string.pref_key_site_whitelist);
         mRelatedPostsPref = getClickPref(R.string.pref_key_site_related_posts);
         mCloseAfterPref = getClickPref(R.string.pref_key_site_close_after);
         mPagingPref = getClickPref(R.string.pref_key_site_paging);
+        mThreadingPref = getClickPref(R.string.pref_key_site_threading);
         mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
@@ -584,7 +577,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showNumberPickerDialog(Bundle args, int requestCode, String tag) {
+        showNumberPickerDialog(args, requestCode, tag, null);
+    }
+
+    private void showNumberPickerDialog(Bundle args, int requestCode, String tag, Formatter format) {
         NumberPickerDialog dialog = new NumberPickerDialog();
+        dialog.setNumberFormat(format);
         dialog.setArguments(args);
         dialog.setTargetFragment(this, requestCode);
         dialog.show(getFragmentManager(), tag);
@@ -602,6 +600,25 @@ public class SiteSettingsFragment extends PreferenceFragment
         args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.paging_limit));
         args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getPagingCount());
         showNumberPickerDialog(args, PAGING_REQUEST_CODE, "paging-dialog");
+    }
+
+    private void showThreadingDialog() {
+        Bundle args = new Bundle();
+        args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, true);
+        args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getShouldThreadComments());
+        args.putString(NumberPickerDialog.SWITCH_TITLE_KEY, getString(R.string.site_settings_threading_title));
+        args.putString(NumberPickerDialog.SWITCH_DESC_KEY, getString(R.string.site_settings_threading_dialog_description));
+        args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_threading_title));
+        args.putString(NumberPickerDialog.HEADER_TEXT_KEY, getString(R.string.site_settings_threading_dialog_header));
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 1);
+        args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.threading_limit));
+        args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getThreadingLevels());
+        showNumberPickerDialog(args, THREADING_REQUEST_CODE, "threading-dialog", new Formatter() {
+            @Override
+            public String format(int value) {
+                return mSiteSettings.getThreadingDescriptionForLevel(value);
+            }
+        });
     }
 
     private void showCloseAfterDialog() {
@@ -650,9 +667,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mSortByPref,
                 String.valueOf(mSiteSettings.getCommentSorting()),
                 mSiteSettings.getSortingDescription());
-        setDetailListPreferenceValue(mThreadingPref,
-                String.valueOf(mSiteSettings.getThreadingLevels()),
-                mSiteSettings.getThreadingDescription());
         int approval = mSiteSettings.getManualApproval() ?
                 mSiteSettings.getUseCommentWhitelist() ? 0
                         : -1 : 1;
@@ -664,7 +678,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mUploadAndLinkPref.setChecked(mBlog.isFullSizeImage());
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
-        mThreadingPref.setValue(String.valueOf(mSiteSettings.getThreadingLevels()));
+        mThreadingPref.setSummary(mSiteSettings.getThreadingDescription());
         mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescription());
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
     }
