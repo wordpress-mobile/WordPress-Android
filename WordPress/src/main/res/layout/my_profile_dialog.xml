@@ -15,7 +15,7 @@
         android:textStyle="bold"
         app:fontVariation="light" />
 
-    <org.wordpress.android.widgets.OpenSansEditText
+    <org.wordpress.android.widgets.WPEditText
         android:id="@+id/my_profile_dialog_input"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
