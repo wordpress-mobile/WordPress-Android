@@ -3,6 +3,7 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -35,9 +36,9 @@ public class TypefaceCache {
             return null;
         }
 
-        final String typefaceName;
         if (family == FAMILY_MERRIWEATHER) {
             // note that merriweather doesn't have a light variation
+            final String typefaceName;
             switch (fontStyle) {
                 case Typeface.BOLD:
                     typefaceName = "Merriweather-Bold.ttf";
@@ -52,44 +53,22 @@ public class TypefaceCache {
                     typefaceName = "Merriweather-Regular.ttf";
                     break;
             }
-        } else {
-            // Open Sans
-            if (variation == VARIATION_LIGHT) {
-                switch (fontStyle) {
-                    case Typeface.BOLD:
-                        typefaceName = "OpenSans-LightBold.ttf";
-                        break;
-                    case Typeface.ITALIC:
-                        typefaceName = "OpenSans-LightItalic.ttf";
-                        break;
-                    case Typeface.BOLD_ITALIC:
-                        typefaceName = "OpenSans-LightBoldItalic.ttf";
-                        break;
-                    default:
-                        typefaceName = "OpenSans-Light.ttf";
-                        break;
-                }
-            } else {
-                switch (fontStyle) {
-                    case Typeface.BOLD:
-                        typefaceName = "OpenSans-Bold.ttf";
-                        break;
-                    case Typeface.ITALIC:
-                        typefaceName = "OpenSans-Italic.ttf";
-                        break;
-                    case Typeface.BOLD_ITALIC:
-                        typefaceName = "OpenSans-BoldItalic.ttf";
-                        break;
-                    default:
-                        typefaceName = "OpenSans-Regular.ttf";
-                        break;
-                }
-            }
+            return getTypefaceForTypefaceName(context, typefaceName);
         }
 
-        return getTypefaceForTypefaceName(context, typefaceName);
+        // default system font - note that "sans-serif-light" was added in SDK 4.1
+        // http://developer.android.com/about/versions/android-4.1.html#Fonts
+        if (variation == VARIATION_LIGHT
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return Typeface.create("sans-serif-light", fontStyle);
+        } else {
+            return Typeface.defaultFromStyle(fontStyle);
+        }
     }
 
+    /*
+     * loads the desired typeface from the app's assets
+     */
     protected static Typeface getTypefaceForTypefaceName(Context context, String typefaceName) {
         if (!mTypefaceCache.containsKey(typefaceName)) {
             Typeface typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/"
@@ -129,7 +108,8 @@ public class TypefaceCache {
         }
 
         // nothing more to do if this is the default system font
-        if (family == FAMILY_DEFAULT) {
+        if (family == FAMILY_DEFAULT
+                && variation == VARIATION_NORMAL) {
             return;
         }
 
