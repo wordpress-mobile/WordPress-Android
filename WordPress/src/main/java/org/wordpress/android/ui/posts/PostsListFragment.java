@@ -29,7 +29,6 @@ import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -39,9 +38,6 @@ import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
-
-import java.util.List;
-import java.util.Vector;
 
 import de.greenrobot.event.EventBus;
 
@@ -189,8 +185,10 @@ public class PostsListFragment extends Fragment
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
-        // always (re)load when resumed to reflect changes made elsewhere
-        loadPosts();
+        if (WordPress.getCurrentBlog() != null) {
+            // always (re)load when resumed to reflect changes made elsewhere
+            loadPosts();
+        }
 
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
@@ -249,7 +247,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
-        if (isAdded()) {
+        if (isAdded() && WordPress.getCurrentBlog() != null) {
             getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
