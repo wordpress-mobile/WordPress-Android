@@ -168,15 +168,21 @@ public class MyProfileActivity extends AppCompatActivity {
         return Account.RestParam.toString(param);
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsChanged event) {
+    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
         if (!isFinishing()) {
             refreshDetails();
         }
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsDataLoadSaveError event) {
+    public void onEventMainThread(PrefsEvents.AccountSettingsFetchError event) {
         if (!isFinishing()) {
-            ToastUtils.showToast(this, R.string.error_refresh_profile_not_accessible, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(this, R.string.error_fetch_my_profile, ToastUtils.Duration.LONG);
+        }
+    }
+
+    public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
+        if (!isFinishing()) {
+            ToastUtils.showToast(this, R.string.error_post_my_profile, ToastUtils.Duration.LONG);
         }
     }
 }
