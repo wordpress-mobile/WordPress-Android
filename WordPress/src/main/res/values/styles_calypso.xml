@@ -2,7 +2,7 @@
 <!--
     Calypso (WP.com homepage) styles
 -->
-<resources>
+<resources xmlns:ns1="http://schemas.android.com/tools">
     <style name="CalypsoTheme" parent="@style/WordPress">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:popupMenuStyle">@style/Calypso.PopupMenu</item>
@@ -55,7 +55,7 @@
     </style>
 
     <style name="Calypso.TextAppearance.AlertDialog">
-        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:fontFamily" ns1:ignore="NewApi">sans-serif-light</item>
         <item name="android:background">@color/white</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
         <item name="android:textStyle">bold</item>

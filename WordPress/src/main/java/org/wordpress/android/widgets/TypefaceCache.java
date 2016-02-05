@@ -83,7 +83,7 @@ public class TypefaceCache {
 
     /*
      * sets the typeface for a TextView (or TextView descendant such as EditText or Button) based on
-     * the passed attributes, defaults to normal Open Sans
+     * the passed attributes, defaults to normal
      */
     protected static void setCustomTypeface(Context context, TextView view, AttributeSet attrs) {
         if (context == null || view == null) return;

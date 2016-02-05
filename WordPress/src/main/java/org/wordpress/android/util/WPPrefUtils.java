@@ -78,7 +78,7 @@ public class WPPrefUtils {
     }
 
     /**
-     * Font      : Open Sans
+     * Font      : Default
      * Style     : Normal
      * Variation : Normal
      */
@@ -88,7 +88,7 @@ public class WPPrefUtils {
     }
 
     /**
-     * Font      : Open Sans
+     * Font      : Default
      * Style     : Bold
      * Variation : Light
      */
