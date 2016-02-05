@@ -42,6 +42,7 @@ public class NumberPickerDialog extends DialogFragment
     private SwitchCompat mSwitch;
     private TextView mHeaderText;
     private NumberPicker mNumberPicker;
+    private NumberPicker.Formatter mFormat;
     private int mMinValue;
     private int mMaxValue;
     private boolean mConfirmed;
@@ -82,6 +83,7 @@ public class NumberPickerDialog extends DialogFragment
             builder.setCustomTitle(getDialogTitleView(args.getString(TITLE_KEY, "")));
         }
 
+        mNumberPicker.setFormatter(mFormat);
         mNumberPicker.setMinValue(mMinValue);
         mNumberPicker.setMaxValue(mMaxValue);
         mNumberPicker.setValue(value);
@@ -134,6 +136,10 @@ public class NumberPickerDialog extends DialogFragment
         }
 
         super.onDismiss(dialog);
+    }
+
+    public void setNumberFormat(NumberPicker.Formatter format) {
+        mFormat = format;
     }
 
     private View getDialogTitleView(String title) {
