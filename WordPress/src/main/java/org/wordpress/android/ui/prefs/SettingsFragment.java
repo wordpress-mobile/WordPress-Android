@@ -72,7 +72,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
 
         mEmailPreference.setOnPreferenceChangeListener(this);
-        mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -153,9 +152,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 showPendingEmailChangeSnackbar(newValue.toString());
             }
             return false;
-        } else if (preference == mPrimarySitePreference) {
-            changePrimaryBlogPreference(newValue.toString());
-            updatePrimaryBlog(newValue.toString());
         } else if (preference == mWebAddressPreference) {
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
@@ -342,6 +338,9 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         if (event.positiveResult && !event.startingValue.equals(event.newValue)) {
             if (event.preference == mLanguagePreference) {
                 changeLanguage(event.newValue);
+            } else if (event.preference == mPrimarySitePreference) {
+                changePrimaryBlogPreference(event.newValue);
+                updatePrimaryBlog(event.newValue);
             }
         }
     }
