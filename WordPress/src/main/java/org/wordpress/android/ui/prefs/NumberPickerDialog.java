@@ -29,6 +29,7 @@ public class NumberPickerDialog extends DialogFragment
     public static final String SHOW_SWITCH_KEY    = "show-switch";
     public static final String SWITCH_ENABLED_KEY = "switch-enabled";
     public static final String SWITCH_TITLE_KEY   = "switch-title";
+    public static final String SWITCH_DESC_KEY    = "switch-description";
     public static final String TITLE_KEY          = "dialog-title";
     public static final String HEADER_TEXT_KEY    = "header-text";
     public static final String MIN_VALUE_KEY      = "min-value";
@@ -72,7 +73,7 @@ public class NumberPickerDialog extends DialogFragment
             } else {
                 mSwitch.setVisibility(View.GONE);
             }
-            switchText.setText(args.getString(SWITCH_TITLE_KEY, ""));
+            switchText.setText(args.getString(SWITCH_DESC_KEY, ""));
             mHeaderText.setText(args.getString(HEADER_TEXT_KEY, ""));
             mMinValue = args.getInt(MIN_VALUE_KEY, DEFAULT_MIN_VALUE);
             mMaxValue = args.getInt(MAX_VALUE_KEY, DEFAULT_MAX_VALUE);

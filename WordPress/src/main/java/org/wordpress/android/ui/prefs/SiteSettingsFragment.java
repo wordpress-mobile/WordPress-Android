@@ -595,6 +595,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, true);
         args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getShouldPageComments());
         args.putString(NumberPickerDialog.SWITCH_TITLE_KEY, getString(R.string.site_settings_paging_title));
+        args.putString(NumberPickerDialog.SWITCH_DESC_KEY, getString(R.string.site_settings_paging_dialog_description));
         args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_paging_title));
         args.putString(NumberPickerDialog.HEADER_TEXT_KEY, getString(R.string.site_settings_paging_dialog_header));
         args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 1);
@@ -608,6 +609,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, true);
         args.putBoolean(NumberPickerDialog.SWITCH_ENABLED_KEY, mSiteSettings.getShouldCloseAfter());
         args.putString(NumberPickerDialog.SWITCH_TITLE_KEY, getString(R.string.site_settings_close_after_dialog_switch_text));
+        args.putString(NumberPickerDialog.SWITCH_DESC_KEY, getString(R.string.site_settings_close_after_dialog_description));
         args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_close_after_dialog_title));
         args.putString(NumberPickerDialog.HEADER_TEXT_KEY, getString(R.string.site_settings_close_after_dialog_header));
         args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 1);
