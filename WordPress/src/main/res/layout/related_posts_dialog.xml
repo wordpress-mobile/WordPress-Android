@@ -72,7 +72,7 @@
             android:textStyle="italic|bold"
             android:textColor="@color/related_posts_preview_header"
             android:textSize="@dimen/text_sz_medium"
-            app:fontVariation="light" />
+            android:fontFamily="sans-serif-light" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/related_posts_list_header"
@@ -83,7 +83,7 @@
             android:textStyle="bold"
             android:textSize="@dimen/text_sz_medium"
             android:textColor="@color/related_posts_list_header"
-            app:fontVariation="light" />
+            android:fontFamily="sans-serif-light" />
 
         <LinearLayout
             android:id="@+id/related_posts_list"
@@ -107,7 +107,7 @@
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
                 android:text="@string/site_settings_rp_preview1_title"
-                app:fontVariation="light" />
+                android:fontFamily="sans-serif-light" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_site1"
@@ -135,7 +135,7 @@
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
                 android:text="@string/site_settings_rp_preview2_title"
-                app:fontVariation="light" />
+                android:fontFamily="sans-serif-light" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_site2"
@@ -163,7 +163,7 @@
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
                 android:text="@string/site_settings_rp_preview3_title"
-                app:fontVariation="light" />
+                android:fontFamily="sans-serif-light" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_site3"
@@ -173,8 +173,7 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
                 android:textColor="@color/grey_dark"
-                android:text="@string/site_settings_rp_preview3_site"
-                app:fontVariation="normal" />
+                android:text="@string/site_settings_rp_preview3_site"/>
         </LinearLayout>
 
     </LinearLayout>

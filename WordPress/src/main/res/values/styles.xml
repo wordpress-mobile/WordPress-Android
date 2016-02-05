@@ -195,7 +195,7 @@
 
     <style name="WordPress.EmptyList.Title" parent="WordPress.EmptyList">
         <item name="android:textSize">@dimen/empty_list_title_text_size</item>
-        <item name="fontVariation">light</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="WordPress.EmptyList.Description" parent="WordPress.EmptyList">

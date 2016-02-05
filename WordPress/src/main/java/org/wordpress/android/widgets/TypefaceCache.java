@@ -12,13 +12,12 @@ import java.util.Hashtable;
 
 public class TypefaceCache {
     /**
-     * Cache used for all views that support custom fonts. The default is the system font, but
+     * Cache used for all views that support custom fonts - defaults to the system font, but
      * Merriweather is also available via the "fontFamily" attribute
      */
 
     public static final int VARIATION_NORMAL = 0;
     public static final int VARIATION_LIGHT = 1;
-    public static final int VARIATION_DEFAULT = VARIATION_NORMAL;
 
     public static final int FAMILY_DEFAULT = 0;
     public static final int FAMILY_MERRIWEATHER = 1;
@@ -26,7 +25,7 @@ public class TypefaceCache {
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
     public static Typeface getTypeface(Context context) {
-        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_DEFAULT);
+        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_NORMAL);
     }
     public static Typeface getTypeface(Context context,
                                        int family,
@@ -115,18 +114,23 @@ public class TypefaceCache {
 
         // defaults if not set in attributes
         int family = FAMILY_DEFAULT;
-        int variation = VARIATION_DEFAULT;
+        int variation = VARIATION_NORMAL;
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
             if (a != null) {
                 try {
                     family = a.getInteger(R.styleable.WPTextView_fontFamily, FAMILY_DEFAULT);
-                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, VARIATION_DEFAULT);
+                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, VARIATION_NORMAL);
                 } finally {
                     a.recycle();
                 }
             }
+        }
+
+        // nothing more to do if this is the default system font
+        if (family == FAMILY_DEFAULT) {
+            return;
         }
 
         // determine the font style from the existing typeface

@@ -33,6 +33,6 @@
         android:text="@string/learn_more"
         android:textSize="@dimen/text_sz_medium"
         android:textColor="@color/blue_medium"
-        app:fontVariation="light" />
+        android:fontFamily="sans-serif-light" />
 
 </LinearLayout>

@@ -27,7 +27,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 style="@style/WordPress.NUXTitle"
-                app:fontVariation="light"
+                android:fontFamily="sans-serif-light"
                 app:fixWidowWords="true"/>
 
             <RelativeLayout

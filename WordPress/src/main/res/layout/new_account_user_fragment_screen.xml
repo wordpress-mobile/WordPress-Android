@@ -44,7 +44,7 @@
                 android:id="@+id/create_account_label"
                 android:text="@string/create_account_wpcom"
                 style="@style/WordPress.NUXTitle"
-                app:fontVariation="light"
+                android:fontFamily="sans-serif-light"
                 app:fixWidowWords="true"/>
 
             <RelativeLayout

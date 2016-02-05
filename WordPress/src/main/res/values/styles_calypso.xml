@@ -32,7 +32,7 @@
     </style>
 
     <style name="Calypso.ActionMode.Text">
-        <item name="fontVariation">light</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
@@ -55,7 +55,7 @@
     </style>
 
     <style name="Calypso.TextAppearance.AlertDialog">
-        <item name="fontVariation">light</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:background">@color/white</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
         <item name="android:textStyle">bold</item>
