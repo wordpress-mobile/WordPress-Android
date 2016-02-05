@@ -23,14 +23,12 @@
 	<string name="post_trashed">Yazını zibil qutusuna göndər</string>
 	<string name="button_back">Geri</string>
 	<string name="page_deleted">Səhifə silindi</string>
-	<string name="button_more">Daha çox</string>
 	<string name="button_stats">Statistikalar</string>
 	<string name="button_trash">Zibil qutusu</string>
 	<string name="button_preview">Önizləmə</string>
 	<string name="button_view">Bax</string>
 	<string name="button_edit">Redaktə et</string>
 	<string name="button_publish">Dərc et</string>
-	<string name="button_delete">Sil</string>
 	<string name="trashed">Zibil qutusuna göndərildi</string>
 	<string name="stats_no_activity_this_period">Bu dövrə aid aktivlik yoxdur</string>
 	<string name="my_site_no_sites_view_subtitle">Bir ədədini əlavə etmək istərdinizmi?</string>
@@ -71,7 +69,6 @@
 	<string name="my_site_btn_switch_site">Saytı Dəyişdir</string>
 	<string name="my_site_btn_blog_posts">Bloq Yazıları</string>
 	<string name="my_site_btn_site_settings">Parametrlər</string>
-	<string name="my_site_btn_comments">Şərhlər</string>
 	<string name="my_site_header_look_and_feel">Əsas Görünüş</string>
 	<string name="my_site_header_publish">Dərc et</string>
 	<string name="my_site_header_configuration">Konfiqurasiya</string>
@@ -203,7 +200,6 @@
 	<string name="stats_view_followers">İzləyici</string>
 	<string name="stats_view_countries">Ölkələr</string>
 	<string name="stats_likes">Bəyənmə</string>
-	<string name="stats_comments">Şərh</string>
 	<string name="stats_pagination_label">Səhifə %1$s / %2$s</string>
 	<string name="stats_timeframe_years">İl</string>
 	<string name="stats_views">Baxış</string>
@@ -227,7 +223,6 @@
 	<string name="reader_label_comment_count_single">Bir şərh</string>
 	<string name="reader_label_comments_closed">Şərhlər bağlıdır</string>
 	<string name="reader_label_comments_on">Şərh</string>
-	<string name="reader_title_comments">Şərh</string>
 	<string name="reader_title_photo_viewer">%1$d / %2$d</string>
 	<string name="error_refresh_unauthorized_posts">Yazıya baxmağa və ya onu redaktə etməyə izniniz yoxdur</string>
 	<string name="select_a_blog">WordPress saytı seç</string>
@@ -244,6 +239,7 @@
 	<string name="error_refresh_unauthorized_pages">Səhifələrə baxma və ya redaktə etmə izniniz yoxdur</string>
 	<string name="error_refresh_unauthorized_comments">Şərhlərə baxma və ya redaktə etmə izniniz yoxdur</string>
 	<string name="older_month">Bir aydan əski</string>
+	<string name="more">Daha çox</string>
 	<string name="older_two_days">2 gündən əski</string>
 	<string name="older_last_week">1 həftədən əski</string>
 	<string name="stats_no_blog">İstənən bloq üçün statistiklar yüklənmir</string>
@@ -534,7 +530,6 @@
 	<string name="media_edit_description_text">Açıqlama</string>
 	<string name="share_action">Göndər</string>
 	<string name="stats_view_tags_and_categories">Etiketlər və Kateqoriyalar</string>
-	<string name="stats_view_comments">Şərhlər</string>
 	<string name="stats_entry_authors">Müəllif</string>
 	<string name="stats_entry_posts_and_pages">Başlıq</string>
 	<string name="all">Tamamı</string>
@@ -547,7 +542,6 @@
 	<string name="stats_entry_country">Ölkə</string>
 	<string name="stats_entry_tags_and_categories">Bəhs</string>
 	<string name="stats_entry_referrers">Yönləndirmə</string>
-	<string name="stats_totals_comments">Şərhlər</string>
 	<string name="media_gallery_type">Növ</string>
 	<string name="menu_search">Axtar</string>
 	<string name="media_edit_caption_text">Başlıq</string>
@@ -633,7 +627,6 @@
 	<string name="app_title">Android üçün WordPress</string>
 	<string name="tos">Xidmət Şərtləri</string>
 	<string name="about">Haqqında</string>
-	<string name="max_thumbnail_px_width">Mövcud təsvirin genişliyi</string>
 	<string name="image_alignment">Mövqeləndirmə</string>
 	<string name="refresh">Təzələ</string>
 	<string name="untitled">Başlıqsız</string>
@@ -668,7 +661,6 @@
 	<string name="no">Xeyr</string>
 	<string name="yes">Bəli</string>
 	<string name="reply">Cavabla</string>
-	<string name="tab_comments">Şərhlər</string>
 	<string name="error">Xəta</string>
 	<string name="cancel">İmtina</string>
 	<string name="save">Qeyd et</string>
